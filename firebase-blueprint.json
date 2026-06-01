@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with email and authentication hash",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "passwordHash": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "name", "passwordHash", "createdAt"]
+    },
+    "QRProject": {
+      "title": "QRProject",
+      "description": "QR Code Project customization parameters and statistics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["url", "text", "wifi", "card", "email", "phone", "sms", "social", "crypto", "geo"] },
+        "content": { "type": "string" },
+        "design": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "scanCount": { "type": "integer" },
+        "trackingEnabled": { "type": "boolean" },
+        "trackingId": { "type": "string" }
+      },
+      "required": ["id", "userId", "name", "type", "content", "design", "createdAt", "scanCount", "trackingEnabled", "trackingId"]
+    },
+    "ScanLog": {
+      "title": "ScanLog",
+      "description": "Analytics scan logging for tracked visits",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projectId": { "type": "string" },
+        "trackingId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "deviceType": { "type": "string" },
+        "browser": { "type": "string" },
+        "approxLocation": { "type": "string" },
+        "ip": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "projectId", "trackingId", "timestamp", "deviceType", "browser", "approxLocation", "ip", "userId"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Collection of signed up users"
+    },
+    "projects/{projectId}": {
+      "schema": "QRProject",
+      "description": "Collection of QR key objects"
+    },
+    "scans/{scanId}": {
+      "schema": "ScanLog",
+      "description": "Global log of scanned click interactions"
+    }
+  }
+}

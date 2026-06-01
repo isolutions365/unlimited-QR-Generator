@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@layer base {
+  /* Premium modern button micro-interactions that trigger once cursor enters */
+  button,
+  [role="button"],
+  input[type="submit"],
+  .btn-animate {
+    transition: transform 0.25s cubic-bezier(0.34, 1.6, 0.64, 1), 
+                box-shadow 0.25s cubic-bezier(0.34, 1.6, 0.64, 1),
+                background-color 0.2s ease,
+                border-color 0.2s ease,
+                color 0.15s ease !important;
+  }
+
+  button:hover,
+  [role="button"]:hover,
+  input[type="submit"]:hover {
+    transform: scale(1.045) translateY(-2px);
+    box-shadow: 0 10px 20px -8px rgba(99, 102, 241, 0.25), 
+                0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  }
+
+  button:active,
+  [role="button"]:active,
+  input[type="submit"]:active {
+    transform: scale(0.96) translateY(0px) !important;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
+  }
+}

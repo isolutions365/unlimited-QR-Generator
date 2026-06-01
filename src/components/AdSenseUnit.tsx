@@ -1,0 +1,90 @@
+import React, { useEffect, useRef, useState } from 'react';
+
+interface AdSenseUnitProps {
+  id: string;
+  adClient?: string; // Optional custom client ID, defaults to fallback setup
+  adSlot: string;    // The AdSense unit's slot code
+  adFormat?: string; // e.g. 'auto', 'fluid', 'rectangle' etc.
+  fullWidthResponsive?: boolean;
+  className?: string; // Extra styling classes
+  style?: React.CSSProperties; // Optional inline overrides
+  label?: string; // Default: 'ADVERTISEMENT'
+}
+
+declare global {
+  interface Window {
+    adsbygoogle?: any[];
+  }
+}
+
+export default function AdSenseUnit({
+  id,
+  adClient = "ca-pub-3940256099942544", // Testing Google AdSense Client ID
+  adSlot,
+  adFormat = 'auto',
+  fullWidthResponsive = true,
+  className = '',
+  style,
+  label = 'ADVERTISEMENT'
+}: AdSenseUnitProps) {
+  const [hasError, setHasError] = useState(false);
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    // Only attempt to push if we are in a browser environment
+    if (typeof window !== 'undefined' && !initialized.current) {
+      try {
+        // Setup window.adsbygoogle array if missing
+        window.adsbygoogle = window.adsbygoogle || [];
+        
+        // Push the advertisement initialization object safely
+        window.adsbygoogle.push({});
+        initialized.current = true;
+      } catch (err) {
+        console.warn('AdSense unit initialization skipped or delayed (expected in dev):', err);
+        setHasError(true);
+      }
+    }
+  }, []);
+
+  return (
+    <div 
+      id={id}
+      className={`relative flex flex-col items-center justify-center bg-gray-50/50 border border-gray-200/50 rounded-2xl p-3 text-center overflow-hidden transition-all duration-300 hover:border-gray-200 shadow-3xs ${className}`}
+    >
+      {/* Policy Compliant Label tag */}
+      <span className="text-[9px] font-mono font-bold tracking-widest text-gray-400 mb-2 uppercase select-none">
+        {label}
+      </span>
+
+      {/* Ad unit canvas container with fallback minimum dimensions */}
+      <div className="w-full flex justify-center items-center relative" style={{ minHeight: style?.height || style?.minHeight || '90px' }}>
+        {/* Standard AdSense client container */}
+        <ins
+          className="adsbygoogle w-full block"
+          style={style || { display: 'block', minHeight: '90px' }}
+          data-ad-client={adClient}
+          data-ad-slot={adSlot}
+          data-ad-format={adFormat}
+          data-full-width-responsive={fullWidthResponsive ? 'true' : 'false'}
+        />
+
+        {/* Polished, professional visual proxy to show in development / local testing preview */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 border border-dashed border-slate-200/80 rounded-xl p-4 cursor-default select-none group">
+          <div className="flex items-center gap-1.5">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-xs font-bold text-gray-800 tracking-tight group-hover:text-indigo-600 transition-colors">
+              Premium Ad Placement Active
+            </span>
+          </div>
+          <p className="text-[10px] text-gray-400 font-mono mt-1 select-all">
+            slot: {adSlot} • form: {adFormat}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
