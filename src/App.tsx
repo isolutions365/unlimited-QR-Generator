@@ -15,6 +15,7 @@ import AdSenseUnit from './components/AdSenseUnit';
 import CompanyPages from './components/CompanyPages';
 import FaqSection from './components/FaqSection';
 import BlogSection from './components/BlogSection';
+import { Locale, navTranslations, creativeSubItems, presetToolsTranslations } from './utils/translations';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
@@ -49,6 +50,44 @@ const INITIAL_DESIGN: Partial<QRProject> = {
   trackingEnabled: true,
   trackingId: ''
 };
+
+function RollingNumber({ value, duration = 1200 }: { value: number; duration?: number }) {
+  const [displayValue, setDisplayValue] = useState(0);
+  const previousValueRef = useRef(0);
+
+  useEffect(() => {
+    const startValue = previousValueRef.current;
+    const endValue = value;
+    if (startValue === endValue && startValue !== 0) return;
+
+    const startTime = performance.now();
+    let animationFrameId: number;
+
+    const updateNumber = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      
+      const currentValue = Math.round(startValue + (endValue - startValue) * easeProgress);
+      setDisplayValue(currentValue);
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(updateNumber);
+      } else {
+        setDisplayValue(endValue);
+        previousValueRef.current = endValue;
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(updateNumber);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [value, duration]);
+
+  return <>{displayValue}</>;
+}
 
 function AnimatedHeaderTitle() {
   const letters = Array.from("Free QR Generator");
@@ -206,6 +245,20 @@ export default function App() {
   const [scans, setScans] = useState<ScanLog[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
+  // Localization State
+  const [locale, setLocale] = useState<Locale>(() => {
+    const saved = localStorage.getItem('app-locale');
+    if (saved === 'es' || saved === 'en') {
+      return saved as Locale;
+    }
+    return 'en';
+  });
+
+  const handleLocaleChange = (newLocale: Locale) => {
+    setLocale(newLocale);
+    localStorage.setItem('app-locale', newLocale);
+  };
+
   // Active configurations in the drawing board
   const [currentProject, setCurrentProject] = useState<Partial<QRProject>>(INITIAL_DESIGN);
   const [isSaving, setIsSaving] = useState(false);
@@ -272,6 +325,11 @@ export default function App() {
 
   const showCreativeMenu = isCreativeOpen || isCreativeHovered;
   const showToolsMenu = isToolsOpen || isToolsHovered;
+  
+  // Determine if the currently active route belongs to Free QR Tools presets
+  const isFreeQrToolsActive = currentPath !== '/' && currentPath !== '' && 
+    !['/faq', '/about', '/privacy', '/contact', '/terms'].includes(currentPath) && 
+    !currentPath.startsWith('/blog');
 
   // Handle escape press & focus trap inside the accessible mobile menu
   useEffect(() => {
@@ -668,7 +726,7 @@ export default function App() {
               <Sparkles className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/creative:scale-110 group-hover/creative:rotate-12 ${currentPath === '/' || currentPath === '' ? 'text-indigo-600' : 'text-slate-400 group-hover/creative:text-indigo-500'}`} />
               
               <span className={`relative z-10 font-bold ${currentPath === '/' || currentPath === '' ? 'text-indigo-600' : 'text-slate-600 group-hover/creative:text-indigo-600'} transition-colors`}>
-                Creative Station
+                {navTranslations[locale].creativeStation}
               </span>
               
               <ChevronDown className={`w-3 h-3 relative z-10 text-slate-400 group-hover/creative:text-indigo-500 transition-transform duration-300 ${showCreativeMenu ? 'rotate-180 text-indigo-600' : ''}`} />
@@ -694,142 +752,47 @@ export default function App() {
                 >
                   <div className="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/95 shadow-2xl p-5 w-[380px] grid grid-cols-1 gap-1.5 ring-1 ring-black/5 animate-fade-in text-left">
                     <div className="border-b border-slate-100 pb-2 mb-1.5 flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 font-mono">Design Studio</span>
-                      <span className="text-[9px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold">6 WORKSPACES</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 font-mono">{navTranslations[locale].designStudio}</span>
+                      <span className="text-[9px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold">{navTranslations[locale].workspaces}</span>
                     </div>
 
-                    <a
-                      href="/"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsCreativeOpen(false);
-                        setIsCreativeHovered(false);
-                        setActiveTab('create');
-                        navigateTo('/');
-                      }}
-                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
-                    >
-                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
-                        <Wand2 className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">AI QR Generator</span>
-                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Design beautiful prompt-to-artwork QR templates</span>
-                      </div>
-                    </a>
-
-                    <a
-                      href="/"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsCreativeOpen(false);
-                        setIsCreativeHovered(false);
-                        setActiveTab('create');
-                        navigateTo('/');
-                      }}
-                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
-                    >
-                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
-                        <Palette className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">QR Designer</span>
-                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Customize eye grids, gradients and quiet spaces</span>
-                      </div>
-                    </a>
-
-                    <a
-                      href="/"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsCreativeOpen(false);
-                        setIsCreativeHovered(false);
-                        setActiveTab('templates');
-                        navigateTo('/');
-                      }}
-                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
-                    >
-                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
-                        <LayoutTemplate className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">QR Templates</span>
-                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Apply readymade premium business templates</span>
-                      </div>
-                    </a>
-
-                    <a
-                      href="/"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsCreativeOpen(false);
-                        setIsCreativeHovered(false);
-                        setActiveTab('animations');
-                        navigateTo('/');
-                      }}
-                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
-                    >
-                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
-                        <Play className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">QR Animations</span>
-                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Apply sleek scanning indicators and sweep transitions</span>
-                      </div>
-                    </a>
-
-                    <a
-                      href="/"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsCreativeOpen(false);
-                        setIsCreativeHovered(false);
-                        setActiveTab('create');
-                        navigateTo('/');
-                        setTimeout(() => {
-                          const logoSec = document.getElementById('logo-settings-section');
-                          if (logoSec) {
-                            logoSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                          }
-                        }, 250);
-                      }}
-                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
-                    >
-                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
-                        <Image className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">Brand Assets</span>
-                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Upload centerpiece logos and corporate symbols</span>
-                      </div>
-                    </a>
-
-                    <a
-                      href="/"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsCreativeOpen(false);
-                        setIsCreativeHovered(false);
-                        setActiveTab('boiler');
-                        navigateTo('/');
-                      }}
-                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
-                    >
-                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
-                        <Megaphone className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">Marketing Materials</span>
-                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Scale print formats, cards, flyers and media packs</span>
-                      </div>
-                    </a>
+                    {[
+                      { name: creativeSubItems[locale][0].name, desc: creativeSubItems[locale][0].desc, action: () => { setActiveTab('create'); navigateTo('/'); }, icon: Wand2 },
+                      { name: creativeSubItems[locale][1].name, desc: creativeSubItems[locale][1].desc, action: () => { setActiveTab('create'); navigateTo('/'); }, icon: Palette },
+                      { name: creativeSubItems[locale][2].name, desc: creativeSubItems[locale][2].desc, action: () => { setActiveTab('templates'); navigateTo('/'); }, icon: LayoutTemplate },
+                      { name: creativeSubItems[locale][3].name, desc: creativeSubItems[locale][3].desc, action: () => { setActiveTab('animations'); navigateTo('/'); }, icon: Play },
+                      { name: creativeSubItems[locale][4].name, desc: creativeSubItems[locale][4].desc, action: () => { setActiveTab('create'); navigateTo('/'); setTimeout(() => { const sec = document.getElementById('logo-settings-section'); if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250); }, icon: Image },
+                      { name: creativeSubItems[locale][5].name, desc: creativeSubItems[locale][5].desc, action: () => { setActiveTab('boiler'); navigateTo('/'); }, icon: Megaphone }
+                    ].map((item, idx) => {
+                      const Icon = item.icon;
+                      return (
+                        <a
+                          key={idx}
+                          href="/"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsCreativeOpen(false);
+                            setIsCreativeHovered(false);
+                            item.action();
+                          }}
+                          className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
+                        >
+                          <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors uppercase tracking-tight">{item.name}</span>
+                            <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">{item.desc}</span>
+                          </div>
+                        </a>
+                      );
+                    })}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-          
-          {/* Free QR Tools Dropdown */}
+                  {/* Free QR Tools Dropdown */}
           <div 
             ref={toolsMenuRef}
             className="relative"
@@ -842,15 +805,15 @@ export default function App() {
             >
               <span className="absolute inset-0 bg-indigo-50/0 group-hover/btn:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
               
-              <Compass className={`w-3.5 h-3.5 relative z-10 transition-transform duration-500 group-hover/btn:rotate-180 ${currentPath !== '/' && currentPath !== '' ? 'text-indigo-600' : 'text-slate-400 group-hover/btn:text-indigo-500'}`} />
+              <Compass className={`w-3.5 h-3.5 relative z-10 transition-transform duration-500 group-hover/btn:rotate-180 ${isFreeQrToolsActive ? 'text-indigo-600' : 'text-slate-400 group-hover/btn:text-indigo-500'}`} />
               
-              <span className={`relative z-10 font-bold ${currentPath !== '/' && currentPath !== '' ? 'text-indigo-600' : 'text-slate-600 group-hover/btn:text-indigo-600'} transition-colors`}>
-                Free QR Tools
+              <span className={`relative z-10 font-bold ${isFreeQrToolsActive ? 'text-indigo-600' : 'text-slate-600 group-hover/btn:text-indigo-600'} transition-colors`}>
+                {navTranslations[locale].freeQrTools}
               </span>
               
               <ChevronDown className={`w-3 h-3 relative z-10 text-slate-400 group-hover/btn:text-indigo-500 transition-transform duration-300 ${showToolsMenu ? 'rotate-180 text-indigo-600' : ''}`} />
               
-              {currentPath !== '/' && currentPath !== '' && (
+              {isFreeQrToolsActive && (
                 <motion.div
                   layoutId="activeNavIndicator"
                   className="absolute bottom-0 left-4 right-4 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
@@ -872,25 +835,19 @@ export default function App() {
                 >
                   <div className="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-2xl p-5 w-[640px] grid grid-cols-2 gap-2.5 ring-1 ring-black/5 animate-fade-in text-left">
                     <div className="col-span-2 border-b border-slate-100 pb-2 mb-1.5 flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 font-mono">Expert Presets & Converters</span>
-                      <span className="text-[9px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold">10 CHANNELS AVAILABLE</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 font-mono">{navTranslations[locale].expertPresets}</span>
+                      <span className="text-[9px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold">{navTranslations[locale].channelsCount}</span>
                     </div>
 
-                    {[
-                      { name: 'URL QR', slug: 'url-qr-generator', desc: 'Secure web redirects with live trackable shortened links.' },
-                      { name: 'PDF QR', slug: 'pdf-qr-generator', desc: 'Contactless dynamic documents loading restaurant menus & guides.' },
-                      { name: 'WiFi QR', slug: 'wifi-qr-generator', desc: 'Auto-pair guests to local wireless routers with no password typed.' },
-                      { name: 'vCard QR', slug: 'vcard-qr-generator', desc: 'Share rich digital contact records immediately to scanners.' },
-                      { name: 'Email QR', slug: 'email-qr-generator', desc: 'Preconfigure receiver addresses with customized boilerplate body text.' },
-                      { name: 'SMS QR', slug: 'sms-qr-generator', desc: 'Compose direct-to-text messages with pre-allocated phone nodes.' },
-                      { name: 'WhatsApp QR', slug: 'whatsapp-qr-generator', desc: 'Trigger instant customized chat logs instantly with customer staff.' },
-                      { name: 'Social QR', slug: 'instagram-qr-generator', desc: 'Consolidate bio-links directly to Instagram, Facebook and Youtube.' },
-                      { name: 'Text QR', slug: 'text-qr', desc: 'Store raw text keys, offline copyable logs and secret key matrices.', action: () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' }) },
-                      { name: 'App Store QR', slug: 'app-store-qr', desc: 'Direct visitors directly to App Store / Play Store download entries.', action: () => handleInitiateGenerator({ type: 'url', content: 'https://apps.apple.com', name: 'App Store Download' }) },
-                    ].map((toolItem) => {
+                    {presetToolsTranslations[locale].map((toolItem) => {
                       const isPrebuiltSlug = toolItem.slug !== 'text-qr' && toolItem.slug !== 'app-store-qr';
                       const isCurrentActive = isPrebuiltSlug ? currentPath === `/${toolItem.slug}` : false;
                       const IconComponent = getPresetIcon(toolItem.slug);
+                      const action = toolItem.slug === 'text-qr' 
+                        ? () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' })
+                        : toolItem.slug === 'app-store-qr'
+                        ? () => handleInitiateGenerator({ type: 'url', content: 'https://apps.apple.com', name: 'App Store Download' })
+                        : undefined;
 
                       return (
                         <a
@@ -900,8 +857,8 @@ export default function App() {
                             e.preventDefault(); 
                             setIsToolsOpen(false);
                             setIsToolsHovered(false); 
-                            if (toolItem.action) {
-                              toolItem.action();
+                            if (action) {
+                              action();
                             } else {
                               navigateTo(`/${toolItem.slug}`); 
                             }
@@ -921,7 +878,7 @@ export default function App() {
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-1.5">
-                              <span className="block text-xs font-extrabold text-slate-900 group-hover/item:text-indigo-600 transition-colors truncate">
+                              <span className="block text-xs font-extrabold text-slate-900 group-hover/item:text-indigo-600 transition-colors truncate uppercase tracking-tight">
                                 {toolItem.name}
                               </span>
                               {isCurrentActive && (
@@ -947,10 +904,20 @@ export default function App() {
               e.preventDefault();
               navigateTo('/faq');
             }}
-            className="py-2 px-3 text-xs font-bold text-slate-600 hover:text-indigo-650 transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="relative py-2.5 px-4 text-xs font-bold tracking-wide transition-all group/faq flex items-center gap-2 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
-            <span>FAQ</span>
+            <span className="absolute inset-0 bg-indigo-50/0 group-hover/faq:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+            <HelpCircle className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/faq:scale-110 ${currentPath === '/faq' ? 'text-indigo-600' : 'text-slate-400 group-hover/faq:text-indigo-500'}`} />
+            <span className={`relative z-10 font-bold ${currentPath === '/faq' ? 'text-indigo-600' : 'text-slate-600 group-hover/faq:text-indigo-600'} transition-colors`}>
+              {navTranslations[locale].faqTitle}
+            </span>
+            {currentPath === '/faq' && (
+              <motion.div
+                layoutId="activeNavIndicator"
+                className="absolute bottom-0 left-4 right-4 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
           </a>
 
           <a
@@ -959,15 +926,51 @@ export default function App() {
               e.preventDefault();
               navigateTo('/blog');
             }}
-            className="py-2 px-3 text-xs font-bold text-slate-600 hover:text-indigo-650 transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="relative py-2.5 px-4 text-xs font-bold tracking-wide transition-all group/blog flex items-center gap-2 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
           >
-            <BookOpen className="w-3.5 h-3.5 text-slate-400" />
-            <span>Guides Blog</span>
+            <span className="absolute inset-0 bg-indigo-50/0 group-hover/blog:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+            <BookOpen className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/blog:scale-110 ${currentPath.startsWith('/blog') ? 'text-indigo-600' : 'text-slate-400 group-hover/blog:text-indigo-500'}`} />
+            <span className={`relative z-10 font-bold ${currentPath.startsWith('/blog') ? 'text-indigo-600' : 'text-slate-600 group-hover/blog:text-indigo-600'} transition-colors`}>
+              {navTranslations[locale].blogTitle}
+            </span>
+            {currentPath.startsWith('/blog') && (
+              <motion.div
+                layoutId="activeNavIndicator"
+                className="absolute bottom-0 left-4 right-4 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
           </a>
         </nav>
 
         {/* Auth controllers & Mobile Menu Button */}
         <div className="flex items-center gap-3">
+          {/* Language Switcher Button */}
+          <div className="bg-slate-100/80 backdrop-blur-xs rounded-xl p-0.5 border border-slate-200/60 flex items-center mr-1">
+            <button
+              type="button"
+              onClick={() => handleLocaleChange('en')}
+              className={`px-2 py-1 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${
+                locale === 'en'
+                  ? 'bg-white text-indigo-600 shadow-xs ring-1 ring-black/5'
+                  : 'text-slate-500 hover:text-indigo-600'
+              }`}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              onClick={() => handleLocaleChange('es')}
+              className={`px-2 py-1 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${
+                locale === 'es'
+                  ? 'bg-white text-indigo-600 shadow-xs ring-1 ring-black/5'
+                  : 'text-slate-500 hover:text-indigo-600'
+              }`}
+            >
+              ES
+            </button>
+          </div>
+
           {authLoading ? (
             <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
           ) : user ? (
@@ -985,7 +988,7 @@ export default function App() {
                 className="py-1.5 px-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1 border border-gray-200 cursor-pointer transition-colors"
                >
                 <LogOut className="w-3.5 h-3.5" />
-                Sign Out
+                {navTranslations[locale].signOut}
               </button>
             </div>
           ) : (
@@ -995,7 +998,7 @@ export default function App() {
               className="py-2 px-4 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-md shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <LogIn className="w-4 h-4" />
-              Sign In / Sign Up
+              {navTranslations[locale].signIn}
             </button>
           )}
 
@@ -1073,7 +1076,7 @@ export default function App() {
                   >
                     <span className="font-mono tracking-widest text-[10px] flex items-center gap-2">
                       <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                      Creative Station
+                      {navTranslations[locale].creativeStation}
                     </span>
                     <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileCreativeOpen ? 'rotate-180' : ''}`} />
                   </button>
@@ -1087,27 +1090,31 @@ export default function App() {
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                         className="overflow-hidden pl-2 flex flex-col gap-1 mt-1"
                       >
-                        {[
-                          { name: 'AI QR Generator', desc: 'Custom AI artwork layouts', icon: Wand2, action: () => { setActiveTab('create'); navigateTo('/'); } },
-                          { name: 'QR Designer', desc: 'Fine-tune styles and colors', icon: Palette, action: () => { setActiveTab('create'); navigateTo('/'); } },
-                          { name: 'QR Templates', desc: 'Apply pre-formatted styles', icon: LayoutTemplate, action: () => { setActiveTab('templates'); navigateTo('/'); } },
-                          { name: 'QR Animations', desc: 'Scanning swipe & hover indicators', icon: Play, action: () => { setActiveTab('animations'); navigateTo('/'); } },
-                          { name: 'Brand Assets', desc: 'Embed emblems and marks', icon: Image, action: () => {
-                            setActiveTab('create'); navigateTo('/');
-                            setTimeout(() => {
-                              const logoSec = document.getElementById('logo-settings-section');
-                              if (logoSec) logoSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }, 250);
-                          } },
-                          { name: 'Marketing Materials', desc: 'Print files & mobile apps', icon: Megaphone, action: () => { setActiveTab('boiler'); navigateTo('/'); } }
-                        ].map((sub) => {
-                          const SubIcon = sub.icon;
+                        {creativeSubItems[locale].map((sub, idx) => {
+                          const subIcons = [Wand2, Palette, LayoutTemplate, Play, Image, Megaphone];
+                          const SubIcon = subIcons[idx] || Wand2;
+                          const subActions = [
+                            () => { setActiveTab('create'); navigateTo('/'); },
+                            () => { setActiveTab('create'); navigateTo('/'); },
+                            () => { setActiveTab('templates'); navigateTo('/'); },
+                            () => { setActiveTab('animations'); navigateTo('/'); },
+                            () => {
+                              setActiveTab('create'); navigateTo('/');
+                              setTimeout(() => {
+                                const logoSec = document.getElementById('logo-settings-section');
+                                if (logoSec) logoSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                              }, 250);
+                            },
+                            () => { setActiveTab('boiler'); navigateTo('/'); }
+                          ];
+                          const subAction = subActions[idx] || (() => {});
+
                           return (
                             <button
                               key={sub.name}
                               onClick={() => {
                                 setIsMobileMenuOpen(false);
-                                sub.action();
+                                subAction();
                               }}
                               className="w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
                             >
@@ -1135,7 +1142,7 @@ export default function App() {
                   >
                     <span className="font-mono tracking-widest text-[10px] flex items-center gap-2">
                       <Compass className="w-3.5 h-3.5 text-indigo-400" />
-                      Free QR Tools
+                      {navTranslations[locale].freeQrTools}
                     </span>
                     <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileToolsOpen ? 'rotate-180' : ''}`} />
                   </button>
@@ -1149,29 +1156,25 @@ export default function App() {
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                         className="overflow-hidden pl-2 flex flex-col gap-1 mt-1"
                       >
-                        {[
-                          { name: 'URL QR', slug: 'url-qr-generator', icon: Globe },
-                          { name: 'PDF QR', slug: 'pdf-qr-generator', icon: FileText },
-                          { name: 'WiFi QR', slug: 'wifi-qr-generator', icon: Wifi },
-                          { name: 'vCard QR', slug: 'vcard-qr-generator', icon: Contact },
-                          { name: 'Email QR', slug: 'email-qr-generator', icon: Mail },
-                          { name: 'SMS QR', slug: 'sms-qr-generator', icon: Phone },
-                          { name: 'WhatsApp QR', slug: 'whatsapp-qr-generator', icon: Phone },
-                          { name: 'Social QR', slug: 'instagram-qr-generator', icon: Instagram },
-                          { name: 'Text QR', slug: 'text-qr', icon: FileText, action: () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' }) },
-                          { name: 'App Store QR', slug: 'app-store-qr', icon: Smartphone, action: () => handleInitiateGenerator({ type: 'url', content: 'https://apps.apple.com', name: 'App Store Download' }) },
-                        ].map((sub) => {
-                          const SubIcon = sub.icon;
+                        {presetToolsTranslations[locale].map((sub, idx) => {
+                          const presetIcons = [Globe, FileText, Wifi, Contact, Mail, Phone, Phone, Instagram, FileText, Smartphone];
+                          const SubIcon = presetIcons[idx] || Compass;
                           const isPrebuiltSlug = sub.slug !== 'text-qr' && sub.slug !== 'app-store-qr';
                           const isCurrentActive = isPrebuiltSlug ? currentPath === `/${sub.slug}` : false;
                           
+                          const subAction = sub.slug === 'text-qr' 
+                            ? () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' })
+                            : sub.slug === 'app-store-qr'
+                            ? () => handleInitiateGenerator({ type: 'url', content: 'https://apps.apple.com', name: 'App Store Download' })
+                            : undefined;
+
                           return (
                             <button
                               key={sub.name}
                               onClick={() => {
                                 setIsMobileMenuOpen(false);
-                                if (sub.action) {
-                                  sub.action();
+                                if (subAction) {
+                                  subAction();
                                 } else {
                                   navigateTo(`/${sub.slug}`);
                                 }
@@ -1206,7 +1209,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <HelpCircle className="w-3.5 h-3.5" />
                     </div>
-                    <span className="font-bold">FAQ / Help Center</span>
+                    <span className="font-bold">{navTranslations[locale].faqTitle}</span>
                   </button>
 
                   <button
@@ -1219,7 +1222,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <BookOpen className="w-3.5 h-3.5" />
                     </div>
-                    <span className="font-bold">Guides Blog</span>
+                    <span className="font-bold">{navTranslations[locale].blogTitle}</span>
                   </button>
 
                   <button
@@ -1246,7 +1249,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <Info className="w-3.5 h-3.5" />
                     </div>
-                    <span className="font-bold">About Us</span>
+                    <span className="font-bold">{navTranslations[locale].aboutUs}</span>
                   </button>
 
                   <button
@@ -1259,7 +1262,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <MessageSquare className="w-3.5 h-3.5" />
                     </div>
-                    <span className="font-bold">Contact & Support</span>
+                    <span className="font-bold">{navTranslations[locale].contactSupport}</span>
                   </button>
 
                   <button
@@ -1272,7 +1275,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <Shield className="w-3.5 h-3.5" />
                     </div>
-                    <span className="font-bold">Privacy Policy</span>
+                    <span className="font-bold">{navTranslations[locale].privacyPolicy}</span>
                   </button>
                 </div>
 
@@ -1324,11 +1327,12 @@ export default function App() {
           onInitiateGenerator={handleInitiateGenerator} 
         />
       ) : currentPath === '/faq' ? (
-        <FaqSection onNavigate={navigateTo} />
+        <FaqSection onNavigate={navigateTo} locale={locale} />
       ) : (currentPath === '/blog' || currentPath.startsWith('/blog/')) ? (
         <BlogSection 
           initialSlug={currentPath.startsWith('/blog/') ? currentPath.substring(6) : null} 
           onNavigate={navigateTo} 
+          locale={locale}
         />
       ) : ['/about', '/privacy', '/contact', '/terms'].includes(currentPath) ? (
         <CompanyPages 
@@ -1736,7 +1740,11 @@ export default function App() {
                 <AnimatePresence mode="popLayout">
                   {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'wifi') && (
                     <motion.div key="wifi-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div id="recent-wifi-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group">
+                      <div 
+                        id="recent-wifi-card" 
+                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[inset_0_0_15px_rgba(99,102,241,0.35),0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group"
+                        style={{ transition: 'all 0.3s ease' }}
+                      >
                         <div className="space-y-1">
                           <span className="text-[10px] font-mono text-indigo-400 font-bold uppercase block">📡 Wireless Tech Integration • 2 min ago</span>
                           <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-indigo-400 transition-colors">Wireless Wi-Fi SSID Pairing</h4>
@@ -1748,7 +1756,7 @@ export default function App() {
                         <div className="space-y-1.5 mt-4">
                           <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
                             <span>Scan Activity Rate</span>
-                            <span className="font-extrabold text-slate-300">{Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)}%</span>
+                            <span className="font-extrabold text-slate-300"><RollingNumber value={Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)} />%</span>
                           </div>
                           <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
                             <motion.div 
@@ -1767,7 +1775,7 @@ export default function App() {
                           className="mt-4 text-xs font-bold text-indigo-400 group-hover:text-white flex items-center gap-1"
                         >
                           Explore Free WiFi lander
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
                     </motion.div>
@@ -1775,7 +1783,11 @@ export default function App() {
    
                   {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'whatsapp') && (
                     <motion.div key="whatsapp-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div id="recent-whatsapp-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group">
+                      <div 
+                        id="recent-whatsapp-card" 
+                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group"
+                        style={{ transition: 'all 0.3s ease' }}
+                      >
                         <div className="space-y-1">
                           <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
                           <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-emerald-400 transition-colors">Direct WhatsApp Customer Support</h4>
@@ -1806,7 +1818,7 @@ export default function App() {
                           className="mt-4 text-xs font-bold text-emerald-400 group-hover:text-white flex items-center gap-1"
                         >
                           Explore WhatsApp lander
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
                     </motion.div>
@@ -1814,7 +1826,11 @@ export default function App() {
    
                   {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'vcard') && (
                     <motion.div key="vcard-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div id="recent-vcard-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group">
+                      <div 
+                        id="recent-vcard-card" 
+                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[inset_0_0_15px_rgba(168,85,247,0.35),0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group"
+                        style={{ transition: 'all 0.3s ease' }}
+                      >
                         <div className="space-y-1">
                           <span className="text-[10px] font-mono text-purple-400 font-bold uppercase block">📇 Business Connectivity • 15 min ago</span>
                           <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-purple-400 transition-colors">Interactive Content-Rich vCards</h4>
@@ -1845,7 +1861,7 @@ export default function App() {
                           className="mt-4 text-xs font-bold text-purple-400 group-hover:text-white flex items-center gap-1"
                         >
                           Explore vCard lander
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
                     </motion.div>
@@ -1853,7 +1869,11 @@ export default function App() {
    
                   {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'restaurant') && (
                     <motion.div key="restaurant-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div id="recent-restaurant-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group">
+                      <div 
+                        id="recent-restaurant-card" 
+                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[inset_0_0_15px_rgba(245,158,11,0.35),0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group"
+                        style={{ transition: 'all 0.3s ease' }}
+                      >
                         <div className="space-y-1">
                           <span className="text-[10px] font-mono text-amber-400 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
                           <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-amber-400 transition-colors">Restaurant Menus & PDF Hosters</h4>
@@ -1884,7 +1904,7 @@ export default function App() {
                           className="mt-4 text-xs font-bold text-amber-400 group-hover:text-white flex items-center gap-1"
                         >
                           Explore Restaurant lander
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
                     </motion.div>
@@ -1892,7 +1912,11 @@ export default function App() {
 
                   {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'social') && (
                     <motion.div key="social-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div id="recent-social-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group" style={{ contentVisibility: 'auto' }}>
+                      <div 
+                        id="recent-social-card" 
+                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.35),0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group"
+                        style={{ transition: 'all 0.3s ease', contentVisibility: 'auto' }}
+                      >
                         <div className="space-y-1">
                           <span className="text-[10px] font-mono text-pink-400 font-bold uppercase block">📲 Bio Links & Socials • 2 hrs ago</span>
                           <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-pink-400 transition-colors">Social Multi-Link Hubs</h4>
@@ -1923,7 +1947,7 @@ export default function App() {
                           className="mt-4 text-xs font-bold text-pink-400 group-hover:text-white flex items-center gap-1"
                         >
                           Explore Instagram lander
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
                     </motion.div>

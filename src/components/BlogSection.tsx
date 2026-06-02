@@ -3,18 +3,37 @@ import {
   ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check,
   BookOpen, ChevronRight, MessageSquare, AlertCircle, Sparkles, Filter 
 } from 'lucide-react';
-import { blogArticles, blogCategories, BlogArticle } from '../data/blogData';
+import { blogCategories, BlogArticle } from '../data/blogData';
+import { getLocalizedBlog } from '../utils/translations';
 
 interface BlogSectionProps {
   initialSlug?: string | null;
   onNavigate: (path: string) => void;
+  locale?: 'en' | 'es';
 }
 
-export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProps) {
+const blogCategoryLabelsEs: Record<string, string> = {
+  "QR Code Guides": "Guías de Códigos QR",
+  "Business Marketing": "Marketing de Negocios",
+  "Digital Marketing": "Marketing Digital",
+  "Small Business Tools": "Herramientas para PYMEs",
+  "Technology": "Tecnología",
+  "Contactless Solutions": "Soluciones sin Contacto",
+  "Restaurant QR Menus": "Menús QR de Restaurantes",
+  "Event QR Codes": "Códigos QR de Eventos",
+  "Education QR Codes": "Códigos QR de Educación",
+  "Social Media Marketing": "Marketing de Redes Sociales"
+};
+
+export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: BlogSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeArticleSlug, setActiveArticleSlug] = useState<string | null>(initialSlug || null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [expandedFaqIndex, setExpandedFaqIndex] = useState<number | null>(null);
+
+  const localizedArticles = useMemo(() => {
+    return getLocalizedBlog(locale);
+  }, [locale]);
 
   // Synchronize active slug if initialSlug changes
   useEffect(() => {
@@ -25,14 +44,14 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
 
   const activeArticle = useMemo(() => {
     if (!activeArticleSlug) return null;
-    return blogArticles.find(art => art.slug === activeArticleSlug) || null;
-  }, [activeArticleSlug]);
+    return localizedArticles.find(art => art.slug === activeArticleSlug) || null;
+  }, [activeArticleSlug, localizedArticles]);
 
   // Filter articles based on category selection
   const filteredArticles = useMemo(() => {
-    if (selectedCategory === 'all') return blogArticles;
-    return blogArticles.filter(art => art.category === selectedCategory);
-  }, [selectedCategory]);
+    if (selectedCategory === 'all') return localizedArticles;
+    return localizedArticles.filter(art => art.category === selectedCategory);
+  }, [localizedArticles, selectedCategory]);
 
   const handleReadArticle = (slug: string) => {
     setActiveArticleSlug(slug);
@@ -91,11 +110,11 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
               className="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors group cursor-pointer focus:outline-hidden"
             >
               <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-              Back to Article Hub
+              {locale === 'es' ? 'Volver al Centro de Artículos' : 'Back to Article Hub'}
             </button>
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
-                {activeArticle.category}
+                {locale === 'es' ? (blogCategoryLabelsEs[activeArticle.category] || activeArticle.category) : activeArticle.category}
               </span>
               <button
                 onClick={() => copyArticleLink(activeArticle.slug)}
@@ -104,12 +123,12 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
                 {copiedLink ? (
                   <>
                     <Check className="w-3 h-3 text-emerald-500" />
-                    <span className="text-emerald-500 text-[10px]">Copied!</span>
+                    <span className="text-emerald-500 text-[10px]">{locale === 'es' ? '¡Copiado!' : 'Copied!'}</span>
                   </>
                 ) : (
                   <>
                     <Share2 className="w-3 h-3" />
-                    <span className="text-[10px]">Share</span>
+                    <span className="text-[10px]">{locale === 'es' ? 'Compartir' : 'Share'}</span>
                   </>
                 )}
               </button>
@@ -181,9 +200,9 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
 
           {/* Dynamic Article FAQ Accordion Area */}
           {activeArticle.relatedFAQs && activeArticle.relatedFAQs.length > 0 && (
-            <div id="article-faq-container" className="pt-8 border-t border-slate-100 space-y-4">
+            <div id="article-faq-container" className="pt-8 border-t border-slate-105 space-y-4">
               <h3 className="text-sm font-extrabold text-slate-950 uppercase tracking-widest font-mono">
-                Article Core FAQs
+                {locale === 'es' ? 'Preguntas Claves del Artículo' : 'Article Core FAQs'}
               </h3>
               <div className="space-y-3">
                 {activeArticle.relatedFAQs.map((faq, index) => {
@@ -216,7 +235,7 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
           {activeArticle.internalLinks && activeArticle.internalLinks.length > 0 && (
             <div id="article-recommendations" className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
-                Related Workspace Tools
+                {locale === 'es' ? 'Herramientas de Trabajo Relacionadas' : 'Related Workspace Tools'}
               </span>
               <div className="flex flex-wrap gap-2">
                 {activeArticle.internalLinks.map((link, index) => (
@@ -245,13 +264,15 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-4">
               <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 bg-opacity-70 border border-indigo-100 rounded-full font-extrabold uppercase tracking-widest inline-block">
-                Unlimited QR Generator Blog
+                {locale === 'es' ? 'Blog del Generador de Códigos QR' : 'Unlimited QR Generator Blog'}
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
-                Marketing & Tech Guides
+                {locale === 'es' ? 'Guías de Marketing y Tecnología' : 'Marketing & Tech Guides'}
               </h1>
               <p className="text-sm text-slate-500 max-w-xl leading-relaxed">
-                Stay updated with strategic marketing guidelines, contactless hospitality systems, error correction, and standard design configurations.
+                {locale === 'es'
+                  ? 'Manténgase actualizado con estrategias de marketing, sistemas de hospitalidad, corrección de errores y configuraciones de diseño estándar.'
+                  : 'Stay updated with strategic marketing guidelines, contactless hospitality systems, error correction, and standard design configurations.'}
               </p>
             </div>
           </div>
@@ -260,7 +281,7 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
           <div className="relative">
             <div className="flex items-center gap-2 mb-3 text-[10px] font-mono font-bold text-indigo-500 uppercase">
               <Filter className="w-3.5 h-3.5" />
-              <span>Filter articles by topic</span>
+              <span>{locale === 'es' ? 'Filtrar artículos por tema' : 'Filter articles by topic'}</span>
             </div>
             <div className="flex flex-wrap gap-1.5 pb-2 overflow-x-auto border-b border-slate-105 scrollbar-none">
               <button
@@ -271,7 +292,7 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
                     : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200'
                 }`}
               >
-                All Categories
+                {locale === 'es' ? 'Todas las Categorías' : 'All Categories'}
               </button>
               {blogCategories.map((cat) => (
                 <button
@@ -283,7 +304,7 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200'
                   }`}
                 >
-                  {cat}
+                  {locale === 'es' ? (blogCategoryLabelsEs[cat] || cat) : cat}
                 </button>
               ))}
             </div>
@@ -303,7 +324,9 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
                   <div className={`h-2.5 w-full bg-gradient-to-r ${getCategoryGradient(art.category)}`} />
                   <div className="p-6 space-y-3">
                     <div className="flex items-center justify-between text-[10px] font-mono font-bold text-slate-400">
-                      <span className="text-indigo-600">{art.category}</span>
+                      <span className="text-indigo-600">
+                        {locale === 'es' ? (blogCategoryLabelsEs[art.category] || art.category) : art.category}
+                      </span>
                       <span>{art.readingTime}</span>
                     </div>
 
@@ -320,7 +343,7 @@ export default function BlogSection({ initialSlug, onNavigate }: BlogSectionProp
                 <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-slate-50 text-[10px] font-mono font-bold text-slate-400">
                   <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {art.date}</span>
                   <span className="text-indigo-600 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    Read article <ArrowRight className="w-3 h-3" />
+                    {locale === 'es' ? 'Leer artículo' : 'Read article'} <ArrowRight className="w-3 h-3" />
                   </span>
                 </div>
               </div>

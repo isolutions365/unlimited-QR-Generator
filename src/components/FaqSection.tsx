@@ -1,27 +1,33 @@
 import React, { useState, useMemo } from 'react';
 import { Search, HelpCircle, ChevronDown, ChevronUp, Copy, Check, ArrowLeft, ShieldAlert } from 'lucide-react';
-import { faqData, faqCategories, FAQItem } from '../data/faqData';
+import { faqCategories, FAQItem } from '../data/faqData';
+import { getLocalizedFaq, faqCategoryLabels } from '../utils/translations';
 
 interface FaqSectionProps {
   onNavigate: (path: string) => void;
+  locale?: 'en' | 'es';
 }
 
-export default function FaqSection({ onNavigate }: FaqSectionProps) {
+export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  const localizedFaqData = useMemo(() => {
+    return getLocalizedFaq(locale);
+  }, [locale]);
+
   // Filter FAQs based on search and selected category
   const filteredFAQs = useMemo(() => {
-    return faqData.filter((faq) => {
+    return localizedFaqData.filter((faq) => {
       const matchCategory = selectedCategory === 'all' || faq.category === selectedCategory;
       const matchSearch =
         faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
         faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
       return matchCategory && matchSearch;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [localizedFaqData, searchQuery, selectedCategory]);
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -66,19 +72,21 @@ export default function FaqSection({ onNavigate }: FaqSectionProps) {
         className="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors mb-8 group cursor-pointer focus:outline-hidden"
       >
         <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-        Back to Creative Station
+        {locale === 'es' ? 'Volver a la Estación Creativa' : 'Back to Creative Station'}
       </button>
 
       {/* Hero Header section */}
       <div className="space-y-4 mb-10 text-center sm:text-left">
         <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 bg-opacity-70 border border-indigo-100 rounded-full font-extrabold uppercase tracking-widest inline-block">
-          Universal Knowledge Base
+          {locale === 'es' ? 'Base de Conocimiento Universal' : 'Universal Knowledge Base'}
         </span>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
-          Frequently Asked Questions
+          {locale === 'es' ? 'Preguntas Frecuentes' : 'Frequently Asked Questions'}
         </h1>
         <p className="text-sm text-slate-500 max-w-xl leading-relaxed">
-          Unlock maximum scannability and build better brand experiences with our 25+ detailed guides, hardware compatibility logs, and legal disclaimers.
+          {locale === 'es'
+            ? 'Optimice la legibilidad y cree mejores experiencias con nuestras más de 25 guías detalladas, compatibilidades y descargos de responsabilidad.'
+            : 'Unlock maximum scannability and build better brand experiences with our 25+ detailed guides, hardware compatibility logs, and legal disclaimers.'}
         </p>
       </div>
 
@@ -91,7 +99,9 @@ export default function FaqSection({ onNavigate }: FaqSectionProps) {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search standard questions, error corrections, vector scaling, format guidelines..."
+          placeholder={locale === 'es'
+            ? 'Buscar preguntas, corrección de errores, escala vectorial...'
+            : 'Search standard questions, error corrections, vector scaling, format guidelines...'}
           className="w-full h-full text-xs px-3 bg-transparent outline-none text-slate-800 placeholder:text-slate-400 font-sans"
         />
         {searchQuery && (
@@ -99,7 +109,7 @@ export default function FaqSection({ onNavigate }: FaqSectionProps) {
             onClick={() => setSearchQuery('')}
             className="text-xs text-slate-400 hover:text-slate-600 pr-4 font-mono font-bold cursor-pointer"
           >
-            Clear
+            {locale === 'es' ? 'Limpiar' : 'Clear'}
           </button>
         )}
       </div>
@@ -119,7 +129,7 @@ export default function FaqSection({ onNavigate }: FaqSectionProps) {
                 : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200'
             }`}
           >
-            {cat.label}
+            {faqCategoryLabels[locale][cat.id] || cat.label}
           </button>
         ))}
       </div>
@@ -167,7 +177,7 @@ export default function FaqSection({ onNavigate }: FaqSectionProps) {
                     </p>
                     <div className="mt-4 flex items-center justify-between text-[10px] font-mono font-bold text-slate-400 pt-3 border-t border-slate-100">
                       <span className="uppercase text-indigo-500 bg-indigo-50/50 px-2 py-0.5 rounded-md">
-                        Category: {faq.category}
+                        {locale === 'es' ? 'Categoría' : 'Category'}: {faqCategoryLabels[locale][faq.category] || faq.category}
                       </span>
                       <button
                         onClick={(e) => copyShareLink(faq.id, e)}
@@ -176,12 +186,12 @@ export default function FaqSection({ onNavigate }: FaqSectionProps) {
                         {copiedId === faq.id ? (
                           <>
                             <Check className="w-3 h-3 text-emerald-500" />
-                            <span className="text-emerald-500">Link Copied!</span>
+                            <span className="text-emerald-500">{locale === 'es' ? '¡Enlace copiado!' : 'Link Copied!'}</span>
                           </>
                         ) : (
                           <>
                             <Copy className="w-3 h-3" />
-                            <span>Copy link ID</span>
+                            <span>{locale === 'es' ? 'Copiar ID de enlace' : 'Copy link ID'}</span>
                           </>
                         )}
                       </button>
@@ -198,9 +208,13 @@ export default function FaqSection({ onNavigate }: FaqSectionProps) {
             <ShieldAlert className="w-5 h-5" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-sm font-extrabold text-slate-900">No matching questions found</h3>
+            <h3 className="text-sm font-extrabold text-slate-900">
+              {locale === 'es' ? 'No se encontraron preguntas' : 'No matching questions found'}
+            </h3>
             <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-              We couldn't locate anything matching "{searchQuery}". Try searching general keywords like "expire", "printing", or "WiFi".
+              {locale === 'es'
+                ? `No pudimos encontrar preguntas que coincidan con "${searchQuery}". Pruebe con palabras clave como "caducan", "imprimir" o "WiFi".`
+                : `We couldn't locate anything matching "${searchQuery}". Try searching general keywords like "expire", "printing", or "WiFi".`}
             </p>
           </div>
           <button
@@ -210,7 +224,7 @@ export default function FaqSection({ onNavigate }: FaqSectionProps) {
             }}
             className="px-4 py-2 bg-indigo-600 hover:bg-slate-950 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-indigo-100"
           >
-            Reset All Filters
+            {locale === 'es' ? 'Restablecer Filtros' : 'Reset All Filters'}
           </button>
         </div>
       )}
