@@ -960,6 +960,7 @@ export default function ControlPanel({
 
       {/* Brand Logos Custom center overlay */}
       <motion.div
+        id="logo-settings-section"
         variants={itemVariants}
         whileHover={{
           scale: 1.015,

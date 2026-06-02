@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
 import { QRProject, ScanLog } from './types';
 import SEOPage from './components/landing/SEOPage';
@@ -12,10 +12,12 @@ import MobileAppMockup from './components/MobileAppMockup';
 import AnimationsShowcase from './components/AnimationsShowcase';
 import AuthModal from './components/AuthModal';
 import AdSenseUnit from './components/AdSenseUnit';
+import CompanyPages from './components/CompanyPages';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
-  Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText
+  Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
+  Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -122,6 +124,66 @@ function AnimatedHeaderTitle() {
   );
 }
 
+const drawerVariants = {
+  hidden: { x: '100%', opacity: 0.95 },
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      damping: 26,
+      stiffness: 220,
+      staggerChildren: 0.04,
+      delayChildren: 0.1,
+    }
+  },
+  exit: {
+    x: '100%',
+    opacity: 0.95,
+    transition: {
+      type: 'spring',
+      damping: 28,
+      stiffness: 240,
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: 25 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: 'spring',
+      damping: 20,
+      stiffness: 160,
+    }
+  }
+};
+
+const categoryContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+    }
+  }
+};
+
+const categoryCardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      damping: 24,
+      stiffness: 120,
+    }
+  }
+};
+
 export default function App() {
   const [user, setUser] = useState<UserSession | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -140,6 +202,99 @@ export default function App() {
   // Client path-routing states for SEO landing pages
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isToolsHovered, setIsToolsHovered] = useState(false);
+  const [isToolsOpen, setIsToolsOpen] = useState(false);
+  const [isCreativeHovered, setIsCreativeHovered] = useState(false);
+  const [isCreativeOpen, setIsCreativeOpen] = useState(false);
+
+  const [isMobileCreativeOpen, setIsMobileCreativeOpen] = useState(false);
+  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
+
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const creativeMenuRef = useRef<HTMLDivElement>(null);
+  const toolsMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close desktop mega menus on click outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (creativeMenuRef.current && !creativeMenuRef.current.contains(e.target as Node)) {
+        setIsCreativeOpen(false);
+      }
+      if (toolsMenuRef.current && !toolsMenuRef.current.contains(e.target as Node)) {
+        setIsToolsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
+
+  const showCreativeMenu = isCreativeOpen || isCreativeHovered;
+  const showToolsMenu = isToolsOpen || isToolsHovered;
+
+  // Handle escape press & focus trap inside the accessible mobile menu
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    // Set focus to close button initially for quick accessibility
+    const timer = setTimeout(() => {
+      closeBtnRef.current?.focus();
+    }, 120);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      } else if (e.key === 'Tab') {
+        if (!mobileMenuRef.current) return;
+        const focusableElements = mobileMenuRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements.length === 0) return;
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    // Prevent document scrolling on background when modal menu is open
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  const getPresetIcon = (slug: string) => {
+    switch (slug) {
+      case 'wifi-qr-generator': return Wifi;
+      case 'whatsapp-qr-generator': return Phone;
+      case 'email-qr-generator': return Mail;
+      case 'sms-qr-generator': return Phone;
+      case 'vcard-qr-generator': return Contact;
+      case 'url-qr-generator': return Globe;
+      case 'business-card-qr-generator': return Contact;
+      case 'restaurant-qr-generator': return Utensils;
+      case 'facebook-qr-generator': return Facebook;
+      case 'instagram-qr-generator': return Instagram;
+      case 'youtube-qr-generator': return Youtube;
+      case 'pdf-qr-generator': return FileText;
+      default: return QrCode;
+    }
+  };
 
   // Set the default homepage browser window metadata dynamically
   useEffect(() => {
@@ -231,7 +386,7 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 15) {
+      if (window.scrollY > 20) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -432,13 +587,13 @@ export default function App() {
           {/* Dynamic Upper Banner */}
       <motion.header 
         animate={{
-          y: isScrolled ? [-15, 0] : 0,
+          y: isScrolled ? [-10, 0] : 0,
         }}
-        transition={{ type: "spring", damping: 15, stiffness: 180 }}
-        className={`sticky top-0 z-50 bg-white/60 backdrop-blur-xl border-b px-6 flex items-center justify-between transition-[padding,background-color,border-color] duration-300 ease-in-out ${
+        transition={{ type: "spring", damping: 18, stiffness: 200 }}
+        className={`sticky top-0 z-50 px-6 flex items-center justify-between border-b backdrop-blur-xl transition-all duration-500 ease-in-out ${
           isScrolled 
-            ? 'py-2.5 border-gray-200/95 shadow-md scrolled bg-white/70 shadow-indigo-100/30' 
-            : 'py-4 border-gray-200/60 shadow-sm'
+            ? 'py-2.5 border-slate-200/85 shadow-md bg-white/40 shadow-indigo-100/20' 
+            : 'py-5 border-slate-200/40 shadow-xs bg-white/50'
         }`}
       >
         <div className="flex items-center gap-3">
@@ -454,46 +609,295 @@ export default function App() {
         </div>
 
         {/* Dynamic Center Navigation for Desktop */}
-        <nav className="hidden md:flex items-center gap-6">
-          <a
-            href="/"
-            onClick={(e) => { e.preventDefault(); navigateTo('/'); }}
-            className={`text-xs font-semibold tracking-wide transition-all ${currentPath === '/' || currentPath === '' ? 'text-indigo-600 font-bold border-b-2 border-indigo-600 pb-1' : 'text-slate-600 hover:text-indigo-600 pb-1'}`}
-          >
-            Creative Station
-          </a>
+        <nav className="hidden md:flex items-center gap-6 relative">
           
-          {/* QR Tools Mega Dropdown */}
-          <div className="relative group/nav">
-            <button className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-indigo-600 transition-colors py-2 cursor-pointer focus:outline-none">
-              <span>Free QR Tools</span>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover/nav:rotate-180 transition-transform duration-300" />
+          {/* Creative Station Dropdown */}
+          <div 
+            ref={creativeMenuRef}
+            className="relative"
+            onMouseEnter={() => setIsCreativeHovered(true)}
+            onMouseLeave={() => setIsCreativeHovered(false)}
+          >
+            <button 
+              onClick={() => setIsCreativeOpen(!isCreativeOpen)}
+              className="relative py-2.5 px-4 text-xs font-bold tracking-wide transition-all group/creative flex items-center gap-2 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
+            >
+              <span className="absolute inset-0 bg-indigo-50/0 group-hover/creative:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+              
+              <Sparkles className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/creative:scale-110 group-hover/creative:rotate-12 ${currentPath === '/' || currentPath === '' ? 'text-indigo-600' : 'text-slate-400 group-hover/creative:text-indigo-500'}`} />
+              
+              <span className={`relative z-10 font-bold ${currentPath === '/' || currentPath === '' ? 'text-indigo-600' : 'text-slate-600 group-hover/creative:text-indigo-600'} transition-colors`}>
+                Creative Station
+              </span>
+              
+              <ChevronDown className={`w-3 h-3 relative z-10 text-slate-400 group-hover/creative:text-indigo-500 transition-transform duration-300 ${showCreativeMenu ? 'rotate-180 text-indigo-600' : ''}`} />
+
+              {(currentPath === '/' || currentPath === '') && (
+                <motion.div
+                  layoutId="activeNavIndicator"
+                  className="absolute bottom-0 left-4 right-4 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
             </button>
-            
-            {/* Dropdown Menu block */}
-            <div className="absolute top-full left-1/2 -track-x-1/2 pt-2 hidden group-hover/nav:block z-50">
-              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xl p-5 w-[620px] grid grid-cols-2 gap-3" style={{ transform: 'translateX(-50%)' }}>
-                {Object.keys(landingPages).map((key) => {
-                  const item = landingPages[key];
-                  return (
+
+            {/* Creative Station Mega Dropdown Menu Panel */}
+            <AnimatePresence>
+              {showCreativeMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 12, scale: 0.96 }}
+                  transition={{ type: "spring", damping: 18, stiffness: 220 }}
+                  className="absolute top-full left-0 pt-2.5 z-50 pointer-events-auto"
+                >
+                  <div className="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/95 shadow-2xl p-5 w-[380px] grid grid-cols-1 gap-1.5 ring-1 ring-black/5 animate-fade-in text-left">
+                    <div className="border-b border-slate-100 pb-2 mb-1.5 flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 font-mono">Design Studio</span>
+                      <span className="text-[9px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold">6 WORKSPACES</span>
+                    </div>
+
                     <a
-                      key={item.slug}
-                      href={`/${item.slug}`}
-                      onClick={(e) => { e.preventDefault(); navigateTo(`/${item.slug}`); }}
-                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-indigo-50/50 group/item transition-all text-left"
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsCreativeOpen(false);
+                        setIsCreativeHovered(false);
+                        setActiveTab('create');
+                        navigateTo('/');
+                      }}
+                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs shrink-0 group-hover/item:bg-indigo-100 group-hover/item:text-indigo-700 transition-colors">
-                        🚀
+                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
+                        <Wand2 className="w-4 h-4" />
                       </div>
-                      <div className="min-w-0">
-                        <span className="block text-xs font-bold text-slate-900 group-hover/item:text-indigo-600 truncate">{item.h1}</span>
-                        <span className="block text-[10px] text-slate-500 truncate max-w-[210px] font-medium">{item.intro.highlight}</span>
+                      <div>
+                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">AI QR Generator</span>
+                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Design beautiful prompt-to-artwork QR templates</span>
                       </div>
                     </a>
-                  );
-                })}
-              </div>
-            </div>
+
+                    <a
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsCreativeOpen(false);
+                        setIsCreativeHovered(false);
+                        setActiveTab('create');
+                        navigateTo('/');
+                      }}
+                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
+                    >
+                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
+                        <Palette className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">QR Designer</span>
+                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Customize eye grids, gradients and quiet spaces</span>
+                      </div>
+                    </a>
+
+                    <a
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsCreativeOpen(false);
+                        setIsCreativeHovered(false);
+                        setActiveTab('templates');
+                        navigateTo('/');
+                      }}
+                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
+                    >
+                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
+                        <LayoutTemplate className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">QR Templates</span>
+                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Apply readymade premium business templates</span>
+                      </div>
+                    </a>
+
+                    <a
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsCreativeOpen(false);
+                        setIsCreativeHovered(false);
+                        setActiveTab('animations');
+                        navigateTo('/');
+                      }}
+                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
+                    >
+                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
+                        <Play className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">QR Animations</span>
+                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Apply sleek scanning indicators and sweep transitions</span>
+                      </div>
+                    </a>
+
+                    <a
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsCreativeOpen(false);
+                        setIsCreativeHovered(false);
+                        setActiveTab('create');
+                        navigateTo('/');
+                        setTimeout(() => {
+                          const logoSec = document.getElementById('logo-settings-section');
+                          if (logoSec) {
+                            logoSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }
+                        }, 250);
+                      }}
+                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
+                    >
+                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
+                        <Image className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">Brand Assets</span>
+                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Upload centerpiece logos and corporate symbols</span>
+                      </div>
+                    </a>
+
+                    <a
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsCreativeOpen(false);
+                        setIsCreativeHovered(false);
+                        setActiveTab('boiler');
+                        navigateTo('/');
+                      }}
+                      className="flex items-start gap-3 p-2 rounded-xl transition-all border border-transparent hover:border-slate-100 hover:bg-slate-50/80 group/creative-item"
+                    >
+                      <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 group-hover/creative-item:bg-indigo-600 group-hover/creative-item:text-white transition-all">
+                        <Megaphone className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <span className="block text-xs font-extrabold text-slate-900 group-hover/creative-item:text-indigo-600 transition-colors">Marketing Materials</span>
+                        <span className="block text-[10px] text-slate-500 mt-0.5 leading-relaxed">Scale print formats, cards, flyers and media packs</span>
+                      </div>
+                    </a>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          
+          {/* Free QR Tools Dropdown */}
+          <div 
+            ref={toolsMenuRef}
+            className="relative"
+            onMouseEnter={() => setIsToolsHovered(true)}
+            onMouseLeave={() => setIsToolsHovered(false)}
+          >
+            <button 
+              onClick={() => setIsToolsOpen(!isToolsOpen)}
+              className="relative py-2.5 px-4 text-xs font-bold tracking-wide transition-all group/btn flex items-center gap-2 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
+            >
+              <span className="absolute inset-0 bg-indigo-50/0 group-hover/btn:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+              
+              <Compass className={`w-3.5 h-3.5 relative z-10 transition-transform duration-500 group-hover/btn:rotate-180 ${currentPath !== '/' && currentPath !== '' ? 'text-indigo-600' : 'text-slate-400 group-hover/btn:text-indigo-500'}`} />
+              
+              <span className={`relative z-10 font-bold ${currentPath !== '/' && currentPath !== '' ? 'text-indigo-600' : 'text-slate-600 group-hover/btn:text-indigo-600'} transition-colors`}>
+                Free QR Tools
+              </span>
+              
+              <ChevronDown className={`w-3 h-3 relative z-10 text-slate-400 group-hover/btn:text-indigo-500 transition-transform duration-300 ${showToolsMenu ? 'rotate-180 text-indigo-600' : ''}`} />
+              
+              {currentPath !== '/' && currentPath !== '' && (
+                <motion.div
+                  layoutId="activeNavIndicator"
+                  className="absolute bottom-0 left-4 right-4 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+            
+            {/* Animated Dropdown Menu Panel */}
+            <AnimatePresence>
+              {showToolsMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 12, scale: 0.96 }}
+                  transition={{ type: "spring", damping: 18, stiffness: 220 }}
+                  className="absolute top-full left-1/2 pt-2.5 z-50 pointer-events-auto"
+                  style={{ transform: 'translateX(-50%)' }}
+                >
+                  <div className="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-2xl p-5 w-[640px] grid grid-cols-2 gap-2.5 ring-1 ring-black/5 animate-fade-in text-left">
+                    <div className="col-span-2 border-b border-slate-100 pb-2 mb-1.5 flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 font-mono">Expert Presets & Converters</span>
+                      <span className="text-[9px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold">10 CHANNELS AVAILABLE</span>
+                    </div>
+
+                    {[
+                      { name: 'URL QR', slug: 'url-qr-generator', desc: 'Secure web redirects with live trackable shortened links.' },
+                      { name: 'PDF QR', slug: 'pdf-qr-generator', desc: 'Contactless dynamic documents loading restaurant menus & guides.' },
+                      { name: 'WiFi QR', slug: 'wifi-qr-generator', desc: 'Auto-pair guests to local wireless routers with no password typed.' },
+                      { name: 'vCard QR', slug: 'vcard-qr-generator', desc: 'Share rich digital contact records immediately to scanners.' },
+                      { name: 'Email QR', slug: 'email-qr-generator', desc: 'Preconfigure receiver addresses with customized boilerplate body text.' },
+                      { name: 'SMS QR', slug: 'sms-qr-generator', desc: 'Compose direct-to-text messages with pre-allocated phone nodes.' },
+                      { name: 'WhatsApp QR', slug: 'whatsapp-qr-generator', desc: 'Trigger instant customized chat logs instantly with customer staff.' },
+                      { name: 'Social QR', slug: 'instagram-qr-generator', desc: 'Consolidate bio-links directly to Instagram, Facebook and Youtube.' },
+                      { name: 'Text QR', slug: 'text-qr', desc: 'Store raw text keys, offline copyable logs and secret key matrices.', action: () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' }) },
+                      { name: 'App Store QR', slug: 'app-store-qr', desc: 'Direct visitors directly to App Store / Play Store download entries.', action: () => handleInitiateGenerator({ type: 'url', content: 'https://apps.apple.com', name: 'App Store Download' }) },
+                    ].map((toolItem) => {
+                      const isPrebuiltSlug = toolItem.slug !== 'text-qr' && toolItem.slug !== 'app-store-qr';
+                      const isCurrentActive = isPrebuiltSlug ? currentPath === `/${toolItem.slug}` : false;
+                      const IconComponent = getPresetIcon(toolItem.slug);
+
+                      return (
+                        <a
+                          key={toolItem.name}
+                          href={isPrebuiltSlug ? `/${toolItem.slug}` : "/"}
+                          onClick={(e) => { 
+                            e.preventDefault(); 
+                            setIsToolsOpen(false);
+                            setIsToolsHovered(false); 
+                            if (toolItem.action) {
+                              toolItem.action();
+                            } else {
+                              navigateTo(`/${toolItem.slug}`); 
+                            }
+                          }}
+                          className={`flex items-start gap-3 p-2.5 rounded-xl transition-all relative overflow-hidden group/item ${
+                            isCurrentActive 
+                              ? 'bg-gradient-to-r from-indigo-50 to-purple-50/50 border border-indigo-100 shadow-3xs' 
+                              : 'hover:bg-slate-50/80 border border-transparent hover:border-slate-100'
+                          }`}
+                        >
+                          <div className={`w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 ${
+                            isCurrentActive 
+                              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' 
+                              : 'bg-slate-150/60 text-slate-500 group-hover/item:bg-indigo-600 group-hover/item:text-white group-hover/item:scale-105 group-hover/item:rotate-3'
+                          }`}>
+                            <IconComponent className="w-4 h-4 transition-transform duration-300 group-hover/item:scale-110" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="block text-xs font-extrabold text-slate-900 group-hover/item:text-indigo-600 transition-colors truncate">
+                                {toolItem.name}
+                              </span>
+                              {isCurrentActive && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                              )}
+                            </div>
+                            <span className="block text-[10px] text-slate-500 truncate mt-0.5 leading-normal">
+                              {toolItem.desc}
+                            </span>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </nav>
 
@@ -534,63 +938,234 @@ export default function App() {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl border border-slate-200 bg-white shadow-3xs cursor-pointer text-slate-700 hover:text-indigo-600 transition-colors focus:outline-none"
+            className="md:hidden p-2 rounded-xl border border-slate-200 bg-white shadow-3xs cursor-pointer text-slate-700 hover:text-indigo-600 transition-all focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 active:scale-95"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation-menu"
+            aria-label={isMobileMenuOpen ? "Close main navigation menu" : "Open main navigation menu"}
           >
             {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </motion.header>
 
-      {/* Mobile Sliding Navigation Menu */}
+      {/* Mobile Sliding Navigation Menu with spring-loaded accessibility drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="md:hidden sticky top-[73px] z-45 bg-white border-b border-slate-200 shadow-lg overflow-hidden"
-          >
-            <div className="p-4 flex flex-col gap-3 font-semibold select-none">
-              <span className="text-[10px] tracking-widest font-black uppercase text-slate-400 block px-2">Main Menu</span>
-              <a
-                href="/"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsMobileMenuOpen(false);
-                  navigateTo('/');
-                }}
-                className={`flex items-center justify-between p-3 rounded-xl text-xs ${currentPath === '/' || currentPath === '' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-600 hover:bg-slate-50'}`}
-              >
-                <span>Creative Station</span>
-                <span className="text-[9px] font-mono bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">ACTIVE</span>
-              </a>
+          <>
+            {/* Backdrop Overlay with Backdrop Blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs md:hidden"
+            />
 
-              <span className="text-[10px] tracking-widest font-black uppercase text-slate-400 block mt-2 px-2">Free Pro-SEO Tools</span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                {Object.keys(landingPages).map((key) => {
-                  const item = landingPages[key];
-                  return (
-                    <a
-                      key={item.slug}
-                      href={`/${item.slug}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsMobileMenuOpen(false);
-                        navigateTo(`/${item.slug}`);
-                      }}
-                      className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-indigo-50/30 text-slate-700 hover:text-indigo-700 transition-colors text-left font-medium"
-                    >
-                      <div className="w-6 h-6 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs shrink-0 font-mono">
-                        🚀
-                      </div>
-                      <span className="text-xs truncate">{item.h1}</span>
-                    </a>
-                  );
-                })}
+            {/* Slide-In Side Navigation Drawer */}
+            <motion.div
+              ref={mobileMenuRef}
+              variants={drawerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              id="mobile-navigation-menu"
+              className="fixed top-0 right-0 bottom-0 z-55 w-full max-w-[320px] bg-slate-900 text-slate-100 shadow-2xl flex flex-col md:hidden border-l border-slate-800"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile Navigation Menu"
+              tabIndex={-1}
+            >
+              {/* Drawer Title & Close Control */}
+              <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/40">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-950/45">
+                    <QrCode className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10px] font-black tracking-widest text-indigo-400 uppercase font-mono">
+                    PRO-SEO UTILITIES
+                  </span>
+                </div>
+                <button
+                  ref={closeBtnRef}
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/80 border border-transparent hover:border-slate-800 transition-all cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-indigo-500/40"
+                  aria-label="Close navigation menu"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-            </div>
-          </motion.div>
+
+              {/* Staggered Navigation Items list with Accordions */}
+              <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4 scrollbar-thin">
+                
+                {/* 1. Creative Station Accordion */}
+                <div className="border-b border-slate-800/60 pb-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileCreativeOpen(!isMobileCreativeOpen)}
+                    className="w-full flex items-center justify-between px-2 py-2.5 text-xs font-black tracking-wider uppercase text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    <span className="font-mono tracking-widest text-[10px] flex items-center gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                      Creative Station
+                    </span>
+                    <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileCreativeOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isMobileCreativeOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden pl-2 flex flex-col gap-1 mt-1"
+                      >
+                        {[
+                          { name: 'AI QR Generator', desc: 'Custom AI artwork layouts', icon: Wand2, action: () => { setActiveTab('create'); navigateTo('/'); } },
+                          { name: 'QR Designer', desc: 'Fine-tune styles and colors', icon: Palette, action: () => { setActiveTab('create'); navigateTo('/'); } },
+                          { name: 'QR Templates', desc: 'Apply pre-formatted styles', icon: LayoutTemplate, action: () => { setActiveTab('templates'); navigateTo('/'); } },
+                          { name: 'QR Animations', desc: 'Scanning swipe & hover indicators', icon: Play, action: () => { setActiveTab('animations'); navigateTo('/'); } },
+                          { name: 'Brand Assets', desc: 'Embed emblems and marks', icon: Image, action: () => {
+                            setActiveTab('create'); navigateTo('/');
+                            setTimeout(() => {
+                              const logoSec = document.getElementById('logo-settings-section');
+                              if (logoSec) logoSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }, 250);
+                          } },
+                          { name: 'Marketing Materials', desc: 'Print files & mobile apps', icon: Megaphone, action: () => { setActiveTab('boiler'); navigateTo('/'); } }
+                        ].map((sub) => {
+                          const SubIcon = sub.icon;
+                          return (
+                            <button
+                              key={sub.name}
+                              onClick={() => {
+                                setIsMobileMenuOpen(false);
+                                sub.action();
+                              }}
+                              className="w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                            >
+                              <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                                <SubIcon className="w-3.5 h-3.5" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <span className="block font-bold truncate">{sub.name}</span>
+                                <span className="block text-[9px] text-slate-500 truncate">{sub.desc}</span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* 2. Free QR Tools Accordion */}
+                <div className="border-b border-slate-800/60 pb-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
+                    className="w-full flex items-center justify-between px-2 py-2.5 text-xs font-black tracking-wider uppercase text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    <span className="font-mono tracking-widest text-[10px] flex items-center gap-2">
+                      <Compass className="w-3.5 h-3.5 text-indigo-400" />
+                      Free QR Tools
+                    </span>
+                    <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileToolsOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isMobileToolsOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden pl-2 flex flex-col gap-1 mt-1"
+                      >
+                        {[
+                          { name: 'URL QR', slug: 'url-qr-generator', icon: Globe },
+                          { name: 'PDF QR', slug: 'pdf-qr-generator', icon: FileText },
+                          { name: 'WiFi QR', slug: 'wifi-qr-generator', icon: Wifi },
+                          { name: 'vCard QR', slug: 'vcard-qr-generator', icon: Contact },
+                          { name: 'Email QR', slug: 'email-qr-generator', icon: Mail },
+                          { name: 'SMS QR', slug: 'sms-qr-generator', icon: Phone },
+                          { name: 'WhatsApp QR', slug: 'whatsapp-qr-generator', icon: Phone },
+                          { name: 'Social QR', slug: 'instagram-qr-generator', icon: Instagram },
+                          { name: 'Text QR', slug: 'text-qr', icon: FileText, action: () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' }) },
+                          { name: 'App Store QR', slug: 'app-store-qr', icon: Smartphone, action: () => handleInitiateGenerator({ type: 'url', content: 'https://apps.apple.com', name: 'App Store Download' }) },
+                        ].map((sub) => {
+                          const SubIcon = sub.icon;
+                          const isPrebuiltSlug = sub.slug !== 'text-qr' && sub.slug !== 'app-store-qr';
+                          const isCurrentActive = isPrebuiltSlug ? currentPath === `/${sub.slug}` : false;
+                          
+                          return (
+                            <button
+                              key={sub.name}
+                              onClick={() => {
+                                setIsMobileMenuOpen(false);
+                                if (sub.action) {
+                                  sub.action();
+                                } else {
+                                  navigateTo(`/${sub.slug}`);
+                                }
+                              }}
+                              className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                                isCurrentActive 
+                                  ? 'bg-gradient-to-r from-indigo-950/40 to-purple-950/20 text-indigo-400 border border-indigo-500/20' 
+                                  : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                              }`}
+                            >
+                              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isCurrentActive ? 'bg-indigo-600/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
+                                <SubIcon className="w-3.5 h-3.5" />
+                              </div>
+                              <span className="font-bold">{sub.name}</span>
+                            </button>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+              </div>
+
+              {/* Sticky bottom summary & Account profile state */}
+              <div className="p-4 bg-slate-950/55 border-t border-slate-800/60">
+                {user ? (
+                  <div className="flex items-center justify-between gap-3 text-left">
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[9px] font-bold text-slate-500 block font-mono">CONNECTED</span>
+                      <span className="text-xs font-extrabold text-slate-200 block truncate">{user.name}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        handleSignOut();
+                      }}
+                      className="py-1.5 px-3 bg-red-950/30 active:bg-red-950/50 hover:bg-red-950/40 hover:text-red-200 border border-red-900/40 rounded-xl text-[10px] font-black uppercase text-red-400 tracking-wider transition-colors cursor-pointer"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleSignInClick();
+                    }}
+                    className="w-full py-2.5 px-4 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-950/40 hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    Connect Account
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
@@ -600,6 +1175,11 @@ export default function App() {
           slug={slug} 
           onSelectRoute={navigateTo} 
           onInitiateGenerator={handleInitiateGenerator} 
+        />
+      ) : ['/about', '/privacy', '/contact'].includes(currentPath) ? (
+        <CompanyPages 
+          view={currentPath.substring(1) as 'about' | 'privacy' | 'contact'} 
+          onNavigate={navigateTo} 
         />
       ) : (
         <main className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6">
@@ -967,83 +1547,97 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 relative z-10">
-                <div id="recent-wifi-card" className="p-5 bg-slate-950 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-mono text-indigo-400 font-bold uppercase block">📡 Wireless Tech Integration • 2 min ago</span>
-                    <h4 className="text-sm font-extrabold text-slate-100">Wireless Wi-Fi SSID Pairing</h4>
-                    <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                      Used by 1,480+ local hosts, cafeteria managers, and Airbnb operations. Allows direct, no-type scan router pairing.
-                    </p>
+              <motion.div 
+                variants={categoryContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 relative z-10"
+              >
+                <motion.div variants={categoryCardVariants}>
+                  <div id="recent-wifi-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-indigo-500 hover:shadow-[0_20px_50px_-12px_rgba(99,102,241,0.35),0_0_30px_rgba(99,102,241,0.2)] group">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-mono text-indigo-400 font-bold uppercase block">📡 Wireless Tech Integration • 2 min ago</span>
+                      <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-indigo-400 transition-colors">Wireless Wi-Fi SSID Pairing</h4>
+                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                        Used by 1,480+ local hosts, cafeteria managers, and Airbnb operations. Allows direct, no-type scan router pairing.
+                      </p>
+                    </div>
+                    <a
+                      id="recent-wifi-link"
+                      href="/wifi-qr-generator"
+                      onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
+                      className="mt-4 text-xs font-bold text-indigo-400 group-hover:text-white flex items-center gap-1"
+                    >
+                      Explore Free WiFi lander
+                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                    </a>
                   </div>
-                  <a
-                    id="recent-wifi-link"
-                    href="/wifi-qr-generator"
-                    onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-indigo-400 hover:text-white flex items-center gap-1"
-                  >
-                    Explore Free WiFi lander
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
-                </div>
-
-                <div id="recent-whatsapp-card" className="p-5 bg-slate-950 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
-                    <h4 className="text-sm font-extrabold text-slate-100">Direct WhatsApp Customer Support</h4>
-                    <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                      Used by retail stores and digital agencies to enable rapid customer service requests. Launches formatted text templates.
-                    </p>
+                </motion.div>
+ 
+                <motion.div variants={categoryCardVariants}>
+                  <div id="recent-whatsapp-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-indigo-500 hover:shadow-[0_20px_50px_-12px_rgba(16,185,129,0.25),0_0_30px_rgba(99,102,241,0.2)] group">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
+                      <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-emerald-400 transition-colors">Direct WhatsApp Customer Support</h4>
+                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                        Used by retail stores and digital agencies to enable rapid customer service requests. Launches formatted text templates.
+                      </p>
+                    </div>
+                    <a
+                      id="recent-whatsapp-link"
+                      href="/whatsapp-qr-generator"
+                      onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
+                      className="mt-4 text-xs font-bold text-emerald-400 group-hover:text-white flex items-center gap-1"
+                    >
+                      Explore WhatsApp lander
+                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                    </a>
                   </div>
-                  <a
-                    id="recent-whatsapp-link"
-                    href="/whatsapp-qr-generator"
-                    onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-emerald-400 hover:text-white flex items-center gap-1"
-                  >
-                    Explore WhatsApp lander
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
-                </div>
-
-                <div id="recent-vcard-card" className="p-5 bg-slate-950 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-mono text-purple-400 font-bold uppercase block">📇 Business Connectivity • 15 min ago</span>
-                    <h4 className="text-sm font-extrabold text-slate-100">Interactive Content-Rich vCards</h4>
-                    <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                      Designed weekly by real estate brokers and dynamic consulting networks. Instantly saves primary contact cards.
-                    </p>
+                </motion.div>
+ 
+                <motion.div variants={categoryCardVariants}>
+                  <div id="recent-vcard-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-indigo-500 hover:shadow-[0_20px_50px_-12px_rgba(168,85,247,0.25),0_0_30px_rgba(99,102,241,0.2)] group">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-mono text-purple-400 font-bold uppercase block">📇 Business Connectivity • 15 min ago</span>
+                      <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-purple-400 transition-colors">Interactive Content-Rich vCards</h4>
+                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                        Designed weekly by real estate brokers and dynamic consulting networks. Instantly saves primary contact cards.
+                      </p>
+                    </div>
+                    <a
+                      id="recent-vcard-link"
+                      href="/vcard-qr-generator"
+                      onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
+                      className="mt-4 text-xs font-bold text-purple-400 group-hover:text-white flex items-center gap-1"
+                    >
+                      Explore vCard lander
+                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                    </a>
                   </div>
-                  <a
-                    id="recent-vcard-link"
-                    href="/vcard-qr-generator"
-                    onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-purple-400 hover:text-white flex items-center gap-1"
-                  >
-                    Explore vCard lander
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
-                </div>
-
-                <div id="recent-restaurant-card" className="p-5 bg-slate-950 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-mono text-amber-400 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
-                    <h4 className="text-sm font-extrabold text-slate-100">Restaurant Menus & PDF Hosters</h4>
-                    <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                      Leveraged by cafes, visual bistros, and contactless fast-food spots. Keeps dynamic menu files editable and local.
-                    </p>
+                </motion.div>
+ 
+                <motion.div variants={categoryCardVariants}>
+                  <div id="recent-restaurant-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-indigo-500 hover:shadow-[0_20px_50px_-12px_rgba(245,158,11,0.25),0_0_30px_rgba(99,102,241,0.2)] group">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-mono text-amber-400 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
+                      <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-amber-400 transition-colors">Restaurant Menus & PDF Hosters</h4>
+                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                        Leveraged by cafes, visual bistros, and contactless fast-food spots. Keeps dynamic menu files editable and local.
+                      </p>
+                    </div>
+                    <a
+                      id="recent-restaurant-link"
+                      href="/restaurant-qr-generator"
+                      onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
+                      className="mt-4 text-xs font-bold text-amber-400 group-hover:text-white flex items-center gap-1"
+                    >
+                      Explore Restaurant lander
+                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                    </a>
                   </div>
-                  <a
-                    id="recent-restaurant-link"
-                    href="/restaurant-qr-generator"
-                    onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-amber-400 hover:text-white flex items-center gap-1"
-                  >
-                    Explore Restaurant lander
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </section>
 
             {/* Complete Internal Linking Related Pages grid */}
@@ -1151,8 +1745,15 @@ export default function App() {
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-6 border-t border-slate-100 mt-12 pt-6 text-center text-[11px] text-slate-400 font-mono">
+        <div className="max-w-7xl mx-auto px-6 border-t border-slate-100 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400 font-mono">
           <p>© 2026 Custom DB QR Generator. Decoupled and fully verified local-cloud schema.</p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">About Us</a>
+            <span>•</span>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Privacy Policy</a>
+            <span>•</span>
+            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Contact Us</a>
+          </div>
         </div>
       </footer>
     </div>

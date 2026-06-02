@@ -28,3 +28,26 @@
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
   }
 }
+
+/* Custom QR Scanner Sweeping Laser Line Keyframe Animation */
+@keyframes qr-scan {
+  0% {
+    top: 8px;
+    opacity: 0.15;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: calc(100% - 10px);
+    opacity: 0.15;
+  }
+}
+
+.animate-qr-scan {
+  animation: qr-scan 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+

@@ -212,12 +212,30 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       {/* QR Board Canvas */}
       <div className="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-xs flex flex-col items-center justify-center gap-4 relative overflow-hidden">
         <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center">
-          <div className="relative bg-white p-2 rounded-xl shadow-xs" style={{ width: '280px', height: '280px' }}>
+          <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden" style={{ width: '280px', height: '280px' }}>
             <canvas
               ref={canvasRef}
-              className="max-w-full rounded-lg bg-white"
+              className="max-w-full rounded-lg bg-white transition-transform duration-300 group-hover:scale-[0.98]"
               style={{ width: '264px', height: '264px' }}
             />
+
+            {/* Elegant Hover QR Scanner Overlay */}
+            <div className="absolute inset-2 bg-slate-950/40 backdrop-blur-[1.5px] rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center z-10 pointer-events-none select-none">
+              {/* Animated Corner Brackets */}
+              <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-indigo-400 group-hover:scale-110 transition-transform duration-300" />
+              <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-indigo-400 group-hover:scale-110 transition-transform duration-300" />
+              <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-indigo-400 group-hover:scale-110 transition-transform duration-300" />
+              <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-indigo-400 group-hover:scale-110 transition-transform duration-300" />
+
+              {/* Glowing sweeps laser line */}
+              <div className="absolute left-3 right-3 h-0.5 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.9)] animate-qr-scan" />
+
+              {/* Central scanning prompt */}
+              <div className="flex flex-col items-center gap-1 bg-slate-900/95 text-white py-2 px-3.5 rounded-xl border border-slate-700/60 shadow-xl transform scale-95 group-hover:scale-100 transition-all duration-300">
+                <Camera className="w-4 h-4 text-indigo-400 animate-pulse" />
+                <span className="text-[10px] font-extrabold tracking-wider uppercase text-slate-200">READY TO SCAN</span>
+              </div>
+            </div>
           </div>
         </div>
 
