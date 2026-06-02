@@ -13,11 +13,13 @@ import AnimationsShowcase from './components/AnimationsShowcase';
 import AuthModal from './components/AuthModal';
 import AdSenseUnit from './components/AdSenseUnit';
 import CompanyPages from './components/CompanyPages';
+import FaqSection from './components/FaqSection';
+import BlogSection from './components/BlogSection';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
-  Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle
+  Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -937,6 +939,30 @@ export default function App() {
               )}
             </AnimatePresence>
           </div>
+
+          <a
+            href="/faq"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/faq');
+            }}
+            className="py-2 px-3 text-xs font-bold text-slate-600 hover:text-indigo-650 transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
+            <span>FAQ</span>
+          </a>
+
+          <a
+            href="/blog"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/blog');
+            }}
+            className="py-2 px-3 text-xs font-bold text-slate-600 hover:text-indigo-650 transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-slate-400" />
+            <span>Guides Blog</span>
+          </a>
         </nav>
 
         {/* Auth controllers & Mobile Menu Button */}
@@ -1167,6 +1193,35 @@ export default function App() {
                   </AnimatePresence>
                 </div>
 
+                {/* 3. General Links */}
+                <div className="flex flex-col gap-1 pt-2">
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/faq');
+                    }}
+                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                      <HelpCircle className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold">FAQ / Help Center</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/blog');
+                    }}
+                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                      <BookOpen className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold">Guides Blog</span>
+                  </button>
+                </div>
+
               </div>
 
               {/* Sticky bottom summary & Account profile state */}
@@ -1214,9 +1269,16 @@ export default function App() {
           onSelectRoute={navigateTo} 
           onInitiateGenerator={handleInitiateGenerator} 
         />
-      ) : ['/about', '/privacy', '/contact'].includes(currentPath) ? (
+      ) : currentPath === '/faq' ? (
+        <FaqSection onNavigate={navigateTo} />
+      ) : (currentPath === '/blog' || currentPath.startsWith('/blog/')) ? (
+        <BlogSection 
+          initialSlug={currentPath.startsWith('/blog/') ? currentPath.substring(6) : null} 
+          onNavigate={navigateTo} 
+        />
+      ) : ['/about', '/privacy', '/contact', '/terms'].includes(currentPath) ? (
         <CompanyPages 
-          view={currentPath.substring(1) as 'about' | 'privacy' | 'contact'} 
+          view={currentPath.substring(1) as 'about' | 'privacy' | 'contact' | 'terms'} 
           onNavigate={navigateTo} 
         />
       ) : (
@@ -1987,7 +2049,13 @@ export default function App() {
           <div className="flex flex-wrap gap-4 justify-center">
             <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">About Us</a>
             <span>•</span>
+            <a href="/faq" onClick={(e) => { e.preventDefault(); navigateTo('/faq'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">FAQ</a>
+            <span>•</span>
+            <a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Blog</a>
+            <span>•</span>
             <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Privacy Policy</a>
+            <span>•</span>
+            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Terms & Conditions</a>
             <span>•</span>
             <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Contact Us</a>
           </div>

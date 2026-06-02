@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ShieldCheck, Mail, MapPin, Users, Award, Briefcase, Heart, Send, CheckCircle2, Globe, ArrowLeft, MessageSquare, Phone, Info } from 'lucide-react';
 
 interface CompanyPagesProps {
-  view: 'about' | 'privacy' | 'contact';
+  view: 'about' | 'privacy' | 'contact' | 'terms';
   onNavigate: (path: string) => void;
 }
 
@@ -199,6 +199,74 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
               </h2>
               <p>
                 If you have questions, inquiries, or would like to request file/data deletion, reach out instantly to our compliance contact at <span className="font-semibold text-indigo-600">admin@isolutionsico.com</span>.
+              </p>
+            </section>
+          </div>
+        </div>
+      )}
+
+      {view === 'terms' && (
+        <div id="terms-and-conditions-page" className="space-y-8 animate-fade-in">
+          <div className="space-y-4">
+            <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-extrabold uppercase tracking-widest inline-block">
+              Legal Framework & Agreements
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-none">
+              Terms & Conditions
+            </h1>
+            <p className="text-xs text-slate-500 font-mono">
+              Last Updated: June 2, 2026
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-8 space-y-6 text-sm text-slate-600 leading-relaxed">
+            <section className="space-y-3">
+              <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-indigo-600" />
+                1. Acceptance of Terms
+              </h2>
+              <p>
+                By accessing or using the iSolutions QR Generator, you represent and warrant that you have read, understood, and agree to be bound by these Terms and Conditions. These terms govern all generated templates, local schema persistence, standard redirects, and visual campaigns.
+              </p>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <Globe className="w-5 h-5 text-indigo-600" />
+                2. Fair Use Policy & Content Safety
+              </h2>
+              <p>
+                You are solely responsible for all content embedded or linked within QR codes generated through this platform. You agree not to distribute link hubs or formatted templates that point to malware, phishing sites, unsolicited spam material, or other prohibited contents under localized state regulations. We reserve the full right to decline support if violations are reported.
+              </p>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <Award className="w-5 h-5 text-indigo-600" />
+                3. Technical Accuracy & Execution Warning
+              </h2>
+              <p>
+                While our high-performance generator utilizes proper Reed-Solomon algorithms and customizable error correction (L, M, Q, H presets) to sustain extreme compatibility, final scannability remains heavily reliant on correct styling, sufficient color contrast, printing quality, and direct scanner camera hardware. We advise verifying generated previews on physical target devices prior to mass physical deployment.
+              </p>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-indigo-600" />
+                4. Local Schema Storage & Intellectual Property
+              </h2>
+              <p>
+                Your customized configurations, history caches, and workspace exports are kept local using decentralized key-value persistence. All proprietary graphic templates, engine rendering systems, and creative station interfaces are the operational property of iSolutions ICo and protected under international intellectual property legal frame structures.
+              </p>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <Mail className="w-5 h-5 text-indigo-600" />
+                5. Compliance Contacts
+              </h2>
+              <p>
+                All regulatory feedback, inquiries, operational questions, or policy dispute reports should be addressed immediately to our support center at <span className="font-semibold text-indigo-600">admin@isolutionsico.com</span>.
               </p>
             </section>
           </div>
