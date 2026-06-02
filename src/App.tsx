@@ -214,6 +214,29 @@ export default function App() {
   // Filter for recently used categories
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<'all' | 'wifi' | 'whatsapp' | 'vcard' | 'restaurant' | 'social'>('all');
 
+  // Cookie Consent banner state
+  const [showCookieConsent, setShowCookieConsent] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem('cookie-consent');
+    if (!consent) {
+      const timer = setTimeout(() => {
+        setShowCookieConsent(true);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleAcceptCookies = () => {
+    localStorage.setItem('cookie-consent', 'accepted');
+    setShowCookieConsent(false);
+  };
+
+  const handleDeclineCookies = () => {
+    localStorage.setItem('cookie-consent', 'declined');
+    setShowCookieConsent(false);
+  };
+
   // Client path-routing states for SEO landing pages
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -1850,6 +1873,48 @@ export default function App() {
 
         </main>
       )}
+
+      {/* Premium Sticky Cookie Consent Banner */}
+      <AnimatePresence>
+        {showCookieConsent && (
+          <motion.div
+            initial={{ y: 80, opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 50, opacity: 0, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 140, damping: 20 }}
+            id="cookie-consent-banner"
+            className="fixed bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-md bg-slate-950 border border-slate-800/80 text-white p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col gap-4 z-[9999] backdrop-blur-md"
+          >
+            <div className="flex gap-3">
+              <div id="cookie-icon-wrapper" className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl flex-shrink-0 h-10 w-10 flex items-center justify-center">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <h4 id="cookie-title" className="text-sm font-bold tracking-tight text-slate-100">Cookie Preference</h4>
+                <p id="cookie-description" className="text-[11px] text-slate-400 leading-relaxed font-sans">
+                  We use essential cookies to safely persist state, optimize your QR customization workflow, and analyze scan activity rates.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-3 pt-0.5">
+              <button
+                id="cookie-decline-button"
+                onClick={handleDeclineCookies}
+                className="px-3.5 py-1.5 text-[11px] font-bold text-slate-400 hover:text-white transition-colors cursor-pointer rounded-lg hover:bg-slate-900/50"
+              >
+                Decline
+              </button>
+              <button
+                id="cookie-accept-button"
+                onClick={handleAcceptCookies}
+                className="px-4 py-2 text-[11px] font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/15 active:scale-95 transition-all cursor-pointer font-sans"
+              >
+                Accept All
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Auth0/Clerk style Auth Overlays Dialog Component */}
       <AuthModal 
