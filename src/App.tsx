@@ -166,30 +166,32 @@ const categoryContainerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
+      staggerChildren: 0.15,
+      delayChildren: 0.05
     }
   }
 };
 
 const categoryCardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  hidden: { opacity: 0, y: 50, scale: 0.9 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
       type: 'spring',
-      damping: 24,
-      stiffness: 120,
+      stiffness: 100,
+      damping: 15,
+      mass: 0.8
     }
   },
   exit: {
     opacity: 0,
-    scale: 0.95,
-    y: 15,
+    scale: 0.9,
+    y: 20,
     transition: {
-      duration: 0.2,
-      ease: 'easeIn'
+      duration: 0.25,
+      ease: 'easeOut'
     }
   }
 };
