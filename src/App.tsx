@@ -172,14 +172,24 @@ const categoryContainerVariants = {
 };
 
 const categoryCardVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
       type: 'spring',
       damping: 24,
       stiffness: 120,
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: 15,
+    transition: {
+      duration: 0.2,
+      ease: 'easeIn'
     }
   }
 };
@@ -198,6 +208,9 @@ export default function App() {
 
   // Active Tab
   const [activeTab, setActiveTab ] = useState<'create' | 'templates' | 'analytics' | 'boiler' | 'animations'>('create');
+
+  // Filter for recently used categories
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<'all' | 'wifi' | 'whatsapp' | 'vcard' | 'restaurant' | 'social'>('all');
 
   // Client path-routing states for SEO landing pages
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
@@ -299,7 +312,7 @@ export default function App() {
   // Set the default homepage browser window metadata dynamically
   useEffect(() => {
     if (currentPath === '/' || currentPath === '') {
-      document.title = 'Custom DB QR Code Generator | Design Professional Trackable QR Codes';
+      document.title = 'iSolutions QR Code Generator | Design Professional Trackable QR Codes';
       let metaDesc = document.querySelector('meta[name="description"]');
       if (!metaDesc) {
         metaDesc = document.createElement('meta');
@@ -319,19 +332,19 @@ export default function App() {
           "@type": "WebSite",
           "@id": `${rootUrl}/#website`,
           "url": rootUrl,
-          "name": "Custom DB QR Code Generator",
+          "name": "iSolutions QR Code Generator",
           "description": "Design secure, highly custom QR codes with color gradients, custom dot patterns, embedded logos, and real-time short-link scan analytics.",
           "publisher": {
             "@id": `${rootUrl}/#organization`,
             "@type": "Organization",
-            "name": "Custom DB QR Codes Inc.",
+            "name": "iSolutions QR Codes Inc.",
             "url": rootUrl
           }
         },
         {
           "@type": "SoftwareApplication",
           "@id": `${rootUrl}/#software`,
-          "name": "Custom DB QR Generator and Short Link tracker",
+          "name": "iSolutions QR Generator and Short Link tracker",
           "operatingSystem": "All modern web browsers",
           "applicationCategory": "DesignApplication, BusinessApplication",
           "offers": {
@@ -1547,97 +1560,254 @@ export default function App() {
                 </p>
               </div>
 
+              {/* Category Filter Controls */}
+              <div id="category-filter-bar" className="flex flex-wrap gap-2 mt-6 pb-4 border-b border-slate-800/80 relative z-10">
+                {[
+                  { id: 'all', label: 'All Categories' },
+                  { id: 'wifi', label: 'WiFi Pairing' },
+                  { id: 'whatsapp', label: 'WhatsApp' },
+                  { id: 'vcard', label: 'vCards' },
+                  { id: 'restaurant', label: 'Menus' },
+                  { id: 'social', label: 'Social Media' }
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    id={`filter-btn-${cat.id}`}
+                    onClick={() => setSelectedCategoryFilter(cat.id as any)}
+                    className={`px-3.5 py-1.5 rounded-xl text-[11px] font-bold tracking-wide transition-all duration-250 cursor-pointer ${
+                      selectedCategoryFilter === cat.id
+                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 scale-[1.03]'
+                        : 'bg-slate-950/80 text-slate-400 hover:text-white border border-slate-800/60'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
               <motion.div 
                 variants={categoryContainerVariants}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-50px" }}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 relative z-10"
+                className="flex overflow-x-auto sm:grid sm:grid-cols-2 gap-4 mt-8 pb-4 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent relative z-10 snap-x snap-mandatory"
               >
-                <motion.div variants={categoryCardVariants}>
-                  <div id="recent-wifi-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-indigo-500 hover:shadow-[0_20px_50px_-12px_rgba(99,102,241,0.35),0_0_30px_rgba(99,102,241,0.2)] group">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-mono text-indigo-400 font-bold uppercase block">📡 Wireless Tech Integration • 2 min ago</span>
-                      <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-indigo-400 transition-colors">Wireless Wi-Fi SSID Pairing</h4>
-                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                        Used by 1,480+ local hosts, cafeteria managers, and Airbnb operations. Allows direct, no-type scan router pairing.
-                      </p>
-                    </div>
-                    <a
-                      id="recent-wifi-link"
-                      href="/wifi-qr-generator"
-                      onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
-                      className="mt-4 text-xs font-bold text-indigo-400 group-hover:text-white flex items-center gap-1"
-                    >
-                      Explore Free WiFi lander
-                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
-                    </a>
-                  </div>
-                </motion.div>
- 
-                <motion.div variants={categoryCardVariants}>
-                  <div id="recent-whatsapp-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-indigo-500 hover:shadow-[0_20px_50px_-12px_rgba(16,185,129,0.25),0_0_30px_rgba(99,102,241,0.2)] group">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
-                      <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-emerald-400 transition-colors">Direct WhatsApp Customer Support</h4>
-                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                        Used by retail stores and digital agencies to enable rapid customer service requests. Launches formatted text templates.
-                      </p>
-                    </div>
-                    <a
-                      id="recent-whatsapp-link"
-                      href="/whatsapp-qr-generator"
-                      onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
-                      className="mt-4 text-xs font-bold text-emerald-400 group-hover:text-white flex items-center gap-1"
-                    >
-                      Explore WhatsApp lander
-                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
-                    </a>
-                  </div>
-                </motion.div>
- 
-                <motion.div variants={categoryCardVariants}>
-                  <div id="recent-vcard-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-indigo-500 hover:shadow-[0_20px_50px_-12px_rgba(168,85,247,0.25),0_0_30px_rgba(99,102,241,0.2)] group">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-mono text-purple-400 font-bold uppercase block">📇 Business Connectivity • 15 min ago</span>
-                      <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-purple-400 transition-colors">Interactive Content-Rich vCards</h4>
-                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                        Designed weekly by real estate brokers and dynamic consulting networks. Instantly saves primary contact cards.
-                      </p>
-                    </div>
-                    <a
-                      id="recent-vcard-link"
-                      href="/vcard-qr-generator"
-                      onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
-                      className="mt-4 text-xs font-bold text-purple-400 group-hover:text-white flex items-center gap-1"
-                    >
-                      Explore vCard lander
-                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
-                    </a>
-                  </div>
-                </motion.div>
- 
-                <motion.div variants={categoryCardVariants}>
-                  <div id="recent-restaurant-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-indigo-500 hover:shadow-[0_20px_50px_-12px_rgba(245,158,11,0.25),0_0_30px_rgba(99,102,241,0.2)] group">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-mono text-amber-400 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
-                      <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-amber-400 transition-colors">Restaurant Menus & PDF Hosters</h4>
-                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                        Leveraged by cafes, visual bistros, and contactless fast-food spots. Keeps dynamic menu files editable and local.
-                      </p>
-                    </div>
-                    <a
-                      id="recent-restaurant-link"
-                      href="/restaurant-qr-generator"
-                      onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
-                      className="mt-4 text-xs font-bold text-amber-400 group-hover:text-white flex items-center gap-1"
-                    >
-                      Explore Restaurant lander
-                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
-                    </a>
-                  </div>
-                </motion.div>
+                <AnimatePresence mode="popLayout">
+                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'wifi') && (
+                    <motion.div key="wifi-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                      <div id="recent-wifi-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group">
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono text-indigo-400 font-bold uppercase block">📡 Wireless Tech Integration • 2 min ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-indigo-400 transition-colors">Wireless Wi-Fi SSID Pairing</h4>
+                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                            Used by 1,480+ local hosts, cafeteria managers, and Airbnb operations. Allows direct, no-type scan router pairing.
+                          </p>
+                        </div>
+
+                        <div className="space-y-1.5 mt-4">
+                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
+                            <span>Scan Activity Rate</span>
+                            <span className="font-extrabold text-slate-300">{Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)}%</span>
+                          </div>
+                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)}%` }}
+                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                              className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                            />
+                          </div>
+                        </div>
+
+                        <a
+                          id="recent-wifi-link"
+                          href="/wifi-qr-generator"
+                          onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
+                          className="mt-4 text-xs font-bold text-indigo-400 group-hover:text-white flex items-center gap-1"
+                        >
+                          Explore Free WiFi lander
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                        </a>
+                      </div>
+                    </motion.div>
+                  )}
+   
+                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'whatsapp') && (
+                    <motion.div key="whatsapp-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                      <div id="recent-whatsapp-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group">
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-emerald-400 transition-colors">Direct WhatsApp Customer Support</h4>
+                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                            Used by retail stores and digital agencies to enable rapid customer service requests. Launches formatted text templates.
+                          </p>
+                        </div>
+
+                        <div className="space-y-1.5 mt-4">
+                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
+                            <span>Scan Activity Rate</span>
+                            <span className="font-extrabold text-slate-300">{Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%</span>
+                          </div>
+                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%` }}
+                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
+                            />
+                          </div>
+                        </div>
+
+                        <a
+                          id="recent-whatsapp-link"
+                          href="/whatsapp-qr-generator"
+                          onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
+                          className="mt-4 text-xs font-bold text-emerald-400 group-hover:text-white flex items-center gap-1"
+                        >
+                          Explore WhatsApp lander
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                        </a>
+                      </div>
+                    </motion.div>
+                  )}
+   
+                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'vcard') && (
+                    <motion.div key="vcard-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                      <div id="recent-vcard-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group">
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono text-purple-400 font-bold uppercase block">📇 Business Connectivity • 15 min ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-purple-400 transition-colors">Interactive Content-Rich vCards</h4>
+                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                            Designed weekly by real estate brokers and dynamic consulting networks. Instantly saves primary contact cards.
+                          </p>
+                        </div>
+
+                        <div className="space-y-1.5 mt-4">
+                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
+                            <span>Scan Activity Rate</span>
+                            <span className="font-extrabold text-slate-300">{Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%</span>
+                          </div>
+                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%` }}
+                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                              className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                            />
+                          </div>
+                        </div>
+
+                        <a
+                          id="recent-vcard-link"
+                          href="/vcard-qr-generator"
+                          onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
+                          className="mt-4 text-xs font-bold text-purple-400 group-hover:text-white flex items-center gap-1"
+                        >
+                          Explore vCard lander
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                        </a>
+                      </div>
+                    </motion.div>
+                  )}
+   
+                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'restaurant') && (
+                    <motion.div key="restaurant-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                      <div id="recent-restaurant-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group">
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono text-amber-400 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-amber-400 transition-colors">Restaurant Menus & PDF Hosters</h4>
+                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                            Leveraged by cafes, visual bistros, and contactless fast-food spots. Keeps dynamic menu files editable and local.
+                          </p>
+                        </div>
+
+                        <div className="space-y-1.5 mt-4">
+                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
+                            <span>Scan Activity Rate</span>
+                            <span className="font-extrabold text-slate-300">{Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%</span>
+                          </div>
+                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%` }}
+                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                              className="h-full bg-gradient-to-r from-amber-500 to-orange-500"
+                            />
+                          </div>
+                        </div>
+
+                        <a
+                          id="recent-restaurant-link"
+                          href="/restaurant-qr-generator"
+                          onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
+                          className="mt-4 text-xs font-bold text-amber-400 group-hover:text-white flex items-center gap-1"
+                        >
+                          Explore Restaurant lander
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                        </a>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'social') && (
+                    <motion.div key="social-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                      <div id="recent-social-card" className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group" style={{ contentVisibility: 'auto' }}>
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono text-pink-400 font-bold uppercase block">📲 Bio Links & Socials • 2 hrs ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-pink-400 transition-colors">Social Multi-Link Hubs</h4>
+                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                            Designed weekly by micro-influencers, content creators, and local artists to map multiple platforms inside a single aesthetic scan.
+                          </p>
+                        </div>
+
+                        <div className="space-y-1.5 mt-4">
+                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
+                            <span>Scan Activity Rate</span>
+                            <span className="font-extrabold text-slate-300">{Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%</span>
+                          </div>
+                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%` }}
+                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                              className="h-full bg-gradient-to-r from-pink-500 to-rose-500"
+                            />
+                          </div>
+                        </div>
+
+                        <a
+                          id="recent-social-link"
+                          href="/instagram-qr-generator"
+                          onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }}
+                          className="mt-4 text-xs font-bold text-pink-400 group-hover:text-white flex items-center gap-1"
+                        >
+                          Explore Instagram lander
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
+                        </a>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
+
+              {/* Dynamic scroll indicator if there are > 4 active categories */}
+              {[
+                'wifi',
+                'whatsapp',
+                'vcard',
+                'restaurant',
+                'social'
+              ].filter(id => selectedCategoryFilter === 'all' || selectedCategoryFilter === id).length > 4 && (
+                <div id="scroll-indicator" className="flex items-center justify-center gap-2 mt-4 text-[10px] uppercase tracking-wider font-mono font-bold text-indigo-400 sm:hidden">
+                  <span>Swipe horizontally to view categories</span>
+                  <motion.div
+                    animate={{ x: [0, 6, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+                  >
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </motion.div>
+                </div>
+              )}
             </section>
 
             {/* Complete Internal Linking Related Pages grid */}
@@ -1697,7 +1867,7 @@ export default function App() {
               <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-md">
                 <QrCode className="w-5 h-5 animate-spin-slow" />
               </div>
-              <span className="font-bold text-xs text-slate-900 tracking-wider uppercase font-mono">Custom DB QR Generator</span>
+              <span className="font-bold text-xs text-slate-900 tracking-wider uppercase font-mono">iSolutions QR Generator</span>
             </div>
             <p className="text-xs text-slate-500 max-w-sm leading-relaxed">
               Design customized, high-redundancy QR codes with modern color gradients, dot styles, and brand centerpieces. Complete with dynamic web link shortener tracking and real-time scan analytics.
@@ -1746,7 +1916,7 @@ export default function App() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 border-t border-slate-100 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400 font-mono">
-          <p>© 2026 Custom DB QR Generator. Decoupled and fully verified local-cloud schema.</p>
+          <p>© 2026 iSolutions QR Generator. Decoupled and fully verified local-cloud schema.</p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">About Us</a>
             <span>•</span>

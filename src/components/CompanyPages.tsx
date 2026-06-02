@@ -45,7 +45,7 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
               Our Journey
             </span>
             <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-none">
-              About Custom DB QR Generator
+              About iSolutions QR Generator
             </h1>
             <p className="text-base text-slate-600 max-w-2xl leading-relaxed">
               We started with a simple belief: QR codes don't have to be boring black-and-white grids. They can be dynamic, artistic extensions of your visual and corporate brand identity.
@@ -137,7 +137,7 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
             <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest font-mono">Our Operations</span>
             <h3 className="text-lg font-extrabold">Powered by iSolutions ICo</h3>
             <p className="text-xs text-slate-300 leading-relaxed max-w-xl">
-              Custom DB QR Generator is designed and developed by **iSolutions ICo**. We specialize in high-availability web tools, responsive UX designs, and robust systems aimed at making marketing technology accessible to everyone.
+              iSolutions QR Generator is designed and developed by **iSolutions ICo**. We specialize in high-availability web tools, responsive UX designs, and robust systems aimed at making marketing technology accessible to everyone.
             </p>
             <div className="pt-2 flex flex-wrap gap-4 text-xs text-slate-400">
               <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-indigo-400" /> isolutionsico.com</span>
