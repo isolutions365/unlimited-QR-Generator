@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://unlimitedqrgen.netlify.app/sitemap.xml

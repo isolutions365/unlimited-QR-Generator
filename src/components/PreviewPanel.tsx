@@ -3,6 +3,7 @@ import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG } from '../utils/qrRenderer';
 import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType } from 'lucide-react';
 import { jsPDF } from 'jspdf';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface PreviewPanelProps {
   currentProject: Partial<QRProject>;
@@ -16,6 +17,17 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [simulatedScanResult, setSimulatedScanResult] = useState<string | null>(null);
   const [isScanningSim, setIsScanningSim] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<'PNG' | 'SVG' | 'PDF'>('PNG');
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+  const successTimeoutRef = useRef<any>(null);
+
+  // Clean up any pending success timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (successTimeoutRef.current) {
+        clearTimeout(successTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Deconstruct primitive design properties to prevent reference-dependent re-render loops
   const fgColor = currentProject.design?.fgColor || '#0f172a';
@@ -143,6 +155,15 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       pdf.save(`${currentProject.name || 'qr-code'}.pdf`);
     }
 
+    // Trigger visual success checkmark animation
+    setShowSuccessAnimation(true);
+    if (successTimeoutRef.current) {
+      clearTimeout(successTimeoutRef.current);
+    }
+    successTimeoutRef.current = setTimeout(() => {
+      setShowSuccessAnimation(false);
+    }, 2200);
+
     if (onDownloadTrigger) {
       onDownloadTrigger();
     }
@@ -212,7 +233,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       {/* QR Board Canvas */}
       <div className="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-xs flex flex-col items-center justify-center gap-4 relative overflow-hidden">
         <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center">
-          <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden" style={{ width: '280px', height: '280px' }}>
+          <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden animate-fade-in" style={{ width: '280px', height: '280px' }}>
             <canvas
               ref={canvasRef}
               className="max-w-full rounded-lg bg-white transition-transform duration-300 group-hover:scale-[0.98]"
@@ -236,6 +257,52 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 <span className="text-[10px] font-extrabold tracking-wider uppercase text-slate-200">READY TO SCAN</span>
               </div>
             </div>
+
+            {/* Download file ready success animation overlay */}
+            <AnimatePresence>
+              {showSuccessAnimation && (
+                <motion.div
+                  id="success-overlay"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.22 }}
+                  className="absolute inset-0 bg-emerald-600/95 backdrop-blur-xs rounded-xl flex flex-col items-center justify-center z-20 pointer-events-none select-none"
+                >
+                  <motion.div
+                    initial={{ scale: 0.3, opacity: 0 }}
+                    animate={{ scale: [0.3, 1.12, 1], opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ 
+                      type: "spring",
+                      stiffness: 320,
+                      damping: 20,
+                      delay: 0.05
+                    }}
+                    className="bg-white text-emerald-600 p-3.5 rounded-full shadow-lg flex items-center justify-center mb-2"
+                  >
+                    <Check className="w-8 h-8 stroke-[3.5]" />
+                  </motion.div>
+                  <motion.p
+                    initial={{ y: 8, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -8, opacity: 0 }}
+                    transition={{ delay: 0.12, duration: 0.2 }}
+                    className="text-white text-xs font-black tracking-wider uppercase text-center"
+                  >
+                    {selectedFormat} READY!
+                  </motion.p>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.75 }}
+                    transition={{ delay: 0.22 }}
+                    className="text-emerald-100 text-[10px] font-medium mt-1"
+                  >
+                    Successfully Downloaded
+                  </motion.span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
