@@ -57,16 +57,27 @@
     }
     </script>
 
-    <!-- Google AdSense Client Script (Asynchronous) -->
-    <script 
-      async 
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" 
-      crossorigin="anonymous">
-    </script>
+    <!-- Performance Optimization: Preconnect & DNS-Prefetch Hints -->
+    <link rel="preconnect" href="https://firestore.googleapis.com" />
+    <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
+    <link rel="preconnect" href="https://securetoken.googleapis.com" />
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+
+    <!-- Font Asynchronous Preloading to minimize Render Blocking (FCP, LCP, SI optimized) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" />
+    </noscript>
+
+
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" defer src="/src/main.tsx"></script>
   </body>
 </html>
 

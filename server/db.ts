@@ -114,20 +114,25 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
   throw new Error(JSON.stringify(errInfo));
 }
 
-// Read Firebase configurations
-let firebaseConfig: any;
-try {
-  const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
-  firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-} catch (e) {
-  console.error("Critical: Failed to load firebase-applet-config.json:", e);
-}
+// Read Firebase configurations and initialize lazily to prevent blocking startup / render latency
+export let db: any;
 
-// Initialize Client Endpoint
-const firebaseApp = initializeApp(firebaseConfig);
-export const db = initializeFirestore(firebaseApp, {
-  experimentalForceLongPolling: true,
-}, firebaseConfig.firestoreDatabaseId || '(default)');
+export function getDb() {
+  if (!db) {
+    let firebaseConfig: any;
+    try {
+      const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
+      firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    } catch (e) {
+      console.error("Critical: Failed to load firebase-applet-config.json:", e);
+    }
+    const firebaseApp = initializeApp(firebaseConfig);
+    db = initializeFirestore(firebaseApp, {
+      experimentalForceLongPolling: true,
+    }, firebaseConfig?.firestoreDatabaseId || '(default)');
+  }
+  return db;
+}
 
 // Validate Connection on Boot asynchronously with a fast 1.2s circuit breaker to guarantee instant boots
 async function testConnection() {
@@ -136,8 +141,9 @@ async function testConnection() {
   );
 
   try {
+    const activeDb = getDb();
     await Promise.race([
-      getDocFromServer(doc(db, 'test', 'connection')),
+      getDocFromServer(doc(activeDb, 'test', 'connection')),
       timeoutPromise
     ]);
     console.log("Firebase connection verified and fully operational.");

@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG } from '../utils/qrRenderer';
 import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType } from 'lucide-react';
-import { jsPDF } from 'jspdf';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface PreviewPanelProps {
@@ -91,7 +90,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     errorCorrectionLevel
   ]);
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (!canvasRef.current) return;
 
     if (selectedFormat === 'PNG') {
@@ -126,6 +125,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       URL.revokeObjectURL(url);
     } else if (selectedFormat === 'PDF') {
       const imgData = canvasRef.current.toDataURL('image/png');
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -311,7 +311,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           <p className="text-xs font-semibold text-gray-800">
             {trackingEnabled ? '🚀 Short Url Tracking Active' : '💾 Direct QR Code'}
           </p>
-          <span className="text-[10px] text-gray-400 font-mono select-all truncate max-w-[260px] block mt-0.5">
+          <span className="text-[10px] text-slate-600 font-mono select-all truncate max-w-[260px] block mt-0.5">
             {textToEncode}
           </span>
         </div>
@@ -320,8 +320,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         <div className="w-full flex flex-col gap-3 mt-2 bg-slate-50/50 p-3 rounded-2xl border border-slate-200/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <FileType className="w-3.5 h-3.5 text-slate-500" />
-              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Download Format</span>
+              <FileType className="w-3.5 h-3.5 text-slate-600" />
+              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Download Format</span>
             </div>
             <div className="flex bg-white border border-slate-200 p-0.5 rounded-lg shadow-3xs">
               {(['PNG', 'SVG', 'PDF'] as const).map((fmt) => (
@@ -332,8 +332,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all cursor-pointer ${
                     selectedFormat === fmt
                       ? 'bg-slate-900 text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
+                      : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
                   }`}
+                  aria-label={`Select ${fmt} format`}
                 >
                   {fmt}
                 </button>
@@ -346,6 +347,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               type="button"
               onClick={handleExport}
               className="col-span-2 py-2.5 px-3 bg-gray-950 text-white hover:bg-black rounded-xl text-xs font-semibold shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+              aria-label={`Download QR Code as ${selectedFormat}`}
             >
               <Download className="w-4 h-4" />
               Download {selectedFormat}
@@ -354,6 +356,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               type="button"
               onClick={handleLocalPrint}
               className="py-2.5 px-2 bg-white text-gray-800 hover:bg-slate-50 rounded-xl text-xs font-medium border border-slate-200 shadow-3xs transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+              aria-label="Print QR Code"
             >
               <Printer className="w-3.5 h-3.5" />
               Print
@@ -364,6 +367,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             type="button"
             onClick={simulateScan}
             className="w-full py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-1.5 active:scale-95 border border-indigo-100 cursor-pointer"
+            aria-label="Simulate Live QR Code Scanner Viewfinder Test"
           >
             <Smartphone className="w-3.5 h-3.5" />
             Live Viewfinder Scan Test
@@ -373,15 +377,16 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         {/* Tracking Details & Copying Option */}
         {trackingEnabled && trackingUrl && (
           <div className="w-full bg-indigo-50/30 border border-indigo-100/50 rounded-xl p-3 flex flex-col gap-2 mt-1">
-            <span className="text-[10px] text-indigo-900 font-semibold uppercase tracking-wider">Tracking Short URL</span>
+            <span className="text-[10px] text-indigo-950 font-semibold uppercase tracking-wider">Tracking Short URL</span>
             <div className="flex items-center justify-between gap-2 overflow-hidden bg-white px-3 py-1.5 rounded-lg border border-indigo-100">
-              <span className="text-xs font-mono text-indigo-700 truncate select-all">{trackingUrl}</span>
+              <span className="text-xs font-mono text-indigo-800 truncate select-all">{trackingUrl}</span>
               <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={handleCopyLink}
                   className="p-1 hover:bg-indigo-50 text-indigo-600 rounded-md transition-all"
                   title="Copy link"
+                  aria-label="Copy short tracking URL"
                 >
                   {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
@@ -391,6 +396,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   rel="noreferrer"
                   className="p-1 hover:bg-indigo-50 text-indigo-600 rounded-md transition-all"
                   title="Test scan redirect"
+                  aria-label="Open tracking redirect URL in a new window"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
@@ -405,11 +411,11 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-4 bg-black rounded-b-xl border border-slate-900" />
 
         <div className="flex items-center justify-between border-b border-slate-800 pb-3 mt-2">
-          <div className="flex items-center gap-1.5 text-xs text-slate-400">
+          <div className="flex items-center gap-1.5 text-xs text-slate-300">
             <Smartphone className="w-4 h-4 text-indigo-400" />
             <span>Smartphone Simulator</span>
           </div>
-          <span className="text-[9px] px-2 py-0.5 rounded-full bg-indigo-900/50 border border-indigo-500/30 text-indigo-300 font-mono">
+          <span className="text-[9px] px-2 py-0.5 rounded-full bg-indigo-900/50 border border-indigo-500/30 text-indigo-350 font-mono">
             LIVE DECODER
           </span>
         </div>
@@ -420,7 +426,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             <div className="flex flex-col items-center gap-2">
               <Camera className="w-6 h-6 text-indigo-400 animate-pulse" />
               <div className="w-32 h-1 bg-indigo-500 animate-bounce rounded-full shadow-lg shadow-indigo-500" />
-              <span className="text-[10px] text-slate-400 font-mono">Decoding modules...</span>
+              <span className="text-[10px] text-slate-300 font-mono">Decoding modules...</span>
             </div>
           ) : simulatedScanResult ? (
             <div className="text-center p-4">
@@ -442,11 +448,12 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             </div>
           ) : (
             <div className="text-center space-y-1">
-              <p className="text-xs text-slate-500">Viewfinder ready.</p>
+              <p className="text-xs text-slate-300">Viewfinder ready.</p>
               <button
                 type="button"
                 onClick={simulateScan}
-                className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg text-[10px] uppercase font-semibold transition-all border border-slate-800"
+                className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 rounded-lg text-[10px] uppercase font-semibold transition-all border border-slate-800 cursor-pointer"
+                aria-label="Scan Canvas QR Code"
               >
                 Scan Canvas QR
               </button>

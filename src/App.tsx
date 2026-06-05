@@ -1,20 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
 import { QRProject, ScanLog } from './types';
-import SEOPage from './components/landing/SEOPage';
 import { landingPages } from './components/landing/SEODatabase';
 import ControlPanel from './components/ControlPanel';
-import TemplatesTab from './components/TemplatesTab';
 import PreviewPanel from './components/PreviewPanel';
-import SavedProjects from './components/SavedProjects';
-import AnalyticsDashboard from './components/AnalyticsDashboard';
-import MobileAppMockup from './components/MobileAppMockup';
-import AnimationsShowcase from './components/AnimationsShowcase';
-import AuthModal from './components/AuthModal';
 import AdSenseUnit from './components/AdSenseUnit';
-import CompanyPages from './components/CompanyPages';
-import FaqSection from './components/FaqSection';
-import BlogSection from './components/BlogSection';
+
+// Code-splitting via React.lazy for non-critical elements (improves LCP, FCP, Speed Index)
+const SEOPage = React.lazy(() => import('./components/landing/SEOPage'));
+const TemplatesTab = React.lazy(() => import('./components/TemplatesTab'));
+const SavedProjects = React.lazy(() => import('./components/SavedProjects'));
+const AnalyticsDashboard = React.lazy(() => import('./components/AnalyticsDashboard'));
+const MobileAppMockup = React.lazy(() => import('./components/MobileAppMockup'));
+const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowcase'));
+const AuthModal = React.lazy(() => import('./components/AuthModal'));
+const CompanyPages = React.lazy(() => import('./components/CompanyPages'));
+const FaqSection = React.lazy(() => import('./components/FaqSection'));
+const BlogSection = React.lazy(() => import('./components/BlogSection'));
+
+// Non-blocking fallback skeleton loader
+const LazyLoader = () => (
+  <div className="flex items-center justify-center p-12 min-h-[300px]" id="lazy-fallback">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-8 h-8 rounded-full border-2 border-indigo-600/20 border-t-indigo-600 animate-spin" />
+      <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Loading workspace...</span>
+    </div>
+  </div>
+);
 import { Locale, navTranslations, creativeSubItems, presetToolsTranslations } from './utils/translations';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
@@ -1321,24 +1333,32 @@ export default function App() {
 
       {/* Primary Container Grid */}
       {isLandingPage ? (
-        <SEOPage 
-          slug={slug} 
-          onSelectRoute={navigateTo} 
-          onInitiateGenerator={handleInitiateGenerator} 
-        />
+        <React.Suspense fallback={<LazyLoader />}>
+          <SEOPage 
+            slug={slug} 
+            onSelectRoute={navigateTo} 
+            onInitiateGenerator={handleInitiateGenerator} 
+          />
+        </React.Suspense>
       ) : currentPath === '/faq' ? (
-        <FaqSection onNavigate={navigateTo} locale={locale} />
+        <React.Suspense fallback={<LazyLoader />}>
+          <FaqSection onNavigate={navigateTo} locale={locale} />
+        </React.Suspense>
       ) : (currentPath === '/blog' || currentPath.startsWith('/blog/')) ? (
-        <BlogSection 
-          initialSlug={currentPath.startsWith('/blog/') ? currentPath.substring(6) : null} 
-          onNavigate={navigateTo} 
-          locale={locale}
-        />
+        <React.Suspense fallback={<LazyLoader />}>
+          <BlogSection 
+            initialSlug={currentPath.startsWith('/blog/') ? currentPath.substring(6) : null} 
+            onNavigate={navigateTo} 
+            locale={locale}
+          />
+        </React.Suspense>
       ) : ['/about', '/privacy', '/contact', '/terms'].includes(currentPath) ? (
-        <CompanyPages 
-          view={currentPath.substring(1) as 'about' | 'privacy' | 'contact' | 'terms'} 
-          onNavigate={navigateTo} 
-        />
+        <React.Suspense fallback={<LazyLoader />}>
+          <CompanyPages 
+            view={currentPath.substring(1) as 'about' | 'privacy' | 'contact' | 'terms'} 
+            onNavigate={navigateTo} 
+          />
+        </React.Suspense>
       ) : (
         <main className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6">
 
@@ -1429,13 +1449,15 @@ export default function App() {
               />
 
               {/* Saved History List Ledger */}
-              <SavedProjects
-                projects={projects}
-                onSelect={handleSelectProject}
-                onDelete={handleDeleteProject}
-                onSeedData={handleSeedScanClick}
-                isLoading={isLoadingData}
-              />
+              <React.Suspense fallback={<div className="bg-slate-50 rounded-3xl h-48 animate-pulse border border-slate-100 flex items-center justify-center text-xs text-slate-400 font-medium">Loading saved collection...</div>}>
+                <SavedProjects
+                  projects={projects}
+                  onSelect={handleSelectProject}
+                  onDelete={handleDeleteProject}
+                  onSeedData={handleSeedScanClick}
+                  isLoading={isLoadingData}
+                />
+              </React.Suspense>
             </div>
 
             {/* Right side Live Previews boards */}
@@ -1465,10 +1487,12 @@ export default function App() {
             
             {/* Left side Workspace Templates controls */}
             <div className="lg:col-span-7 flex flex-col gap-6">
-              <TemplatesTab
-                currentProject={currentProject}
-                onChange={setCurrentProject}
-              />
+              <React.Suspense fallback={<LazyLoader />}>
+                <TemplatesTab
+                  currentProject={currentProject}
+                  onChange={setCurrentProject}
+                />
+              </React.Suspense>
             </div>
 
             {/* Right side Live Previews boards */}
@@ -1496,7 +1520,9 @@ export default function App() {
         {activeTab === 'analytics' && (
           <div className="max-w-4xl mx-auto w-full">
             {user ? (
-              <AnalyticsDashboard scans={scans} projects={projects} onPurgeAll={handlePurgeAllScans} />
+              <React.Suspense fallback={<LazyLoader />}>
+                <AnalyticsDashboard scans={scans} projects={projects} onPurgeAll={handlePurgeAllScans} />
+              </React.Suspense>
             ) : (
               <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm flex flex-col items-center justify-center">
                 <div className="w-16 h-16 bg-slate-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
@@ -1520,17 +1546,21 @@ export default function App() {
 
         {activeTab === 'boiler' && (
           <div className="max-w-4xl mx-auto w-full">
-            <MobileAppMockup />
+            <React.Suspense fallback={<LazyLoader />}>
+              <MobileAppMockup />
+            </React.Suspense>
           </div>
         )}
 
         {activeTab === 'animations' && (
           <div className="w-full">
-            <AnimationsShowcase
-              currentProject={currentProject}
-              onChange={setCurrentProject}
-              onDownloadTrigger={handleDownloadTrigger}
-            />
+            <React.Suspense fallback={<LazyLoader />}>
+              <AnimationsShowcase
+                currentProject={currentProject}
+                onChange={setCurrentProject}
+                onDownloadTrigger={handleDownloadTrigger}
+              />
+            </React.Suspense>
           </div>
         )}
 
@@ -2057,14 +2087,16 @@ export default function App() {
       </AnimatePresence>
 
       {/* Auth0/Clerk style Auth Overlays Dialog Component */}
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-        onSuccess={(u) => {
-          setUser(u);
-          setIsAuthModalOpen(false);
-        }}
-      />
+      <React.Suspense fallback={null}>
+        <AuthModal 
+          isOpen={isAuthModalOpen} 
+          onClose={() => setIsAuthModalOpen(false)} 
+          onSuccess={(u) => {
+            setUser(u);
+            setIsAuthModalOpen(false);
+          }}
+        />
+      </React.Suspense>
 
       {/* Footer with rich SEO directory links */}
       <footer id="app-footer" className="py-16 border-t border-slate-100 bg-white/50 text-slate-600 mt-12">

@@ -206,10 +206,11 @@ export default function ControlPanel({
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-4"
       >
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Project Name</label>
+          <label htmlFor="project-name-input" className="block text-xs font-semibold text-slate-800 mb-1">Project Name</label>
           <input
+            id="project-name-input"
             type="text"
-            className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+            className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
             placeholder="e.g. My Website QR"
             value={currentProject.name || ''}
             onChange={e => onChange({ ...currentProject, name: e.target.value })}
@@ -218,10 +219,11 @@ export default function ControlPanel({
 
         {currentProject.type === 'url' && (
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Target Website URL</label>
+            <label htmlFor="target-url-input" className="block text-xs font-semibold text-slate-800 mb-1">Target Website URL</label>
             <input
+              id="target-url-input"
               type="url"
-              className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+              className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
               placeholder="https://example.com"
               value={currentProject.content || ''}
               onChange={e => onChange({ ...currentProject, content: e.target.value })}
@@ -231,9 +233,10 @@ export default function ControlPanel({
 
         {currentProject.type === 'text' && (
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Plain Text</label>
+            <label htmlFor="plain-text-input" className="block text-xs font-semibold text-slate-800 mb-1">Plain Text</label>
             <textarea
-              className="w-full text-sm px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 h-20 bg-white"
+              id="plain-text-input"
+              className="w-full text-sm px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 h-20 bg-white text-slate-800"
               placeholder="Add raw text to encode..."
               value={currentProject.content || ''}
               onChange={e => onChange({ ...currentProject, content: e.target.value })}
@@ -242,37 +245,47 @@ export default function ControlPanel({
         )}
 
         {currentProject.type === 'wifi' && (
-          <div className="p-3 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
-            <h4 className="text-xs font-semibold text-gray-700">WiFi Integration Setting</h4>
-            <p className="text-[11px] text-gray-500">Auto-configured to connect to wifi spots securely.</p>
-            <input
-              type="text"
-              className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white"
-              placeholder="WiFi Network ID / SSID"
-              onChange={e => {
-                const parts = (currentProject.content || '').split(';');
-                const pass = parts[2] || '';
-                onChange({ ...currentProject, content: `WIFI:S:${e.target.value};T:WPA;P:${pass};;` });
-              }}
-            />
-            <input
-              type="password"
-              className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white"
-              placeholder="WiFi Password"
-              onChange={e => {
-                const parts = (currentProject.content || '').split(';');
-                const ss = parts[0]?.replace('WIFI:S:', '') || '';
-                onChange({ ...currentProject, content: `WIFI:S:${ss};T:WPA;P:${e.target.value};;` });
-              }}
-            />
+          <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
+            <h4 className="text-xs font-semibold text-slate-850">WiFi Integration Setting</h4>
+            <p className="text-[11px] text-slate-600">Auto-configured to connect to wifi spots securely.</p>
+            <div>
+              <label htmlFor="wifi-ssid-input" className="block text-[10px] font-semibold text-slate-800 mb-1">WiFi Network ID / SSID</label>
+              <input
+                id="wifi-ssid-input"
+                type="text"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
+                placeholder="WiFi Network ID / SSID"
+                onChange={e => {
+                  const parts = (currentProject.content || '').split(';');
+                  const pass = parts[2] || '';
+                  onChange({ ...currentProject, content: `WIFI:S:${e.target.value};T:WPA;P:${pass};;` });
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="wifi-pass-input" className="block text-[10px] font-semibold text-slate-800 mb-1">WiFi Password</label>
+              <input
+                id="wifi-pass-input"
+                type="password"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
+                placeholder="WiFi Password"
+                onChange={e => {
+                  const parts = (currentProject.content || '').split(';');
+                  const ss = parts[0]?.replace('WIFI:S:', '') || '';
+                  onChange({ ...currentProject, content: `WIFI:S:${ss};T:WPA;P:${e.target.value};;` });
+                }}
+              />
+            </div>
           </div>
         )}
 
         {currentProject.type === 'email' && (
           <div className="space-y-2">
+            <label htmlFor="email-recipient-input" className="block text-xs font-semibold text-slate-800">Recipient Email Address</label>
             <input
+              id="email-recipient-input"
               type="email"
-              className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 bg-white"
+              className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-slate-800"
               placeholder="Recipient Email Address"
               onChange={e => onChange({ ...currentProject, content: `mailto:${e.target.value}` })}
             />
@@ -281,23 +294,28 @@ export default function ControlPanel({
 
         {currentProject.type === 'card' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
-            <h4 className="text-xs font-semibold text-gray-700 font-mono">vCard Contact Credentials</h4>
-            <input
-              type="text"
-              className="w-full text-xs px-3 py-1.5 rounded-md border border-gray-200 bg-white"
-              placeholder="Full Name"
-              value={currentProject.content?.includes('N:') ? currentProject.content.split('N:')[1]?.split('\n')[0] : ''}
-              onChange={e => onChange({ ...currentProject, content: `BEGIN:VCARD\nVERSION:3.0\nN:${e.target.value}\nEND:VCARD` })}
-            />
+            <h4 className="text-xs font-semibold text-slate-850 font-mono">vCard Contact Credentials</h4>
+            <div>
+              <label htmlFor="vcard-name-input" className="block text-[10px] font-semibold text-slate-800 mb-1">Full Name</label>
+              <input
+                id="vcard-name-input"
+                type="text"
+                className="w-full text-xs px-3 py-1.5 rounded-md border border-gray-200 bg-white text-slate-800"
+                placeholder="Full Name"
+                value={currentProject.content?.includes('N:') ? currentProject.content.split('N:')[1]?.split('\n')[0] : ''}
+                onChange={e => onChange({ ...currentProject, content: `BEGIN:VCARD\nVERSION:3.0\nN:${e.target.value}\nEND:VCARD` })}
+              />
+            </div>
           </div>
         )}
 
         {currentProject.type === 'phone' && (
           <div className="space-y-2">
-            <label className="block text-xs font-semibold text-gray-700">Phone Number</label>
+            <label htmlFor="phone-number-input" className="block text-xs font-semibold text-slate-800">Phone Number</label>
             <input
+              id="phone-number-input"
               type="tel"
-              className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="+1 (555) 000-0000"
               value={(() => {
                 if (currentProject.content?.startsWith('tel:')) {
@@ -307,68 +325,76 @@ export default function ControlPanel({
               })()}
               onChange={e => onChange({ ...currentProject, content: `tel:${e.target.value.trim()}` })}
             />
-            <span className="text-[10px] text-gray-400 block font-sans">Encodes standard cellular dialing protocols automatically.</span>
+            <span className="text-[10px] text-slate-600 block font-sans">Encodes standard cellular dialing protocols automatically.</span>
           </div>
         )}
 
         {currentProject.type === 'sms' && (
-          <div className="p-3 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
-            <h4 className="text-xs font-semibold text-gray-700">Pre-composed SMS Text</h4>
-            <input
-              type="tel"
-              className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white"
-              placeholder="Recipient Phone Number"
-              value={(() => {
-                if (currentProject.content?.startsWith('sms:')) {
-                  const queryIdx = currentProject.content.indexOf('?');
-                  return queryIdx !== -1 ? currentProject.content.substring(4, queryIdx) : currentProject.content.substring(4);
-                } else if (currentProject.content?.startsWith('SMSTO:')) {
-                  return currentProject.content.substring(6).split(':')[0] || '';
-                }
-                return '';
-              })()}
-              onChange={e => {
-                const phone = e.target.value.trim();
-                let existingMsg = '';
-                if (currentProject.content?.startsWith('sms:')) {
-                  const queryIdx = currentProject.content.indexOf('?body=');
-                  existingMsg = queryIdx !== -1 ? decodeURIComponent(currentProject.content.substring(queryIdx + 6)) : '';
-                } else if (currentProject.content?.startsWith('SMSTO:')) {
-                  existingMsg = currentProject.content.substring(6).split(':').slice(1).join(':') || '';
-                }
-                onChange({ ...currentProject, content: `SMSTO:${phone}:${existingMsg}` });
-              }}
-            />
-            <textarea
-              className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white h-16"
-              placeholder="Prefilled message body"
-              value={(() => {
-                if (currentProject.content?.startsWith('sms:')) {
-                  const queryIdx = currentProject.content.indexOf('?body=');
-                  return queryIdx !== -1 ? decodeURIComponent(currentProject.content.substring(queryIdx + 6)) : '';
-                } else if (currentProject.content?.startsWith('SMSTO:')) {
-                  return currentProject.content.substring(6).split(':').slice(1).join(':') || '';
-                }
-                return '';
-              })()}
-              onChange={e => {
-                const msg = e.target.value;
-                let existingPhone = '';
-                if (currentProject.content?.startsWith('sms:')) {
-                  const queryIdx = currentProject.content.indexOf('?');
-                  existingPhone = queryIdx !== -1 ? currentProject.content.substring(4, queryIdx) : currentProject.content.substring(4);
-                } else if (currentProject.content?.startsWith('SMSTO:')) {
-                  existingPhone = currentProject.content.substring(6).split(':')[0] || '';
-                }
-                onChange({ ...currentProject, content: `SMSTO:${existingPhone}:${msg}` });
-              }}
-            />
+          <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
+            <h4 className="text-xs font-semibold text-slate-850">Pre-composed SMS Text</h4>
+            <div>
+              <label htmlFor="sms-phone-input" className="block text-[10px] font-semibold text-slate-800 mb-1">Recipient Phone Number</label>
+              <input
+                id="sms-phone-input"
+                type="tel"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
+                placeholder="Recipient Phone Number"
+                value={(() => {
+                  if (currentProject.content?.startsWith('sms:')) {
+                    const queryIdx = currentProject.content.indexOf('?');
+                    return queryIdx !== -1 ? currentProject.content.substring(4, queryIdx) : currentProject.content.substring(4);
+                  } else if (currentProject.content?.startsWith('SMSTO:')) {
+                    return currentProject.content.substring(6).split(':')[0] || '';
+                  }
+                  return '';
+                })()}
+                onChange={e => {
+                  const phone = e.target.value.trim();
+                  let existingMsg = '';
+                  if (currentProject.content?.startsWith('sms:')) {
+                    const queryIdx = currentProject.content.indexOf('?body=');
+                    existingMsg = queryIdx !== -1 ? decodeURIComponent(currentProject.content.substring(queryIdx + 6)) : '';
+                  } else if (currentProject.content?.startsWith('SMSTO:')) {
+                    existingMsg = currentProject.content.substring(6).split(':').slice(1).join(':') || '';
+                  }
+                  onChange({ ...currentProject, content: `SMSTO:${phone}:${existingMsg}` });
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="sms-msg-textarea" className="block text-[10px] font-semibold text-slate-800 mb-1">Prefilled Message Body</label>
+              <textarea
+                id="sms-msg-textarea"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white h-16 text-slate-800"
+                placeholder="Prefilled message body"
+                value={(() => {
+                  if (currentProject.content?.startsWith('sms:')) {
+                    const queryIdx = currentProject.content.indexOf('?body=');
+                    return queryIdx !== -1 ? decodeURIComponent(currentProject.content.substring(queryIdx + 6)) : '';
+                  } else if (currentProject.content?.startsWith('SMSTO:')) {
+                    return currentProject.content.substring(6).split(':').slice(1).join(':') || '';
+                  }
+                  return '';
+                })()}
+                onChange={e => {
+                  const msg = e.target.value;
+                  let existingPhone = '';
+                  if (currentProject.content?.startsWith('sms:')) {
+                    const queryIdx = currentProject.content.indexOf('?');
+                    existingPhone = queryIdx !== -1 ? currentProject.content.substring(4, queryIdx) : currentProject.content.substring(4);
+                  } else if (currentProject.content?.startsWith('SMSTO:')) {
+                    existingPhone = currentProject.content.substring(6).split(':')[0] || '';
+                  }
+                  onChange({ ...currentProject, content: `SMSTO:${existingPhone}:${msg}` });
+                }}
+              />
+            </div>
           </div>
         )}
 
         {currentProject.type === 'social' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
-            <h4 className="text-xs font-semibold text-gray-700">Social Media Profile</h4>
+            <h4 className="text-xs font-semibold text-slate-850">Social Media Profile</h4>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: 'instagram', label: 'Instagram', prefix: 'https://instagram.com/' },
@@ -404,7 +430,7 @@ export default function ControlPanel({
                     className={`py-1.5 px-2 text-[10px] font-medium border rounded-lg text-center transition-all ${
                       isPlatActive
                         ? 'bg-indigo-600 text-white border-indigo-600'
-                        : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-100'
+                        : 'bg-white text-slate-700 border-gray-200 hover:bg-gray-100'
                     }`}
                   >
                     {plat.label}
@@ -414,7 +440,7 @@ export default function ControlPanel({
             </div>
             
             <div>
-              <span className="text-[10px] text-gray-500 font-mono">
+              <span className="text-[10px] text-slate-650 font-mono">
                 Platform Path: {(() => {
                   const content = currentProject.content || '';
                   if (content.includes('instagram.com/')) return 'https://instagram.com/';
@@ -426,9 +452,11 @@ export default function ControlPanel({
                   return 'https://instagram.com/';
                 })()}
               </span>
+              <label htmlFor="social-username-input" className="sr-only">Social Username or Contact</label>
               <input
+                id="social-username-input"
                 type="text"
-                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white mt-1 font-mono"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white mt-1 font-mono text-slate-800"
                 placeholder="username, handle, or contact number"
                 value={(() => {
                   const content = currentProject.content || '';
@@ -461,7 +489,7 @@ export default function ControlPanel({
 
         {currentProject.type === 'crypto' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
-            <h4 className="text-xs font-semibold text-gray-700">Cryptocurrency Address</h4>
+            <h4 className="text-xs font-semibold text-slate-850">Cryptocurrency Address</h4>
             <div className="grid grid-cols-4 gap-1.5">
               {[
                 { id: 'bitcoin', label: 'BTC', prefix: 'bitcoin:' },
@@ -492,7 +520,7 @@ export default function ControlPanel({
                     className={`py-1 px-1.5 text-[9px] font-bold border rounded-lg text-center transition-all ${
                       isCoinActive
                         ? 'bg-indigo-600 text-white border-indigo-600'
-                        : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-100'
+                        : 'bg-white text-slate-700 border-gray-200 hover:bg-gray-100'
                     }`}
                   >
                     {coin.label}
@@ -502,7 +530,7 @@ export default function ControlPanel({
             </div>
 
             <div>
-              <span className="text-[10px] text-gray-500 font-mono">
+              <span className="text-[10px] text-slate-650 font-mono">
                 Asset Prefix: {(() => {
                   const content = currentProject.content || '';
                   if (content.startsWith('bitcoin:')) return 'bitcoin:';
@@ -512,9 +540,11 @@ export default function ControlPanel({
                   return 'bitcoin:';
                 })()}
               </span>
+              <label htmlFor="crypto-address-input" className="sr-only">Cryptocurrency Address</label>
               <input
+                id="crypto-address-input"
                 type="text"
-                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white mt-1 font-mono"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white mt-1 font-mono text-slate-800"
                 placeholder="Wallet destination hash"
                 value={(() => {
                   const content = currentProject.content || '';
@@ -544,7 +574,7 @@ export default function ControlPanel({
         {currentProject.type === 'geo' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-gray-700">Maps Geolocation</h4>
+              <h4 className="text-xs font-semibold text-slate-850">Maps Geolocation</h4>
               <button
                 type="button"
                 onClick={() => {
@@ -570,10 +600,11 @@ export default function ControlPanel({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-[10px] text-gray-500 block mb-0.5">Latitude</label>
+                <label htmlFor="geo-latitude-input" className="text-[10px] text-slate-700 block mb-0.5 font-semibold">Latitude</label>
                 <input
+                  id="geo-latitude-input"
                   type="text"
-                  className="w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white font-mono"
+                  className="w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white font-mono text-slate-800"
                   placeholder="e.g. 37.7749"
                   value={(() => {
                     if (currentProject.content?.startsWith('geo:')) {
@@ -595,10 +626,11 @@ export default function ControlPanel({
               </div>
 
               <div>
-                <label className="text-[10px] text-gray-500 block mb-0.5">Longitude</label>
+                <label htmlFor="geo-longitude-input" className="text-[10px] text-slate-700 block mb-0.5 font-semibold">Longitude</label>
                 <input
+                  id="geo-longitude-input"
                   type="text"
-                  className="w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white font-mono"
+                  className="w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white font-mono text-slate-800"
                   placeholder="e.g. -122.4194"
                   value={(() => {
                     if (currentProject.content?.startsWith('geo:')) {
@@ -741,10 +773,11 @@ export default function ControlPanel({
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm grid grid-cols-2 gap-4"
       >
-        <div>
-          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block mb-2">Corner Eyes</label>
+       <div>
+          <label htmlFor="eye-style-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase block mb-2">Corner Eyes</label>
           <select
-            className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            id="eye-style-select"
+            className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
             value={currentProject.design?.eyeStyle || 'square'}
             onChange={e => setDesignField('eyeStyle', e.target.value)}
           >
@@ -756,9 +789,10 @@ export default function ControlPanel({
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block mb-2">Internal Dots</label>
+          <label htmlFor="dot-style-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase block mb-2">Internal Dots</label>
           <select
-            className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            id="dot-style-select"
+            className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
             value={currentProject.design?.dotStyle || 'square'}
             onChange={e => setDesignField('dotStyle', e.target.value)}
           >
@@ -783,8 +817,8 @@ export default function ControlPanel({
       >
         <div className="flex justify-between items-center">
           <div>
-            <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block">Finder Eye Colors</label>
-            <span className="text-[10px] text-gray-400 block">Independently color the three main corner eyes.</span>
+            <span className="text-xs font-semibold text-slate-800 tracking-wider uppercase block">Finder Eye Colors</span>
+            <span className="text-[10px] text-slate-600 block">Independently color the three main corner eyes.</span>
           </div>
           {(currentProject.design?.eyeColorTopLeft || currentProject.design?.eyeColorTopRight || currentProject.design?.eyeColorBottomLeft) ? (
             <button
@@ -804,9 +838,10 @@ export default function ControlPanel({
         <div className="grid grid-cols-3 gap-3 pt-1">
           {/* Top-Left Eye */}
           <div className="flex flex-col items-center p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 transition-all">
-            <span className="text-[10px] text-gray-500 font-medium mb-1.5 text-center">Top-Left</span>
+            <label htmlFor="eye-color-tl" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">Top-Left</label>
             <div className="relative group">
               <input
+                id="eye-color-tl"
                 type="color"
                 className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
                 value={currentProject.design?.eyeColorTopLeft || currentProject.design?.fgColor || '#0f172a'}
@@ -815,16 +850,17 @@ export default function ControlPanel({
                 }}
               />
             </div>
-            <span className="text-[9px] font-mono text-gray-455 mt-1 uppercase block truncate max-w-full">
+            <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
               {currentProject.design?.eyeColorTopLeft ? currentProject.design.eyeColorTopLeft : 'Inherited'}
             </span>
           </div>
 
           {/* Top-Right Eye */}
           <div className="flex flex-col items-center p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 transition-all">
-            <span className="text-[10px] text-gray-500 font-medium mb-1.5 text-center">Top-Right</span>
+            <label htmlFor="eye-color-tr" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">Top-Right</label>
             <div className="relative group">
               <input
+                id="eye-color-tr"
                 type="color"
                 className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
                 value={currentProject.design?.eyeColorTopRight || currentProject.design?.fgColor || '#0f172a'}
@@ -833,16 +869,17 @@ export default function ControlPanel({
                 }}
               />
             </div>
-            <span className="text-[9px] font-mono text-gray-455 mt-1 uppercase block truncate max-w-full">
+            <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
               {currentProject.design?.eyeColorTopRight ? currentProject.design.eyeColorTopRight : 'Inherited'}
             </span>
           </div>
 
           {/* Bottom-Left Eye */}
           <div className="flex flex-col items-center p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 transition-all">
-            <span className="text-[10px] text-gray-500 font-medium mb-1.5 text-center">Bottom-Left</span>
+            <label htmlFor="eye-color-bl" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">Bottom-Left</label>
             <div className="relative group">
               <input
+                id="eye-color-bl"
                 type="color"
                 className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
                 value={currentProject.design?.eyeColorBottomLeft || currentProject.design?.fgColor || '#0f172a'}
@@ -851,7 +888,7 @@ export default function ControlPanel({
                 }}
               />
             </div>
-            <span className="text-[9px] font-mono text-gray-455 mt-1 uppercase block truncate max-w-full">
+            <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
               {currentProject.design?.eyeColorBottomLeft ? currentProject.design.eyeColorBottomLeft : 'Inherited'}
             </span>
           </div>
@@ -870,10 +907,11 @@ export default function ControlPanel({
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
         <div className="flex justify-between items-center mb-1.5">
-          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase">Quiet Zone (Margin)</label>
+          <label htmlFor="quiet-zone-range" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Quiet Zone (Margin)</label>
           <span className="text-xs text-indigo-600 font-mono font-medium">{currentProject.design?.margin ?? 20}px</span>
         </div>
         <input
+          id="quiet-zone-range"
           type="range"
           min="0"
           max="80"
@@ -882,7 +920,7 @@ export default function ControlPanel({
           value={currentProject.design?.margin ?? 20}
           onChange={e => setDesignField('margin', parseInt(e.target.value, 10))}
         />
-        <p className="text-[10px] text-gray-400 mt-1">Adjusts the whitespace board surrounding the code to improve scannability.</p>
+        <p className="text-[10px] text-slate-600 mt-1">Adjusts the whitespace board surrounding the code to improve scannability.</p>
       </motion.div>
 
       {/* Error Correction Level Slider */}
@@ -897,7 +935,7 @@ export default function ControlPanel({
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
         <div className="flex justify-between items-center mb-1.5">
-          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase">Error Correction Level</label>
+          <label htmlFor="error-correction-range" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Error Correction Level</label>
           <span className="text-xs text-indigo-600 font-mono font-bold">
             {currentProject.design?.errorCorrectionLevel || 'H'}
           </span>
@@ -906,6 +944,7 @@ export default function ControlPanel({
         <div className="space-y-3">
           <div className="relative pt-1">
             <input
+              id="error-correction-range"
               type="range"
               min="0"
               max="3"
@@ -926,7 +965,7 @@ export default function ControlPanel({
             />
             
             {/* Custom Markers / Labels along the range axis */}
-            <div className="flex justify-between text-[10px] font-bold text-gray-400 mt-1 px-1 font-mono">
+            <div className="flex justify-between text-[10px] font-bold text-slate-500 mt-1 px-1 font-mono">
               <span className={(() => {
                 const ec = currentProject.design?.errorCorrectionLevel || 'H';
                 return ec === 'L' ? 'text-indigo-600 scale-110 font-black font-sans' : 'font-sans';
@@ -946,7 +985,7 @@ export default function ControlPanel({
             </div>
           </div>
           
-          <p className="text-[10px] text-gray-400">
+          <p className="text-[10px] text-slate-600">
             {(() => {
               const ec = currentProject.design?.errorCorrectionLevel || 'H';
               if (ec === 'L') return 'Low density. Simplest rendering, but vulnerable to slight scratches/smudges.';
@@ -971,12 +1010,12 @@ export default function ControlPanel({
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-3"
       >
         <div className="flex justify-between items-center">
-          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase">Emblem Center Logo</label>
+          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Emblem Center Logo</label>
           {currentProject.design?.logoUrl && (
             <button
               type="button"
               onClick={clearLogo}
-              className="text-[10px] text-red-500 hover:text-red-700 font-medium transition-colors cursor-pointer"
+              className="text-[10px] text-red-600 hover:text-red-800 font-semibold transition-colors cursor-pointer"
             >
               Clear Emblem
             </button>
@@ -986,8 +1025,9 @@ export default function ControlPanel({
         {/* Text/Emoji custom word input */}
         <div>
           <input
+            id="emblem-url-input"
             type="text"
-            className="w-full text-xs px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+            className="w-full text-xs px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-850"
             placeholder="e.g. Google, QR, or text/emoji"
             value={currentProject.design?.logoUrl || ''}
             onChange={e => {
@@ -995,7 +1035,7 @@ export default function ControlPanel({
               setDesignField('logoUrl', e.target.value);
             }}
           />
-          <p className="text-[10px] text-gray-400 mt-1">Accepts short words, emojis, or external secure image URLs.</p>
+          <p className="text-[10px] text-slate-600 mt-1">Accepts short words, emojis, or external secure image URLs.</p>
         </div>
 
         {/* Drag and Drop Upload Area */}
@@ -1064,10 +1104,11 @@ export default function ControlPanel({
             {/* Logo Rotation Slider */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Logo Rotation</label>
+                <label htmlFor="logo-rotation-range" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Logo Rotation</label>
                 <span className="text-[11px] text-indigo-600 font-mono font-bold">{currentProject.design?.logoRotation ?? 0}°</span>
               </div>
               <input
+                id="logo-rotation-range"
                 type="range"
                 min="0"
                 max="360"
@@ -1081,10 +1122,11 @@ export default function ControlPanel({
             {/* Logo Scale Slider */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Logo Size / Scale</label>
+                <label htmlFor="logo-scale-range" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Logo Size / Scale</label>
                 <span className="text-[11px] text-indigo-600 font-mono font-bold">{Math.round((currentProject.design?.logoScale ?? 0.18) * 100)}%</span>
               </div>
               <input
+                id="logo-scale-range"
                 type="range"
                 min="0.05"
                 max="0.30"
@@ -1115,6 +1157,8 @@ export default function ControlPanel({
         </div>
         <button
           type="button"
+          aria-label="Toggle pattern color shift animation"
+          aria-checked={currentProject.design?.colorShift ? "true" : "false"}
           onClick={() => setDesignField('colorShift', !currentProject.design?.colorShift)}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
             currentProject.design?.colorShift ? 'bg-emerald-600' : 'bg-gray-200'
@@ -1145,6 +1189,8 @@ export default function ControlPanel({
         </div>
         <button
           type="button"
+          aria-label="Toggle short URL and analytics tracking"
+          aria-checked={currentProject.trackingEnabled ? "true" : "false"}
           onClick={() => onChange({ ...currentProject, trackingEnabled: !currentProject.trackingEnabled })}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
             currentProject.trackingEnabled ? 'bg-indigo-600' : 'bg-gray-200'

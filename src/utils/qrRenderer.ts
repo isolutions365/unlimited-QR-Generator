@@ -39,7 +39,23 @@ export async function renderStyledQR(
   const qrSize = Math.max(100, size - margin * 2);
 
   // Generate QR Matrix using standard qrcode package API
-  const qr = qrcode.create(text, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
+  let qr;
+  try {
+    qr = qrcode.create(text, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
+  } catch (err) {
+    console.error("Fatal: QR Code Matrix generation failed inside qrcode package:", err);
+    ctx.fillStyle = options.bgColor;
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#ef4444';
+    ctx.font = 'bold 15px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('QR Code Generation Failed', size / 2, size / 2 - 12);
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('Content might be too long or corrupt.', size / 2, size / 2 + 15);
+    return;
+  }
   const modulesCount = qr.modules.size;
   const cellSize = qrSize / modulesCount;
 
@@ -260,7 +276,18 @@ export function generateStyledSVG(
   const qrSize = Math.max(100, size - margin * 2);
 
   // Generate QR Matrix
-  const qr = qrcode.create(text, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
+  let qr;
+  try {
+    qr = qrcode.create(text, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
+  } catch (err) {
+    console.error("Fatal: SVG QR Code Matrix generation failed inside qrcode package:", err);
+    return `<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
+  <rect width="${size}" height="${size}" fill="${options.bgColor}" />
+  <text x="${size / 2}" y="${size / 2 - 10}" font-family="system-ui, sans-serif" font-weight="bold" font-size="15" fill="#ef4444" text-anchor="middle">QR Code Generation Failed</text>
+  <text x="${size / 2}" y="${size / 2 + 15}" font-family="system-ui, sans-serif" font-size="12" fill="#64748b" text-anchor="middle">Input content is invalid or too long.</text>
+</svg>`;
+  }
   const modulesCount = qr.modules.size;
   const cellSize = qrSize / modulesCount;
 

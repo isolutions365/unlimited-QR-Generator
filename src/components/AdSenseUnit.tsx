@@ -31,21 +31,38 @@ export default function AdSenseUnit({
   const initialized = useRef(false);
 
   useEffect(() => {
-    // Only attempt to push if we are in a browser environment
-    if (typeof window !== 'undefined' && !initialized.current) {
-      try {
-        // Setup window.adsbygoogle array if missing
-        window.adsbygoogle = window.adsbygoogle || [];
-        
-        // Push the advertisement initialization object safely
-        window.adsbygoogle.push({});
-        initialized.current = true;
-      } catch (err) {
-        console.warn('AdSense unit initialization skipped or delayed (expected in dev):', err);
-        setHasError(true);
+    // Only attempt to initialize if we are in a browser environment
+    if (typeof window !== 'undefined') {
+      const isProd = import.meta.env.PROD || process.env.NODE_ENV === 'production';
+      
+      // Load AdSense script dynamically only on production
+      if (isProd) {
+        const hasScript = document.querySelector('script[src*="adsbygoogle.js"]');
+        if (!hasScript) {
+          const script = document.createElement('script');
+          script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`;
+          script.async = true;
+          script.defer = true;
+          script.crossOrigin = 'anonymous';
+          document.head.appendChild(script);
+        }
+      }
+
+      if (!initialized.current) {
+        try {
+          // Setup window.adsbygoogle array if missing
+          window.adsbygoogle = window.adsbygoogle || [];
+          
+          // Push the advertisement initialization object safely
+          window.adsbygoogle.push({});
+          initialized.current = true;
+        } catch (err) {
+          console.warn('AdSense unit initialization skipped or delayed:', err);
+          setHasError(true);
+        }
       }
     }
-  }, []);
+  }, [adClient]);
 
   return (
     <div 
