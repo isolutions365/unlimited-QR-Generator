@@ -13,24 +13,29 @@ export default defineConfig(() => {
     },
     build: {
       target: 'esnext',
-      minify: 'esbuild',
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+        },
+      },
       cssMinify: true,
-      sourcemap: true,
+      sourcemap: 'hidden',
       rollupOptions: {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
               // Group React core vendor
               if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
-                return 'vendor';
+                return 'vendor-react';
               }
               // Group QR-related modules
               if (id.includes('qrcode') || id.includes('qr-scanner')) {
-                return 'qr';
+                return 'vendor-qr';
               }
               // Group Firebase modules
               if (id.includes('firebase')) {
-                return 'firebase';
+                return 'vendor-firebase';
               }
               // Group Icons
               if (id.includes('lucide-react')) {

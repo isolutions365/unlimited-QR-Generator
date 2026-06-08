@@ -107,7 +107,7 @@ export default function ControlPanel({
     { name: 'Amber', main: '#b45309', grad: '#f59e0b' }
   ];
 
-  const containerVariants = {
+  const containerVariants: any = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -117,7 +117,7 @@ export default function ControlPanel({
     }
   };
 
-  const itemVariants = {
+  const itemVariants: any = {
     hidden: { opacity: 0, y: 12 },
     show: {
       opacity: 1,

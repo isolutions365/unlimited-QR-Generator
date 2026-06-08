@@ -104,7 +104,7 @@ function RollingNumber({ value, duration = 1200 }: { value: number; duration?: n
 function AnimatedHeaderTitle() {
   const letters = Array.from("Free QR Generator");
   
-  const containerVariants = {
+  const containerVariants: any = {
     initial: {},
     animate: {
       transition: {
@@ -113,7 +113,7 @@ function AnimatedHeaderTitle() {
     }
   };
   
-  const letterVariants = {
+  const letterVariants: any = {
     initial: { 
       opacity: 0, 
       y: 8,
@@ -178,7 +178,7 @@ function AnimatedHeaderTitle() {
   );
 }
 
-const drawerVariants = {
+const drawerVariants: any = {
   hidden: { x: '100%', opacity: 0.95 },
   visible: {
     x: 0,
@@ -202,7 +202,7 @@ const drawerVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: any = {
   hidden: { opacity: 0, x: 25 },
   visible: {
     opacity: 1,
@@ -215,7 +215,7 @@ const itemVariants = {
   }
 };
 
-const categoryContainerVariants = {
+const categoryContainerVariants: any = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -226,7 +226,7 @@ const categoryContainerVariants = {
   }
 };
 
-const categoryCardVariants = {
+const categoryCardVariants: any = {
   hidden: { opacity: 0, y: 50, scale: 0.9 },
   visible: {
     opacity: 1,

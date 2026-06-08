@@ -33,7 +33,7 @@ export default function AdSenseUnit({
   useEffect(() => {
     // Only attempt to initialize if we are in a browser environment
     if (typeof window !== 'undefined') {
-      const isProd = import.meta.env.PROD || process.env.NODE_ENV === 'production';
+      const isProd = (import.meta as any).env?.PROD || (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') || (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1');
       
       // Load AdSense script dynamically only on production
       if (isProd) {
