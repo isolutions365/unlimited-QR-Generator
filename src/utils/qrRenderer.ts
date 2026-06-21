@@ -18,6 +18,7 @@ interface DrawOptions {
   logoAutoCenter?: boolean;
   logoOffsetX?: number;
   logoOffsetY?: number;
+  skipLogoImage?: boolean;
 }
 
 /**
@@ -208,7 +209,9 @@ export async function renderStyledQR(
 
     // Try rendering image logo
     try {
-      if (options.logoUrl.startsWith('http') || options.logoUrl.startsWith('data:image')) {
+      if (options.skipLogoImage) {
+        // Skip rendering the centerpiece image/text inside the canvas to allow a smooth Framer Motion overlay instead
+      } else if (options.logoUrl.startsWith('http') || options.logoUrl.startsWith('data:image')) {
         const img = new Image();
         img.src = options.logoUrl;
         await new Promise<void>((resolve, reject) => {

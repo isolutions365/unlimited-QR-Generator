@@ -4,6 +4,7 @@ import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, P
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
+import qrcode from 'qrcode';
 
 interface ControlPanelProps {
   currentProject: Partial<QRProject>;
@@ -25,6 +26,31 @@ export default function ControlPanel({
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const calculateAutoCenterOffsets = () => {
+    const errorCorrectionLevel = currentProject.design?.errorCorrectionLevel || 'H';
+    const margin = typeof currentProject.design?.margin === 'number' ? currentProject.design?.margin : 20;
+    const qrContent = currentProject.content || 'https://google.com';
+    const trackingEnabled = currentProject.trackingEnabled || false;
+    const trackingId = currentProject.trackingId || '';
+    const appUrl = (window as any).location?.origin || '';
+    const trackingUrl = trackingId ? `${appUrl}/qr/${trackingId}` : null;
+    const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : qrContent;
+
+    try {
+      const qr = qrcode.create(textToEncode, { errorCorrectionLevel });
+      const modulesCount = qr.modules.size;
+      const size = 450;
+      const qrSize = Math.max(100, size - margin * 2);
+      const cellSize = qrSize / modulesCount;
+      const eyeSize = cellSize * 7;
+      const offsetX = Math.round(eyeSize * 0.04 * 10) / 10;
+      const offsetY = Math.round(eyeSize * 0.04 * 10) / 10;
+      return { modulesCount, cellSize, eyeSize, offsetX, offsetY };
+    } catch (e) {
+      return { modulesCount: 29, cellSize: 14.1, eyeSize: 98.7, offsetX: 3.9, offsetY: 3.9 };
+    }
+  };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -1040,8 +1066,130 @@ export default function ControlPanel({
                 </button>
               </div>
 
-              {/* Conditionally show Manual Offset controls when Auto-Center is disabled */}
-              {currentProject.design?.logoAutoCenter === false ? (
+              {/* Real-time Visual Alignment Preview Box */}
+              <div className="mt-4 p-3 bg-slate-50 border border-slate-150 rounded-xl space-y-2.5">
+                <div className="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider">
+                  <span>Alignment Simulator Preview</span>
+                  <span className="text-[9px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded cursor-default select-none">Live viewport</span>
+                </div>
+                
+                <div className="flex items-center gap-3.5">
+                  {/* Miniature QR mock representation */}
+                  <div className="relative w-28 h-28 bg-white border border-slate-200/80 rounded-lg p-2 flex items-center justify-center overflow-hidden shadow-inner group cursor-help shrink-0">
+                    {/* Grid of background dots to visually simulate QR bits */}
+                    <div className="absolute inset-2 grid grid-cols-7 grid-rows-7 gap-1 opacity-[0.05] select-none pointer-events-none">
+                      {Array.from({ length: 49 }).map((_, i) => (
+                        <div key={i} className="bg-slate-900 rounded-xs" />
+                      ))}
+                    </div>
+
+                    {/* Left & Right Crosshair Axis lines for clear visualization on hover */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25 group-hover:opacity-70 transition-opacity duration-200">
+                      <div className="w-full h-[0.5px] border-b border-dashed border-indigo-400" />
+                      <div className="absolute h-full w-[0.5px] border-l border-dashed border-indigo-400" />
+                    </div>
+
+                    {/* Corner Finder Eyes */}
+                    {/* Top-Left */}
+                    <div className="absolute top-1.5 left-1.5 w-6 h-6 border-2 border-slate-800 rounded-[5px] p-0.5 flex items-center justify-center bg-white">
+                      <div className="w-2.5 h-2.5 bg-slate-800 rounded-[1.5px]" />
+                    </div>
+                    {/* Top-Right */}
+                    <div className="absolute top-1.5 right-1.5 w-6 h-6 border-2 border-slate-800 rounded-[5px] p-0.5 flex items-center justify-center bg-white">
+                      <div className="w-2.5 h-2.5 bg-slate-800 rounded-[1.5px]" />
+                    </div>
+                    {/* Bottom-Left */}
+                    <div className="absolute bottom-1.5 left-1.5 w-6 h-6 border-2 border-slate-800 rounded-[5px] p-0.5 flex items-center justify-center bg-white">
+                      <div className="w-2.5 h-2.5 bg-slate-800 rounded-[1.5px]" />
+                    </div>
+
+                    {/* Logo Representative Marker */}
+                    {currentProject.design?.logoUrl && (
+                      <motion.div
+                        className="absolute flex items-center justify-center shadow-md bg-white border border-slate-100 z-10 p-0.5"
+                        animate={{
+                          x: currentProject.design?.logoAutoCenter !== false 
+                            ? calculateAutoCenterOffsets().offsetX * (112 / 450)
+                            : (currentProject.design?.logoOffsetX ?? 0) * (112 / 450),
+                          y: currentProject.design?.logoAutoCenter !== false 
+                            ? calculateAutoCenterOffsets().offsetY * (112 / 450)
+                            : (currentProject.design?.logoOffsetY ?? 0) * (112 / 450),
+                          rotate: currentProject.design?.logoRotation ?? 0,
+                          scale: (currentProject.design?.logoScale ?? 0.18) / 0.18
+                        }}
+                        transition={{ type: 'spring', stiffness: 350, damping: 20 }}
+                        style={{
+                          width: `${112 * (currentProject.design?.logoScale ?? 0.18)}px`,
+                          height: `${112 * (currentProject.design?.logoScale ?? 0.18)}px`,
+                          borderRadius: `${Math.max(2, 112 * (currentProject.design?.logoScale ?? 0.18) * 0.22)}px`
+                        }}
+                      >
+                        {(() => {
+                          const logoUrl = currentProject.design?.logoUrl || '';
+                          const isImg = logoUrl.startsWith('http') || logoUrl.startsWith('data:image');
+                          if (isImg) {
+                            return (
+                              <img 
+                                src={logoUrl} 
+                                alt="Logo mini preview" 
+                                className="w-full h-full object-contain"
+                                style={{ borderRadius: '1.5px' }}
+                                referrerPolicy="no-referrer"
+                              />
+                            );
+                          } else {
+                            return (
+                              <div className="w-full h-full flex items-center justify-center font-bold text-[6px] text-white bg-indigo-650 rounded-[1.5px] uppercase select-none">
+                                {logoUrl.slice(0, 2)}
+                              </div>
+                            );
+                          }
+                        })()}
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* Alignment description or status helper */}
+                  <div className="flex-1 space-y-1">
+                    <span className="text-[10px] font-bold text-slate-800 block">
+                      {currentProject.design?.logoAutoCenter !== false ? '✨ Optical Auto-Balanced' : '🔧 Manually Adjusted'}
+                    </span>
+                    <p className="text-[8.5px] text-slate-500 leading-normal">
+                      {currentProject.design?.logoAutoCenter !== false 
+                        ? 'Logo shifted slightly top-left to achieve visual symmetry with asymmetric finder pattern count.' 
+                        : 'Custom offset coordinates applied over the physical grid coordinate origin.'}
+                    </p>
+                    <div className="flex items-center gap-1.5 pt-0.5 text-[8px] text-slate-400 font-semibold uppercase tracking-wider">
+                      <span className="inline-block w-1 h-1 rounded-full bg-slate-400" />
+                      <span>Hover grid to show alignment guides</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                           {/* Conditionally show Manual Offset controls when Auto-Center is disabled or show dynamic calculation when active */}
+              {currentProject.design?.logoAutoCenter !== false ? (
+                <div className="mt-3 p-3 bg-indigo-50/50 border border-indigo-100/60 rounded-xl space-y-2 text-slate-700 animate-in fade-in duration-200">
+                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block">Automatic Weight Balancing</span>
+                  <div className="grid grid-cols-2 gap-2 text-[10px]">
+                    <div className="bg-white/80 p-2 rounded-lg border border-indigo-50/50 flex flex-col justify-center">
+                      <span className="text-slate-500 text-[8.5px]">Offset X (Horizontal)</span>
+                      <span className="font-mono font-bold text-slate-800 text-[11px] mt-0.5">
+                        +{calculateAutoCenterOffsets().offsetX} px
+                      </span>
+                    </div>
+                    <div className="bg-white/80 p-2 rounded-lg border border-indigo-50/50 flex flex-col justify-center">
+                      <span className="text-slate-500 text-[8.5px]">Offset Y (Vertical)</span>
+                      <span className="font-mono font-bold text-slate-800 text-[11px] mt-0.5">
+                        +{calculateAutoCenterOffsets().offsetY} px
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[8.5px] text-slate-500 leading-normal mt-1">
+                    Balanced calculated offset accounts for standard QR Code eye pattern asymmetry ({calculateAutoCenterOffsets().modulesCount}x{calculateAutoCenterOffsets().modulesCount} grid), automatically shifting the centerpiece slightly top-left by 4% of eye footprint size to ensure absolute visual/optical balance.
+                  </p>
+                </div>
+              ) : (
                 <div className="mt-3.5 p-3 bg-white border border-gray-250/60 rounded-xl space-y-3 shadow-2xs animate-in fade-in duration-200">
                   <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block mb-1">Manual Center Fine-Tuning</span>
                   
@@ -1091,12 +1239,6 @@ export default function ControlPanel({
                       Manually shift logo placement in pixels relative to the physical center.
                     </p>
                   </div>
-                </div>
-              ) : (
-                <div className="mt-2.5 p-2 bg-indigo-50/50 border border-indigo-150/40 rounded-xl flex items-center gap-1.5">
-                  <span className="text-[9px] text-indigo-700 font-medium leading-relaxed">
-                    ✨ Auto-alignment balances center coordinates relative to the finder frames.
-                  </span>
                 </div>
               )}
             </div>

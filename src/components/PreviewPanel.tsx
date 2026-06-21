@@ -3,6 +3,7 @@ import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG } from '../utils/qrRenderer';
 import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import qrcode from 'qrcode';
 
 interface PreviewPanelProps {
   currentProject: Partial<QRProject>;
@@ -92,7 +93,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         eyeColorTopLeft: eyeColorTopLeft || undefined,
         eyeColorTopRight: eyeColorTopRight || undefined,
         eyeColorBottomLeft: eyeColorBottomLeft || undefined,
-        errorCorrectionLevel
+        errorCorrectionLevel,
+        skipLogoImage: isPrintModalOpen ? false : true
       });
     }
   }, [
@@ -113,11 +115,38 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     eyeColorTopLeft,
     eyeColorTopRight,
     eyeColorBottomLeft,
-    errorCorrectionLevel
+    errorCorrectionLevel,
+    isPrintModalOpen
   ]);
 
   const handleExport = async () => {
     if (!canvasRef.current) return;
+
+    const needsRedrawForExport = !isPrintModalOpen;
+
+    if (needsRedrawForExport) {
+      // Re-draw onto canvas WITH the logo before exporting!
+      await renderStyledQR(canvasRef.current, textToEncode, {
+        fgColor,
+        bgColor,
+        gradientType,
+        gradientColor,
+        dotStyle,
+        eyeStyle,
+        logoUrl: logoUrl || undefined,
+        logoScale,
+        margin,
+        logoRotation,
+        logoAutoCenter,
+        logoOffsetX,
+        logoOffsetY,
+        eyeColorTopLeft: eyeColorTopLeft || undefined,
+        eyeColorTopRight: eyeColorTopRight || undefined,
+        eyeColorBottomLeft: eyeColorBottomLeft || undefined,
+        errorCorrectionLevel,
+        skipLogoImage: false
+      });
+    }
 
     if (selectedFormat === 'PNG') {
       const link = document.createElement('a');
@@ -182,6 +211,30 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       pdf.text("Scan the QR code above to navigate/decode.", 105, 184, { align: "center" });
 
       pdf.save(`${currentProject.name || 'qr-code'}.pdf`);
+    }
+
+    if (needsRedrawForExport) {
+      // Restore on-screen canvas (no logo image)
+      await renderStyledQR(canvasRef.current, textToEncode, {
+        fgColor,
+        bgColor,
+        gradientType,
+        gradientColor,
+        dotStyle,
+        eyeStyle,
+        logoUrl: logoUrl || undefined,
+        logoScale,
+        margin,
+        logoRotation,
+        logoAutoCenter,
+        logoOffsetX,
+        logoOffsetY,
+        eyeColorTopLeft: eyeColorTopLeft || undefined,
+        eyeColorTopRight: eyeColorTopRight || undefined,
+        eyeColorBottomLeft: eyeColorBottomLeft || undefined,
+        errorCorrectionLevel,
+        skipLogoImage: true
+      });
     }
 
     // Trigger visual success checkmark animation
@@ -556,6 +609,38 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     }, 1000);
   };
 
+  // Setup calculated center offset for overlay
+  const getScaleFactorAndOffsets = () => {
+    const scaleFactor = 264 / 450;
+    let offsetX = 0;
+    let offsetY = 0;
+    
+    if (logoAutoCenter !== false) {
+      try {
+        const qr = qrcode.create(textToEncode, { errorCorrectionLevel });
+        const modulesCount = qr.modules.size;
+        const qrSize = Math.max(100, 450 - margin * 2);
+        const cellSize = qrSize / modulesCount;
+        const eyeSize = cellSize * 7;
+        offsetX = Math.round(eyeSize * 0.04);
+        offsetY = Math.round(eyeSize * 0.04);
+      } catch (e) {
+        // Fallback
+      }
+    } else {
+      offsetX = logoOffsetX;
+      offsetY = logoOffsetY;
+    }
+
+    return {
+      scaleFactor,
+      offsetX: offsetX * scaleFactor,
+      offsetY: offsetY * scaleFactor
+    };
+  };
+
+  const { offsetX: onScreenOffsetX, offsetY: onScreenOffsetY } = getScaleFactorAndOffsets();
+
   return (
     <div className="flex flex-col gap-6">
       {/* QR Board Canvas */}
@@ -567,6 +652,68 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               className="max-w-full rounded-lg bg-white transition-transform duration-300 group-hover:scale-[0.98]"
               style={{ width: '264px', height: '264px' }}
             />
+
+            {/* Elegant overlay logo with smooth scaling on change */}
+            {logoUrl && !isPrintModalOpen && (
+              <div 
+                className="absolute inset-0 flex items-center justify-center pointer-events-none z-[5]"
+                style={{
+                  transform: `translate(${onScreenOffsetX}px, ${onScreenOffsetY}px)`
+                }}
+              >
+                <motion.div
+                  key={logoUrl} // Unmount and mount new element to trigger entry spring pop animation!
+                  initial={{ scale: 0, opacity: 0, rotate: logoRotation - 30 }}
+                  animate={{ scale: 1, opacity: 1, rotate: logoRotation }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 15,
+                  }}
+                  whileHover={{ scale: 1.15, rotate: logoRotation + 8 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center justify-center shadow-[0_3px_10px_rgba(0,0,0,0.1)] select-none"
+                  style={{
+                    width: `${264 * logoScale}px`,
+                    height: `${264 * logoScale}px`,
+                    backgroundColor: bgColor,
+                    borderRadius: `${Math.max(4, 264 * logoScale * 0.22)}px`,
+                    padding: '2.5px',
+                    pointerEvents: 'auto', // Allow cursor interactions
+                  }}
+                >
+                  {(() => {
+                    const isImg = logoUrl.startsWith('http') || logoUrl.startsWith('data:image');
+                    const sizePx = 264 * logoScale;
+                    const borderRadiusVal = `${Math.max(2, sizePx * 0.16)}px`;
+                    
+                    if (isImg) {
+                      return (
+                        <img 
+                          src={logoUrl} 
+                          alt="QR Centerpiece Logo"
+                          className="w-full h-full object-contain"
+                          style={{ borderRadius: borderRadiusVal }}
+                          referrerPolicy="no-referrer"
+                        />
+                      );
+                    } else {
+                      return (
+                        <div 
+                          className="w-full h-full flex items-center justify-center font-black text-white tracking-wider bg-gradient-to-tr from-indigo-600 to-violet-600 shadow-inner"
+                          style={{ 
+                            fontSize: `${sizePx * 0.38}px`,
+                            borderRadius: borderRadiusVal
+                          }}
+                        >
+                          {logoUrl.slice(0, 3).toUpperCase()}
+                        </div>
+                      );
+                    }
+                  })()}
+                </motion.div>
+              </div>
+            )}
 
             {/* Elegant Hover QR Scanner Overlay */}
             <div className="absolute inset-2 bg-slate-950/40 backdrop-blur-[1.5px] rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center z-10 pointer-events-none select-none">
