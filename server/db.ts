@@ -124,13 +124,62 @@ export let db: any;
 
 export function getDb() {
   if (!db) {
-    let firebaseConfig: any;
-    try {
-      const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
-      firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-    } catch (e) {
-      console.error("Critical: Failed to load firebase-applet-config.json:", e);
+    const envApiKey = process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY;
+    const envAuthDomain = process.env.VITE_FIREBASE_AUTH_DOMAIN || process.env.FIREBASE_AUTH_DOMAIN;
+    const envProjectId = process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID;
+    const envStorageBucket = process.env.VITE_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET;
+    const envMessagingSenderId = process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env.FIREBASE_MESSAGING_SENDER_ID;
+    const envAppId = process.env.VITE_FIREBASE_APP_ID || process.env.FIREBASE_APP_ID;
+    const envFirestoreDbId = process.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || process.env.FIREBASE_FIRESTORE_DATABASE_ID;
+    const envMeasurementId = process.env.VITE_FIREBASE_MEASUREMENT_ID || process.env.FIREBASE_MEASUREMENT_ID;
+
+    let firebaseConfig: any = null;
+
+    if (envApiKey && envProjectId) {
+      console.log("Firebase initialized successfully using system environment variables.");
+      firebaseConfig = {
+        apiKey: envApiKey,
+        authDomain: envAuthDomain,
+        projectId: envProjectId,
+        storageBucket: envStorageBucket,
+        messagingSenderId: envMessagingSenderId,
+        appId: envAppId,
+        measurementId: envMeasurementId,
+        firestoreDatabaseId: envFirestoreDbId
+      };
+    } else {
+      try {
+        const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
+        if (fs.existsSync(configPath)) {
+          const rawConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+          firebaseConfig = {
+            apiKey: (!rawConfig.apiKey || rawConfig.apiKey.includes('REPLACE_WITH_VITE_FIREBASE_API_KEY') || rawConfig.apiKey.includes('YOUR_FIREBASE_API_KEY')) ? "" : rawConfig.apiKey,
+            authDomain: rawConfig.authDomain,
+            projectId: rawConfig.projectId,
+            storageBucket: rawConfig.storageBucket,
+            messagingSenderId: rawConfig.messagingSenderId,
+            appId: rawConfig.appId,
+            measurementId: rawConfig.measurementId,
+            firestoreDatabaseId: rawConfig.firestoreDatabaseId
+          };
+        }
+      } catch (e) {
+        console.error("Critical Failure: Failed to parse firebase-applet-config.json:", e);
+      }
     }
+
+    if (!firebaseConfig || !firebaseConfig.apiKey) {
+      console.warn("Warning: Firebase is running with fallback mock credentials. Real-time scanning sync features will be offline. Please supply system variables or verify .env layout.");
+      firebaseConfig = {
+        apiKey: "dummy-api-key-fallback-for-tests",
+        authDomain: "dummy-domain.firebaseapp.com",
+        projectId: "dummy-project-12345",
+        storageBucket: "dummy-bucket.appspot.com",
+        messagingSenderId: "12345678",
+        appId: "1:12345:web:abcdef"
+      };
+    }
+
     const firebaseApp = initializeApp(firebaseConfig);
     db = initializeFirestore(firebaseApp, {
       experimentalForceLongPolling: true,
