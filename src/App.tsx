@@ -5,6 +5,7 @@ import { landingPages } from './components/landing/SEODatabase';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
 import AdSenseUnit from './components/AdSenseUnit';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Code-splitting via React.lazy for non-critical elements (improves LCP, FCP, Speed Index)
 const SEOPage = React.lazy(() => import('./components/landing/SEOPage'));
@@ -2628,6 +2629,7 @@ export default function App() {
             </motion.div>
           ))}
         </AnimatePresence>
+      <SpeedInsights />
       </div>
     </div>
   );
