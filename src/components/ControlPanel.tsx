@@ -185,16 +185,16 @@ export default function ControlPanel({
         <div className="grid grid-cols-5 gap-2">
           {(
             [
-              { id: 'url', icon: Link2, label: 'URL' },
-              { id: 'text', icon: AlignLeft, label: 'Text' },
-              { id: 'wifi', icon: Wifi, label: 'WiFi' },
-              { id: 'email', icon: Mail, label: 'Email' },
-              { id: 'card', icon: ScanFace, label: 'Card' },
-              { id: 'phone', icon: Phone, label: 'Phone' },
-              { id: 'sms', icon: MessageSquare, label: 'SMS' },
-              { id: 'social', icon: Share2, label: 'Social' },
-              { id: 'crypto', icon: Coins, label: 'Crypto' },
-              { id: 'geo', icon: MapPin, label: 'Location' }
+              { id: 'url', icon: Link2, label: 'URL', color: 'text-blue-500' },
+              { id: 'text', icon: AlignLeft, label: 'Text', color: 'text-purple-500' },
+              { id: 'wifi', icon: Wifi, label: 'WiFi', color: 'text-emerald-500' },
+              { id: 'email', icon: Mail, label: 'Email', color: 'text-red-500' },
+              { id: 'card', icon: ScanFace, label: 'Card', color: 'text-pink-500' },
+              { id: 'phone', icon: Phone, label: 'Phone', color: 'text-teal-500' },
+              { id: 'sms', icon: MessageSquare, label: 'SMS', color: 'text-indigo-500' },
+              { id: 'social', icon: Share2, label: 'Social', color: 'text-orange-500' },
+              { id: 'crypto', icon: Coins, label: 'Crypto', color: 'text-amber-500' },
+              { id: 'geo', icon: MapPin, label: 'Location', color: 'text-cyan-500' }
             ] as const
           ).map(type => {
             const Icon = type.icon;
@@ -203,14 +203,23 @@ export default function ControlPanel({
               <button
                 key={type.id}
                 type="button"
-                className={`py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
+                className={`relative group py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
                   isSelected
                     ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100 scale-105'
                     : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
                 }`}
                 onClick={() => onChange({ ...currentProject, type: type.id })}
               >
-                <Icon className="w-4 h-4" />
+                {/* Circular radio/selection indicator */}
+                <span 
+                  className={`absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full border transition-all ${
+                    isSelected 
+                      ? 'border-white bg-white scale-110 shadow-xs' 
+                      : 'border-slate-350 bg-white group-hover:border-slate-450'
+                  }`} 
+                />
+
+                <Icon className={`w-4 h-4 transition-colors ${isSelected ? 'text-white' : type.color}`} />
                 <span className="text-[10px] font-medium">{type.label}</span>
               </button>
             );
