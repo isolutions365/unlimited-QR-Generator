@@ -1,5 +1,5 @@
 {
-  "name": "Free QR Generator",
+  "name": "Unlimited QR Generator Premium",
   "description": "A production-ready QR code generator with options to customize colors, inner dots, shapes, add custom brand logos, save projects to history with real-time analytics dashboards.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

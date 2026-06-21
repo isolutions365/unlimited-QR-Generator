@@ -20,12 +20,20 @@ export interface QRProject {
     eyeColorTopRight?: string; // independent color for top-right finder eye (optional override)
     eyeColorBottomLeft?: string; // independent color for bottom-left finder eye (optional override)
     errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'; // error correction density (L=7%, M=15%, Q=25%, H=30%)
+    logoAutoCenter?: boolean; // toggle automatic centering or offset
+    logoOffsetX?: number; // logo offset adjustment X (-100 to 100)
+    logoOffsetY?: number; // logo offset adjustment Y (-100 to 100)
   };
   createdAt: string;
   updatedAt?: string;
   scanCount: number;
   trackingEnabled: boolean;
   trackingId: string;
+  expiryDate?: string;
+  expiryRedirectType?: 'message' | 'url';
+  expiryRedirectUrl?: string;
+  expiryMessage?: string;
+  category?: string;
 }
 
 export interface ScanLog {

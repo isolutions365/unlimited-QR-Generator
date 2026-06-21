@@ -106,6 +106,100 @@ class ApiClient {
       method: 'DELETE',
     });
   }
+
+  // --- PREMIUM AI CO-PILOT REST SERVICES ---
+  async suggestColors(industry: string, promptVibe: string): Promise<{
+    primaryColor: string;
+    secondaryColor: string;
+    bgColor: string;
+    gradientType: 'none' | 'linear' | 'radial';
+    gradientColor: string;
+    description: string;
+  }> {
+    return this.request<{
+      primaryColor: string;
+      secondaryColor: string;
+      bgColor: string;
+      gradientType: 'none' | 'linear' | 'radial';
+      gradientColor: string;
+      description: string;
+    }>('/ai/suggest-colors', {
+      method: 'POST',
+      body: JSON.stringify({ industry, promptVibe }),
+    });
+  }
+
+  async suggestStyles(vibe: string): Promise<{
+    dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+    eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
+    errorCorrectionLevel: 'L' | 'M' | 'Q' | 'H';
+    logoScale: number;
+    description: string;
+  }> {
+    return this.request<{
+      dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+      eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
+      errorCorrectionLevel: 'L' | 'M' | 'Q' | 'H';
+      logoScale: number;
+      description: string;
+    }>('/ai/suggest-styles', {
+      method: 'POST',
+      body: JSON.stringify({ vibe }),
+    });
+  }
+
+  async brandMatch(brandName: string, brandDescription: string): Promise<{
+    primaryColor: string;
+    gradientType: 'none' | 'linear' | 'radial';
+    gradientColor: string;
+    bgColor: string;
+    dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+    eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
+    logoScale: number;
+    explanation: string;
+  }> {
+    return this.request<{
+      primaryColor: string;
+      gradientType: 'none' | 'linear' | 'radial';
+      gradientColor: string;
+      bgColor: string;
+      dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+      eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
+      logoScale: number;
+      explanation: string;
+    }>('/ai/brand-match', {
+      method: 'POST',
+      body: JSON.stringify({ brandName, brandDescription }),
+    });
+  }
+
+  async getDesignRecommendations(qrContent: string, currentDesign: any): Promise<{
+    recommendations: string[];
+  }> {
+    return this.request<{
+      recommendations: string[];
+    }>('/ai/design-recommendations', {
+      method: 'POST',
+      body: JSON.stringify({ qrContent, currentDesign }),
+    });
+  }
+
+  async getLayoutOptimization(qrContent: string, currentDesign: any): Promise<{
+    optimizedErrorCorrection: 'L' | 'M' | 'Q' | 'H';
+    optimizedMargin: number;
+    optimizedLogoScale: number;
+    vibe: string;
+  }> {
+    return this.request<{
+      optimizedErrorCorrection: 'L' | 'M' | 'Q' | 'H';
+      optimizedMargin: number;
+      optimizedLogoScale: number;
+      vibe: string;
+    }>('/ai/layout-optimize', {
+      method: 'POST',
+      body: JSON.stringify({ qrContent, currentDesign }),
+    });
+  }
 }
 
 export const api = new ApiClient();

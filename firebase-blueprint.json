@@ -28,7 +28,12 @@
         "updatedAt": { "type": "string", "format": "date-time" },
         "scanCount": { "type": "integer" },
         "trackingEnabled": { "type": "boolean" },
-        "trackingId": { "type": "string" }
+        "trackingId": { "type": "string" },
+        "expiryDate": { "type": "string", "format": "date" },
+        "expiryRedirectType": { "type": "string", "enum": ["message", "url"] },
+        "expiryRedirectUrl": { "type": "string" },
+        "expiryMessage": { "type": "string" },
+        "category": { "type": "string" }
       },
       "required": ["id", "userId", "name", "type", "content", "design", "createdAt", "scanCount", "trackingEnabled", "trackingId"]
     },

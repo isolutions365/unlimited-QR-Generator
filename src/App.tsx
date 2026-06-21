@@ -33,9 +33,10 @@ import {
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
-  BarChart3, Info, MessageSquare, Shield
+  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Joyride, STATUS, Step } from 'react-joyride';
 
 const INITIAL_DESIGN: Partial<QRProject> = {
   id: '',
@@ -257,6 +258,171 @@ export default function App() {
   const [scans, setScans] = useState<ScanLog[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
+  // Real-time scan alerts toasts lists
+  interface LiveToast {
+    id: string;
+    projectName: string;
+    approxLocation: string;
+    deviceType: string;
+    browser: string;
+    timestamp: string;
+  }
+  const [toasts, setToasts] = useState<LiveToast[]>([]);
+  const [nPermission, setNPermission] = useState<NotificationPermission>(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      return Notification.permission;
+    }
+    return 'default';
+  });
+
+  // Request browser Notification API permission
+  const handleRequestNPermission = async () => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      try {
+        const res = await Notification.requestPermission();
+        setNPermission(res);
+      } catch (err) {
+        console.error('[Notification Permission] Request failure:', err);
+      }
+    }
+  };
+
+  // Setup Real-time WebSocket scan notification engine
+  useEffect(() => {
+    if (!user) {
+      setToasts([]);
+      return;
+    }
+
+    const token = localStorage.getItem('qr_jwt_token');
+    if (!token) return;
+
+    let ws: WebSocket | null = null;
+    let reconnectTimeout: NodeJS.Timeout | null = null;
+    let keepAliveInterval: NodeJS.Timeout | null = null;
+    let isClosedOnPurpose = false;
+
+    const establishWS = () => {
+      try {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsHost = window.location.host;
+        const targetUrl = `${protocol}//${wsHost}/ws?token=${token}`;
+
+        console.log('[WS Socket] Initiating real-time endpoint connection:', targetUrl);
+        ws = new WebSocket(targetUrl);
+
+        ws.onopen = () => {
+          console.log('[WS Socket] Connection established successfully.');
+          
+          // Send regular tiny pings to keep reverse proxy connection from cutting off
+          keepAliveInterval = setInterval(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+              ws.send(JSON.stringify({ type: 'ping' }));
+            }
+          }, 30000);
+        };
+
+        ws.onmessage = (event) => {
+          try {
+            const parsed = JSON.parse(event.data);
+            if (parsed.type === 'NEW_SCAN') {
+              console.log('[WS Socket] Incoming real-time scan metrics:', parsed.data);
+              const data = parsed.data;
+
+              // Append toast safely
+              const uid = `toast-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+              setToasts((prev) => [
+                ...prev,
+                {
+                  id: uid,
+                  projectName: data.projectName,
+                  approxLocation: data.approxLocation,
+                  deviceType: data.deviceType,
+                  browser: data.browser,
+                  timestamp: data.timestamp
+                }
+              ]);
+
+              // Play subtle synth-synthesized notification tone (chime sound effect)
+              try {
+                const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+                if (AudioCtx) {
+                  const audio = new AudioCtx();
+                  const osc = audio.createOscillator();
+                  const gainNode = audio.createGain();
+                  
+                  osc.type = 'sine';
+                  osc.frequency.setValueAtTime(523.25, audio.currentTime); // C5 principal
+                  osc.frequency.setValueAtTime(783.99, audio.currentTime + 0.08); // G5 chime accent
+                  
+                  gainNode.gain.setValueAtTime(0.06, audio.currentTime);
+                  gainNode.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.4);
+                  
+                  osc.connect(gainNode);
+                  gainNode.connect(audio.destination);
+                  
+                  osc.start();
+                  osc.stop(audio.currentTime + 0.4);
+                }
+              } catch (soundErr) {
+                console.warn('[WS Socket] Audio tone play blocked:', soundErr);
+              }
+
+              // Deliver desktop native notification if granted
+              if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+                try {
+                  const alertTitle = `New Scan: ${data.projectName}`;
+                  new Notification(alertTitle, {
+                    body: `📍 Location: ${data.approxLocation}\n📱 Device: ${data.deviceType} (${data.browser})\n🌐 IP: ${data.ip}`,
+                    icon: '/favicon.ico',
+                    tag: data.id,
+                    silent: true // audio manually outputted
+                  });
+                } catch (desktopNotifyErr) {
+                  console.error('[WS Socket] Native notify call failed:', desktopNotifyErr);
+                }
+              }
+
+              // Refresh Recharts widgets & list logs instantly!
+              fetchUserData();
+            }
+          } catch (msgErr) {
+            console.error('[WS Socket] Message decoding failed:', msgErr);
+          }
+        };
+
+        ws.onclose = (ev) => {
+          if (keepAliveInterval) clearInterval(keepAliveInterval);
+          if (!isClosedOnPurpose) {
+            console.warn('[WS Socket] Connection lost. Attempting reconnection in 4 seconds...');
+            reconnectTimeout = setTimeout(establishWS, 4000);
+          }
+        };
+
+        ws.onerror = (wsErr) => {
+          console.error('[WS Socket] Client connection error recorded:', wsErr);
+        };
+      } catch (e) {
+        console.error('[WS Socket] Connection build error:', e);
+      }
+    };
+
+    establishWS();
+
+    return () => {
+      isClosedOnPurpose = true;
+      if (ws) {
+        ws.close();
+      }
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout);
+      }
+      if (keepAliveInterval) {
+        clearInterval(keepAliveInterval);
+      }
+    };
+  }, [user]);
+
   // Localization State
   const [locale, setLocale] = useState<Locale>(() => {
     const saved = localStorage.getItem('app-locale');
@@ -272,9 +438,128 @@ export default function App() {
   };
 
   // Active configurations in the drawing board
-  const [currentProject, setCurrentProject] = useState<Partial<QRProject>>(INITIAL_DESIGN);
+  const [currentProject, setCurrentProject] = useState<Partial<QRProject>>(() => {
+    try {
+      const savedPalette = localStorage.getItem('qr-active-palette');
+      if (savedPalette && savedPalette !== 'Custom') {
+        const presets = [
+          { name: 'Slate', main: '#0f172a', grad: '#3b82f6' },
+          { name: 'Indigo', main: '#4f46e5', grad: '#ec4899' },
+          { name: 'Emerald', main: '#059669', grad: '#10b981' },
+          { name: 'Cherry', main: '#b91c1c', grad: '#f43f5e' },
+          { name: 'Violet', main: '#6d28d9', grad: '#8b5cf6' },
+          { name: 'Amber', main: '#b45309', grad: '#f59e0b' }
+        ];
+        const match = presets.find(p => p.name === savedPalette);
+        if (match) {
+          return {
+            ...INITIAL_DESIGN,
+            design: {
+              ...INITIAL_DESIGN.design!,
+              fgColor: match.main,
+              gradientColor: match.grad,
+            }
+          };
+        }
+      }
+    } catch (err) {
+      console.error('[App] Error reading active palette on startup:', err);
+    }
+    return INITIAL_DESIGN;
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Guided Tour State
+  const [tourRun, setTourRun] = useState(false);
+
+  useEffect(() => {
+    const hasRun = localStorage.getItem('qr-tour-completed');
+    if (!hasRun) {
+      const timer = setTimeout(() => {
+        setTourRun(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleJoyrideCallback = (data: any) => {
+    const { status, type } = data;
+    const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+    if (finishedStatuses.includes(status)) {
+      setTourRun(false);
+      localStorage.setItem('qr-tour-completed', 'true');
+    }
+  };
+
+  const tourSteps: Step[] = [
+    {
+      target: 'body',
+      placement: 'center',
+      title: '✨ Welcome to Free QR Generator!',
+      content: 'Let\'s take a 1-minute guided tour to show you how easy it is to create, brand-customize, and track scannable QR codes for your projects.',
+    },
+    {
+      target: '#tour-qr-type',
+      placement: 'right-start',
+      title: '🔗 Step 1: Choose QR Type',
+      content: 'First, select what content you want to embed. Supports URLs, WiFi credentials, vCard contacts, raw text, social profiles, crypto, or geographic coordinates.',
+    },
+    {
+      target: '#tour-project-details',
+      placement: 'right-start',
+      title: '📝 Step 2: Set Project Name & Content',
+      content: 'Provide a name to keep this QR design organized in your database, then enter the target website link, plain text, or network settings.',
+    },
+    {
+      target: '#tour-color-palette',
+      placement: 'right-start',
+      title: '🎨 Step 3: Brand Color Customization',
+      content: 'Apply beautiful predefined color palettes, or specify exact hex values for solid backgrounds, foregrounds, and dynamic gradient colors!',
+    },
+    {
+      target: '#tour-qr-styles',
+      placement: 'right-start',
+      title: '✨ Step 4: Corner Eyes & Dot Styles',
+      content: 'Tweak node properties to match your brand style. Change Corner Eyes frames (Square, Circle, Leaf) or choose modern Dot configurations.',
+    },
+    {
+      target: '#logo-settings-section',
+      placement: 'right-start',
+      title: '🏷️ Step 5: Overlay Logo or Emoji',
+      content: 'Upload personal images or write simple custom words and emojis directly in the center of the tracker QR.',
+    },
+    {
+      target: '#tour-analytics-toggle',
+      placement: 'top',
+      title: '📊 Step 6: Scan Metrics & Analytics',
+      content: 'Toggle short URL proxy to securely collect visitor scan geo-locations, hardware models, browser user-agents, and scan timestamp graphs.',
+    },
+    {
+      target: '#tour-link-expiration',
+      placement: 'top',
+      title: '⏳ Step 7: Optional Link Expiry',
+      content: 'Control content availability! Set an expiry date and specify whether to show custom warnings or redirect visitors to backup URLs after expiration.',
+    },
+    {
+      target: '#tour-folder-category',
+      placement: 'top',
+      title: '📁 Step 8: Organize in folders',
+      content: 'Assign custom category folders (e.g. "Marketing", "Client A", "Personal") to easily search, sort, and organize designs in your history workspace.',
+    },
+    {
+      target: '#tour-save-button',
+      placement: 'top',
+      title: '💾 Step 9: Save Design to Secure Cloud',
+      content: 'Ready to download or track? Save your completed layout to your cloud storage safely so you never lose your progress.',
+    },
+    {
+      target: '#tour-qr-preview',
+      placement: 'left',
+      title: '📱 Step 10: Real-time Live Preview',
+      content: 'Behold your design live! Every action instantly redraws high-resolution modules. Print custom stickers, copy redirect links, or test scan this QR code directly with your smartphone device!',
+    },
+  ];
 
   // Active Tab
   const [activeTab, setActiveTab ] = useState<'create' | 'templates' | 'analytics' | 'boiler' | 'animations'>('create');
@@ -695,6 +980,68 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50/80 text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased">
+      <Joyride
+        {...({
+          steps: tourSteps,
+          run: tourRun,
+          continuous: true,
+          showSkipButton: true,
+          showProgress: true,
+          overlayClickAction: 'close',
+          callback: handleJoyrideCallback,
+          locale: {
+            back: 'Back',
+            close: 'Close',
+            last: 'Finish',
+            next: 'Next',
+            skip: (
+              <span className="flex flex-col items-start gap-1 text-left select-none">
+                <span className="font-bold text-slate-500 hover:text-indigo-600 transition-colors uppercase tracking-wider text-[11px]">Skip Tour</span>
+                <span className="text-[10px] font-medium text-slate-400 normal-case tracking-normal block leading-snug whitespace-nowrap">
+                  💡 Click anywhere outside to exit
+                </span>
+              </span>
+            )
+          },
+          styles: {
+            options: {
+              arrowColor: '#ffffff',
+              backgroundColor: '#ffffff',
+              overlayColor: 'rgba(15, 23, 42, 0.45)',
+              primaryColor: '#4f46e5',
+              textColor: '#1e293b',
+              zIndex: 10000,
+            },
+            tooltipContainer: {
+              textAlign: 'left',
+            },
+            buttonNext: {
+              backgroundColor: '#4f46e5',
+              color: '#ffffff',
+              borderRadius: '10px',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              padding: '8px 16px',
+              cursor: 'pointer',
+            },
+            buttonBack: {
+              color: '#64748b',
+              fontSize: '12px',
+              fontWeight: '600',
+              marginRight: '12px',
+              cursor: 'pointer',
+            },
+            buttonSkip: {
+              color: '#94a3b8',
+              fontSize: '12px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              textAlign: 'left',
+              padding: '4px 0',
+            }
+          }
+        } as any)}
+      />
           {/* Dynamic Upper Banner */}
       <motion.header 
         animate={{
@@ -957,6 +1304,17 @@ export default function App() {
 
         {/* Auth controllers & Mobile Menu Button */}
         <div className="flex items-center gap-3">
+          {/* Guided Tour Trigger Button */}
+          <button
+            type="button"
+            id="tour-trigger-button"
+            onClick={() => setTourRun(true)}
+            className="flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98] mr-1"
+          >
+            <Sparkles className="w-3 h-3 text-indigo-600" />
+            <span>Tour</span>
+          </button>
+
           {/* Language Switcher Button */}
           <div className="bg-slate-100/80 backdrop-blur-xs rounded-xl p-0.5 border border-slate-200/60 flex items-center mr-1">
             <button
@@ -987,6 +1345,36 @@ export default function App() {
             <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
           ) : user ? (
             <div className="flex items-center gap-3">
+              {/* Desktop alerts permission bell controller */}
+              <button
+                type="button"
+                onClick={handleRequestNPermission}
+                title={
+                  nPermission === 'granted'
+                    ? 'Real-time Desktop Alerts are active'
+                    : nPermission === 'denied'
+                    ? 'Alerts are blocked. Check browser address bar settings.'
+                    : 'Click to enable real-time Desktop Alerts for new scans'
+                }
+                className={`relative p-2 rounded-xl border transition-all cursor-pointer ${
+                  nPermission === 'granted'
+                    ? 'bg-emerald-50/70 text-emerald-600 border-emerald-100 hover:bg-emerald-50'
+                    : nPermission === 'denied'
+                    ? 'bg-slate-100 text-slate-400 border-slate-200/60 cursor-not-allowed'
+                    : 'bg-indigo-50/50 hover:bg-indigo-50 text-indigo-600 border-indigo-100 animate-pulse'
+                }`}
+              >
+                <Bell className="w-3.5 h-3.5" />
+                {nPermission === 'granted' && (
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-emerald-500 ring-2 ring-white animate-ping" />
+                )}
+                {nPermission === 'denied' && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-rose-500 text-white rounded-full w-3 h-3 flex items-center justify-center text-[8px] font-bold">
+                    !
+                  </span>
+                )}
+              </button>
+
               <div className="hidden sm:block text-right">
                 <span className="text-xs font-bold text-gray-800 block">{user.name}</span>
                 <span className="text-[10px] text-gray-400 block truncate max-w-[150px]">{user.email}</span>
@@ -1446,6 +1834,7 @@ export default function App() {
                 onSave={handleSaveProject}
                 isSaving={isSaving}
                 userEmail={user?.email}
+                projects={projects}
               />
 
               {/* Saved History List Ledger */}
@@ -2171,6 +2560,71 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Floating Real-Time Scan Alerts Toaster Panel (Bottom Right) */}
+      <div className="fixed bottom-6 right-6 z-100 w-full max-w-sm flex flex-col gap-3 pointer-events-none p-4" id="floating-notification-toaster-container">
+        <AnimatePresence>
+          {toasts.map((toast) => (
+            <motion.div
+              key={toast.id}
+              initial={{ opacity: 0, y: 30, scale: 0.9, rotateX: 30 }}
+              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+              exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.2 } }}
+              transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+              className="pointer-events-auto bg-slate-900/95 backdrop-blur-md text-white rounded-2xl p-4 shadow-xl border border-slate-800 flex gap-3.5 relative overflow-hidden group hover:bg-slate-900 transition-all duration-300"
+            >
+              {/* Elegant ambient glowing backdrop dot */}
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+              {/* Pulsing visual element */}
+              <div className="w-10 h-10 rounded-xl bg-indigo-700 flex items-center justify-center shrink-0 shadow-md shadow-indigo-950/40 relative">
+                <Radio className="w-5 h-5 text-indigo-300 animate-pulse animate-duration-1000" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-900" />
+              </div>
+
+              {/* Toast info panel details */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-[10px] font-extrabold text-indigo-400 uppercase tracking-widest block font-mono">
+                    Real-Time Scan Notice
+                  </span>
+                  <span className="text-[9px] text-slate-400 font-mono">
+                    Just now
+                  </span>
+                </div>
+                
+                <h4 className="text-xs font-extrabold text-white truncate max-w-[200px] mt-0.5">
+                  {toast.projectName}
+                </h4>
+
+                <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1.5 pt-1.5 border-t border-slate-800/80">
+                  <div>
+                    <span className="text-[8px] text-slate-400 font-semibold block uppercase">Location</span>
+                    <span className="text-[10px] font-bold text-slate-200 block truncate">
+                      📍 {toast.approxLocation}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[8px] text-slate-400 font-semibold block uppercase font-sans">Device</span>
+                    <span className="text-[10px] font-bold text-slate-200 block truncate">
+                      📱 {toast.deviceType} ({toast.browser})
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dismiss X action button */}
+              <button
+                type="button"
+                onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
+                className="text-slate-400 hover:text-white hover:bg-white/10 p-1 rounded-lg transition-colors inline-self-start z-10 cursor-pointer h-7 w-7 flex items-center justify-center"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG } from '../utils/qrRenderer';
-import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType } from 'lucide-react';
+import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface PreviewPanelProps {
@@ -18,6 +18,16 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [selectedFormat, setSelectedFormat] = useState<'PNG' | 'SVG' | 'PDF'>('PNG');
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const successTimeoutRef = useRef<any>(null);
+
+  // Print Studio States
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [selectedLayout, setSelectedLayout] = useState<string>('business_card_horizontal');
+  const [companyName, setCompanyName] = useState<string>('CREATIVE STUDIO');
+  const [headingText, setHeadingText] = useState<string>('SCAN TO VISIT');
+  const [subText, setSubText] = useState<string>('');
+  const [badgeText, setBadgeText] = useState<string>('SCAN ME');
+  const [themeColor, setThemeColor] = useState<string>('indigo');
+  const [printSheetMode, setPrintSheetMode] = useState<boolean>(true);
 
   // Clean up any pending success timeouts on unmount
   useEffect(() => {
@@ -39,6 +49,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const logoScale = currentProject.design?.logoScale || 0.18;
   const margin = typeof currentProject.design?.margin === 'number' ? currentProject.design?.margin : 20;
   const logoRotation = currentProject.design?.logoRotation || 0;
+  const logoAutoCenter = currentProject.design?.logoAutoCenter !== false;
+  const logoOffsetX = currentProject.design?.logoOffsetX || 0;
+  const logoOffsetY = currentProject.design?.logoOffsetY || 0;
   const eyeColorTopLeft = currentProject.design?.eyeColorTopLeft || '';
   const eyeColorTopRight = currentProject.design?.eyeColorTopRight || '';
   const eyeColorBottomLeft = currentProject.design?.eyeColorBottomLeft || '';
@@ -51,6 +64,13 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
   const trackingUrl = trackingId ? `${appUrl}/qr/${trackingId}` : null;
   const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : qrContent;
+
+  // Sync print subtext default when content changes
+  useEffect(() => {
+    if (textToEncode) {
+      setSubText(textToEncode);
+    }
+  }, [textToEncode]);
 
   // Draw QR on standard Canvas when contents or style parameters change
   useEffect(() => {
@@ -66,6 +86,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         logoScale,
         margin,
         logoRotation,
+        logoAutoCenter,
+        logoOffsetX,
+        logoOffsetY,
         eyeColorTopLeft: eyeColorTopLeft || undefined,
         eyeColorTopRight: eyeColorTopRight || undefined,
         eyeColorBottomLeft: eyeColorBottomLeft || undefined,
@@ -84,6 +107,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     logoScale,
     margin,
     logoRotation,
+    logoAutoCenter,
+    logoOffsetX,
+    logoOffsetY,
     eyeColorTopLeft,
     eyeColorTopRight,
     eyeColorBottomLeft,
@@ -110,6 +136,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         logoScale,
         margin,
         logoRotation,
+        logoAutoCenter,
+        logoOffsetX,
+        logoOffsetY,
         eyeColorTopLeft: eyeColorTopLeft || undefined,
         eyeColorTopRight: eyeColorTopRight || undefined,
         eyeColorBottomLeft: eyeColorBottomLeft || undefined,
@@ -176,22 +205,321 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     setTimeout(() => setIsCopied(false), 2000);
   };
 
-  const handleLocalPrint = () => {
+  const colorThemes: Record<string, { main: string; border: string; bg: string; text: string; hex: string; lightHex: string }> = {
+    indigo: { main: 'bg-indigo-600', border: 'border-indigo-200', bg: 'bg-indigo-50', text: 'text-indigo-600', hex: '#4f46e5', lightHex: '#eff6ff' },
+    slate: { main: 'bg-slate-900', border: 'border-slate-200', bg: 'bg-slate-100', text: 'text-slate-900', hex: '#0f172a', lightHex: '#f1f5f9' },
+    emerald: { main: 'bg-emerald-600', border: 'border-emerald-200', bg: 'bg-emerald-50', text: 'text-emerald-600', hex: '#10b981', lightHex: '#ecfdf5' },
+    amber: { main: 'bg-amber-600', border: 'border-amber-200', bg: 'bg-amber-50', text: 'text-amber-600', hex: '#d97706', lightHex: '#fef3c7' },
+    rose: { main: 'bg-rose-600', border: 'border-rose-200', bg: 'bg-rose-50', text: 'text-rose-600', hex: '#e11d48', lightHex: '#fff1f2' }
+  };
+
+  const getLayoutHtmlForPrinting = (qrCodeUrl: string): string => {
+    const theme = colorThemes[themeColor] || colorThemes.indigo;
+    
+    if (selectedLayout === 'business_card_horizontal') {
+      if (printSheetMode) {
+        let cardsHtml = '';
+        for (let i = 0; i < 8; i++) {
+          cardsHtml += `
+            <div style="width: 82mm; height: 48mm; margin: 4mm; border: 1px dashed #cbd5e1; border-radius: 8px; box-sizing: border-box; padding: 14px; display: flex; align-items: center; justify-content: space-between; position: relative; background: white; page-break-inside: avoid; float: left;">
+              <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 6px; border-top-left-radius: 8px; border-bottom-left-radius: 8px; background-color: ${theme.hex};"></div>
+              <div style="flex: 1; padding-left: 12px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                <div>
+                  <div style="font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px;">${companyName}</div>
+                  <div style="font-size: 14px; font-weight: 800; color: #1e293b; line-height: 1.2;">${headingText}</div>
+                </div>
+                <div style="font-size: 9px; font-family: monospace; color: #64748b; margin-top: 10px; word-break: break-all; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px;">${subText}</div>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex-shrink: 0;">
+                <div style="padding: 3px 8px; font-size: 8px; font-weight: 800; border-radius: 4px; background-color: ${theme.lightHex}; color: ${theme.hex}; text-transform: uppercase;">
+                  ${badgeText}
+                </div>
+                <div style="padding: 4px; border: 1px solid #f1f5f9; border-radius: 6px; background: white;">
+                  <img src="${qrCodeUrl}" style="width: 70px; height: 70px; display: block;" />
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        return `
+          <div style="max-width: 190mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center;">
+            <div style="width: 100%; text-align: center; margin-bottom: 8px; font-family: sans-serif;" class="no-print">
+              <p style="font-size: 14px; color: #475569; font-weight: 500;">Grid Print Mode: 8 Cards formatted for standard paper cutlines</p>
+              <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; margin-bottom: 20px;">Print Cards</button>
+            </div>
+            ${cardsHtml}
+          </div>
+        `;
+      } else {
+        return `
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; font-family: sans-serif;">
+            <div style="width: 85mm; height: 50mm; border: 1px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; padding: 18px; display: flex; align-items: center; justify-content: space-between; position: relative; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+              <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 8px; border-top-left-radius: 12px; border-bottom-left-radius: 12px; background-color: ${theme.hex};"></div>
+              <div style="flex: 1; padding-left: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px;">${companyName}</div>
+                  <div style="font-size: 18px; font-weight: 850; color: #1e293b; line-height: 1.2;">${headingText}</div>
+                </div>
+                <div style="font-size: 11px; font-family: monospace; color: #64748b; margin-top: 15px; word-break: break-all; max-width: 180px;">${subText}</div>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0;">
+                <div style="padding: 4px 10px; font-size: 9px; font-weight: 800; border-radius: 6px; background-color: ${theme.lightHex}; color: ${theme.hex}; text-transform: uppercase;">
+                  ${badgeText}
+                </div>
+                <div style="padding: 6px; border: 1px solid #f1f5f9; border-radius: 8px; background: white;">
+                  <img src="${qrCodeUrl}" style="width: 90px; height: 90px; display: block;" />
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    if (selectedLayout === 'business_card_vertical') {
+      if (printSheetMode) {
+        let cardsHtml = '';
+        for (let i = 0; i < 8; i++) {
+          cardsHtml += `
+            <div style="width: 44mm; height: 78mm; margin: 3mm; border: 1px dashed #cbd5e1; border-radius: 8px; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; position: relative; background: white; page-break-inside: avoid; float: left;">
+              <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; border-top-left-radius: 8px; border-top-right-radius: 8px; background-color: ${theme.hex};"></div>
+              <div style="text-align: center; width: 100%; padding-top: 6px;">
+                <div style="font-size: 8px; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase;">${companyName}</div>
+                <div style="width: 25px; height: 1.5px; background: #e2e8f0; margin: 4px auto;"></div>
+                <div style="font-size: 12px; font-weight: 800; color: #1e293b; line-height: 1.2;">${headingText}</div>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 4px 0;">
+                <div style="padding: 4px; border: 1px solid #f1f5f9; border-radius: 6px; background: white;">
+                  <img src="${qrCodeUrl}" style="width: 70px; height: 70px; display: block;" />
+                </div>
+                <div style="padding: 3px 8px; font-size: 7px; font-weight: 800; border-radius: 4px; background-color: ${theme.lightHex}; color: ${theme.hex}; text-transform: uppercase;">
+                  ${badgeText}
+                </div>
+              </div>
+              <div style="text-align: center; width: 100%;">
+                <div style="font-size: 8px; font-family: monospace; color: #64748b; word-break: break-all; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px;">${subText}</div>
+              </div>
+            </div>
+          `;
+        }
+        return `
+          <div style="max-width: 190mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center;">
+            <div style="width: 100%; text-align: center; margin-bottom: 8px; font-family: sans-serif;" class="no-print">
+              <p style="font-size: 14px; color: #475569; font-weight: 500;">Grid Print Mode: 8 Vertical Cards formatted for standard paper cutlines</p>
+              <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; margin-bottom: 20px;">Print Cards</button>
+            </div>
+            ${cardsHtml}
+          </div>
+        `;
+      } else {
+        return `
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; font-family: sans-serif;">
+            <div style="width: 50mm; height: 85mm; border: 1px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; position: relative; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+              <div style="position: absolute; top: 0; left: 0; right: 0; height: 8px; border-top-left-radius: 12px; border-top-right-radius: 12px; background-color: ${theme.hex};"></div>
+              <div style="text-align: center; width: 100%; padding-top: 12px;">
+                <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase;">${companyName}</div>
+                <div style="width: 30px; height: 2px; background: #e2e8f0; margin: 8px auto;"></div>
+                <div style="font-size: 15px; font-weight: 850; color: #1e293b; line-height: 1.2;">${headingText}</div>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 12px 0;">
+                <div style="padding: 6px; border: 1px solid #f1f5f9; border-radius: 8px; background: white;">
+                  <img src="${qrCodeUrl}" style="width: 90px; height: 90px; display: block;" />
+                </div>
+                <div style="padding: 4px 10px; font-size: 8px; font-weight: 800; border-radius: 6px; background-color: ${theme.lightHex}; color: ${theme.hex}; text-transform: uppercase;">
+                  ${badgeText}
+                </div>
+              </div>
+              <div style="text-align: center; width: 100%;">
+                <div style="font-size: 9px; font-family: monospace; color: #64748b; word-break: break-all; max-width: 150px;">${subText}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    if (selectedLayout === 'flyer_a4') {
+      return `
+        <div style="max-width: 170mm; margin: 15mm auto; padding: 40px; border: 1px solid #e2e8f0; border-radius: 20px; text-align: center; font-family: sans-serif; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+          <div style="height: 12px; background-color: ${theme.hex}; border-radius: 6px 6px 0 0; margin: -40px -40px 40px -40px;"></div>
+          <div style="margin-top: 10px;">
+            <span style="display: inline-block; padding: 6px 16px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; border-radius: 20px; background-color: ${theme.lightHex}; color: ${theme.hex}; margin-bottom: 20px;">
+              ${companyName}
+            </span>
+            <h1 style="font-size: 32px; font-weight: 900; color: #0f172a; margin-bottom: 25px; letter-spacing: -0.5px; text-transform: uppercase; font-family: inherit;">
+              ${headingText}
+            </h1>
+          </div>
+          <div style="display: inline-block; padding: 24px; border: 4px solid #f1f5f9; border-radius: 24px; background: white; margin: 20px 0;">
+            <img src="${qrCodeUrl}" style="width: 240px; height: 240px; display: block;" />
+          </div>
+          <div style="margin-top: 15px;">
+            <div style="display: inline-block; padding: 10px 30px; font-size: 14px; font-weight: 800; color: white; background-color: ${theme.hex}; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">
+              ${badgeText}
+            </div>
+          </div>
+          <div style="border-top: 1px solid #f1f5f9; padding-top: 25px; margin-top: 25px;">
+            <p style="font-size: 16px; font-weight: 700; color: #1e293b; margin: 0; word-break: break-all;">${subText}</p>
+            <p style="font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 8px; font-family: monospace;">No App Download Required • Simply Scan with Smartphone Camera</p>
+          </div>
+        </div>
+      `;
+    }
+
+    if (selectedLayout === 'table_tent') {
+      return `
+        <div style="max-width: 180mm; margin: 15mm auto; font-family: sans-serif;">
+          <div style="text-align: center; margin-bottom: 25px;" class="no-print">
+            <p style="font-size: 14px; color: #475569; font-weight: 500;">Foldable Table Tent Template - Includes fold guides</p>
+            <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Print Table Tent</button>
+          </div>
+          <div style="border: 1px solid #cbd5e1; border-radius: 12px; height: 160mm; display: flex; position: relative; background: #fafafa; box-sizing: border-box;">
+            <div style="flex: 1; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; transform: rotate(180deg); box-sizing: border-box; opacity: 0.85;">
+              <div style="padding-top: 15px;">
+                <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase;">${companyName}</div>
+                <div style="width: 25px; height: 1.5px; background: #cbd5e1; margin: 8px auto;"></div>
+                <div style="font-size: 15px; font-weight: 800; color: #334155;">Thank You For scanning!</div>
+              </div>
+              <div style="padding: 6px; border: 1px solid #e2e8f0; border-radius: 8px; background: white;">
+                <img src="${qrCodeUrl}" style="width: 80px; height: 80px; display: block;" />
+              </div>
+              <div style="font-size: 9px; font-weight: 600; color: #cbd5e1; letter-spacing: 2px; text-transform: uppercase;">BACK DISPLAY</div>
+            </div>
+            
+            <div style="position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; transform: translateX(-50%);">
+              <span style="background: #334155; color: white; border-radius: 10px; font-size: 8px; font-weight: 700; padding: 3px 12px; letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; transform: rotate(-90deg); z-index: 10;">FOLD LINE TO STAND</span>
+            </div>
+            
+            <div style="flex: 1; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; box-sizing: border-box; position: relative;">
+              <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background-color: ${theme.hex};"></div>
+              <div style="padding-top: 15px;">
+                <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase;">${companyName}</div>
+                <h3 style="font-size: 15px; font-weight: 900; color: #1e293b; text-transform: uppercase; margin-top: 6px; line-height: 1.2;">${headingText}</h3>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <div style="padding: 8px; border: 2px solid ${theme.lightHex}; border-radius: 12px; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                  <img src="${qrCodeUrl}" style="width: 100px; height: 100px; display: block;" />
+                </div>
+                <div style="padding: 3px 10px; font-size: 8px; font-weight: 800; border-radius: 4px; background-color: ${theme.lightHex}; color: ${theme.hex}; text-transform: uppercase;">
+                  ${badgeText}
+                </div>
+              </div>
+              <div>
+                <div style="font-size: 10px; font-family: monospace; color: #64748b; word-break: break-all; max-width: 160px;">${subText}</div>
+                <div style="font-size: 8px; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-family: monospace; margin-top: 6px;">Fold and Stand • Easy to Scan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (selectedLayout === 'multi_sticker') {
+      let stickersHtml = '';
+      for (let i = 0; i < 12; i++) {
+        stickersHtml += `
+          <div style="width: 54mm; height: 40mm; float: left; border: 1px dashed #cbd5e1; border-radius: 6px; box-sizing: border-box; padding: 10px; display: flex; align-items: center; justify-content: space-between; overflow: hidden; background: white; page-break-inside: avoid; margin: 2mm;">
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-width: 0;">
+              <span style="font-size: 8px; letter-spacing: 1px; font-family: monospace; color: #94a3b8; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${companyName}</span>
+              <p style="font-size: 11px; font-weight: 800; color: #1e293b; line-height: 1.25; margin: 4px 0; word-break: break-word;">${badgeText}</p>
+              <span style="font-size: 8px; color: #64748b; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">${subText}</span>
+            </div>
+            <div style="flex-shrink: 0; padding: 3px; border: 1px solid #f1f5f9; border-radius: 4px; background: white; margin-left: 6px;">
+              <img src="${qrCodeUrl}" style="width: 60px; height: 60px; display: block;" />
+            </div>
+          </div>
+        `;
+      }
+      return `
+        <div style="max-width: 190mm; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 25px;" class="no-print" style="font-family: sans-serif;">
+            <p style="font-size: 14px; color: #475569; font-weight: 500;">Multi-Sticker Sheet: 12 stickers with clean cutting guides</p>
+            <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Print Sheet</button>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            ${stickersHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    return '';
+  };
+
+  const handlePrintTemplate = () => {
     if (!canvasRef.current) return;
-    const windowPrint = window.open('', '', 'width=600,height=600');
-    if (!windowPrint) return;
-    windowPrint.document.write(`
+    const qrCodeUrl = canvasRef.current.toDataURL('image/png');
+    
+    const printWindow = window.open('', '_blank', 'width=850,height=1100');
+    if (!printWindow) return;
+    
+    let stylesHtml = '';
+    for (const styleSheet of Array.from(document.styleSheets)) {
+      try {
+        if (styleSheet.href) {
+          stylesHtml += `<link rel="stylesheet" href="${styleSheet.href}">`;
+        } else {
+          const rules = Array.from(styleSheet.cssRules).map(rule => rule.cssText).join('\n');
+          stylesHtml += `<style>${rules}</style>`;
+        }
+      } catch (e) {
+        // Fallback for cross-origin styles
+      }
+    }
+
+    stylesHtml += `
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    `;
+
+    const layoutHtml = getLayoutHtmlForPrinting(qrCodeUrl);
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
       <html>
-        <head><title>Print QR Code - ${currentProject.name || 'QR'}</title></head>
-        <body style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; margin:0;">
-          <h2 style="margin-bottom:20px; color:#1e293b;">${currentProject.name || 'QR Code'}</h2>
-          <img src="${canvasRef.current.toDataURL('image/png')}" width="300" height="300" style="border:1px solid #e2e8f0; border-radius:12px; padding:12px;" />
-          <p style="margin-top:15px; font-size:12px; color:#64748b;">Generated beautifully</p>
-          <script>window.onload = function() { window.print(); window.close(); }</script>
+        <head>
+          <title>Print QR Studio</title>
+          ${stylesHtml}
+          <style>
+            @media print {
+              body {
+                background: white !important;
+                color: black !important;
+                margin: 0 !important;
+                padding: 0 !important;
+              }
+              .no-print {
+                display: none !important;
+              }
+            }
+            body {
+              font-family: 'Inter', sans-serif;
+              background-color: #f8fafc;
+              margin: 0;
+              padding: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+            }
+          </style>
+        </head>
+        <body>
+          <div style="width: 100%;">
+            ${layoutHtml}
+          </div>
+          <script>
+            window.onload = function() {
+              setTimeout(function() {
+                window.print();
+              }, 600);
+            };
+          </script>
         </body>
       </html>
     `);
-    windowPrint.document.close();
+    printWindow.document.close();
   };
 
   const playPingSound = () => {
@@ -231,7 +559,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   return (
     <div className="flex flex-col gap-6">
       {/* QR Board Canvas */}
-      <div className="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-xs flex flex-col items-center justify-center gap-4 relative overflow-hidden">
+      <div id="tour-qr-preview" className="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-xs flex flex-col items-center justify-center gap-4 relative overflow-hidden">
         <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center">
           <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden animate-fade-in" style={{ width: '280px', height: '280px' }}>
             <canvas
@@ -271,7 +599,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 >
                   <motion.div
                     initial={{ scale: 0.3, opacity: 0 }}
-                    animate={{ scale: [0.3, 1.12, 1], opacity: 1 }}
+                    animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.8, opacity: 0 }}
                     transition={{ 
                       type: "spring",
@@ -314,6 +642,21 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           <span className="text-[10px] text-slate-600 font-mono select-all truncate max-w-[260px] block mt-0.5">
             {textToEncode}
           </span>
+          {currentProject.expiryDate && (() => {
+            const isExpired = new Date() > new Date(currentProject.expiryDate);
+            return (
+              <span className={`inline-flex items-center gap-1 mt-2 text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                isExpired 
+                  ? 'bg-red-50 text-red-600 border border-red-100/50' 
+                  : 'bg-amber-50 text-amber-700 border border-amber-100/50'
+              }`}>
+                {isExpired 
+                  ? `Expired ⚠️ (${new Date(currentProject.expiryDate).toLocaleDateString()})` 
+                  : `Expires ⏳ (${new Date(currentProject.expiryDate).toLocaleDateString()})`
+                }
+              </span>
+            );
+          })()}
         </div>
 
         {/* Printable/Export triggers */}
@@ -354,12 +697,12 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             </button>
             <button
               type="button"
-              onClick={handleLocalPrint}
-              className="py-2.5 px-2 bg-white text-gray-800 hover:bg-slate-50 rounded-xl text-xs font-medium border border-slate-200 shadow-3xs transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
-              aria-label="Print QR Code"
+              onClick={() => setIsPrintModalOpen(true)}
+              className="py-2.5 px-2 bg-white text-indigo-600 hover:bg-indigo-50/50 rounded-xl text-xs font-semibold border border-indigo-100 shadow-3xs transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+              aria-label="Open Print Layout Studio"
             >
               <Printer className="w-3.5 h-3.5" />
-              Print
+              Print Studio
             </button>
           </div>
 
@@ -461,6 +804,372 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           )}
         </div>
       </div>
+
+      {/* Print Layout Studio Modal */}
+      <AnimatePresence>
+        {isPrintModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto"
+            onClick={() => setIsPrintModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+              className="bg-white rounded-3xl w-full max-w-5xl shadow-2xl overflow-hidden text-slate-800 grid grid-cols-1 lg:grid-cols-12 border border-slate-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Left Settings Control Side (5 columns) */}
+              <div className="lg:col-span-12 xl:col-span-5 bg-slate-50 border-r border-slate-100 p-6 flex flex-col justify-between max-h-[85vh] overflow-y-auto">
+                <div className="space-y-6">
+                  {/* Header title */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="p-2 bg-indigo-600 rounded-lg text-white">
+                        <Printer className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h2 className="text-base font-extrabold text-slate-900 tracking-tight">Print Layout Studio</h2>
+                        <span className="text-[10px] text-slate-500 font-medium">Standardized physical media formats</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Settings Category 1: Layout Selection */}
+                  <div className="space-y-2.5">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">1. Select Layout Template</span>
+                    <div className="grid grid-cols-1 gap-2">
+                      {[
+                        { id: 'business_card_horizontal', label: 'Horizontal Business Card (3.5" x 2.0")', desc: 'Perfect for standard wallets & boxes' },
+                        { id: 'business_card_vertical', label: 'Vertical Business Card (2.0" x 3.5")', desc: 'Contemporary minimalist format' },
+                        { id: 'flyer_a4', label: 'Modern Portrait Flyer (A4 / US Letter)', desc: 'Bold message style for walls & tables' },
+                        { id: 'table_tent', label: 'Foldable Table Tent (Restaurant/Event)', desc: 'Two-sided self-standing tabletop card' },
+                        { id: 'multi_sticker', label: 'Sticker Sheet Grid (12 stickers)', desc: 'Formatted for labels with dashed cutlines' }
+                      ].map((tmpl) => (
+                        <button
+                          key={tmpl.id}
+                          type="button"
+                          onClick={() => setSelectedLayout(tmpl.id)}
+                          className={`p-3 rounded-xl border text-left transition-all flex items-start gap-2.5 cursor-pointer w-full ${
+                            selectedLayout === tmpl.id
+                              ? 'bg-white border-indigo-600 shadow-sm ring-1 ring-indigo-600/20'
+                              : 'bg-white border-slate-200 hover:border-slate-300'
+                          }`}
+                        >
+                          <div className={`p-1.5 rounded-lg mt-0.5 ${selectedLayout === tmpl.id ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-50 text-slate-500'}`}>
+                            <Layout className="w-3.5 h-3.5" />
+                          </div>
+                          <div>
+                            <p className={`text-xs font-bold leading-none ${selectedLayout === tmpl.id ? 'text-indigo-950' : 'text-slate-800'}`}>{tmpl.label}</p>
+                            <p className="text-[10px] text-slate-600 mt-1 leading-normal">{tmpl.desc}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Settings Category 2: Card customizations */}
+                  <div className="space-y-4 pt-1">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">2. Brand Text Customization</span>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <label htmlFor="comp-name" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Company / Brand Name</label>
+                        <input
+                          id="comp-name"
+                          type="text"
+                          value={companyName}
+                          onChange={(e) => setCompanyName(e.target.value.toUpperCase())}
+                          className="w-full h-9 px-3 bg-white border border-slate-250 rounded-lg text-xs font-semibold text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
+                          placeholder="CREATIVE STUDIO"
+                        />
+                      </div>
+
+                      {selectedLayout !== 'multi_sticker' && (
+                        <div>
+                          <label htmlFor="head-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Primary Call-to-Action</label>
+                          <input
+                            id="head-text"
+                            type="text"
+                            value={headingText}
+                            onChange={(e) => setHeadingText(e.target.value)}
+                            className="w-full h-9 px-3 bg-white border border-slate-250 rounded-lg text-xs font-medium text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
+                            placeholder="SCAN TO VISIT WEBSITE"
+                          />
+                        </div>
+                      )}
+
+                      <div>
+                        <label htmlFor="url-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Display Text / Web URL</label>
+                        <input
+                          id="url-text"
+                          type="text"
+                          value={subText}
+                          onChange={(e) => setSubText(e.target.value)}
+                          className="w-full h-9 px-3 bg-white border border-slate-250 rounded-lg text-xs font-mono text-slate-800 focus:outline-none focus:border-indigo-500 transition-colors"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="badge-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Mini Badge Label</label>
+                        <input
+                          id="badge-text"
+                          type="text"
+                          value={badgeText}
+                          onChange={(e) => setBadgeText(e.target.value.toUpperCase())}
+                          className="w-full h-9 px-3 bg-white border border-slate-250 rounded-lg text-xs font-bold text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
+                          placeholder="SCAN ME"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Settings Category 3: Color accent */}
+                  <div className="space-y-3">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">3. Layout Color Accent</span>
+                    <div className="flex items-center gap-2">
+                      {Object.keys(colorThemes).map((colorKey) => (
+                        <button
+                          key={colorKey}
+                          type="button"
+                          onClick={() => setThemeColor(colorKey)}
+                          className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
+                            themeColor === colorKey
+                              ? 'border-indigo-600 ring-2 ring-indigo-500/20'
+                              : 'border-slate-200 hover:border-slate-300'
+                          }`}
+                          aria-label={`Select ${colorKey} theme`}
+                        >
+                          <span
+                            className="w-5 h-5 rounded-md shadow-xs block"
+                            style={{ backgroundColor: colorThemes[colorKey].hex }}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Settings Category 4: Grid Output style toggle for Cards */}
+                  {(selectedLayout === 'business_card_horizontal' || selectedLayout === 'business_card_vertical') && (
+                    <div className="pt-2 border-t border-slate-200 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs font-bold text-slate-800">Layout Format Mode</p>
+                          <p className="text-[10px] text-slate-600">Print 8 cards on a sheet vs. single layout</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setPrintSheetMode(!printSheetMode)}
+                          className={`px-3 py-1.5 text-[10px] font-bold rounded-lg border transition-all cursor-pointer ${
+                            printSheetMode
+                              ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                          }`}
+                        >
+                          {printSheetMode ? '8 Cards Sheet' : 'Single Card'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Print bottom button */}
+                <div className="mt-8 pt-4 border-t border-slate-200">
+                  <button
+                    type="button"
+                    onClick={handlePrintTemplate}
+                    className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-xl text-xs tracking-wide uppercase shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Printer className="w-4 h-4 text-indigo-100" />
+                    Send to Print Service
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Paper Live View Canvas Area (7 columns) */}
+              <div className="lg:col-span-12 xl:col-span-7 bg-slate-900 p-8 flex flex-col items-center justify-center min-h-[450px] lg:min-h-full max-h-[85vh] overflow-y-auto relative">
+                {/* Paper sheet background wrapper */}
+                <div className="text-slate-400 absolute top-4 left-4 text-[10px] font-mono tracking-widest flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  REAL-TIME PRINT WORKSPACE
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsPrintModalOpen(false)}
+                  className="absolute top-4 right-4 p-2 bg-slate-800/80 hover:bg-slate-800 text-slate-400 hover:text-white rounded-full transition-all border border-slate-700/50 cursor-pointer"
+                  aria-label="Close layout studio"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+
+                {/* Render corresponding visual mock templates based on selection */}
+                <div className="flex items-center justify-center py-4 scale-90 sm:scale-100 origin-center transition-all transform animate-fade-in">
+                  {canvasRef.current && (
+                    (() => {
+                      const qrImg = canvasRef.current.toDataURL('image/png');
+                      
+                      if (selectedLayout === 'business_card_horizontal') {
+                        return (
+                          <div className="w-[360px] h-[200px] bg-white border border-slate-200 p-5 rounded-2xl shadow-xl flex items-center justify-between gap-4 relative overflow-hidden select-none">
+                            <div className={`absolute left-0 top-0 bottom-0 w-3 ${colorThemes[themeColor].main}`} />
+                            <div className="flex-1 flex flex-col justify-between h-full pl-2">
+                              <div>
+                                <h4 className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">{companyName || 'COMPANY NAME'}</h4>
+                                <h3 className="text-sm font-extrabold text-slate-850 tracking-tight leading-snug">{headingText || 'Scan QR Code'}</h3>
+                              </div>
+                              <span className="text-[9px] font-mono text-slate-500 truncate max-w-[170px] block">{subText}</span>
+                            </div>
+                            <div className="flex flex-col items-center justify-center gap-1.5 shrink-0">
+                              <div className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-wide rounded ${colorThemes[themeColor].bg} ${colorThemes[themeColor].text}`}>
+                                {badgeText || 'SCAN ME'}
+                              </div>
+                              <div className="p-1.5 border border-slate-100 rounded-lg bg-white shadow-3xs">
+                                <img src={qrImg} className="w-[74px] h-[74px]" alt="Print QR preview" />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      if (selectedLayout === 'business_card_vertical') {
+                        return (
+                          <div className="w-[230px] h-[360px] bg-white border border-slate-200 p-5 rounded-2xl shadow-xl flex flex-col justify-between items-center relative overflow-hidden select-none">
+                            <div className={`absolute top-0 left-0 right-0 h-3 ${colorThemes[themeColor].main}`} />
+                            <div className="text-center w-full pt-1">
+                              <h4 className="text-[9px] font-mono font-bold text-slate-450 uppercase tracking-widest">{companyName || 'COMPANY NAME'}</h4>
+                              <div className="w-8 h-0.5 mx-auto my-2 bg-slate-200" />
+                              <h3 className="text-sm font-extrabold text-slate-850 tracking-tight leading-tight px-1">{headingText || 'Scan QR Code'}</h3>
+                            </div>
+                            <div className="flex flex-col items-center justify-center gap-1.5 my-3">
+                              <div className="p-1.5 border border-slate-100 rounded-lg bg-white shadow-3xs">
+                                <img src={qrImg} className="w-[84px] h-[84px]" alt="Print QR preview" />
+                              </div>
+                              <div className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-wider rounded-md ${colorThemes[themeColor].bg} ${colorThemes[themeColor].text}`}>
+                                {badgeText || 'SCAN ME'}
+                              </div>
+                            </div>
+                            <div className="text-center w-full pb-0.5">
+                              <span className="text-[9px] font-mono text-slate-500 block truncate max-w-[190px]">{subText}</span>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      if (selectedLayout === 'flyer_a4') {
+                        return (
+                          <div className="w-[300px] h-[410px] bg-white border border-slate-200 p-6 rounded-2xl shadow-xl flex flex-col justify-between items-center relative overflow-hidden select-none">
+                            <div className={`absolute top-0 left-0 right-0 h-3.5 ${colorThemes[themeColor].main}`} />
+                            <div className="text-center w-full pt-2">
+                              <span className={`inline-block px-2.5 py-0.5 text-[9px] font-bold tracking-widest uppercase rounded-full ${colorThemes[themeColor].bg} ${colorThemes[themeColor].text} mb-2.5`}>
+                                {companyName || 'OFFICIAL EVENT'}
+                              </span>
+                              <h2 className="text-sm font-black text-slate-900 tracking-tight uppercase leading-snug px-1">{headingText || 'SCAN TO CONNECT'}</h2>
+                            </div>
+                            <div className="flex flex-col items-center justify-center my-3 w-full">
+                              <div className="p-2.5 border-2 border-slate-100 rounded-xl bg-white shadow-2xs">
+                                <img src={qrImg} className="w-[110px] h-[110px]" alt="Print QR preview" />
+                              </div>
+                              <div className={`mt-2.5 py-1 px-3 text-[8px] font-black uppercase tracking-wider rounded-md text-white ${colorThemes[themeColor].main}`}>
+                                {badgeText || 'GET DETAILS'}
+                              </div>
+                            </div>
+                            <div className="text-center w-full pt-1.5 border-t border-slate-100">
+                              <p className="text-[9px] font-bold text-slate-800 truncate px-2">{subText}</p>
+                              <p className="text-[8px] text-slate-400 mt-0.5 font-medium uppercase font-mono">Simply Scan & Learn • No registration</p>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      if (selectedLayout === 'table_tent') {
+                        return (
+                          <div className="w-[360px] h-[330px] bg-white border border-slate-250 p-3 rounded-2xl shadow-xl flex flex-col justify-between relative overflow-hidden select-none bg-slate-50/10">
+                            <div className="absolute inset-0 grid grid-cols-2 divide-x divide-dashed divide-slate-300">
+                              {/* Left back view turned upside down */}
+                              <div className="p-3 flex flex-col items-center justify-between rotate-180 text-center select-none opacity-45">
+                                <div className="pt-1">
+                                  <h4 className="text-[8px] font-mono text-slate-400 uppercase tracking-widest">{companyName || 'WELCOME'}</h4>
+                                  <div className="w-4 h-0.5 mx-auto my-1 bg-slate-200" />
+                                  <h3 className="text-[9px] font-bold text-slate-700 leading-tight">Thank You!</h3>
+                                </div>
+                                <div className="p-1 border border-slate-100 rounded-md bg-white">
+                                  <img src={qrImg} className="w-[46px] h-[46px] opacity-70" alt="Print QR preview" />
+                                </div>
+                                <span className="text-[7px] text-slate-400 uppercase tracking-widest font-mono">BACK DISPLAY</span>
+                              </div>
+
+                              {/* Right display viewport */}
+                              <div className="p-3 flex flex-col items-center justify-between text-center select-none relative">
+                                <div className={`absolute top-0 right-0 left-0 h-1.5 ${colorThemes[themeColor].main}`} />
+                                <div className="pt-2">
+                                  <h4 className="text-[8px] font-mono text-slate-500 uppercase tracking-widest">{companyName || 'COFFEE & CO.'}</h4>
+                                  <h3 className="text-[10px] font-bold text-slate-800 leading-snug tracking-tight mt-1 px-0.5">{headingText || 'SCAN FOR DIgital MENU'}</h3>
+                                </div>
+                                <div className="my-1.5 flex flex-col items-center gap-1">
+                                  <div className="p-1 border-2 border-slate-100 rounded-lg bg-white shadow-3xs">
+                                    <img src={qrImg} className="w-[62px] h-[62px]" alt="Print QR preview" />
+                                  </div>
+                                  <div className={`px-2 py-0.5 text-[7px] font-black uppercase rounded tracking-wider ${colorThemes[themeColor].bg} ${colorThemes[themeColor].text}`}>
+                                    {badgeText || 'SCAN NOW'}
+                                  </div>
+                                </div>
+                                <div>
+                                  <span className="text-[8px] font-mono text-slate-500 block truncate max-w-[130px]">{subText}</span>
+                                  <span className="text-[6px] text-slate-400 font-bold block uppercase mt-0.5">Fold and Stand Display</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900/90 text-white text-[7px] px-2 py-0.5 rounded-full font-bold uppercase tracking-widest select-none z-10 shadow-md border border-slate-700 pointer-events-none">
+                              ✦ FOLD LINE GUIDE ✦
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      if (selectedLayout === 'multi_sticker') {
+                        return (
+                          <div className="w-[325px] h-[420px] bg-slate-50 border border-slate-350 p-2.5 rounded-2xl shadow-xl grid grid-cols-2 grid-rows-4 gap-2 relative overflow-hidden select-none">
+                            {Array.from({ length: 8 }).map((_, idx) => (
+                              <div key={idx} className="bg-white border border-dashed border-slate-200 hover:border-slate-300 p-2 rounded-xl flex items-center justify-between gap-1.5 transition-colors">
+                                <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
+                                  <span className="text-[6px] font-mono font-bold text-slate-400 uppercase tracking-widest truncate">{companyName || 'STICKER'}</span>
+                                  <p className="text-[8px] font-black text-slate-800 leading-tight line-clamp-2">{badgeText || 'SCAN ME'}</p>
+                                  <span className="text-[6px] text-slate-400 truncate max-w-[70px] leading-none block">{subText}</span>
+                                </div>
+                                <div className="shrink-0 p-1 border border-slate-100 rounded-md bg-white">
+                                  <img src={qrImg} className="w-[42px] h-[42px]" alt="Print QR preview" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+
+                      return null;
+                    })()
+                  )}
+                </div>
+
+                {/* Print Hint Card */}
+                <div className="bg-slate-800/65 backdrop-blur-xs border border-slate-700/60 p-4 rounded-xl text-center max-w-sm mt-3">
+                  <div className="flex items-center justify-center gap-1.5 text-slate-300 text-xs font-semibold">
+                    <Grid className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Quality Aspect Ratio Check</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1 leading-normal">
+                    This workspace shows accurate physical layout proportions. Select your favorite theme, input copy details, and tap the print button. Cut guidelines are auto-generated!
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

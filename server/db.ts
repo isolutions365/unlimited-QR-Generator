@@ -67,6 +67,11 @@ export interface DbProject {
   scanCount: number;
   trackingEnabled: boolean;
   trackingId: string;
+  expiryDate?: string;
+  expiryRedirectType?: 'message' | 'url';
+  expiryRedirectUrl?: string;
+  expiryMessage?: string;
+  category?: string;
 }
 
 export interface DbScan {

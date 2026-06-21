@@ -15,6 +15,9 @@ interface DrawOptions {
   eyeColorTopRight?: string;
   eyeColorBottomLeft?: string;
   errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H';
+  logoAutoCenter?: boolean;
+  logoOffsetX?: number;
+  logoOffsetY?: number;
 }
 
 /**
@@ -178,9 +181,22 @@ export async function renderStyledQR(
     const logoSize = size * logoScale;
     const halfSize = logoSize / 2;
 
+    const isAutoCentered = options.logoAutoCenter !== false;
+    let offsetX = 0;
+    let offsetY = 0;
+    if (isAutoCentered) {
+      // Auto-calculate exact optical center relative to the asymmetric heavy finder eye frames
+      const eyeSize = cellSize * 7;
+      offsetX = Math.round(eyeSize * 0.04);
+      offsetY = Math.round(eyeSize * 0.04);
+    } else {
+      offsetX = options.logoOffsetX || 0;
+      offsetY = options.logoOffsetY || 0;
+    }
+
     // Use context state preservation to translate and rotate precisely about the QR center
     ctx.save();
-    ctx.translate(size / 2, size / 2);
+    ctx.translate(size / 2 + offsetX, size / 2 + offsetY);
     const angleInRadians = ((options.logoRotation || 0) * Math.PI) / 180;
     ctx.rotate(angleInRadians);
 
@@ -399,8 +415,20 @@ export function generateStyledSVG(
     const halfSize = logoSize / 2;
     const angle = options.logoRotation || 0;
 
+    const isAutoCentered = options.logoAutoCenter !== false;
+    let offsetX = 0;
+    let offsetY = 0;
+    if (isAutoCentered) {
+      const eyeSize = cellSize * 7;
+      offsetX = Math.round(eyeSize * 0.04);
+      offsetY = Math.round(eyeSize * 0.04);
+    } else {
+      offsetX = options.logoOffsetX || 0;
+      offsetY = options.logoOffsetY || 0;
+    }
+
     // Apply matrix offsets
-    logoSvg += `  <g transform="translate(${size / 2}, ${size / 2}) rotate(${angle})">\n`;
+    logoSvg += `  <g transform="translate(${size / 2 + offsetX}, ${size / 2 + offsetY}) rotate(${angle})">\n`;
     logoSvg += `    <!-- Backplate boundary to preserve scan compatibility -->\n`;
     logoSvg += `    <rect x="${-halfSize - cellSize}" y="${-halfSize - cellSize}" width="${logoSize + cellSize * 2}" height="${logoSize + cellSize * 2}" rx="${cellSize * 1.5}" ry="${cellSize * 1.5}" fill="${options.bgColor}" />\n`;
 

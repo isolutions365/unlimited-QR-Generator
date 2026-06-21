@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { QRProject } from '../../types';
+import QR3DExperience from '../QR3DExperience';
 
 interface SEOPageProps {
   slug: string;
@@ -244,27 +245,18 @@ export default function SEOPage({ slug, onSelectRoute, onInitiateGenerator }: SE
               </div>
             </div>
 
-            {/* Simulated Live Preview Card sidebar */}
-            <div className="md:col-span-4 flex flex-col gap-6 bg-white p-5 rounded-3xl border border-slate-200/80 shadow-md">
-              <div className="flex items-center justify-between border-b pb-3 text-slate-300 select-none">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider font-mono">Live Preset Sandbox</span>
-                <span className="text-[9px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">STYLING SEED</span>
+            {/* Simulated Live Preview Card sidebar with Glassmorphism UI */}
+            <div className="md:col-span-4 flex flex-col gap-4 bg-white/60 p-5 rounded-3xl border border-slate-200/50 shadow-xl relative overflow-hidden backdrop-blur-md">
+              <div className="flex items-center justify-between border-b border-indigo-150 pb-2 text-slate-400 select-none">
+                <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-wider font-mono">Live Preset Sandbox</span>
+                <span className="text-[9px] bg-indigo-50/80 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">3D ACTIVE</span>
               </div>
-              <div className="w-full flex justify-center py-4 relative">
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center justify-center shadow-inner">
-                  <div className="p-2.5 bg-white rounded-xl border border-slate-200/40 shadow-xs relative">
-                    <QrCode className="w-36 h-36 text-slate-900 border-4 border-white" />
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-slate-100 shadow-xs flex items-center justify-center p-1 font-mono text-[9px] font-black text-indigo-700">
-                        INFO
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
+              <QR3DExperience />
+
               <button 
                 onClick={handleCtaInitiation}
-                className="w-full py-3 px-4 bg-indigo-600 text-white hover:bg-slate-950 text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 group active:scale-95 cursor-pointer"
+                className="w-full py-3.5 px-4 bg-indigo-600 text-white hover:bg-slate-900 text-xs font-bold rounded-2xl transition-all shadow-md shadow-indigo-200/30 flex items-center justify-center gap-2 group active:scale-[0.98] cursor-pointer"
               >
                 Launch Builder (Free)
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

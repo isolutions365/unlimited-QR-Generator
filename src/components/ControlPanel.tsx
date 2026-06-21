@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder } from 'lucide-react';
 import { motion } from 'motion/react';
+import ColorPalette from './ColorPalette';
+import AICoPilot from './AICoPilot';
 
 interface ControlPanelProps {
   currentProject: Partial<QRProject>;
@@ -9,6 +11,7 @@ interface ControlPanelProps {
   onSave: () => void;
   isSaving: boolean;
   userEmail?: string | null;
+  projects?: QRProject[];
 }
 
 export default function ControlPanel({
@@ -16,7 +19,8 @@ export default function ControlPanel({
   onChange,
   onSave,
   isSaving,
-  userEmail
+  userEmail,
+  projects = []
 }: ControlPanelProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -98,14 +102,7 @@ export default function ControlPanel({
     } as Partial<QRProject>);
   };
 
-  const presetColors = [
-    { name: 'Slate', main: '#0f172a', grad: '#3b82f6' },
-    { name: 'Indigo', main: '#4f46e5', grad: '#ec4899' },
-    { name: 'Emerald', main: '#059669', grad: '#10b981' },
-    { name: 'Cherry', main: '#b91c1c', grad: '#f43f5e' },
-    { name: 'Violet', main: '#6d28d9', grad: '#8b5cf6' },
-    { name: 'Amber', main: '#b45309', grad: '#f59e0b' }
-  ];
+  // Preset colors and gradient handling refactored into ColorPalette component
 
   const containerVariants: any = {
     hidden: { opacity: 0 },
@@ -148,6 +145,7 @@ export default function ControlPanel({
 
       {/* Target Content Types */}
       <motion.div
+        id="tour-qr-type"
         variants={itemVariants}
         whileHover={{
           scale: 1.015,
@@ -196,6 +194,7 @@ export default function ControlPanel({
 
       {/* Input Form Fields based on Type */}
       <motion.div
+        id="tour-project-details"
         variants={itemVariants}
         whileHover={{
           scale: 1.015,
@@ -655,115 +654,21 @@ export default function ControlPanel({
         )}
       </motion.div>
 
-      {/* Styled Corner Colors */}
-      <motion.div
-        variants={itemVariants}
-        whileHover={{
-          scale: 1.015,
-          y: -2,
-          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
-        }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
-      >
-        <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block mb-2">Color Palette</label>
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            {presetColors.map(col => {
-              const isActive = currentProject.design?.fgColor === col.main;
-              return (
-                <button
-                  key={col.name}
-                  type="button"
-                  onClick={() => {
-                    setDesignField('fgColor', col.main);
-                    setDesignField('gradientColor', col.grad);
-                  }}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-1.5 transition-all ${
-                    isActive ? 'bg-gray-100 border-gray-400 font-semibold' : 'bg-white border-gray-200 text-gray-600'
-                  }`}
-                >
-                  <span className="w-3  h-3 rounded-full shadow-sm" style={{ backgroundColor: col.main }} />
-                  {col.name}
-                </button>
-              );
-            })}
-          </div>
+      {/* Integrated Color Palette and Gradient Manager */}
+      <ColorPalette
+        currentProject={currentProject}
+        onChange={onChange}
+      />
 
-          <div className="grid grid-cols-2 gap-3 mt-1">
-            <div>
-              <span className="text-[10px] text-gray-500 block mb-1">Foreground Color</span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="color"
-                  className="w-8 h-8 rounded-lg cursor-pointer border-0"
-                  value={currentProject.design?.fgColor || '#0f172a'}
-                  onChange={e => setDesignField('fgColor', e.target.value)}
-                />
-                <span className="text-[11px] font-mono text-gray-600 uppercase">{currentProject.design?.fgColor}</span>
-              </div>
-            </div>
-
-            <div>
-              <span className="text-[10px] text-gray-500 block mb-1">Background Color</span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="color"
-                  className="w-8 h-8 rounded-lg cursor-pointer border-0"
-                  value={currentProject.design?.bgColor || '#ffffff'}
-                  onChange={e => setDesignField('bgColor', e.target.value)}
-                />
-                <span className="text-[11px] font-mono text-gray-600 uppercase">{currentProject.design?.bgColor}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Gradient Options */}
-      <motion.div
-        variants={itemVariants}
-        whileHover={{
-          scale: 1.015,
-          y: -2,
-          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
-        }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
-      >
-        <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block mb-2">Gradient Style</label>
-        <div className="grid grid-cols-3 gap-2 mb-2">
-          {(['none', 'linear', 'radial'] as const).map(g => (
-            <button
-              key={g}
-              type="button"
-              className={`py-1.5 rounded-lg border text-xs capitalize transition-all ${
-                currentProject.design?.gradientType === g
-                  ? 'bg-gray-900 text-white border-gray-900 font-semibold'
-                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-              }`}
-              onClick={() => setDesignField('gradientType', g)}
-            >
-              {g}
-            </button>
-          ))}
-        </div>
-        {currentProject.design?.gradientType !== 'none' && (
-          <div className="flex items-center gap-2 mt-2 bg-gray-50 p-2 rounded-xl">
-            <span className="text-[10px] text-gray-500">Gradient Goal:</span>
-            <input
-              type="color"
-              className="w-6 h-6 rounded cursor-pointer border-0"
-              value={currentProject.design?.gradientColor || '#4f46e5'}
-              onChange={e => setDesignField('gradientColor', e.target.value)}
-            />
-            <span className="text-xs font-mono">{currentProject.design?.gradientColor}</span>
-          </div>
-        )}
-      </motion.div>
+      {/* Gemini AI Co-Pilot Intelligent Customizer */}
+      <AICoPilot
+        currentProject={currentProject}
+        onChange={onChange}
+      />
 
       {/* Frame Corners and Dots Selection (Eyes Style & Dots Style) */}
       <motion.div
+        id="tour-qr-styles"
         variants={itemVariants}
         whileHover={{
           scale: 1.015,
@@ -934,64 +839,36 @@ export default function ControlPanel({
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
-        <div className="flex justify-between items-center mb-1.5">
-          <label htmlFor="error-correction-range" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Error Correction Level</label>
+        <div className="flex justify-between items-center mb-2">
+          <label htmlFor="error-correction-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Error Correction Level</label>
           <span className="text-xs text-indigo-600 font-mono font-bold">
             {currentProject.design?.errorCorrectionLevel || 'H'}
           </span>
         </div>
         
         <div className="space-y-3">
-          <div className="relative pt-1">
-            <input
-              id="error-correction-range"
-              type="range"
-              min="0"
-              max="3"
-              step="1"
-              className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-              value={(() => {
-                const ec = currentProject.design?.errorCorrectionLevel || 'H';
-                if (ec === 'L') return 0;
-                if (ec === 'M') return 1;
-                if (ec === 'Q') return 2;
-                return 3;
-              })()}
-              onChange={e => {
-                const val = parseInt(e.target.value, 10);
-                const levels: ('L' | 'M' | 'Q' | 'H')[] = ['L', 'M', 'Q', 'H'];
-                setDesignField('errorCorrectionLevel', levels[val]);
-              }}
-            />
-            
-            {/* Custom Markers / Labels along the range axis */}
-            <div className="flex justify-between text-[10px] font-bold text-slate-500 mt-1 px-1 font-mono">
-              <span className={(() => {
-                const ec = currentProject.design?.errorCorrectionLevel || 'H';
-                return ec === 'L' ? 'text-indigo-600 scale-110 font-black font-sans' : 'font-sans';
-              })()}>L (7%)</span>
-              <span className={(() => {
-                const ec = currentProject.design?.errorCorrectionLevel || 'H';
-                return ec === 'M' ? 'text-indigo-600 scale-110 font-black font-sans' : 'font-sans';
-              })()}>M (15%)</span>
-              <span className={(() => {
-                const ec = currentProject.design?.errorCorrectionLevel || 'H';
-                return ec === 'Q' ? 'text-indigo-600 scale-110 font-black font-sans' : 'font-sans';
-              })()}>Q (25%)</span>
-              <span className={(() => {
-                const ec = currentProject.design?.errorCorrectionLevel || 'H';
-                return ec === 'H' ? 'text-indigo-600 scale-110 font-black font-sans' : 'font-sans';
-              })()}>H (30%)</span>
-            </div>
-          </div>
+          <select
+            id="error-correction-select"
+            className="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-2xs font-semibold transition-all duration-200"
+            value={currentProject.design?.errorCorrectionLevel || 'H'}
+            onChange={e => {
+              const val = e.target.value as 'L' | 'M' | 'Q' | 'H';
+              setDesignField('errorCorrectionLevel', val);
+            }}
+          >
+            <option value="L">L (7% Recovery) — Low density, simple pattern</option>
+            <option value="M">M (15% Recovery) — Medium density, standard balance</option>
+            <option value="Q">Q (25% Recovery) — Quartile density, high reliability</option>
+            <option value="H">H (30% Recovery) — High density, best for logos & complexity</option>
+          </select>
           
-          <p className="text-[10px] text-slate-600">
+          <p className="text-[10px] text-slate-650 leading-relaxed">
             {(() => {
               const ec = currentProject.design?.errorCorrectionLevel || 'H';
-              if (ec === 'L') return 'Low density. Simplest rendering, but vulnerable to slight scratches/smudges.';
-              if (ec === 'M') return 'Medium density. Standard balanced density used across normal codes.';
-              if (ec === 'Q') return 'Quartile density. Retains scannability down to 25% print surface damage.';
-              return 'High density (Default). Perfect for complex, custom QR patterns and centerpiece overlay graphics.';
+              if (ec === 'L') return 'Low recovery budget. Simplest rendering, but vulnerable to slight scratches/smudges.';
+              if (ec === 'M') return 'Medium recovery budget. Standard balanced configuration used across normal scanners.';
+              if (ec === 'Q') return 'Quartile recovery budget. Retains scannability even when up to 25% of the print surface is dirty or torn.';
+              return 'High recovery budget (Highly Recommended). Perfect for complex, custom QR patterns and centerpiece custom brand logo overlays.';
             })()}
           </p>
         </div>
@@ -1136,6 +1013,93 @@ export default function ControlPanel({
                 onChange={e => setDesignField('logoScale', parseFloat(e.target.value))}
               />
             </div>
+
+            {/* Logo Positioning & Auto-Center Toggle */}
+            <div className="pt-3 border-t border-gray-200/50">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span id="logo-autocenter-label" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">Auto-Center Position</span>
+                  <p className="text-[9px] text-slate-500 leading-normal mt-0.5 max-w-[190px]">
+                    Maintains the correct offset relative to the finder eye frames automatically.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  aria-labelledby="logo-autocenter-label"
+                  aria-checked={currentProject.design?.logoAutoCenter !== false ? "true" : "false"}
+                  onClick={() => setDesignField('logoAutoCenter', currentProject.design?.logoAutoCenter === false)}
+                  className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
+                    currentProject.design?.logoAutoCenter !== false ? 'bg-indigo-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      currentProject.design?.logoAutoCenter !== false ? 'translate-x-4.5' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* Conditionally show Manual Offset controls when Auto-Center is disabled */}
+              {currentProject.design?.logoAutoCenter === false ? (
+                <div className="mt-3.5 p-3 bg-white border border-gray-250/60 rounded-xl space-y-3 shadow-2xs animate-in fade-in duration-200">
+                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block mb-1">Manual Center Fine-Tuning</span>
+                  
+                  {/* Manual X Offset slider */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label htmlFor="logo-offset-x" className="text-[9px] font-semibold text-slate-600 uppercase tracking-wider">Offset X (Horizontal)</label>
+                      <span className="text-[10px] text-slate-700 font-mono font-bold">
+                        {(currentProject.design?.logoOffsetX ?? 0) > 0 ? `+${currentProject.design?.logoOffsetX ?? 0}` : currentProject.design?.logoOffsetX ?? 0} px
+                      </span>
+                    </div>
+                    <input
+                      id="logo-offset-x"
+                      type="range"
+                      min="-100"
+                      max="100"
+                      step="1"
+                      className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
+                      value={currentProject.design?.logoOffsetX ?? 0}
+                      onChange={e => setDesignField('logoOffsetX', parseInt(e.target.value, 10))}
+                    />
+                  </div>
+
+                  {/* Manual Y Offset slider */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label htmlFor="logo-offset-y" className="text-[9px] font-semibold text-slate-600 uppercase tracking-wider">Offset Y (Vertical)</label>
+                      <span className="text-[10px] text-slate-700 font-mono font-bold">
+                        {(currentProject.design?.logoOffsetY ?? 0) > 0 ? `+${currentProject.design?.logoOffsetY ?? 0}` : currentProject.design?.logoOffsetY ?? 0} px
+                      </span>
+                    </div>
+                    <input
+                      id="logo-offset-y"
+                      type="range"
+                      min="-100"
+                      max="100"
+                      step="1"
+                      className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
+                      value={currentProject.design?.logoOffsetY ?? 0}
+                      onChange={e => setDesignField('logoOffsetY', parseInt(e.target.value, 10))}
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-1.5 pt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                    <p className="text-[8.5px] leading-relaxed text-slate-500 font-medium">
+                      Manually shift logo placement in pixels relative to the physical center.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-2.5 p-2 bg-indigo-50/50 border border-indigo-150/40 rounded-xl flex items-center gap-1.5">
+                  <span className="text-[9px] text-indigo-700 font-medium leading-relaxed">
+                    ✨ Auto-alignment balances center coordinates relative to the finder frames.
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </motion.div>
@@ -1174,6 +1138,7 @@ export default function ControlPanel({
 
       {/* Analytics Tracking Flag toggle */}
       <motion.div
+        id="tour-analytics-toggle"
         variants={itemVariants}
         whileHover={{
           scale: 1.015,
@@ -1204,8 +1169,205 @@ export default function ControlPanel({
         </button>
       </motion.div>
 
+      {/* Dynamic Expiry Date & Redirection Settings */}
+      <motion.div
+        id="tour-link-expiration"
+        variants={itemVariants}
+        className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100 space-y-4"
+      >
+        <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-slate-600" />
+          <span className="text-xs font-semibold text-slate-950">Optional Link Expiration</span>
+        </div>
+
+        <p className="text-[10px] text-slate-600 leading-normal">
+          Deactivate this QR code on a specific date. Once expired, visitors will see a custom message or be sent to an alternate URL.
+        </p>
+
+        {/* Expiry Enabled / Date Customizer */}
+        <div className="space-y-1.5">
+          <label htmlFor="expiry-date-input" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">
+            Expiration Date & Time
+          </label>
+          <div className="flex gap-2">
+            <input
+              id="expiry-date-input"
+              type="datetime-local"
+              className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+              value={currentProject.expiryDate ? currentProject.expiryDate.substring(0, 16) : ''}
+              onChange={(e) => {
+                const dateVal = e.target.value;
+                if (dateVal) {
+                  // Ensure tracking is enabled so redirect works
+                  onChange({
+                    ...currentProject,
+                    expiryDate: new Date(dateVal).toISOString(),
+                    trackingEnabled: true
+                  });
+                } else {
+                  onChange({
+                    ...currentProject,
+                    expiryDate: undefined
+                  });
+                }
+              }}
+            />
+            {currentProject.expiryDate && (
+              <button
+                type="button"
+                onClick={() => onChange({
+                  ...currentProject,
+                  expiryDate: undefined
+                })}
+                className="px-2.5 py-2 text-xs font-semibold text-red-600 bg-red-100/35 hover:bg-red-100 rounded-xl transition cursor-pointer"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+
+        {currentProject.expiryDate && (
+          <div className="space-y-4 pt-2 border-t border-slate-100">
+            {/* Auto-Enable Tracking Warning */}
+            {!currentProject.trackingEnabled && (
+              <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 text-[10px] text-amber-800 flex items-start gap-2">
+                <span className="font-bold">⚠️ Warning:</span>
+                <span>
+                  Dynamic Link is currently disabled. Link Expiration requires enabling <strong>Short URL & Analytics</strong> to function properly.
+                </span>
+              </div>
+            )}
+
+            {/* Redirect Action Selector */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">
+                Post-Expiration Action
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => onChange({ ...currentProject, expiryRedirectType: 'message' })}
+                  className={`py-2 px-3 text-center text-[10px] sm:text-xs font-medium rounded-xl border transition-all cursor-pointer ${
+                    (currentProject.expiryRedirectType || 'message') === 'message'
+                      ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold'
+                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  custom message
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChange({ ...currentProject, expiryRedirectType: 'url' })}
+                  className={`py-2 px-3 text-center text-[10px] sm:text-xs font-medium rounded-xl border transition-all cursor-pointer ${
+                    currentProject.expiryRedirectType === 'url'
+                      ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold'
+                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  different url
+                </button>
+              </div>
+            </div>
+
+            {/* Dynamic input depending on choice */}
+            {(currentProject.expiryRedirectType || 'message') === 'message' ? (
+              <div className="space-y-1.5">
+                <label htmlFor="expiry-message-textarea" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">
+                  Custom Message text
+                </label>
+                <textarea
+                  id="expiry-message-textarea"
+                  rows={2}
+                  className="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="e.g., This QR code has reached its designated expiration date and is no longer active."
+                  value={currentProject.expiryMessage || ''}
+                  onChange={(e) => onChange({ ...currentProject, expiryMessage: e.target.value })}
+                />
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                <label htmlFor="expiry-redirect-url-input" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">
+                  Fallback Destination URL
+                </label>
+                <input
+                  id="expiry-redirect-url-input"
+                  type="url"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="e.g., https://yoursite.com/new-dest"
+                  value={currentProject.expiryRedirectUrl || ''}
+                  onChange={(e) => onChange({ ...currentProject, expiryRedirectUrl: e.target.value })}
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </motion.div>
+
+      {/* Folder / Category Selection */}
+      <motion.div
+        id="tour-folder-category"
+        variants={itemVariants}
+        className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100 space-y-3"
+      >
+        <div className="flex items-center gap-2">
+          <Folder className="w-4 h-4 text-indigo-600" />
+          <span className="text-xs font-semibold text-slate-950">Folder / Category</span>
+        </div>
+
+        <p className="text-[10px] text-slate-600 leading-normal">
+          Organize your QR designs in categories to keep your workspace structured (e.g., <em className="not-italic font-medium text-slate-700">Client A, Marketing, Personal</em>).
+        </p>
+
+        <div className="space-y-2">
+          {/* Text Input */}
+          <input
+            type="text"
+            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Type or select folders (e.g. Marketing)"
+            value={currentProject.category || ''}
+            onChange={(e) => onChange({ ...currentProject, category: e.target.value })}
+            maxLength={40}
+          />
+
+          {/* Preset / Existing Suggestions */}
+          {(() => {
+            const DEFAULT_SUGGESTIONS = ['Client A', 'Marketing', 'Personal'];
+            const existing = (projects || [])
+              .map(p => p.category?.trim())
+              .filter(Boolean) as string[];
+            const suggestions = Array.from(new Set([...DEFAULT_SUGGESTIONS, ...existing])).slice(0, 8);
+
+            return suggestions.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {suggestions.map((sug) => {
+                  const isSelected = currentProject.category?.trim().toLowerCase() === sug.trim().toLowerCase();
+                  return (
+                    <button
+                      key={sug}
+                      type="button"
+                      onClick={() => onChange({ 
+                        ...currentProject, 
+                        category: isSelected ? '' : sug 
+                      })}
+                      className={`text-[9px] font-medium px-2.5 py-1 rounded-full transition cursor-pointer select-none ${
+                        isSelected
+                          ? 'bg-indigo-600 text-white font-semibold'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      {sug}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null;
+          })()}
+        </div>
+      </motion.div>
+
       {/* Storage persistence Save Button */}
-      <motion.div variants={itemVariants}>
+      <motion.div id="tour-save-button" variants={itemVariants}>
         <button
           type="button"
           disabled={isSaving || !currentProject.name}
