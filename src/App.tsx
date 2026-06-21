@@ -270,7 +270,11 @@ export default function App() {
   const [toasts, setToasts] = useState<LiveToast[]>([]);
   const [nPermission, setNPermission] = useState<NotificationPermission>(() => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
-      return Notification.permission;
+      try {
+        return Notification.permission;
+      } catch (err) {
+        console.warn('Notification permission query blocked in sandboxed window:', err);
+      }
     }
     return 'default';
   });
@@ -369,7 +373,7 @@ export default function App() {
               }
 
               // Deliver desktop native notification if granted
-              if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+              if (typeof window !== 'undefined' && 'Notification' in window && nPermission === 'granted') {
                 try {
                   const alertTitle = `New Scan: ${data.projectName}`;
                   new Notification(alertTitle, {

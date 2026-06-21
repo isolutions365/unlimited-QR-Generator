@@ -29,6 +29,7 @@ export default function AdSenseUnit({
 }: AdSenseUnitProps) {
   const [hasError, setHasError] = useState(false);
   const initialized = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Only attempt to initialize if we are in a browser environment
@@ -48,24 +49,55 @@ export default function AdSenseUnit({
         }
       }
 
-      if (!initialized.current) {
-        try {
-          // Setup window.adsbygoogle array if missing
-          window.adsbygoogle = window.adsbygoogle || [];
-          
-          // Push the advertisement initialization object safely
-          window.adsbygoogle.push({});
-          initialized.current = true;
-        } catch (err) {
-          console.warn('AdSense unit initialization skipped or delayed:', err);
-          setHasError(true);
+      if (initialized.current) return;
+
+      const checkAndInit = () => {
+        if (initialized.current) return;
+        const width = containerRef.current?.offsetWidth || 0;
+        if (width > 0) {
+          try {
+            // Setup window.adsbygoogle array if missing
+            window.adsbygoogle = window.adsbygoogle || [];
+            
+            // Push the advertisement initialization object safely
+            window.adsbygoogle.push({});
+            initialized.current = true;
+            console.log('[AdSenseUnit] Successfully initialized ad slot:', adSlot, 'width:', width);
+          } catch (err) {
+            console.warn('[AdSenseUnit] Initialization skipped or delayed:', err);
+            setHasError(true);
+          }
         }
+      };
+
+      // Try initial call
+      checkAndInit();
+
+      // Setup ResizeObserver to run when container dimensions resolve (e.g. from 0px/hidden state)
+      let observer: ResizeObserver | null = null;
+      if (!initialized.current && typeof ResizeObserver !== 'undefined' && containerRef.current) {
+        observer = new ResizeObserver(() => {
+          if (!initialized.current) {
+            checkAndInit();
+            if (initialized.current && observer) {
+              observer.disconnect();
+            }
+          }
+        });
+        observer.observe(containerRef.current);
       }
+
+      return () => {
+        if (observer) {
+          observer.disconnect();
+        }
+      };
     }
-  }, [adClient]);
+  }, [adClient, adSlot]);
 
   return (
     <div 
+      ref={containerRef}
       id={id}
       className={`relative flex flex-col items-center justify-center bg-gray-50/50 border border-gray-200/50 rounded-2xl p-3 text-center overflow-hidden transition-all duration-300 hover:border-gray-200 shadow-3xs ${className}`}
     >

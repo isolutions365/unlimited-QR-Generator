@@ -13,49 +13,10 @@ export default defineConfig(() => {
     },
     build: {
       target: 'esnext',
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: true,
-        },
-      },
+      minify: 'esbuild' as const,
       cssMinify: true,
-      sourcemap: 'hidden',
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              // Group React core vendor
-              if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
-                return 'vendor-react';
-              }
-              // Group QR-related modules
-              if (id.includes('qrcode') || id.includes('qr-scanner')) {
-                return 'vendor-qr';
-              }
-              // Group Firebase modules
-              if (id.includes('firebase')) {
-                return 'vendor-firebase';
-              }
-              // Group Icons
-              if (id.includes('lucide-react')) {
-                return 'icons';
-              }
-              // Group Animations
-              if (id.includes('motion') || id.includes('framer-motion')) {
-                return 'animations';
-              }
-              // Group Charts
-              if (id.includes('recharts') || id.includes('d3')) {
-                return 'charts';
-              }
-              // Fallback libs chunk
-              return 'vendor-libs';
-            }
-          },
-        },
-      },
-      chunkSizeWarningLimit: 1000,
+      sourcemap: 'hidden' as const,
+      chunkSizeWarningLimit: 2000,
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
