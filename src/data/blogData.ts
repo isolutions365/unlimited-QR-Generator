@@ -562,14 +562,14 @@ To maximize search presence and assist AI-driven semantic engines, we have embed
   "author": {
     "@type": "Organization",
     "name": "I-Solutions",
-    "url": "https://freeqrgen.pro/"
+    "url": "https://www.freeqrgen.pro/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "I-Solutions",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://freeqrgen.pro/sitemap.xml"
+      "url": "https://www.freeqrgen.pro/sitemap.xml"
     }
   },
   "description": "An deep-dive operational guide on how businesses use free high-contrast QR codes to build reliable inventory tracking and asset management architectures."

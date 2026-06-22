@@ -71,11 +71,11 @@ async function startServer() {
 
   app.use(express.json());
 
-  // SEO Redirection Engine: 301 redirect all Netlify URLs, old domains, and temporary domains to the primary domain
+  // SEO Redirection Engine: 301 redirect non-www, Netlify URLs, old domains, and temporary domains to the primary www domain
   app.use((req, res, next) => {
     const host = (req.headers.host || '').toLowerCase();
-    if (host.includes('netlify.app') || host.includes('unlimitedqrgen.com')) {
-      return res.redirect(301, `https://freeqrgen.pro${req.originalUrl}`);
+    if (host === 'freeqrgen.pro' || host.includes('netlify.app') || host.includes('unlimitedqrgen.com')) {
+      return res.redirect(301, `https://www.freeqrgen.pro${req.originalUrl}`);
     }
     next();
   });
@@ -1009,7 +1009,7 @@ async function startServer() {
   // --- SEO ROUTING: SITEMAP & ROBOTS ENFORCEMENTS ---
   app.get('/sitemap.xml', (req, res) => {
     res.header('Content-Type', 'application/xml');
-    const baseUrl = 'https://freeqrgen.pro';
+    const baseUrl = 'https://www.freeqrgen.pro';
     const slugs = [
       '',
       'wifi-qr-generator',
@@ -1075,7 +1075,7 @@ ${urlXmls}
     const robots = `User-agent: *
 Allow: /
 
-Sitemap: https://freeqrgen.pro/sitemap.xml`;
+Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
     res.send(robots);
   });
 

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://freeqrgen.pro/sitemap.xml
+Sitemap: https://www.freeqrgen.pro/sitemap.xml
