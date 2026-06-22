@@ -71,6 +71,15 @@ async function startServer() {
 
   app.use(express.json());
 
+  // SEO Redirection Engine: 301 redirect all Netlify URLs, old domains, and temporary domains to the primary domain
+  app.use((req, res, next) => {
+    const host = (req.headers.host || '').toLowerCase();
+    if (host.includes('netlify.app') || host.includes('unlimitedqrgen.com')) {
+      return res.redirect(301, `https://freeqrgen.pro${req.originalUrl}`);
+    }
+    next();
+  });
+
   // Input sanitization and verification middleware to prevent Server TypeError crashes (DoS)
   function validateAuthPayload(req: any, res: any, next: any) {
     const { email, password, name } = req.body;
@@ -1000,8 +1009,7 @@ async function startServer() {
   // --- SEO ROUTING: SITEMAP & ROBOTS ENFORCEMENTS ---
   app.get('/sitemap.xml', (req, res) => {
     res.header('Content-Type', 'application/xml');
-    const host = req.headers.host || 'qrcodeps.com';
-    const baseUrl = `https://${host}`;
+    const baseUrl = 'https://freeqrgen.pro';
     const slugs = [
       '',
       'wifi-qr-generator',
@@ -1015,14 +1023,43 @@ async function startServer() {
       'facebook-qr-generator',
       'instagram-qr-generator',
       'youtube-qr-generator',
-      'pdf-qr-generator'
+      'pdf-qr-generator',
+      'faq',
+      'blog',
+      'about',
+      'privacy',
+      'contact',
+      'terms',
+      'blog/what-is-qr-code-how-it-works',
+      'blog/10-ways-businesses-use-qr-codes-increase-sales',
+      'blog/how-to-create-wifi-qr-code',
+      'blog/qr-codes-restaurants-digital-menus',
+      'blog/best-qr-code-marketing-strategies',
+      'blog/qr-codes-events-conferences',
+      'blog/qr-codes-in-education',
+      'blog/common-qr-code-mistakes-avoid',
+      'blog/how-qr-codes-improve-customer-experience',
+      'blog/future-of-qr-code-technology',
+      'blog/qr-codes-inventory-management-asset-tracking'
     ];
     const urlXmls = slugs.map(slug => {
+      let priority = '0.8';
+      let freq = 'weekly';
+      if (slug === '') {
+        priority = '1.0';
+        freq = 'daily';
+      } else if (['about', 'privacy', 'contact', 'terms'].includes(slug)) {
+        priority = '0.5';
+        freq = 'monthly';
+      } else if (slug.startsWith('blog/')) {
+        priority = '0.6';
+        freq = 'monthly';
+      }
       return `  <url>
     <loc>${baseUrl}/${slug ? slug : ''}</loc>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>${slug === '' ? '1.0' : '0.8'}</priority>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>${freq}</changefreq>
+    <priority>${priority}</priority>
   </url>`;
     }).join('\n');
     
@@ -1035,11 +1072,10 @@ ${urlXmls}
 
   app.get('/robots.txt', (req, res) => {
     res.header('Content-Type', 'text/plain');
-    const host = req.headers.host || 'qrcodeps.com';
     const robots = `User-agent: *
 Allow: /
 
-Sitemap: https://${host}/sitemap.xml`;
+Sitemap: https://freeqrgen.pro/sitemap.xml`;
     res.send(robots);
   });
 
