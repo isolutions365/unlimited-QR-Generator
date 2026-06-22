@@ -19,6 +19,10 @@ interface DrawOptions {
   logoOffsetX?: number;
   logoOffsetY?: number;
   skipLogoImage?: boolean;
+  frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'custom';
+  frameText?: string;
+  frameColor?: string;
+  frameTextColor?: string;
 }
 
 /**
@@ -39,8 +43,48 @@ export async function renderStyledQR(
   ctx.fillStyle = options.bgColor;
   ctx.fillRect(0, 0, size, size);
 
+  const hasFrame = options.frameStyle && options.frameStyle !== 'none';
   const margin = typeof options.margin === 'number' ? options.margin : 20;
-  const qrSize = Math.max(100, size - margin * 2);
+
+  let qrSize = Math.max(100, size - margin * 2);
+  let margin_x = margin;
+  let margin_y = margin;
+
+  if (hasFrame) {
+    qrSize = 260;
+    margin_x = 35 + (380 - qrSize) / 2;
+    margin_y = 35 + (320 - qrSize) / 2;
+  }
+
+  const center_x = margin_x + qrSize / 2;
+  const center_y = margin_y + qrSize / 2;
+
+  // Render Frame background first so the QR renders inside its inner card on top
+  if (hasFrame) {
+    const frameColor = options.frameColor || options.fgColor || '#4f46e5';
+    const frameTextColor = options.frameTextColor || '#ffffff';
+    let label = 'SCAN ME';
+    if (options.frameStyle === 'visit-website') label = 'VISIT WEBSITE';
+    if (options.frameStyle === 'wifi-password') label = 'WIFI PASSWORD';
+    if (options.frameStyle === 'custom') label = (options.frameText || 'SCAN ME').toUpperCase();
+
+    // 1. Draw Outer Frame Container (beautiful rounded block)
+    ctx.fillStyle = frameColor;
+    roundRect(ctx, 20, 20, 410, 410, 24);
+    ctx.fill();
+
+    // 2. Draw Inner white/bgColor Card (the QR Code canvas surface)
+    ctx.fillStyle = options.bgColor;
+    roundRect(ctx, 35, 35, 380, 320, 16);
+    ctx.fill();
+
+    // 3. Render precise centered label text inside bottom banner
+    ctx.fillStyle = frameTextColor;
+    ctx.font = 'bold 20px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, 225, 388);
+  }
 
   // Generate QR Matrix using standard qrcode package API
   let qr;
@@ -66,12 +110,12 @@ export async function renderStyledQR(
   // Setup foreground styling (gradients)
   let fillStyle: string | CanvasGradient = options.fgColor;
   if (options.gradientType === 'linear') {
-    const grad = ctx.createLinearGradient(margin, margin, size - margin, size - margin);
+    const grad = ctx.createLinearGradient(margin_x, margin_y, margin_x + qrSize, margin_y + qrSize);
     grad.addColorStop(0, options.fgColor);
     grad.addColorStop(1, options.gradientColor);
     fillStyle = grad;
   } else if (options.gradientType === 'radial') {
-    const grad = ctx.createRadialGradient(size / 2, size / 2, cellSize, size / 2, size / 2, qrSize * 0.7);
+    const grad = ctx.createRadialGradient(center_x, center_y, cellSize, center_x, center_y, qrSize * 0.7);
     grad.addColorStop(0, options.fgColor);
     grad.addColorStop(1, options.gradientColor);
     fillStyle = grad;
@@ -98,8 +142,8 @@ export async function renderStyledQR(
       const isActive = qr.modules.get(r, c);
       if (!isActive) continue;
 
-      const x = margin + c * cellSize;
-      const y = margin + r * cellSize;
+      const x = margin_x + c * cellSize;
+      const y = margin_y + r * cellSize;
 
       ctx.beginPath();
       if (options.dotStyle === 'dots') {
@@ -170,11 +214,11 @@ export async function renderStyledQR(
   };
 
   // Top-Left Eye
-  drawEye(margin, margin, options.eyeColorTopLeft);
+  drawEye(margin_x, margin_y, options.eyeColorTopLeft);
   // Top-Right Eye
-  drawEye(margin + (modulesCount - 7) * cellSize, margin, options.eyeColorTopRight);
+  drawEye(margin_x + (modulesCount - 7) * cellSize, margin_y, options.eyeColorTopRight);
   // Bottom-Left Eye
-  drawEye(margin, margin + (modulesCount - 7) * cellSize, options.eyeColorBottomLeft);
+  drawEye(margin_x, margin_y + (modulesCount - 7) * cellSize, options.eyeColorBottomLeft);
 
   // Apply visual logo centered safely inside the layout
   if (options.logoUrl) {
@@ -197,7 +241,7 @@ export async function renderStyledQR(
 
     // Use context state preservation to translate and rotate precisely about the QR center
     ctx.save();
-    ctx.translate(size / 2 + offsetX, size / 2 + offsetY);
+    ctx.translate(center_x + offsetX, center_y + offsetY);
     const angleInRadians = ((options.logoRotation || 0) * Math.PI) / 180;
     ctx.rotate(angleInRadians);
 
@@ -291,8 +335,21 @@ export function generateStyledSVG(
   options: DrawOptions
 ): string {
   const size = 450;
+  const hasFrame = options.frameStyle && options.frameStyle !== 'none';
   const margin = typeof options.margin === 'number' ? options.margin : 20;
-  const qrSize = Math.max(100, size - margin * 2);
+
+  let qrSize = Math.max(100, size - margin * 2);
+  let margin_x = margin;
+  let margin_y = margin;
+
+  if (hasFrame) {
+    qrSize = 260;
+    margin_x = 35 + (380 - qrSize) / 2;
+    margin_y = 35 + (320 - qrSize) / 2;
+  }
+
+  const center_x = margin_x + qrSize / 2;
+  const center_y = margin_y + qrSize / 2;
 
   // Generate QR Matrix
   let qr;
@@ -310,8 +367,25 @@ export function generateStyledSVG(
   const modulesCount = qr.modules.size;
   const cellSize = qrSize / modulesCount;
 
-  // Background
-  const bgRect = `<rect width="${size}" height="${size}" fill="${options.bgColor}" />`;
+  // Background and Frame elements
+  let bgElements = `<rect width="${size}" height="${size}" fill="${options.bgColor}" />`;
+  if (hasFrame) {
+    const frameColor = options.frameColor || options.fgColor || '#4f46e5';
+    const frameTextColor = options.frameTextColor || '#ffffff';
+    let label = 'SCAN ME';
+    if (options.frameStyle === 'visit-website') label = 'VISIT WEBSITE';
+    if (options.frameStyle === 'wifi-password') label = 'WIFI PASSWORD';
+    if (options.frameStyle === 'custom') label = (options.frameText || 'SCAN ME').toUpperCase();
+
+    bgElements = `
+  <!-- Outer Frame Container -->
+  <rect x="20" y="20" width="410" height="410" rx="24" ry="24" fill="${frameColor}" />
+  <!-- Inner White/bgColor Card -->
+  <rect x="35" y="35" width="380" height="320" rx="16" ry="16" fill="${options.bgColor}" />
+  <!-- Bottom Banner Label -->
+  <text x="225" y="388" font-family="system-ui, -apple-system, sans-serif" font-weight="bold" font-size="20" fill="${frameTextColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
+    `;
+  }
 
   // Define gradients if requested
   let defs = '';
@@ -350,8 +424,8 @@ export function generateStyledSVG(
       const isActive = qr.modules.get(r, c);
       if (!isActive) continue;
 
-      const x = margin + c * cellSize;
-      const y = margin + r * cellSize;
+      const x = margin_x + c * cellSize;
+      const y = margin_y + r * cellSize;
 
       if (options.dotStyle === 'dots') {
         const radius = (cellSize / 2) * 0.85;
@@ -406,9 +480,9 @@ export function generateStyledSVG(
     return eyePaths;
   };
 
-  paths += buildEyeSvg(margin, margin, options.eyeColorTopLeft);
-  paths += buildEyeSvg(margin + (modulesCount - 7) * cellSize, margin, options.eyeColorTopRight);
-  paths += buildEyeSvg(margin, margin + (modulesCount - 7) * cellSize, options.eyeColorBottomLeft);
+  paths += buildEyeSvg(margin_x, margin_y, options.eyeColorTopLeft);
+  paths += buildEyeSvg(margin_x + (modulesCount - 7) * cellSize, margin_y, options.eyeColorTopRight);
+  paths += buildEyeSvg(margin_x, margin_y + (modulesCount - 7) * cellSize, options.eyeColorBottomLeft);
 
   // Centered Mascot / Branding Logo Embed
   let logoSvg = '';
@@ -431,7 +505,7 @@ export function generateStyledSVG(
     }
 
     // Apply matrix offsets
-    logoSvg += `  <g transform="translate(${size / 2 + offsetX}, ${size / 2 + offsetY}) rotate(${angle})">\n`;
+    logoSvg += `  <g transform="translate(${center_x + offsetX}, ${center_y + offsetY}) rotate(${angle})">\n`;
     logoSvg += `    <!-- Backplate boundary to preserve scan compatibility -->\n`;
     logoSvg += `    <rect x="${-halfSize - cellSize}" y="${-halfSize - cellSize}" width="${logoSize + cellSize * 2}" height="${logoSize + cellSize * 2}" rx="${cellSize * 1.5}" ry="${cellSize * 1.5}" fill="${options.bgColor}" />\n`;
 
@@ -447,9 +521,9 @@ export function generateStyledSVG(
   }
 
   return `<?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2500/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
   ${defs ? `<defs>${defs}\n  </defs>` : ''}
-  ${bgRect}
+  ${bgElements}
   <g id="qr-modules">
 ${paths}  </g>
 ${logoSvg}</svg>`;

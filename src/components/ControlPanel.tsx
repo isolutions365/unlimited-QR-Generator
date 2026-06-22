@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot } from 'lucide-react';
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
@@ -14,6 +14,105 @@ interface ControlPanelProps {
   userEmail?: string | null;
   projects?: QRProject[];
 }
+
+const quickStyles = [
+  {
+    name: 'Stealth Slate',
+    description: 'Ultra-clean off-black standard design',
+    iconColor: 'bg-slate-900',
+    design: {
+      fgColor: '#0f172a',
+      bgColor: '#ffffff',
+      gradientType: 'none' as const,
+      gradientColor: '#4f46e5',
+      dotStyle: 'square' as const,
+      eyeStyle: 'square' as const,
+      eyeColorTopLeft: '',
+      eyeColorTopRight: '',
+      eyeColorBottomLeft: ''
+    }
+  },
+  {
+    name: 'Neon Eclipse',
+    description: 'Sleek violet-pink gradient with rounded frame',
+    iconColor: 'bg-gradient-to-tr from-pink-500 to-indigo-600',
+    design: {
+      fgColor: '#ec4899',
+      bgColor: '#ffffff',
+      gradientType: 'linear' as const,
+      gradientColor: '#4f46e5',
+      dotStyle: 'rounded' as const,
+      eyeStyle: 'rounded' as const,
+      eyeColorTopLeft: '',
+      eyeColorTopRight: '',
+      eyeColorBottomLeft: ''
+    }
+  },
+  {
+    name: 'Forest Leaf',
+    description: 'Relaxing emerald theme with elegant leaves',
+    iconColor: 'bg-gradient-to-tr from-emerald-600 to-teal-500',
+    design: {
+      fgColor: '#059669',
+      bgColor: '#ffffff',
+      gradientType: 'linear' as const,
+      gradientColor: '#14b8a6',
+      dotStyle: 'classy' as const,
+      eyeStyle: 'leaf' as const,
+      eyeColorTopLeft: '',
+      eyeColorTopRight: '',
+      eyeColorBottomLeft: ''
+    }
+  },
+  {
+    name: 'Oceanic Pulse',
+    description: 'Dynamic cyan gradient with classy dots',
+    iconColor: 'bg-gradient-to-tr from-cyan-400 to-blue-600',
+    design: {
+      fgColor: '#06b6d4',
+      bgColor: '#ffffff',
+      gradientType: 'linear' as const,
+      gradientColor: '#2563eb',
+      dotStyle: 'classy' as const,
+      eyeStyle: 'rounded' as const,
+      eyeColorTopLeft: '',
+      eyeColorTopRight: '',
+      eyeColorBottomLeft: ''
+    }
+  },
+  {
+    name: 'Sunset Glow',
+    description: 'Vivid orange red with smooth circles',
+    iconColor: 'bg-gradient-to-tr from-amber-500 to-rose-600',
+    design: {
+      fgColor: '#f59e0b',
+      bgColor: '#ffffff',
+      gradientType: 'linear' as const,
+      gradientColor: '#e11d48',
+      dotStyle: 'rounded' as const,
+      eyeStyle: 'circle' as const,
+      eyeColorTopLeft: '',
+      eyeColorTopRight: '',
+      eyeColorBottomLeft: ''
+    }
+  },
+  {
+    name: 'Imperial Plum',
+    description: 'Sophisticated violet gradient with circular dots',
+    iconColor: 'bg-gradient-to-tr from-purple-700 to-pink-500',
+    design: {
+      fgColor: '#6d28d9',
+      bgColor: '#ffffff',
+      gradientType: 'radial' as const,
+      gradientColor: '#db2777',
+      dotStyle: 'dots' as const,
+      eyeStyle: 'circle' as const,
+      eyeColorTopLeft: '',
+      eyeColorTopRight: '',
+      eyeColorBottomLeft: ''
+    }
+  }
+];
 
 export default function ControlPanel({
   currentProject,
@@ -695,6 +794,81 @@ export default function ControlPanel({
         onChange={onChange}
       />
 
+      {/* Quick Style Presets Section */}
+      <motion.div
+        variants={itemVariants}
+        whileHover={{
+          scale: 1.015,
+          y: -2,
+          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
+        }}
+        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm flex flex-col gap-3"
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-xs font-semibold text-slate-800 tracking-wider uppercase flex items-center gap-1.5">
+              <Wand2 className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
+              Quick Style Presets
+            </h3>
+            <span className="text-[10px] text-slate-500 block">Apply curated style combinations instantly.</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          {quickStyles.map((preset) => {
+            const isSelected = (() => {
+              const design = currentProject.design;
+              if (!design) return false;
+              return (
+                design.fgColor === preset.design.fgColor &&
+                design.gradientType === preset.design.gradientType &&
+                design.gradientColor === preset.design.gradientColor &&
+                design.dotStyle === preset.design.dotStyle &&
+                design.eyeStyle === preset.design.eyeStyle
+              );
+            })();
+
+            return (
+              <button
+                key={preset.name}
+                type="button"
+                onClick={() => {
+                  onChange({
+                    ...currentProject,
+                    design: {
+                      ...(currentProject.design || {}),
+                      ...preset.design,
+                    },
+                  });
+                }}
+                className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all ${
+                  isSelected
+                    ? 'border-indigo-600 bg-indigo-50/30 ring-1 ring-indigo-500'
+                    : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/50'
+                }`}
+              >
+                {/* Visual Swatch Mini Badge */}
+                <div className={`w-5 h-5 rounded-md ${preset.iconColor} shrink-0 shadow-sm border border-white flex items-center justify-center`}>
+                  {isSelected && (
+                    <Check className="w-3 h-3 text-white stroke-[3.5]" />
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11px] font-bold text-slate-800 leading-tight truncate">
+                    {preset.name}
+                  </div>
+                  <div className="text-[9px] text-slate-500 truncate">
+                    {preset.description}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </motion.div>
+
       {/* Gemini AI Co-Pilot Intelligent Customizer */}
       <AICoPilot
         currentProject={currentProject}
@@ -742,6 +916,130 @@ export default function ControlPanel({
             <option value="classy">Classy Starbursts</option>
           </select>
         </div>
+      </motion.div>
+
+      {/* Outer Edge Label Frame Section */}
+      <motion.div
+        variants={itemVariants}
+        whileHover={{
+          scale: 1.015,
+          y: -2,
+          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
+        }}
+        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-4"
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-xs font-semibold text-slate-800 tracking-wider uppercase flex items-center gap-1.5">
+              <SquareDot className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
+              Outer Edge Label Frame
+            </h3>
+            <span className="text-[10px] text-slate-500 block">Add a beautiful, styled badge-frame around your QR.</span>
+          </div>
+          {currentProject.design?.frameStyle && currentProject.design?.frameStyle !== 'none' ? (
+            <button
+              type="button"
+              onClick={() => {
+                setDesignField('frameStyle', 'none');
+              }}
+              className="text-[10px] text-red-500 hover:text-red-700 font-semibold cursor-pointer"
+            >
+              Remove Outer Frame
+            </button>
+          ) : null}
+        </div>
+
+        {/* Preset Selector Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {[
+            { id: 'none', label: 'No Frame', desc: 'Sleek & clean' },
+            { id: 'scan-me', label: 'Scan Me', desc: 'Default action' },
+            { id: 'visit-website', label: 'Visit Website', desc: 'Great for URLs' },
+            { id: 'wifi-password', label: 'WiFi Password', desc: 'For network setups' },
+            { id: 'custom', label: 'Custom Text', desc: 'Type your own text' },
+          ].map(preset => {
+            const isSelected = (currentProject.design?.frameStyle || 'none') === preset.id;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => {
+                  setDesignField('frameStyle', preset.id);
+                  if (preset.id !== 'none') {
+                    // Set sensible default frame colors and text to make it instantly look amazing
+                    if (!currentProject.design?.frameColor) {
+                      setDesignField('frameColor', currentProject.design?.fgColor || '#4f46e5');
+                    }
+                    if (!currentProject.design?.frameTextColor) {
+                      setDesignField('frameTextColor', '#ffffff');
+                    }
+                  }
+                }}
+                className={`p-2 rounded-lg border text-left transition-all flex flex-col justify-between h-[54px] cursor-pointer ${
+                  isSelected
+                    ? 'border-indigo-600 bg-indigo-50/25 ring-1 ring-indigo-500/25'
+                    : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/50'
+                }`}
+              >
+                <div className="text-[10.5px] font-bold text-slate-800 flex items-center justify-between w-full">
+                  <span>{preset.label}</span>
+                  {isSelected && <Check className="w-3 h-3 text-indigo-600 stroke-[3]" />}
+                </div>
+                <div className="text-[9px] text-slate-500 truncate w-full">{preset.desc}</div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Custom Text input (Visible if Custom frameStyle is selected) */}
+        {currentProject.design?.frameStyle === 'custom' && (
+          <div className="space-y-1 pt-1">
+            <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-slate-700 tracking-wider uppercase block animate-fade-in">Custom Frame Label</label>
+            <input
+              id="custom-frame-text"
+              type="text"
+              maxLength={20}
+              className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-450 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="e.g. SCAN TO ORDER"
+              value={currentProject.design?.frameText || ''}
+              onChange={e => setDesignField('frameText', e.target.value)}
+            />
+          </div>
+        )}
+
+        {/* Only display color pickers if a frame is active */}
+        {currentProject.design?.frameStyle && currentProject.design?.frameStyle !== 'none' && (
+          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-100/60">
+            <div>
+              <span className="text-[10px] font-bold text-slate-700 tracking-wider uppercase block mb-1.5">Frame Shape Color</span>
+              <div className="flex items-center gap-2">
+                <input
+                  id="frame-color-picker"
+                  type="color"
+                  className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
+                  value={currentProject.design?.frameColor || currentProject.design?.fgColor || '#4f46e5'}
+                  onChange={e => setDesignField('frameColor', e.target.value)}
+                />
+                <span className="text-[10px] font-mono text-slate-500 uppercase">{currentProject.design?.frameColor || currentProject.design?.fgColor || '#4f46e5'}</span>
+              </div>
+            </div>
+
+            <div>
+              <span className="text-[10px] font-bold text-slate-700 tracking-wider uppercase block mb-1.5">Label Text Color</span>
+              <div className="flex items-center gap-2">
+                <input
+                  id="frame-text-color-picker"
+                  type="color"
+                  className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
+                  value={currentProject.design?.frameTextColor || '#ffffff'}
+                  onChange={e => setDesignField('frameTextColor', e.target.value)}
+                />
+                <span className="text-[10px] font-mono text-slate-500 uppercase">{currentProject.design?.frameTextColor || '#ffffff'}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </motion.div>
 
       {/* Independent Finder Corner Eyes Styling */}

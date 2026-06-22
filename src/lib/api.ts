@@ -30,7 +30,7 @@ class ApiClient {
 
     const contentType = response.headers.get('Content-Type') || '';
     if (contentType.includes('text/html')) {
-      throw new Error(`Server API offline: Target endpoint "${path}" returned HTML content instead of JSON. If you are running on Netlify or a static SPA server, please configure real-time Firebase syncing, or verify if the Express service processes are running.`);
+      throw new Error(`Server API offline: Target endpoint "${path}" returned HTML content instead of JSON. Please verify if the Express service processes are running.`);
     }
 
     if (!response.ok) {

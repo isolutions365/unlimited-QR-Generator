@@ -23,6 +23,10 @@ export interface QRProject {
     logoAutoCenter?: boolean; // toggle automatic centering or offset
     logoOffsetX?: number; // logo offset adjustment X (-100 to 100)
     logoOffsetY?: number; // logo offset adjustment Y (-100 to 100)
+    frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'custom';
+    frameText?: string;
+    frameColor?: string;
+    frameTextColor?: string;
   };
   createdAt: string;
   updatedAt?: string;

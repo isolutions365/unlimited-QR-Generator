@@ -1,6 +1,5 @@
 # Unlimited QR Generator
 Free unlimited QR code generator
-🔗 Live Demo: https://unlimitedqrgen.netlify.app
 
 ## Features
 - URL, Text, WiFi, Contact QR codes
@@ -10,13 +9,13 @@ Free unlimited QR code generator
 - PWA - installable on Android
 - No signup required
 
-## Netlify Deployment Guide
+## Deployment Guide
 
-This project is fully ready for deployment on **Netlify**. To prevent build failures or secrets scanning alerts caused by hardcoded API credentials, all Firebase settings have been externalized into environment variables.
+This project is fully ready for deployment on **AI Studio** or **Google Cloud Run** as a standard full-stack Node.js/TypeScript Express + Vite application. To prevent build failures or secrets scanning alerts caused by hardcoded API credentials, all Firebase settings have been externalized into environment variables.
 
-### 1. Set Up Environment Variables in Netlify
+### 1. Set Up Environment Variables
 
-In your Netlify Dashboard, navigate to **Site configuration > Environment variables** and add the following variables:
+Provide the following environment variables in your deployment environment settings:
 
 | Variable Name | Description | Example / Source |
 |---|---|---|
@@ -29,14 +28,7 @@ In your Netlify Dashboard, navigate to **Site configuration > Environment variab
 | `VITE_FIREBASE_FIRESTORE_DATABASE_ID` | Firestore Sub-database (optional) | `ai-studio-9f...` (or `(default)`) |
 | `VITE_FIREBASE_MEASUREMENT_ID` | Firebase Analytics ID (optional) | `G-Z5SBN2TJ5S` |
 
-### 2. Standard Build Parameters
-
-Our `netlify.toml` file includes optimal pre-configured commands:
-- **Build command**: `npm run build`
-- **Publish directory**: `dist`
-- **Redirect Rule**: Set `/*` to rewrite to `/index.html` (crucial for Single Page Application client-side routing)
-
-### 3. Local Development
+### 2. Standalone Local Development
 
 To run the project locally with full database features:
 1. Create a `.env` file in the project's root directory (this file is ignored by Git in `.gitignore`).
