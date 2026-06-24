@@ -5,6 +5,7 @@ import { landingPages } from './components/landing/SEODatabase';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
 import AdSenseUnit from './components/AdSenseUnit';
+import { Analytics } from '@vercel/analytics/react';
 
 // Code-splitting via React.lazy for non-critical elements (improves LCP, FCP, Speed Index)
 const SEOPage = React.lazy(() => import('./components/landing/SEOPage'));
@@ -2653,6 +2654,7 @@ export default function App() {
           ))}
         </AnimatePresence>
       </div>
+      <Analytics />
     </div>
   );
 }
