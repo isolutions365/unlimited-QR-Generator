@@ -23,6 +23,10 @@ export default function QR3DExperience() {
   const glossX = useTransform(x, [-0.5, 0.5], ['0%', '100%']);
   const glossY = useTransform(y, [-0.5, 0.5], ['0%', '100%']);
 
+  // Parallax offsets for the decorative specular mesh backdrop
+  const meshX = useTransform(x, [-0.5, 0.5], [-40, 40]);
+  const meshY = useTransform(y, [-0.5, 0.5], [-40, 40]);
+
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -60,11 +64,9 @@ export default function QR3DExperience() {
         className="relative w-80 h-80 sm:w-[380px] sm:h-[380px] cursor-grab active:cursor-grabbing select-none"
       >
         {/* Dynamic Specular Mesh backdrop representing "Stripe and VisionOS style glow" */}
-        <div 
+        <motion.div
           className="absolute -inset-10 bg-radial-gradient from-indigo-500/10 via-purple-600/5 to-transparent rounded-full filter blur-3xl opacity-80 pointer-events-none transition-transform duration-500"
-          style={{
-            transform: `translate3d(${useTransform(x, [-0.5, 0.5], [-40, 40]).get()}px, ${useTransform(y, [-0.5, 0.5], [-40, 40]).get()}px, 0px)`
-          }}
+          style={{ x: meshX, y: meshY }}
         />
 
         {/* Outer Orbit Glass Ring */}

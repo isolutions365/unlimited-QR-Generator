@@ -6,17 +6,54 @@ import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
 import AdSenseUnit from './components/AdSenseUnit';
 
-// Code-splitting via React.lazy for non-critical elements (improves LCP, FCP, Speed Index)
-const SEOPage = React.lazy(() => import('./components/landing/SEOPage'));
-const TemplatesTab = React.lazy(() => import('./components/TemplatesTab'));
-const SavedProjects = React.lazy(() => import('./components/SavedProjects'));
-const AnalyticsDashboard = React.lazy(() => import('./components/AnalyticsDashboard'));
-const MobileAppMockup = React.lazy(() => import('./components/MobileAppMockup'));
-const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowcase'));
-const AuthModal = React.lazy(() => import('./components/AuthModal'));
-const CompanyPages = React.lazy(() => import('./components/CompanyPages'));
-const FaqSection = React.lazy(() => import('./components/FaqSection'));
-const BlogSection = React.lazy(() => import('./components/BlogSection'));
+// Code-splitting via React.lazy for non-critical elements (improves LCP, FCP, Speed Index).
+//
+// After a new deploy, the hashed chunk filenames change. A returning visitor whose
+// browser still holds the previous index.html / main bundle will request an old chunk
+// URL that no longer exists, the dynamic import() rejects, and the routed sub-page
+// renders blank. lazyWithRetry catches that failure and performs a single, guarded
+// full reload so the freshest index.html (and chunk manifest) is fetched, then renders
+// the page normally. The sessionStorage guard prevents an infinite reload loop if the
+// chunk is genuinely unavailable.
+function lazyWithRetry<T extends React.ComponentType<any>>(
+  factory: () => Promise<{ default: T }>,
+  chunkName: string,
+): React.LazyExoticComponent<T> {
+  return React.lazy(async () => {
+    const reloadKey = `lazy-chunk-reload:${chunkName}`;
+    try {
+      const component = await factory();
+      // Loaded cleanly — clear any prior reload marker for this chunk.
+      try { window.sessionStorage.removeItem(reloadKey); } catch { /* storage blocked */ }
+      return component;
+    } catch (error) {
+      let alreadyReloaded = false;
+      try { alreadyReloaded = window.sessionStorage.getItem(reloadKey) === '1'; } catch { /* storage blocked */ }
+
+      if (!alreadyReloaded) {
+        try { window.sessionStorage.setItem(reloadKey, '1'); } catch { /* storage blocked */ }
+        // Force a fresh load of index.html so outdated chunk references are replaced.
+        window.location.reload();
+        // Halt rendering until the reload takes over (never resolves).
+        return new Promise<{ default: T }>(() => { /* intentionally pending */ });
+      }
+
+      // Reload already attempted once and it still failed: surface to the ErrorBoundary.
+      throw error;
+    }
+  });
+}
+
+const SEOPage = lazyWithRetry(() => import('./components/landing/SEOPage'), 'SEOPage');
+const TemplatesTab = lazyWithRetry(() => import('./components/TemplatesTab'), 'TemplatesTab');
+const SavedProjects = lazyWithRetry(() => import('./components/SavedProjects'), 'SavedProjects');
+const AnalyticsDashboard = lazyWithRetry(() => import('./components/AnalyticsDashboard'), 'AnalyticsDashboard');
+const MobileAppMockup = lazyWithRetry(() => import('./components/MobileAppMockup'), 'MobileAppMockup');
+const AnimationsShowcase = lazyWithRetry(() => import('./components/AnimationsShowcase'), 'AnimationsShowcase');
+const AuthModal = lazyWithRetry(() => import('./components/AuthModal'), 'AuthModal');
+const CompanyPages = lazyWithRetry(() => import('./components/CompanyPages'), 'CompanyPages');
+const FaqSection = lazyWithRetry(() => import('./components/FaqSection'), 'FaqSection');
+const BlogSection = lazyWithRetry(() => import('./components/BlogSection'), 'BlogSection');
 
 // Non-blocking fallback skeleton loader
 const LazyLoader = () => (
