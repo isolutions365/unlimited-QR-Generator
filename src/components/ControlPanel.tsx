@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info } from 'lucide-react';
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
@@ -125,6 +125,48 @@ export default function ControlPanel({
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const getUrlError = (url: string): { type: 'error' | 'warning' | 'info'; message: string; action?: () => void } | null => {
+    if (!url || !url.trim()) {
+      return { type: 'info', message: 'Enter the destination web link above. A valid link is required to generate the QR code.' };
+    }
+
+    const trimmed = url.trim();
+    
+    // Check for spaces
+    if (/\s/.test(trimmed)) {
+      return { type: 'error', message: 'URLs cannot contain spaces. Please check for accidental spaces.' };
+    }
+
+    // Check if missing protocol
+    const hasProtocol = /^(https?:\/\/)/i.test(trimmed);
+    if (!hasProtocol) {
+      // Suggest adding https://
+      return {
+        type: 'warning',
+        message: 'Missing required protocol! Smartphone scanners need "http://" or "https://" to recognize this as a web link.',
+        action: () => {
+          onChange({ ...currentProject, content: `https://${trimmed}` });
+        }
+      };
+    }
+
+    // Try to validate domain structure
+    try {
+      const urlObj = new URL(trimmed);
+      const host = urlObj.hostname;
+      if (!host.includes('.') || host.split('.').filter(Boolean).length < 2) {
+        return { type: 'error', message: 'Invalid website domain. Make sure you entered a full address (e.g. domain.com).' };
+      }
+    } catch (e) {
+      return { type: 'error', message: 'Invalid URL format. Please enter a valid website address (e.g. https://example.com).' };
+    }
+
+    return null;
+  };
+
+  const urlError = currentProject.type === 'url' ? getUrlError(currentProject.content || '') : null;
+  const isUrlInvalid = urlError && (urlError.type === 'error' || urlError.type === 'warning');
 
   const calculateAutoCenterOffsets = () => {
     const errorCorrectionLevel = currentProject.design?.errorCorrectionLevel || 'H';
@@ -353,14 +395,68 @@ export default function ControlPanel({
         {currentProject.type === 'url' && (
           <div>
             <label htmlFor="target-url-input" className="block text-xs font-semibold text-slate-800 mb-1">Target Website URL</label>
-            <input
-              id="target-url-input"
-              type="url"
-              className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
-              placeholder="https://example.com"
-              value={currentProject.content || ''}
-              onChange={e => onChange({ ...currentProject, content: e.target.value })}
-            />
+            <div className="flex gap-2">
+              <input
+                id="target-url-input"
+                type="url"
+                className={`flex-1 text-sm px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-white text-slate-800 transition-all ${
+                  urlError && urlError.type === 'error'
+                    ? 'border-rose-300 focus:ring-rose-500/20 focus:border-rose-500'
+                    : urlError && urlError.type === 'warning'
+                    ? 'border-amber-350 focus:ring-amber-500/20 focus:border-amber-500'
+                    : 'border-gray-200 focus:ring-indigo-500 focus:border-indigo-500'
+                }`}
+                placeholder="https://example.com"
+                value={currentProject.content || ''}
+                onChange={e => onChange({ ...currentProject, content: e.target.value })}
+              />
+              {urlError && urlError.type === 'warning' && urlError.action && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  type="button"
+                  onClick={urlError.action}
+                  title="Add https://"
+                  className="px-3.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 active:scale-[0.95] text-amber-700 transition-all flex items-center justify-center cursor-pointer relative group"
+                >
+                  <Link2 className="w-4 h-4" />
+                  <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-md">
+                    Add https://
+                  </span>
+                </motion.button>
+              )}
+            </div>
+
+            {urlError && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`mt-2 p-3 rounded-xl border text-xs flex gap-2.5 transition-all duration-200 ${
+                  urlError.type === 'error'
+                    ? 'bg-rose-50/50 border-rose-200/50 text-rose-800 shadow-xs'
+                    : urlError.type === 'warning'
+                    ? 'bg-amber-50/50 border-amber-200/50 text-amber-850 shadow-xs'
+                    : 'bg-slate-50/70 border-slate-200/40 text-slate-600'
+                }`}
+              >
+                {urlError.type === 'error' && <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />}
+                {urlError.type === 'warning' && <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />}
+                {urlError.type === 'info' && <Info className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />}
+                
+                <div className="flex-1 space-y-1.5">
+                  <p className="leading-relaxed font-medium">{urlError.message}</p>
+                  {urlError.action && (
+                    <button
+                      type="button"
+                      onClick={urlError.action}
+                      className="text-[10px] font-bold bg-amber-600 hover:bg-amber-750 text-white px-2.5 py-1 rounded-md transition-colors inline-flex items-center gap-1 active:scale-[0.97]"
+                    >
+                      <span>Fix: Add "https://" prefix</span>
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            )}
           </div>
         )}
 
@@ -1819,7 +1915,7 @@ export default function ControlPanel({
       <motion.div id="tour-save-button" variants={itemVariants}>
         <button
           type="button"
-          disabled={isSaving || !currentProject.name}
+          disabled={isSaving || !currentProject.name || isUrlInvalid}
           onClick={onSave}
           className="w-full py-3 bg-indigo-600 text-white rounded-xl font-medium text-sm shadow-md shadow-indigo-100 hover:bg-indigo-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
         >

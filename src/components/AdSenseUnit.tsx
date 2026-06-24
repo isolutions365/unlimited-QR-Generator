@@ -19,7 +19,7 @@ declare global {
 
 export default function AdSenseUnit({
   id,
-  adClient = "ca-pub-3940256099942544", // Testing Google AdSense Client ID
+  adClient = "ca-pub-1877345878061699", // Production Google AdSense Client ID
   adSlot,
   adFormat = 'auto',
   fullWidthResponsive = true,

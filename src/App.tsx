@@ -522,6 +522,23 @@ export default function App() {
       content: 'Apply beautiful predefined color palettes, or specify exact hex values for solid backgrounds, foregrounds, and dynamic gradient colors!',
     },
     {
+      target: '#gemini-ai-co-pilot',
+      placement: 'right',
+      title: (
+        <div className="flex items-center justify-between gap-3 w-full">
+          <span className="font-bold text-slate-900">🤖 Meet Your AI Co-Pilot — Powered by Gemini</span>
+          <span className="bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase px-2 py-0.5 rounded-md border border-indigo-200 whitespace-nowrap">✨ Exclusive Feature</span>
+        </div>
+      ),
+      content: (
+        <div className="space-y-2">
+          <p className="text-xs text-slate-600 leading-relaxed">
+            This isn't just another QR generator. Tell our AI your business name and what you do, and Gemini instantly matches colors, gradients, and styles to your brand identity — no design skills needed. No other free QR tool does this.
+          </p>
+        </div>
+      )
+    },
+    {
       target: '#tour-qr-styles',
       placement: 'right-start',
       title: '✨ Step 4: Corner Eyes & Dot Styles',
@@ -870,11 +887,18 @@ export default function App() {
       const targetId = currentProject.id || '';
       const trackingId = currentProject.trackingId || Math.random().toString(36).substr(2, 6);
 
+      let contentVal = currentProject.content || '';
+      if (currentProject.type === 'url') {
+        contentVal = contentVal.trim().replace(/\/+$/, '');
+        // Update local state so user sees the cleaned content value in UI
+        setCurrentProject(prev => ({ ...prev, content: contentVal }));
+      }
+
       const projectData: Partial<QRProject> = {
         id: targetId,
         name: currentProject.name || 'My Styled QR',
         type: currentProject.type || 'url',
-        content: currentProject.content || 'https://google.com',
+        content: contentVal || 'https://google.com',
         design: {
           fgColor: currentProject.design?.fgColor || '#0f172a',
           bgColor: currentProject.design?.bgColor || '#ffffff',

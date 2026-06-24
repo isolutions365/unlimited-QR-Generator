@@ -30,11 +30,19 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [themeColor, setThemeColor] = useState<string>('indigo');
   const [printSheetMode, setPrintSheetMode] = useState<boolean>(true);
 
-  // Clean up any pending success timeouts on unmount
+  // Redraw Visual Feedback States
+  const [redrawKey, setRedrawKey] = useState(0);
+  const [isAnimatingRedraw, setIsAnimatingRedraw] = useState(false);
+  const redrawTimeoutRef = useRef<any>(null);
+
+  // Clean up any pending success and redraw timeouts on unmount
   useEffect(() => {
     return () => {
       if (successTimeoutRef.current) {
         clearTimeout(successTimeoutRef.current);
+      }
+      if (redrawTimeoutRef.current) {
+        clearTimeout(redrawTimeoutRef.current);
       }
     };
   }, []);
@@ -96,6 +104,17 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         errorCorrectionLevel,
         skipLogoImage: isPrintModalOpen ? false : true
       });
+
+      // Trigger high-end subtle redraw animation feedback on style/content updates
+      setIsAnimatingRedraw(true);
+      setRedrawKey(prev => prev + 1);
+
+      if (redrawTimeoutRef.current) {
+        clearTimeout(redrawTimeoutRef.current);
+      }
+      redrawTimeoutRef.current = setTimeout(() => {
+        setIsAnimatingRedraw(false);
+      }, 450);
     }
   }, [
     textToEncode,
@@ -649,9 +668,16 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden animate-fade-in" style={{ width: '280px', height: '280px' }}>
             <canvas
               ref={canvasRef}
-              className="max-w-full rounded-lg bg-white transition-transform duration-300 group-hover:scale-[0.98]"
+              className={`max-w-full rounded-lg bg-white transition-all duration-300 group-hover:scale-[0.98] ${
+                isAnimatingRedraw ? 'animate-qr-redraw' : ''
+              }`}
               style={{ width: '264px', height: '264px' }}
             />
+
+            {/* Premium diagonal shine sweep on design update */}
+            {isAnimatingRedraw && (
+              <div className="animate-sweep-shine pointer-events-none z-[8]" />
+            )}
 
             {/* Elegant overlay logo with smooth scaling on change */}
             {logoUrl && !isPrintModalOpen && (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { QRProject } from '../types';
-import { Palette, Check, Sparkles } from 'lucide-react';
+import { Palette, Check, Sparkles, CheckCircle2, AlertTriangle, XCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const presetColors = [
@@ -28,6 +28,12 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
   const [localFgColor, setLocalFgColor] = useState(fgColor);
   const [localBgColor, setLocalBgColor] = useState(bgColor);
   const [localGradientColor, setLocalGradientColor] = useState(gradientColor);
+
+  // Real-time contrast and scannability calculations
+  const primaryContrast = getContrastRatio(localFgColor, localBgColor);
+  const gradientContrast = gradientType !== 'none' ? getContrastRatio(localGradientColor, localBgColor) : primaryContrast;
+  const finalContrast = Math.min(primaryContrast, gradientContrast);
+  const isInverted = isLightOnDark(localFgColor, localBgColor);
 
   // Sync local states if the parent project design properties change externally (e.g. loading another preset, custom template)
   useEffect(() => {
@@ -331,6 +337,140 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
           )}
         </AnimatePresence>
       </motion.div>
+
+      {/* Real-time Scannability Checker */}
+      <motion.div
+        variants={itemVariants}
+        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm flex flex-col gap-3"
+      >
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block">
+            QR Scannability Checker
+          </label>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-100 text-slate-500 font-mono">
+            Contrast Status
+          </span>
+        </div>
+
+        {/* Status card */}
+        {(() => {
+          let statusBg = 'bg-emerald-50/30';
+          let statusBorder = 'border-emerald-200/60';
+          let statusText = 'text-emerald-800';
+          let statusIconColor = 'text-emerald-500';
+          let statusTitle = 'Perfect Contrast';
+          let statusDesc = `Excellent contrast ratio of ${finalContrast.toFixed(1)}:1. This QR code will scan flawlessly under any normal or dim lighting conditions on all mobile devices.`;
+          let StatusIcon = CheckCircle2;
+
+          if (finalContrast < 3) {
+            statusBg = 'bg-rose-50/40';
+            statusBorder = 'border-rose-200/60';
+            statusText = 'text-rose-800';
+            statusIconColor = 'text-rose-500';
+            statusTitle = 'High Scan Failure Risk';
+            statusDesc = `Critical warning! Very low contrast ratio of ${finalContrast.toFixed(1)}:1. Camera scanners will likely fail to read this QR code. Please increase the contrast between the foreground and background colors immediately.`;
+            StatusIcon = XCircle;
+          } else if (finalContrast < 4.5) {
+            statusBg = 'bg-amber-50/40';
+            statusBorder = 'border-amber-200/60';
+            statusText = 'text-amber-800';
+            statusIconColor = 'text-amber-500';
+            statusTitle = 'Moderate Scan Risk';
+            statusDesc = `Contrast ratio of ${finalContrast.toFixed(1)}:1 is below ideal levels. Some older devices or dim environments may struggle to decode this QR code. Consider making the foreground darker or background lighter.`;
+            StatusIcon = AlertTriangle;
+          } else if (finalContrast < 7) {
+            statusBg = 'bg-blue-50/30';
+            statusBorder = 'border-blue-200/60';
+            statusText = 'text-blue-800';
+            statusIconColor = 'text-blue-500';
+            statusTitle = 'Good Scannability';
+            statusDesc = `Good contrast ratio of ${finalContrast.toFixed(1)}:1. Highly readable by almost all modern smartphone camera scanners. Safe for production use.`;
+            StatusIcon = CheckCircle2;
+          }
+
+          return (
+            <div className={`p-3.5 rounded-xl border ${statusBg} ${statusBorder} flex gap-3 transition-all duration-300`}>
+              <StatusIcon className={`w-5 h-5 ${statusIconColor} shrink-0 mt-0.5`} />
+              <div className="flex flex-col gap-1">
+                <span className={`text-xs font-bold ${statusText} flex items-center gap-1.5`}>
+                  {statusTitle}
+                  <span className="font-mono text-[10px] opacity-75 font-normal">
+                    ({finalContrast.toFixed(1)}:1)
+                  </span>
+                </span>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  {statusDesc}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Context-aware advice tips */}
+        {(isInverted || (gradientType !== 'none' && gradientContrast < primaryContrast)) && (
+          <div className="p-3 bg-slate-50/50 rounded-lg border border-slate-200/40 flex flex-col gap-2">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">
+              <Info className="w-3.5 h-3.5 text-slate-400" />
+              <span>Scannability Tips</span>
+            </div>
+            
+            <div className="space-y-1.5">
+              {isInverted && (
+                <p className="text-[10px] text-slate-500 leading-relaxed">
+                  <strong className="text-slate-600">Inverted QR Code:</strong> You are using a light foreground on a dark background. While modern smartphones read this easily, some legacy barcode scanners and older scanner apps cannot process inverted codes. Consider using a dark foreground on a light background for maximum physical print safety.
+                </p>
+              )}
+              {gradientType !== 'none' && gradientContrast < primaryContrast && (
+                <p className="text-[10px] text-slate-500 leading-relaxed">
+                  <strong className="text-slate-600">Gradient Warning:</strong> Your secondary gradient color ({localGradientColor}) has lower contrast ({gradientContrast.toFixed(1)}:1) than the main color ({primaryContrast.toFixed(1)}:1). Make sure the gradient stays dark enough relative to the background across the entire code.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </motion.div>
     </div>
   );
+}
+
+// Helper functions for real-time contrast checking
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  const fullHex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      }
+    : null;
+}
+
+function getLuminance(r: number, g: number, b: number): number {
+  const a = [r, g, b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+
+function getContrastRatio(hex1: string, hex2: string): number {
+  const rgb1 = hexToRgb(hex1);
+  const rgb2 = hexToRgb(hex2);
+  if (!rgb1 || !rgb2) return 1;
+  const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+  const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+  const brightest = Math.max(lum1, lum2);
+  const darkest = Math.min(lum1, lum2);
+  return (brightest + 0.05) / (darkest + 0.05);
+}
+
+function isLightOnDark(fgHex: string, bgHex: string): boolean {
+  const rgb1 = hexToRgb(fgHex);
+  const rgb2 = hexToRgb(bgHex);
+  if (!rgb1 || !rgb2) return false;
+  const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+  const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+  return lum1 > lum2;
 }
