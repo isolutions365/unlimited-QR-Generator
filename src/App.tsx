@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { api, UserSession } from './lib/api';
 import { QRProject, ScanLog } from './types';
 import { landingPages } from './components/landing/SEODatabase';
@@ -2652,6 +2653,7 @@ export default function App() {
             </motion.div>
           ))}
         </AnimatePresence>
+      <Analytics />
       </div>
     </div>
   );
