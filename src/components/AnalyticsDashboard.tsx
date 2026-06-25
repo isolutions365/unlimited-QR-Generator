@@ -2,6 +2,7 @@ import React from 'react';
 import { ScanLog, QRProject } from '../types';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
 import { BarChart3, Globe, Tablet, Users, Grid } from 'lucide-react';
+import D3WorldHeatmap from './D3WorldHeatmap';
 
 interface AnalyticsDashboardProps {
   scans: ScanLog[];
@@ -279,74 +280,11 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
                 {/* Background Grid Pattern */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
                 
-                <svg viewBox="0 0 800 400" className="w-full h-full relative z-10">
-                  {/* Styled simplified continent outlines */}
-                  {/* North America */}
-                  <path d="M100,80 C130,70 180,60 210,80 C230,95 240,120 230,140 C210,165 180,180 160,200 C150,210 145,225 140,240 C135,220 120,190 100,180 Z" className="fill-slate-100 stroke-slate-200/50" strokeWidth="1.5" />
-                  {/* South America */}
-                  <path d="M140,240 C170,240 190,260 205,290 C220,330 210,370 190,400 C180,410 170,420 165,430 C155,410 145,340 135,300 Z" className="fill-slate-100 stroke-slate-200/50" strokeWidth="1.5" />
-                  {/* Africa */}
-                  <path d="M360,210 C390,195 440,200 455,230 C470,260 490,290 475,320 C460,350 440,390 425,410 C420,390 415,360 405,340 C395,330 365,310 355,280 C345,260 350,230 360,210 Z" className="fill-slate-100 stroke-slate-200/50" strokeWidth="1.5" />
-                  {/* Europe & Asia */}
-                  <path d="M360,210 C370,180 360,140 390,110 C420,90 470,80 540,80 C600,80 680,90 730,110 C760,125 780,150 750,180 C720,210 680,240 640,250 C580,260 520,250 470,230 Z" className="fill-slate-100 stroke-slate-200/50" strokeWidth="1.5" />
-                  {/* Australia */}
-                  <path d="M680,310 C710,300 740,315 750,330 C760,350 740,380 710,380 C690,380 670,360 680,310 Z" className="fill-slate-100 stroke-slate-200/50" strokeWidth="1.5" />
-
-                  {/* Lat/Long Grid Markings */}
-                  <line x1="0" y1="200" x2="800" y2="200" stroke="#cbd5e1" strokeWidth="0.5" strokeDasharray="4 4" opacity="0.4" />
-                  <line x1="400" y1="0" x2="400" y2="400" stroke="#cbd5e1" strokeWidth="0.5" strokeDasharray="4 4" opacity="0.4" />
-
-                  {/* Heatmap Hotspots */}
-                  {geoData.map((g) => {
-                    const isHovered = hoveredCountry?.name === g.name;
-                    const heatColors = 
-                      g.intensity > 0.7 ? { core: '#ef4444', glow: 'rgba(239, 68, 68, 0.2)' } :
-                      g.intensity > 0.4 ? { core: '#f97316', glow: 'rgba(249, 115, 22, 0.2)' } :
-                      { core: '#4f46e5', glow: 'rgba(79, 70, 229, 0.2)' };
-
-                    return (
-                      <g
-                        key={g.name}
-                        onMouseEnter={() => setHoveredCountry({ name: g.name, count: g.count, code: g.code })}
-                        onMouseLeave={() => setHoveredCountry(null)}
-                        className="cursor-pointer group transition-all"
-                      >
-                        {/* Interactive Invisible Large Hover Area */}
-                        <circle cx={g.x} cy={g.y} r="18" fill="transparent" />
-
-                        {/* Outer Glow Ring */}
-                        <circle
-                          cx={g.x}
-                          cy={g.y}
-                          r={isHovered ? 24 : 10 + g.intensity * 14}
-                          fill={heatColors.glow}
-                          className="transition-all duration-300"
-                        />
-
-                        {/* Pulsing Heat Core Ring */}
-                        <circle
-                          cx={g.x}
-                          cy={g.y}
-                          r={isHovered ? 16 : 6 + g.intensity * 8}
-                          fill="none"
-                          stroke={heatColors.core}
-                          strokeWidth="1.5"
-                          className="opacity-70 animate-ping origin-center"
-                          style={{ transformOrigin: `${g.x}px ${g.y}px` }}
-                        />
-
-                        {/* Solid Inner Core */}
-                        <circle
-                          cx={g.x}
-                          cy={g.y}
-                          r={isHovered ? 8 : 4 + g.intensity * 4}
-                          fill={heatColors.core}
-                          className="stroke-white stroke-2 shadow-md transition-all duration-200"
-                        />
-                      </g>
-                    );
-                  })}
-                </svg>
+                <D3WorldHeatmap
+                  scans={scans}
+                  onHoverCountry={setHoveredCountry}
+                  hoveredCountryName={hoveredCountry?.name}
+                />
               </div>
             </div>
 
