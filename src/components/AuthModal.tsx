@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { api } from '../lib/api';
 import { Mail, Lock, User, X, Eye, EyeOff, Sparkles } from 'lucide-react';
-import AdSenseUnit from './AdSenseUnit';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -186,18 +185,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
               )}
             </button>
           </form>
-
-          {/* Post-Download / High Engagement Ad unit */}
-          <div className="mt-5 pt-4 border-t border-gray-100">
-            <AdSenseUnit
-              id="auth-post-download-ad"
-              adSlot="3000000003"
-              adFormat="horizontal"
-              style={{ display: 'block', minHeight: '90px' }}
-              className="bg-purple-50/10 border-purple-150/40"
-              label="SPECIAL SPONSOR OFFER"
-            />
-          </div>
         </div>
 
         {/* Modal Info Footer */}

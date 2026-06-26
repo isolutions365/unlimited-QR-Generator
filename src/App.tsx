@@ -4,7 +4,6 @@ import { QRProject, ScanLog } from './types';
 import { landingPages } from './components/landing/SEODatabase';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
-import AdSenseUnit from './components/AdSenseUnit';
 
 // Code-splitting via React.lazy for non-critical elements (improves LCP, FCP, Speed Index)
 const SEOPage = React.lazy(() => import('./components/landing/SEOPage'));
@@ -1778,15 +1777,6 @@ export default function App() {
       ) : (
         <main className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6">
 
-        {/* Top Leaderboard Native Ad unit */}
-        <AdSenseUnit
-          id="top-leaderboard-ad"
-          adSlot="1000000001"
-          adFormat="horizontal"
-          style={{ display: 'block', minHeight: '90px', width: '100%' }}
-          className="w-full bg-linear-to-r from-slate-50 to-indigo-50/10 border-indigo-100/40"
-        />
-
         {/* Tab view controller */}
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between bg-white border border-gray-200/80 p-1.5 rounded-2xl max-w-xl shadow-xs gap-1">
           <button
@@ -1884,16 +1874,6 @@ export default function App() {
                 onTestScan={handleSimTestScan} 
                 onDownloadTrigger={handleDownloadTrigger} 
               />
-
-              {/* Native Sidebar / Display Ad Unit */}
-              <AdSenseUnit
-                id="sidebar-native-ad"
-                adSlot="2000000002"
-                adFormat="rectangle"
-                style={{ display: 'block', minHeight: '220px' }}
-                className="w-full bg-linear-to-b from-slate-50 to-indigo-50/10 border-indigo-100/40"
-                label="SPONSORED HIGHLIGHT"
-              />
             </div>
           </div>
         )}
@@ -1918,16 +1898,6 @@ export default function App() {
                 currentProject={currentProject} 
                 onTestScan={handleSimTestScan} 
                 onDownloadTrigger={handleDownloadTrigger} 
-              />
-
-              {/* Native Sidebar / Display Ad Unit */}
-              <AdSenseUnit
-                id="sidebar-native-ad"
-                adSlot="2000000002"
-                adFormat="rectangle"
-                style={{ display: 'block', minHeight: '220px' }}
-                className="w-full bg-linear-to-b from-slate-50 to-indigo-50/10 border-indigo-100/40"
-                label="SPONSORED HIGHLIGHT"
               />
             </div>
           </div>
