@@ -23,10 +23,12 @@ export interface QRProject {
     logoAutoCenter?: boolean; // toggle automatic centering or offset
     logoOffsetX?: number; // logo offset adjustment X (-100 to 100)
     logoOffsetY?: number; // logo offset adjustment Y (-100 to 100)
-    frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'custom';
+    frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'custom';
     frameText?: string;
     frameColor?: string;
     frameTextColor?: string;
+    smartOptimize?: boolean; // automatically adjust padding & error correction to maintain readability
+    modulePadding?: number; // QR module spacing/padding percentage (0 to 40)
   };
   createdAt: string;
   updatedAt?: string;

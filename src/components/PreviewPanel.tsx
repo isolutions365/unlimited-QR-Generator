@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG } from '../utils/qrRenderer';
-import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid } from 'lucide-react';
+import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import qrcode from 'qrcode';
 
@@ -9,9 +9,10 @@ interface PreviewPanelProps {
   currentProject: Partial<QRProject>;
   onTestScan?: (text: string) => void;
   onDownloadTrigger?: () => void;
+  onChange?: (project: Partial<QRProject>) => void;
 }
 
-export default function PreviewPanel({ currentProject, onTestScan, onDownloadTrigger }: PreviewPanelProps) {
+export default function PreviewPanel({ currentProject, onTestScan, onDownloadTrigger, onChange }: PreviewPanelProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [simulatedScanResult, setSimulatedScanResult] = useState<string | null>(null);
@@ -19,6 +20,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [selectedFormat, setSelectedFormat] = useState<'PNG' | 'SVG' | 'PDF'>('PNG');
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const successTimeoutRef = useRef<any>(null);
+
+  // Scannability diagnostics state
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   // Print Studio States
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
@@ -34,6 +38,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [redrawKey, setRedrawKey] = useState(0);
   const [isAnimatingRedraw, setIsAnimatingRedraw] = useState(false);
   const redrawTimeoutRef = useRef<any>(null);
+
+  // Keep track of the last known stable readable design configuration
+  const lastReadableDesignRef = useRef<any>(null);
 
   // Clean up any pending success and redraw timeouts on unmount
   useEffect(() => {
@@ -65,6 +72,144 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const eyeColorTopRight = currentProject.design?.eyeColorTopRight || '';
   const eyeColorBottomLeft = currentProject.design?.eyeColorBottomLeft || '';
   const errorCorrectionLevel = currentProject.design?.errorCorrectionLevel || 'H';
+
+  // Helper to calculate relative luminance for WCAG contrast checking
+  const getLuminance = (hexColor: string): number => {
+    const hex = hexColor.replace(/^#/, '');
+    if (hex.length !== 3 && hex.length !== 6) return 0;
+    
+    let r = 0, g = 0, b = 0;
+    if (hex.length === 6) {
+      r = parseInt(hex.substring(0, 2), 16);
+      g = parseInt(hex.substring(2, 4), 16);
+      b = parseInt(hex.substring(4, 6), 16);
+    } else {
+      r = parseInt(hex[0] + hex[0], 16);
+      g = parseInt(hex[1] + hex[1], 16);
+      b = parseInt(hex[2] + hex[2], 16);
+    }
+    
+    const [rs, gs, bs] = [r, g, b].map((val) => {
+      const s = val / 255;
+      return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+    });
+    
+    return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+  };
+
+  const getContrastRatio = (hex1: string, hex2: string): number => {
+    const l1 = getLuminance(hex1);
+    const l2 = getLuminance(hex2);
+    const brightest = Math.max(l1, l2);
+    const darkest = Math.min(l1, l2);
+    return (brightest + 0.05) / (darkest + 0.05);
+  };
+
+  const contrastFG = getContrastRatio(fgColor, bgColor);
+  const contrastGrad = gradientType !== 'none' ? getContrastRatio(gradientColor, bgColor) : contrastFG;
+  const minContrast = Math.min(contrastFG, contrastGrad);
+
+  const isLowContrast = minContrast < 3.0;
+  const isSuboptimalContrast = minContrast >= 3.0 && minContrast < 4.5;
+
+  let maxRecommendedScale = 0.15;
+  if (errorCorrectionLevel === 'M') maxRecommendedScale = 0.20;
+  if (errorCorrectionLevel === 'Q') maxRecommendedScale = 0.25;
+  if (errorCorrectionLevel === 'H') maxRecommendedScale = 0.28;
+
+  const isExcessiveLogo = !!logoUrl && logoScale > maxRecommendedScale;
+  const isHighLogoRisk = !!logoUrl && logoScale > (maxRecommendedScale * 0.8) && logoScale <= maxRecommendedScale;
+
+  const hasUnreadableIssue = isLowContrast || isExcessiveLogo;
+  const hasWarningIssue = isSuboptimalContrast || isHighLogoRisk;
+
+  const autoFixContrast = () => {
+    if (!onChange) return;
+    onChange({
+      ...currentProject,
+      design: {
+        ...(currentProject.design || {}),
+        fgColor: '#0f172a',
+        bgColor: '#ffffff',
+        gradientType: 'none',
+      } as any
+    });
+  };
+
+  const autoFixLogoScale = () => {
+    if (!onChange) return;
+    onChange({
+      ...currentProject,
+      design: {
+        ...(currentProject.design || {}),
+        logoScale: Math.max(0.08, Number((maxRecommendedScale * 0.9).toFixed(2))),
+      } as any
+    });
+  };
+
+  const autoFixErrorCorrection = () => {
+    if (!onChange) return;
+    onChange({
+      ...currentProject,
+      design: {
+        ...(currentProject.design || {}),
+        errorCorrectionLevel: 'H',
+      } as any
+    });
+  };
+
+  const autoFixAll = () => {
+    if (!onChange) return;
+    const updatedDesign = { ...(currentProject.design || {}) } as any;
+    if (isLowContrast || isSuboptimalContrast) {
+      updatedDesign.fgColor = '#0f172a';
+      updatedDesign.bgColor = '#ffffff';
+      updatedDesign.gradientType = 'none';
+    }
+    if (isExcessiveLogo) {
+      updatedDesign.errorCorrectionLevel = 'H';
+      if (logoScale > 0.28) {
+        updatedDesign.logoScale = 0.22;
+      }
+    }
+    onChange({
+      ...currentProject,
+      design: updatedDesign
+    });
+  };
+
+  // Tracking effect to record the last known stable scannable design configuration
+  useEffect(() => {
+    if (!hasUnreadableIssue && !hasWarningIssue && currentProject.design) {
+      lastReadableDesignRef.current = JSON.parse(JSON.stringify(currentProject.design));
+    }
+  }, [fgColor, bgColor, gradientType, gradientColor, logoUrl, logoScale, errorCorrectionLevel, hasUnreadableIssue, hasWarningIssue]);
+
+  const revertToLastReadable = () => {
+    if (!onChange) return;
+    if (lastReadableDesignRef.current) {
+      onChange({
+        ...currentProject,
+        design: {
+          ...currentProject.design,
+          ...lastReadableDesignRef.current
+        } as any
+      });
+    } else {
+      // Fallback if no last known readable design exists yet
+      onChange({
+        ...currentProject,
+        design: {
+          ...(currentProject.design || {}),
+          fgColor: '#0f172a',
+          bgColor: '#ffffff',
+          gradientType: 'none',
+          logoScale: 0.15,
+          errorCorrectionLevel: 'H'
+        } as any
+      });
+    }
+  };
 
   const qrContent = currentProject.content || 'https://google.com';
   const appUrl = (window as any).location?.origin || '';
@@ -741,6 +886,26 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               </div>
             )}
 
+             {/* Scannability Warning Tag */}
+            {(hasUnreadableIssue || hasWarningIssue) && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDetailsModal(true);
+                }}
+                className={`absolute top-4 right-4 z-20 px-2 py-1 rounded-md text-[9px] font-extrabold uppercase tracking-wider shadow-sm flex items-center gap-1 cursor-pointer animate-pulse transition-all ${
+                  hasUnreadableIssue 
+                    ? 'bg-rose-600 hover:bg-rose-700 text-white' 
+                    : 'bg-amber-500 hover:bg-amber-650 text-white'
+                }`}
+                title="Click for Scannability Diagnostics"
+              >
+                <AlertTriangle className="w-3 h-3 stroke-[3]" />
+                <span>Risk: {hasUnreadableIssue ? 'High' : 'Medium'}</span>
+              </button>
+            )}
+
             {/* Elegant Hover QR Scanner Overlay */}
             <div className="absolute inset-2 bg-slate-950/40 backdrop-blur-[1.5px] rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center z-10 pointer-events-none select-none">
               {/* Animated Corner Brackets */}
@@ -806,6 +971,67 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             </AnimatePresence>
           </div>
         </div>
+
+        {/* Real-time Scannability Alert Banner */}
+        {(hasUnreadableIssue || hasWarningIssue) && (
+          <div className={`w-full p-3.5 rounded-xl border flex gap-3 transition-all ${
+            hasUnreadableIssue 
+              ? 'bg-rose-50/70 border-rose-150 text-rose-950 shadow-3xs' 
+              : 'bg-amber-50/70 border-amber-150 text-amber-950 shadow-3xs'
+          }`}>
+            <div className={`p-2 rounded-lg shrink-0 h-fit ${hasUnreadableIssue ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600'}`}>
+              <AlertTriangle className="w-4 h-4" />
+            </div>
+            <div className="flex-1 min-w-0 text-left">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[11px] font-black uppercase tracking-wider">
+                  {hasUnreadableIssue ? '🚨 QR Might Be Unreadable' : '⚠️ Moderate Scan Risk'}
+                </span>
+                <span className="text-[10px] font-semibold text-gray-500 font-mono">
+                  Contrast: {minContrast.toFixed(1)}:1
+                </span>
+              </div>
+              <p className="text-[11px] text-gray-600 leading-normal mt-1">
+                {isLowContrast && "Foreground & background colors are too similar."}
+                {!isLowContrast && isSuboptimalContrast && "Contrast is slightly low; may fail under dim lighting."}
+                {isExcessiveLogo && `Center logo covers too much area (${(logoScale * 100).toFixed(0)}%) for current Error Correction.`}
+                {!isExcessiveLogo && isHighLogoRisk && `Center logo is large (${(logoScale * 100).toFixed(0)}%). Consider raising Error Correction level.`}
+              </p>
+              <div className="flex items-center gap-2 mt-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowDetailsModal(true)}
+                  className="px-2.5 py-1 text-[10px] font-bold rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 cursor-pointer shadow-3xs transition-all"
+                >
+                  Diagnostics Details
+                </button>
+                {onChange && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={autoFixAll}
+                      className={`px-2.5 py-1 text-[10px] font-extrabold rounded-lg text-white cursor-pointer shadow-2xs transition-all ${
+                        hasUnreadableIssue 
+                          ? 'bg-rose-600 hover:bg-rose-700' 
+                          : 'bg-amber-600 hover:bg-amber-700'
+                      }`}
+                    >
+                      Auto-Fix Design
+                    </button>
+                    <button
+                      type="button"
+                      onClick={revertToLastReadable}
+                      className="px-2.5 py-1 text-[10px] font-extrabold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer shadow-2xs transition-all"
+                      title="Revert logo scale and contrast to the last known readable state"
+                    >
+                      Quick Fix
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Informative metadata text */}
         <div className="text-center">
@@ -985,7 +1211,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-40 flex items-end sm:items-center justify-center p-4 sm:p-6 overflow-y-auto pt-20"
             onClick={() => setIsPrintModalOpen(false)}
           >
             <motion.div
@@ -993,11 +1219,11 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="bg-white rounded-3xl w-full max-w-5xl shadow-2xl overflow-hidden text-slate-800 grid grid-cols-1 lg:grid-cols-12 border border-slate-100"
+              className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-5xl shadow-2xl overflow-y-auto sm:overflow-hidden text-slate-800 grid grid-cols-1 lg:grid-cols-12 border border-slate-100 max-h-[70vh] sm:max-h-[85vh]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Left Settings Control Side (5 columns) */}
-              <div className="lg:col-span-12 xl:col-span-5 bg-slate-50 border-r border-slate-100 p-6 flex flex-col justify-between max-h-[85vh] overflow-y-auto">
+              <div className="lg:col-span-12 xl:col-span-5 bg-slate-50 border-r border-slate-100 p-6 flex flex-col justify-between max-h-none sm:max-h-[85vh] overflow-y-auto">
                 <div className="space-y-6">
                   {/* Header title */}
                   <div className="flex items-center justify-between">
@@ -1164,7 +1390,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               </div>
 
               {/* Right Paper Live View Canvas Area (7 columns) */}
-              <div className="lg:col-span-12 xl:col-span-7 bg-slate-900 p-8 flex flex-col items-center justify-center min-h-[450px] lg:min-h-full max-h-[85vh] overflow-y-auto relative">
+              <div className="lg:col-span-12 xl:col-span-7 bg-slate-900 p-8 flex flex-col items-center justify-center min-h-[350px] sm:min-h-[450px] lg:min-h-full max-h-none sm:max-h-[85vh] overflow-y-auto relative">
                 {/* Paper sheet background wrapper */}
                 <div className="text-slate-400 absolute top-4 left-4 text-[10px] font-mono tracking-widest flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -1339,6 +1565,244 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   </p>
                 </div>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Scannability Diagnostics Inspector Modal */}
+      <AnimatePresence>
+        {showDetailsModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-[100] flex items-center justify-center p-4 overflow-y-auto"
+            onClick={() => setShowDetailsModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+              className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden text-slate-800 border border-slate-100 flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className={`p-5 text-white flex items-center justify-between relative ${
+                hasUnreadableIssue 
+                  ? 'bg-gradient-to-r from-rose-600 to-red-600' 
+                  : 'bg-gradient-to-r from-amber-500 to-amber-600'
+              }`}>
+                <div className="flex items-center gap-2.5">
+                  <div className="p-1.5 bg-white/20 rounded-lg">
+                    <AlertTriangle className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="text-sm font-black uppercase tracking-wider text-white">Scannability Inspector</h3>
+                    <p className="text-[10px] text-slate-100 opacity-90 font-medium">Real-time design & color analysis</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowDetailsModal(false)}
+                  className="p-1.5 hover:bg-white/20 rounded-full text-white/80 hover:text-white transition-all cursor-pointer border-0"
+                  aria-label="Close Diagnostics"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Body Content */}
+              <div className="p-5 space-y-5 overflow-y-auto max-h-[70vh]">
+                
+                {/* 1. Contrast Diagnostic */}
+                <div className="space-y-2 text-left">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">1. Color Contrast Ratio</span>
+                    <span className={`text-xs font-mono font-black px-2 py-0.5 rounded ${
+                      isLowContrast 
+                        ? 'bg-rose-50 text-rose-700 border border-rose-100' 
+                        : isSuboptimalContrast 
+                          ? 'bg-amber-50 text-amber-700 border border-amber-100' 
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                    }`}>
+                      {minContrast.toFixed(1)}:1 Ratio
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 space-y-2">
+                    {/* Visual Comparison Badges */}
+                    <div className="grid grid-cols-2 gap-2 text-center text-[10px] font-bold">
+                      <div className="p-2 rounded-lg border border-slate-200" style={{ backgroundColor: bgColor, color: fgColor }}>
+                        Foreground Color
+                      </div>
+                      {gradientType !== 'none' && (
+                        <div className="p-2 rounded-lg border border-slate-200" style={{ backgroundColor: bgColor, color: gradientColor }}>
+                          Gradient Color
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Feedback Rating */}
+                    <div className="text-[11px] leading-normal">
+                      {isLowContrast && (
+                        <p className="text-rose-700 font-semibold">
+                          ❌ CRITICAL: Contrast ratio is too low (minimum is 3.0:1). Most standard scanner devices will fail.
+                        </p>
+                      )}
+                      {isSuboptimalContrast && (
+                        <p className="text-amber-700 font-semibold">
+                          ⚠️ WARNING: Suboptimal contrast (recommended is 4.5:1). QR may fail in low light or on budget cameras.
+                        </p>
+                      )}
+                      {!isLowContrast && !isSuboptimalContrast && (
+                        <p className="text-emerald-700 font-semibold">
+                          ✅ SAFE: Excellent contrast! Scanners will easily read the code module patterns.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Fix Contrast Action */}
+                  {(isLowContrast || isSuboptimalContrast) && onChange && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        autoFixContrast();
+                      }}
+                      className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-extrabold rounded-lg uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer border-0"
+                    >
+                      <span>Fix Colors (Set Slate on White)</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* 2. Logo Size Diagnostic */}
+                {logoUrl ? (
+                  <div className="space-y-2 pt-4 border-t border-slate-100 text-left">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">2. Center Logo Coverage</span>
+                      <span className={`text-xs font-mono font-black px-2 py-0.5 rounded ${
+                        isExcessiveLogo 
+                          ? 'bg-rose-50 text-rose-700 border border-rose-100' 
+                          : isHighLogoRisk 
+                            ? 'bg-amber-50 text-amber-700 border border-amber-100' 
+                            : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                      }`}>
+                        {(logoScale * 100).toFixed(0)}% Width
+                      </span>
+                    </div>
+
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 space-y-2 text-[11px] leading-normal">
+                      <div className="flex justify-between text-slate-500 font-medium mb-1">
+                        <span>Correction Level:</span>
+                        <span className="font-mono font-bold text-slate-700">Level {errorCorrectionLevel} (Max safe limit: {(maxRecommendedScale * 100).toFixed(0)}%)</span>
+                      </div>
+
+                      {isExcessiveLogo && (
+                        <p className="text-rose-700 font-semibold">
+                          ❌ CRITICAL: Logo size is too large for Error Correction Level {errorCorrectionLevel}. Scanners cannot recover obscured data.
+                        </p>
+                      )}
+                      {isHighLogoRisk && (
+                        <p className="text-amber-700 font-semibold">
+                          ⚠️ WARNING: Logo is close to safe scan threshold limit. Scanners may encounter delay.
+                        </p>
+                      )}
+                      {!isExcessiveLogo && !isHighLogoRisk && (
+                        <p className="text-emerald-700 font-semibold">
+                          ✅ SAFE: Logo size is perfectly safe within the current error correction boundaries.
+                        </p>
+                      )}
+
+                      {/* Error Correction Reference Scale */}
+                      <div className="pt-2 border-t border-slate-250 grid grid-cols-4 gap-1.5 text-center text-[9px] text-slate-500 font-bold">
+                        <div className={`p-1 rounded flex flex-col ${errorCorrectionLevel === 'L' ? 'bg-indigo-50 font-bold text-indigo-600 border border-indigo-100' : 'bg-white'}`}>
+                          <span>L (7%)</span>
+                          <span className="font-mono opacity-80 mt-0.5">Max: 15%</span>
+                        </div>
+                        <div className={`p-1 rounded flex flex-col ${errorCorrectionLevel === 'M' ? 'bg-indigo-50 font-bold text-indigo-600 border border-indigo-100' : 'bg-white'}`}>
+                          <span>M (15%)</span>
+                          <span className="font-mono opacity-80 mt-0.5">Max: 20%</span>
+                        </div>
+                        <div className={`p-1 rounded flex flex-col ${errorCorrectionLevel === 'Q' ? 'bg-indigo-50 font-bold text-indigo-600 border border-indigo-100' : 'bg-white'}`}>
+                          <span>Q (25%)</span>
+                          <span className="font-mono opacity-80 mt-0.5">Max: 25%</span>
+                        </div>
+                        <div className={`p-1 rounded flex flex-col ${errorCorrectionLevel === 'H' ? 'bg-indigo-50 font-bold text-indigo-600 border border-indigo-100' : 'bg-white'}`}>
+                          <span>H (30%)</span>
+                          <span className="font-mono opacity-80 mt-0.5">Max: 28%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Logo Fix Triggers */}
+                    {onChange && (
+                      <div className="flex gap-2">
+                        {errorCorrectionLevel !== 'H' && (
+                          <button
+                            type="button"
+                            onClick={autoFixErrorCorrection}
+                            className="flex-1 py-2 px-2.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-[10px] font-black rounded-lg uppercase tracking-wider transition-all cursor-pointer"
+                          >
+                            Set Correction H (30%)
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={autoFixLogoScale}
+                          className="flex-1 py-2 px-2.5 bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black rounded-lg uppercase tracking-wider transition-all cursor-pointer border-0"
+                        >
+                          Scale down logo
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-1 pt-4 border-t border-slate-100 text-left">
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wide">2. Center Logo</p>
+                    <p className="text-[11px] text-slate-500 leading-normal">No logo centerpiece is active. All data modules have 100% full scan exposure.</p>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Footer */}
+              <div className="p-4 bg-slate-50 border-t border-slate-100 flex gap-2 justify-end">
+                {onChange && (hasUnreadableIssue || hasWarningIssue) && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        autoFixAll();
+                        setShowDetailsModal(false);
+                      }}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-xl uppercase tracking-wider shadow-xs transition-all cursor-pointer border-0"
+                    >
+                      Auto-Fix All
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        revertToLastReadable();
+                        setShowDetailsModal(false);
+                      }}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl uppercase tracking-wider shadow-xs transition-all cursor-pointer border-0"
+                    >
+                      Quick Fix
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setShowDetailsModal(false)}
+                  className="px-4 py-2 bg-slate-200 hover:bg-slate-350 text-slate-700 text-xs font-bold rounded-xl uppercase tracking-wider transition-all cursor-pointer border-0"
+                >
+                  Close
+                </button>
+              </div>
+
             </motion.div>
           </motion.div>
         )}

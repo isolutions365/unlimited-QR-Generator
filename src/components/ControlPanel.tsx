@@ -116,12 +116,73 @@ const quickStyles = [
 
 export default function ControlPanel({
   currentProject,
-  onChange,
+  onChange: parentOnChange,
   onSave,
   isSaving,
   userEmail,
   projects = []
 }: ControlPanelProps) {
+  const optimizeDesign = (design: NonNullable<QRProject['design']>, content: string): NonNullable<QRProject['design']> => {
+    if (!design.smartOptimize) return design;
+
+    const newDesign = { ...design };
+
+    const hasLogo = !!newDesign.logoUrl && newDesign.logoUrl.trim() !== '';
+    const logoScale = newDesign.logoScale ?? 0.18;
+    const contentLength = content ? content.length : 0;
+
+    // 1. Error Correction Level Optimization
+    if (hasLogo) {
+      if (logoScale >= 0.18) {
+        newDesign.errorCorrectionLevel = 'H';
+      } else if (logoScale >= 0.12) {
+        newDesign.errorCorrectionLevel = 'Q';
+      } else {
+        newDesign.errorCorrectionLevel = 'M';
+      }
+    } else {
+      if (contentLength < 35) {
+        newDesign.errorCorrectionLevel = 'M';
+      } else if (contentLength < 80) {
+        newDesign.errorCorrectionLevel = 'Q';
+      } else {
+        newDesign.errorCorrectionLevel = 'H';
+      }
+    }
+
+    // 2. QR Module Spacing/Padding Optimization
+    if (contentLength < 30) {
+      newDesign.modulePadding = 16; // airy modern design
+    } else if (contentLength < 60) {
+      newDesign.modulePadding = 8;
+    } else if (contentLength < 120) {
+      newDesign.modulePadding = 4;
+    } else {
+      newDesign.modulePadding = 0; // high density
+    }
+
+    // 3. Margin/Quiet Zone Optimization
+    if (typeof newDesign.margin === 'number' && newDesign.margin < 20) {
+      newDesign.margin = 20;
+    } else if (typeof newDesign.margin !== 'number') {
+      newDesign.margin = 20;
+    }
+
+    return newDesign;
+  };
+
+  const onChange = (updatedProject: Partial<QRProject>) => {
+    let design = updatedProject.design || currentProject.design;
+    if (design && design.smartOptimize) {
+      const optimizedDesign = optimizeDesign(design, updatedProject.content || currentProject.content || '');
+      updatedProject = {
+        ...updatedProject,
+        design: optimizedDesign
+      };
+    }
+    parentOnChange(updatedProject);
+  };
+
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -1053,7 +1114,10 @@ export default function ControlPanel({
             { id: 'scan-me', label: 'Scan Me', desc: 'Default action' },
             { id: 'visit-website', label: 'Visit Website', desc: 'Great for URLs' },
             { id: 'wifi-password', label: 'WiFi Password', desc: 'For network setups' },
-            { id: 'custom', label: 'Custom Text', desc: 'Type your own text' },
+            { id: 'download-app', label: 'Download App', desc: 'App store links' },
+            { id: 'follow-us', label: 'Follow Us', desc: 'Stay connected' },
+            { id: 'join-wifi', label: 'Join WiFi', desc: 'Direct network scan' },
+            { id: 'custom', label: 'Custom Text', desc: 'Fully custom label' },
           ].map(preset => {
             const isSelected = (currentProject.design?.frameStyle || 'none') === preset.id;
             return (
@@ -1088,19 +1152,33 @@ export default function ControlPanel({
           })}
         </div>
 
-        {/* Custom Text input (Visible if Custom frameStyle is selected) */}
-        {currentProject.design?.frameStyle === 'custom' && (
-          <div className="space-y-1 pt-1">
-            <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-slate-700 tracking-wider uppercase block animate-fade-in">Custom Frame Label</label>
+        {/* Configurable Frame Text input (Visible if any frame is active) */}
+        {currentProject.design?.frameStyle && currentProject.design?.frameStyle !== 'none' && (
+          <div className="space-y-1.5 pt-1">
+            <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-slate-700 tracking-wider uppercase block animate-fade-in">
+              {currentProject.design?.frameStyle === 'custom' ? 'Custom Frame Label Text' : 'Override Preset Label Text'}
+            </label>
             <input
               id="custom-frame-text"
               type="text"
               maxLength={20}
-              className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-450 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="e.g. SCAN TO ORDER"
+              className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder={(() => {
+                const style = currentProject.design?.frameStyle;
+                if (style === 'scan-me') return 'e.g. SCAN ME';
+                if (style === 'visit-website') return 'e.g. VISIT WEBSITE';
+                if (style === 'wifi-password') return 'e.g. WIFI PASSWORD';
+                if (style === 'download-app') return 'e.g. DOWNLOAD APP';
+                if (style === 'follow-us') return 'e.g. FOLLOW US';
+                if (style === 'join-wifi') return 'e.g. JOIN WIFI';
+                return 'e.g. SCAN TO REGISTER';
+              })()}
               value={currentProject.design?.frameText || ''}
               onChange={e => setDesignField('frameText', e.target.value)}
             />
+            <span className="text-[9.5px] text-slate-450 block leading-tight">
+              Type custom wording to override or personalize the selected banner layout. Max 20 chars.
+            </span>
           </div>
         )}
 
@@ -1229,20 +1307,152 @@ export default function ControlPanel({
         </div>
       </motion.div>
 
-      {/* Margin / Quiet Zone Slider */}
+      {/* Smart Optimization Engine */}
       <motion.div
         variants={itemVariants}
         whileHover={{
           scale: 1.015,
           y: -2,
-          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
+          boxShadow: '0 8px 20px -8px rgba(79, 70, 229, 0.08), 0 2px 6px -4px rgba(79, 70, 229, 0.04)'
         }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
+        className="p-4 bg-gradient-to-br from-indigo-50/20 to-purple-50/10 rounded-xl border border-indigo-100/40 hover:bg-white hover:border-indigo-200/50 transition-all duration-300 shadow-sm space-y-3.5"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
+            <div>
+              <span className="text-xs font-semibold text-slate-900 block">Smart Optimization</span>
+              <span className="text-[10px] text-slate-500 block">Auto-balances error correction & module spacing.</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            aria-label="Toggle Smart Optimization"
+            aria-checked={currentProject.design?.smartOptimize ? "true" : "false"}
+            onClick={() => {
+              const isEnabling = !currentProject.design?.smartOptimize;
+              onChange({
+                ...currentProject,
+                design: {
+                  ...(currentProject.design || {
+                    fgColor: '#0f172a',
+                    bgColor: '#ffffff',
+                    gradientType: 'none',
+                    gradientColor: '#4f46e5',
+                    dotStyle: 'square',
+                    eyeStyle: 'square',
+                    margin: 20
+                  }),
+                  smartOptimize: isEnabling,
+                  ...(isEnabling ? {
+                    margin: Math.max(20, currentProject.design?.margin ?? 20),
+                  } : {})
+                }
+              });
+            }}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
+              currentProject.design?.smartOptimize ? 'bg-indigo-600' : 'bg-gray-200'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                currentProject.design?.smartOptimize ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
+
+        {currentProject.design?.smartOptimize ? (
+          <div className="bg-white/60 p-3 rounded-lg border border-indigo-100/50 space-y-2.5 text-slate-700 text-xs animate-in fade-in duration-200">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-indigo-600 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
+              <span>Readability Engine Active</span>
+            </div>
+            
+            <div className="space-y-2 text-[11px] leading-relaxed">
+              <div className="flex items-start gap-1.5">
+                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
+                <div>
+                  <strong className="text-slate-800">Error Correction: </strong>
+                  <span className="text-slate-600">
+                    Set to <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(currentProject.design?.errorCorrectionLevel || 'H')}</span> based on centerpiece logo scale & URL complexity.
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-1.5">
+                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
+                <div>
+                  <strong className="text-slate-800">Module Spacing: </strong>
+                  <span className="text-slate-600">
+                    Optimized to <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(currentProject.design?.modulePadding ?? 0)}% padding</span> to guarantee camera scanning readability.
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-1.5">
+                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
+                <div>
+                  <strong className="text-slate-800">Quiet Zone Margin: </strong>
+                  <span className="text-slate-600">
+                    Locked at a safe minimum of <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(currentProject.design?.margin ?? 20)}px</span> to prevent edge-crop issues.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-[9px] text-slate-400 font-medium">
+              * Design parameter sliders below are auto-managed. Disable Smart Optimization to adjust them manually.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3.5 pt-1.5 border-t border-slate-100 animate-in fade-in duration-200">
+            {/* Manual QR Module Spacing slider (visible when smartOptimize is false) */}
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <label htmlFor="manual-padding-range" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Module Spacing (Padding)</label>
+                <span className="text-[11px] text-indigo-600 font-mono font-bold">{currentProject.design?.modulePadding ?? 0}%</span>
+              </div>
+              <input
+                id="manual-padding-range"
+                type="range"
+                min="0"
+                max="40"
+                step="2"
+                className="w-full h-1 bg-gray-250 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                value={currentProject.design?.modulePadding ?? 0}
+                onChange={e => setDesignField('modulePadding', parseInt(e.target.value, 10))}
+              />
+              <span className="text-[9.5px] text-slate-500 block mt-1">
+                Adjusts the physical space between individual modules to customize dot density.
+              </span>
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Margin / Quiet Zone Slider */}
+      <motion.div
+        variants={itemVariants}
+        whileHover={!currentProject.design?.smartOptimize ? {
+          scale: 1.015,
+          y: -2,
+          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
+        } : undefined}
+        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        className={`p-4 rounded-xl border transition-all duration-300 shadow-sm ${
+          currentProject.design?.smartOptimize 
+            ? 'bg-gray-100/40 border-gray-200/30 opacity-60' 
+            : 'bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80'
+        }`}
       >
         <div className="flex justify-between items-center mb-1.5">
           <label htmlFor="quiet-zone-range" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Quiet Zone (Margin)</label>
-          <span className="text-xs text-indigo-600 font-mono font-medium">{currentProject.design?.margin ?? 20}px</span>
+          <span className="text-xs text-indigo-600 font-mono font-medium">
+            {currentProject.design?.margin ?? 20}px
+            {currentProject.design?.smartOptimize && " (Auto)"}
+          </span>
         </div>
         <input
           id="quiet-zone-range"
@@ -1250,35 +1460,48 @@ export default function ControlPanel({
           min="0"
           max="80"
           step="5"
-          className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+          disabled={currentProject.design?.smartOptimize}
+          className={`w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer ${
+            currentProject.design?.smartOptimize ? 'accent-gray-300' : 'accent-indigo-600'
+          }`}
           value={currentProject.design?.margin ?? 20}
           onChange={e => setDesignField('margin', parseInt(e.target.value, 10))}
         />
-        <p className="text-[10px] text-slate-600 mt-1">Adjusts the whitespace board surrounding the code to improve scannability.</p>
+        <p className="text-[10px] text-slate-600 mt-1">
+          {currentProject.design?.smartOptimize 
+            ? "Managed automatically by Smart Optimization to secure at least 20px scanner buffer."
+            : "Adjusts the whitespace board surrounding the code to improve scannability."}
+        </p>
       </motion.div>
 
       {/* Error Correction Level Slider */}
       <motion.div
         variants={itemVariants}
-        whileHover={{
+        whileHover={!currentProject.design?.smartOptimize ? {
           scale: 1.015,
           y: -2,
           boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
-        }}
+        } : undefined}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
+        className={`p-4 rounded-xl border transition-all duration-300 shadow-sm ${
+          currentProject.design?.smartOptimize 
+            ? 'bg-gray-100/40 border-gray-200/30 opacity-60' 
+            : 'bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80'
+        }`}
       >
         <div className="flex justify-between items-center mb-2">
           <label htmlFor="error-correction-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Error Correction Level</label>
           <span className="text-xs text-indigo-600 font-mono font-bold">
             {currentProject.design?.errorCorrectionLevel || 'H'}
+            {currentProject.design?.smartOptimize && " (Auto)"}
           </span>
         </div>
         
         <div className="space-y-3">
           <select
             id="error-correction-select"
-            className="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-2xs font-semibold transition-all duration-200"
+            disabled={currentProject.design?.smartOptimize}
+            className="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-2xs font-semibold transition-all duration-200 disabled:bg-gray-100 disabled:text-slate-450"
             value={currentProject.design?.errorCorrectionLevel || 'H'}
             onChange={e => {
               const val = e.target.value as 'L' | 'M' | 'Q' | 'H';
@@ -1292,13 +1515,15 @@ export default function ControlPanel({
           </select>
           
           <p className="text-[10px] text-slate-650 leading-relaxed">
-            {(() => {
-              const ec = currentProject.design?.errorCorrectionLevel || 'H';
-              if (ec === 'L') return 'Low recovery budget. Simplest rendering, but vulnerable to slight scratches/smudges.';
-              if (ec === 'M') return 'Medium recovery budget. Standard balanced configuration used across normal scanners.';
-              if (ec === 'Q') return 'Quartile recovery budget. Retains scannability even when up to 25% of the print surface is dirty or torn.';
-              return 'High recovery budget (Highly Recommended). Perfect for complex, custom QR patterns and centerpiece custom brand logo overlays.';
-            })()}
+            {currentProject.design?.smartOptimize 
+              ? "Managed automatically by Smart Optimization to secure optimal recovery budget based on content depth and brand logo."
+              : (() => {
+                  const ec = currentProject.design?.errorCorrectionLevel || 'H';
+                  if (ec === 'L') return 'Low recovery budget. Simplest rendering, but vulnerable to slight scratches/smudges.';
+                  if (ec === 'M') return 'Medium recovery budget. Standard balanced configuration used across normal scanners.';
+                  if (ec === 'Q') return 'Quartile recovery budget. Retains scannability even when up to 25% of the print surface is dirty or torn.';
+                  return 'High recovery budget (Highly Recommended). Perfect for complex, custom QR patterns and centerpiece custom brand logo overlays.';
+                })()}
           </p>
         </div>
       </motion.div>

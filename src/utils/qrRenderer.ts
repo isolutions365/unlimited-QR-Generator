@@ -19,10 +19,12 @@ interface DrawOptions {
   logoOffsetX?: number;
   logoOffsetY?: number;
   skipLogoImage?: boolean;
-  frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'custom';
+  frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'custom';
   frameText?: string;
   frameColor?: string;
   frameTextColor?: string;
+  smartOptimize?: boolean;
+  modulePadding?: number;
 }
 
 /**
@@ -66,7 +68,15 @@ export async function renderStyledQR(
     let label = 'SCAN ME';
     if (options.frameStyle === 'visit-website') label = 'VISIT WEBSITE';
     if (options.frameStyle === 'wifi-password') label = 'WIFI PASSWORD';
-    if (options.frameStyle === 'custom') label = (options.frameText || 'SCAN ME').toUpperCase();
+    if (options.frameStyle === 'download-app') label = 'DOWNLOAD APP';
+    if (options.frameStyle === 'follow-us') label = 'FOLLOW US';
+    if (options.frameStyle === 'join-wifi') label = 'JOIN WIFI';
+    if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
+
+    if (options.frameText && options.frameText.trim() !== '') {
+      label = options.frameText;
+    }
+    label = label.toUpperCase();
 
     // 1. Draw Outer Frame Container (beautiful rounded block)
     ctx.fillStyle = frameColor;
@@ -134,6 +144,9 @@ export async function renderStyledQR(
     return false;
   };
 
+  const paddingPct = typeof options.modulePadding === 'number' ? options.modulePadding : 0;
+  const dotScale = 1 - (paddingPct / 100);
+
   // Skip rendering default cells in finder spots. We will draw custom ones below
   for (let r = 0; r < modulesCount; r++) {
     for (let c = 0; c < modulesCount; c++) {
@@ -146,6 +159,15 @@ export async function renderStyledQR(
       const y = margin_y + r * cellSize;
 
       ctx.beginPath();
+      
+      const shouldScale = dotScale < 1;
+      if (shouldScale) {
+        ctx.save();
+        ctx.translate(x + cellSize / 2, y + cellSize / 2);
+        ctx.scale(dotScale, dotScale);
+        ctx.translate(-(x + cellSize / 2), -(y + cellSize / 2));
+      }
+
       if (options.dotStyle === 'dots') {
         const radius = cellSize / 2 * 0.85;
         ctx.arc(x + cellSize / 2, y + cellSize / 2, radius, 0, Math.PI * 2);
@@ -166,6 +188,10 @@ export async function renderStyledQR(
       } else {
         // Standard high-contrast square
         ctx.fillRect(x, y, cellSize, cellSize);
+      }
+
+      if (shouldScale) {
+        ctx.restore();
       }
     }
   }
@@ -375,7 +401,15 @@ export function generateStyledSVG(
     let label = 'SCAN ME';
     if (options.frameStyle === 'visit-website') label = 'VISIT WEBSITE';
     if (options.frameStyle === 'wifi-password') label = 'WIFI PASSWORD';
-    if (options.frameStyle === 'custom') label = (options.frameText || 'SCAN ME').toUpperCase();
+    if (options.frameStyle === 'download-app') label = 'DOWNLOAD APP';
+    if (options.frameStyle === 'follow-us') label = 'FOLLOW US';
+    if (options.frameStyle === 'join-wifi') label = 'JOIN WIFI';
+    if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
+
+    if (options.frameText && options.frameText.trim() !== '') {
+      label = options.frameText;
+    }
+    label = label.toUpperCase();
 
     bgElements = `
   <!-- Outer Frame Container -->
@@ -415,6 +449,8 @@ export function generateStyledSVG(
   };
 
   let paths = '';
+  const paddingPctSvg = typeof options.modulePadding === 'number' ? options.modulePadding : 0;
+  const dotScaleSvg = 1 - (paddingPctSvg / 100);
 
   // Render individual code modules/dots
   for (let r = 0; r < modulesCount; r++) {
@@ -427,21 +463,23 @@ export function generateStyledSVG(
       const x = margin_x + c * cellSize;
       const y = margin_y + r * cellSize;
 
+      const cx = x + cellSize / 2;
+      const cy = y + cellSize / 2;
+      const transformAttr = dotScaleSvg < 1 ? ` transform="translate(${cx}, ${cy}) scale(${dotScaleSvg}) translate(${-cx}, ${-cy})"` : '';
+
       if (options.dotStyle === 'dots') {
         const radius = (cellSize / 2) * 0.85;
-        paths += `    <circle cx="${x + cellSize / 2}" cy="${y + cellSize / 2}" r="${radius}" fill="${fillStyle}" />\n`;
+        paths += `    <circle cx="${x + cellSize / 2}" cy="${y + cellSize / 2}" r="${radius}" fill="${fillStyle}"${transformAttr} />\n`;
       } else if (options.dotStyle === 'rounded') {
         const padding = cellSize * 0.05;
         const width = cellSize - padding * 2;
         const radius = cellSize * 0.4;
-        paths += `    <rect x="${x + padding}" y="${y + padding}" width="${width}" height="${width}" rx="${radius}" ry="${radius}" fill="${fillStyle}" />\n`;
+        paths += `    <rect x="${x + padding}" y="${y + padding}" width="${width}" height="${width}" rx="${radius}" ry="${radius}" fill="${fillStyle}"${transformAttr} />\n`;
       } else if (options.dotStyle === 'classy') {
-        const cx = x + cellSize / 2;
-        const cy = y + cellSize / 2;
         const classyPath = `M ${cx} ${y + cellSize * 0.1} Q ${cx} ${cy} ${x + cellSize * 0.9} ${cy} Q ${cx} ${cy} ${cx} ${y + cellSize * 0.9} Q ${cx} ${cy} ${x + cellSize * 0.1} ${cy} Q ${cx} ${cy} ${cx} ${y + cellSize * 0.1} Z`;
-        paths += `    <path d="${classyPath}" fill="${fillStyle}" />\n`;
+        paths += `    <path d="${classyPath}" fill="${fillStyle}"${transformAttr} />\n`;
       } else {
-        paths += `    <rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${fillStyle}" />\n`;
+        paths += `    <rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${fillStyle}"${transformAttr} />\n`;
       }
     }
   }

@@ -16,6 +16,7 @@ const AuthModal = React.lazy(() => import('./components/AuthModal'));
 const CompanyPages = React.lazy(() => import('./components/CompanyPages'));
 const FaqSection = React.lazy(() => import('./components/FaqSection'));
 const BlogSection = React.lazy(() => import('./components/BlogSection'));
+const EmbedPage = React.lazy(() => import('./components/EmbedPage'));
 
 // Non-blocking fallback skeleton loader
 const LazyLoader = () => (
@@ -1767,6 +1768,10 @@ export default function App() {
             locale={locale}
           />
         </React.Suspense>
+      ) : currentPath === '/embed' ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          <EmbedPage onNavigate={navigateTo} />
+        </React.Suspense>
       ) : ['/about', '/privacy', '/contact', '/terms'].includes(currentPath) ? (
         <React.Suspense fallback={<LazyLoader />}>
           <CompanyPages 
@@ -1873,6 +1878,7 @@ export default function App() {
                 currentProject={currentProject} 
                 onTestScan={handleSimTestScan} 
                 onDownloadTrigger={handleDownloadTrigger} 
+                onChange={setCurrentProject}
               />
             </div>
           </div>
@@ -1898,6 +1904,7 @@ export default function App() {
                 currentProject={currentProject} 
                 onTestScan={handleSimTestScan} 
                 onDownloadTrigger={handleDownloadTrigger} 
+                onChange={setCurrentProject}
               />
             </div>
           </div>
@@ -2553,6 +2560,8 @@ export default function App() {
             <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Privacy Policy</a>
             <span>•</span>
             <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Terms & Conditions</a>
+            <span>•</span>
+            <a href="/embed" onClick={(e) => { e.preventDefault(); navigateTo('/embed'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold text-indigo-600">Embed Badge</a>
             <span>•</span>
             <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Contact Us</a>
           </div>
