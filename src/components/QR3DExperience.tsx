@@ -76,7 +76,7 @@ export default function QR3DExperience() {
             rotateY: rotateY,
             transformStyle: 'preserve-3d'
           }}
-          className="relative w-full h-full rounded-[40px] bg-white/70 dark:bg-slate-900/40 border border-white/40 shadow-[0_30px_60px_-15px_rgba(15,23,42,0.18)] backdrop-blur-xl p-8 flex flex-col items-center justify-between transition-all duration-300"
+          className="relative w-full h-full rounded-[40px] bg-white/70 border border-white/40 shadow-[0_30px_60px_-15px_rgba(15,23,42,0.18)] backdrop-blur-xl p-8 flex flex-col items-center justify-between transition-all duration-300"
         >
           {/* Dynamic Light Reflection Layer */}
           <motion.div 
@@ -126,12 +126,12 @@ export default function QR3DExperience() {
           </div>
 
           {/* VisionOS Control Micro-Panel Footer */}
-          <div className="w-full bg-slate-900/5 dark:bg-white/5 border border-slate-950/5 dark:border-white/10 rounded-2xl p-2.5 flex items-center justify-between z-10 [transform:translateZ(30px)]">
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700 dark:text-slate-200">
+          <div className="w-full bg-slate-900/5 border border-slate-950/5 rounded-2xl p-2.5 flex items-center justify-between z-10 [transform:translateZ(30px)]">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">
               <Shield className="w-3.5 h-3.5 text-emerald-500" />
               <span>TLS Secured</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700 dark:text-slate-200">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">
               <Activity className="w-3.5 h-3.5 text-indigo-500" />
               <span>Ready</span>
             </div>

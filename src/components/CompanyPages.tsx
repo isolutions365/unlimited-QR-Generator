@@ -55,21 +55,21 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
           {/* Key Metrics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-              <span className="block text-3xl font-black text-indigo-600">14K+</span>
+              <span className="block text-3xl font-black text-indigo-600 font-bold">14K+</span>
               <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">Monthly Campaigns</span>
               <p className="text-[11px] text-slate-500 leading-normal">
                 Businesses trust us to build high-performance vector schemas monthly.
               </p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-              <span className="block text-3xl font-black text-indigo-600">99.9%</span>
+              <span className="block text-3xl font-black text-indigo-600 font-bold">99.9%</span>
               <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">Scan Accuracy</span>
               <p className="text-[11px] text-slate-500 leading-normal">
                 Robust Reed-Solomon error correction keeps high scan-rates on all devices.
               </p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-              <span className="block text-3xl font-black text-indigo-600">100%</span>
+              <span className="block text-3xl font-black text-indigo-600 font-bold">100%</span>
               <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">Local Encryption</span>
               <p className="text-[11px] text-slate-500 leading-normal">
                 Your credentials are kept safely encrypted and never leave your sandbox.
@@ -86,7 +86,7 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
                   <Award className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-sm font-extrabold text-slate-950">Pristine Aesthetic Layouts</h3>
+                  <h3 className="text-sm font-extrabold text-slate-900">Pristine Aesthetic Layouts</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     We select beautiful custom color gradients, sleek eye frames, and tailored dots for ultimate branding value.
                   </p>
@@ -98,7 +98,7 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
                   <Users className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-sm font-extrabold text-slate-950">Developer-First Mentality</h3>
+                  <h3 className="text-sm font-extrabold text-slate-900">Developer-First Mentality</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     Designed to easily fit modern full-stack workflows with local decoupled sandboxes.
                   </p>
@@ -110,7 +110,7 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
                   <Briefcase className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-sm font-extrabold text-slate-950">Uncompromising Integrity</h3>
+                  <h3 className="text-sm font-extrabold text-slate-900">Uncompromising Integrity</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     Our platform executes local operations immediately and securely with transparent cookie and data handling.
                   </p>
@@ -122,7 +122,7 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
                   <Heart className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-sm font-extrabold text-slate-950">End-User Experience</h3>
+                  <h3 className="text-sm font-extrabold text-slate-900">End-User Experience</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     We guarantee friction-free scanning triggers on iOS, Android, and other hardware readers.
                   </p>
@@ -332,7 +332,7 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
 
               {/* Security Banner Card */}
               <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md space-y-3 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-indigo-400" />
                   <span className="text-xs font-bold text-indigo-400 font-mono tracking-wide uppercase">Encrypted Inboxes</span>
@@ -421,7 +421,7 @@ export default function CompanyPages({ view, onNavigate }: CompanyPagesProps) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-slate-900 hover:shadow-lg disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-indigo-100"
+                    className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-slate-900 hover:shadow-lg disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
                   >
                     <Send className="w-3.5 h-3.5" />
                     {isSubmitting ? 'Sending Request...' : 'Send Message'}

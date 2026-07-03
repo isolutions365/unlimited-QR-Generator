@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize } from 'lucide-react';
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
@@ -122,6 +122,52 @@ export default function ControlPanel({
   userEmail,
   projects = []
 }: ControlPanelProps) {
+  const [localProject, setLocalProject] = useState<Partial<QRProject>>(currentProject);
+  const lastPropagatedProjectRef = useRef<Partial<QRProject>>(currentProject);
+  const isDebouncingRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (JSON.stringify(currentProject) !== JSON.stringify(lastPropagatedProjectRef.current)) {
+      setLocalProject(currentProject);
+      lastPropagatedProjectRef.current = currentProject;
+      isDebouncingRef.current = false;
+    }
+  }, [currentProject]);
+
+  useEffect(() => {
+    if (!isDebouncingRef.current) return;
+
+    const handler = setTimeout(() => {
+      if (JSON.stringify(localProject) !== JSON.stringify(currentProject)) {
+        lastPropagatedProjectRef.current = localProject;
+        parentOnChange(localProject);
+        isDebouncingRef.current = false;
+      }
+    }, 400);
+
+    return () => clearTimeout(handler);
+  }, [localProject, parentOnChange, currentProject]);
+
+  const updateProjectState = (updatedProject: Partial<QRProject>, debounce = false) => {
+    let design = updatedProject.design || localProject.design;
+    if (design && design.smartOptimize) {
+      const optimizedDesign = optimizeDesign(design, updatedProject.content || localProject.content || '');
+      updatedProject = {
+        ...updatedProject,
+        design: optimizedDesign
+      };
+    }
+
+    setLocalProject(updatedProject);
+
+    if (!debounce) {
+      lastPropagatedProjectRef.current = updatedProject;
+      parentOnChange(updatedProject);
+      isDebouncingRef.current = false;
+    } else {
+      isDebouncingRef.current = true;
+    }
+  };
   const optimizeDesign = (design: NonNullable<QRProject['design']>, content: string): NonNullable<QRProject['design']> => {
     if (!design.smartOptimize) return design;
 
@@ -162,25 +208,33 @@ export default function ControlPanel({
     }
 
     // 3. Margin/Quiet Zone Optimization
-    if (typeof newDesign.margin === 'number' && newDesign.margin < 20) {
-      newDesign.margin = 20;
-    } else if (typeof newDesign.margin !== 'number') {
+    if (typeof newDesign.margin !== 'number') {
       newDesign.margin = 20;
     }
 
     return newDesign;
   };
 
-  const onChange = (updatedProject: Partial<QRProject>) => {
-    let design = updatedProject.design || currentProject.design;
-    if (design && design.smartOptimize) {
-      const optimizedDesign = optimizeDesign(design, updatedProject.content || currentProject.content || '');
-      updatedProject = {
-        ...updatedProject,
-        design: optimizedDesign
-      };
-    }
-    parentOnChange(updatedProject);
+  const onChange = (updatedProject: Partial<QRProject>, debounce = false) => {
+    updateProjectState(updatedProject, debounce);
+  };
+
+  const setDesignField = (field: string, value: any, debounce = false) => {
+    onChange({
+      ...localProject,
+      design: {
+        ...(localProject.design || {
+          fgColor: '#0f172a',
+          bgColor: '#ffffff',
+          gradientType: 'none',
+          gradientColor: '#4f46e5',
+          dotStyle: 'square',
+          eyeStyle: 'square',
+          margin: 20
+        }),
+        [field]: value
+      }
+    } as Partial<QRProject>, debounce);
   };
 
   const [isDragging, setIsDragging] = useState(false);
@@ -207,7 +261,7 @@ export default function ControlPanel({
         type: 'warning',
         message: 'Missing required protocol! Smartphone scanners need "http://" or "https://" to recognize this as a web link.',
         action: () => {
-          onChange({ ...currentProject, content: `https://${trimmed}` });
+          onChange({ ...localProject, content: `https://${trimmed}` });
         }
       };
     }
@@ -226,15 +280,15 @@ export default function ControlPanel({
     return null;
   };
 
-  const urlError = currentProject.type === 'url' ? getUrlError(currentProject.content || '') : null;
+  const urlError = localProject.type === 'url' ? getUrlError(localProject.content || '') : null;
   const isUrlInvalid = urlError && (urlError.type === 'error' || urlError.type === 'warning');
 
   const calculateAutoCenterOffsets = () => {
-    const errorCorrectionLevel = currentProject.design?.errorCorrectionLevel || 'H';
-    const margin = typeof currentProject.design?.margin === 'number' ? currentProject.design?.margin : 20;
-    const qrContent = currentProject.content || 'https://google.com';
-    const trackingEnabled = currentProject.trackingEnabled || false;
-    const trackingId = currentProject.trackingId || '';
+    const errorCorrectionLevel = localProject.design?.errorCorrectionLevel || 'H';
+    const margin = typeof localProject.design?.margin === 'number' ? localProject.design?.margin : 20;
+    const qrContent = localProject.content || 'https://google.com';
+    const trackingEnabled = localProject.trackingEnabled || false;
+    const trackingId = localProject.trackingId || '';
     const appUrl = (window as any).location?.origin || '';
     const trackingUrl = trackingId ? `${appUrl}/qr/${trackingId}` : null;
     const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : qrContent;
@@ -312,23 +366,7 @@ export default function ControlPanel({
     }
   };
 
-  const setDesignField = (field: string, value: any) => {
-    onChange({
-      ...currentProject,
-      design: {
-        ...(currentProject.design || {
-          fgColor: '#0f172a',
-          bgColor: '#ffffff',
-          gradientType: 'none',
-          gradientColor: '#4f46e5',
-          dotStyle: 'square',
-          eyeStyle: 'square',
-          margin: 20
-        }),
-        [field]: value
-      }
-    } as Partial<QRProject>);
-  };
+
 
   // Preset colors and gradient handling refactored into ColorPalette component
 
@@ -383,7 +421,7 @@ export default function ControlPanel({
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
-        <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block mb-3">QR Code Type</label>
+        <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-3">QR Code Type</label>
         <div className="grid grid-cols-5 gap-2">
           {(
             [
@@ -400,25 +438,17 @@ export default function ControlPanel({
             ] as const
           ).map(type => {
             const Icon = type.icon;
-            const isSelected = currentProject.type === type.id;
+            const isSelected = localProject.type === type.id;
             return (
               <button
                 key={type.id}
                 type="button"
-                className={`relative group py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
-                  isSelected
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100 scale-105'
-                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
-                }`}
-                onClick={() => onChange({ ...currentProject, type: type.id })}
+                className={`relative group py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${ isSelected ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100 scale-105' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50' }`}
+                onClick={() => onChange({ ...localProject, type: type.id })}
               >
                 {/* Circular radio/selection indicator */}
                 <span 
-                  className={`absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full border transition-all ${
-                    isSelected 
-                      ? 'border-white bg-white scale-110 shadow-xs' 
-                      : 'border-slate-350 bg-white group-hover:border-slate-450'
-                  }`} 
+                  className={`absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full border transition-all ${ isSelected ? 'border-white bg-white scale-110 shadow-xs' : 'border-slate-350 bg-white group-hover:border-slate-450' }`} 
                 />
 
                 <Icon className={`w-4 h-4 transition-colors ${isSelected ? 'text-white' : type.color}`} />
@@ -448,28 +478,22 @@ export default function ControlPanel({
             type="text"
             className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
             placeholder="e.g. My Website QR"
-            value={currentProject.name || ''}
-            onChange={e => onChange({ ...currentProject, name: e.target.value })}
+            value={localProject.name || ''}
+            onChange={e => onChange({ ...localProject, name: e.target.value }, true)}
           />
         </div>
 
-        {currentProject.type === 'url' && (
+        {localProject.type === 'url' && (
           <div>
             <label htmlFor="target-url-input" className="block text-xs font-semibold text-slate-800 mb-1">Target Website URL</label>
             <div className="flex gap-2">
               <input
                 id="target-url-input"
                 type="url"
-                className={`flex-1 text-sm px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-white text-slate-800 transition-all ${
-                  urlError && urlError.type === 'error'
-                    ? 'border-rose-300 focus:ring-rose-500/20 focus:border-rose-500'
-                    : urlError && urlError.type === 'warning'
-                    ? 'border-amber-350 focus:ring-amber-500/20 focus:border-amber-500'
-                    : 'border-gray-200 focus:ring-indigo-500 focus:border-indigo-500'
-                }`}
+                className={`flex-1 text-sm px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-white text-slate-800 transition-all ${ urlError && urlError.type === 'error' ? 'border-rose-300 focus:ring-rose-500/20 focus:border-rose-500' : urlError && urlError.type === 'warning' ? 'border-amber-350 focus:ring-amber-500/20 focus:border-amber-500' : 'border-gray-200 focus:ring-indigo-500 focus:border-indigo-500' }`}
                 placeholder="https://example.com"
-                value={currentProject.content || ''}
-                onChange={e => onChange({ ...currentProject, content: e.target.value })}
+                value={localProject.content || ''}
+                onChange={e => onChange({ ...localProject, content: e.target.value }, true)}
               />
               {urlError && urlError.type === 'warning' && urlError.action && (
                 <motion.button
@@ -492,13 +516,7 @@ export default function ControlPanel({
               <motion.div
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`mt-2 p-3 rounded-xl border text-xs flex gap-2.5 transition-all duration-200 ${
-                  urlError.type === 'error'
-                    ? 'bg-rose-50/50 border-rose-200/50 text-rose-800 shadow-xs'
-                    : urlError.type === 'warning'
-                    ? 'bg-amber-50/50 border-amber-200/50 text-amber-850 shadow-xs'
-                    : 'bg-slate-50/70 border-slate-200/40 text-slate-600'
-                }`}
+                className={`mt-2 p-3 rounded-xl border text-xs flex gap-2.5 transition-all duration-200 ${ urlError.type === 'error' ? 'bg-rose-50/50 border-rose-200/50 text-rose-800 shadow-xs' : urlError.type === 'warning' ? 'bg-amber-50/50 border-amber-200/50 text-amber-850 shadow-xs' : 'bg-slate-50/70 border-slate-200/40 text-slate-600' }`}
               >
                 {urlError.type === 'error' && <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />}
                 {urlError.type === 'warning' && <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />}
@@ -521,20 +539,20 @@ export default function ControlPanel({
           </div>
         )}
 
-        {currentProject.type === 'text' && (
+        {localProject.type === 'text' && (
           <div>
             <label htmlFor="plain-text-input" className="block text-xs font-semibold text-slate-800 mb-1">Plain Text</label>
             <textarea
               id="plain-text-input"
               className="w-full text-sm px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 h-20 bg-white text-slate-800"
               placeholder="Add raw text to encode..."
-              value={currentProject.content || ''}
-              onChange={e => onChange({ ...currentProject, content: e.target.value })}
+              value={localProject.content || ''}
+              onChange={e => onChange({ ...localProject, content: e.target.value }, true)}
             />
           </div>
         )}
 
-        {currentProject.type === 'wifi' && (
+        {localProject.type === 'wifi' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
             <h4 className="text-xs font-semibold text-slate-850">WiFi Integration Setting</h4>
             <p className="text-[11px] text-slate-600">Auto-configured to connect to wifi spots securely.</p>
@@ -546,9 +564,9 @@ export default function ControlPanel({
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
                 placeholder="WiFi Network ID / SSID"
                 onChange={e => {
-                  const parts = (currentProject.content || '').split(';');
+                  const parts = (localProject.content || '').split(';');
                   const pass = parts[2] || '';
-                  onChange({ ...currentProject, content: `WIFI:S:${e.target.value};T:WPA;P:${pass};;` });
+                  onChange({ ...localProject, content: `WIFI:S:${e.target.value};T:WPA;P:${pass};;` }, true);
                 }}
               />
             </div>
@@ -560,16 +578,16 @@ export default function ControlPanel({
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
                 placeholder="WiFi Password"
                 onChange={e => {
-                  const parts = (currentProject.content || '').split(';');
+                  const parts = (localProject.content || '').split(';');
                   const ss = parts[0]?.replace('WIFI:S:', '') || '';
-                  onChange({ ...currentProject, content: `WIFI:S:${ss};T:WPA;P:${e.target.value};;` });
+                  onChange({ ...localProject, content: `WIFI:S:${ss};T:WPA;P:${e.target.value};;` }, true);
                 }}
               />
             </div>
           </div>
         )}
 
-        {currentProject.type === 'email' && (
+        {localProject.type === 'email' && (
           <div className="space-y-2">
             <label htmlFor="email-recipient-input" className="block text-xs font-semibold text-slate-800">Recipient Email Address</label>
             <input
@@ -577,12 +595,12 @@ export default function ControlPanel({
               type="email"
               className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-slate-800"
               placeholder="Recipient Email Address"
-              onChange={e => onChange({ ...currentProject, content: `mailto:${e.target.value}` })}
+              onChange={e => onChange({ ...localProject, content: `mailto:${e.target.value}` }, true)}
             />
           </div>
         )}
 
-        {currentProject.type === 'card' && (
+        {localProject.type === 'card' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
             <h4 className="text-xs font-semibold text-slate-850 font-mono">vCard Contact Credentials</h4>
             <div>
@@ -592,14 +610,14 @@ export default function ControlPanel({
                 type="text"
                 className="w-full text-xs px-3 py-1.5 rounded-md border border-gray-200 bg-white text-slate-800"
                 placeholder="Full Name"
-                value={currentProject.content?.includes('N:') ? currentProject.content.split('N:')[1]?.split('\n')[0] : ''}
-                onChange={e => onChange({ ...currentProject, content: `BEGIN:VCARD\nVERSION:3.0\nN:${e.target.value}\nEND:VCARD` })}
+                value={localProject.content?.includes('N:') ? localProject.content.split('N:')[1]?.split('\n')[0] : ''}
+                onChange={e => onChange({ ...localProject, content: `BEGIN:VCARD\nVERSION:3.0\nN:${e.target.value}\nEND:VCARD` }, true)}
               />
             </div>
           </div>
         )}
 
-        {currentProject.type === 'phone' && (
+        {localProject.type === 'phone' && (
           <div className="space-y-2">
             <label htmlFor="phone-number-input" className="block text-xs font-semibold text-slate-800">Phone Number</label>
             <input
@@ -608,18 +626,18 @@ export default function ControlPanel({
               className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="+1 (555) 000-0000"
               value={(() => {
-                if (currentProject.content?.startsWith('tel:')) {
-                  return currentProject.content.substring(4);
+                if (localProject.content?.startsWith('tel:')) {
+                  return localProject.content.substring(4);
                 }
                 return '';
               })()}
-              onChange={e => onChange({ ...currentProject, content: `tel:${e.target.value.trim()}` })}
+              onChange={e => onChange({ ...localProject, content: `tel:${e.target.value.trim()}` }, true)}
             />
             <span className="text-[10px] text-slate-600 block font-sans">Encodes standard cellular dialing protocols automatically.</span>
           </div>
         )}
 
-        {currentProject.type === 'sms' && (
+        {localProject.type === 'sms' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
             <h4 className="text-xs font-semibold text-slate-850">Pre-composed SMS Text</h4>
             <div>
@@ -630,24 +648,24 @@ export default function ControlPanel({
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
                 placeholder="Recipient Phone Number"
                 value={(() => {
-                  if (currentProject.content?.startsWith('sms:')) {
-                    const queryIdx = currentProject.content.indexOf('?');
-                    return queryIdx !== -1 ? currentProject.content.substring(4, queryIdx) : currentProject.content.substring(4);
-                  } else if (currentProject.content?.startsWith('SMSTO:')) {
-                    return currentProject.content.substring(6).split(':')[0] || '';
+                  if (localProject.content?.startsWith('sms:')) {
+                    const queryIdx = localProject.content.indexOf('?');
+                    return queryIdx !== -1 ? localProject.content.substring(4, queryIdx) : localProject.content.substring(4);
+                  } else if (localProject.content?.startsWith('SMSTO:')) {
+                    return localProject.content.substring(6).split(':')[0] || '';
                   }
                   return '';
                 })()}
                 onChange={e => {
                   const phone = e.target.value.trim();
                   let existingMsg = '';
-                  if (currentProject.content?.startsWith('sms:')) {
-                    const queryIdx = currentProject.content.indexOf('?body=');
-                    existingMsg = queryIdx !== -1 ? decodeURIComponent(currentProject.content.substring(queryIdx + 6)) : '';
-                  } else if (currentProject.content?.startsWith('SMSTO:')) {
-                    existingMsg = currentProject.content.substring(6).split(':').slice(1).join(':') || '';
+                  if (localProject.content?.startsWith('sms:')) {
+                    const queryIdx = localProject.content.indexOf('?body=');
+                    existingMsg = queryIdx !== -1 ? decodeURIComponent(localProject.content.substring(queryIdx + 6)) : '';
+                  } else if (localProject.content?.startsWith('SMSTO:')) {
+                    existingMsg = localProject.content.substring(6).split(':').slice(1).join(':') || '';
                   }
-                  onChange({ ...currentProject, content: `SMSTO:${phone}:${existingMsg}` });
+                  onChange({ ...localProject, content: `SMSTO:${phone}:${existingMsg}` }, true);
                 }}
               />
             </div>
@@ -658,31 +676,31 @@ export default function ControlPanel({
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white h-16 text-slate-800"
                 placeholder="Prefilled message body"
                 value={(() => {
-                  if (currentProject.content?.startsWith('sms:')) {
-                    const queryIdx = currentProject.content.indexOf('?body=');
-                    return queryIdx !== -1 ? decodeURIComponent(currentProject.content.substring(queryIdx + 6)) : '';
-                  } else if (currentProject.content?.startsWith('SMSTO:')) {
-                    return currentProject.content.substring(6).split(':').slice(1).join(':') || '';
+                  if (localProject.content?.startsWith('sms:')) {
+                    const queryIdx = localProject.content.indexOf('?body=');
+                    return queryIdx !== -1 ? decodeURIComponent(localProject.content.substring(queryIdx + 6)) : '';
+                  } else if (localProject.content?.startsWith('SMSTO:')) {
+                    return localProject.content.substring(6).split(':').slice(1).join(':') || '';
                   }
                   return '';
                 })()}
                 onChange={e => {
                   const msg = e.target.value;
                   let existingPhone = '';
-                  if (currentProject.content?.startsWith('sms:')) {
-                    const queryIdx = currentProject.content.indexOf('?');
-                    existingPhone = queryIdx !== -1 ? currentProject.content.substring(4, queryIdx) : currentProject.content.substring(4);
-                  } else if (currentProject.content?.startsWith('SMSTO:')) {
-                    existingPhone = currentProject.content.substring(6).split(':')[0] || '';
+                  if (localProject.content?.startsWith('sms:')) {
+                    const queryIdx = localProject.content.indexOf('?');
+                    existingPhone = queryIdx !== -1 ? localProject.content.substring(4, queryIdx) : localProject.content.substring(4);
+                  } else if (localProject.content?.startsWith('SMSTO:')) {
+                    existingPhone = localProject.content.substring(6).split(':')[0] || '';
                   }
-                  onChange({ ...currentProject, content: `SMSTO:${existingPhone}:${msg}` });
+                  onChange({ ...localProject, content: `SMSTO:${existingPhone}:${msg}` }, true);
                 }}
               />
             </div>
           </div>
         )}
 
-        {currentProject.type === 'social' && (
+        {localProject.type === 'social' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
             <h4 className="text-xs font-semibold text-slate-850">Social Media Profile</h4>
             <div className="grid grid-cols-2 gap-2">
@@ -695,7 +713,7 @@ export default function ControlPanel({
                 { id: 'linkedin', label: 'LinkedIn', prefix: 'https://linkedin.com/in/' }
               ].map(plat => {
                 const isPlatActive = (() => {
-                  const content = currentProject.content || '';
+                  const content = localProject.content || '';
                   return content.includes(plat.prefix);
                 })();
 
@@ -706,7 +724,7 @@ export default function ControlPanel({
                     onClick={() => {
                       // Preserve the username/handle if possible
                       const currentUsername = (() => {
-                        const content = currentProject.content || '';
+                        const content = localProject.content || '';
                         if (content.includes('instagram.com/')) return content.split('instagram.com/')[1] || '';
                         if (content.includes('x.com/')) return content.split('x.com/')[1] || '';
                         if (content.includes('wa.me/')) return content.split('wa.me/')[1] || '';
@@ -715,13 +733,9 @@ export default function ControlPanel({
                         if (content.includes('linkedin.com/in/')) return content.split('linkedin.com/in/')[1] || '';
                         return '';
                       })();
-                      onChange({ ...currentProject, content: `${plat.prefix}${currentUsername}` });
+                      onChange({ ...localProject, content: `${plat.prefix}${currentUsername}` });
                     }}
-                    className={`py-1.5 px-2 text-[10px] font-medium border rounded-lg text-center transition-all ${
-                      isPlatActive
-                        ? 'bg-indigo-600 text-white border-indigo-600'
-                        : 'bg-white text-slate-700 border-gray-200 hover:bg-gray-100'
-                    }`}
+                    className={`py-1.5 px-2 text-[10px] font-medium border rounded-lg text-center transition-all ${ isPlatActive ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-gray-200 hover:bg-gray-100' }`}
                   >
                     {plat.label}
                   </button>
@@ -732,7 +746,7 @@ export default function ControlPanel({
             <div>
               <span className="text-[10px] text-slate-650 font-mono">
                 Platform Path: {(() => {
-                  const content = currentProject.content || '';
+                  const content = localProject.content || '';
                   if (content.includes('instagram.com/')) return 'https://instagram.com/';
                   if (content.includes('x.com/')) return 'https://x.com/';
                   if (content.includes('wa.me/')) return 'https://wa.me/';
@@ -749,7 +763,7 @@ export default function ControlPanel({
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white mt-1 font-mono text-slate-800"
                 placeholder="username, handle, or contact number"
                 value={(() => {
-                  const content = currentProject.content || '';
+                  const content = localProject.content || '';
                   if (content.includes('instagram.com/')) return content.split('instagram.com/')[1] || '';
                   if (content.includes('x.com/')) return content.split('x.com/')[1] || '';
                   if (content.includes('wa.me/')) return content.split('wa.me/')[1] || '';
@@ -761,7 +775,7 @@ export default function ControlPanel({
                 onChange={e => {
                   const handle = e.target.value.trim().replace(/^@/, '');
                   const currentPrefix = (() => {
-                    const content = currentProject.content || '';
+                    const content = localProject.content || '';
                     if (content.includes('instagram.com/')) return 'https://instagram.com/';
                     if (content.includes('x.com/')) return 'https://x.com/';
                     if (content.includes('wa.me/')) return 'https://wa.me/';
@@ -770,14 +784,14 @@ export default function ControlPanel({
                     if (content.includes('linkedin.com/in/')) return 'https://linkedin.com/in/';
                     return 'https://instagram.com/';
                   })();
-                  onChange({ ...currentProject, content: `${currentPrefix}${handle}` });
+                  onChange({ ...localProject, content: `${currentPrefix}${handle}` }, true);
                 }}
               />
             </div>
           </div>
         )}
 
-        {currentProject.type === 'crypto' && (
+        {localProject.type === 'crypto' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
             <h4 className="text-xs font-semibold text-slate-850">Cryptocurrency Address</h4>
             <div className="grid grid-cols-4 gap-1.5">
@@ -788,7 +802,7 @@ export default function ControlPanel({
                 { id: 'dogecoin', label: 'DOGE', prefix: 'dogecoin:' }
               ].map(coin => {
                 const isCoinActive = (() => {
-                  const content = currentProject.content || '';
+                  const content = localProject.content || '';
                   return content.startsWith(coin.prefix);
                 })();
 
@@ -798,20 +812,16 @@ export default function ControlPanel({
                     type="button"
                     onClick={() => {
                       const currentAddr = (() => {
-                        const content = currentProject.content || '';
+                        const content = localProject.content || '';
                         if (content.startsWith('bitcoin:')) return content.split('bitcoin:')[1] || '';
                         if (content.startsWith('ethereum:')) return content.split('ethereum:')[1] || '';
                         if (content.startsWith('solana:')) return content.split('solana:')[1] || '';
                         if (content.startsWith('dogecoin:')) return content.split('dogecoin:')[1] || '';
                         return '';
                       })();
-                      onChange({ ...currentProject, content: `${coin.prefix}${currentAddr}` });
+                      onChange({ ...localProject, content: `${coin.prefix}${currentAddr}` });
                     }}
-                    className={`py-1 px-1.5 text-[9px] font-bold border rounded-lg text-center transition-all ${
-                      isCoinActive
-                        ? 'bg-indigo-600 text-white border-indigo-600'
-                        : 'bg-white text-slate-700 border-gray-200 hover:bg-gray-100'
-                    }`}
+                    className={`py-1 px-1.5 text-[9px] font-bold border rounded-lg text-center transition-all ${ isCoinActive ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-gray-200 hover:bg-gray-100' }`}
                   >
                     {coin.label}
                   </button>
@@ -822,7 +832,7 @@ export default function ControlPanel({
             <div>
               <span className="text-[10px] text-slate-650 font-mono">
                 Asset Prefix: {(() => {
-                  const content = currentProject.content || '';
+                  const content = localProject.content || '';
                   if (content.startsWith('bitcoin:')) return 'bitcoin:';
                   if (content.startsWith('ethereum:')) return 'ethereum:';
                   if (content.startsWith('solana:')) return 'solana:';
@@ -837,7 +847,7 @@ export default function ControlPanel({
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white mt-1 font-mono text-slate-800"
                 placeholder="Wallet destination hash"
                 value={(() => {
-                  const content = currentProject.content || '';
+                  const content = localProject.content || '';
                   if (content.startsWith('bitcoin:')) return content.split('bitcoin:')[1] || '';
                   if (content.startsWith('ethereum:')) return content.split('ethereum:')[1] || '';
                   if (content.startsWith('solana:')) return content.split('solana:')[1] || '';
@@ -847,21 +857,21 @@ export default function ControlPanel({
                 onChange={e => {
                   const addr = e.target.value.trim();
                   const currentPrefix = (() => {
-                    const content = currentProject.content || '';
+                    const content = localProject.content || '';
                     if (content.startsWith('bitcoin:')) return 'bitcoin:';
                     if (content.startsWith('ethereum:')) return 'ethereum:';
                     if (content.startsWith('solana:')) return 'solana:';
                     if (content.startsWith('dogecoin:')) return 'dogecoin:';
                     return 'bitcoin:';
                   })();
-                  onChange({ ...currentProject, content: `${currentPrefix}${addr}` });
+                  onChange({ ...localProject, content: `${currentPrefix}${addr}` }, true);
                 }}
               />
             </div>
           </div>
         )}
 
-        {currentProject.type === 'geo' && (
+        {localProject.type === 'geo' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-semibold text-slate-850">Maps Geolocation</h4>
@@ -873,7 +883,7 @@ export default function ControlPanel({
                       pos => {
                         const lat = pos.coords.latitude.toFixed(6);
                         const lng = pos.coords.longitude.toFixed(6);
-                        onChange({ ...currentProject, content: `geo:${lat},${lng}` });
+                        onChange({ ...localProject, content: `geo:${lat},${lng}` });
                       },
                       err => {
                         console.error("Geolocation request failed:", err);
@@ -897,20 +907,20 @@ export default function ControlPanel({
                   className="w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white font-mono text-slate-800"
                   placeholder="e.g. 37.7749"
                   value={(() => {
-                    if (currentProject.content?.startsWith('geo:')) {
-                      return currentProject.content.substring(4).split(',')[0] || '';
+                    if (localProject.content?.startsWith('geo:')) {
+                      return localProject.content.substring(4).split(',')[0] || '';
                     }
                     return '';
                   })()}
                   onChange={e => {
                     const lat = e.target.value.trim();
                     const existingLng = (() => {
-                      if (currentProject.content?.startsWith('geo:')) {
-                        return currentProject.content.substring(4).split(',')[1] || '';
+                      if (localProject.content?.startsWith('geo:')) {
+                        return localProject.content.substring(4).split(',')[1] || '';
                       }
                       return '';
                     })();
-                    onChange({ ...currentProject, content: `geo:${lat},${existingLng}` });
+                    onChange({ ...localProject, content: `geo:${lat},${existingLng}` }, true);
                   }}
                 />
               </div>
@@ -923,20 +933,20 @@ export default function ControlPanel({
                   className="w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white font-mono text-slate-800"
                   placeholder="e.g. -122.4194"
                   value={(() => {
-                    if (currentProject.content?.startsWith('geo:')) {
-                      return currentProject.content.substring(4).split(',')[1] || '';
+                    if (localProject.content?.startsWith('geo:')) {
+                      return localProject.content.substring(4).split(',')[1] || '';
                     }
                     return '';
                   })()}
                   onChange={e => {
                     const lng = e.target.value.trim();
                     const existingLat = (() => {
-                      if (currentProject.content?.startsWith('geo:')) {
-                        return currentProject.content.substring(4).split(',')[0] || '';
+                      if (localProject.content?.startsWith('geo:')) {
+                        return localProject.content.substring(4).split(',')[0] || '';
                       }
                       return '';
                     })();
-                    onChange({ ...currentProject, content: `geo:${existingLat},${lng}` });
+                    onChange({ ...localProject, content: `geo:${existingLat},${lng}` }, true);
                   }}
                 />
               </div>
@@ -947,7 +957,7 @@ export default function ControlPanel({
 
       {/* Integrated Color Palette and Gradient Manager */}
       <ColorPalette
-        currentProject={currentProject}
+        currentProject={localProject}
         onChange={onChange}
       />
 
@@ -964,18 +974,18 @@ export default function ControlPanel({
       >
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-xs font-semibold text-slate-800 tracking-wider uppercase flex items-center gap-1.5">
+            <h3 className="text-xs font-semibold text-gray-900 tracking-wider uppercase flex items-center gap-1.5">
               <Wand2 className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
               Quick Style Presets
             </h3>
-            <span className="text-[10px] text-slate-500 block">Apply curated style combinations instantly.</span>
+            <span className="text-[10px] text-gray-600 block">Apply curated style combinations instantly.</span>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
           {quickStyles.map((preset) => {
             const isSelected = (() => {
-              const design = currentProject.design;
+              const design = localProject.design;
               if (!design) return false;
               return (
                 design.fgColor === preset.design.fgColor &&
@@ -992,18 +1002,14 @@ export default function ControlPanel({
                 type="button"
                 onClick={() => {
                   onChange({
-                    ...currentProject,
+                    ...localProject,
                     design: {
-                      ...(currentProject.design || {}),
+                      ...(localProject.design || {}),
                       ...preset.design,
                     },
                   });
                 }}
-                className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all ${
-                  isSelected
-                    ? 'border-indigo-600 bg-indigo-50/30 ring-1 ring-indigo-500'
-                    : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/50'
-                }`}
+                className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all ${ isSelected ? 'border-indigo-600 bg-indigo-50/30 ring-1 ring-indigo-500' : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/50' }`}
               >
                 {/* Visual Swatch Mini Badge */}
                 <div className={`w-5 h-5 rounded-md ${preset.iconColor} shrink-0 shadow-sm border border-white flex items-center justify-center`}>
@@ -1028,7 +1034,7 @@ export default function ControlPanel({
 
       {/* Gemini AI Co-Pilot Intelligent Customizer */}
       <AICoPilot
-        currentProject={currentProject}
+        currentProject={localProject}
         onChange={onChange}
       />
 
@@ -1049,7 +1055,7 @@ export default function ControlPanel({
           <select
             id="eye-style-select"
             className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
-            value={currentProject.design?.eyeStyle || 'square'}
+            value={localProject.design?.eyeStyle || 'square'}
             onChange={e => setDesignField('eyeStyle', e.target.value)}
           >
             <option value="square">Square Frame</option>
@@ -1060,11 +1066,11 @@ export default function ControlPanel({
         </div>
 
         <div>
-          <label htmlFor="dot-style-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase block mb-2">Internal Dots</label>
+          <label htmlFor="dot-style-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-2">Internal Dots</label>
           <select
             id="dot-style-select"
             className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
-            value={currentProject.design?.dotStyle || 'square'}
+            value={localProject.design?.dotStyle || 'square'}
             onChange={e => setDesignField('dotStyle', e.target.value)}
           >
             <option value="square">Standard Square</option>
@@ -1088,13 +1094,13 @@ export default function ControlPanel({
       >
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-xs font-semibold text-slate-800 tracking-wider uppercase flex items-center gap-1.5">
+            <h3 className="text-xs font-semibold text-gray-900 tracking-wider uppercase flex items-center gap-1.5">
               <SquareDot className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
               Outer Edge Label Frame
             </h3>
-            <span className="text-[10px] text-slate-500 block">Add a beautiful, styled badge-frame around your QR.</span>
+            <span className="text-[10px] text-gray-600 block">Add a beautiful, styled badge-frame around your QR.</span>
           </div>
-          {currentProject.design?.frameStyle && currentProject.design?.frameStyle !== 'none' ? (
+          {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' ? (
             <button
               type="button"
               onClick={() => {
@@ -1119,7 +1125,7 @@ export default function ControlPanel({
             { id: 'join-wifi', label: 'Join WiFi', desc: 'Direct network scan' },
             { id: 'custom', label: 'Custom Text', desc: 'Fully custom label' },
           ].map(preset => {
-            const isSelected = (currentProject.design?.frameStyle || 'none') === preset.id;
+            const isSelected = (localProject.design?.frameStyle || 'none') === preset.id;
             return (
               <button
                 key={preset.id}
@@ -1128,35 +1134,31 @@ export default function ControlPanel({
                   setDesignField('frameStyle', preset.id);
                   if (preset.id !== 'none') {
                     // Set sensible default frame colors and text to make it instantly look amazing
-                    if (!currentProject.design?.frameColor) {
-                      setDesignField('frameColor', currentProject.design?.fgColor || '#4f46e5');
+                    if (!localProject.design?.frameColor) {
+                      setDesignField('frameColor', localProject.design?.fgColor || '#4f46e5');
                     }
-                    if (!currentProject.design?.frameTextColor) {
+                    if (!localProject.design?.frameTextColor) {
                       setDesignField('frameTextColor', '#ffffff');
                     }
                   }
                 }}
-                className={`p-2 rounded-lg border text-left transition-all flex flex-col justify-between h-[54px] cursor-pointer ${
-                  isSelected
-                    ? 'border-indigo-600 bg-indigo-50/25 ring-1 ring-indigo-500/25'
-                    : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/50'
-                }`}
+                className={`p-2 rounded-lg border text-left transition-all flex flex-col justify-between h-[54px] cursor-pointer ${ isSelected ? 'border-indigo-600 bg-indigo-50/25 ring-1 ring-indigo-500/25' : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/50' }`}
               >
-                <div className="text-[10.5px] font-bold text-slate-800 flex items-center justify-between w-full">
+                <div className="text-[10.5px] font-bold text-gray-900 flex items-center justify-between w-full">
                   <span>{preset.label}</span>
                   {isSelected && <Check className="w-3 h-3 text-indigo-600 stroke-[3]" />}
                 </div>
-                <div className="text-[9px] text-slate-500 truncate w-full">{preset.desc}</div>
+                <div className="text-[9px] text-gray-600 truncate w-full">{preset.desc}</div>
               </button>
             );
           })}
         </div>
 
         {/* Configurable Frame Text input (Visible if any frame is active) */}
-        {currentProject.design?.frameStyle && currentProject.design?.frameStyle !== 'none' && (
+        {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' && (
           <div className="space-y-1.5 pt-1">
-            <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-slate-700 tracking-wider uppercase block animate-fade-in">
-              {currentProject.design?.frameStyle === 'custom' ? 'Custom Frame Label Text' : 'Override Preset Label Text'}
+            <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block animate-fade-in">
+              {localProject.design?.frameStyle === 'custom' ? 'Custom Frame Label Text' : 'Override Preset Label Text'}
             </label>
             <input
               id="custom-frame-text"
@@ -1164,7 +1166,7 @@ export default function ControlPanel({
               maxLength={20}
               className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder={(() => {
-                const style = currentProject.design?.frameStyle;
+                const style = localProject.design?.frameStyle;
                 if (style === 'scan-me') return 'e.g. SCAN ME';
                 if (style === 'visit-website') return 'e.g. VISIT WEBSITE';
                 if (style === 'wifi-password') return 'e.g. WIFI PASSWORD';
@@ -1173,43 +1175,78 @@ export default function ControlPanel({
                 if (style === 'join-wifi') return 'e.g. JOIN WIFI';
                 return 'e.g. SCAN TO REGISTER';
               })()}
-              value={currentProject.design?.frameText || ''}
-              onChange={e => setDesignField('frameText', e.target.value)}
+              value={localProject.design?.frameText || ''}
+              onChange={e => setDesignField('frameText', e.target.value, true)}
             />
-            <span className="text-[9.5px] text-slate-450 block leading-tight">
+            <span className="text-[9.5px] text-gray-600 block leading-tight">
               Type custom wording to override or personalize the selected banner layout. Max 20 chars.
             </span>
           </div>
         )}
 
         {/* Only display color pickers if a frame is active */}
-        {currentProject.design?.frameStyle && currentProject.design?.frameStyle !== 'none' && (
-          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-100/60">
-            <div>
-              <span className="text-[10px] font-bold text-slate-700 tracking-wider uppercase block mb-1.5">Frame Shape Color</span>
-              <div className="flex items-center gap-2">
-                <input
-                  id="frame-color-picker"
-                  type="color"
-                  className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
-                  value={currentProject.design?.frameColor || currentProject.design?.fgColor || '#4f46e5'}
-                  onChange={e => setDesignField('frameColor', e.target.value)}
-                />
-                <span className="text-[10px] font-mono text-slate-500 uppercase">{currentProject.design?.frameColor || currentProject.design?.fgColor || '#4f46e5'}</span>
+        {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' && (
+          <div className="space-y-3 pt-2 border-t border-gray-100/60">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">Frame Shape Color</span>
+                <div className="flex items-center gap-2">
+                  <input
+                    id="frame-color-picker"
+                    type="color"
+                    className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
+                    value={localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}
+                    onChange={e => setDesignField('frameColor', e.target.value)}
+                  />
+                  <span className="text-[10px] font-mono text-slate-500 uppercase">{localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}</span>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">Label Text Color</span>
+                <div className="flex items-center gap-2">
+                  <input
+                    id="frame-text-color-picker"
+                    type="color"
+                    className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
+                    value={localProject.design?.frameTextColor || '#ffffff'}
+                    onChange={e => setDesignField('frameTextColor', e.target.value)}
+                  />
+                  <span className="text-[10px] font-mono text-slate-500 uppercase">{localProject.design?.frameTextColor || '#ffffff'}</span>
+                </div>
               </div>
             </div>
 
-            <div>
-              <span className="text-[10px] font-bold text-slate-700 tracking-wider uppercase block mb-1.5">Label Text Color</span>
-              <div className="flex items-center gap-2">
+            {/* Font Size & Position adjustments */}
+            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100/40">
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label htmlFor="frame-font-size-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">Font Size</label>
+                  <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.frameFontSize ?? 20}px</span>
+                </div>
                 <input
-                  id="frame-text-color-picker"
-                  type="color"
-                  className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
-                  value={currentProject.design?.frameTextColor || '#ffffff'}
-                  onChange={e => setDesignField('frameTextColor', e.target.value)}
+                  id="frame-font-size-range"
+                  type="range"
+                  min="12"
+                  max="32"
+                  step="1"
+                  className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                  value={localProject.design?.frameFontSize ?? 20}
+                  onChange={e => setDesignField('frameFontSize', parseInt(e.target.value), true)}
                 />
-                <span className="text-[10px] font-mono text-slate-500 uppercase">{currentProject.design?.frameTextColor || '#ffffff'}</span>
+              </div>
+
+              <div>
+                <label htmlFor="frame-text-position-select" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block mb-1.5">Text Position</label>
+                <select
+                  id="frame-text-position-select"
+                  className="w-full text-xs px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                  value={localProject.design?.frameTextPosition || 'bottom'}
+                  onChange={e => setDesignField('frameTextPosition', e.target.value)}
+                >
+                  <option value="bottom">Bottom Banner</option>
+                  <option value="top">Top Banner</option>
+                </select>
               </div>
             </div>
           </div>
@@ -1229,10 +1266,10 @@ export default function ControlPanel({
       >
         <div className="flex justify-between items-center">
           <div>
-            <span className="text-xs font-semibold text-slate-800 tracking-wider uppercase block">Finder Eye Colors</span>
-            <span className="text-[10px] text-slate-600 block">Independently color the three main corner eyes.</span>
+            <span className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">Finder Eye Colors</span>
+            <span className="text-[10px] text-gray-600 block">Independently color the three main corner eyes.</span>
           </div>
-          {(currentProject.design?.eyeColorTopLeft || currentProject.design?.eyeColorTopRight || currentProject.design?.eyeColorBottomLeft) ? (
+          {(localProject.design?.eyeColorTopLeft || localProject.design?.eyeColorTopRight || localProject.design?.eyeColorBottomLeft) ? (
             <button
               type="button"
               onClick={() => {
@@ -1256,14 +1293,14 @@ export default function ControlPanel({
                 id="eye-color-tl"
                 type="color"
                 className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
-                value={currentProject.design?.eyeColorTopLeft || currentProject.design?.fgColor || '#0f172a'}
+                value={localProject.design?.eyeColorTopLeft || localProject.design?.fgColor || '#0f172a'}
                 onChange={e => {
                   setDesignField('eyeColorTopLeft', e.target.value);
                 }}
               />
             </div>
             <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
-              {currentProject.design?.eyeColorTopLeft ? currentProject.design.eyeColorTopLeft : 'Inherited'}
+              {localProject.design?.eyeColorTopLeft ? localProject.design.eyeColorTopLeft : 'Inherited'}
             </span>
           </div>
 
@@ -1275,14 +1312,14 @@ export default function ControlPanel({
                 id="eye-color-tr"
                 type="color"
                 className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
-                value={currentProject.design?.eyeColorTopRight || currentProject.design?.fgColor || '#0f172a'}
+                value={localProject.design?.eyeColorTopRight || localProject.design?.fgColor || '#0f172a'}
                 onChange={e => {
                   setDesignField('eyeColorTopRight', e.target.value);
                 }}
               />
             </div>
             <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
-              {currentProject.design?.eyeColorTopRight ? currentProject.design.eyeColorTopRight : 'Inherited'}
+              {localProject.design?.eyeColorTopRight ? localProject.design.eyeColorTopRight : 'Inherited'}
             </span>
           </div>
 
@@ -1294,14 +1331,14 @@ export default function ControlPanel({
                 id="eye-color-bl"
                 type="color"
                 className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
-                value={currentProject.design?.eyeColorBottomLeft || currentProject.design?.fgColor || '#0f172a'}
+                value={localProject.design?.eyeColorBottomLeft || localProject.design?.fgColor || '#0f172a'}
                 onChange={e => {
                   setDesignField('eyeColorBottomLeft', e.target.value);
                 }}
               />
             </div>
             <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
-              {currentProject.design?.eyeColorBottomLeft ? currentProject.design.eyeColorBottomLeft : 'Inherited'}
+              {localProject.design?.eyeColorBottomLeft ? localProject.design.eyeColorBottomLeft : 'Inherited'}
             </span>
           </div>
         </div>
@@ -1329,13 +1366,13 @@ export default function ControlPanel({
           <button
             type="button"
             aria-label="Toggle Smart Optimization"
-            aria-checked={currentProject.design?.smartOptimize ? "true" : "false"}
+            aria-checked={localProject.design?.smartOptimize ? "true" : "false"}
             onClick={() => {
-              const isEnabling = !currentProject.design?.smartOptimize;
+              const isEnabling = !localProject.design?.smartOptimize;
               onChange({
-                ...currentProject,
+                ...localProject,
                 design: {
-                  ...(currentProject.design || {
+                  ...(localProject.design || {
                     fgColor: '#0f172a',
                     bgColor: '#ffffff',
                     gradientType: 'none',
@@ -1346,24 +1383,20 @@ export default function ControlPanel({
                   }),
                   smartOptimize: isEnabling,
                   ...(isEnabling ? {
-                    margin: Math.max(20, currentProject.design?.margin ?? 20),
+                    margin: Math.max(20, localProject.design?.margin ?? 20),
                   } : {})
                 }
               });
             }}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
-              currentProject.design?.smartOptimize ? 'bg-indigo-600' : 'bg-gray-200'
-            }`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.design?.smartOptimize ? 'bg-indigo-600' : 'bg-gray-200' }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                currentProject.design?.smartOptimize ? 'translate-x-6' : 'translate-x-1'
-              }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.design?.smartOptimize ? 'translate-x-6' : 'translate-x-1' }`}
             />
           </button>
         </div>
 
-        {currentProject.design?.smartOptimize ? (
+        {localProject.design?.smartOptimize ? (
           <div className="bg-white/60 p-3 rounded-lg border border-indigo-100/50 space-y-2.5 text-slate-700 text-xs animate-in fade-in duration-200">
             <div className="flex items-center gap-1.5 text-[10px] font-bold text-indigo-600 uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
@@ -1376,7 +1409,7 @@ export default function ControlPanel({
                 <div>
                   <strong className="text-slate-800">Error Correction: </strong>
                   <span className="text-slate-600">
-                    Set to <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(currentProject.design?.errorCorrectionLevel || 'H')}</span> based on centerpiece logo scale & URL complexity.
+                    Set to <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.errorCorrectionLevel || 'H')}</span> based on centerpiece logo scale & URL complexity.
                   </span>
                 </div>
               </div>
@@ -1386,7 +1419,7 @@ export default function ControlPanel({
                 <div>
                   <strong className="text-slate-800">Module Spacing: </strong>
                   <span className="text-slate-600">
-                    Optimized to <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(currentProject.design?.modulePadding ?? 0)}% padding</span> to guarantee camera scanning readability.
+                    Optimized to <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.modulePadding ?? 0)}% padding</span> to guarantee camera scanning readability.
                   </span>
                 </div>
               </div>
@@ -1396,7 +1429,7 @@ export default function ControlPanel({
                 <div>
                   <strong className="text-slate-800">Quiet Zone Margin: </strong>
                   <span className="text-slate-600">
-                    Locked at a safe minimum of <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(currentProject.design?.margin ?? 20)}px</span> to prevent edge-crop issues.
+                    Locked at a safe minimum of <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.margin ?? 20)}px</span> to prevent edge-crop issues.
                   </span>
                 </div>
               </div>
@@ -1411,8 +1444,8 @@ export default function ControlPanel({
             {/* Manual QR Module Spacing slider (visible when smartOptimize is false) */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label htmlFor="manual-padding-range" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Module Spacing (Padding)</label>
-                <span className="text-[11px] text-indigo-600 font-mono font-bold">{currentProject.design?.modulePadding ?? 0}%</span>
+                <label htmlFor="manual-padding-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">Module Spacing (Padding)</label>
+                <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.modulePadding ?? 0}%</span>
               </div>
               <input
                 id="manual-padding-range"
@@ -1421,10 +1454,10 @@ export default function ControlPanel({
                 max="40"
                 step="2"
                 className="w-full h-1 bg-gray-250 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                value={currentProject.design?.modulePadding ?? 0}
-                onChange={e => setDesignField('modulePadding', parseInt(e.target.value, 10))}
+                value={localProject.design?.modulePadding ?? 0}
+                onChange={e => setDesignField('modulePadding', parseInt(e.target.value, 10), true)}
               />
-              <span className="text-[9.5px] text-slate-500 block mt-1">
+              <span className="text-[9.5px] text-gray-600 block mt-1">
                 Adjusts the physical space between individual modules to customize dot density.
               </span>
             </div>
@@ -1435,23 +1468,21 @@ export default function ControlPanel({
       {/* Margin / Quiet Zone Slider */}
       <motion.div
         variants={itemVariants}
-        whileHover={!currentProject.design?.smartOptimize ? {
+        whileHover={{
           scale: 1.015,
           y: -2,
           boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
-        } : undefined}
+        }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className={`p-4 rounded-xl border transition-all duration-300 shadow-sm ${
-          currentProject.design?.smartOptimize 
-            ? 'bg-gray-100/40 border-gray-200/30 opacity-60' 
-            : 'bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80'
-        }`}
+        className="p-4 rounded-xl border transition-all duration-300 shadow-sm bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80"
       >
         <div className="flex justify-between items-center mb-1.5">
-          <label htmlFor="quiet-zone-range" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Quiet Zone (Margin)</label>
-          <span className="text-xs text-indigo-600 font-mono font-medium">
-            {currentProject.design?.margin ?? 20}px
-            {currentProject.design?.smartOptimize && " (Auto)"}
+          <div className="flex items-center gap-1.5">
+            <Maximize className="w-3.5 h-3.5 text-indigo-500" />
+            <label htmlFor="quiet-zone-range" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">Quiet Zone (Margin)</label>
+          </div>
+          <span className="text-xs text-indigo-600 font-mono font-bold bg-indigo-50 px-1.5 py-0.5 rounded">
+            {localProject.design?.margin ?? 20}px
           </span>
         </div>
         <input
@@ -1460,49 +1491,77 @@ export default function ControlPanel({
           min="0"
           max="80"
           step="5"
-          disabled={currentProject.design?.smartOptimize}
-          className={`w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer ${
-            currentProject.design?.smartOptimize ? 'accent-gray-300' : 'accent-indigo-600'
-          }`}
-          value={currentProject.design?.margin ?? 20}
-          onChange={e => setDesignField('margin', parseInt(e.target.value, 10))}
+          className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+          value={localProject.design?.margin ?? 20}
+          onChange={e => setDesignField('margin', parseInt(e.target.value, 10), true)}
         />
-        <p className="text-[10px] text-slate-600 mt-1">
-          {currentProject.design?.smartOptimize 
-            ? "Managed automatically by Smart Optimization to secure at least 20px scanner buffer."
-            : "Adjusts the whitespace board surrounding the code to improve scannability."}
+
+        {/* Material Presets Selector */}
+        <div className="mt-3.5">
+          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2 flex items-center gap-1">
+            <Layers className="w-3 h-3 text-slate-400" /> Recommended Margin by Print Material
+          </span>
+          <div className="grid grid-cols-2 gap-1.5">
+            {[
+              { name: 'Paper & Screens', size: 20, desc: 'Digital or smooth paper' },
+              { name: 'Textured Paper', size: 35, desc: 'Kraft, cardboard, textured' },
+              { name: 'Glossy & Metal', size: 30, desc: 'Reflective, metallic prints' },
+              { name: 'Fabric & Apparel', size: 50, desc: 'Folds, stretchable surfaces' }
+            ].map(preset => {
+              const isActive = (localProject.design?.margin ?? 20) === preset.size;
+              return (
+                <button
+                  key={preset.name}
+                  type="button"
+                  id={`quiet-zone-preset-${preset.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+                  onClick={() => setDesignField('margin', preset.size, true)}
+                  className={`p-1.5 rounded-lg border text-left transition-all duration-150 cursor-pointer ${
+                    isActive
+                      ? 'border-indigo-500 bg-indigo-50/40 text-indigo-900 shadow-3xs'
+                      : 'border-slate-200/60 bg-white/50 text-slate-700 hover:bg-white hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold truncate pr-1">{preset.name}</span>
+                    <span className="text-[9px] font-mono font-semibold text-indigo-600 bg-indigo-50 px-1 rounded shrink-0">{preset.size}px</span>
+                  </div>
+                  <span className="text-[8px] text-slate-400 block truncate leading-tight mt-0.5">{preset.desc}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <p className="text-[10px] text-gray-500 mt-3 leading-relaxed">
+          The quiet zone surrounds your code with clean breathing room so scanners can instantly identify pattern edges, especially on textured, glossy, or stretchable physical materials.
         </p>
       </motion.div>
 
       {/* Error Correction Level Slider */}
       <motion.div
         variants={itemVariants}
-        whileHover={!currentProject.design?.smartOptimize ? {
+        whileHover={!localProject.design?.smartOptimize ? {
           scale: 1.015,
           y: -2,
           boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
         } : undefined}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className={`p-4 rounded-xl border transition-all duration-300 shadow-sm ${
-          currentProject.design?.smartOptimize 
-            ? 'bg-gray-100/40 border-gray-200/30 opacity-60' 
-            : 'bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80'
-        }`}
+        className={`p-4 rounded-xl border transition-all duration-300 shadow-sm ${ localProject.design?.smartOptimize ? 'bg-gray-100/40 border-gray-200/30 opacity-60' : 'bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80' }`}
       >
         <div className="flex justify-between items-center mb-2">
-          <label htmlFor="error-correction-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Error Correction Level</label>
+          <label htmlFor="error-correction-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">Error Correction Level</label>
           <span className="text-xs text-indigo-600 font-mono font-bold">
-            {currentProject.design?.errorCorrectionLevel || 'H'}
-            {currentProject.design?.smartOptimize && " (Auto)"}
+            {localProject.design?.errorCorrectionLevel || 'H'}
+            {localProject.design?.smartOptimize && " (Auto)"}
           </span>
         </div>
         
         <div className="space-y-3">
           <select
             id="error-correction-select"
-            disabled={currentProject.design?.smartOptimize}
+            disabled={localProject.design?.smartOptimize}
             className="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-2xs font-semibold transition-all duration-200 disabled:bg-gray-100 disabled:text-slate-450"
-            value={currentProject.design?.errorCorrectionLevel || 'H'}
+            value={localProject.design?.errorCorrectionLevel || 'H'}
             onChange={e => {
               const val = e.target.value as 'L' | 'M' | 'Q' | 'H';
               setDesignField('errorCorrectionLevel', val);
@@ -1514,11 +1573,11 @@ export default function ControlPanel({
             <option value="H">H (30% Recovery) — High density, best for logos & complexity</option>
           </select>
           
-          <p className="text-[10px] text-slate-650 leading-relaxed">
-            {currentProject.design?.smartOptimize 
+          <p className="text-[10px] text-gray-600 leading-relaxed">
+            {localProject.design?.smartOptimize 
               ? "Managed automatically by Smart Optimization to secure optimal recovery budget based on content depth and brand logo."
               : (() => {
-                  const ec = currentProject.design?.errorCorrectionLevel || 'H';
+                  const ec = localProject.design?.errorCorrectionLevel || 'H';
                   if (ec === 'L') return 'Low recovery budget. Simplest rendering, but vulnerable to slight scratches/smudges.';
                   if (ec === 'M') return 'Medium recovery budget. Standard balanced configuration used across normal scanners.';
                   if (ec === 'Q') return 'Quartile recovery budget. Retains scannability even when up to 25% of the print surface is dirty or torn.';
@@ -1541,8 +1600,8 @@ export default function ControlPanel({
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-3"
       >
         <div className="flex justify-between items-center">
-          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-slate-800 tracking-wider uppercase">Emblem Center Logo</label>
-          {currentProject.design?.logoUrl && (
+          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">Emblem Center Logo</label>
+          {localProject.design?.logoUrl && (
             <button
               type="button"
               onClick={clearLogo}
@@ -1560,13 +1619,13 @@ export default function ControlPanel({
             type="text"
             className="w-full text-xs px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-850"
             placeholder="e.g. Google, QR, or text/emoji"
-            value={currentProject.design?.logoUrl || ''}
+            value={localProject.design?.logoUrl || ''}
             onChange={e => {
               setUploadError(null);
-              setDesignField('logoUrl', e.target.value);
+              setDesignField('logoUrl', e.target.value, true);
             }}
           />
-          <p className="text-[10px] text-slate-600 mt-1">Accepts short words, emojis, or external secure image URLs.</p>
+          <p className="text-[10px] text-gray-600 mt-1">Accepts short words, emojis, or external secure image URLs.</p>
         </div>
 
         {/* Drag and Drop Upload Area */}
@@ -1575,11 +1634,7 @@ export default function ControlPanel({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${
-            isDragging
-              ? 'border-indigo-500 bg-indigo-50/40 scale-[1.01]'
-              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/50 bg-white'
-          }`}
+          className={`border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${ isDragging ? 'border-indigo-500 bg-indigo-50/40 scale-[1.01]' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/50 bg-white' }`}
         >
           <input
             type="file"
@@ -1602,32 +1657,32 @@ export default function ControlPanel({
           <p className="text-[10px] text-red-500 font-medium mt-1 bg-red-50/50 p-2 rounded-lg border border-red-100">{uploadError}</p>
         )}
 
-        {currentProject.design?.logoUrl && (
+        {localProject.design?.logoUrl && (
           <div className="mt-3 space-y-3 bg-slate-50/50 p-3 rounded-2xl border border-slate-100">
             {/* Show a small thumbnail preview of the logo */}
             <div className="flex items-center gap-2.5 bg-white p-2 rounded-xl border border-slate-100">
               <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 overflow-hidden shrink-0">
-                {currentProject.design.logoUrl.startsWith('data:image') || currentProject.design.logoUrl.startsWith('http') ? (
+                {localProject.design.logoUrl.startsWith('data:image') || localProject.design.logoUrl.startsWith('http') ? (
                   <img
-                    src={currentProject.design.logoUrl}
+                    src={localProject.design.logoUrl}
                     alt="Logo Preview"
                     className="w-full h-full object-contain"
                     referrerPolicy="no-referrer"
                   />
                 ) : (
-                  <span className="text-xs font-bold text-indigo-600">{currentProject.design.logoUrl.slice(0, 3).toUpperCase()}</span>
+                  <span className="text-xs font-bold text-indigo-600">{localProject.design.logoUrl.slice(0, 3).toUpperCase()}</span>
                 )}
               </div>
               <div className="overflow-hidden">
                 <span className="text-xs font-medium text-gray-800 block truncate">
-                  {currentProject.design.logoUrl.startsWith('data:image') 
+                  {localProject.design.logoUrl.startsWith('data:image') 
                     ? 'Uploaded Base64 Emblem Image' 
-                    : currentProject.design.logoUrl.startsWith('http') 
+                    : localProject.design.logoUrl.startsWith('http') 
                       ? 'External Image URL' 
-                      : `Text Emblem: "${currentProject.design.logoUrl}"`}
+                      : `Text Emblem: "${localProject.design.logoUrl}"`}
                 </span>
                 <span className="text-[9px] font-mono text-gray-400 block truncate max-w-[180px]">
-                  {currentProject.design.logoUrl}
+                  {localProject.design.logoUrl}
                 </span>
               </div>
             </div>
@@ -1635,8 +1690,8 @@ export default function ControlPanel({
             {/* Logo Rotation Slider */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label htmlFor="logo-rotation-range" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Logo Rotation</label>
-                <span className="text-[11px] text-indigo-600 font-mono font-bold">{currentProject.design?.logoRotation ?? 0}°</span>
+                <label htmlFor="logo-rotation-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">Logo Rotation</label>
+                <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.logoRotation ?? 0}°</span>
               </div>
               <input
                 id="logo-rotation-range"
@@ -1645,16 +1700,16 @@ export default function ControlPanel({
                 max="360"
                 step="5"
                 className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                value={currentProject.design?.logoRotation ?? 0}
-                onChange={e => setDesignField('logoRotation', parseInt(e.target.value, 10))}
+                value={localProject.design?.logoRotation ?? 0}
+                onChange={e => setDesignField('logoRotation', parseInt(e.target.value, 10), true)}
               />
             </div>
 
             {/* Logo Scale Slider */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label htmlFor="logo-scale-range" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Logo Size / Scale</label>
-                <span className="text-[11px] text-indigo-600 font-mono font-bold">{Math.round((currentProject.design?.logoScale ?? 0.18) * 100)}%</span>
+                <label htmlFor="logo-scale-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">Logo Size / Scale</label>
+                <span className="text-[11px] text-indigo-600 font-mono font-bold">{Math.round((localProject.design?.logoScale ?? 0.18) * 100)}%</span>
               </div>
               <input
                 id="logo-scale-range"
@@ -1663,8 +1718,8 @@ export default function ControlPanel({
                 max="0.30"
                 step="0.01"
                 className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                value={currentProject.design?.logoScale ?? 0.18}
-                onChange={e => setDesignField('logoScale', parseFloat(e.target.value))}
+                value={localProject.design?.logoScale ?? 0.18}
+                onChange={e => setDesignField('logoScale', parseFloat(e.target.value), true)}
               />
             </div>
 
@@ -1672,31 +1727,27 @@ export default function ControlPanel({
             <div className="pt-3 border-t border-gray-200/50">
               <div className="flex items-center justify-between">
                 <div>
-                  <span id="logo-autocenter-label" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">Auto-Center Position</span>
-                  <p className="text-[9px] text-slate-500 leading-normal mt-0.5 max-w-[190px]">
+                  <span id="logo-autocenter-label" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">Auto-Center Position</span>
+                  <p className="text-[9px] text-gray-600 leading-normal mt-0.5 max-w-[190px]">
                     Maintains the correct offset relative to the finder eye frames automatically.
                   </p>
                 </div>
                 <button
                   type="button"
                   aria-labelledby="logo-autocenter-label"
-                  aria-checked={currentProject.design?.logoAutoCenter !== false ? "true" : "false"}
-                  onClick={() => setDesignField('logoAutoCenter', currentProject.design?.logoAutoCenter === false)}
-                  className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
-                    currentProject.design?.logoAutoCenter !== false ? 'bg-indigo-600' : 'bg-gray-300'
-                  }`}
+                  aria-checked={localProject.design?.logoAutoCenter !== false ? "true" : "false"}
+                  onClick={() => setDesignField('logoAutoCenter', localProject.design?.logoAutoCenter === false)}
+                  className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.design?.logoAutoCenter !== false ? 'bg-indigo-600' : 'bg-gray-300' }`}
                 >
                   <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-                      currentProject.design?.logoAutoCenter !== false ? 'translate-x-4.5' : 'translate-x-1'
-                    }`}
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${ localProject.design?.logoAutoCenter !== false ? 'translate-x-4.5' : 'translate-x-1' }`}
                   />
                 </button>
               </div>
 
               {/* Real-time Visual Alignment Preview Box */}
               <div className="mt-4 p-3 bg-slate-50 border border-slate-150 rounded-xl space-y-2.5">
-                <div className="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider">
+                <div className="flex justify-between items-center text-[10px] font-bold text-gray-900 uppercase tracking-wider">
                   <span>Alignment Simulator Preview</span>
                   <span className="text-[9px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded cursor-default select-none">Live viewport</span>
                 </div>
@@ -1732,28 +1783,28 @@ export default function ControlPanel({
                     </div>
 
                     {/* Logo Representative Marker */}
-                    {currentProject.design?.logoUrl && (
+                    {localProject.design?.logoUrl && (
                       <motion.div
                         className="absolute flex items-center justify-center shadow-md bg-white border border-slate-100 z-10 p-0.5"
                         animate={{
-                          x: currentProject.design?.logoAutoCenter !== false 
+                          x: localProject.design?.logoAutoCenter !== false 
                             ? calculateAutoCenterOffsets().offsetX * (112 / 450)
-                            : (currentProject.design?.logoOffsetX ?? 0) * (112 / 450),
-                          y: currentProject.design?.logoAutoCenter !== false 
+                            : (localProject.design?.logoOffsetX ?? 0) * (112 / 450),
+                          y: localProject.design?.logoAutoCenter !== false 
                             ? calculateAutoCenterOffsets().offsetY * (112 / 450)
-                            : (currentProject.design?.logoOffsetY ?? 0) * (112 / 450),
-                          rotate: currentProject.design?.logoRotation ?? 0,
-                          scale: (currentProject.design?.logoScale ?? 0.18) / 0.18
+                            : (localProject.design?.logoOffsetY ?? 0) * (112 / 450),
+                          rotate: localProject.design?.logoRotation ?? 0,
+                          scale: (localProject.design?.logoScale ?? 0.18) / 0.18
                         }}
                         transition={{ type: 'spring', stiffness: 350, damping: 20 }}
                         style={{
-                          width: `${112 * (currentProject.design?.logoScale ?? 0.18)}px`,
-                          height: `${112 * (currentProject.design?.logoScale ?? 0.18)}px`,
-                          borderRadius: `${Math.max(2, 112 * (currentProject.design?.logoScale ?? 0.18) * 0.22)}px`
+                          width: `${112 * (localProject.design?.logoScale ?? 0.18)}px`,
+                          height: `${112 * (localProject.design?.logoScale ?? 0.18)}px`,
+                          borderRadius: `${Math.max(2, 112 * (localProject.design?.logoScale ?? 0.18) * 0.22)}px`
                         }}
                       >
                         {(() => {
-                          const logoUrl = currentProject.design?.logoUrl || '';
+                          const logoUrl = localProject.design?.logoUrl || '';
                           const isImg = logoUrl.startsWith('http') || logoUrl.startsWith('data:image');
                           if (isImg) {
                             return (
@@ -1780,10 +1831,10 @@ export default function ControlPanel({
                   {/* Alignment description or status helper */}
                   <div className="flex-1 space-y-1">
                     <span className="text-[10px] font-bold text-slate-800 block">
-                      {currentProject.design?.logoAutoCenter !== false ? '✨ Optical Auto-Balanced' : '🔧 Manually Adjusted'}
+                      {localProject.design?.logoAutoCenter !== false ? '✨ Optical Auto-Balanced' : '🔧 Manually Adjusted'}
                     </span>
                     <p className="text-[8.5px] text-slate-500 leading-normal">
-                      {currentProject.design?.logoAutoCenter !== false 
+                      {localProject.design?.logoAutoCenter !== false 
                         ? 'Logo shifted slightly top-left to achieve visual symmetry with asymmetric finder pattern count.' 
                         : 'Custom offset coordinates applied over the physical grid coordinate origin.'}
                     </p>
@@ -1796,7 +1847,7 @@ export default function ControlPanel({
               </div>
 
                            {/* Conditionally show Manual Offset controls when Auto-Center is disabled or show dynamic calculation when active */}
-              {currentProject.design?.logoAutoCenter !== false ? (
+              {localProject.design?.logoAutoCenter !== false ? (
                 <div className="mt-3 p-3 bg-indigo-50/50 border border-indigo-100/60 rounded-xl space-y-2 text-slate-700 animate-in fade-in duration-200">
                   <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block">Automatic Weight Balancing</span>
                   <div className="grid grid-cols-2 gap-2 text-[10px]">
@@ -1824,9 +1875,9 @@ export default function ControlPanel({
                   {/* Manual X Offset slider */}
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label htmlFor="logo-offset-x" className="text-[9px] font-semibold text-slate-600 uppercase tracking-wider">Offset X (Horizontal)</label>
+                      <label htmlFor="logo-offset-x" className="text-[9px] font-semibold text-gray-950 uppercase tracking-wider">Offset X (Horizontal)</label>
                       <span className="text-[10px] text-slate-700 font-mono font-bold">
-                        {(currentProject.design?.logoOffsetX ?? 0) > 0 ? `+${currentProject.design?.logoOffsetX ?? 0}` : currentProject.design?.logoOffsetX ?? 0} px
+                        {(localProject.design?.logoOffsetX ?? 0) > 0 ? `+${localProject.design?.logoOffsetX ?? 0}` : localProject.design?.logoOffsetX ?? 0} px
                       </span>
                     </div>
                     <input
@@ -1836,17 +1887,17 @@ export default function ControlPanel({
                       max="100"
                       step="1"
                       className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
-                      value={currentProject.design?.logoOffsetX ?? 0}
-                      onChange={e => setDesignField('logoOffsetX', parseInt(e.target.value, 10))}
+                      value={localProject.design?.logoOffsetX ?? 0}
+                      onChange={e => setDesignField('logoOffsetX', parseInt(e.target.value, 10), true)}
                     />
                   </div>
 
                   {/* Manual Y Offset slider */}
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label htmlFor="logo-offset-y" className="text-[9px] font-semibold text-slate-600 uppercase tracking-wider">Offset Y (Vertical)</label>
+                      <label htmlFor="logo-offset-y" className="text-[9px] font-semibold text-gray-950 uppercase tracking-wider">Offset Y (Vertical)</label>
                       <span className="text-[10px] text-slate-700 font-mono font-bold">
-                        {(currentProject.design?.logoOffsetY ?? 0) > 0 ? `+${currentProject.design?.logoOffsetY ?? 0}` : currentProject.design?.logoOffsetY ?? 0} px
+                        {(localProject.design?.logoOffsetY ?? 0) > 0 ? `+${localProject.design?.logoOffsetY ?? 0}` : localProject.design?.logoOffsetY ?? 0} px
                       </span>
                     </div>
                     <input
@@ -1856,8 +1907,8 @@ export default function ControlPanel({
                       max="100"
                       step="1"
                       className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
-                      value={currentProject.design?.logoOffsetY ?? 0}
-                      onChange={e => setDesignField('logoOffsetY', parseInt(e.target.value, 10))}
+                      value={localProject.design?.logoOffsetY ?? 0}
+                      onChange={e => setDesignField('logoOffsetY', parseInt(e.target.value, 10), true)}
                     />
                   </div>
 
@@ -1892,16 +1943,12 @@ export default function ControlPanel({
         <button
           type="button"
           aria-label="Toggle pattern color shift animation"
-          aria-checked={currentProject.design?.colorShift ? "true" : "false"}
-          onClick={() => setDesignField('colorShift', !currentProject.design?.colorShift)}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
-            currentProject.design?.colorShift ? 'bg-emerald-600' : 'bg-gray-200'
-          }`}
+          aria-checked={localProject.design?.colorShift ? "true" : "false"}
+          onClick={() => setDesignField('colorShift', !localProject.design?.colorShift)}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.design?.colorShift ? 'bg-emerald-600' : 'bg-gray-200 ' }`}
         >
           <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-              currentProject.design?.colorShift ? 'translate-x-6' : 'translate-x-1'
-            }`}
+            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.design?.colorShift ? 'translate-x-6' : 'translate-x-1' }`}
           />
         </button>
       </motion.div>
@@ -1925,16 +1972,12 @@ export default function ControlPanel({
         <button
           type="button"
           aria-label="Toggle short URL and analytics tracking"
-          aria-checked={currentProject.trackingEnabled ? "true" : "false"}
-          onClick={() => onChange({ ...currentProject, trackingEnabled: !currentProject.trackingEnabled })}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-            currentProject.trackingEnabled ? 'bg-indigo-600' : 'bg-gray-200'
-          }`}
+          aria-checked={localProject.trackingEnabled ? "true" : "false"}
+          onClick={() => onChange({ ...localProject, trackingEnabled: !localProject.trackingEnabled })}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.trackingEnabled ? 'bg-indigo-600' : 'bg-gray-200 ' }`}
         >
           <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-              currentProject.trackingEnabled ? 'translate-x-6' : 'translate-x-1'
-            }`}
+            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.trackingEnabled ? 'translate-x-6' : 'translate-x-1' }`}
           />
         </button>
       </motion.div>
@@ -1947,16 +1990,16 @@ export default function ControlPanel({
       >
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-slate-600" />
-          <span className="text-xs font-semibold text-slate-950">Optional Link Expiration</span>
+          <span className="text-xs font-semibold text-gray-900">Optional Link Expiration</span>
         </div>
 
-        <p className="text-[10px] text-slate-600 leading-normal">
+        <p className="text-[10px] text-gray-600 leading-normal">
           Deactivate this QR code on a specific date. Once expired, visitors will see a custom message or be sent to an alternate URL.
         </p>
 
         {/* Expiry Enabled / Date Customizer */}
         <div className="space-y-1.5">
-          <label htmlFor="expiry-date-input" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">
+          <label htmlFor="expiry-date-input" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
             Expiration Date & Time
           </label>
           <div className="flex gap-2">
@@ -1964,29 +2007,29 @@ export default function ControlPanel({
               id="expiry-date-input"
               type="datetime-local"
               className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-              value={currentProject.expiryDate ? currentProject.expiryDate.substring(0, 16) : ''}
+              value={localProject.expiryDate ? localProject.expiryDate.substring(0, 16) : ''}
               onChange={(e) => {
                 const dateVal = e.target.value;
                 if (dateVal) {
                   // Ensure tracking is enabled so redirect works
                   onChange({
-                    ...currentProject,
+                    ...localProject,
                     expiryDate: new Date(dateVal).toISOString(),
                     trackingEnabled: true
                   });
                 } else {
                   onChange({
-                    ...currentProject,
+                    ...localProject,
                     expiryDate: undefined
                   });
                 }
               }}
             />
-            {currentProject.expiryDate && (
+            {localProject.expiryDate && (
               <button
                 type="button"
                 onClick={() => onChange({
-                  ...currentProject,
+                  ...localProject,
                   expiryDate: undefined
                 })}
                 className="px-2.5 py-2 text-xs font-semibold text-red-600 bg-red-100/35 hover:bg-red-100 rounded-xl transition cursor-pointer"
@@ -1997,10 +2040,10 @@ export default function ControlPanel({
           </div>
         </div>
 
-        {currentProject.expiryDate && (
+        {localProject.expiryDate && (
           <div className="space-y-4 pt-2 border-t border-slate-100">
             {/* Auto-Enable Tracking Warning */}
-            {!currentProject.trackingEnabled && (
+            {!localProject.trackingEnabled && (
               <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 text-[10px] text-amber-800 flex items-start gap-2">
                 <span className="font-bold">⚠️ Warning:</span>
                 <span>
@@ -2011,29 +2054,21 @@ export default function ControlPanel({
 
             {/* Redirect Action Selector */}
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
                 Post-Expiration Action
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
-                  onClick={() => onChange({ ...currentProject, expiryRedirectType: 'message' })}
-                  className={`py-2 px-3 text-center text-[10px] sm:text-xs font-medium rounded-xl border transition-all cursor-pointer ${
-                    (currentProject.expiryRedirectType || 'message') === 'message'
-                      ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold'
-                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
+                  onClick={() => onChange({ ...localProject, expiryRedirectType: 'message' })}
+                  className={`py-2 px-3 text-center text-[10px] sm:text-xs font-medium rounded-xl border transition-all cursor-pointer ${ (localProject.expiryRedirectType || 'message') === 'message' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50' }`}
                 >
                   custom message
                 </button>
                 <button
                   type="button"
-                  onClick={() => onChange({ ...currentProject, expiryRedirectType: 'url' })}
-                  className={`py-2 px-3 text-center text-[10px] sm:text-xs font-medium rounded-xl border transition-all cursor-pointer ${
-                    currentProject.expiryRedirectType === 'url'
-                      ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold'
-                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
+                  onClick={() => onChange({ ...localProject, expiryRedirectType: 'url' })}
+                  className={`py-2 px-3 text-center text-[10px] sm:text-xs font-medium rounded-xl border transition-all cursor-pointer ${ localProject.expiryRedirectType === 'url' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50' }`}
                 >
                   different url
                 </button>
@@ -2041,9 +2076,9 @@ export default function ControlPanel({
             </div>
 
             {/* Dynamic input depending on choice */}
-            {(currentProject.expiryRedirectType || 'message') === 'message' ? (
+            {(localProject.expiryRedirectType || 'message') === 'message' ? (
               <div className="space-y-1.5">
-                <label htmlFor="expiry-message-textarea" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">
+                <label htmlFor="expiry-message-textarea" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
                   Custom Message text
                 </label>
                 <textarea
@@ -2051,13 +2086,13 @@ export default function ControlPanel({
                   rows={2}
                   className="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   placeholder="e.g., This QR code has reached its designated expiration date and is no longer active."
-                  value={currentProject.expiryMessage || ''}
-                  onChange={(e) => onChange({ ...currentProject, expiryMessage: e.target.value })}
+                  value={localProject.expiryMessage || ''}
+                  onChange={(e) => onChange({ ...localProject, expiryMessage: e.target.value }, true)}
                 />
               </div>
             ) : (
               <div className="space-y-1.5">
-                <label htmlFor="expiry-redirect-url-input" className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">
+                <label htmlFor="expiry-redirect-url-input" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
                   Fallback Destination URL
                 </label>
                 <input
@@ -2065,8 +2100,8 @@ export default function ControlPanel({
                   type="url"
                   className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   placeholder="e.g., https://yoursite.com/new-dest"
-                  value={currentProject.expiryRedirectUrl || ''}
-                  onChange={(e) => onChange({ ...currentProject, expiryRedirectUrl: e.target.value })}
+                  value={localProject.expiryRedirectUrl || ''}
+                  onChange={(e) => onChange({ ...localProject, expiryRedirectUrl: e.target.value }, true)}
                 />
               </div>
             )}
@@ -2095,8 +2130,8 @@ export default function ControlPanel({
             type="text"
             className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Type or select folders (e.g. Marketing)"
-            value={currentProject.category || ''}
-            onChange={(e) => onChange({ ...currentProject, category: e.target.value })}
+            value={localProject.category || ''}
+            onChange={(e) => onChange({ ...localProject, category: e.target.value }, true)}
             maxLength={40}
           />
 
@@ -2111,20 +2146,16 @@ export default function ControlPanel({
             return suggestions.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {suggestions.map((sug) => {
-                  const isSelected = currentProject.category?.trim().toLowerCase() === sug.trim().toLowerCase();
+                  const isSelected = localProject.category?.trim().toLowerCase() === sug.trim().toLowerCase();
                   return (
                     <button
                       key={sug}
                       type="button"
                       onClick={() => onChange({ 
-                        ...currentProject, 
+                        ...localProject, 
                         category: isSelected ? '' : sug 
                       })}
-                      className={`text-[9px] font-medium px-2.5 py-1 rounded-full transition cursor-pointer select-none ${
-                        isSelected
-                          ? 'bg-indigo-600 text-white font-semibold'
-                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
-                      }`}
+                      className={`text-[9px] font-medium px-2.5 py-1 rounded-full transition cursor-pointer select-none ${ isSelected ? 'bg-indigo-600 text-white font-semibold' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }`}
                     >
                       {sug}
                     </button>
@@ -2140,7 +2171,7 @@ export default function ControlPanel({
       <motion.div id="tour-save-button" variants={itemVariants}>
         <button
           type="button"
-          disabled={isSaving || !currentProject.name || isUrlInvalid}
+          disabled={isSaving || !localProject.name || isUrlInvalid}
           onClick={onSave}
           className="w-full py-3 bg-indigo-600 text-white rounded-xl font-medium text-sm shadow-md shadow-indigo-100 hover:bg-indigo-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
         >
@@ -2149,7 +2180,8 @@ export default function ControlPanel({
           ) : (
             <>
               <Check className="w-4 h-4" />
-              Save Design to Cloud
+              <span>Save Design to Cloud</span>
+              <kbd className="ml-1.5 px-1.5 py-0.5 text-[9px] bg-indigo-500/80 text-indigo-50 rounded font-mono font-bold select-none tracking-normal uppercase">Ctrl+S</kbd>
             </>
           )}
         </button>

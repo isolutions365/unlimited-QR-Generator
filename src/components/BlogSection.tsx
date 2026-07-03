@@ -137,7 +137,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
 
           {/* Title and Meta Description Area */}
           <div className="space-y-4">
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
               {activeArticle.title}
             </h1>
             
@@ -155,9 +155,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
           {/* Intro paragraph with clean display styling */}
           <div id="article-intro-text" className="p-5 bg-indigo-50/40 rounded-2xl border border-indigo-100/50 text-slate-700 text-xs sm:text-sm font-semibold leading-relaxed font-sans">
             "{activeArticle.intro}"
-          </div>
-
-          {/* Process raw text rendering or structured HTML headers */}
+          </div>            {/* Process raw text rendering or structured HTML headers */}
           <div id="article-main-body" className="prose max-w-none text-slate-700 text-xs sm:text-sm leading-relaxed space-y-6">
             {activeArticle.contentMarkdown.split('\n\n').map((para, idx) => {
               if (para.startsWith('## ')) {
@@ -200,7 +198,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
 
           {/* Dynamic Article FAQ Accordion Area */}
           {activeArticle.relatedFAQs && activeArticle.relatedFAQs.length > 0 && (
-            <div id="article-faq-container" className="pt-8 border-t border-slate-105 space-y-4">
+            <div id="article-faq-container" className="pt-8 border-t border-slate-100 space-y-4">
               <h3 className="text-sm font-extrabold text-slate-950 uppercase tracking-widest font-mono">
                 {locale === 'es' ? 'Preguntas Claves del Artículo' : 'Article Core FAQs'}
               </h3>
@@ -217,7 +215,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
                           <MessageSquare className="w-3.5 h-3.5 text-indigo-500" />
                           {faq.question}
                         </span>
-                        <ChevronRight className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isExpanded ? 'rotate-90 text-indigo-600' : ''}`} />
+                        <ChevronRight className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isExpanded ? 'rotate-90 text-indigo-600 ' : ''}`} />
                       </button>
                       {isExpanded && (
                         <div className="px-4 pb-4 text-xs text-slate-500 leading-relaxed font-sans">
@@ -283,14 +281,10 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
               <Filter className="w-3.5 h-3.5" />
               <span>{locale === 'es' ? 'Filtrar artículos por tema' : 'Filter articles by topic'}</span>
             </div>
-            <div className="flex flex-wrap gap-1.5 pb-2 overflow-x-auto border-b border-slate-105 scrollbar-none">
+            <div className="flex flex-wrap gap-1.5 pb-2 overflow-x-auto border-b border-slate-100 scrollbar-none">
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${
-                  selectedCategory === 'all'
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200'
-                }`}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${ selectedCategory === 'all' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
               >
                 {locale === 'es' ? 'Todas las Categorías' : 'All Categories'}
               </button>
@@ -298,11 +292,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${
-                    selectedCategory === cat
-                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100'
-                      : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200'
-                  }`}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${ selectedCategory === cat ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
                 >
                   {locale === 'es' ? (blogCategoryLabelsEs[cat] || cat) : cat}
                 </button>
@@ -323,24 +313,24 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
                   {/* Category Gradient strip */}
                   <div className={`h-2.5 w-full bg-gradient-to-r ${getCategoryGradient(art.category)}`} />
                   <div className="p-6 space-y-3">
-                    <div className="flex items-center justify-between text-[10px] font-mono font-bold text-slate-400">
+                    <div className="flex items-center justify-between text-[10px] font-mono font-bold text-slate-500">
                       <span className="text-indigo-600">
                         {locale === 'es' ? (blogCategoryLabelsEs[art.category] || art.category) : art.category}
                       </span>
                       <span>{art.readingTime}</span>
                     </div>
 
-                    <h2 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-650 transition-colors leading-snug">
+                    <h2 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors leading-snug">
                       {art.title}
                     </h2>
 
-                    <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 font-sans">
+                    <p className="text-xs text-slate-600 leading-relaxed line-clamp-3 font-sans">
                       {art.intro}
                     </p>
                   </div>
                 </div>
 
-                <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-slate-50 text-[10px] font-mono font-bold text-slate-400">
+                <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-slate-100 text-[10px] font-mono font-bold text-slate-500">
                   <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {art.date}</span>
                   <span className="text-indigo-600 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                     {locale === 'es' ? 'Leer artículo' : 'Read article'} <ArrowRight className="w-3 h-3" />

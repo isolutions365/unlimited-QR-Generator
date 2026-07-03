@@ -27,6 +27,8 @@ export interface QRProject {
     frameText?: string;
     frameColor?: string;
     frameTextColor?: string;
+    frameFontSize?: number;
+    frameTextPosition?: 'bottom' | 'top';
     smartOptimize?: boolean; // automatically adjust padding & error correction to maintain readability
     modulePadding?: number; // QR module spacing/padding percentage (0 to 40)
   };

@@ -80,7 +80,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
         <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 bg-opacity-70 border border-indigo-100 rounded-full font-extrabold uppercase tracking-widest inline-block">
           {locale === 'es' ? 'Base de Conocimiento Universal' : 'Universal Knowledge Base'}
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-none">
           {locale === 'es' ? 'Preguntas Frecuentes' : 'Frequently Asked Questions'}
         </h1>
         <p className="text-sm text-slate-500 max-w-xl leading-relaxed">
@@ -123,11 +123,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
               setSelectedCategory(cat.id);
               setExpandedId(null);
             }}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${
-              selectedCategory === cat.id
-                ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100'
-                : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200'
-            }`}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${ selectedCategory === cat.id ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
           >
             {faqCategoryLabels[locale][cat.id] || cat.label}
           </button>
@@ -143,11 +139,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
               <div
                 key={faq.id}
                 id={`faq-item-${faq.id}`}
-                className={`bg-white rounded-2xl border transition-all duration-300 ${
-                  isExpanded
-                    ? 'border-indigo-500/40 shadow-lg shadow-indigo-500/5 ring-1 ring-indigo-500/10'
-                    : 'border-slate-200/80 hover:border-slate-350 hover:shadow-xs'
-                }`}
+                className={`bg-white rounded-2xl border transition-all duration-300 ${ isExpanded ? 'border-indigo-500/40 shadow-lg ring-1 ring-indigo-500/10' : 'border-slate-200/80 hover:border-slate-350 hover:shadow-xs' }`}
               >
                 <button
                   onClick={() => toggleExpand(faq.id)}
@@ -172,7 +164,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
 
                 {isExpanded && (
                   <div className="px-5 pb-5 pt-1 border-t border-slate-50 relative animate-fade-in">
-                    <p className="text-xs text-slate-650 leading-relaxed font-sans max-w-3xl">
+                    <p className="text-xs text-slate-600 leading-relaxed font-sans max-w-3xl">
                       {faq.answer}
                     </p>
                     <div className="mt-4 flex items-center justify-between text-[10px] font-mono font-bold text-slate-400 pt-3 border-t border-slate-100">
@@ -222,7 +214,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
               setSearchQuery('');
               setSelectedCategory('all');
             }}
-            className="px-4 py-2 bg-indigo-600 hover:bg-slate-950 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-indigo-100"
+            className="px-4 py-2 bg-indigo-600 hover:bg-slate-950 text-white text-xs font-bold rounded-xl transition-all shadow-md"
           >
             {locale === 'es' ? 'Restablecer Filtros' : 'Reset All Filters'}
           </button>

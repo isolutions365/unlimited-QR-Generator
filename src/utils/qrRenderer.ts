@@ -23,6 +23,8 @@ interface DrawOptions {
   frameText?: string;
   frameColor?: string;
   frameTextColor?: string;
+  frameFontSize?: number;
+  frameTextPosition?: 'bottom' | 'top';
   smartOptimize?: boolean;
   modulePadding?: number;
 }
@@ -52,10 +54,12 @@ export async function renderStyledQR(
   let margin_x = margin;
   let margin_y = margin;
 
+  const isTop = options.frameTextPosition === 'top';
+
   if (hasFrame) {
     qrSize = 260;
     margin_x = 35 + (380 - qrSize) / 2;
-    margin_y = 35 + (320 - qrSize) / 2;
+    margin_y = (isTop ? 95 : 35) + (320 - qrSize) / 2;
   }
 
   const center_x = margin_x + qrSize / 2;
@@ -85,15 +89,18 @@ export async function renderStyledQR(
 
     // 2. Draw Inner white/bgColor Card (the QR Code canvas surface)
     ctx.fillStyle = options.bgColor;
-    roundRect(ctx, 35, 35, 380, 320, 16);
+    const innerCardY = isTop ? 95 : 35;
+    roundRect(ctx, 35, innerCardY, 380, 320, 16);
     ctx.fill();
 
     // 3. Render precise centered label text inside bottom banner
     ctx.fillStyle = frameTextColor;
-    ctx.font = 'bold 20px system-ui, -apple-system, sans-serif';
+    const fontSize = options.frameFontSize || 20;
+    ctx.font = `bold ${fontSize}px system-ui, -apple-system, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(label, 225, 388);
+    const textY = isTop ? 62 : 388;
+    ctx.fillText(label, 225, textY);
   }
 
   // Generate QR Matrix using standard qrcode package API
@@ -368,10 +375,12 @@ export function generateStyledSVG(
   let margin_x = margin;
   let margin_y = margin;
 
+  const isTop = options.frameTextPosition === 'top';
+
   if (hasFrame) {
     qrSize = 260;
     margin_x = 35 + (380 - qrSize) / 2;
-    margin_y = 35 + (320 - qrSize) / 2;
+    margin_y = (isTop ? 95 : 35) + (320 - qrSize) / 2;
   }
 
   const center_x = margin_x + qrSize / 2;
@@ -411,13 +420,17 @@ export function generateStyledSVG(
     }
     label = label.toUpperCase();
 
+    const innerCardY = isTop ? 95 : 35;
+    const textY = isTop ? 62 : 388;
+    const fontSize = options.frameFontSize || 20;
+
     bgElements = `
   <!-- Outer Frame Container -->
   <rect x="20" y="20" width="410" height="410" rx="24" ry="24" fill="${frameColor}" />
   <!-- Inner White/bgColor Card -->
-  <rect x="35" y="35" width="380" height="320" rx="16" ry="16" fill="${options.bgColor}" />
+  <rect x="35" y="${innerCardY}" width="380" height="320" rx="16" ry="16" fill="${options.bgColor}" />
   <!-- Bottom Banner Label -->
-  <text x="225" y="388" font-family="system-ui, -apple-system, sans-serif" font-weight="bold" font-size="20" fill="${frameTextColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
+  <text x="225" y="${textY}" font-family="system-ui, -apple-system, sans-serif" font-weight="bold" font-size="${fontSize}" fill="${frameTextColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
     `;
   }
 

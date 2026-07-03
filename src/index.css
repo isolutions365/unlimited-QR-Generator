@@ -103,6 +103,27 @@ textarea::placeholder {
   animation: qr-redraw 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
+@keyframes qr-fade-in {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.965);
+    filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0));
+  }
+  30% {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0));
+  }
+}
+
+.animate-qr-fade-in {
+  animation: qr-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @keyframes sweep-shine {
   0% {
     left: -120%;
@@ -126,5 +147,148 @@ textarea::placeholder {
   transform: skewX(-25deg);
   animation: sweep-shine 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Ensure smooth background transition when toggling modes */
+body, html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom dark variant configuration for Tailwind CSS v4 class-based matching */
+@variant dark (&:where(.dark, .dark *));
+
+/* Global high-fidelity Dark Mode styling overrides */
+.dark {
+  /* Set document base colors */
+  background-color: #0b111e !important;
+  color: #f1f5f9 !important;
+}
+
+.dark body {
+  background-color: #0b111e !important;
+  color: #f1f5f9 !important;
+}
+
+/* Override cards, forms, headers, and backgrounds in Dark Mode */
+.dark .bg-white,
+.dark .bg-slate-50\/80,
+.dark .bg-slate-50\/40,
+.dark .bg-slate-50\/50,
+.dark .bg-slate-50\/30,
+.dark .bg-gray-50\/50 {
+  background-color: #162235 !important;
+  border-color: rgba(71, 85, 105, 0.35) !important;
+  color: #f1f5f9 !important;
+}
+
+.dark header {
+  background-color: rgba(11, 17, 30, 0.85) !important;
+  border-color: rgba(71, 85, 105, 0.4) !important;
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* General border color mapping */
+.dark .border,
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-slate-200\/40,
+.dark .border-slate-200\/60,
+.dark .border-slate-200\/80,
+.dark .border-slate-200\/85,
+.dark .border-slate-200\/95 {
+  border-color: rgba(71, 85, 105, 0.35) !important;
+}
+
+/* Typography contrast mapping for dark mode */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6, .dark .font-bold {
+  color: #ffffff !important;
+}
+
+.dark p, .dark span:not(.text-indigo-600):not(.text-emerald-500):not(.text-indigo-700) {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-500,
+.dark .text-slate-600,
+.dark .text-slate-750,
+.dark .text-slate-700,
+.dark .text-slate-800,
+.dark .text-slate-850,
+.dark .text-gray-500,
+.dark .text-gray-600,
+.dark .text-gray-700,
+.dark .text-gray-800,
+.dark .text-slate-950,
+.dark .text-gray-950,
+.dark .text-indigo-950 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-slate-900,
+.dark .text-gray-900 {
+  color: #f8fafc !important;
+}
+
+/* Interactive elements */
+.dark input, 
+.dark textarea, 
+.dark select {
+  background-color: #1e293b !important;
+  border-color: rgba(71, 85, 105, 0.5) !important;
+  color: #f8fafc !important;
+}
+
+.dark input::placeholder, 
+.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Selection and dropdown boxes */
+.dark .bg-slate-100,
+.dark .bg-slate-200\/50,
+.dark .bg-gray-100,
+.dark .bg-slate-100\/80,
+.dark .bg-slate-150\/60 {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Menu Dropdowns */
+.dark .bg-white\/95,
+.dark .bg-white\/90 {
+  background-color: rgba(22, 34, 53, 0.95) !important;
+  border-color: rgba(71, 85, 105, 0.6) !important;
+}
+
+/* Links & Nav icons */
+.dark nav a, .dark header button {
+  color: #cbd5e1 !important;
+}
+
+.dark nav a:hover, .dark header button:hover {
+  color: #818cf8 !important;
+}
+
+.dark .text-indigo-600,
+.dark .text-indigo-700 {
+  color: #818cf8 !important;
+}
+
+.dark .bg-indigo-50 {
+  background-color: #1e1b4b !important;
+  color: #c7d2fe !important;
+}
+
+.dark .bg-indigo-50\/50,
+.dark .bg-indigo-50\/60 {
+  background-color: rgba(30, 27, 75, 0.4) !important;
+}
+
+.dark .border-indigo-100,
+.dark .border-indigo-200 {
+  border-color: rgba(129, 140, 248, 0.35) !important;
+}
+
 
 

@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG } from '../utils/qrRenderer';
-import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle } from 'lucide-react';
+import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle, Share2, Twitter, Linkedin, Facebook, ChevronDown, FileText, Scale, Sliders, Contrast, Eye, Layers, Maximize } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import qrcode from 'qrcode';
+import { MemoizedQRCanvas } from './MemoizedQRCanvas';
 
 interface PreviewPanelProps {
   currentProject: Partial<QRProject>;
@@ -17,7 +18,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [isCopied, setIsCopied] = useState(false);
   const [simulatedScanResult, setSimulatedScanResult] = useState<string | null>(null);
   const [isScanningSim, setIsScanningSim] = useState(false);
+  const [shareLinkType, setShareLinkType] = useState<'destination' | 'app'>('destination');
   const [selectedFormat, setSelectedFormat] = useState<'PNG' | 'SVG' | 'PDF'>('PNG');
+  const [isFormatDropdownOpen, setIsFormatDropdownOpen] = useState(false);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const successTimeoutRef = useRef<any>(null);
 
@@ -34,22 +37,24 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [themeColor, setThemeColor] = useState<string>('indigo');
   const [printSheetMode, setPrintSheetMode] = useState<boolean>(true);
 
-  // Redraw Visual Feedback States
-  const [redrawKey, setRedrawKey] = useState(0);
-  const [isAnimatingRedraw, setIsAnimatingRedraw] = useState(false);
-  const redrawTimeoutRef = useRef<any>(null);
+  // Print-Ready Layout States
+  const [isPrintReadyModalOpen, setIsPrintReadyModalOpen] = useState(false);
+  const [printReadyPaperSize, setPrintReadyPaperSize] = useState<'a4' | 'letter'>('a4');
+  const [printReadyGrayscale, setPrintReadyGrayscale] = useState<'none' | 'grayscale' | 'pure_bw'>('grayscale');
+  const [printReadyQrSize, setPrintReadyQrSize] = useState<number>(65); // default size in mm
+  const [printReadyMargin, setPrintReadyMargin] = useState<number>(10); // default quiet zone in mm
+  const [printReadyCropMarks, setPrintReadyCropMarks] = useState<boolean>(true);
+  const [printReadyShowInfo, setPrintReadyShowInfo] = useState<boolean>(true);
+  const [printReadyInfoText, setPrintReadyInfoText] = useState<string>('');
 
   // Keep track of the last known stable readable design configuration
   const lastReadableDesignRef = useRef<any>(null);
 
-  // Clean up any pending success and redraw timeouts on unmount
+  // Clean up any pending success timeouts on unmount
   useEffect(() => {
     return () => {
       if (successTimeoutRef.current) {
         clearTimeout(successTimeoutRef.current);
-      }
-      if (redrawTimeoutRef.current) {
-        clearTimeout(redrawTimeoutRef.current);
       }
     };
   }, []);
@@ -72,6 +77,12 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const eyeColorTopRight = currentProject.design?.eyeColorTopRight || '';
   const eyeColorBottomLeft = currentProject.design?.eyeColorBottomLeft || '';
   const errorCorrectionLevel = currentProject.design?.errorCorrectionLevel || 'H';
+  const frameStyle = currentProject.design?.frameStyle || 'none';
+  const frameText = currentProject.design?.frameText || '';
+  const frameColor = currentProject.design?.frameColor || '';
+  const frameTextColor = currentProject.design?.frameTextColor || '';
+  const frameFontSize = currentProject.design?.frameFontSize || 20;
+  const frameTextPosition = currentProject.design?.frameTextPosition || 'bottom';
 
   // Helper to calculate relative luminance for WCAG contrast checking
   const getLuminance = (hexColor: string): number => {
@@ -219,69 +230,25 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const trackingUrl = trackingId ? `${appUrl}/qr/${trackingId}` : null;
   const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : qrContent;
 
+  const isTargetAUrl = textToEncode.startsWith('http://') || textToEncode.startsWith('https://');
+  const finalShareUrl = shareLinkType === 'destination' && isTargetAUrl ? textToEncode : appUrl;
+  
+  const dotStyleName = currentProject.design?.dotStyle || 'square';
+  const eyeStyleName = currentProject.design?.eyeStyle || 'square';
+  const fgColorHex = currentProject.design?.fgColor || '#0f172a';
+  const shareText = `Check out my custom QR design 🎨: ${dotStyleName} style dots and ${eyeStyleName} style eyes in ${fgColorHex}. Created on QR Studio!`;
+
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(finalShareUrl)}`;
+  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(finalShareUrl)}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(finalShareUrl)}`;
+
   // Sync print subtext default when content changes
   useEffect(() => {
     if (textToEncode) {
       setSubText(textToEncode);
+      setPrintReadyInfoText(textToEncode);
     }
   }, [textToEncode]);
-
-  // Draw QR on standard Canvas when contents or style parameters change
-  useEffect(() => {
-    if (canvasRef.current) {
-      renderStyledQR(canvasRef.current, textToEncode, {
-        fgColor,
-        bgColor,
-        gradientType,
-        gradientColor,
-        dotStyle,
-        eyeStyle,
-        logoUrl: logoUrl || undefined,
-        logoScale,
-        margin,
-        logoRotation,
-        logoAutoCenter,
-        logoOffsetX,
-        logoOffsetY,
-        eyeColorTopLeft: eyeColorTopLeft || undefined,
-        eyeColorTopRight: eyeColorTopRight || undefined,
-        eyeColorBottomLeft: eyeColorBottomLeft || undefined,
-        errorCorrectionLevel,
-        skipLogoImage: isPrintModalOpen ? false : true
-      });
-
-      // Trigger high-end subtle redraw animation feedback on style/content updates
-      setIsAnimatingRedraw(true);
-      setRedrawKey(prev => prev + 1);
-
-      if (redrawTimeoutRef.current) {
-        clearTimeout(redrawTimeoutRef.current);
-      }
-      redrawTimeoutRef.current = setTimeout(() => {
-        setIsAnimatingRedraw(false);
-      }, 450);
-    }
-  }, [
-    textToEncode,
-    fgColor,
-    bgColor,
-    gradientType,
-    gradientColor,
-    dotStyle,
-    eyeStyle,
-    logoUrl,
-    logoScale,
-    margin,
-    logoRotation,
-    logoAutoCenter,
-    logoOffsetX,
-    logoOffsetY,
-    eyeColorTopLeft,
-    eyeColorTopRight,
-    eyeColorBottomLeft,
-    errorCorrectionLevel,
-    isPrintModalOpen
-  ]);
 
   const handleExport = async () => {
     if (!canvasRef.current) return;
@@ -308,6 +275,12 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         eyeColorTopRight: eyeColorTopRight || undefined,
         eyeColorBottomLeft: eyeColorBottomLeft || undefined,
         errorCorrectionLevel,
+        frameStyle: frameStyle !== 'none' ? frameStyle as any : undefined,
+        frameText,
+        frameColor: frameColor || undefined,
+        frameTextColor: frameTextColor || undefined,
+        frameFontSize,
+        frameTextPosition,
         skipLogoImage: false
       });
     }
@@ -335,7 +308,13 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         eyeColorTopLeft: eyeColorTopLeft || undefined,
         eyeColorTopRight: eyeColorTopRight || undefined,
         eyeColorBottomLeft: eyeColorBottomLeft || undefined,
-        errorCorrectionLevel
+        errorCorrectionLevel,
+        frameStyle: frameStyle !== 'none' ? frameStyle as any : undefined,
+        frameText,
+        frameColor: frameColor || undefined,
+        frameTextColor: frameTextColor || undefined,
+        frameFontSize,
+        frameTextPosition
       });
 
       const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
@@ -397,6 +376,12 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         eyeColorTopRight: eyeColorTopRight || undefined,
         eyeColorBottomLeft: eyeColorBottomLeft || undefined,
         errorCorrectionLevel,
+        frameStyle: frameStyle !== 'none' ? frameStyle as any : undefined,
+        frameText,
+        frameColor: frameColor || undefined,
+        frameTextColor: frameTextColor || undefined,
+        frameFontSize,
+        frameTextPosition,
         skipLogoImage: true
       });
     }
@@ -739,6 +724,178 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     printWindow.document.close();
   };
 
+  const handlePrintReadyLayout = () => {
+    if (!canvasRef.current) return;
+    const qrCodeUrl = canvasRef.current.toDataURL('image/png');
+    
+    const printWindow = window.open('', '_blank', 'width=850,height=1100');
+    if (!printWindow) return;
+    
+    let stylesHtml = '';
+    for (const styleSheet of Array.from(document.styleSheets)) {
+      try {
+        if (styleSheet.href) {
+          stylesHtml += `<link rel="stylesheet" href="${styleSheet.href}">`;
+        } else {
+          const rules = Array.from(styleSheet.cssRules).map(rule => rule.cssText).join('\n');
+          stylesHtml += `<style>${rules}</style>`;
+        }
+      } catch (e) {
+        // Fallback
+      }
+    }
+
+    const paperWidth = printReadyPaperSize === 'a4' ? '210mm' : '215.9mm';
+    const paperHeight = printReadyPaperSize === 'a4' ? '297mm' : '279.4mm';
+
+    const qrFilterStyle = printReadyGrayscale === 'grayscale'
+      ? 'filter: grayscale(1) contrast(1.2);'
+      : printReadyGrayscale === 'pure_bw'
+        ? 'filter: grayscale(1) contrast(500) brightness(1.1);'
+        : '';
+
+    const textStyle = printReadyGrayscale === 'pure_bw' ? 'color: #000000 !important;' : 'color: #334155;';
+    const subTextStyle = printReadyGrayscale === 'pure_bw' ? 'color: #555555 !important;' : 'color: #64748b;';
+    const borderStyle = printReadyGrayscale === 'pure_bw' ? 'border: 1.5px solid #000000;' : 'border: 1px dashed #cbd5e1;';
+    const cropMarkColor = printReadyGrayscale === 'pure_bw' ? '#000000' : '#94a3b8';
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Print-Ready QR Code</title>
+          ${stylesHtml}
+          <style>
+            @media print {
+              @page {
+                size: ${printReadyPaperSize === 'a4' ? 'A4' : 'letter'} portrait;
+                margin: 0;
+              }
+              body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+              }
+              .no-print {
+                display: none !important;
+              }
+              .print-page {
+                width: ${paperWidth} !important;
+                height: ${paperHeight} !important;
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+                page-break-after: avoid !important;
+                page-break-before: avoid !important;
+              }
+            }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+              background-color: #f1f5f9;
+              margin: 0;
+              padding: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+            }
+            .print-page {
+              background: white;
+              width: ${paperWidth};
+              height: ${paperHeight};
+              box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              position: relative;
+              box-sizing: border-box;
+              padding: 20mm;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="print-page">
+            <!-- Center layout containing QR and Crop Marks -->
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+              <div style="position: relative; width: ${printReadyQrSize + 2 * printReadyMargin}mm; height: ${printReadyQrSize + 2 * printReadyMargin}mm; padding: ${printReadyMargin}mm; box-sizing: border-box; background: white; display: flex; align-items: center; justify-content: center; ${borderStyle}">
+                
+                ${printReadyCropMarks ? `
+                  <!-- Crop Marks: Top-Left -->
+                  <div style="position: absolute; top: -15mm; left: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
+                  <div style="position: absolute; top: 0; left: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
+                  
+                  <!-- Crop Marks: Top-Right -->
+                  <div style="position: absolute; top: -15mm; right: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
+                  <div style="position: absolute; top: 0; right: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
+                  
+                  <!-- Crop Marks: Bottom-Left -->
+                  <div style="position: absolute; bottom: -15mm; left: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
+                  <div style="position: absolute; bottom: 0; left: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
+                  
+                  <!-- Crop Marks: Bottom-Right -->
+                  <div style="position: absolute; bottom: -15mm; right: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
+                  <div style="position: absolute; bottom: 0; right: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
+                ` : ''}
+
+                <!-- QR code image centered -->
+                <img src="${qrCodeUrl}" style="width: ${printReadyQrSize}mm; height: ${printReadyQrSize}mm; display: block; object-fit: contain; ${qrFilterStyle}" />
+              </div>
+            </div>
+
+            <!-- Footer Info Section -->
+            ${printReadyShowInfo && printReadyInfoText ? `
+              <div style="text-align: center; margin-bottom: 5mm; font-family: inherit; width: 100%; box-sizing: border-box; padding: 0 10mm;">
+                <p style="font-size: 11pt; font-weight: 700; margin: 0 0 3mm 0; word-break: break-all; ${textStyle}">${printReadyInfoText}</p>
+                <p style="font-size: 8pt; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; ${subTextStyle}">
+                  Print-Ready Layout • Centered ${printReadyPaperSize.toUpperCase()} Format • Target Size: ${printReadyQrSize}mm (${(printReadyQrSize / 25.4).toFixed(1)}") • ${new Date().toLocaleDateString()}
+                </p>
+              </div>
+            ` : ''}
+          </div>
+          
+          <script>
+            window.onload = function() {
+              setTimeout(function() {
+                window.print();
+              }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
+  // Listen for global keyboard shortcuts triggered in App.tsx
+  useEffect(() => {
+    const handleDownloadEvent = () => {
+      handleExport();
+    };
+    const handlePrintEvent = () => {
+      if (isPrintModalOpen) {
+        handlePrintTemplate();
+      } else {
+        setIsPrintModalOpen(true);
+      }
+    };
+
+    window.addEventListener('app-trigger-download', handleDownloadEvent);
+    window.addEventListener('app-trigger-print', handlePrintEvent);
+
+    return () => {
+      window.removeEventListener('app-trigger-download', handleDownloadEvent);
+      window.removeEventListener('app-trigger-print', handlePrintEvent);
+    };
+  }, [handleExport, handlePrintTemplate, isPrintModalOpen]);
+
   const playPingSound = () => {
     try {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -811,18 +968,34 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       <div id="tour-qr-preview" className="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-xs flex flex-col items-center justify-center gap-4 relative overflow-hidden">
         <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center">
           <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden animate-fade-in" style={{ width: '280px', height: '280px' }}>
-            <canvas
+            <MemoizedQRCanvas
               ref={canvasRef}
-              className={`max-w-full rounded-lg bg-white transition-all duration-300 group-hover:scale-[0.98] ${
-                isAnimatingRedraw ? 'animate-qr-redraw' : ''
-              }`}
-              style={{ width: '264px', height: '264px' }}
+              textToEncode={textToEncode}
+              fgColor={fgColor}
+              bgColor={bgColor}
+              gradientType={gradientType}
+              gradientColor={gradientColor}
+              dotStyle={dotStyle}
+              eyeStyle={eyeStyle}
+              logoUrl={logoUrl || undefined}
+              logoScale={logoScale}
+              margin={margin}
+              logoRotation={logoRotation}
+              logoAutoCenter={logoAutoCenter}
+              logoOffsetX={logoOffsetX}
+              logoOffsetY={logoOffsetY}
+              eyeColorTopLeft={eyeColorTopLeft || undefined}
+              eyeColorTopRight={eyeColorTopRight || undefined}
+              eyeColorBottomLeft={eyeColorBottomLeft || undefined}
+              errorCorrectionLevel={errorCorrectionLevel}
+              isPrintModalOpen={isPrintModalOpen}
+              frameStyle={frameStyle !== 'none' ? frameStyle as any : undefined}
+              frameText={frameText}
+              frameColor={frameColor || undefined}
+              frameTextColor={frameTextColor || undefined}
+              frameFontSize={frameFontSize}
+              frameTextPosition={frameTextPosition}
             />
-
-            {/* Premium diagonal shine sweep on design update */}
-            {isAnimatingRedraw && (
-              <div className="animate-sweep-shine pointer-events-none z-[8]" />
-            )}
 
             {/* Elegant overlay logo with smooth scaling on change */}
             {logoUrl && !isPrintModalOpen && (
@@ -1061,26 +1234,73 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         {/* Printable/Export triggers */}
         <div className="w-full flex flex-col gap-3 mt-2 bg-slate-50/50 p-3 rounded-2xl border border-slate-200/50">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <FileType className="w-3.5 h-3.5 text-slate-600" />
               <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Download Format</span>
             </div>
-            <div className="flex bg-white border border-slate-200 p-0.5 rounded-lg shadow-3xs">
-              {(['PNG', 'SVG', 'PDF'] as const).map((fmt) => (
-                <button
-                  type="button"
-                  key={fmt}
-                  onClick={() => setSelectedFormat(fmt)}
-                  className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all cursor-pointer ${
-                    selectedFormat === fmt
-                      ? 'bg-slate-900 text-white shadow-xs'
-                      : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
-                  }`}
-                  aria-label={`Select ${fmt} format`}
-                >
-                  {fmt}
-                </button>
-              ))}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsFormatDropdownOpen(!isFormatDropdownOpen)}
+                className="flex items-center justify-between gap-2 px-3 py-1.5 min-w-[100px] bg-white border border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-950 text-xs font-semibold rounded-xl shadow-3xs transition-all duration-200 cursor-pointer focus:outline-none"
+                aria-label="Toggle format dropdown"
+                aria-haspopup="listbox"
+                aria-expanded={isFormatDropdownOpen}
+              >
+                <span>{selectedFormat}</span>
+                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isFormatDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              <AnimatePresence>
+                {isFormatDropdownOpen && (
+                  <>
+                    {/* Invisible backdrop to dismiss dropdown */}
+                    <div 
+                      className="fixed inset-0 z-30" 
+                      onClick={() => setIsFormatDropdownOpen(false)} 
+                    />
+                    <motion.ul
+                      initial={{ opacity: 0, y: 4, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                      transition={{ duration: 0.15, ease: 'easeOut' }}
+                      className="absolute right-0 mt-1.5 w-52 bg-white border border-slate-200 rounded-xl shadow-lg p-1.5 z-45 focus:outline-none"
+                      role="listbox"
+                    >
+                      {[
+                        { value: 'PNG', label: 'PNG Image', desc: 'Standard raster, perfect for web & screen' },
+                        { value: 'SVG', label: 'SVG Vector', desc: 'Infinitely scalable vector format for print' },
+                        { value: 'PDF', label: 'PDF Document', desc: 'High-resolution print-ready A4 document' }
+                      ].map((item) => (
+                        <li key={item.value} role="option" aria-selected={selectedFormat === item.value}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedFormat(item.value as 'PNG' | 'SVG' | 'PDF');
+                              setIsFormatDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-3 py-2 rounded-lg transition-all flex flex-col gap-0.5 cursor-pointer ${
+                              selectedFormat === item.value
+                                ? 'bg-slate-900 text-white'
+                                : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between w-full">
+                              <span className="text-xs font-bold">{item.label}</span>
+                              {selectedFormat === item.value && (
+                                <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full" />
+                              )}
+                            </div>
+                            <span className={`text-[10px] leading-normal font-medium ${selectedFormat === item.value ? 'text-slate-300' : 'text-slate-400'}`}>
+                              {item.desc}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </motion.ul>
+                  </>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
@@ -1092,7 +1312,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               aria-label={`Download QR Code as ${selectedFormat}`}
             >
               <Download className="w-4 h-4" />
-              Download {selectedFormat}
+              <span>Download {selectedFormat}</span>
+              <kbd className="hidden sm:inline-block px-1 py-0.2 bg-zinc-800 text-zinc-300 rounded text-[9px] font-mono font-bold ml-1 uppercase">Ctrl+D</kbd>
             </button>
             <button
               type="button"
@@ -1101,9 +1322,20 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               aria-label="Open Print Layout Studio"
             >
               <Printer className="w-3.5 h-3.5" />
-              Print Studio
+              <span>Print</span>
+              <kbd className="hidden sm:inline-block px-1 py-0.2 bg-indigo-50 border border-indigo-100 text-indigo-500 rounded text-[9px] font-mono font-bold uppercase ml-1">Ctrl+P</kbd>
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setIsPrintReadyModalOpen(true)}
+            className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+            aria-label="Open Print-Ready Layout Modal"
+          >
+            <Printer className="w-4 h-4 text-indigo-100" />
+            <span>Print-Ready A4/Letter Page</span>
+          </button>
 
           <button
             type="button"
@@ -1114,6 +1346,84 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             <Smartphone className="w-3.5 h-3.5" />
             Live Viewfinder Scan Test
           </button>
+        </div>
+
+        {/* Social Media Sharing Button Group */}
+        <div className="w-full flex flex-col gap-3 mt-1 bg-slate-50/50 p-3.5 rounded-2xl border border-slate-200/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Share2 className="w-3.5 h-3.5 text-slate-600" />
+              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Share QR Design</span>
+            </div>
+            {isTargetAUrl && (
+              <div className="flex bg-white border border-slate-200 p-0.5 rounded-lg shadow-3xs">
+                <button
+                  type="button"
+                  onClick={() => setShareLinkType('destination')}
+                  className={`px-2 py-0.5 text-[9px] font-bold rounded-md transition-all cursor-pointer ${
+                    shareLinkType === 'destination'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
+                  }`}
+                  title="Share the link embedded inside the QR"
+                >
+                  Destination
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShareLinkType('app')}
+                  className={`px-2 py-0.5 text-[9px] font-bold rounded-md transition-all cursor-pointer ${
+                    shareLinkType === 'app'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
+                  }`}
+                  title="Share the link to QR Studio builder"
+                >
+                  App Link
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-white border border-slate-200/60 p-2.5 rounded-xl">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Post Preview</span>
+            <p className="text-[11px] text-slate-600 font-medium leading-relaxed italic bg-slate-50/50 p-2 rounded-lg border border-slate-100 select-all">
+              "{shareText}" <span className="text-indigo-600 not-italic font-semibold break-all">{finalShareUrl}</span>
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            <a
+              href={twitterShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-2 px-1 bg-black text-white hover:bg-zinc-900 rounded-xl text-[10px] sm:text-[11px] font-bold shadow-3xs transition-all flex items-center justify-center gap-1 hover:scale-[1.02] active:scale-95 cursor-pointer text-center no-underline"
+              aria-label="Share on Twitter / X"
+            >
+              <Twitter className="w-3 h-3 fill-current" />
+              Twitter / X
+            </a>
+            <a
+              href={linkedinShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-2 px-1 bg-[#0077b5] text-white hover:bg-[#006297] rounded-xl text-[10px] sm:text-[11px] font-bold shadow-3xs transition-all flex items-center justify-center gap-1 hover:scale-[1.02] active:scale-95 cursor-pointer text-center no-underline"
+              aria-label="Share on LinkedIn"
+            >
+              <Linkedin className="w-3 h-3 fill-current" />
+              LinkedIn
+            </a>
+            <a
+              href={facebookShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-2 px-1 bg-[#1877f2] text-white hover:bg-[#166fe5] rounded-xl text-[10px] sm:text-[11px] font-bold shadow-3xs transition-all flex items-center justify-center gap-1 hover:scale-[1.02] active:scale-95 cursor-pointer text-center no-underline"
+              aria-label="Share on Facebook"
+            >
+              <Facebook className="w-3 h-3 fill-current" />
+              Facebook
+            </a>
+          </div>
         </div>
 
         {/* Tracking Details & Copying Option */}
@@ -1803,6 +2113,346 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 </button>
               </div>
 
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Print-Ready Layout Modal */}
+      <AnimatePresence>
+        {isPrintReadyModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-[100] flex items-center justify-center p-4 overflow-y-auto"
+            onClick={() => setIsPrintReadyModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+              className="bg-white rounded-3xl w-full max-w-4xl shadow-2xl overflow-hidden text-slate-800 border border-slate-100 flex flex-col md:flex-row h-full max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Left Panel: Settings Controls */}
+              <div className="w-full md:w-5/12 bg-slate-50 border-r border-slate-100 flex flex-col h-full overflow-y-auto">
+                {/* Header */}
+                <div className="p-5 border-b border-slate-100 bg-gradient-to-r from-slate-900 to-indigo-950 text-white">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-1.5 bg-indigo-500/20 rounded-lg">
+                      <FileText className="w-5 h-5 text-indigo-400" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-sm font-black uppercase tracking-wider text-white">Print-Ready Studio</h3>
+                      <p className="text-[10px] text-indigo-200 font-medium">Pre-press centering & scale engine</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Controls Form */}
+                <div className="p-5 space-y-5 text-left flex-1">
+                  {/* 1. Paper Size */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <Scale className="w-3.5 h-3.5 text-slate-500" />
+                      Paper Format
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setPrintReadyPaperSize('a4')}
+                        className={`py-2 px-3 rounded-xl border text-xs font-semibold flex flex-col items-center gap-0.5 cursor-pointer transition-all ${
+                          printReadyPaperSize === 'a4'
+                            ? 'bg-indigo-600 border-indigo-600 text-white'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                        }`}
+                      >
+                        <span>A4 Sheet</span>
+                        <span className={`text-[9px] font-normal ${printReadyPaperSize === 'a4' ? 'text-indigo-200' : 'text-slate-400'}`}>
+                          210mm x 297mm
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPrintReadyPaperSize('letter')}
+                        className={`py-2 px-3 rounded-xl border text-xs font-semibold flex flex-col items-center gap-0.5 cursor-pointer transition-all ${
+                          printReadyPaperSize === 'letter'
+                            ? 'bg-indigo-600 border-indigo-600 text-white'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                        }`}
+                      >
+                        <span>US Letter</span>
+                        <span className={`text-[9px] font-normal ${printReadyPaperSize === 'letter' ? 'text-indigo-200' : 'text-slate-400'}`}>
+                          8.5" x 11" (216x279mm)
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 2. Color Profile (Grayscale / Ink Saver) */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <Contrast className="w-3.5 h-3.5 text-slate-500" />
+                      Grayscale & Ink-Saver Profile
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setPrintReadyGrayscale('none')}
+                        className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
+                          printReadyGrayscale === 'none'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                        }`}
+                      >
+                        <span>Original</span>
+                        <span className="text-[8px] font-normal opacity-85">Full Color</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPrintReadyGrayscale('grayscale')}
+                        className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
+                          printReadyGrayscale === 'grayscale'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                        }`}
+                      >
+                        <span>Grayscale</span>
+                        <span className="text-[8px] font-normal opacity-85">Pro Printer</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPrintReadyGrayscale('pure_bw')}
+                        className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
+                          printReadyGrayscale === 'pure_bw'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                        }`}
+                      >
+                        <span>Pure B&W</span>
+                        <span className="text-[8px] font-normal opacity-85">Max Contrast</span>
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-slate-500">
+                      {printReadyGrayscale === 'grayscale' && "Converts colors to print-friendly grayscales to save colored ink cartridges."}
+                      {printReadyGrayscale === 'pure_bw' && "Renders the QR with 100% black/white thresholds. Ideal for high-speed laser printing."}
+                      {printReadyGrayscale === 'none' && "Retains the custom design colors. Best for fine photo-quality printing."}
+                    </p>
+                  </div>
+
+                  {/* 3. QR Size Slider */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+                      <span className="flex items-center gap-1.5">
+                        <Maximize className="w-3.5 h-3.5 text-slate-500" />
+                        QR Printed Size
+                      </span>
+                      <span className="font-mono text-indigo-600 font-bold">{printReadyQrSize}mm ({(printReadyQrSize/25.4).toFixed(1)}")</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="20"
+                      max="150"
+                      step="5"
+                      value={printReadyQrSize}
+                      onChange={(e) => setPrintReadyQrSize(Number(e.target.value))}
+                      className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                      <span>20mm (Small)</span>
+                      <span>80mm (Medium)</span>
+                      <span>150mm (Large)</span>
+                    </div>
+                  </div>
+
+                  {/* 4. Margin Size Slider */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+                      <span className="flex items-center gap-1.5">
+                        <Layers className="w-3.5 h-3.5 text-slate-500" />
+                        Safe Quiet Zone
+                      </span>
+                      <span className="font-mono text-indigo-600 font-bold">{printReadyMargin}mm ({(printReadyMargin/25.4).toFixed(1)}")</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="4"
+                      max="30"
+                      step="2"
+                      value={printReadyMargin}
+                      onChange={(e) => setPrintReadyMargin(Number(e.target.value))}
+                      className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                      <span>4mm (Min)</span>
+                      <span>15mm (Recommended)</span>
+                      <span>30mm (Max)</span>
+                    </div>
+                  </div>
+
+                  {/* 5. Toggles */}
+                  <div className="space-y-2 pt-2 border-t border-slate-100">
+                    <label className="flex items-center justify-between cursor-pointer p-1.5 hover:bg-slate-100/50 rounded-lg transition-all">
+                      <div className="text-left">
+                        <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Show Crop Marks</span>
+                        <p className="text-[10px] text-slate-400">Pre-press corners for guillotine cutting alignment.</p>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={printReadyCropMarks}
+                        onChange={(e) => setPrintReadyCropMarks(e.target.checked)}
+                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer"
+                      />
+                    </label>
+
+                    <label className="flex items-center justify-between cursor-pointer p-1.5 hover:bg-slate-100/50 rounded-lg transition-all">
+                      <div className="text-left">
+                        <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Show Footnote/Meta info</span>
+                        <p className="text-[10px] text-slate-400">Adds date, code size, and custom label below design.</p>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={printReadyShowInfo}
+                        onChange={(e) => setPrintReadyShowInfo(e.target.checked)}
+                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer"
+                      />
+                    </label>
+                  </div>
+
+                  {/* 6. Footnote Text Input */}
+                  {printReadyShowInfo && (
+                    <div className="space-y-1 text-left">
+                      <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Custom Footnote Label</label>
+                      <input
+                        type="text"
+                        value={printReadyInfoText}
+                        onChange={(e) => setPrintReadyInfoText(e.target.value)}
+                        placeholder="Scan code to open website..."
+                        className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-800 placeholder-slate-400 bg-white focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Left Panel Footer: Trigger Print */}
+                <div className="p-4 bg-slate-100 border-t border-slate-200 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsPrintReadyModalOpen(false)}
+                    className="flex-1 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl uppercase tracking-wider transition-all cursor-pointer border-0"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handlePrintReadyLayout}
+                    className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-xl uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer border-0"
+                  >
+                    <Printer className="w-4 h-4" />
+                    <span>Print Sheet</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Panel: Scrollable Real-Time Sheet Preview */}
+              <div className="w-full md:w-7/12 bg-slate-100 flex flex-col h-full overflow-hidden relative">
+                {/* Visual Guide Header */}
+                <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center text-xs text-slate-500 font-medium">
+                  <span className="flex items-center gap-1.5 uppercase font-bold tracking-wider text-slate-600">
+                    <Eye className="w-4 h-4 text-slate-400" />
+                    Interactive Sheet Preview
+                  </span>
+                  <span className="font-mono bg-slate-200 px-2 py-0.5 rounded text-slate-600 uppercase">
+                    Scale: 1:1 Simulated
+                  </span>
+                </div>
+
+                {/* Preview Sheet Area */}
+                <div className="flex-1 overflow-y-auto p-8 flex items-center justify-center min-h-0">
+                  <div
+                    className={`bg-white shadow-xl border border-slate-200/50 rounded-sm relative flex flex-col justify-between items-center p-8 transition-all ${
+                      printReadyPaperSize === 'a4' 
+                        ? 'w-[280px] h-[396px]' // Simulated A4 aspect ratio 1 : 1.414
+                        : 'w-[280px] h-[362px]' // Simulated US Letter aspect ratio 1 : 1.294
+                    }`}
+                  >
+                    {/* Centered QR Frame Area */}
+                    <div className="flex-1 flex flex-col items-center justify-center w-full">
+                      <div
+                        className="relative border border-dashed border-slate-200 transition-all bg-white"
+                        style={{
+                          width: `${(printReadyQrSize + 2 * printReadyMargin) * 1.5}px`,
+                          height: `${(printReadyQrSize + 2 * printReadyMargin) * 1.5}px`,
+                          padding: `${printReadyMargin * 1.5}px`,
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        {/* Interactive Crop Marks */}
+                        {printReadyCropMarks && (
+                          <>
+                            {/* Top Left */}
+                            <div className="absolute top-[-15px] left-0 w-[0.5px] h-[10px] bg-slate-400"></div>
+                            <div className="absolute top-0 left-[-15px] w-[10px] h-[0.5px] bg-slate-400"></div>
+                            {/* Top Right */}
+                            <div className="absolute top-[-15px] right-0 w-[0.5px] h-[10px] bg-slate-400"></div>
+                            <div className="absolute top-0 right-[-15px] w-[10px] h-[0.5px] bg-slate-400"></div>
+                            {/* Bottom Left */}
+                            <div className="absolute bottom-[-15px] left-0 w-[0.5px] h-[10px] bg-slate-400"></div>
+                            <div className="absolute bottom-0 left-[-15px] w-[10px] h-[0.5px] bg-slate-400"></div>
+                            {/* Bottom Right */}
+                            <div className="absolute bottom-[-15px] right-0 w-[0.5px] h-[10px] bg-slate-400"></div>
+                            <div className="absolute bottom-0 right-[-15px] w-[10px] h-[0.5px] bg-slate-400"></div>
+                          </>
+                        )}
+
+                        {/* Centered QR Canvas Copy or Placeholder */}
+                        <div
+                          className="w-full h-full bg-slate-50 rounded flex items-center justify-center overflow-hidden"
+                          style={{
+                            filter: 
+                              printReadyGrayscale === 'grayscale' ? 'grayscale(1) contrast(1.2)' :
+                              printReadyGrayscale === 'pure_bw' ? 'grayscale(1) contrast(500) brightness(1.1)' : 'none'
+                          }}
+                        >
+                          {canvasRef.current ? (
+                            <img
+                              src={canvasRef.current.toDataURL('image/png')}
+                              alt="Print Preview"
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-slate-200 animate-pulse flex items-center justify-center text-[8px] font-mono">
+                              QR Code Loading...
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Centered Footer Text Preview */}
+                    {printReadyShowInfo && printReadyInfoText && (
+                      <div className="w-full text-center mt-2 max-w-[90%] pointer-events-none">
+                        <p className="text-[8px] font-bold text-slate-800 line-clamp-1 break-all uppercase tracking-wide">
+                          {printReadyInfoText}
+                        </p>
+                        <p className="text-[6px] text-slate-400 tracking-wider uppercase font-mono mt-0.5">
+                          Centered {printReadyPaperSize.toUpperCase()} Sheet • Output: {printReadyQrSize}mm
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Estimated DPI / Resolution Indicator */}
+                <div className="p-3 bg-slate-50 border-t border-slate-200 text-left text-[10px] text-slate-500 font-mono flex justify-between items-center">
+                  <span>Estimated Scan Quality:</span>
+                  <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                    {Math.round(2000 / (printReadyQrSize / 25.4))} DPI (Crisp Vectors)
+                  </span>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}

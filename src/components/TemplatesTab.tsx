@@ -301,7 +301,7 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
           </p>
         </div>
       </motion.div>
-
+ 
       {/* Templates Cards Grid */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 gap-4">
         {TEMPLATES.map(template => {
@@ -317,15 +317,11 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
               }}
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               onClick={() => handleApplyTemplate(template)}
-              className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-4 ${
-                active
-                  ? 'bg-gradient-to-r from-indigo-50/70 to-purple-50/40 border-indigo-300 shadow-xs ring-1 ring-indigo-300'
-                  : 'bg-white/40 border-gray-150 hover:bg-white hover:border-gray-250'
-              }`}
+              className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-4 ${ active ? 'bg-gradient-to-r from-indigo-50/70 to-purple-50/40 border-indigo-300 shadow-xs ring-1 ring-indigo-300 ' : 'bg-white/40 border-gray-150 hover:bg-white hover:border-gray-250 ' }`}
             >
               {/* Mini Interactive QR Code rendered live */}
               <MiniQRPreview design={template.design} testText={sampleUrl} />
-
+ 
               {/* Template Meta Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -337,7 +333,7 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
                 <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
                   {template.description}
                 </p>
-
+ 
                 {/* Styled Swatch previews */}
                 <div className="flex items-center gap-1.5 mt-3">
                   <span className="text-[10px] text-gray-400 font-mono">Palette:</span>
@@ -353,14 +349,10 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
                   </span>
                 </div>
               </div>
-
+ 
               {/* Selection Checkmark Button */}
               <div className="shrink-0 self-center">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all ${
-                  active
-                    ? 'bg-indigo-600 border-indigo-600 text-white scale-110 shadow-3xs'
-                    : 'bg-white border-gray-200 text-transparent group-hover:border-gray-300'
-                }`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all ${ active ? 'bg-indigo-600 border-indigo-600 text-white scale-110 shadow-3xs ' : 'bg-white border-gray-200 text-transparent group-hover:border-gray-300 ' }`}>
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
                 </div>
               </div>
@@ -371,11 +363,11 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
 
       {/* Bottom informational guidance */}
       <motion.div variants={itemVariants} className="bg-amber-50/60 rounded-xl p-3.5 border border-amber-100/80 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
-        <p className="text-[11px] text-amber-800 leading-relaxed">
-          <strong>Tip:</strong> After applying any template, you can jump back to the <strong>Creative Station</strong> tab anytime to perform precision edits, add custom center logos, or adjust the quiet zone spacing to match your unique brand requirements.
-        </p>
-      </motion.div>
+         <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+         <p className="text-[11px] text-amber-800 leading-relaxed">
+           <strong>Tip:</strong> After applying any template, you can jump back to the <strong>Creative Station</strong> tab anytime to perform precision edits, add custom center logos, or adjust the quiet zone spacing to match your unique brand requirements.
+         </p>
+       </motion.div>
     </motion.div>
   );
 }

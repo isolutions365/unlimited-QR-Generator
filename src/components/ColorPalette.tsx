@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { QRProject } from '../types';
-import { Palette, Check, Sparkles, CheckCircle2, AlertTriangle, XCircle, Info } from 'lucide-react';
+import { Palette, Check, Sparkles, CheckCircle2, AlertTriangle, XCircle, Info, Compass, Eye, Layout } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const presetColors = [
@@ -28,6 +28,22 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
   const [localFgColor, setLocalFgColor] = useState(fgColor);
   const [localBgColor, setLocalBgColor] = useState(bgColor);
   const [localGradientColor, setLocalGradientColor] = useState(gradientColor);
+
+  // Brand Harmony States
+  const [harmonyType, setHarmonyType] = useState<'complementary' | 'analogous' | 'triadic' | 'monochromatic'>('complementary');
+  const [selectedHarmonyColor, setSelectedHarmonyColor] = useState<string | null>(null);
+  const [appliedField, setAppliedField] = useState<string | null>(null);
+
+  // Keep selected suggested harmony color in bounds when input color or harmony mode changes
+  const harmonySuggestions = generateHarmony(localFgColor, harmonyType);
+  useEffect(() => {
+    if (harmonySuggestions.length > 0) {
+      const exists = harmonySuggestions.some(s => s.hex.toLowerCase() === selectedHarmonyColor?.toLowerCase());
+      if (!exists) {
+        setSelectedHarmonyColor(harmonySuggestions[0].hex);
+      }
+    }
+  }, [localFgColor, harmonyType, selectedHarmonyColor]);
 
   // Real-time contrast and scannability calculations
   const primaryContrast = getContrastRatio(localFgColor, localBgColor);
@@ -144,7 +160,7 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
         <div className="flex items-center justify-between mb-3">
-          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block">
+          <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">
             Color Palette
           </label>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-100 text-slate-500 font-mono">
@@ -184,7 +200,7 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
                         background: `linear-gradient(135deg, ${col.main} 0%, ${col.main} 50%, ${col.grad} 50%, ${col.grad} 100%)`
                       }}
                     />
-                    <span className={isActive ? 'text-indigo-700 font-semibold' : 'text-gray-600'}>
+                    <span className={isActive ? 'text-indigo-700  font-semibold' : 'text-gray-600 '}>
                       {col.name}
                     </span>
                     {isActive && (
@@ -213,11 +229,7 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
               <button
                 type="button"
                 id="palette-preset-custom"
-                className={`relative z-10 px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-1.5 cursor-default transition-all ${
-                  activePalette === 'Custom'
-                    ? 'border-amber-300 text-amber-700 font-semibold shadow-3xs'
-                    : 'bg-white/50 border-dashed border-gray-200 text-gray-400'
-                }`}
+                className={`relative z-10 px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-1.5 cursor-default transition-all ${ activePalette === 'Custom' ? 'border-amber-300 text-amber-700 font-semibold shadow-3xs' : 'bg-white/50 border-dashed border-gray-200 text-gray-400' }`}
                 style={{
                   borderColor: activePalette === 'Custom' ? 'transparent' : undefined
                 }}
@@ -231,7 +243,7 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
           {/* Color pickers selection */}
           <div className="grid grid-cols-2 gap-3 mt-1">
             <div className="relative">
-              <span className="text-[10px] text-gray-500 font-medium block mb-1">Foreground Color</span>
+              <span className="text-[10px] text-gray-600 font-medium block mb-1">Foreground Color</span>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition-all duration-200">
                 <input
                   type="color"
@@ -251,7 +263,7 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
             </div>
 
             <div>
-              <span className="text-[10px] text-gray-500 font-medium block mb-1">Background Color</span>
+              <span className="text-[10px] text-gray-600 font-medium block mb-1">Background Color</span>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition-all duration-200 font-sans">
                 <input
                   type="color"
@@ -279,7 +291,7 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
         <div className="flex items-center justify-between mb-2">
-          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block">
+          <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">
             Gradient Style
           </label>
         </div>
@@ -290,11 +302,7 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
               key={g}
               type="button"
               id={`gradient-btn-${g}`}
-              className={`py-1.5 rounded-lg border text-xs capitalize transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${
-                gradientType === g
-                  ? 'bg-gray-900 text-white border-gray-900 font-semibold shadow-xs'
-                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-              }`}
+              className={`py-1.5 rounded-lg border text-xs capitalize transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${ gradientType === g ? 'bg-gray-900 text-white border-gray-900 font-semibold shadow-xs' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50' }`}
               onClick={() => updateDesignFields({ gradientType: g }, true)}
             >
               {g}
@@ -338,13 +346,185 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
         </AnimatePresence>
       </motion.div>
 
+      {/* Brand Harmony Suggestions Section */}
+      <motion.div
+        variants={itemVariants}
+        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm flex flex-col gap-3"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Compass className="w-4 h-4 text-indigo-500 animate-spin-slow" style={{ animationDuration: '8s' }} />
+            <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">
+              Brand Harmony
+            </label>
+          </div>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-indigo-50 text-indigo-600 font-mono">
+            Color Theory
+          </span>
+        </div>
+
+        <p className="text-[11px] text-slate-500 leading-relaxed">
+          Select a palette model below to automatically discover complementary colors that perfectly balance your primary design.
+        </p>
+
+        {/* Harmony Mode Selector Buttons */}
+        <div className="grid grid-cols-4 gap-1 p-1 bg-slate-100 rounded-lg">
+          {(['complementary', 'analogous', 'triadic', 'monochromatic'] as const).map(mode => (
+            <button
+              key={mode}
+              type="button"
+              id={`harmony-tab-${mode}`}
+              className={`py-1 rounded-md text-[10px] font-medium capitalize transition-all duration-150 cursor-pointer ${
+                harmonyType === mode
+                  ? 'bg-white text-slate-900 shadow-3xs font-semibold'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+              onClick={() => {
+                setHarmonyType(mode);
+                const newSwatches = generateHarmony(localFgColor, mode);
+                if (newSwatches.length > 0) {
+                  setSelectedHarmonyColor(newSwatches[0].hex);
+                }
+              }}
+            >
+              {mode === 'monochromatic' ? 'Mono' : mode}
+            </button>
+          ))}
+        </div>
+
+        {/* Selected Mode Summary */}
+        <div className="text-[10px] text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100 italic leading-snug">
+          {harmonyType === 'complementary' && 'Complementary: Uses exact opposite hues to create high-contrast, high-energy accents.'}
+          {harmonyType === 'analogous' && 'Analogous: adjacent hues that look incredibly smooth and share similar warm or cool tones.'}
+          {harmonyType === 'triadic' && 'Triadic: Uses three evenly spaced colors to achieve vibrant, highly-balanced accents.'}
+          {harmonyType === 'monochromatic' && 'Monochromatic: Explores shades and tints of your main color for a cohesive, minimal look.'}
+        </div>
+
+        {/* Harmony Swatches Grid */}
+        <div className="grid grid-cols-3 gap-2 mt-1">
+          {harmonySuggestions.map((swatch, idx) => {
+            const isSelected = selectedHarmonyColor?.toLowerCase() === swatch.hex.toLowerCase();
+            return (
+              <button
+                key={idx}
+                type="button"
+                id={`harmony-swatch-${idx}`}
+                className={`p-2.5 rounded-xl border text-left transition-all duration-200 flex flex-col items-center gap-1.5 cursor-pointer relative ${
+                  isSelected
+                    ? 'border-indigo-500 bg-indigo-50/20 ring-1 ring-indigo-400'
+                    : 'border-slate-200/60 bg-white hover:border-slate-300 hover:bg-slate-50/30'
+                }`}
+                onClick={() => setSelectedHarmonyColor(swatch.hex)}
+              >
+                {/* Colored circle */}
+                <div
+                  className="w-8 h-8 rounded-full border border-black/10 shadow-sm relative shrink-0"
+                  style={{ backgroundColor: swatch.hex }}
+                >
+                  {isSelected && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 rounded-full">
+                      <Check className="w-4 h-4 text-white stroke-[3.5]" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-center w-full">
+                  <span className="text-[10px] font-bold text-slate-800 block truncate leading-tight">
+                    {swatch.name}
+                  </span>
+                  <span className="text-[9px] font-mono text-slate-400 uppercase block font-semibold leading-none mt-0.5">
+                    {swatch.hex}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Quick Action Application Panel for Selected Color */}
+        {selectedHarmonyColor && (() => {
+          const activeSwatch = harmonySuggestions.find(s => s.hex.toLowerCase() === selectedHarmonyColor.toLowerCase());
+          return (
+            <div className="mt-1 p-3 bg-white rounded-xl border border-slate-200/80 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold text-slate-700">
+                    Apply Accent Color: <span className="font-mono text-indigo-600 uppercase">{selectedHarmonyColor}</span>
+                  </span>
+                  {activeSwatch && (
+                    <span className="text-[9px] text-slate-400 leading-tight">
+                      {activeSwatch.role}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-1.5 mt-0.5">
+                <button
+                  type="button"
+                  id="btn-apply-harmony-gradient"
+                  className="py-1.5 px-2 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 text-slate-700 text-[10px] font-bold rounded-lg border border-slate-200 transition-all flex flex-col items-center gap-1 cursor-pointer"
+                  onClick={() => {
+                    setLocalGradientColor(selectedHarmonyColor);
+                    updateDesignFields({ gradientType: 'linear', gradientColor: selectedHarmonyColor }, true);
+                    setAppliedField('gradient');
+                    setTimeout(() => setAppliedField(null), 1500);
+                  }}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                  <span>
+                    {appliedField === 'gradient' ? 'Applied! ✓' : 'Set Gradient'}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  id="btn-apply-harmony-frame"
+                  className="py-1.5 px-2 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 text-slate-700 text-[10px] font-bold rounded-lg border border-slate-200 transition-all flex flex-col items-center gap-1 cursor-pointer"
+                  onClick={() => {
+                    updateDesignFields({ frameColor: selectedHarmonyColor }, true);
+                    setAppliedField('frame');
+                    setTimeout(() => setAppliedField(null), 1500);
+                  }}
+                >
+                  <Layout className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <span>
+                    {appliedField === 'frame' ? 'Applied! ✓' : 'Set Frame'}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  id="btn-apply-harmony-eyes"
+                  className="py-1.5 px-2 bg-slate-50 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 text-slate-700 text-[10px] font-bold rounded-lg border border-slate-200 transition-all flex flex-col items-center gap-1 cursor-pointer"
+                  onClick={() => {
+                    updateDesignFields({
+                      eyeColorTopLeft: selectedHarmonyColor,
+                      eyeColorTopRight: selectedHarmonyColor,
+                      eyeColorBottomLeft: selectedHarmonyColor
+                    }, true);
+                    setAppliedField('eyes');
+                    setTimeout(() => setAppliedField(null), 1500);
+                  }}
+                >
+                  <Eye className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>
+                    {appliedField === 'eyes' ? 'Applied! ✓' : 'Set Eyes'}
+                  </span>
+                </button>
+              </div>
+            </div>
+          );
+        })()}
+      </motion.div>
+
       {/* Real-time Scannability Checker */}
       <motion.div
         variants={itemVariants}
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm flex flex-col gap-3"
       >
         <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-gray-700 tracking-wider uppercase block">
+          <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">
             QR Scannability Checker
           </label>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-100 text-slate-500 font-mono">
@@ -473,4 +653,193 @@ function isLightOnDark(fgHex: string, bgHex: string): boolean {
   const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
   const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
   return lum1 > lum2;
+}
+
+interface HSL {
+  h: number;
+  s: number;
+  l: number;
+}
+
+function hexToHsl(hex: string): HSL {
+  hex = hex.replace(/^#/, '');
+  if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('');
+  }
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100)
+  };
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  s /= 100;
+  l /= 100;
+  h /= 360;
+
+  let r = l;
+  let g = l;
+  let b = l;
+
+  if (s !== 0) {
+    const hue2rgb = (p: number, q: number, t: number) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+
+  const toHex = (x: number) => {
+    const hex = Math.round(x * 255).toString(16);
+    return hex.length === 1 ? '0' : '' + hex;
+  };
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+interface HarmonySwatch {
+  hex: string;
+  name: string;
+  role: string;
+}
+
+function generateHarmony(primaryHex: string, type: 'complementary' | 'analogous' | 'triadic' | 'monochromatic'): HarmonySwatch[] {
+  const hsl = hexToHsl(primaryHex);
+  const swatches: HarmonySwatch[] = [];
+
+  switch (type) {
+    case 'complementary': {
+      const compHue = (hsl.h + 180) % 360;
+      const split1 = (hsl.h + 150) % 360;
+      const split2 = (hsl.h + 210) % 360;
+
+      swatches.push({
+        hex: hslToHex(compHue, hsl.s, hsl.l),
+        name: 'Direct Opposite',
+        role: 'Perfect eye-catching contrast for frames & accents'
+      });
+      swatches.push({
+        hex: hslToHex(split1, Math.max(20, hsl.s - 10), Math.min(80, hsl.l + 10)),
+        name: 'Split Warm',
+        role: 'Softer vibrant pairing with warm undertones'
+      });
+      swatches.push({
+        hex: hslToHex(split2, Math.max(20, hsl.s - 10), Math.max(20, hsl.l - 10)),
+        name: 'Split Cool',
+        role: 'Softer vibrant pairing with cool undertones'
+      });
+      break;
+    }
+    case 'analogous': {
+      const h1 = (hsl.h - 30 + 360) % 360;
+      const h2 = (hsl.h + 30) % 360;
+      const h3 = (hsl.h + 60) % 360;
+
+      swatches.push({
+        hex: hslToHex(h1, hsl.s, hsl.l),
+        name: 'Left Neighbor',
+        role: 'Adjacent hue, provides a natural fluid blending gradient'
+      });
+      swatches.push({
+        hex: hslToHex(h2, hsl.s, hsl.l),
+        name: 'Right Neighbor',
+        role: 'Adjacent hue, perfect for secondary eye colors'
+      });
+      swatches.push({
+        hex: hslToHex(h3, Math.max(15, hsl.s - 15), Math.min(85, hsl.l + 15)),
+        name: 'Extended Accent',
+        role: 'Slightly further along the wheel for soft frame accents'
+      });
+      break;
+    }
+    case 'triadic': {
+      const h1 = (hsl.h + 120) % 360;
+      const h2 = (hsl.h + 240) % 360;
+      const h3 = (hsl.h + 120) % 360;
+
+      swatches.push({
+        hex: hslToHex(h1, hsl.s, hsl.l),
+        name: 'Triadic Pair A',
+        role: 'High energy triad, incredible for custom QR gradients'
+      });
+      swatches.push({
+        hex: hslToHex(h2, hsl.s, hsl.l),
+        name: 'Triadic Pair B',
+        role: 'Complementary triad balance, works great on finder frames'
+      });
+      swatches.push({
+        hex: hslToHex(h3, Math.min(100, hsl.s + 15), Math.max(10, hsl.l - 20)),
+        name: 'Deep Accent',
+        role: 'Darkened triadic shade, perfect for subtle scan margins'
+      });
+      break;
+    }
+    case 'monochromatic': {
+      const s1 = Math.min(100, hsl.s + 20);
+      const l1 = Math.min(85, hsl.l + 25);
+
+      const s2 = Math.max(10, hsl.s - 20);
+      const l2 = Math.max(15, hsl.l - 25);
+
+      const s3 = Math.max(20, hsl.s - 5);
+      const l3 = Math.max(10, hsl.l - 12);
+
+      swatches.push({
+        hex: hslToHex(hsl.h, s1, l1),
+        name: 'Bright Tint',
+        role: 'Clean lighter shade of main color, great for backgrounds'
+      });
+      swatches.push({
+        hex: hslToHex(hsl.h, s2, l2),
+        name: 'Deep Shade',
+        role: 'Elegant dark tone, perfect for high-contrast scanning'
+      });
+      swatches.push({
+        hex: hslToHex(hsl.h, s3, l3),
+        name: 'Active Middle',
+        role: 'Balanced intermediate tone for seamless designs'
+      });
+      break;
+    }
+  }
+
+  return swatches;
 }

@@ -13,6 +13,7 @@ const AnalyticsDashboard = React.lazy(() => import('./components/AnalyticsDashbo
 const MobileAppMockup = React.lazy(() => import('./components/MobileAppMockup'));
 const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowcase'));
 const AuthModal = React.lazy(() => import('./components/AuthModal'));
+const ShortcutsHelpModal = React.lazy(() => import('./components/ShortcutsHelpModal'));
 const CompanyPages = React.lazy(() => import('./components/CompanyPages'));
 const FaqSection = React.lazy(() => import('./components/FaqSection'));
 const BlogSection = React.lazy(() => import('./components/BlogSection'));
@@ -33,7 +34,7 @@ import {
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
-  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio
+  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -585,6 +586,16 @@ export default function App() {
   // Active Tab
   const [activeTab, setActiveTab ] = useState<'create' | 'templates' | 'analytics' | 'boiler' | 'animations'>('create');
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const root = window.document.documentElement;
+      root.classList.remove('dark');
+      root.classList.add('light');
+      root.style.colorScheme = 'light';
+      localStorage.setItem('app-theme', 'light');
+    }
+  }, []);
+
   // Filter for recently used categories
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<'all' | 'wifi' | 'whatsapp' | 'vcard' | 'restaurant' | 'social'>('all');
 
@@ -797,6 +808,7 @@ export default function App() {
 
   // Control state for Clerk/Auth0-style Login Dialog
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
 
   // Detect when user has scrolled down the page to condense the header
   const [isScrolled, setIsScrolled] = useState(false);
@@ -1003,6 +1015,52 @@ export default function App() {
     }
   };
 
+  // Global Keyboard Shortcuts (Ctrl+S to save, Ctrl+P to print, Ctrl+D to download, ? for help)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if target is an input, textarea, or editable element
+      const target = e.target as HTMLElement;
+      const isEditable = target.tagName === 'INPUT' || 
+                         target.tagName === 'TEXTAREA' || 
+                         target.isContentEditable;
+
+      const isMac = typeof window !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const modifier = isMac ? e.metaKey : e.ctrlKey;
+
+      if (modifier) {
+        switch (e.key.toLowerCase()) {
+          case 's':
+            e.preventDefault();
+            handleSaveProject();
+            break;
+          case 'p':
+            e.preventDefault();
+            window.dispatchEvent(new CustomEvent('app-trigger-print'));
+            break;
+          case 'd':
+            // Only trigger download if not focused inside inputs to avoid conflict
+            if (!isEditable) {
+              e.preventDefault();
+              window.dispatchEvent(new CustomEvent('app-trigger-download'));
+            }
+            break;
+          default:
+            break;
+        }
+      } else {
+        if (!isEditable && e.key === '?') {
+          e.preventDefault();
+          setIsShortcutsModalOpen(true);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleSaveProject, setIsShortcutsModalOpen]);
+
   const slug = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
   const isLandingPage = !!landingPages[slug];
 
@@ -1076,11 +1134,7 @@ export default function App() {
           y: isScrolled ? [-10, 0] : 0,
         }}
         transition={{ type: "spring", damping: 18, stiffness: 200 }}
-        className={`sticky top-0 z-50 px-6 flex items-center justify-between border-b backdrop-blur-xl transition-all duration-500 ease-in-out ${
-          isScrolled 
-            ? 'py-2.5 border-slate-200/85 shadow-md bg-white/40 shadow-indigo-100/20' 
-            : 'py-5 border-slate-200/40 shadow-xs bg-white/50'
-        }`}
+        className={`sticky top-0 z-50 px-6 flex items-center justify-between border-b backdrop-blur-xl transition-all duration-500 ease-in-out ${ isScrolled ? 'py-2.5 border-slate-200/85 shadow-md bg-white/40 shadow-indigo-100/20' : 'py-5 border-slate-200/40 shadow-xs bg-white/50' }`}
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-100/60 hover:scale-105 transition-transform duration-200">
@@ -1250,17 +1304,9 @@ export default function App() {
                               navigateTo(`/${toolItem.slug}`); 
                             }
                           }}
-                          className={`flex items-start gap-3 p-2.5 rounded-xl transition-all relative overflow-hidden group/item ${
-                            isCurrentActive 
-                              ? 'bg-gradient-to-r from-indigo-50 to-purple-50/50 border border-indigo-100 shadow-3xs' 
-                              : 'hover:bg-slate-50/80 border border-transparent hover:border-slate-100'
-                          }`}
+                          className={`flex items-start gap-3 p-2.5 rounded-xl transition-all relative overflow-hidden group/item ${ isCurrentActive ? 'bg-gradient-to-r from-indigo-50 to-purple-50/50 border border-indigo-100 shadow-3xs' : 'hover:bg-slate-50/80 border border-transparent hover:border-slate-100' }`}
                         >
-                          <div className={`w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 ${
-                            isCurrentActive 
-                              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' 
-                              : 'bg-slate-150/60 text-slate-500 group-hover/item:bg-indigo-600 group-hover/item:text-white group-hover/item:scale-105 group-hover/item:rotate-3'
-                          }`}>
+                          <div className={`w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 ${ isCurrentActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'bg-slate-150/60 text-slate-500 group-hover/item:bg-indigo-600 group-hover/item:text-white group-hover/item:scale-105 group-hover/item:rotate-3' }`}>
                             <IconComponent className="w-4 h-4 transition-transform duration-300 group-hover/item:scale-110" />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -1343,27 +1389,32 @@ export default function App() {
             <span>Tour</span>
           </button>
 
+          {/* Keyboard Shortcuts Help Button */}
+          <button
+            type="button"
+            id="shortcuts-help-button"
+            onClick={() => setIsShortcutsModalOpen(true)}
+            title="Keyboard Shortcuts (Press '?')"
+            className="flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98] mr-1 animate-fade-in"
+          >
+            <HelpCircle className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
+            <span className="hidden sm:inline">Shortcuts</span>
+            <kbd className="hidden md:inline px-1 py-0.5 text-[9px] font-mono font-bold bg-white border border-slate-200 rounded-md text-slate-500 shadow-3xs ml-0.5">?</kbd>
+          </button>
+
           {/* Language Switcher Button */}
           <div className="bg-slate-100/80 backdrop-blur-xs rounded-xl p-0.5 border border-slate-200/60 flex items-center mr-1">
             <button
               type="button"
               onClick={() => handleLocaleChange('en')}
-              className={`px-2 py-1 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${
-                locale === 'en'
-                  ? 'bg-white text-indigo-600 shadow-xs ring-1 ring-black/5'
-                  : 'text-slate-500 hover:text-indigo-600'
-              }`}
+              className={`px-2 py-1 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${ locale === 'en' ? 'bg-white text-indigo-600 shadow-xs ring-1 ring-black/5' : 'text-slate-500 hover:text-indigo-600' }`}
             >
               EN
             </button>
             <button
               type="button"
               onClick={() => handleLocaleChange('es')}
-              className={`px-2 py-1 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${
-                locale === 'es'
-                  ? 'bg-white text-indigo-600 shadow-xs ring-1 ring-black/5'
-                  : 'text-slate-500 hover:text-indigo-600'
-              }`}
+              className={`px-2 py-1 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${ locale === 'es' ? 'bg-white text-indigo-600 shadow-xs ring-1 ring-black/5' : 'text-slate-500 hover:text-indigo-600' }`}
             >
               ES
             </button>
@@ -1384,13 +1435,7 @@ export default function App() {
                     ? 'Alerts are blocked. Check browser address bar settings.'
                     : 'Click to enable real-time Desktop Alerts for new scans'
                 }
-                className={`relative p-2 rounded-xl border transition-all cursor-pointer ${
-                  nPermission === 'granted'
-                    ? 'bg-emerald-50/70 text-emerald-600 border-emerald-100 hover:bg-emerald-50'
-                    : nPermission === 'denied'
-                    ? 'bg-slate-100 text-slate-400 border-slate-200/60 cursor-not-allowed'
-                    : 'bg-indigo-50/50 hover:bg-indigo-50 text-indigo-600 border-indigo-100 animate-pulse'
-                }`}
+                className={`relative p-2 rounded-xl border transition-all cursor-pointer ${ nPermission === 'granted' ? 'bg-emerald-50/70 text-emerald-600 border-emerald-100 hover:bg-emerald-50' : nPermission === 'denied' ? 'bg-slate-100 text-slate-400 border-slate-200/60 cursor-not-allowed' : 'bg-indigo-50/50 hover:bg-indigo-50 text-indigo-600 border-indigo-100 animate-pulse' }`}
               >
                 <Bell className="w-3.5 h-3.5" />
                 {nPermission === 'granted' && (
@@ -1607,11 +1652,7 @@ export default function App() {
                                   navigateTo(`/${sub.slug}`);
                                 }
                               }}
-                              className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
-                                isCurrentActive 
-                                  ? 'bg-gradient-to-r from-indigo-950/40 to-purple-950/20 text-indigo-400 border border-indigo-500/20' 
-                                  : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
-                              }`}
+                              className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${ isCurrentActive ? 'bg-gradient-to-r from-indigo-950/40 to-purple-950/20 text-indigo-400 border border-indigo-500/20' : 'text-slate-300 hover:text-white hover:bg-slate-800/40' }`}
                             >
                               <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isCurrentActive ? 'bg-indigo-600/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
                                 <SubIcon className="w-3.5 h-3.5" />
@@ -1786,47 +1827,35 @@ export default function App() {
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between bg-white border border-gray-200/80 p-1.5 rounded-2xl max-w-xl shadow-xs gap-1">
           <button
             type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
-              activeTab === 'create' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'
-            }`}
+            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'create' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('create')}
           >
             Creative Station
           </button>
           <button
             type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
-              activeTab === 'templates' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'
-            }`}
+            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'templates' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('templates')}
           >
             Templates
           </button>
           <button
             type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
-              activeTab === 'analytics' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'
-            }`}
+            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'analytics' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('analytics')}
           >
             Scan Analytics
           </button>
           <button
             type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
-              activeTab === 'boiler' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'
-            }`}
+            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'boiler' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('boiler')}
           >
             Mobile Packages
           </button>
           <button
             type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 ${
-              activeTab === 'animations'
-                ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white shadow-xs font-bold'
-                : 'text-gray-600 hover:bg-gray-50'
-            }`}
+            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 ${ activeTab === 'animations' ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white shadow-xs font-bold' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('animations')}
           >
             <Sparkles className={`w-3.5 h-3.5 ${activeTab === 'animations' ? 'text-yellow-300 animate-spin-slow' : 'text-purple-500'}`} />
@@ -2114,23 +2143,23 @@ export default function App() {
             </section>
 
             {/* Recently Used QR Categories */}
-            <section id="recent-categories" className="bg-slate-900 text-white rounded-3xl p-8 relative overflow-hidden shadow-xl">
+            <section id="recent-categories" className="bg-white border border-slate-200 text-slate-900 rounded-3xl p-8 relative overflow-hidden shadow-xs">
               <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full filter blur-3xl pointer-events-none" />
               
               <div className="max-w-2xl space-y-2 relative z-10">
-                <span className="text-[9px] uppercase tracking-widest font-black text-indigo-400 font-mono inline-block">
+                <span className="text-[9px] uppercase tracking-widest font-black text-indigo-600 font-mono inline-block">
                   Live Usage Statistics and Trends
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+                <h3 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
                   Recently Used QR Categories
                 </h3>
-                <p className="text-xs text-slate-400 leading-normal">
+                <p className="text-xs text-slate-600 leading-normal">
                   Over 14,000 professional campaigns style high-contrast QR visual patterns monthly. See active metrics:
                 </p>
               </div>
 
               {/* Category Filter Controls */}
-              <div id="category-filter-bar" className="flex flex-wrap gap-2 mt-6 pb-4 border-b border-slate-800/80 relative z-10">
+              <div id="category-filter-bar" className="flex flex-wrap gap-2 mt-6 pb-4 border-b border-slate-200 relative z-10">
                 {[
                   { id: 'all', label: 'All Categories' },
                   { id: 'wifi', label: 'WiFi Pairing' },
@@ -2143,11 +2172,7 @@ export default function App() {
                     key={cat.id}
                     id={`filter-btn-${cat.id}`}
                     onClick={() => setSelectedCategoryFilter(cat.id as any)}
-                    className={`px-3.5 py-1.5 rounded-xl text-[11px] font-bold tracking-wide transition-all duration-250 cursor-pointer ${
-                      selectedCategoryFilter === cat.id
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 scale-[1.03]'
-                        : 'bg-slate-950/80 text-slate-400 hover:text-white border border-slate-800/60'
-                    }`}
+                    className={`px-3.5 py-1.5 rounded-xl text-[11px] font-bold tracking-wide transition-all duration-250 cursor-pointer ${ selectedCategoryFilter === cat.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 scale-[1.03]' : 'bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 ' }`}
                   >
                     {cat.label}
                   </button>
@@ -2159,20 +2184,20 @@ export default function App() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-50px" }}
-                className="flex overflow-x-auto sm:grid sm:grid-cols-2 gap-4 mt-8 pb-4 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent relative z-10 snap-x snap-mandatory"
+                className="flex overflow-x-auto sm:grid sm:grid-cols-2 gap-4 mt-8 pb-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent relative z-10 snap-x snap-mandatory"
               >
                 <AnimatePresence mode="popLayout">
                   {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'wifi') && (
                     <motion.div key="wifi-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-wifi-card" 
-                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[inset_0_0_15px_rgba(99,102,241,0.35),0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group"
+                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[inset_0_0_15px_rgba(99,102,241,0.35),0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group"
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-indigo-400 font-bold uppercase block">📡 Wireless Tech Integration • 2 min ago</span>
-                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-indigo-400 transition-colors">Wireless Wi-Fi SSID Pairing</h4>
-                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                          <span className="text-[10px] font-mono text-indigo-600 font-bold uppercase block">📡 Wireless Tech Integration • 2 min ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Wireless Wi-Fi SSID Pairing</h4>
+                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             Used by 1,480+ local hosts, cafeteria managers, and Airbnb operations. Allows direct, no-type scan router pairing.
                           </p>
                         </div>
@@ -2180,9 +2205,9 @@ export default function App() {
                         <div className="space-y-1.5 mt-4">
                           <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
                             <span>Scan Activity Rate</span>
-                            <span className="font-extrabold text-slate-300"><RollingNumber value={Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)} />%</span>
+                            <span className="font-extrabold text-slate-800"><RollingNumber value={Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)} />%</span>
                           </div>
-                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
                               animate={{ width: `${Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)}%` }}
@@ -2196,7 +2221,7 @@ export default function App() {
                           id="recent-wifi-link"
                           href="/wifi-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-indigo-400 group-hover:text-white flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1"
                         >
                           Explore Free WiFi lander
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
@@ -2209,13 +2234,13 @@ export default function App() {
                     <motion.div key="whatsapp-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-whatsapp-card" 
-                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group"
+                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group"
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
-                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-emerald-400 transition-colors">Direct WhatsApp Customer Support</h4>
-                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                          <span className="text-[10px] font-mono text-emerald-600 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-emerald-600 transition-colors">Direct WhatsApp Customer Support</h4>
+                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             Used by retail stores and digital agencies to enable rapid customer service requests. Launches formatted text templates.
                           </p>
                         </div>
@@ -2223,9 +2248,9 @@ export default function App() {
                         <div className="space-y-1.5 mt-4">
                           <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
                             <span>Scan Activity Rate</span>
-                            <span className="font-extrabold text-slate-300">{Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%</span>
+                            <span className="font-extrabold text-slate-800">{Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%</span>
                           </div>
-                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
                               animate={{ width: `${Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%` }}
@@ -2239,7 +2264,7 @@ export default function App() {
                           id="recent-whatsapp-link"
                           href="/whatsapp-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-emerald-400 group-hover:text-white flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-emerald-600 group-hover:text-emerald-800 flex items-center gap-1"
                         >
                           Explore WhatsApp lander
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
@@ -2252,13 +2277,13 @@ export default function App() {
                     <motion.div key="vcard-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-vcard-card" 
-                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[inset_0_0_15px_rgba(168,85,247,0.35),0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group"
+                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[inset_0_0_15px_rgba(168,85,247,0.35),0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group"
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-purple-400 font-bold uppercase block">📇 Business Connectivity • 15 min ago</span>
-                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-purple-400 transition-colors">Interactive Content-Rich vCards</h4>
-                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                          <span className="text-[10px] font-mono text-purple-600 font-bold uppercase block">📇 Business Connectivity • 15 min ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-purple-600 transition-colors">Interactive Content-Rich vCards</h4>
+                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             Designed weekly by real estate brokers and dynamic consulting networks. Instantly saves primary contact cards.
                           </p>
                         </div>
@@ -2266,9 +2291,9 @@ export default function App() {
                         <div className="space-y-1.5 mt-4">
                           <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
                             <span>Scan Activity Rate</span>
-                            <span className="font-extrabold text-slate-300">{Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%</span>
+                            <span className="font-extrabold text-slate-800">{Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%</span>
                           </div>
-                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
                               animate={{ width: `${Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%` }}
@@ -2282,7 +2307,7 @@ export default function App() {
                           id="recent-vcard-link"
                           href="/vcard-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-purple-400 group-hover:text-white flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-purple-600 group-hover:text-purple-800 flex items-center gap-1"
                         >
                           Explore vCard lander
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
@@ -2295,13 +2320,13 @@ export default function App() {
                     <motion.div key="restaurant-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-restaurant-card" 
-                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[inset_0_0_15px_rgba(245,158,11,0.35),0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group"
+                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[inset_0_0_15px_rgba(245,158,11,0.35),0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group"
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-amber-400 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
-                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-amber-400 transition-colors">Restaurant Menus & PDF Hosters</h4>
-                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                          <span className="text-[10px] font-mono text-amber-600 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-amber-600 transition-colors">Restaurant Menus & PDF Hosters</h4>
+                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             Leveraged by cafes, visual bistros, and contactless fast-food spots. Keeps dynamic menu files editable and local.
                           </p>
                         </div>
@@ -2309,9 +2334,9 @@ export default function App() {
                         <div className="space-y-1.5 mt-4">
                           <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
                             <span>Scan Activity Rate</span>
-                            <span className="font-extrabold text-slate-300">{Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%</span>
+                            <span className="font-extrabold text-slate-800">{Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%</span>
                           </div>
-                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
                               animate={{ width: `${Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%` }}
@@ -2325,7 +2350,7 @@ export default function App() {
                           id="recent-restaurant-link"
                           href="/restaurant-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-amber-400 group-hover:text-white flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-amber-600 group-hover:text-amber-800 flex items-center gap-1"
                         >
                           Explore Restaurant lander
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
@@ -2338,13 +2363,13 @@ export default function App() {
                     <motion.div key="social-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-social-card" 
-                        className="h-full p-5 bg-slate-950 rounded-2xl border border-slate-850/50 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.35),0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group"
+                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.35),0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group"
                         style={{ transition: 'all 0.3s ease', contentVisibility: 'auto' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-pink-400 font-bold uppercase block">📲 Bio Links & Socials • 2 hrs ago</span>
-                          <h4 className="text-sm font-extrabold text-slate-100 group-hover:text-pink-400 transition-colors">Social Multi-Link Hubs</h4>
-                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                          <span className="text-[10px] font-mono text-pink-600 font-bold uppercase block">📲 Bio Links & Socials • 2 hrs ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-pink-600 transition-colors">Social Multi-Link Hubs</h4>
+                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             Designed weekly by micro-influencers, content creators, and local artists to map multiple platforms inside a single aesthetic scan.
                           </p>
                         </div>
@@ -2352,9 +2377,9 @@ export default function App() {
                         <div className="space-y-1.5 mt-4">
                           <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
                             <span>Scan Activity Rate</span>
-                            <span className="font-extrabold text-slate-300">{Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%</span>
+                            <span className="font-extrabold text-slate-800">{Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%</span>
                           </div>
-                          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
                               animate={{ width: `${Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%` }}
@@ -2368,7 +2393,7 @@ export default function App() {
                           id="recent-social-link"
                           href="/instagram-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-pink-400 group-hover:text-white flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-pink-600 group-hover:text-pink-800 flex items-center gap-1"
                         >
                           Explore Instagram lander
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
@@ -2387,7 +2412,7 @@ export default function App() {
                 'restaurant',
                 'social'
               ].filter(id => selectedCategoryFilter === 'all' || selectedCategoryFilter === id).length > 4 && (
-                <div id="scroll-indicator" className="flex items-center justify-center gap-2 mt-4 text-[10px] uppercase tracking-wider font-mono font-bold text-indigo-400 sm:hidden">
+                <div id="scroll-indicator" className="flex items-center justify-center gap-2 mt-4 text-[10px] uppercase tracking-wider font-mono font-bold text-indigo-600 sm:hidden">
                   <span>Swipe horizontally to view categories</span>
                   <motion.div
                     animate={{ x: [0, 6, 0] }}
@@ -2401,7 +2426,7 @@ export default function App() {
 
             {/* Complete Internal Linking Related Pages grid */}
             <section id="guide-relations" className="space-y-4">
-              <h3 className="text-xs font-black uppercase text-slate-400 tracking-wider font-mono">
+              <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider font-mono">
                 Related Free QR Generation Guides
               </h3>
               <div className="w-full h-[1px] bg-slate-200" />
@@ -2420,7 +2445,7 @@ export default function App() {
                         <span className="block text-[11px] font-extrabold text-slate-900 group-hover:text-indigo-600 truncate">
                           🚀 {item.h1}
                         </span>
-                        <p className="text-[9px] text-slate-400 mt-1 leading-relaxed truncate-3-lines min-h-[25px]">
+                        <p className="text-[9px] text-slate-600 mt-1 leading-relaxed truncate-3-lines min-h-[25px]">
                           {item.intro.highlight}
                         </p>
                       </div>
@@ -2490,10 +2515,14 @@ export default function App() {
             setIsAuthModalOpen(false);
           }}
         />
+        <ShortcutsHelpModal 
+          isOpen={isShortcutsModalOpen}
+          onClose={() => setIsShortcutsModalOpen(false)}
+        />
       </React.Suspense>
 
       {/* Footer with rich SEO directory links */}
-      <footer id="app-footer" className="py-16 border-t border-slate-100 bg-white/50 text-slate-600 mt-12">
+      <footer id="app-footer" className="py-16 border-t border-slate-200 bg-slate-50/50 text-slate-600 mt-12">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div id="footer-branding" className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2">
@@ -2502,68 +2531,68 @@ export default function App() {
               </div>
               <span className="font-bold text-xs text-slate-900 tracking-wider uppercase font-mono">iSolutions QR Generator</span>
             </div>
-            <p className="text-xs text-slate-500 max-w-sm leading-relaxed">
+            <p className="text-xs text-slate-600 max-w-sm leading-relaxed">
               Design customized, high-redundancy QR codes with modern color gradients, dot styles, and brand centerpieces. Complete with dynamic web link shortener tracking and real-time scan analytics.
             </p>
           </div>
           <div id="footer-directory" className="md:col-span-2 space-y-4">
             <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">Dedicated Free QR Code Solutions</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-              <a href="/wifi-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/wifi-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 📡 Free WiFi QR Code Generator
               </a>
-              <a href="/whatsapp-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/whatsapp-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 💬 Free WhatsApp QR Code Generator
               </a>
-              <a href="/email-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/email-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/email-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/email-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 ✉️ Free Email QR Code Generator
               </a>
-              <a href="/sms-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/sms-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/sms-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/sms-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 📱 Free SMS QR Code Generator
               </a>
-              <a href="/vcard-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/vcard-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 📇 Free vCard QR Code Generator
               </a>
-              <a href="/url-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/url-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/url-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/url-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 🔗 Free URL QR Code Generator
               </a>
-              <a href="/business-card-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/business-card-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/business-card-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/business-card-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 💼 Free Business Card QR Code
               </a>
-              <a href="/restaurant-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/restaurant-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 🍔 Free Restaurant QR Code
               </a>
-              <a href="/facebook-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/facebook-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/facebook-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/facebook-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 📘 Free Facebook QR Code
               </a>
-              <a href="/instagram-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/instagram-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 📸 Free Instagram QR Code
               </a>
-              <a href="/youtube-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/youtube-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/youtube-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/youtube-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 🎥 Free YouTube QR Code
               </a>
-              <a href="/pdf-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/pdf-qr-generator'); }} className="text-left text-xs text-slate-500 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/pdf-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/pdf-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 📄 Free PDF QR Code Generator
               </a>
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-6 border-t border-slate-100 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400 font-mono">
+        <div className="max-w-7xl mx-auto px-6 border-t border-slate-200 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono">
           <p>© 2026 iSolutions QR Generator. Decoupled and fully verified local-cloud schema.</p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">About Us</a>
+            <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">About Us</a>
             <span>•</span>
-            <a href="/faq" onClick={(e) => { e.preventDefault(); navigateTo('/faq'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">FAQ</a>
+            <a href="/faq" onClick={(e) => { e.preventDefault(); navigateTo('/faq'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">FAQ</a>
             <span>•</span>
-            <a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Blog</a>
+            <a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Blog</a>
             <span>•</span>
-            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Privacy Policy</a>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Privacy Policy</a>
             <span>•</span>
-            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Terms & Conditions</a>
+            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Terms & Conditions</a>
             <span>•</span>
-            <a href="/embed" onClick={(e) => { e.preventDefault(); navigateTo('/embed'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold text-indigo-600">Embed Badge</a>
+            <a href="/embed" onClick={(e) => { e.preventDefault(); navigateTo('/embed'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Embed Badge</a>
             <span>•</span>
-            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Contact Us</a>
+            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Contact Us</a>
           </div>
         </div>
       </footer>

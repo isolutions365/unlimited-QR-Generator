@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScanLog, QRProject } from '../types';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
-import { BarChart3, Globe, Tablet, Users, Grid } from 'lucide-react';
+import { BarChart3, Globe, Tablet, Users, Grid, GitCompare, Calendar } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import D3WorldHeatmap from './D3WorldHeatmap';
 
 interface AnalyticsDashboardProps {
@@ -13,6 +14,154 @@ interface AnalyticsDashboardProps {
 export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: AnalyticsDashboardProps) {
 
   const [hoveredCountry, setHoveredCountry] = React.useState<{ name: string; count: number; code: string } | null>(null);
+
+  // Project selection state for side-by-side comparison
+  const [compareProjectAId, setCompareProjectAId] = React.useState<string>('');
+  const [compareProjectBId, setCompareProjectBId] = React.useState<string>('');
+
+  // Date range picker states for side-by-side comparison
+  const [compareRangeType, setCompareRangeType] = React.useState<'7days' | '30days' | 'custom'>('7days');
+  const [compareStartDate, setCompareStartDate] = React.useState<string>('2026-06-22');
+  const [compareEndDate, setCompareEndDate] = React.useState<string>('2026-06-29');
+
+  // Sync selected compare projects with actual list
+  React.useEffect(() => {
+    if (projects && projects.length > 0) {
+      if (!compareProjectAId || !projects.find(p => p.id === compareProjectAId)) {
+        setCompareProjectAId(projects[0].id);
+      }
+      if (!compareProjectBId || !projects.find(p => p.id === compareProjectBId)) {
+        setCompareProjectBId(projects[1]?.id || projects[0].id);
+      }
+    }
+  }, [projects, compareProjectAId, compareProjectBId]);
+
+  const projectA = projects.find(p => p.id === compareProjectAId);
+  const projectB = projects.find(p => p.id === compareProjectBId);
+
+  // Timeframe filter function for comparison data
+  const filteredScansByTimeframe = React.useMemo(() => {
+    const now = new Date('2026-06-29T23:59:59'); // Base on current user session metadata date
+
+    let startMs = 0;
+    let endMs = Infinity;
+
+    if (compareRangeType === '7days') {
+      const d = new Date(now);
+      d.setDate(d.getDate() - 6);
+      d.setHours(0, 0, 0, 0);
+      startMs = d.getTime();
+      endMs = now.getTime();
+    } else if (compareRangeType === '30days') {
+      const d = new Date(now);
+      d.setDate(d.getDate() - 29);
+      d.setHours(0, 0, 0, 0);
+      startMs = d.getTime();
+      endMs = now.getTime();
+    } else if (compareRangeType === 'custom') {
+      if (compareStartDate) {
+        const dStart = new Date(compareStartDate + 'T00:00:00');
+        startMs = dStart.getTime();
+      } else {
+        startMs = 0;
+      }
+      if (compareEndDate) {
+        const dEnd = new Date(compareEndDate + 'T23:59:59');
+        endMs = dEnd.getTime();
+      } else {
+        endMs = Infinity;
+      }
+    }
+
+    return (projectScans: ScanLog[]) => {
+      return projectScans.filter(s => {
+        const t = new Date(s.timestamp).getTime();
+        return t >= startMs && t <= endMs;
+      });
+    };
+  }, [compareRangeType, compareStartDate, compareEndDate]);
+
+  const rawScansA = React.useMemo(() => scans.filter(s => s.projectId === compareProjectAId), [scans, compareProjectAId]);
+  const rawScansB = React.useMemo(() => scans.filter(s => s.projectId === compareProjectBId), [scans, compareProjectBId]);
+
+  const scansA = React.useMemo(() => filteredScansByTimeframe(rawScansA), [rawScansA, filteredScansByTimeframe]);
+  const scansB = React.useMemo(() => filteredScansByTimeframe(rawScansB), [rawScansB, filteredScansByTimeframe]);
+
+  // Aggregate locations count
+  const locsA = React.useMemo(() => new Set(scansA.map(s => s.approxLocation).filter(Boolean)).size, [scansA]);
+  const locsB = React.useMemo(() => new Set(scansB.map(s => s.approxLocation).filter(Boolean)).size, [scansB]);
+
+  // Aggregate top browser
+  const getTopBrowser = (filteredScans: ScanLog[]) => {
+    if (filteredScans.length === 0) return 'None';
+    const browsers: { [key: string]: number } = {};
+    filteredScans.forEach(s => {
+      const b = s.browser || 'Chrome';
+      browsers[b] = (browsers[b] || 0) + 1;
+    });
+    return Object.keys(browsers).reduce((a, b) => browsers[a] > browsers[b] ? a : b, 'Unknown');
+  };
+  const topBrowserA = React.useMemo(() => getTopBrowser(scansA), [scansA]);
+  const topBrowserB = React.useMemo(() => getTopBrowser(scansB), [scansB]);
+
+  // Combine daily timeline data for overlay
+  const getCompareTimelineData = () => {
+    const dates: { [key: string]: { date: string; scansA: number; scansB: number } } = {};
+    const daysList: string[] = [];
+
+    let numDays = 7;
+    let startDateObj = new Date('2026-06-29T23:59:59');
+
+    if (compareRangeType === '7days') {
+      numDays = 7;
+      startDateObj.setDate(startDateObj.getDate() - 6);
+    } else if (compareRangeType === '30days') {
+      numDays = 30;
+      startDateObj.setDate(startDateObj.getDate() - 29);
+    } else if (compareRangeType === 'custom') {
+      const dStart = new Date(compareStartDate + 'T00:00:00');
+      const dEnd = new Date(compareEndDate + 'T23:59:59');
+      const diffTime = Math.abs(dEnd.getTime() - dStart.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      numDays = Math.min(Math.max(diffDays, 1), 180); // Clamp between 1 day and 180 days to avoid UI crash
+      startDateObj = dStart;
+    }
+
+    // Initialize all daily keys
+    for (let i = 0; i < numDays; i++) {
+      const d = new Date(startDateObj);
+      d.setDate(startDateObj.getDate() + i);
+      const dayString = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      if (!dates[dayString]) {
+        dates[dayString] = { date: dayString, scansA: 0, scansB: 0 };
+        daysList.push(dayString);
+      }
+    }
+
+    scansA.forEach(s => {
+      try {
+        const d = new Date(s.timestamp);
+        const dayString = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        if (dates[dayString] !== undefined) {
+          dates[dayString].scansA++;
+        }
+      } catch {}
+    });
+
+    scansB.forEach(s => {
+      try {
+        const d = new Date(s.timestamp);
+        const dayString = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        if (dates[dayString] !== undefined) {
+          dates[dayString].scansB++;
+        }
+      } catch {}
+    });
+
+    return daysList.map(dayString => dates[dayString]);
+  };
+
+  const compareTimelineData = React.useMemo(() => getCompareTimelineData(), [scansA, scansB, compareRangeType, compareStartDate, compareEndDate]);
 
   // Normalize location strings for heatmap coordination mapping
   const normalizeCountry = (loc: string): string => {
@@ -169,7 +318,12 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
 
       {/* Overview Stat Cards */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-between min-h-[110px]">
+        <motion.div 
+          className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-between min-h-[110px]"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
           <div>
             <div className="flex items-center gap-1.5 text-gray-500 mb-1">
               <Users className="w-4 h-4 text-indigo-500" />
@@ -195,9 +349,14 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-between min-h-[110px]">
+        <motion.div 
+          className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-between min-h-[110px]"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.05, ease: "easeOut" }}
+        >
           <div>
             <div className="flex items-center gap-1.5 text-gray-500 mb-1">
               <Grid className="w-4 h-4 text-emerald-500" />
@@ -209,9 +368,14 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Real-time tracking enabled</span>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-between min-h-[110px]">
+        <motion.div 
+          className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-between min-h-[110px]"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
+        >
           <div>
             <div className="flex items-center gap-1.5 text-gray-500 mb-1">
               <Globe className="w-4 h-4 text-amber-500" />
@@ -222,12 +386,12 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
           <div className="text-[10px] text-gray-400 mt-2 font-medium">
             <span>Locations resolved via client telemetry</span>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Analytics empty fallback */}
       {totalScans === 0 ? (
-        <div className="py-12 text-center border border-dashed border-gray-100 rounded-xl">
+        <div className="py-12 text-center border border-dashed border-gray-100 rounded-xl bg-slate-50/20">
           <Tablet className="w-8 h-8 text-indigo-300 mx-auto mb-2" />
           <h3 className="text-xs font-semibold text-gray-700">No Analytics Telemetry Yet</h3>
           <p className="text-[11px] text-gray-400 mt-1 max-w-[240px] mx-auto">
@@ -239,7 +403,12 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
           {/* Timeline Chart Card */}
           <div className="p-4 rounded-xl border border-gray-100 bg-white">
             <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase mb-4">Click Scan Metrics (last 7 days)</h3>
-            <div className="h-48 w-full">
+            <motion.div 
+              className="h-48 w-full"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+            >
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={timelineData}>
                   <defs>
@@ -250,11 +419,294 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
                   </defs>
                   <XAxis dataKey="date" tickLine={false} style={{ fontSize: 10, fill: '#64748b' }} />
                   <YAxis tickLine={false} width={20} style={{ fontSize: 10, fill: '#64748b' }} allowDecimals={false} />
-                  <Tooltip wrapperStyle={{ outline: 'none' }} contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }} />
+                  <Tooltip wrapperStyle={{ outline: 'none' }} contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0', backgroundColor: '#1e293b', color: '#f8fafc' }} />
                   <Area type="monotone" dataKey="scans" stroke="#4f46e5" strokeWidth={2} fillOpacity={1} fill="url(#colorScans)" />
                 </AreaChart>
               </ResponsiveContainer>
+            </motion.div>
+          </div>
+
+          {/* Side-by-Side QR Project Comparison Overlay */}
+          <div className="p-5 rounded-xl border border-gray-100 bg-white flex flex-col gap-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-gray-100/60">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-indigo-50 rounded-lg text-indigo-600">
+                  <GitCompare className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">Side-by-Side Project Performance</h3>
+                  <p className="text-[11px] text-gray-400 mt-0.5">Select and overlay two different QR projects to cross-examine telemetry trends.</p>
+                </div>
+              </div>
+
+              {projects.length >= 2 ? (
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* Selector A */}
+                  <select
+                    id="compare-project-a"
+                    value={compareProjectAId}
+                    onChange={(e) => setCompareProjectAId(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-gray-700 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium cursor-pointer"
+                  >
+                    {projects.map(p => (
+                      <option key={p.id} value={p.id} className="">{p.name || 'Untitled'}</option>
+                    ))}
+                  </select>
+
+                  <span className="text-[10px] font-bold text-slate-400 uppercase px-1">VS</span>
+
+                  {/* Selector B */}
+                  <select
+                    id="compare-project-b"
+                    value={compareProjectBId}
+                    onChange={(e) => setCompareProjectBId(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-gray-700 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium cursor-pointer"
+                  >
+                    {projects.map(p => (
+                      <option key={p.id} value={p.id} className="">{p.name || 'Untitled'}</option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
             </div>
+
+            {/* Timeframe selector controls */}
+            {projects.length >= 2 && (
+              <div className="flex flex-wrap items-center justify-between gap-3 p-2.5 bg-slate-50/50 border border-slate-100/80 rounded-xl">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1.5 flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                    Timeframe:
+                  </span>
+                  
+                  {/* Presets */}
+                  <div className="flex bg-slate-200/50 rounded-lg p-0.5 border border-slate-200/40">
+                    <button
+                      type="button"
+                      id="btn-range-7days"
+                      onClick={() => setCompareRangeType('7days')}
+                      className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ compareRangeType === '7days' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 ' }`}
+                    >
+                      7 Days
+                    </button>
+                    <button
+                      type="button"
+                      id="btn-range-30days"
+                      onClick={() => setCompareRangeType('30days')}
+                      className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ compareRangeType === '30days' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 ' }`}
+                    >
+                      30 Days
+                    </button>
+                    <button
+                      type="button"
+                      id="btn-range-custom"
+                      onClick={() => setCompareRangeType('custom')}
+                      className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ compareRangeType === 'custom' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 ' }`}
+                    >
+                      Custom Range
+                    </button>
+                  </div>
+                </div>
+
+                {/* Custom Date Picker Inputs */}
+                {compareRangeType === 'custom' && (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2 py-1 shadow-sm">
+                      <span className="text-[9px] font-bold text-slate-400 uppercase">Start</span>
+                      <input
+                        type="date"
+                        id="compare-start-date"
+                        value={compareStartDate}
+                        onChange={(e) => setCompareStartDate(e.target.value)}
+                        max={compareEndDate || '2026-06-29'}
+                        className="text-xs text-slate-700 font-medium focus:outline-none bg-transparent cursor-pointer"
+                      />
+                    </div>
+                    <span className="text-slate-400 text-xs font-semibold">to</span>
+                    <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2 py-1 shadow-sm">
+                      <span className="text-[9px] font-bold text-slate-400 uppercase">End</span>
+                      <input
+                        type="date"
+                        id="compare-end-date"
+                        value={compareEndDate}
+                        onChange={(e) => setCompareEndDate(e.target.value)}
+                        min={compareStartDate}
+                        max="2026-06-29"
+                        className="text-xs text-slate-700 font-medium focus:outline-none bg-transparent cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {projects.length < 2 ? (
+              <div className="py-6 px-4 bg-amber-50/50 border border-amber-100/80 rounded-xl flex items-start gap-3">
+                <div className="w-2 h-2 rounded-full bg-amber-400 mt-1.5 animate-pulse shrink-0" />
+                <div className="text-xs">
+                  <h4 className="font-semibold text-amber-800">Overlay Comparison Requires 2+ Projects</h4>
+                  <p className="text-amber-700/85 mt-1 leading-relaxed">
+                    This module allows you to view multi-project trends on a single interactive chart. 
+                    Please create at least <strong>two different QR projects</strong> to unlock this live cross-analysis tool.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${compareProjectAId}-${compareProjectBId}-${compareRangeType}-${compareStartDate}-${compareEndDate}`}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.35, ease: 'easeInOut' }}
+                  className="grid grid-cols-1 lg:grid-cols-12 gap-6"
+                >
+                  {/* Chart Overlay (7 columns) */}
+                  <div className="lg:col-span-7 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        {compareRangeType === '7days' && '7-Day Scan Volume Overlay'}
+                        {compareRangeType === '30days' && '30-Day Scan Volume Overlay'}
+                        {compareRangeType === 'custom' && 'Custom Scan Volume Overlay'}
+                      </span>
+                      <div className="flex items-center gap-3 text-[10px] font-medium font-mono">
+                        <span className="flex items-center gap-1.5 text-indigo-600">
+                          <span className="w-2 h-2 rounded-full bg-indigo-600" />
+                          {projectA?.name || 'Project A'}
+                        </span>
+                        <span className="flex items-center gap-1.5 text-emerald-500">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                          {projectB?.name || 'Project B'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="h-56 w-full border border-slate-100 rounded-xl p-2 bg-slate-50/30">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={compareTimelineData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="colorScansA" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.15} />
+                              <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
+                            </linearGradient>
+                            <linearGradient id="colorScansB" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
+                              <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <XAxis dataKey="date" tickLine={false} style={{ fontSize: 9, fill: '#64748b' }} />
+                          <YAxis tickLine={false} style={{ fontSize: 9, fill: '#64748b' }} allowDecimals={false} />
+                          <Tooltip 
+                            wrapperStyle={{ outline: 'none' }} 
+                            contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0', backgroundColor: '#1e293b', color: '#f8fafc', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} 
+                          />
+                          <Area type="monotone" name={projectA?.name || 'Project A'} dataKey="scansA" stroke="#4f46e5" strokeWidth={2.5} fillOpacity={1} fill="url(#colorScansA)" />
+                          <Area type="monotone" name={projectB?.name || 'Project B'} dataKey="scansB" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorScansB)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* KPI Side-by-side Table / Progress Breakdown (5 columns) */}
+                  <div className="lg:col-span-5 flex flex-col justify-between gap-4">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Metric Breakdown Comparison</span>
+                    
+                    <div className="flex flex-col gap-4 flex-1">
+                      {/* KPI 1: Total Scans */}
+                      <div className="flex flex-col gap-1.5 p-3 rounded-xl border border-slate-100 bg-slate-50/40">
+                        <div className="flex justify-between text-xs font-semibold text-slate-700">
+                          <span>Total Scans</span>
+                          <div className="flex gap-4 font-mono">
+                            <span className="text-indigo-600">{scansA.length}</span>
+                            <span className="text-slate-300">/</span>
+                            <span className="text-emerald-500">{scansB.length}</span>
+                          </div>
+                        </div>
+                        {/* Side-by-side visual gauge bar */}
+                        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden flex">
+                          {scansA.length + scansB.length > 0 ? (
+                            <>
+                              <motion.div 
+                                className="bg-indigo-600 h-full" 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(scansA.length / (scansA.length + scansB.length)) * 100}%` }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                              />
+                              <motion.div 
+                                className="bg-emerald-500 h-full" 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(scansB.length / (scansA.length + scansB.length)) * 100}%` }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                              />
+                            </>
+                          ) : (
+                            <div className="bg-slate-200 w-full h-full" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* KPI 2: Geographical Reach */}
+                      <div className="flex flex-col gap-1.5 p-3 rounded-xl border border-slate-100 bg-slate-50/40">
+                        <div className="flex justify-between text-xs font-semibold text-slate-700">
+                          <span>Approx Locations Reach</span>
+                          <div className="flex gap-4 font-mono">
+                            <span className="text-indigo-600">{locsA}</span>
+                            <span className="text-slate-300">/</span>
+                            <span className="text-emerald-500">{locsB}</span>
+                          </div>
+                        </div>
+                        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden flex">
+                          {locsA + locsB > 0 ? (
+                            <>
+                              <motion.div 
+                                className="bg-indigo-400 h-full" 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(locsA / (locsA + locsB)) * 100}%` }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                              />
+                              <motion.div 
+                                className="bg-emerald-400 h-full" 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(locsB / (locsA + locsB)) * 100}%` }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                              />
+                            </>
+                          ) : (
+                            <div className="bg-slate-200 w-full h-full" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* KPI 3: Top Browser */}
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <motion.div 
+                          className="p-3 rounded-xl border border-indigo-100/50 bg-indigo-50/20 flex flex-col gap-0.5"
+                          initial={{ scale: 0.95, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.1, duration: 0.3 }}
+                        >
+                          <span className="text-[10px] font-semibold text-indigo-500 uppercase tracking-wider">Top Browser A</span>
+                          <span className="text-xs font-bold text-slate-800 truncate">{topBrowserA}</span>
+                        </motion.div>
+                        <motion.div 
+                          className="p-3 rounded-xl border border-emerald-100/50 bg-emerald-50/20 flex flex-col gap-0.5"
+                          initial={{ scale: 0.95, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.15, duration: 0.3 }}
+                        >
+                          <span className="text-[10px] font-semibold text-emerald-500 uppercase tracking-wider">Top Browser B</span>
+                          <span className="text-xs font-bold text-slate-800 truncate">{topBrowserB}</span>
+                        </motion.div>
+                      </div>
+                    </div>
+
+                    <div className="text-[10px] text-slate-400 italic">
+                      * Selected: {projectA?.name || 'None'} vs {projectB?.name || 'None'}.
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            )}
           </div>
 
           {/* Geographical Heatmap Card */}
@@ -305,14 +757,14 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
                     return (
                       <div
                         key={g.name}
-                        className={`flex flex-col gap-1 text-xs cursor-pointer p-1 rounded-lg transition-colors ${isHovered ? 'bg-slate-50' : ''}`}
+                        className={`flex flex-col gap-1 text-xs cursor-pointer p-1 rounded-lg transition-colors ${isHovered ? 'bg-slate-50 ' : ''}`}
                         onMouseEnter={() => setHoveredCountry({ name: g.name, count: g.count, code: g.code })}
                         onMouseLeave={() => setHoveredCountry(null)}
                       >
                         <div className="flex items-center justify-between text-gray-600 font-medium">
                           <span className="flex items-center gap-1.5 font-sans">
                             <span className="text-[10px] text-gray-400 font-mono w-4">#{index + 1}</span>
-                            <span className={`font-semibold ${isHovered ? 'text-indigo-600' : 'text-gray-800'}`}>{g.name}</span>
+                            <span className={`font-semibold ${isHovered ? 'text-indigo-600 ' : 'text-gray-800 '}`}>{g.name}</span>
                           </span>
                           <span className="font-mono text-gray-500 text-[11px]">
                             {g.count} <span className="text-gray-400">({percent}%)</span>
@@ -361,7 +813,7 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ fontSize: 11 }} />
+                    <Tooltip contentStyle={{ fontSize: 11, backgroundColor: '#1e293b', color: '#f8fafc', border: 'none', borderRadius: 8 }} />
                     <Legend wrapperStyle={{ fontSize: 10 }} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -375,8 +827,8 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={browserData} layout="vertical" margin={{ left: -10, right: 10 }}>
                     <XAxis type="number" hide />
-                    <YAxis type="category" dataKey="name" tickLine={false} style={{ fontSize: 10 }} />
-                    <Tooltip contentStyle={{ fontSize: 11 }} />
+                    <YAxis type="category" dataKey="name" tickLine={false} style={{ fontSize: 10, fill: '#94a3b8' }} />
+                    <Tooltip contentStyle={{ fontSize: 11, backgroundColor: '#1e293b', color: '#f8fafc', border: 'none', borderRadius: 8 }} />
                     <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]} barSize={12} />
                   </BarChart>
                 </ResponsiveContainer>
