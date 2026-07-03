@@ -2534,6 +2534,11 @@ export default function App() {
             <p className="text-xs text-slate-600 max-w-sm leading-relaxed">
               Design customized, high-redundancy QR codes with modern color gradients, dot styles, and brand centerpieces. Complete with dynamic web link shortener tracking and real-time scan analytics.
             </p>
+            <div className="pt-4">
+              <a href="https://www.producthunt.com/posts/free-qr-generator-4" target="_blank" rel="noopener noreferrer" className="inline-block transition-transform hover:scale-102 duration-300">
+                <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=free-qr-generator-4&theme=light" alt="Free QR Generator on Product Hunt" width="250" height="54" />
+              </a>
+            </div>
           </div>
           <div id="footer-directory" className="md:col-span-2 space-y-4">
             <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">Dedicated Free QR Code Solutions</h4>
