@@ -18,6 +18,7 @@ const CompanyPages = React.lazy(() => import('./components/CompanyPages'));
 const FaqSection = React.lazy(() => import('./components/FaqSection'));
 const BlogSection = React.lazy(() => import('./components/BlogSection'));
 const EmbedPage = React.lazy(() => import('./components/EmbedPage'));
+import TourWelcomeModal from './components/TourWelcomeModal';
 
 // Non-blocking fallback skeleton loader
 const LazyLoader = () => (
@@ -476,23 +477,14 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Guided Tour State
-  const [tourRun, setTourRun] = useState(false);
-
-  useEffect(() => {
-    const hasRun = localStorage.getItem('qr-tour-completed');
-    if (!hasRun) {
-      const timer = setTimeout(() => {
-        setTourRun(true);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  const [tourOpen, setTourOpen] = useState(false);
+  const [tourRunning, setTourRunning] = useState(false);
 
   const handleJoyrideCallback = (data: any) => {
     const { status, type } = data;
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
     if (finishedStatuses.includes(status)) {
-      setTourRun(false);
+      setTourRunning(false);
       localStorage.setItem('qr-tour-completed', 'true');
     }
   };
@@ -1069,7 +1061,7 @@ export default function App() {
       <Joyride
         {...({
           steps: tourSteps,
-          run: tourRun,
+          run: tourRunning,
           continuous: true,
           showSkipButton: true,
           showProgress: true,
@@ -1382,7 +1374,7 @@ export default function App() {
           <button
             type="button"
             id="tour-trigger-button"
-            onClick={() => setTourRun(true)}
+            onClick={() => setTourOpen(true)}
             className="flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98] mr-1"
           >
             <Sparkles className="w-3 h-3 text-indigo-600" />
@@ -2518,6 +2510,17 @@ export default function App() {
         <ShortcutsHelpModal 
           isOpen={isShortcutsModalOpen}
           onClose={() => setIsShortcutsModalOpen(false)}
+        />
+        <TourWelcomeModal
+          isOpen={tourOpen}
+          onClose={() => {
+            setTourOpen(false);
+            setTourRunning(false);
+          }}
+          onStart={() => {
+            setTourOpen(false);
+            setTourRunning(true);
+          }}
         />
       </React.Suspense>
 

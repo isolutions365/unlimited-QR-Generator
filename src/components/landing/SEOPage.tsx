@@ -365,7 +365,7 @@ export default function SEOPage({ slug, onSelectRoute, onInitiateGenerator }: SE
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
               <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
-                Questions About Our Free {pageData.h1}
+                Questions About Our {pageData.h1}
               </h2>
             </div>
             <p className="text-xs text-slate-500 -mt-2">Review common queries from other digital marketers and developers regarding operations.</p>
