@@ -960,6 +960,31 @@ export default function App() {
     }
   };
 
+  // Update project folder category in database ledger
+  const handleUpdateProjectCategory = async (projectId: string, category: string) => {
+    try {
+      setErrorMessage(null);
+      const project = projects.find(p => p.id === projectId);
+      if (!project) return;
+
+      const updatedProject = {
+        ...project,
+        category: category
+      };
+      await api.saveProject(updatedProject);
+      
+      // Update local state currentProject if the active selected design was updated
+      if (currentProject.id === projectId) {
+        setCurrentProject(prev => ({ ...prev, category: category }));
+      }
+      
+      await fetchUserData();
+    } catch (err: any) {
+      console.error(err);
+      setErrorMessage(err.message || 'Error occurred while updating folder category.');
+    }
+  };
+
   // In-app test scan click handler
   const handleSimTestScan = async (text: string) => {
     // If it's a tracking URL, trigger a redirect click or trigger local record logging
@@ -1888,6 +1913,7 @@ export default function App() {
                   onSelect={handleSelectProject}
                   onDelete={handleDeleteProject}
                   onSeedData={handleSeedScanClick}
+                  onUpdateCategory={handleUpdateProjectCategory}
                   isLoading={isLoadingData}
                 />
               </React.Suspense>

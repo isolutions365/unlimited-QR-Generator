@@ -315,8 +315,9 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
           <div className="space-y-4">
             <form onSubmit={handleGetColorSuggestions} className="grid grid-cols-1 gap-2.5">
               <div>
-                <label className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Your Industry Segment</label>
+                <label htmlFor="ai-industry-segment" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Your Industry Segment</label>
                 <input
+                  id="ai-industry-segment"
                   type="text"
                   placeholder="e.g. Finance, Eco Coffee, Tech Startup"
                   className="w-full text-xs bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -327,8 +328,9 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
               </div>
 
               <div>
-                <label className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Aesthetic Vibe & Mood</label>
+                <label htmlFor="ai-aesthetic-vibe" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Aesthetic Vibe & Mood</label>
                 <input
+                  id="ai-aesthetic-vibe"
                   type="text"
                   placeholder="e.g. minimalist, futuristic, luxury, nature"
                   className="w-full text-xs bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -387,8 +389,9 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
           <div className="space-y-4">
             <form onSubmit={handleGetStyleSuggestions} className="grid grid-cols-1 gap-2.5">
               <div>
-                <label className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Target Design Aesthetic</label>
+                <label htmlFor="ai-target-design" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Target Design Aesthetic</label>
                 <input
+                  id="ai-target-design"
                   type="text"
                   placeholder="e.g. Luxury, Playful, Cyberpunk, Creative Studio"
                   className="w-full text-xs bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -446,8 +449,9 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
           <div className="space-y-4">
             <form onSubmit={handleGetBrandMatch} className="grid grid-cols-1 gap-3">
               <div>
-                <label className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Company/Product Name</label>
+                <label htmlFor="ai-brand-name" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Company/Product Name</label>
                 <input
+                  id="ai-brand-name"
                   type="text"
                   placeholder="e.g. Acme SaaS"
                   className="w-full text-xs bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -458,8 +462,9 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
               </div>
 
               <div>
-                <label className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">What does your service do?</label>
+                <label htmlFor="ai-brand-desc" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">What does your service do?</label>
                 <textarea
+                  id="ai-brand-desc"
                   placeholder="e.g. We develop secure data synchronization platforms for remote engineering teams."
                   className="w-full text-xs bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 h-16 resize-none"
                   value={brandDesc}

@@ -1194,6 +1194,7 @@ export default function ControlPanel({
                   <input
                     id="frame-color-picker"
                     type="color"
+                    aria-label="Frame Shape Color"
                     className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
                     value={localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}
                     onChange={e => setDesignField('frameColor', e.target.value)}
@@ -1208,6 +1209,7 @@ export default function ControlPanel({
                   <input
                     id="frame-text-color-picker"
                     type="color"
+                    aria-label="Label Text Color"
                     className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
                     value={localProject.design?.frameTextColor || '#ffffff'}
                     onChange={e => setDesignField('frameTextColor', e.target.value)}
@@ -1365,6 +1367,7 @@ export default function ControlPanel({
           </div>
           <button
             type="button"
+            role="switch"
             aria-label="Toggle Smart Optimization"
             aria-checked={localProject.design?.smartOptimize ? "true" : "false"}
             onClick={() => {
@@ -1641,6 +1644,7 @@ export default function ControlPanel({
             ref={fileInputRef}
             onChange={handleFileChange}
             accept="image/*"
+            aria-label="Upload custom center emblem image file"
             className="hidden"
           />
           
@@ -1734,6 +1738,7 @@ export default function ControlPanel({
                 </div>
                 <button
                   type="button"
+                  role="switch"
                   aria-labelledby="logo-autocenter-label"
                   aria-checked={localProject.design?.logoAutoCenter !== false ? "true" : "false"}
                   onClick={() => setDesignField('logoAutoCenter', localProject.design?.logoAutoCenter === false)}
@@ -1942,6 +1947,7 @@ export default function ControlPanel({
         </div>
         <button
           type="button"
+          role="switch"
           aria-label="Toggle pattern color shift animation"
           aria-checked={localProject.design?.colorShift ? "true" : "false"}
           onClick={() => setDesignField('colorShift', !localProject.design?.colorShift)}
@@ -1971,6 +1977,7 @@ export default function ControlPanel({
         </div>
         <button
           type="button"
+          role="switch"
           aria-label="Toggle short URL and analytics tracking"
           aria-checked={localProject.trackingEnabled ? "true" : "false"}
           onClick={() => onChange({ ...localProject, trackingEnabled: !localProject.trackingEnabled })}
@@ -2128,6 +2135,7 @@ export default function ControlPanel({
           {/* Text Input */}
           <input
             type="text"
+            aria-label="Folder or Category"
             className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Type or select folders (e.g. Marketing)"
             value={localProject.category || ''}
