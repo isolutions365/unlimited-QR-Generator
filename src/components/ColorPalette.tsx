@@ -243,11 +243,12 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
           {/* Color pickers selection */}
           <div className="grid grid-cols-2 gap-3 mt-1">
             <div className="relative">
-              <span className="text-[10px] text-gray-600 font-medium block mb-1">Foreground Color</span>
+              <label htmlFor="fg-color-picker" className="text-[10px] text-gray-600 font-medium block mb-1">Foreground Color</label>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition-all duration-200">
                 <input
                   type="color"
                   id="fg-color-picker"
+                  aria-label="Foreground Color"
                   className="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent shrink-0 focus:ring-0 focus:outline-none transition-transform active:scale-95"
                   value={localFgColor}
                   onChange={e => {
@@ -263,11 +264,12 @@ export default function ColorPalette({ currentProject, onChange }: ColorPaletteP
             </div>
 
             <div>
-              <span className="text-[10px] text-gray-600 font-medium block mb-1">Background Color</span>
+              <label htmlFor="bg-color-picker" className="text-[10px] text-gray-600 font-medium block mb-1">Background Color</label>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition-all duration-200 font-sans">
                 <input
                   type="color"
                   id="bg-color-picker"
+                  aria-label="Background Color"
                   className="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent shrink-0 focus:ring-0 focus:outline-none transition-transform active:scale-95"
                   value={localBgColor}
                   onChange={e => {
