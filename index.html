@@ -4,7 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="indexnow-verification" content="58b88f6bad214a2d81bb516a4541ac02" />
     <meta name="google-adsense-account" content="ca-pub-1877345878061699">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1877345878061699" crossorigin="anonymous"></script>
+    <script>
+      // Non-blocking deferred loading of AdSense to optimize PageSpeed metrics and prevent main-thread blocking
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const script = document.createElement('script');
+          script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1877345878061699";
+          script.async = true;
+          script.crossOrigin = "anonymous";
+          document.head.appendChild(script);
+        }, 1500); // 1.5s delay to let browser finish first contentful paint (FCP) and interactive state
+      });
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Free QR Code Generator - Dynamic QR Codes & Custom Creator</title>
 
@@ -56,17 +67,11 @@
     }
     </script>
 
-    <!-- Performance Optimization: Preconnect & DNS-Prefetch Hints -->
-    <link rel="preconnect" href="https://firestore.googleapis.com" />
-    <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
-    <link rel="preconnect" href="https://securetoken.googleapis.com" />
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+    <!-- Performance Optimization: Limit to critical preconnects (Max 3 to satisfy PageSpeed audits) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://firebaseapp.com" />
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
     <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
-    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 
     <!-- Font Asynchronous Preloading to minimize Render Blocking (FCP, LCP, SI optimized) -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />

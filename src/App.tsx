@@ -18,7 +18,7 @@ const CompanyPages = React.lazy(() => import('./components/CompanyPages'));
 const FaqSection = React.lazy(() => import('./components/FaqSection'));
 const BlogSection = React.lazy(() => import('./components/BlogSection'));
 const EmbedPage = React.lazy(() => import('./components/EmbedPage'));
-import TourWelcomeModal from './components/TourWelcomeModal';
+const TourWelcomeModal = React.lazy(() => import('./components/TourWelcomeModal'));
 
 // Non-blocking fallback skeleton loader
 const LazyLoader = () => (

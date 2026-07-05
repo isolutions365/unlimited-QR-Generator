@@ -4,6 +4,7 @@ import { Sparkles, QrCode, Shield, Activity, Share2 } from 'lucide-react';
 
 export default function QR3DExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
   // Motion values to track mouse coordinate offsets
@@ -25,9 +26,13 @@ export default function QR3DExperience() {
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    let rect = rectRef.current;
+    if (!rect) {
+      rect = containerRef.current.getBoundingClientRect();
+      rectRef.current = rect;
+    }
+    const width = rect.width || 380;
+    const height = rect.height || 380;
     
     // Normalized coordinates from -0.5 to 0.5
     const relativeX = (event.clientX - rect.left) / width - 0.5;
@@ -39,12 +44,16 @@ export default function QR3DExperience() {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+    rectRef.current = null;
     x.set(0);
     y.set(0);
   };
 
   const handleMouseEnter = () => {
     setIsHovered(true);
+    if (containerRef.current) {
+      rectRef.current = containerRef.current.getBoundingClientRect();
+    }
   };
 
   return (
