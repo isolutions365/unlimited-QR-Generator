@@ -1323,7 +1323,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print</span>
-              <kbd className="hidden sm:inline-block px-1 py-0.2 bg-indigo-50 border border-indigo-100 text-indigo-500 rounded text-[9px] font-mono font-bold uppercase ml-1">Ctrl+P</kbd>
+              <kbd className="hidden sm:inline-block px-1 py-0.2 bg-indigo-50 border border-indigo-100 text-indigo-800 rounded text-[9px] font-mono font-bold uppercase ml-1">Ctrl+P</kbd>
             </button>
           </div>
 
@@ -1417,7 +1417,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               href={facebookShareUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2 px-1 bg-[#1877f2] text-white hover:bg-[#166fe5] rounded-xl text-[10px] sm:text-[11px] font-bold shadow-3xs transition-all flex items-center justify-center gap-1 hover:scale-[1.02] active:scale-95 cursor-pointer text-center no-underline"
+              className="py-2 px-1 bg-[#0b51b7] text-white hover:bg-[#094193] rounded-xl text-[10px] sm:text-[11px] font-bold shadow-3xs transition-all flex items-center justify-center gap-1 hover:scale-[1.02] active:scale-95 cursor-pointer text-center no-underline"
               aria-label="Share on Facebook"
             >
               <Facebook className="w-3 h-3 fill-current" />

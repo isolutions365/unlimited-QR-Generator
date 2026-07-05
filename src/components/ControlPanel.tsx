@@ -2189,7 +2189,7 @@ export default function ControlPanel({
             <>
               <Check className="w-4 h-4" />
               <span>Save Design to Cloud</span>
-              <kbd className="ml-1.5 px-1.5 py-0.5 text-[9px] bg-indigo-500/80 text-indigo-50 rounded font-mono font-bold select-none tracking-normal uppercase">Ctrl+S</kbd>
+              <kbd className="ml-1.5 px-1.5 py-0.5 text-[9px] bg-indigo-950 text-indigo-100 border border-indigo-500/30 rounded font-mono font-bold select-none tracking-normal uppercase">Ctrl+S</kbd>
             </>
           )}
         </button>

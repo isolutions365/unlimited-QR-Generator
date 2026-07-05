@@ -217,7 +217,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
           </div>
           <div>
             <h3 className="text-xs font-black tracking-widest uppercase text-white font-mono">Gemini AI Co-Pilot™</h3>
-            <p className="text-[10px] text-slate-400 font-medium">Apple-Inspired Smart QR Analytics Suite</p>
+            <p className="text-[10px] text-slate-200 font-medium">Apple-Inspired Smart QR Analytics Suite</p>
           </div>
         </div>
         <span className="text-[9px] px-2 py-0.5 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 font-bold uppercase tracking-wider font-mono">
@@ -238,7 +238,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
             className={`flex-1 py-1.5 px-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
               activeSegment === tab
                 ? 'bg-slate-850 text-white border border-slate-800 shadow-xs'
-                : 'text-slate-400 hover:text-white'
+                : 'text-slate-200 hover:text-white'
             }`}
           >
             {tab === 'audit' ? 'Live Audit' : tab === 'colors' ? 'Colors' : tab === 'styles' ? 'Styles' : 'Brand Match'}

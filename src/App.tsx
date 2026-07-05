@@ -2051,8 +2051,8 @@ export default function App() {
                 {/* 2. WhatsApp Channels */}
                 <div id="tool-whatsapp-card" className="bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-emerald-500/50 hover:shadow-md transition-all group flex flex-col justify-between">
                   <div>
-                    <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
-                      <Phone className="w-5 h-5 text-emerald-600" />
+                    <div className="w-10 h-10 bg-emerald-50 text-emerald-800 rounded-xl flex items-center justify-center mb-4">
+                      <Phone className="w-5 h-5 text-emerald-800" />
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-910">WhatsApp QR Code</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
@@ -2063,7 +2063,7 @@ export default function App() {
                     id="tool-whatsapp-link"
                     href="/whatsapp-qr-generator"
                     onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-emerald-600 hover:text-emerald-800 flex items-center gap-1.5"
+                    className="mt-4 text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1.5"
                   >
                     Launch WhatsApp Tool
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
@@ -2095,8 +2095,8 @@ export default function App() {
                 {/* 4. Restaurant menus */}
                 <div id="tool-restaurant-card" className="bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-amber-500/50 hover:shadow-md transition-all group flex flex-col justify-between">
                   <div>
-                    <div className="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-4">
-                      <Utensils className="w-5 h-5 text-amber-600" />
+                    <div className="w-10 h-10 bg-amber-50 text-amber-800 rounded-xl flex items-center justify-center mb-4">
+                      <Utensils className="w-5 h-5 text-amber-800" />
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">Restaurant QR Code</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
@@ -2107,7 +2107,7 @@ export default function App() {
                     id="tool-restaurant-link"
                     href="/restaurant-qr-generator"
                     onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-amber-600 hover:text-amber-800 flex items-center gap-1.5"
+                    className="mt-4 text-xs font-bold text-amber-800 hover:text-amber-950 flex items-center gap-1.5"
                   >
                     Launch Restaurant Tool
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
@@ -2256,8 +2256,8 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-emerald-600 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
-                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-emerald-600 transition-colors">Direct WhatsApp Customer Support</h4>
+                          <span className="text-[10px] font-mono text-emerald-800 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">Direct WhatsApp Customer Support</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             Used by retail stores and digital agencies to enable rapid customer service requests. Launches formatted text templates.
                           </p>
@@ -2282,7 +2282,7 @@ export default function App() {
                           id="recent-whatsapp-link"
                           href="/whatsapp-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-emerald-600 group-hover:text-emerald-800 flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-emerald-800 group-hover:text-emerald-950 flex items-center gap-1"
                         >
                           Explore WhatsApp lander
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
@@ -2342,8 +2342,8 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-amber-600 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
-                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-amber-600 transition-colors">Restaurant Menus & PDF Hosters</h4>
+                          <span className="text-[10px] font-mono text-amber-800 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
+                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-amber-800 transition-colors">Restaurant Menus & PDF Hosters</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             Leveraged by cafes, visual bistros, and contactless fast-food spots. Keeps dynamic menu files editable and local.
                           </p>
@@ -2368,7 +2368,7 @@ export default function App() {
                           id="recent-restaurant-link"
                           href="/restaurant-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-amber-600 group-hover:text-amber-800 flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-amber-800 group-hover:text-amber-950 flex items-center gap-1"
                         >
                           Explore Restaurant lander
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
@@ -2498,7 +2498,7 @@ export default function App() {
               </div>
               <div className="space-y-1">
                 <h4 id="cookie-title" className="text-sm font-bold tracking-tight text-slate-100">Cookie Preference</h4>
-                <p id="cookie-description" className="text-[11px] text-slate-400 leading-relaxed font-sans">
+                <p id="cookie-description" className="text-[11px] text-slate-200 leading-relaxed font-sans">
                   We use essential cookies to safely persist state, optimize your QR customization workflow, and analyze scan activity rates.
                 </p>
               </div>
@@ -2507,7 +2507,7 @@ export default function App() {
               <button
                 id="cookie-decline-button"
                 onClick={handleDeclineCookies}
-                className="px-3.5 py-1.5 text-[11px] font-bold text-slate-400 hover:text-white transition-colors cursor-pointer rounded-lg hover:bg-slate-900/50"
+                className="px-3.5 py-1.5 text-[11px] font-bold text-slate-200 hover:text-white transition-colors cursor-pointer rounded-lg hover:bg-slate-900/50"
               >
                 Decline
               </button>
