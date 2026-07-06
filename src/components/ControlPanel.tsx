@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone } from 'lucide-react';
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
+import { getEmblemFontSize } from '../utils/qrRenderer';
 import qrcode from 'qrcode';
 
 interface ControlPanelProps {
@@ -433,6 +434,7 @@ export default function ControlPanel({
               { id: 'phone', icon: Phone, label: 'Phone', color: 'text-teal-500' },
               { id: 'sms', icon: MessageSquare, label: 'SMS', color: 'text-indigo-500' },
               { id: 'social', icon: Share2, label: 'Social', color: 'text-orange-500' },
+              { id: 'app', icon: Smartphone, label: 'App Store', color: 'text-rose-500' },
               { id: 'crypto', icon: Coins, label: 'Crypto', color: 'text-amber-500' },
               { id: 'geo', icon: MapPin, label: 'Location', color: 'text-cyan-500' }
             ] as const
@@ -444,7 +446,19 @@ export default function ControlPanel({
                 key={type.id}
                 type="button"
                 className={`relative group py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${ isSelected ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100 scale-105' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50' }`}
-                onClick={() => onChange({ ...localProject, type: type.id })}
+                onClick={() => {
+                  if (type.id === 'app') {
+                    const hasJson = localProject.content && localProject.content.startsWith('{') && localProject.content.endsWith('}');
+                    const initialContent = hasJson ? localProject.content : JSON.stringify({
+                      ios: localProject.content && !localProject.content.startsWith('{') ? localProject.content : 'https://apps.apple.com',
+                      android: 'https://play.google.com',
+                      fallback: 'https://apps.apple.com'
+                    });
+                    onChange({ ...localProject, type: 'app', content: initialContent, trackingEnabled: true });
+                  } else {
+                    onChange({ ...localProject, type: type.id });
+                  }
+                }}
               >
                 {/* Circular radio/selection indicator */}
                 <span 
@@ -950,6 +964,112 @@ export default function ControlPanel({
                   }}
                 />
               </div>
+            </div>
+          </div>
+        )}
+
+        {localProject.type === 'app' && (
+          <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
+            <h4 className="text-xs font-semibold text-slate-850">Smart App Store Setup</h4>
+            <p className="text-[11px] text-slate-600 font-medium">
+              Users scanning this QR code will be dynamically redirected to the appropriate store based on their device.
+            </p>
+            
+            {/* Warning if tracking is disabled */}
+            {!localProject.trackingEnabled && (
+              <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-[10px] text-amber-800 leading-relaxed">
+                <strong>Note:</strong> Device detection requires tracking to be enabled. We have automatically enabled tracking for this QR code.
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="app-ios-input" className="block text-[10px] font-semibold text-slate-800 mb-1">iOS App Store Link</label>
+              <input
+                id="app-ios-input"
+                type="url"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
+                placeholder="https://apps.apple.com/app/..."
+                value={(() => {
+                  try {
+                    const parsed = JSON.parse(localProject.content || '{}');
+                    return parsed.ios || '';
+                  } catch (e) {
+                    return localProject.content && !localProject.content.startsWith('{') ? localProject.content : '';
+                  }
+                })()}
+                onChange={e => {
+                  let currentObj = { ios: '', android: '', fallback: '' };
+                  try {
+                    currentObj = { ...currentObj, ...JSON.parse(localProject.content || '{}') };
+                  } catch (err) {
+                    if (localProject.content && !localProject.content.startsWith('{')) {
+                      currentObj.ios = localProject.content;
+                    }
+                  }
+                  currentObj.ios = e.target.value;
+                  onChange({ ...localProject, content: JSON.stringify(currentObj), trackingEnabled: true }, true);
+                }}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="app-android-input" className="block text-[10px] font-semibold text-slate-800 mb-1">Google Play Store Link</label>
+              <input
+                id="app-android-input"
+                type="url"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
+                placeholder="https://play.google.com/store/apps/details?id=..."
+                value={(() => {
+                  try {
+                    const parsed = JSON.parse(localProject.content || '{}');
+                    return parsed.android || '';
+                  } catch (e) {
+                    return '';
+                  }
+                })()}
+                onChange={e => {
+                  let currentObj = { ios: '', android: '', fallback: '' };
+                  try {
+                    currentObj = { ...currentObj, ...JSON.parse(localProject.content || '{}') };
+                  } catch (err) {
+                    if (localProject.content && !localProject.content.startsWith('{')) {
+                      currentObj.ios = localProject.content;
+                    }
+                  }
+                  currentObj.android = e.target.value;
+                  onChange({ ...localProject, content: JSON.stringify(currentObj), trackingEnabled: true }, true);
+                }}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="app-fallback-input" className="block text-[10px] font-semibold text-slate-800 mb-1">Fallback Website / Desktop Link (Optional)</label>
+              <input
+                id="app-fallback-input"
+                type="url"
+                className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
+                placeholder="https://mywebsite.com"
+                value={(() => {
+                  try {
+                    const parsed = JSON.parse(localProject.content || '{}');
+                    return parsed.fallback || '';
+                  } catch (e) {
+                    return '';
+                  }
+                })()}
+                onChange={e => {
+                  let currentObj = { ios: '', android: '', fallback: '' };
+                  try {
+                    currentObj = { ...currentObj, ...JSON.parse(localProject.content || '{}') };
+                  } catch (err) {
+                    if (localProject.content && !localProject.content.startsWith('{')) {
+                      currentObj.ios = localProject.content;
+                    }
+                  }
+                  currentObj.fallback = e.target.value;
+                  onChange({ ...localProject, content: JSON.stringify(currentObj), trackingEnabled: true }, true);
+                }}
+              />
             </div>
           </div>
         )}
@@ -1674,7 +1794,13 @@ export default function ControlPanel({
                     referrerPolicy="no-referrer"
                   />
                 ) : (
-                  <span className="text-xs font-bold text-indigo-600">{localProject.design.logoUrl.slice(0, 3).toUpperCase()}</span>
+                  <span 
+                    className="font-bold text-indigo-600 text-center overflow-hidden whitespace-nowrap px-0.5 select-none"
+                    dir="auto"
+                    style={{ fontSize: `${getEmblemFontSize(localProject.design.logoUrl, 40)}px` }}
+                  >
+                    {localProject.design.logoUrl}
+                  </span>
                 )}
               </div>
               <div className="overflow-hidden">
@@ -1822,9 +1948,15 @@ export default function ControlPanel({
                               />
                             );
                           } else {
+                            const miniSizePx = 112 * (localProject.design?.logoScale ?? 0.18);
+                            const calculatedFontSize = getEmblemFontSize(logoUrl, miniSizePx);
                             return (
-                              <div className="w-full h-full flex items-center justify-center font-bold text-[6px] text-white bg-indigo-650 rounded-[1.5px] uppercase select-none">
-                                {logoUrl.slice(0, 2)}
+                              <div 
+                                className="w-full h-full flex items-center justify-center font-bold text-white bg-indigo-650 rounded-[1.5px] overflow-hidden whitespace-nowrap text-center px-0.5 select-none"
+                                dir="auto"
+                                style={{ fontSize: `${calculatedFontSize}px`, lineHeight: 1 }}
+                              >
+                                {logoUrl}
                               </div>
                             );
                           }

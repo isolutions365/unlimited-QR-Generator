@@ -680,8 +680,8 @@ async function startServer() {
     }
   });
 
-  // 4. AI Design Recommendations endpoint
-  app.post('/api/ai/design-recommendations', authenticateToken, async (req: any, res) => {
+  // 4. AI Design Recommendations endpoint (public to support instant landing-page scannability audit)
+  app.post(['/api/ai/design-recommendations', '/ai/design-recommendations'], async (req: any, res) => {
     const { qrContent, currentDesign } = req.body;
     const contentStr = qrContent || '';
 
@@ -822,6 +822,25 @@ async function startServer() {
 
       let destination = project.content || 'https://google.com';
       let showExpiredMessage = false;
+
+      // Smart App Store redirection protocol
+      if (project.type === 'app' || (project.content && project.content.startsWith('{') && project.content.endsWith('}'))) {
+        try {
+          const parsed = JSON.parse(project.content);
+          if (parsed.ios || parsed.android) {
+            const userAgent = (req.headers['user-agent'] || '').toLowerCase();
+            if (userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod')) {
+              destination = parsed.ios || parsed.android || 'https://apps.apple.com';
+            } else if (userAgent.includes('android')) {
+              destination = parsed.android || parsed.ios || 'https://play.google.com';
+            } else {
+              destination = parsed.fallback || parsed.ios || parsed.android || 'https://google.com';
+            }
+          }
+        } catch (e) {
+          console.error('Failed to parse app redirect content:', e);
+        }
+      }
 
       // Expiry Date validation protocol
       if (project.expiryDate) {

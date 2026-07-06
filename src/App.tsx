@@ -712,6 +712,7 @@ export default function App() {
       case 'instagram-qr-generator': return Instagram;
       case 'youtube-qr-generator': return Youtube;
       case 'pdf-qr-generator': return FileText;
+      case 'app-store-qr': return Smartphone;
       default: return QrCode;
     }
   };
@@ -1304,7 +1305,15 @@ export default function App() {
                       const action = toolItem.slug === 'text-qr' 
                         ? () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' })
                         : toolItem.slug === 'app-store-qr'
-                        ? () => handleInitiateGenerator({ type: 'url', content: 'https://apps.apple.com', name: 'App Store Download' })
+                        ? () => handleInitiateGenerator({ 
+                            type: 'app', 
+                            content: JSON.stringify({
+                              ios: 'https://apps.apple.com',
+                              android: 'https://play.google.com',
+                              fallback: 'https://apps.apple.com'
+                            }), 
+                            name: 'App Store Download' 
+                          })
                         : undefined;
 
                       return (
@@ -1655,7 +1664,15 @@ export default function App() {
                           const subAction = sub.slug === 'text-qr' 
                             ? () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' })
                             : sub.slug === 'app-store-qr'
-                            ? () => handleInitiateGenerator({ type: 'url', content: 'https://apps.apple.com', name: 'App Store Download' })
+                            ? () => handleInitiateGenerator({ 
+                                type: 'app', 
+                                content: JSON.stringify({
+                                  ios: 'https://apps.apple.com',
+                                  android: 'https://play.google.com',
+                                  fallback: 'https://apps.apple.com'
+                                }), 
+                                name: 'App Store Download' 
+                              })
                             : undefined;
 
                           return (

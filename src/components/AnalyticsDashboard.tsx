@@ -1,9 +1,18 @@
 import React from 'react';
 import { ScanLog, QRProject } from '../types';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
-import { BarChart3, Globe, Tablet, Users, Grid, GitCompare, Calendar } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend, LineChart, Line } from 'recharts';
+import { BarChart3, Globe, Tablet, Users, Grid, GitCompare, Calendar, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import D3WorldHeatmap from './D3WorldHeatmap';
+
+const PROJECT_COLORS = [
+  '#4f46e5', // indigo
+  '#10b981', // emerald
+  '#f59e0b', // amber
+  '#ef4444', // rose
+  '#8b5cf6', // violet
+  '#06b6d4', // cyan
+];
 
 interface AnalyticsDashboardProps {
   scans: ScanLog[];
@@ -294,6 +303,64 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
   const browserData = getBrowserData();
   const geoData = getGeographicalData();
 
+  // Selected project IDs for the 30-day trend line chart
+  const [selectedTrendProjectIds, setSelectedTrendProjectIds] = React.useState<string[]>([]);
+
+  // Initialize selectedTrendProjectIds with all project IDs on load or change
+  React.useEffect(() => {
+    if (projects && projects.length > 0 && selectedTrendProjectIds.length === 0) {
+      setSelectedTrendProjectIds(projects.slice(0, 4).map(p => p.id));
+    }
+  }, [projects, selectedTrendProjectIds.length]);
+
+  const activeTrendProjectIds = React.useMemo(() => {
+    return selectedTrendProjectIds.filter(id => projects.some(p => p.id === id));
+  }, [selectedTrendProjectIds, projects]);
+
+  const trends30DaysData = React.useMemo(() => {
+    const dates: { [key: string]: { dateLabel: string; [projectId: string]: number | string } } = {};
+    const daysList: string[] = [];
+
+    // Populate last 30 days
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dayLabel = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      
+      dates[dayLabel] = {
+        dateLabel: dayLabel,
+      };
+      
+      // Initialize counts to 0 for all projects
+      projects.forEach(p => {
+        dates[dayLabel][p.id] = 0;
+      });
+      
+      daysList.push(dayLabel);
+    }
+
+    // Populate counts from scans
+    scans.forEach(s => {
+      try {
+        if (!s.timestamp || !s.projectId) return;
+        const d = new Date(s.timestamp);
+        const dayLabel = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        
+        if (dates[dayLabel] !== undefined) {
+          if (typeof dates[dayLabel][s.projectId] === 'number') {
+            (dates[dayLabel][s.projectId] as number)++;
+          }
+        }
+      } catch {}
+    });
+
+    return daysList.map(label => dates[label]);
+  }, [scans, projects]);
+
+  const getProjectColor = (index: number) => {
+    return PROJECT_COLORS[index % PROJECT_COLORS.length];
+  };
+
   return (
     <div className="bg-white/90 backdrop-blur-md rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col gap-6">
       {/* Header */}
@@ -425,6 +492,106 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
               </ResponsiveContainer>
             </motion.div>
           </div>
+
+          {/* 30-Day Daily Scan Trends per Selected Project */}
+          <motion.div 
+            className="p-5 rounded-xl border border-gray-100 bg-white flex flex-col gap-5"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-gray-100/60">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-indigo-50 rounded-lg text-indigo-600">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">30-Day Daily Scan Trends</h3>
+                  <p className="text-[11px] text-gray-400 mt-0.5">Toggle projects to compare active trends and daily trajectories over the last 30 days.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Toggle Project Pills */}
+            <div className="flex flex-wrap gap-2">
+              {projects.map((proj, idx) => {
+                const isSelected = activeTrendProjectIds.includes(proj.id);
+                const color = getProjectColor(idx);
+                
+                return (
+                  <motion.button
+                    key={proj.id}
+                    type="button"
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, delay: 0.25 + idx * 0.04, ease: "easeOut" }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      if (isSelected) {
+                        if (activeTrendProjectIds.length > 1) {
+                          setSelectedTrendProjectIds(prev => prev.filter(id => id !== proj.id));
+                        }
+                      } else {
+                        setSelectedTrendProjectIds(prev => [...prev, proj.id]);
+                      }
+                    }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1.5 cursor-pointer select-none ${
+                      isSelected 
+                        ? 'shadow-xs border-transparent' 
+                        : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100 hover:text-slate-700'
+                    }`}
+                    style={isSelected ? {
+                      backgroundColor: `${color}15`, // ~8% opacity
+                      borderColor: color,
+                      color: color,
+                    } : undefined}
+                  >
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                    <span>{proj.name || 'Untitled'}</span>
+                  </motion.button>
+                );
+              })}
+            </div>
+
+            {/* Recharts Line Chart */}
+            <motion.div 
+              className="h-64 w-full"
+              initial={{ opacity: 0, y: 10, scale: 0.99 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.45, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={trends30DaysData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <XAxis dataKey="dateLabel" tickLine={false} style={{ fontSize: 10, fill: '#64748b' }} />
+                  <YAxis tickLine={false} style={{ fontSize: 10, fill: '#64748b' }} allowDecimals={false} />
+                  <Tooltip 
+                    wrapperStyle={{ outline: 'none' }} 
+                    contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0', backgroundColor: '#1e293b', color: '#f8fafc', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} 
+                  />
+                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
+                  {activeTrendProjectIds.map((projectId, idx) => {
+                    const proj = projects.find(p => p.id === projectId);
+                    if (!proj) return null;
+                    return (
+                      <Line
+                        key={projectId}
+                        type="monotone"
+                        name={proj.name || 'Untitled'}
+                        dataKey={projectId}
+                        stroke={getProjectColor(idx)}
+                        strokeWidth={2.5}
+                        dot={{ r: 2 }}
+                        activeDot={{ r: 4 }}
+                        isAnimationActive={true}
+                        animationDuration={1500}
+                      />
+                    );
+                  })}
+                </LineChart>
+              </ResponsiveContainer>
+            </motion.div>
+          </motion.div>
 
           {/* Side-by-Side QR Project Comparison Overlay */}
           <div className="p-5 rounded-xl border border-gray-100 bg-white flex flex-col gap-5">

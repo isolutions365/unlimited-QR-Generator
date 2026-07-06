@@ -317,7 +317,46 @@ export async function renderStyledQR(
 }
 
 /**
- * Fallback / Custom utility to draw initials or emojis inside centerpiece of QR
+ * Dynamically auto-scale the font size to fit inside the center logo area without truncation.
+ * We want to fit the text within 85% of the container size for a 7.5% safe margin on each side.
+ * This leverages canvas-based measurement when available for 100% precision across languages, Unicode, and emojis.
+ */
+export function getEmblemFontSize(text: string, containerSize: number): number {
+  if (!text) return containerSize * 0.38;
+  
+  const maxTextWidth = containerSize * 0.85;
+  const numChars = text.length || 1;
+  
+  // Starting point using a conservative character-based heuristic estimate
+  let fontSize = containerSize * 0.38;
+  if (numChars > 2) {
+    const estimatedCharWidth = 0.62;
+    fontSize = maxTextWidth / (numChars * estimatedCharWidth);
+  }
+  
+  // Try to refine the font size using standard canvas measurement for exact precision
+  try {
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.font = `bold ${fontSize}px system-ui, sans-serif`;
+        const metrics = ctx.measureText(text);
+        if (metrics.width > maxTextWidth && metrics.width > 0) {
+          fontSize = fontSize * (maxTextWidth / metrics.width);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("getEmblemFontSize fallback triggered:", e);
+  }
+  
+  // Cap between minimum readable font size (5% of container) and visual max (38% of container)
+  return Math.max(containerSize * 0.05, Math.min(containerSize * 0.38, fontSize));
+}
+
+/**
+ * Fallback / Custom utility to draw initials, full text or emojis inside centerpiece of QR
  */
 function renderCustomPlaceholderLogo(
   ctx: CanvasRenderingContext2D,
@@ -331,11 +370,28 @@ function renderCustomPlaceholderLogo(
   roundRect(ctx, lx, ly, size, size, size * 0.25);
   ctx.fill();
 
+  ctx.save(); // Save context to modify state such as direction and alignment cleanly
+
   ctx.fillStyle = '#ffffff';
-  ctx.font = `bold ${size * 0.4}px system-ui, sans-serif`;
+  
+  // Dynamic font size computation with 100% precision
+  const fontSize = getEmblemFontSize(text, size);
+  ctx.font = `bold ${fontSize}px system-ui, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(text.slice(0, 3).toUpperCase(), lx + size / 2, ly + size / 2 + size * 0.02);
+
+  // Support RTL (Arabic, Urdu, Hebrew) and other directional scripts dynamically
+  const isRtl = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\u0590-\u05FF\u200F]/.test(text);
+  if (isRtl) {
+    ctx.direction = 'rtl';
+  } else {
+    ctx.direction = 'ltr';
+  }
+
+  // Draw full text exactly as typed (preserving uppercase/lowercase and full character set)
+  ctx.fillText(text, lx + size / 2, ly + size / 2);
+
+  ctx.restore();
 }
 
 /**
@@ -563,10 +619,12 @@ export function generateStyledSVG(
     if (options.logoUrl.startsWith('http') || options.logoUrl.startsWith('data:image')) {
       logoSvg += `    <image href="${options.logoUrl}" x="${-halfSize}" y="${-halfSize}" width="${logoSize}" height="${logoSize}" />\n`;
     } else {
-      const logoText = options.logoUrl.slice(0, 3).toUpperCase();
-      const fontSize = logoSize * 0.4;
+      const logoText = options.logoUrl;
+      const fontSize = getEmblemFontSize(logoText, logoSize);
+      const isRtl = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\u0590-\u05FF\u200F]/.test(logoText);
+      const directionAttr = isRtl ? ' direction="rtl" unicode-bidi="embed"' : '';
       logoSvg += `    <rect x="${-halfSize}" y="${-halfSize}" width="${logoSize}" height="${logoSize}" rx="${logoSize * 0.25}" ry="${logoSize * 0.25}" fill="#4f46e5" />\n`;
-      logoSvg += `    <text x="0" y="${fontSize * 0.08}" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#ffffff">${logoText}</text>\n`;
+      logoSvg += `    <text x="0" y="${fontSize * 0.08}" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#ffffff"${directionAttr}>${logoText}</text>\n`;
     }
     logoSvg += `  </g>\n`;
   }

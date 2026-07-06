@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { QRProject } from '../types';
-import { renderStyledQR, generateStyledSVG } from '../utils/qrRenderer';
+import { renderStyledQR, generateStyledSVG, getEmblemFontSize } from '../utils/qrRenderer';
 import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle, Share2, Twitter, Linkedin, Facebook, ChevronDown, FileText, Scale, Sliders, Contrast, Eye, Layers, Maximize } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import qrcode from 'qrcode';
@@ -46,6 +46,23 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [printReadyCropMarks, setPrintReadyCropMarks] = useState<boolean>(true);
   const [printReadyShowInfo, setPrintReadyShowInfo] = useState<boolean>(true);
   const [printReadyInfoText, setPrintReadyInfoText] = useState<string>('');
+  
+  // Advanced Print-Ready customization states
+  const [printReadyOrientation, setPrintReadyOrientation] = useState<'portrait' | 'landscape'>('portrait');
+  const [printReadyCopies, setPrintReadyCopies] = useState<'single' | 'grid_2x2' | 'grid_3x3' | 'grid_4x4'>('single');
+  const [printReadyZoom, setPrintReadyZoom] = useState<number>(100);
+  const [printReadyPosition, setPrintReadyPosition] = useState<'center' | 'top_left' | 'top_right' | 'bottom_left' | 'bottom_right' | 'custom'>('center');
+  const [printReadyCustomX, setPrintReadyCustomX] = useState<number>(0);
+  const [printReadyCustomY, setPrintReadyCustomY] = useState<number>(0);
+  const [printReadyShowGrid, setPrintReadyShowGrid] = useState<boolean>(false);
+  const [printReadyShowRulers, setPrintReadyShowRulers] = useState<boolean>(true);
+  
+  // Custom paper margins (default standard 15mm margins)
+  const [printReadyMarginTop, setPrintReadyMarginTop] = useState<number>(15);
+  const [printReadyMarginBottom, setPrintReadyMarginBottom] = useState<number>(15);
+  const [printReadyMarginLeft, setPrintReadyMarginLeft] = useState<number>(15);
+  const [printReadyMarginRight, setPrintReadyMarginRight] = useState<number>(15);
+  const [activeSettingsTab, setActiveSettingsTab] = useState<'layout' | 'margins' | 'prepress'>('layout');
 
   // Keep track of the last known stable readable design configuration
   const lastReadableDesignRef = useRef<any>(null);
@@ -83,6 +100,14 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const frameTextColor = currentProject.design?.frameTextColor || '';
   const frameFontSize = currentProject.design?.frameFontSize || 20;
   const frameTextPosition = currentProject.design?.frameTextPosition || 'bottom';
+
+  const qrContent = currentProject.content || 'https://google.com';
+  const appUrl = (window as any).location?.origin || '';
+  const trackingId = currentProject.trackingId || '';
+  const trackingEnabled = currentProject.trackingEnabled || false;
+
+  const trackingUrl = trackingId ? `${appUrl}/qr/${trackingId}` : null;
+  const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : qrContent;
 
   // Helper to calculate relative luminance for WCAG contrast checking
   const getLuminance = (hexColor: string): number => {
@@ -131,8 +156,23 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const isExcessiveLogo = !!logoUrl && logoScale > maxRecommendedScale;
   const isHighLogoRisk = !!logoUrl && logoScale > (maxRecommendedScale * 0.8) && logoScale <= maxRecommendedScale;
 
-  const hasUnreadableIssue = isLowContrast || isExcessiveLogo;
-  const hasWarningIssue = isSuboptimalContrast || isHighLogoRisk;
+  const textLength = textToEncode.length;
+  const isDensityHighRisk = textLength > 120 && (errorCorrectionLevel === 'L' || errorCorrectionLevel === 'M');
+  const isDensityMediumRisk = !isDensityHighRisk && (
+    (textLength > 120 && errorCorrectionLevel === 'Q') ||
+    (textLength > 60 && errorCorrectionLevel === 'L') ||
+    (textLength > 80 && errorCorrectionLevel === 'M')
+  );
+
+  let densitySuggestion = '';
+  if (isDensityHighRisk) {
+    densitySuggestion = `The encoded text/URL is very long (${textLength} characters) for low error correction (${errorCorrectionLevel}). Switch to 'H' (30%) or shorten the data content to avoid scan failures.`;
+  } else if (isDensityMediumRisk) {
+    densitySuggestion = `High data density (${textLength} characters). Upgrading error correction from '${errorCorrectionLevel}' to 'H' or 'Q' will greatly improve scanning reliability.`;
+  }
+
+  const hasUnreadableIssue = isLowContrast || isExcessiveLogo || isDensityHighRisk;
+  const hasWarningIssue = isSuboptimalContrast || isHighLogoRisk || isDensityMediumRisk;
 
   const autoFixContrast = () => {
     if (!onChange) return;
@@ -177,9 +217,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       updatedDesign.bgColor = '#ffffff';
       updatedDesign.gradientType = 'none';
     }
-    if (isExcessiveLogo) {
+    if (isExcessiveLogo || isDensityHighRisk || isDensityMediumRisk) {
       updatedDesign.errorCorrectionLevel = 'H';
-      if (logoScale > 0.28) {
+      if (isExcessiveLogo && logoScale > 0.28) {
         updatedDesign.logoScale = 0.22;
       }
     }
@@ -221,14 +261,6 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       });
     }
   };
-
-  const qrContent = currentProject.content || 'https://google.com';
-  const appUrl = (window as any).location?.origin || '';
-  const trackingId = currentProject.trackingId || '';
-  const trackingEnabled = currentProject.trackingEnabled || false;
-
-  const trackingUrl = trackingId ? `${appUrl}/qr/${trackingId}` : null;
-  const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : qrContent;
 
   const isTargetAUrl = textToEncode.startsWith('http://') || textToEncode.startsWith('https://');
   const finalShareUrl = shareLinkType === 'destination' && isTargetAUrl ? textToEncode : appUrl;
@@ -724,6 +756,95 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     printWindow.document.close();
   };
 
+  const getPaperDimensions = () => {
+    const isA4 = printReadyPaperSize === 'a4';
+    const widthMm = isA4 ? 210 : 215.9;
+    const heightMm = isA4 ? 297 : 279.4;
+    
+    if (printReadyOrientation === 'landscape') {
+      return { widthMm: heightMm, heightMm: widthMm };
+    }
+    return { widthMm, heightMm };
+  };
+
+  const getQrBlockCoordinates = (colIdx = 0, rowIdx = 0) => {
+    const { widthMm, heightMm } = getPaperDimensions();
+    const blockWidth = printReadyQrSize + 2 * printReadyMargin;
+    const blockHeight = printReadyQrSize + 2 * printReadyMargin;
+    
+    const safeLeft = printReadyMarginLeft;
+    const safeRight = widthMm - printReadyMarginRight;
+    const safeTop = printReadyMarginTop;
+    const safeBottom = heightMm - printReadyMarginBottom;
+    
+    const safeWidth = safeRight - safeLeft;
+    const safeHeight = safeBottom - safeTop;
+    
+    let x = safeLeft;
+    let y = safeTop;
+    
+    if (printReadyCopies === 'single') {
+      switch (printReadyPosition) {
+        case 'center':
+          x = safeLeft + (safeWidth - blockWidth) / 2;
+          y = safeTop + (safeHeight - blockHeight) / 2;
+          break;
+        case 'top_left':
+          x = safeLeft;
+          y = safeTop;
+          break;
+        case 'top_right':
+          x = safeRight - blockWidth;
+          y = safeTop;
+          break;
+        case 'bottom_left':
+          x = safeLeft;
+          y = safeBottom - blockHeight;
+          break;
+        case 'bottom_right':
+          x = safeRight - blockWidth;
+          y = safeBottom - blockHeight;
+          break;
+        case 'custom':
+          const centerX = safeLeft + (safeWidth - blockWidth) / 2;
+          const centerY = safeTop + (safeHeight - blockHeight) / 2;
+          x = centerX + printReadyCustomX;
+          y = centerY + printReadyCustomY;
+          break;
+      }
+    } else {
+      let cols = 2;
+      let rows = 2;
+      if (printReadyCopies === 'grid_3x3') {
+        cols = 3;
+        rows = 3;
+      } else if (printReadyCopies === 'grid_4x4') {
+        cols = 4;
+        rows = 4;
+      }
+      
+      const colSpacing = cols > 1 ? (safeWidth - cols * blockWidth) / (cols - 1) : 0;
+      const rowSpacing = rows > 1 ? (safeHeight - rows * blockHeight) / (rows - 1) : 0;
+      
+      const finalColSpacing = colSpacing < 0 ? 2 : colSpacing;
+      const finalRowSpacing = rowSpacing < 0 ? 2 : rowSpacing;
+      
+      const totalGridWidth = cols * blockWidth + (cols - 1) * finalColSpacing;
+      const totalGridHeight = rows * blockHeight + (rows - 1) * finalRowSpacing;
+      
+      const startX = safeLeft + (safeWidth - totalGridWidth) / 2;
+      const startY = safeTop + (safeHeight - totalGridHeight) / 2;
+      
+      x = startX + colIdx * (blockWidth + finalColSpacing);
+      y = startY + rowIdx * (rowSpacing < 0 ? blockHeight + 2 : blockHeight + finalRowSpacing);
+    }
+    
+    return {
+      x: Math.max(0, Math.min(widthMm - blockWidth, x)),
+      y: Math.max(0, Math.min(heightMm - blockHeight, y))
+    };
+  };
+
   const handlePrintReadyLayout = () => {
     if (!canvasRef.current) return;
     const qrCodeUrl = canvasRef.current.toDataURL('image/png');
@@ -745,8 +866,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       }
     }
 
-    const paperWidth = printReadyPaperSize === 'a4' ? '210mm' : '215.9mm';
-    const paperHeight = printReadyPaperSize === 'a4' ? '297mm' : '279.4mm';
+    const { widthMm, heightMm } = getPaperDimensions();
+    const paperWidth = `${widthMm}mm`;
+    const paperHeight = `${heightMm}mm`;
 
     const qrFilterStyle = printReadyGrayscale === 'grayscale'
       ? 'filter: grayscale(1) contrast(1.2);'
@@ -759,16 +881,80 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     const borderStyle = printReadyGrayscale === 'pure_bw' ? 'border: 1.5px solid #000000;' : 'border: 1px dashed #cbd5e1;';
     const cropMarkColor = printReadyGrayscale === 'pure_bw' ? '#000000' : '#94a3b8';
 
+    const cols = printReadyCopies === 'single' ? 1 : (printReadyCopies === 'grid_2x2' ? 2 : (printReadyCopies === 'grid_3x3' ? 3 : 4));
+    const rows = printReadyCopies === 'single' ? 1 : (printReadyCopies === 'grid_2x2' ? 2 : (printReadyCopies === 'grid_3x3' ? 3 : 4));
+
+    let blocksHtml = '';
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const coords = getQrBlockCoordinates(c, r);
+        blocksHtml += `
+          <div style="
+            position: absolute;
+            left: ${coords.x}mm;
+            top: ${coords.y}mm;
+            width: ${printReadyQrSize + 2 * printReadyMargin}mm;
+            height: ${printReadyQrSize + 2 * printReadyMargin}mm;
+            padding: ${printReadyMargin}mm;
+            box-sizing: border-box;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            ${borderStyle}
+          ">
+            ${printReadyCropMarks ? `
+              <!-- Crop Marks: Top-Left -->
+              <div style="position: absolute; top: -15mm; left: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
+              <div style="position: absolute; top: 0; left: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
+              
+              <!-- Crop Marks: Top-Right -->
+              <div style="position: absolute; top: -15mm; right: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
+              <div style="position: absolute; top: 0; right: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
+              
+              <!-- Crop Marks: Bottom-Left -->
+              <div style="position: absolute; bottom: -15mm; left: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
+              <div style="position: absolute; bottom: 0; left: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
+              
+              <!-- Crop Marks: Bottom-Right -->
+              <div style="position: absolute; bottom: -15mm; right: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
+              <div style="position: absolute; bottom: 0; right: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
+            ` : ''}
+
+            <!-- QR code image centered -->
+            <img src="${qrCodeUrl}" style="width: ${printReadyQrSize}mm; height: ${printReadyQrSize}mm; display: block; object-fit: contain; ${qrFilterStyle}" />
+          </div>
+        `;
+      }
+    }
+
+    const footnoteHtml = printReadyShowInfo && printReadyInfoText ? `
+      <div style="
+        position: absolute;
+        left: ${printReadyMarginLeft}mm;
+        bottom: ${printReadyMarginBottom / 2}mm;
+        width: ${widthMm - printReadyMarginLeft - printReadyMarginRight}mm;
+        text-align: center;
+        font-family: inherit;
+        box-sizing: border-box;
+      ">
+        <p style="font-size: 11pt; font-weight: 700; margin: 0 0 1.5mm 0; word-break: break-all; ${textStyle}">${printReadyInfoText}</p>
+        <p style="font-size: 8pt; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; ${subTextStyle}">
+          Print-Ready Layout • Centered ${printReadyPaperSize.toUpperCase()} Format (${printReadyOrientation.toUpperCase()}) • Target Size: ${printReadyQrSize}mm (${(printReadyQrSize / 25.4).toFixed(1)}") • ${new Date().toLocaleDateString()}
+        </p>
+      </div>
+    ` : '';
+
     printWindow.document.write(`
       <!DOCTYPE html>
       <html>
         <head>
           <title>Print-Ready QR Code</title>
-          ${stylesHtml}
+          \${stylesHtml}
           <style>
             @media print {
               @page {
-                size: ${printReadyPaperSize === 'a4' ? 'A4' : 'letter'} portrait;
+                size: \${printReadyPaperSize === 'a4' ? 'A4' : 'letter'} \${printReadyOrientation};
                 margin: 0;
               }
               body {
@@ -780,16 +966,13 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 display: none !important;
               }
               .print-page {
-                width: ${paperWidth} !important;
-                height: ${paperHeight} !important;
+                width: \${paperWidth} !important;
+                height: \${paperHeight} !important;
                 box-shadow: none !important;
                 border: none !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
+                position: relative !important;
                 box-sizing: border-box !important;
                 page-break-inside: avoid !important;
                 page-break-after: avoid !important;
@@ -808,57 +991,18 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             }
             .print-page {
               background: white;
-              width: ${paperWidth};
-              height: ${paperHeight};
+              width: \${paperWidth};
+              height: \${paperHeight};
               box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
               position: relative;
               box-sizing: border-box;
-              padding: 20mm;
             }
           </style>
         </head>
         <body>
           <div class="print-page">
-            <!-- Center layout containing QR and Crop Marks -->
-            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-              <div style="position: relative; width: ${printReadyQrSize + 2 * printReadyMargin}mm; height: ${printReadyQrSize + 2 * printReadyMargin}mm; padding: ${printReadyMargin}mm; box-sizing: border-box; background: white; display: flex; align-items: center; justify-content: center; ${borderStyle}">
-                
-                ${printReadyCropMarks ? `
-                  <!-- Crop Marks: Top-Left -->
-                  <div style="position: absolute; top: -15mm; left: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
-                  <div style="position: absolute; top: 0; left: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
-                  
-                  <!-- Crop Marks: Top-Right -->
-                  <div style="position: absolute; top: -15mm; right: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
-                  <div style="position: absolute; top: 0; right: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
-                  
-                  <!-- Crop Marks: Bottom-Left -->
-                  <div style="position: absolute; bottom: -15mm; left: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
-                  <div style="position: absolute; bottom: 0; left: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
-                  
-                  <!-- Crop Marks: Bottom-Right -->
-                  <div style="position: absolute; bottom: -15mm; right: 0; width: 0.3mm; height: 10mm; background: ${cropMarkColor};"></div>
-                  <div style="position: absolute; bottom: 0; right: -15mm; width: 10mm; height: 0.3mm; background: ${cropMarkColor};"></div>
-                ` : ''}
-
-                <!-- QR code image centered -->
-                <img src="${qrCodeUrl}" style="width: ${printReadyQrSize}mm; height: ${printReadyQrSize}mm; display: block; object-fit: contain; ${qrFilterStyle}" />
-              </div>
-            </div>
-
-            <!-- Footer Info Section -->
-            ${printReadyShowInfo && printReadyInfoText ? `
-              <div style="text-align: center; margin-bottom: 5mm; font-family: inherit; width: 100%; box-sizing: border-box; padding: 0 10mm;">
-                <p style="font-size: 11pt; font-weight: 700; margin: 0 0 3mm 0; word-break: break-all; ${textStyle}">${printReadyInfoText}</p>
-                <p style="font-size: 8pt; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; ${subTextStyle}">
-                  Print-Ready Layout • Centered ${printReadyPaperSize.toUpperCase()} Format • Target Size: ${printReadyQrSize}mm (${(printReadyQrSize / 25.4).toFixed(1)}") • ${new Date().toLocaleDateString()}
-                </p>
-              </div>
-            ` : ''}
+            \${blocksHtml}
+            \${footnoteHtml}
           </div>
           
           <script>
@@ -1042,15 +1186,18 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         />
                       );
                     } else {
+                      const calculatedFontSize = getEmblemFontSize(logoUrl, sizePx);
                       return (
                         <div 
-                          className="w-full h-full flex items-center justify-center font-black text-white tracking-wider bg-gradient-to-tr from-indigo-600 to-violet-600 shadow-inner"
+                          className="w-full h-full flex items-center justify-center font-black text-white bg-gradient-to-tr from-indigo-600 to-violet-600 shadow-inner overflow-hidden whitespace-nowrap text-center px-1"
+                          dir="auto"
                           style={{ 
-                            fontSize: `${sizePx * 0.38}px`,
-                            borderRadius: borderRadiusVal
+                            fontSize: `${calculatedFontSize}px`,
+                            borderRadius: borderRadiusVal,
+                            lineHeight: 1
                           }}
                         >
-                          {logoUrl.slice(0, 3).toUpperCase()}
+                          {logoUrl}
                         </div>
                       );
                     }
@@ -1165,10 +1312,12 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 </span>
               </div>
               <p className="text-[11px] text-gray-600 leading-normal mt-1">
-                {isLowContrast && "Foreground & background colors are too similar."}
-                {!isLowContrast && isSuboptimalContrast && "Contrast is slightly low; may fail under dim lighting."}
-                {isExcessiveLogo && `Center logo covers too much area (${(logoScale * 100).toFixed(0)}%) for current Error Correction.`}
-                {!isExcessiveLogo && isHighLogoRisk && `Center logo is large (${(logoScale * 100).toFixed(0)}%). Consider raising Error Correction level.`}
+                {isLowContrast && "Foreground & background colors are too similar. "}
+                {!isLowContrast && isSuboptimalContrast && "Contrast is slightly low; may fail under dim lighting. "}
+                {isExcessiveLogo && `Center logo covers too much area (${(logoScale * 100).toFixed(0)}%) for current Error Correction. `}
+                {!isExcessiveLogo && isHighLogoRisk && `Center logo is large (${(logoScale * 100).toFixed(0)}%). Consider raising Error Correction level. `}
+                {isDensityHighRisk && `Data is too long (${textLength} chars) for current Error Correction level ${errorCorrectionLevel}. `}
+                {!isDensityHighRisk && isDensityMediumRisk && `High data density (${textLength} chars) for Error Correction level ${errorCorrectionLevel}. `}
               </p>
               <div className="flex items-center gap-2 mt-2.5">
                 <button
@@ -2076,6 +2225,57 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   </div>
                 )}
 
+                {/* 3. Data Density & Error Correction Level Diagnostic */}
+                <div className="space-y-2 pt-4 border-t border-slate-100 text-left">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">3. Data Density & Correction</span>
+                    <span className={`text-xs font-mono font-black px-2 py-0.5 rounded ${
+                      isDensityHighRisk 
+                        ? 'bg-rose-50 text-rose-700 border border-rose-100' 
+                        : isDensityMediumRisk 
+                          ? 'bg-amber-50 text-amber-700 border border-amber-100' 
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                    }`}>
+                      {textLength} Chars • Level {errorCorrectionLevel}
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 space-y-2 text-[11px] leading-normal">
+                    {isDensityHighRisk && (
+                      <p className="text-rose-700 font-semibold">
+                        ❌ CRITICAL: The encoded text/URL is very long ({textLength} characters) for Error Correction Level {errorCorrectionLevel}. The QR modules are highly dense and prone to scanning failures.
+                      </p>
+                    )}
+                    {isDensityMediumRisk && (
+                      <p className="text-amber-700 font-semibold">
+                        ⚠️ WARNING: Moderate data density risk. Switch error correction to a higher level (e.g. 'H') or reduce data length for maximum scan reliability.
+                      </p>
+                    )}
+                    {!isDensityHighRisk && !isDensityMediumRisk && (
+                      <p className="text-emerald-700 font-semibold">
+                        ✅ SAFE: Data density is well balanced for Error Correction Level {errorCorrectionLevel}.
+                      </p>
+                    )}
+
+                    {densitySuggestion && (
+                      <p className="text-slate-600 bg-slate-100 p-2 rounded-lg text-[10px] font-medium leading-relaxed">
+                        💡 {densitySuggestion}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Fix Data Density / Correction Trigger */}
+                  {onChange && (isDensityHighRisk || isDensityMediumRisk) && (
+                    <button
+                      type="button"
+                      onClick={autoFixErrorCorrection}
+                      className="w-full py-2 px-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black rounded-lg uppercase tracking-wider transition-all cursor-pointer border-0 shadow-3xs"
+                    >
+                      Boost Error Correction to H (30%)
+                    </button>
+                  )}
+                </div>
+
               </div>
 
               {/* Footer */}
@@ -2120,342 +2320,769 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
       {/* Print-Ready Layout Modal */}
       <AnimatePresence>
-        {isPrintReadyModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-[100] flex items-center justify-center p-4 overflow-y-auto"
-            onClick={() => setIsPrintReadyModalOpen(false)}
-          >
+        {isPrintReadyModalOpen && (() => {
+          const { widthMm: activeWidthMm, heightMm: activeHeightMm } = getPaperDimensions();
+          const activeBaseScale = 260 / (printReadyOrientation === 'portrait' ? (printReadyPaperSize === 'a4' ? 210 : 215.9) : (printReadyPaperSize === 'a4' ? 297 : 279.4));
+          const activePxPerMm = activeBaseScale * (printReadyZoom / 100);
+
+          const activeSheetWidthPx = activeWidthMm * activePxPerMm;
+          const activeSheetHeightPx = activeHeightMm * activePxPerMm;
+
+          const activeCols = printReadyCopies === 'single' ? 1 : (printReadyCopies === 'grid_2x2' ? 2 : (printReadyCopies === 'grid_3x3' ? 3 : 4));
+          const activeRows = printReadyCopies === 'single' ? 1 : (printReadyCopies === 'grid_2x2' ? 2 : (printReadyCopies === 'grid_3x3' ? 3 : 4));
+          const activeBlockWidth = printReadyQrSize + 2 * printReadyMargin;
+          const activeBlockHeight = printReadyQrSize + 2 * printReadyMargin;
+
+          let activeLayoutOverflow = false;
+          for (let r = 0; r < activeRows; r++) {
+            for (let c = 0; c < activeCols; c++) {
+              const coords = getQrBlockCoordinates(c, r);
+              if (coords.x < 0 || coords.y < 0 || coords.x + activeBlockWidth > activeWidthMm || coords.y + activeBlockHeight > activeHeightMm) {
+                activeLayoutOverflow = true;
+              }
+            }
+          }
+
+          return (
             <motion.div
-              initial={{ scale: 0.95, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 15 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="bg-white rounded-3xl w-full max-w-4xl shadow-2xl overflow-hidden text-slate-800 border border-slate-100 flex flex-col md:flex-row h-full max-h-[90vh]"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-[100] flex items-center justify-center p-4 overflow-y-auto"
+              onClick={() => setIsPrintReadyModalOpen(false)}
             >
-              {/* Left Panel: Settings Controls */}
-              <div className="w-full md:w-5/12 bg-slate-50 border-r border-slate-100 flex flex-col h-full overflow-y-auto">
-                {/* Header */}
-                <div className="p-5 border-b border-slate-100 bg-gradient-to-r from-slate-900 to-indigo-950 text-white">
-                  <div className="flex items-center gap-2.5">
-                    <div className="p-1.5 bg-indigo-500/20 rounded-lg">
-                      <FileText className="w-5 h-5 text-indigo-400" />
-                    </div>
-                    <div className="text-left">
-                      <h3 className="text-sm font-black uppercase tracking-wider text-white">Print-Ready Studio</h3>
-                      <p className="text-[10px] text-indigo-200 font-medium">Pre-press centering & scale engine</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Controls Form */}
-                <div className="p-5 space-y-5 text-left flex-1">
-                  {/* 1. Paper Size */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                      <Scale className="w-3.5 h-3.5 text-slate-500" />
-                      Paper Format
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setPrintReadyPaperSize('a4')}
-                        className={`py-2 px-3 rounded-xl border text-xs font-semibold flex flex-col items-center gap-0.5 cursor-pointer transition-all ${
-                          printReadyPaperSize === 'a4'
-                            ? 'bg-indigo-600 border-indigo-600 text-white'
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        <span>A4 Sheet</span>
-                        <span className={`text-[9px] font-normal ${printReadyPaperSize === 'a4' ? 'text-indigo-200' : 'text-slate-400'}`}>
-                          210mm x 297mm
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPrintReadyPaperSize('letter')}
-                        className={`py-2 px-3 rounded-xl border text-xs font-semibold flex flex-col items-center gap-0.5 cursor-pointer transition-all ${
-                          printReadyPaperSize === 'letter'
-                            ? 'bg-indigo-600 border-indigo-600 text-white'
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        <span>US Letter</span>
-                        <span className={`text-[9px] font-normal ${printReadyPaperSize === 'letter' ? 'text-indigo-200' : 'text-slate-400'}`}>
-                          8.5" x 11" (216x279mm)
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* 2. Color Profile (Grayscale / Ink Saver) */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                      <Contrast className="w-3.5 h-3.5 text-slate-500" />
-                      Grayscale & Ink-Saver Profile
-                    </label>
-                    <div className="grid grid-cols-3 gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setPrintReadyGrayscale('none')}
-                        className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
-                          printReadyGrayscale === 'none'
-                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        <span>Original</span>
-                        <span className="text-[8px] font-normal opacity-85">Full Color</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPrintReadyGrayscale('grayscale')}
-                        className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
-                          printReadyGrayscale === 'grayscale'
-                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        <span>Grayscale</span>
-                        <span className="text-[8px] font-normal opacity-85">Pro Printer</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPrintReadyGrayscale('pure_bw')}
-                        className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
-                          printReadyGrayscale === 'pure_bw'
-                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        <span>Pure B&W</span>
-                        <span className="text-[8px] font-normal opacity-85">Max Contrast</span>
-                      </button>
-                    </div>
-                    <p className="text-[10px] text-slate-500">
-                      {printReadyGrayscale === 'grayscale' && "Converts colors to print-friendly grayscales to save colored ink cartridges."}
-                      {printReadyGrayscale === 'pure_bw' && "Renders the QR with 100% black/white thresholds. Ideal for high-speed laser printing."}
-                      {printReadyGrayscale === 'none' && "Retains the custom design colors. Best for fine photo-quality printing."}
-                    </p>
-                  </div>
-
-                  {/* 3. QR Size Slider */}
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
-                      <span className="flex items-center gap-1.5">
-                        <Maximize className="w-3.5 h-3.5 text-slate-500" />
-                        QR Printed Size
-                      </span>
-                      <span className="font-mono text-indigo-600 font-bold">{printReadyQrSize}mm ({(printReadyQrSize/25.4).toFixed(1)}")</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="20"
-                      max="150"
-                      step="5"
-                      value={printReadyQrSize}
-                      onChange={(e) => setPrintReadyQrSize(Number(e.target.value))}
-                      className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
-                    />
-                    <div className="flex justify-between text-[9px] text-slate-400 font-mono">
-                      <span>20mm (Small)</span>
-                      <span>80mm (Medium)</span>
-                      <span>150mm (Large)</span>
-                    </div>
-                  </div>
-
-                  {/* 4. Margin Size Slider */}
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
-                      <span className="flex items-center gap-1.5">
-                        <Layers className="w-3.5 h-3.5 text-slate-500" />
-                        Safe Quiet Zone
-                      </span>
-                      <span className="font-mono text-indigo-600 font-bold">{printReadyMargin}mm ({(printReadyMargin/25.4).toFixed(1)}")</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="4"
-                      max="30"
-                      step="2"
-                      value={printReadyMargin}
-                      onChange={(e) => setPrintReadyMargin(Number(e.target.value))}
-                      className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
-                    />
-                    <div className="flex justify-between text-[9px] text-slate-400 font-mono">
-                      <span>4mm (Min)</span>
-                      <span>15mm (Recommended)</span>
-                      <span>30mm (Max)</span>
-                    </div>
-                  </div>
-
-                  {/* 5. Toggles */}
-                  <div className="space-y-2 pt-2 border-t border-slate-100">
-                    <label className="flex items-center justify-between cursor-pointer p-1.5 hover:bg-slate-100/50 rounded-lg transition-all">
-                      <div className="text-left">
-                        <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Show Crop Marks</span>
-                        <p className="text-[10px] text-slate-400">Pre-press corners for guillotine cutting alignment.</p>
+              <motion.div
+                initial={{ scale: 0.95, y: 15 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.95, y: 15 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+                className="bg-white rounded-3xl w-full max-w-5xl shadow-2xl overflow-hidden text-slate-800 border border-slate-100 flex flex-col md:flex-row h-full max-h-[92vh]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Left Panel: Settings Controls */}
+                <div className="w-full md:w-5/12 bg-slate-50 border-r border-slate-100 flex flex-col h-full overflow-y-auto">
+                  {/* Header */}
+                  <div className="p-5 border-b border-slate-100 bg-gradient-to-r from-slate-900 to-indigo-950 text-white">
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-1.5 bg-indigo-500/20 rounded-lg">
+                        <FileText className="w-5 h-5 text-indigo-400" />
                       </div>
-                      <input
-                        type="checkbox"
-                        checked={printReadyCropMarks}
-                        onChange={(e) => setPrintReadyCropMarks(e.target.checked)}
-                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer"
-                      />
-                    </label>
-
-                    <label className="flex items-center justify-between cursor-pointer p-1.5 hover:bg-slate-100/50 rounded-lg transition-all">
                       <div className="text-left">
-                        <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Show Footnote/Meta info</span>
-                        <p className="text-[10px] text-slate-400">Adds date, code size, and custom label below design.</p>
+                        <h3 className="text-sm font-black uppercase tracking-wider text-white">Print-Ready Studio</h3>
+                        <p className="text-[10px] text-indigo-200 font-medium">Pre-press calibration & layout center</p>
                       </div>
-                      <input
-                        type="checkbox"
-                        checked={printReadyShowInfo}
-                        onChange={(e) => setPrintReadyShowInfo(e.target.checked)}
-                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer"
-                      />
-                    </label>
+                    </div>
                   </div>
 
-                  {/* 6. Footnote Text Input */}
-                  {printReadyShowInfo && (
-                    <div className="space-y-1 text-left">
-                      <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Custom Footnote Label</label>
-                      <input
-                        type="text"
-                        value={printReadyInfoText}
-                        onChange={(e) => setPrintReadyInfoText(e.target.value)}
-                        placeholder="Scan code to open website..."
-                        className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-800 placeholder-slate-400 bg-white focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                    </div>
-                  )}
-                </div>
+                  {/* Sidebar Tabs Selectors */}
+                  <div className="grid grid-cols-3 border-b border-slate-200 bg-slate-100 text-xs font-bold text-slate-600 select-none">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSettingsTab('layout')}
+                      className={`py-3 text-center cursor-pointer border-b-2 transition-all outline-hidden ${
+                        activeSettingsTab === 'layout'
+                          ? 'border-indigo-600 text-indigo-600 bg-white'
+                          : 'border-transparent hover:bg-slate-50 text-slate-500'
+                      }`}
+                    >
+                      Layout
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSettingsTab('margins')}
+                      className={`py-3 text-center cursor-pointer border-b-2 transition-all outline-hidden ${
+                        activeSettingsTab === 'margins'
+                          ? 'border-indigo-600 text-indigo-600 bg-white'
+                          : 'border-transparent hover:bg-slate-50 text-slate-500'
+                      }`}
+                    >
+                      Margins
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSettingsTab('prepress')}
+                      className={`py-3 text-center cursor-pointer border-b-2 transition-all outline-hidden ${
+                        activeSettingsTab === 'prepress'
+                          ? 'border-indigo-600 text-indigo-600 bg-white'
+                          : 'border-transparent hover:bg-slate-50 text-slate-500'
+                      }`}
+                    >
+                      Options
+                    </button>
+                  </div>
 
-                {/* Left Panel Footer: Trigger Print */}
-                <div className="p-4 bg-slate-100 border-t border-slate-200 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsPrintReadyModalOpen(false)}
-                    className="flex-1 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl uppercase tracking-wider transition-all cursor-pointer border-0"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handlePrintReadyLayout}
-                    className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-xl uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer border-0"
-                  >
-                    <Printer className="w-4 h-4" />
-                    <span>Print Sheet</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Right Panel: Scrollable Real-Time Sheet Preview */}
-              <div className="w-full md:w-7/12 bg-slate-100 flex flex-col h-full overflow-hidden relative">
-                {/* Visual Guide Header */}
-                <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center text-xs text-slate-500 font-medium">
-                  <span className="flex items-center gap-1.5 uppercase font-bold tracking-wider text-slate-600">
-                    <Eye className="w-4 h-4 text-slate-400" />
-                    Interactive Sheet Preview
-                  </span>
-                  <span className="font-mono bg-slate-200 px-2 py-0.5 rounded text-slate-600 uppercase">
-                    Scale: 1:1 Simulated
-                  </span>
-                </div>
-
-                {/* Preview Sheet Area */}
-                <div className="flex-1 overflow-y-auto p-8 flex items-center justify-center min-h-0">
-                  <div
-                    className={`bg-white shadow-xl border border-slate-200/50 rounded-sm relative flex flex-col justify-between items-center p-8 transition-all ${
-                      printReadyPaperSize === 'a4' 
-                        ? 'w-[280px] h-[396px]' // Simulated A4 aspect ratio 1 : 1.414
-                        : 'w-[280px] h-[362px]' // Simulated US Letter aspect ratio 1 : 1.294
-                    }`}
-                  >
-                    {/* Centered QR Frame Area */}
-                    <div className="flex-1 flex flex-col items-center justify-center w-full">
-                      <div
-                        className="relative border border-dashed border-slate-200 transition-all bg-white"
-                        style={{
-                          width: `${(printReadyQrSize + 2 * printReadyMargin) * 1.5}px`,
-                          height: `${(printReadyQrSize + 2 * printReadyMargin) * 1.5}px`,
-                          padding: `${printReadyMargin * 1.5}px`,
-                          boxSizing: 'border-box'
-                        }}
-                      >
-                        {/* Interactive Crop Marks */}
-                        {printReadyCropMarks && (
-                          <>
-                            {/* Top Left */}
-                            <div className="absolute top-[-15px] left-0 w-[0.5px] h-[10px] bg-slate-400"></div>
-                            <div className="absolute top-0 left-[-15px] w-[10px] h-[0.5px] bg-slate-400"></div>
-                            {/* Top Right */}
-                            <div className="absolute top-[-15px] right-0 w-[0.5px] h-[10px] bg-slate-400"></div>
-                            <div className="absolute top-0 right-[-15px] w-[10px] h-[0.5px] bg-slate-400"></div>
-                            {/* Bottom Left */}
-                            <div className="absolute bottom-[-15px] left-0 w-[0.5px] h-[10px] bg-slate-400"></div>
-                            <div className="absolute bottom-0 left-[-15px] w-[10px] h-[0.5px] bg-slate-400"></div>
-                            {/* Bottom Right */}
-                            <div className="absolute bottom-[-15px] right-0 w-[0.5px] h-[10px] bg-slate-400"></div>
-                            <div className="absolute bottom-0 right-[-15px] w-[10px] h-[0.5px] bg-slate-400"></div>
-                          </>
-                        )}
-
-                        {/* Centered QR Canvas Copy or Placeholder */}
-                        <div
-                          className="w-full h-full bg-slate-50 rounded flex items-center justify-center overflow-hidden"
-                          style={{
-                            filter: 
-                              printReadyGrayscale === 'grayscale' ? 'grayscale(1) contrast(1.2)' :
-                              printReadyGrayscale === 'pure_bw' ? 'grayscale(1) contrast(500) brightness(1.1)' : 'none'
-                          }}
-                        >
-                          {canvasRef.current ? (
-                            <img
-                              src={canvasRef.current.toDataURL('image/png')}
-                              alt="Print Preview"
-                              className="w-full h-full object-contain"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-slate-200 animate-pulse flex items-center justify-center text-[8px] font-mono">
-                              QR Code Loading...
-                            </div>
-                          )}
+                  {/* Tab Contents */}
+                  <div className="p-5 space-y-5 text-left flex-1 overflow-y-auto">
+                    {/* Warn User of Boundary Overflow */}
+                    {activeLayoutOverflow && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex gap-2 text-amber-800">
+                        <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <div className="text-[10px] leading-tight font-medium">
+                          <p className="font-bold uppercase tracking-wider text-amber-900 mb-0.5">Layout Overflow Alert</p>
+                          Some QR copies are exceeding the physical print boundaries. Try shrinking the QR size or narrowing safe zone quiet margins.
                         </div>
                       </div>
-                    </div>
-
-                    {/* Centered Footer Text Preview */}
-                    {printReadyShowInfo && printReadyInfoText && (
-                      <div className="w-full text-center mt-2 max-w-[90%] pointer-events-none">
-                        <p className="text-[8px] font-bold text-slate-800 line-clamp-1 break-all uppercase tracking-wide">
-                          {printReadyInfoText}
-                        </p>
-                        <p className="text-[6px] text-slate-400 tracking-wider uppercase font-mono mt-0.5">
-                          Centered {printReadyPaperSize.toUpperCase()} Sheet • Output: {printReadyQrSize}mm
-                        </p>
-                      </div>
                     )}
+
+                    {activeSettingsTab === 'layout' && (
+                      <>
+                        {/* Paper Size */}
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <Scale className="w-3.5 h-3.5 text-slate-500" />
+                            Paper Size Format
+                          </label>
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyPaperSize('a4')}
+                              className={`py-2 px-3 rounded-xl border text-xs font-semibold flex flex-col items-center gap-0.5 cursor-pointer transition-all ${
+                                printReadyPaperSize === 'a4'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>A4 Sheet</span>
+                              <span className={`text-[9px] font-normal ${printReadyPaperSize === 'a4' ? 'text-indigo-200' : 'text-slate-400'}`}>
+                                210mm x 297mm
+                              </span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyPaperSize('letter')}
+                              className={`py-2 px-3 rounded-xl border text-xs font-semibold flex flex-col items-center gap-0.5 cursor-pointer transition-all ${
+                                printReadyPaperSize === 'letter'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>US Letter</span>
+                              <span className={`text-[9px] font-normal ${printReadyPaperSize === 'letter' ? 'text-indigo-200' : 'text-slate-400'}`}>
+                                8.5" x 11" (215.9x279.4mm)
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Orientation */}
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <Sliders className="w-3.5 h-3.5 text-slate-500" />
+                            Orientation
+                          </label>
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyOrientation('portrait')}
+                              className={`py-1.5 px-3 rounded-xl border text-xs font-semibold cursor-pointer transition-all ${
+                                printReadyOrientation === 'portrait'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              Portrait
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyOrientation('landscape')}
+                              className={`py-1.5 px-3 rounded-xl border text-xs font-semibold cursor-pointer transition-all ${
+                                printReadyOrientation === 'landscape'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              Landscape
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Grid copies layout */}
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <Grid className="w-3.5 h-3.5 text-slate-500" />
+                            Print Layout & Grid Copies
+                          </label>
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyCopies('single')}
+                              className={`py-1.5 px-2 rounded-xl border text-xs font-bold cursor-pointer transition-all flex flex-col items-center justify-center ${
+                                printReadyCopies === 'single'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>Single QR</span>
+                              <span className="text-[8px] font-normal opacity-85">Centered pre-press</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyCopies('grid_2x2')}
+                              className={`py-1.5 px-2 rounded-xl border text-xs font-bold cursor-pointer transition-all flex flex-col items-center justify-center ${
+                                printReadyCopies === 'grid_2x2'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>2x2 Grid (4 Copies)</span>
+                              <span className="text-[8px] font-normal opacity-85">Even paper distribution</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyCopies('grid_3x3')}
+                              className={`py-1.5 px-2 rounded-xl border text-xs font-bold cursor-pointer transition-all flex flex-col items-center justify-center ${
+                                printReadyCopies === 'grid_3x3'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>3x3 Grid (9 Copies)</span>
+                              <span className="text-[8px] font-normal opacity-85">Maximum paper utilization</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyCopies('grid_4x4')}
+                              className={`py-1.5 px-2 rounded-xl border text-xs font-bold cursor-pointer transition-all flex flex-col items-center justify-center ${
+                                printReadyCopies === 'grid_4x4'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>4x4 Grid (16 Copies)</span>
+                              <span className="text-[8px] font-normal opacity-85">Small high-density stickers</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* QR Printed Size Slider */}
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+                            <span className="flex items-center gap-1.5">
+                              <Maximize className="w-3.5 h-3.5 text-slate-500" />
+                              QR Physical Width
+                            </span>
+                            <span className="font-mono text-indigo-600 font-bold">{printReadyQrSize}mm ({(printReadyQrSize/25.4).toFixed(1)}")</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="15"
+                            max="140"
+                            step="5"
+                            value={printReadyQrSize}
+                            onChange={(e) => setPrintReadyQrSize(Number(e.target.value))}
+                            className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
+                          />
+                          <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                            <span>15mm (Sticker)</span>
+                            <span>65mm (Recommended)</span>
+                            <span>140mm (Poster)</span>
+                          </div>
+                        </div>
+
+                        {/* Quiet Zone Slider */}
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+                            <span className="flex items-center gap-1.5">
+                              <Layers className="w-3.5 h-3.5 text-slate-500" />
+                              Safe Quiet Zone
+                            </span>
+                            <span className="font-mono text-indigo-600 font-bold">{printReadyMargin}mm ({(printReadyMargin/25.4).toFixed(1)}")</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="2"
+                            max="25"
+                            step="1"
+                            value={printReadyMargin}
+                            onChange={(e) => setPrintReadyMargin(Number(e.target.value))}
+                            className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
+                          />
+                          <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                            <span>2mm (Minimum)</span>
+                            <span>10mm (Balanced)</span>
+                            <span>25mm (Generous)</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {activeSettingsTab === 'margins' && (
+                      <>
+                        {/* Custom Margin Cross Controls */}
+                        <div className="space-y-4">
+                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                            Physical Paper Margins (mm)
+                          </label>
+                          <div className="grid grid-cols-3 gap-2 max-w-[240px] mx-auto text-center border border-slate-100 bg-white p-4 rounded-2xl shadow-xs">
+                            <div></div>
+                            <div>
+                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">Top</span>
+                              <input 
+                                type="number" 
+                                value={printReadyMarginTop} 
+                                min="0" max="60" 
+                                onChange={(e) => setPrintReadyMarginTop(Number(e.target.value))}
+                                className="w-14 px-1.5 py-1 text-center border border-slate-200 rounded-lg text-xs font-bold font-mono focus:ring-1 focus:ring-indigo-500 focus:outline-hidden"
+                              />
+                            </div>
+                            <div></div>
+                            
+                            <div>
+                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">Left</span>
+                              <input 
+                                type="number" 
+                                value={printReadyMarginLeft} 
+                                min="0" max="60" 
+                                onChange={(e) => setPrintReadyMarginLeft(Number(e.target.value))}
+                                className="w-14 px-1.5 py-1 text-center border border-slate-200 rounded-lg text-xs font-bold font-mono focus:ring-1 focus:ring-indigo-500 focus:outline-hidden"
+                              />
+                            </div>
+                            <div className="flex items-center justify-center">
+                              <div className="w-9 h-9 border border-dashed border-indigo-200 bg-indigo-50/20 rounded-lg flex items-center justify-center font-mono text-[8px] text-indigo-400 font-bold">
+                                PAGE
+                              </div>
+                            </div>
+                            <div>
+                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">Right</span>
+                              <input 
+                                type="number" 
+                                value={printReadyMarginRight} 
+                                min="0" max="60" 
+                                onChange={(e) => setPrintReadyMarginRight(Number(e.target.value))}
+                                className="w-14 px-1.5 py-1 text-center border border-slate-200 rounded-lg text-xs font-bold font-mono focus:ring-1 focus:ring-indigo-500 focus:outline-hidden"
+                              />
+                            </div>
+                            
+                            <div></div>
+                            <div>
+                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">Bottom</span>
+                              <input 
+                                type="number" 
+                                value={printReadyMarginBottom} 
+                                min="0" max="60" 
+                                onChange={(e) => setPrintReadyMarginBottom(Number(e.target.value))}
+                                className="w-14 px-1.5 py-1 text-center border border-slate-200 rounded-lg text-xs font-bold font-mono focus:ring-1 focus:ring-indigo-500 focus:outline-hidden"
+                              />
+                            </div>
+                            <div></div>
+                          </div>
+                          <p className="text-[9px] text-slate-400 text-center">
+                            Standard paper margins are 15mm. Adjust them to match your custom printer boundaries.
+                          </p>
+                        </div>
+
+                        {/* Alignment Preset selection (Single only) */}
+                        {printReadyCopies === 'single' ? (
+                          <div className="space-y-1.5 pt-2 border-t border-slate-100">
+                            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                              Alignment & Position Preset
+                            </label>
+                            <div className="grid grid-cols-3 gap-1.5">
+                              {(['center', 'top_left', 'top_right', 'bottom_left', 'bottom_right', 'custom'] as const).map((pos) => (
+                                <button
+                                  key={pos}
+                                  type="button"
+                                  onClick={() => setPrintReadyPosition(pos)}
+                                  className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer capitalize transition-all ${
+                                    printReadyPosition === pos
+                                      ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                                  }`}
+                                >
+                                  {pos.replace('_', ' ')}
+                                </button>
+                              ))}
+                            </div>
+
+                            {/* Custom Alignment Sliders */}
+                            {printReadyPosition === 'custom' && (
+                              <div className="space-y-3 pt-3 p-3 bg-slate-100 rounded-xl mt-2 animate-fadeIn">
+                                <div className="space-y-1">
+                                  <div className="flex justify-between text-[10px] font-bold text-slate-600 font-mono">
+                                    <span>Offset X (Horizontal)</span>
+                                    <span>{printReadyCustomX}mm</span>
+                                  </div>
+                                  <input
+                                    type="range"
+                                    min="-100"
+                                    max="100"
+                                    step="2"
+                                    value={printReadyCustomX}
+                                    onChange={(e) => setPrintReadyCustomX(Number(e.target.value))}
+                                    className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
+                                  />
+                                </div>
+                                <div className="space-y-1">
+                                  <div className="flex justify-between text-[10px] font-bold text-slate-600 font-mono">
+                                    <span>Offset Y (Vertical)</span>
+                                    <span>{printReadyCustomY}mm</span>
+                                  </div>
+                                  <input
+                                    type="range"
+                                    min="-100"
+                                    max="100"
+                                    step="2"
+                                    value={printReadyCustomY}
+                                    onChange={(e) => setPrintReadyCustomY(Number(e.target.value))}
+                                    className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="p-3 bg-slate-100 rounded-xl text-center text-xs text-slate-500 font-medium">
+                            Grid layout copies automatically distribute across the printable safe area.
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {activeSettingsTab === 'prepress' && (
+                      <>
+                        {/* Color profile (grayscale options) */}
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <Contrast className="w-3.5 h-3.5 text-slate-500" />
+                            Color & Ink Saver Profile
+                          </label>
+                          <div className="grid grid-cols-3 gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyGrayscale('none')}
+                              className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
+                                printReadyGrayscale === 'none'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>Original</span>
+                              <span className="text-[8px] font-normal opacity-85">Full Color</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyGrayscale('grayscale')}
+                              className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
+                                printReadyGrayscale === 'grayscale'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>Grayscale</span>
+                              <span className="text-[8px] font-normal opacity-85">Ink Saver</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPrintReadyGrayscale('pure_bw')}
+                              className={`py-1.5 px-2 rounded-lg border text-[10px] font-bold cursor-pointer transition-all flex flex-col items-center gap-0.5 ${
+                                printReadyGrayscale === 'pure_bw'
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span>Pure B&W</span>
+                              <span className="text-[8px] font-normal opacity-85">Laser Max</span>
+                            </button>
+                          </div>
+                          <p className="text-[10px] text-slate-500 leading-normal">
+                            {printReadyGrayscale === 'grayscale' && "Converts colors to print-friendly grayscales to save colored ink cartridges."}
+                            {printReadyGrayscale === 'pure_bw' && "Renders the QR with 100% black/white thresholds. Ideal for high-speed laser printing."}
+                            {printReadyGrayscale === 'none' && "Retains the custom design colors. Best for fine photo-quality printing."}
+                          </p>
+                        </div>
+
+                        {/* Toggles */}
+                        <div className="space-y-2 pt-2 border-t border-slate-100">
+                          <label className="flex items-center justify-between cursor-pointer p-1.5 hover:bg-slate-100/50 rounded-lg transition-all">
+                            <div className="text-left">
+                              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Show Crop Marks</span>
+                              <p className="text-[10px] text-slate-400">Pre-press corners for physical guillotine cutting alignment.</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={printReadyCropMarks}
+                              onChange={(e) => setPrintReadyCropMarks(e.target.checked)}
+                              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer shrink-0"
+                            />
+                          </label>
+
+                          <label className="flex items-center justify-between cursor-pointer p-1.5 hover:bg-slate-100/50 rounded-lg transition-all">
+                            <div className="text-left">
+                              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Show Footnote / Label</span>
+                              <p className="text-[10px] text-slate-400">Adds size, date, and custom string in footer margins.</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={printReadyShowInfo}
+                              onChange={(e) => setPrintReadyShowInfo(e.target.checked)}
+                              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer shrink-0"
+                            />
+                          </label>
+                        </div>
+
+                        {/* Custom Footnote text input */}
+                        {printReadyShowInfo && (
+                          <div className="space-y-1 text-left animate-fadeIn">
+                            <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Custom Label String</label>
+                            <input
+                              type="text"
+                              value={printReadyInfoText}
+                              onChange={(e) => setPrintReadyInfoText(e.target.value)}
+                              placeholder="Scan this QR code to connect..."
+                              className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-800 placeholder-slate-400 bg-white focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 font-medium"
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+
+                  {/* Left Panel Footer: Cancel / Print Trigger */}
+                  <div className="p-4 bg-slate-100 border-t border-slate-200 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsPrintReadyModalOpen(false)}
+                      className="flex-1 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl uppercase tracking-wider transition-all cursor-pointer border-0"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handlePrintReadyLayout}
+                      className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-xl uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer border-0"
+                    >
+                      <Printer className="w-4 h-4" />
+                      <span>Print Sheet</span>
+                    </button>
                   </div>
                 </div>
 
-                {/* Estimated DPI / Resolution Indicator */}
-                <div className="p-3 bg-slate-50 border-t border-slate-200 text-left text-[10px] text-slate-500 font-mono flex justify-between items-center">
-                  <span>Estimated Scan Quality:</span>
-                  <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
-                    {Math.round(2000 / (printReadyQrSize / 25.4))} DPI (Crisp Vectors)
-                  </span>
+                {/* Right Panel: Interactive Real-Time Sheet Preview with measuring instruments */}
+                <div className="w-full md:w-7/12 bg-slate-100 flex flex-col h-full overflow-hidden relative">
+                  {/* Interactive Pre-press Sheet Toolbar */}
+                  <div className="px-5 py-2.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center text-xs text-slate-500 font-medium select-none shadow-xs">
+                    <div className="flex items-center gap-1.5 uppercase font-bold tracking-wider text-slate-600">
+                      <Eye className="w-4 h-4 text-slate-400" />
+                      Interactive Pre-press Sheet
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {/* Zoom Controller */}
+                      <div className="flex items-center gap-1 border border-slate-200 rounded-lg p-0.5 bg-white">
+                        <button
+                          type="button"
+                          title="Zoom Out"
+                          onClick={() => setPrintReadyZoom(Math.max(30, printReadyZoom - 10))}
+                          className="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded text-[10px] cursor-pointer"
+                        >
+                          -
+                        </button>
+                        <span className="text-[10px] font-mono font-bold text-slate-600 px-1 w-[38px] text-center">
+                          {printReadyZoom}%
+                        </span>
+                        <button
+                          type="button"
+                          title="Zoom In"
+                          onClick={() => setPrintReadyZoom(Math.min(150, printReadyZoom + 10))}
+                          className="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded text-[10px] cursor-pointer"
+                        >
+                          +
+                        </button>
+                      </div>
+                      {/* Grid & Ruler Quick Toggles */}
+                      <div className="flex items-center gap-1 border border-slate-200 rounded-lg p-0.5 bg-white">
+                        <button
+                          type="button"
+                          title="Toggle Rulers"
+                          onClick={() => setPrintReadyShowRulers(!printReadyShowRulers)}
+                          className={`px-2 py-1 rounded text-[10px] font-bold cursor-pointer transition-all ${
+                            printReadyShowRulers ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:bg-slate-100'
+                          }`}
+                        >
+                          Ruler
+                        </button>
+                        <button
+                          type="button"
+                          title="Toggle Grid Lines"
+                          onClick={() => setPrintReadyShowGrid(!printReadyShowGrid)}
+                          className={`px-2 py-1 rounded text-[10px] font-bold cursor-pointer transition-all ${
+                            printReadyShowGrid ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:bg-slate-100'
+                          }`}
+                        >
+                          Grid
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Preview Sheet Area */}
+                  <div className="flex-1 overflow-auto p-12 flex items-center justify-center min-h-0 select-none bg-slate-200/50">
+                    <div
+                      className="bg-white shadow-xl border border-slate-300 rounded-sm relative transition-all overflow-hidden flex flex-col justify-between"
+                      style={{
+                        width: `${activeSheetWidthPx}px`,
+                        height: `${activeSheetHeightPx}px`,
+                        minWidth: `${activeSheetWidthPx}px`,
+                        minHeight: `${activeSheetHeightPx}px`,
+                        backgroundImage: printReadyShowGrid 
+                          ? `repeating-linear-gradient(0deg, #f1f5f9 0px, #f1f5f9 1px, transparent 1px, transparent ${10 * activePxPerMm}px), repeating-linear-gradient(90deg, #f1f5f9 0px, #f1f5f9 1px, transparent 1px, transparent ${10 * activePxPerMm}px)` 
+                          : 'none',
+                        backgroundColor: 'white'
+                      }}
+                    >
+                      {/* Rulers */}
+                      {printReadyShowRulers && (
+                        <>
+                          {/* Top Horizontal Ruler */}
+                          <div 
+                            className="absolute left-0 top-0 right-0 h-4 bg-slate-50 border-b border-slate-200 overflow-hidden pointer-events-none z-10"
+                            style={{ fontSize: '7px' }}
+                          >
+                            {Array.from({ length: Math.floor(activeWidthMm / 10) + 1 }).map((_, i) => {
+                              const mm = i * 10;
+                              const leftPx = mm * activePxPerMm;
+                              const isMajor = mm % 50 === 0;
+                              return (
+                                <div key={i} className="absolute top-0 flex flex-col items-start" style={{ left: `${leftPx}px` }}>
+                                  <div className={`w-[0.5px] bg-slate-300 ${isMajor ? 'h-3' : 'h-1.5'}`} />
+                                  {isMajor && (
+                                    <span className="text-[6px] text-slate-400 leading-none absolute top-3 left-0.5 font-mono">
+                                      {mm}
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          {/* Left Vertical Ruler */}
+                          <div 
+                            className="absolute left-0 top-0 bottom-0 w-4 bg-slate-50 border-r border-slate-200 overflow-hidden pointer-events-none z-10"
+                            style={{ fontSize: '7px' }}
+                          >
+                            {Array.from({ length: Math.floor(activeHeightMm / 10) + 1 }).map((_, i) => {
+                              const mm = i * 10;
+                              const topPx = mm * activePxPerMm;
+                              const isMajor = mm % 50 === 0;
+                              return (
+                                <div key={i} className="absolute left-0 flex items-start" style={{ top: `${topPx}px` }}>
+                                  <div className={`h-[0.5px] bg-slate-300 ${isMajor ? 'w-3' : 'w-1.5'}`} />
+                                  {isMajor && (
+                                    <span className="text-[6px] text-slate-400 leading-none absolute left-3 top-0.5 font-mono">
+                                      {mm}
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
+
+                      {/* Safe Margin Guidelines */}
+                      <div 
+                        className="absolute border border-dashed border-indigo-200 pointer-events-none"
+                        style={{
+                          left: `${printReadyMarginLeft * activePxPerMm}px`,
+                          top: `${printReadyMarginTop * activePxPerMm}px`,
+                          right: `${printReadyMarginRight * activePxPerMm}px`,
+                          bottom: `${printReadyMarginBottom * activePxPerMm}px`,
+                        }}
+                      />
+
+                      {/* QR Block(s) */}
+                      {Array.from({ length: activeRows }).map((_, r) => 
+                        Array.from({ length: activeCols }).map((_, c) => {
+                          const coords = getQrBlockCoordinates(c, r);
+                          return (
+                            <div
+                              key={`${r}-${c}`}
+                              className="absolute border border-dashed border-slate-300 bg-white transition-all shadow-xs flex items-center justify-center"
+                              style={{
+                                left: `${coords.x * activePxPerMm}px`,
+                                top: `${coords.y * activePxPerMm}px`,
+                                width: `${activeBlockWidth * activePxPerMm}px`,
+                                height: `${activeBlockHeight * activePxPerMm}px`,
+                                padding: `${printReadyMargin * activePxPerMm}px`,
+                                boxSizing: 'border-box'
+                              }}
+                            >
+                              {/* Interactive Crop Marks */}
+                              {printReadyCropMarks && (
+                                <>
+                                  {/* Top Left */}
+                                  <div className="absolute top-[-8px] left-0 w-[0.5px] h-[5px] bg-slate-400"></div>
+                                  <div className="absolute top-0 left-[-8px] w-[5px] h-[0.5px] bg-slate-400"></div>
+                                  {/* Top Right */}
+                                  <div className="absolute top-[-8px] right-0 w-[0.5px] h-[5px] bg-slate-400"></div>
+                                  <div className="absolute top-0 right-[-8px] w-[5px] h-[0.5px] bg-slate-400"></div>
+                                  {/* Bottom Left */}
+                                  <div className="absolute bottom-[-8px] left-0 w-[0.5px] h-[5px] bg-slate-400"></div>
+                                  <div className="absolute bottom-0 left-[-8px] w-[5px] h-[0.5px] bg-slate-400"></div>
+                                  {/* Bottom Right */}
+                                  <div className="absolute bottom-[-8px] right-0 w-[0.5px] h-[5px] bg-slate-400"></div>
+                                  <div className="absolute bottom-0 right-[-8px] w-[5px] h-[0.5px] bg-slate-400"></div>
+                                </>
+                              )}
+
+                              {/* Centered QR Canvas Copy or Placeholder */}
+                              <div
+                                className="w-full h-full bg-slate-50 rounded flex items-center justify-center overflow-hidden"
+                                style={{
+                                  filter: 
+                                    printReadyGrayscale === 'grayscale' ? 'grayscale(1) contrast(1.2)' :
+                                    printReadyGrayscale === 'pure_bw' ? 'grayscale(1) contrast(500) brightness(1.1)' : 'none'
+                                }}
+                              >
+                                {canvasRef.current ? (
+                                  <img
+                                    src={canvasRef.current.toDataURL('image/png')}
+                                    alt="Print Preview"
+                                    className="w-full h-full object-contain"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full bg-slate-200 animate-pulse flex items-center justify-center text-[8px] font-mono">
+                                    QR Code
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+
+                      {/* Footnote Label Text Preview */}
+                      {printReadyShowInfo && printReadyInfoText && (
+                        <div 
+                          className="absolute text-center pointer-events-none z-10"
+                          style={{
+                            left: `${printReadyMarginLeft * activePxPerMm}px`,
+                            bottom: `${(printReadyMarginBottom / 2) * activePxPerMm}px`,
+                            width: `${(activeWidthMm - printReadyMarginLeft - printReadyMarginRight) * activePxPerMm}px`
+                          }}
+                        >
+                          <p className="text-[9px] font-bold text-slate-800 line-clamp-1 break-all uppercase tracking-wide">
+                            {printReadyInfoText}
+                          </p>
+                          <p className="text-[7px] text-slate-400 tracking-wider uppercase font-mono mt-0.5">
+                            Centered {printReadyPaperSize.toUpperCase()} Format • Output: {printReadyQrSize}mm
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Estimated DPI / Resolution Indicator */}
+                  <div className="p-3 bg-slate-50 border-t border-slate-200 text-left text-[10px] text-slate-500 font-mono flex justify-between items-center shadow-inner">
+                    <span>Estimated Pre-press Density:</span>
+                    <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                      {Math.round(2000 / (printReadyQrSize / 25.4))} DPI (Pin-sharp Vectors)
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          );
+        })()}
       </AnimatePresence>
     </div>
   );

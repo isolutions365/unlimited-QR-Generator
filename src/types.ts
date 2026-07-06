@@ -2,7 +2,7 @@ export interface QRProject {
   id: string;
   userId: string;
   name: string;
-  type: 'url' | 'text' | 'wifi' | 'card' | 'email' | 'phone' | 'sms' | 'social' | 'crypto' | 'geo';
+  type: 'url' | 'text' | 'wifi' | 'card' | 'email' | 'phone' | 'sms' | 'social' | 'crypto' | 'geo' | 'app';
   content: string;
   design: {
     fgColor: string;

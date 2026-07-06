@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { QRProject } from '../types';
-import { renderStyledQR } from '../utils/qrRenderer';
+import { renderStyledQR, getEmblemFontSize } from '../utils/qrRenderer';
 import { Sparkles, Zap, Flame, RotateCw, Play, Monitor, Tv, Video, Download, Check, Shield } from 'lucide-react';
 
 interface AnimationsShowcaseProps {
@@ -274,12 +274,14 @@ export default function AnimationsShowcase({ currentProject, onChange, onDownloa
                           />
                         );
                       } else {
+                        const calculatedFontSize = getEmblemFontSize(logoUrl, sizePx);
                         return (
                           <div 
-                            className="w-full h-full rounded-lg flex items-center justify-center font-extrabold text-white tracking-widest bg-indigo-600"
-                            style={{ fontSize: `${sizePx * 0.35}px` }}
+                            className="w-full h-full rounded-lg flex items-center justify-center font-extrabold text-white bg-indigo-600 overflow-hidden whitespace-nowrap text-center px-1"
+                            dir="auto"
+                            style={{ fontSize: `${calculatedFontSize}px`, lineHeight: 1 }}
                           >
-                            {logoUrl.slice(0, 3).toUpperCase()}
+                            {logoUrl}
                           </div>
                         );
                       }
