@@ -11,13 +11,29 @@ interface PreviewPanelProps {
   onTestScan?: (text: string) => void;
   onDownloadTrigger?: () => void;
   onChange?: (project: Partial<QRProject>) => void;
+  isSaving?: boolean;
 }
 
-export default function PreviewPanel({ currentProject, onTestScan, onDownloadTrigger, onChange }: PreviewPanelProps) {
+export default function PreviewPanel({ currentProject, onTestScan, onDownloadTrigger, onChange, isSaving = false }: PreviewPanelProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [simulatedScanResult, setSimulatedScanResult] = useState<string | null>(null);
   const [isScanningSim, setIsScanningSim] = useState(false);
+
+  // Dynamic color-shifting save glow state
+  const [showSaveGlow, setShowSaveGlow] = useState(false);
+  const prevIsSavingRef = useRef(false);
+
+  useEffect(() => {
+    if (prevIsSavingRef.current && !isSaving) {
+      setShowSaveGlow(true);
+      const timer = setTimeout(() => {
+        setShowSaveGlow(false);
+      }, 4500); // Extended glow to enjoy the beautiful gradient shifts
+      return () => clearTimeout(timer);
+    }
+    prevIsSavingRef.current = !!isSaving;
+  }, [isSaving]);
   const [shareLinkType, setShareLinkType] = useState<'destination' | 'app'>('destination');
   const [selectedFormat, setSelectedFormat] = useState<'PNG' | 'SVG' | 'PDF'>('PNG');
   const [isFormatDropdownOpen, setIsFormatDropdownOpen] = useState(false);
@@ -1109,8 +1125,89 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   return (
     <div className="flex flex-col gap-6">
       {/* QR Board Canvas */}
-      <div id="tour-qr-preview" className="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-xs flex flex-col items-center justify-center gap-4 relative overflow-hidden">
-        <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center">
+      <div 
+        id="tour-qr-preview" 
+        className={`rounded-2xl border p-6 shadow-xs flex flex-col items-center justify-center gap-4 relative overflow-hidden transition-all duration-1000 ${
+          showSaveGlow 
+            ? 'border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.15)] bg-emerald-50/5' 
+            : 'border-gray-200/80 bg-white'
+        }`}
+      >
+        {/* Dynamic color-shifting cloud-save glow indicator */}
+        <AnimatePresence>
+          {showSaveGlow && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: [0, 1, 1, 0.7, 0] 
+              }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 4.2, times: [0, 0.08, 0.75, 0.9, 1] }}
+              className="absolute inset-0 pointer-events-none z-[1]"
+            >
+              {/* Outer boundary box-shadow glow */}
+              <motion.div 
+                animate={{
+                  boxShadow: [
+                    "inset 0 0 20px rgba(59, 130, 246, 0.5), 0 0 25px rgba(59, 130, 246, 0.35)",
+                    "inset 0 0 25px rgba(139, 92, 246, 0.6), 0 0 35px rgba(139, 92, 246, 0.45)",
+                    "inset 0 0 30px rgba(16, 185, 129, 0.7), 0 0 45px rgba(16, 185, 129, 0.55)",
+                    "inset 0 0 20px rgba(52, 211, 153, 0.4), 0 0 20px rgba(52, 211, 153, 0.2)",
+                    "inset 0 0 0px rgba(16, 185, 129, 0), 0 0 0px rgba(16, 185, 129, 0)"
+                  ],
+                  borderColor: [
+                    "rgba(59, 130, 246, 0.6)",
+                    "rgba(139, 92, 246, 0.7)",
+                    "rgba(16, 185, 129, 0.8)",
+                    "rgba(52, 211, 153, 0.5)",
+                    "rgba(16, 185, 129, 0)"
+                  ]
+                }}
+                transition={{ duration: 4.2, ease: "easeInOut" }}
+                className="absolute inset-0 rounded-2xl border-2 pointer-events-none"
+              />
+              
+              {/* Radial gradient background pulse */}
+              <motion.div
+                animate={{
+                  background: [
+                    "radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.12) 0%, transparent 60%)",
+                    "radial-gradient(circle at 50% 10%, rgba(139, 92, 246, 0.18) 0%, transparent 65%)",
+                    "radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.22) 0%, transparent 70%)",
+                    "radial-gradient(circle at 50% 90%, rgba(52, 211, 153, 0.12) 0%, transparent 60%)",
+                    "radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0) 0%, transparent 50%)"
+                  ]
+                }}
+                transition={{ duration: 4.2, ease: "easeInOut" }}
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Floating cloud success indicator badge */}
+        <AnimatePresence>
+          {showSaveGlow && (
+            <motion.div
+              initial={{ opacity: 0, y: -15, scale: 0.9 }}
+              animate={{ 
+                opacity: [0, 1, 1, 0.9, 0],
+                y: [0, 10, 10, 5, -15],
+                scale: [0.95, 1, 1, 0.98, 0.9]
+              }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 3.8, times: [0, 0.1, 0.75, 0.9, 1] }}
+              className="absolute top-3 z-10 flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-[0_4px_12px_rgba(16,185,129,0.3)] border border-emerald-400 pointer-events-none"
+            >
+              <svg className="w-3.5 h-3.5 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Saved to Secure Cloud</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center relative z-5">
           <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden animate-fade-in" style={{ width: '280px', height: '280px' }}>
             <MemoizedQRCanvas
               ref={canvasRef}

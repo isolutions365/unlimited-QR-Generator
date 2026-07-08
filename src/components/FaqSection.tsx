@@ -149,9 +149,9 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
                     <span className="mt-0.5 w-5 h-5 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
                       <HelpCircle className="w-3.5 h-3.5" />
                     </span>
-                    <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
+                    <h2 className="text-sm font-extrabold text-slate-900 leading-tight">
                       {faq.question}
-                    </h3>
+                    </h2>
                   </div>
                   <div className="text-slate-400 shrink-0">
                     {isExpanded ? (
@@ -200,9 +200,9 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
             <ShieldAlert className="w-5 h-5" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-sm font-extrabold text-slate-900">
+            <h2 className="text-sm font-extrabold text-slate-900">
               {locale === 'es' ? 'No se encontraron preguntas' : 'No matching questions found'}
-            </h3>
+            </h2>
             <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
               {locale === 'es'
                 ? `No pudimos encontrar preguntas que coincidan con "${searchQuery}". Pruebe con palabras clave como "caducan", "imprimir" o "WiFi".`

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
 import { QRProject, ScanLog } from './types';
 import { landingPages } from './components/landing/SEODatabase';
+import { blogArticles } from './data/blogData';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
 
@@ -15,10 +16,21 @@ const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowc
 const AuthModal = React.lazy(() => import('./components/AuthModal'));
 const ShortcutsHelpModal = React.lazy(() => import('./components/ShortcutsHelpModal'));
 const CompanyPages = React.lazy(() => import('./components/CompanyPages'));
+const TrustCenterHub = React.lazy(() => import('./components/TrustCenterHub'));
 const FaqSection = React.lazy(() => import('./components/FaqSection'));
 const BlogSection = React.lazy(() => import('./components/BlogSection'));
+const KnowledgeHub = React.lazy(() => import('./components/KnowledgeHub'));
+import { knowledgeArticles } from './data/knowledgeData';
+const TemplatesHub = React.lazy(() => import('./components/TemplatesHub'));
+import { templatePages } from './data/templatePagesData';
 const EmbedPage = React.lazy(() => import('./components/EmbedPage'));
 const TourWelcomeModal = React.lazy(() => import('./components/TourWelcomeModal'));
+const CompareHub = React.lazy(() => import('./components/CompareHub'));
+import { comparisons } from './data/compareData';
+const ProgrammaticHub = React.lazy(() => import('./components/ProgrammaticHub'));
+import { solutionsData, useCasesData, getBespokeProfile } from './data/programmaticSEOData';
+const PlatformHub = React.lazy(() => import('./components/PlatformHub'));
+
 
 // Non-blocking fallback skeleton loader
 const LazyLoader = () => (
@@ -35,7 +47,7 @@ import {
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
-  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop
+  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -143,7 +155,7 @@ function AnimatedHeaderTitle() {
       animate="animate"
       className="flex items-center"
     >
-      <h1 className="text-base font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-950 via-indigo-950 to-purple-950 flex select-none">
+      <span className="text-base font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-950 via-indigo-950 to-purple-950 flex select-none">
         {letters.map((char, index) => (
           <motion.span
             key={index}
@@ -176,7 +188,7 @@ function AnimatedHeaderTitle() {
             {char}
           </motion.span>
         ))}
-      </h1>
+      </span>
     </motion.div>
   );
 }
@@ -648,9 +660,31 @@ export default function App() {
   const showToolsMenu = isToolsOpen || isToolsHovered;
   
   // Determine if the currently active route belongs to Free QR Tools presets
+  const isKnowledgeSection = ['/academy', '/guides', '/tutorials', '/resources', '/glossary'].some(p => currentPath.startsWith(p));
+  const isTemplatesSection = currentPath === '/templates' || currentPath.startsWith('/templates/');
+  const isCompareSection = currentPath === '/compare' || currentPath.startsWith('/compare/');
+  const isSolutionsSection = currentPath === '/solutions' || currentPath.startsWith('/solutions/');
+  const isIndustriesSection = currentPath === '/industries' || currentPath.startsWith('/industries/');
+  const isUseCasesSection = currentPath === '/use-cases' || currentPath.startsWith('/use-cases/');
+  const isPlatformSection = currentPath.startsWith('/platform/');
+  
+  const trustCenterPaths = [
+    '/about', '/why-freeqrgen', '/editorial-policy', '/research-methodology', 
+    '/privacy', '/security', '/data-processing', '/accessibility', 
+    '/contact', '/changelog', '/release-notes', '/system-status', 
+    '/careers', '/media-kit', '/brand-assets', '/press'
+  ];
+  const isTrustCenterSection = trustCenterPaths.some(p => currentPath === p || currentPath.startsWith(p + '/'));
+
   const isFreeQrToolsActive = currentPath !== '/' && currentPath !== '' && 
-    !['/faq', '/about', '/privacy', '/contact', '/terms'].includes(currentPath) && 
-    !currentPath.startsWith('/blog');
+    !['/faq', '/about', '/privacy', '/contact', '/terms', '/solutions', '/industries', '/use-cases'].some(p => currentPath === p || currentPath.startsWith(p + '/')) && 
+    !currentPath.startsWith('/blog') &&
+    !currentPath.startsWith('/platform') &&
+    !isKnowledgeSection &&
+    !isTemplatesSection &&
+    !isCompareSection &&
+    !isTrustCenterSection;
+
 
   // Handle escape press & focus trap inside the accessible mobile menu
   useEffect(() => {
@@ -717,42 +751,258 @@ export default function App() {
     }
   };
 
-  // Set the default homepage browser window metadata dynamically
+  // Centralized SEO Metadata, Canonical URLs, and Social graph (OG/Twitter) Synchronization
   useEffect(() => {
+    let title = 'Free QR Code Generator - Dynamic QR Codes & Custom Creator';
+    let description = 'Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Custom styled QR generator template for your brand.';
+    
+    const rootUrl = 'https://www.freeqrgen.pro';
+    const canonical = `${rootUrl}${currentPath === '/' ? '' : currentPath}`;
+
     if (currentPath === '/' || currentPath === '') {
-      document.title = 'iSolutions QR Code Generator | Design Professional Trackable QR Codes';
-      let metaDesc = document.querySelector('meta[name="description"]');
-      if (!metaDesc) {
-        metaDesc = document.createElement('meta');
-        metaDesc.setAttribute('name', 'description');
-        document.head.appendChild(metaDesc);
+      title = 'Free QR Code Generator - Dynamic QR Codes & Custom Creator';
+      description = 'Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Custom styled QR generator template for your brand.';
+    } else if (currentPath === '/faq') {
+      title = 'Frequently Asked Questions | Free QR Code Generator FAQs';
+      description = 'Find detailed developer and business answers to common questions about custom QR code options, dynamic vs static formats, design options, scan limits, logos, and tracking analytics.';
+    } else if (currentPath === '/blog') {
+      title = 'QR Code Technology & Marketing Blog | FreeQRGen.pro';
+      description = 'Explore modern design tips, tutorials, and advanced marketing strategies for dynamic and static QR codes. Master QR code scanning engagement and conversion.';
+    } else if (currentPath.startsWith('/blog/')) {
+      const blogSlug = currentPath.substring(6);
+      const article = blogArticles.find(art => art.slug === blogSlug);
+      if (article) {
+        title = `${article.metaTitle} | FreeQRGen.pro Blog`;
+        description = article.metaDescription;
+      } else {
+        title = 'Blog Article | FreeQRGen.pro';
+        description = 'Read our informative technical blog post about QR Code solutions.';
       }
-      metaDesc.setAttribute('content', 'Design highly customized, scan-secured QR codes with modern color gradients, dot styles, and brand centerpieces. Complete with dynamic web link shortener tracking and real-time scan analytics.');
+    } else if (['/academy', '/guides', '/tutorials', '/resources', '/glossary'].includes(currentPath)) {
+      const sect = currentPath.substring(1);
+      title = `Free QR Code ${sect.charAt(0).toUpperCase() + sect.slice(1)} Hub | FreeQRGen.pro`;
+      description = `Access our authoritative FreeQRGen.pro ${sect} platform. Master 2D barcode parameters, printing guidelines, sizing calculators, security rules, and marketing campaigns.`;
+    } else if (['/academy/', '/guides/', '/tutorials/', '/resources/', '/glossary/'].some(p => currentPath.startsWith(p))) {
+      const segment = currentPath.split('/')[1];
+      const artSlug = currentPath.split('/')[2];
+      const article = knowledgeArticles.find(art => art.slug === artSlug);
+      if (article) {
+        title = `${article.seoTitle} | FreeQRGen.pro ${segment.charAt(0).toUpperCase() + segment.slice(1)}`;
+        description = article.metaDescription;
+      } else {
+        title = `${segment.charAt(0).toUpperCase() + segment.slice(1)} Article | FreeQRGen.pro`;
+        description = 'Read our informative technical authority guide on FreeQRGen.pro.';
+      }
+    } else if (currentPath === '/templates') {
+      title = 'Free High-Performance QR Code Templates Directory | FreeQRGen.pro';
+      description = 'Access our verified, schema-optimized 2D barcode templates designed to capture high-intent physical traffic. Jumpstart campaigns with pristine layouts.';
+    } else if (currentPath.startsWith('/templates/')) {
+      const tplSlug = currentPath.split('/')[2];
+      const template = templatePages.find(t => t.slug === tplSlug);
+      if (template) {
+        title = `${template.seoTitle} | FreeQRGen.pro Templates`;
+        description = template.metaDescription;
+      } else {
+        title = 'QR Code Preset Template | FreeQRGen.pro';
+        description = 'Utilize our high-performance ready-to-print 2D QR Code template layouts.';
+      }
+    } else if (currentPath === '/compare') {
+      title = 'QR Code Technology Comparison Directory | FreeQRGen.pro';
+      description = 'High-fidelity, professional analytical comparisons between diverse 2D barcode schemas, formats, error levels, and marketing strategies.';
+    } else if (currentPath.startsWith('/compare/')) {
+      const compSlug = currentPath.substring(9);
+      const comparison = comparisons.find(c => c.slug === compSlug);
+      if (comparison) {
+        title = comparison.seoTitle;
+        description = comparison.metaDescription;
+      } else {
+        title = 'QR Code Technology Comparison | FreeQRGen.pro';
+        description = 'Analyze and compare different QR code formats, configurations, and technology options.';
+      }
+    } else if (currentPath === '/solutions') {
+      title = 'Enterprise QR Code Solutions Directory | FreeQRGen.pro';
+      description = 'Explore professional contactless QR solutions custom-made for brands, managers, and designers. Speed up checkouts and scan engagement.';
+    } else if (currentPath.startsWith('/solutions/')) {
+      const solSlug = currentPath.split('/')[2];
+      const sol = solutionsData.find(s => s.slug === solSlug);
+      if (sol) {
+        title = sol.metaTitle;
+        description = sol.metaDesc;
+      } else {
+        title = 'Professional QR Code Solution | FreeQRGen.pro';
+        description = 'Deploy high-performance contactless enterprise QR code solutions.';
+      }
+    } else if (currentPath === '/industries') {
+      title = 'Custom QR Codes for Industries Directory | FreeQRGen.pro';
+      description = 'Browse specialized optical barcode solutions, printable guidelines, and checklists for 40 distinct commercial industries.';
+    } else if (currentPath.startsWith('/industries/')) {
+      const indSlug = currentPath.split('/')[2];
+      const ind = getBespokeProfile(indSlug);
+      title = ind.metaTitle;
+      description = ind.metaDesc;
+    } else if (currentPath === '/use-cases') {
+      title = 'High-Traffic QR Code Use Cases Hub | FreeQRGen.pro';
+      description = 'Review physical placement guidelines, best practices, common mistakes, and printable templates for custom 2D scan configurations.';
+    } else if (currentPath.startsWith('/use-cases/')) {
+      const ucSlug = currentPath.split('/')[2];
+      const uc = useCasesData.find(u => u.slug === ucSlug);
+      if (uc) {
+        title = uc.metaTitle;
+        description = uc.metaDesc;
+      } else {
+        title = 'High-Traffic QR Code Use Case | FreeQRGen.pro';
+        description = 'Explore specialized optical barcode placement frameworks and real case studies.';
+      }
+    } else if (currentPath === '/about') {
+      title = 'About Us | Free QR Code Generator Team';
+      description = 'Learn about FreeQRGen.pro and the iSolutions team dedicated to building secure, beautiful, high-performance QR code creator utilities.';
+    } else if (currentPath === '/privacy') {
+      title = 'Privacy Policy | Secure Databox QR Generator';
+      description = 'Our privacy commitment: zero tracking, complete databox security, offline compatibility, and secure transient memory models.';
+    } else if (currentPath === '/contact') {
+      title = 'Contact Support & Corporate Inquiry | FreeQRGen.pro';
+      description = 'Get in touch with the iSolutions technical team for enterprise licenses, custom templates, or support requests.';
+    } else if (currentPath === '/terms') {
+      title = 'Terms of Service & Usage Limits | FreeQRGen.pro';
+      description = 'Review usage agreements, security expectations, dynamic tracking short-link rules, and API policies of FreeQRGen.pro.';
+    } else {
+      // Dynamic Landing Pages
+      const slug = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
+      const pageData = landingPages[slug];
+      if (pageData) {
+        title = pageData.seoTitle;
+        description = pageData.metaDescription;
+      }
     }
+
+    // Apply document.title
+    document.title = title;
+
+    // Apply meta description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', description);
+
+    // Apply canonical link
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', canonical);
+
+    // Apply Open Graph Tags
+    const ogTags = {
+      'og:title': title,
+      'og:description': description,
+      'og:url': canonical,
+      'og:image': 'https://www.freeqrgen.pro/og-image.jpg',
+      'og:type': 'website'
+    };
+
+    Object.entries(ogTags).forEach(([property, content]) => {
+      let tag = document.querySelector(`meta[property="${property}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute('property', property);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', content);
+    });
+
+    // Apply Twitter Tags
+    const twitterTags = {
+      'twitter:title': title,
+      'twitter:description': description,
+      'twitter:url': canonical,
+      'twitter:image': 'https://www.freeqrgen.pro/og-image.jpg'
+    };
+
+    Object.entries(twitterTags).forEach(([name, content]) => {
+      let tag = document.querySelector(`meta[name="${name}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute('name', name);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', content);
+    });
+
   }, [currentPath]);
 
   const buildHomepageSchema = () => {
-    const rootUrl = typeof window !== 'undefined' ? window.location.origin : 'https://qrcodeps.com';
+    const rootUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.freeqrgen.pro';
     return {
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "Organization",
+          "@id": `${rootUrl}/#organization`,
+          "name": "Free QR Code Generator Inc.",
+          "url": rootUrl,
+          "logo": `${rootUrl}/favicon-32x32.png`,
+          "sameAs": [
+            "https://www.producthunt.com/posts/free-qr-generator-4"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "technical support",
+            "email": "admin@isolutionsico.com",
+            "url": `${rootUrl}/contact`
+          }
+        },
+        {
           "@type": "WebSite",
           "@id": `${rootUrl}/#website`,
           "url": rootUrl,
-          "name": "iSolutions QR Code Generator",
-          "description": "Design secure, highly custom QR codes with color gradients, custom dot patterns, embedded logos, and real-time short-link scan analytics.",
+          "name": "FreeQRGen.pro",
+          "description": "Design secure, highly custom dynamic QR codes with color gradients, custom dot patterns, embedded logos, and real-time short-link scan analytics.",
           "publisher": {
-            "@id": `${rootUrl}/#organization`,
-            "@type": "Organization",
-            "name": "iSolutions QR Codes Inc.",
-            "url": rootUrl
+            "@id": `${rootUrl}/#organization`
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": `${rootUrl}/?search={search_term_string}`
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "WebApplication",
+          "@id": `${rootUrl}/#webapplication`,
+          "name": "Free QR Code Generator & Analytics Platform",
+          "url": rootUrl,
+          "operatingSystem": "All Mobile, Tablet, and Desktop web browsers",
+          "applicationCategory": "DesignApplication, UtilitiesApplication",
+          "browserRequirements": "Requires JavaScript. Supports HTML5 Canvas.",
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "USD"
+          },
+          "featureList": [
+            "Dynamic QR Code Generation",
+            "WiFi Connection QR Setup",
+            "vCard Interactive Business Cards",
+            "Scan Count & Real-time Location Analytics",
+            "Gradient Fill & Customized QR Eye Designs",
+            "Custom Logo branding integration"
+          ],
+          "creator": {
+            "@id": `${rootUrl}/#organization`
           }
         },
         {
           "@type": "SoftwareApplication",
           "@id": `${rootUrl}/#software`,
-          "name": "iSolutions QR Generator and Short Link tracker",
+          "name": "FreeQRGen Creator Engine",
           "operatingSystem": "All modern web browsers",
           "applicationCategory": "DesignApplication, BusinessApplication",
           "offers": {
@@ -762,9 +1012,21 @@ export default function App() {
           },
           "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": "4.95",
-            "reviewCount": "5420"
+            "ratingValue": "4.96",
+            "reviewCount": "5840"
           }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": `${rootUrl}/#breadcrumb`,
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": rootUrl
+            }
+          ]
         }
       ]
     };
@@ -1400,6 +1662,116 @@ export default function App() {
               />
             )}
           </a>
+
+          <a
+            href="/templates"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/templates');
+            }}
+            className="relative py-2.5 px-4 text-xs font-bold tracking-wide transition-all group/templates flex items-center gap-2 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
+          >
+            <span className="absolute inset-0 bg-indigo-50/0 group-hover/templates:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+            <LayoutTemplate className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/templates:scale-110 ${isTemplatesSection ? 'text-indigo-600' : 'text-slate-400 group-hover/templates:text-indigo-500'}`} />
+            <span className={`relative z-10 font-bold ${isTemplatesSection ? 'text-indigo-600' : 'text-slate-600 group-hover/templates:text-indigo-600'} transition-colors`}>
+              Templates
+            </span>
+            {isTemplatesSection && (
+              <motion.div
+                layoutId="activeNavIndicator"
+                className="absolute bottom-0 left-4 right-4 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+          </a>
+
+          <a
+            href="/solutions"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/solutions');
+            }}
+            className="relative py-2.5 px-3 text-xs font-bold tracking-wide transition-all group/solutions flex items-center gap-1.5 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
+          >
+            <span className="absolute inset-0 bg-indigo-50/0 group-hover/solutions:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+            <Sparkles className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/solutions:scale-110 ${isSolutionsSection ? 'text-indigo-600' : 'text-slate-400 group-hover/solutions:text-indigo-500'}`} />
+            <span className={`relative z-10 font-bold ${isSolutionsSection ? 'text-indigo-600' : 'text-slate-600 group-hover/solutions:text-indigo-600'} transition-colors`}>
+              Solutions
+            </span>
+            {isSolutionsSection && (
+              <motion.div
+                layoutId="activeNavIndicator"
+                className="absolute bottom-0 left-3 right-3 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+          </a>
+
+          <a
+            href="/industries"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/industries');
+            }}
+            className="relative py-2.5 px-3 text-xs font-bold tracking-wide transition-all group/industries flex items-center gap-1.5 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
+          >
+            <span className="absolute inset-0 bg-indigo-50/0 group-hover/industries:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+            <Utensils className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/industries:scale-110 ${isIndustriesSection ? 'text-indigo-600' : 'text-slate-400 group-hover/industries:text-indigo-500'}`} />
+            <span className={`relative z-10 font-bold ${isIndustriesSection ? 'text-indigo-600' : 'text-slate-600 group-hover/industries:text-indigo-600'} transition-colors`}>
+              Industries
+            </span>
+            {isIndustriesSection && (
+              <motion.div
+                layoutId="activeNavIndicator"
+                className="absolute bottom-0 left-3 right-3 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+          </a>
+
+          <a
+            href="/use-cases"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/use-cases');
+            }}
+            className="relative py-2.5 px-3 text-xs font-bold tracking-wide transition-all group/usecases flex items-center gap-1.5 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
+          >
+            <span className="absolute inset-0 bg-indigo-50/0 group-hover/usecases:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+            <Cpu className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/usecases:scale-110 ${isUseCasesSection ? 'text-indigo-600' : 'text-slate-400 group-hover/usecases:text-indigo-500'}`} />
+            <span className={`relative z-10 font-bold ${isUseCasesSection ? 'text-indigo-600' : 'text-slate-600 group-hover/usecases:text-indigo-600'} transition-colors`}>
+              Use Cases
+            </span>
+            {isUseCasesSection && (
+              <motion.div
+                layoutId="activeNavIndicator"
+                className="absolute bottom-0 left-3 right-3 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+          </a>
+
+          <a
+            href="/compare"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('/compare');
+            }}
+            className="relative py-2.5 px-4 text-xs font-bold tracking-wide transition-all group/compare flex items-center gap-2 focus:outline-none rounded-xl overflow-hidden cursor-pointer"
+          >
+            <span className="absolute inset-0 bg-indigo-50/0 group-hover/compare:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
+            <Scale className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/compare:scale-110 ${isCompareSection ? 'text-indigo-600' : 'text-slate-400 group-hover/compare:text-indigo-500'}`} />
+            <span className={`relative z-10 font-bold ${isCompareSection ? 'text-indigo-600' : 'text-slate-600 group-hover/compare:text-indigo-600'} transition-colors`}>
+              Comparisons
+            </span>
+            {isCompareSection && (
+              <motion.div
+                layoutId="activeNavIndicator"
+                className="absolute bottom-0 left-4 right-4 h-0.5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-400/80"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+          </a>
         </nav>
 
         {/* Auth controllers & Mobile Menu Button */}
@@ -1731,6 +2103,71 @@ export default function App() {
                   <button
                     onClick={() => {
                       setIsMobileMenuOpen(false);
+                      navigateTo('/templates');
+                    }}
+                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                      <LayoutTemplate className="w-3.5 h-3.5 text-indigo-400" />
+                    </div>
+                    <span className="font-bold text-indigo-400">Templates Hub</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/solutions');
+                    }}
+                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                    </div>
+                    <span className="font-bold text-indigo-400">Solutions Directory</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/industries');
+                    }}
+                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                      <Utensils className="w-3.5 h-3.5 text-indigo-400" />
+                    </div>
+                    <span className="font-bold text-indigo-400">Industries Directory</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/use-cases');
+                    }}
+                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                      <Cpu className="w-3.5 h-3.5 text-indigo-400" />
+                    </div>
+                    <span className="font-bold text-indigo-400">Use Cases Directory</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/compare');
+                    }}
+                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                      <Scale className="w-3.5 h-3.5 text-indigo-400" />
+                    </div>
+                    <span className="font-bold text-indigo-400">Comparisons Directory</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
                       setActiveTab('analytics');
                       navigateTo('/');
                     }}
@@ -1843,19 +2280,99 @@ export default function App() {
             locale={locale}
           />
         </React.Suspense>
+      ) : isKnowledgeSection ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          {(() => {
+            const pathParts = currentPath.split('/');
+            const sectName = pathParts[1] as 'academy' | 'blog' | 'guides' | 'tutorials' | 'resources' | 'glossary';
+            const artSlug = pathParts[2] || null;
+            return (
+              <KnowledgeHub 
+                section={sectName}
+                initialSlug={artSlug}
+                onNavigate={navigateTo}
+                locale={locale}
+              />
+            );
+          })()}
+        </React.Suspense>
+      ) : isTemplatesSection ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          {(() => {
+            const pathParts = currentPath.split('/');
+            const artSlug = pathParts[2] || null;
+            return (
+              <TemplatesHub 
+                initialSlug={artSlug}
+                onNavigate={navigateTo}
+                onInitiateGenerator={handleInitiateGenerator}
+                locale={locale}
+              />
+            );
+          })()}
+        </React.Suspense>
+      ) : isCompareSection ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          {(() => {
+            const pathParts = currentPath.split('/');
+            const compSlug = pathParts[2] || null;
+            return (
+              <CompareHub 
+                initialSlug={compSlug}
+                onNavigate={navigateTo}
+                onInitiateGenerator={handleInitiateGenerator}
+                locale={locale}
+              />
+            );
+          })()}
+        </React.Suspense>
+      ) : (isSolutionsSection || isIndustriesSection || isUseCasesSection) ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          {(() => {
+            const prefix = isSolutionsSection ? 'solutions' : isIndustriesSection ? 'industries' : 'use-cases';
+            const pathParts = currentPath.split('/');
+            const artSlug = pathParts[2] || null;
+            return (
+              <ProgrammaticHub 
+                section={prefix}
+                initialSlug={artSlug}
+                onNavigate={navigateTo}
+                onInitiateGenerator={handleInitiateGenerator}
+                locale={locale}
+              />
+            );
+          })()}
+        </React.Suspense>
       ) : currentPath === '/embed' ? (
         <React.Suspense fallback={<LazyLoader />}>
           <EmbedPage onNavigate={navigateTo} />
         </React.Suspense>
-      ) : ['/about', '/privacy', '/contact', '/terms'].includes(currentPath) ? (
+      ) : isPlatformSection ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          <PlatformHub 
+            initialSlug={currentPath.substring(1)} 
+            onNavigate={navigateTo} 
+            locale={locale}
+          />
+        </React.Suspense>
+      ) : isTrustCenterSection ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          <TrustCenterHub 
+            initialSlug={currentPath.substring(1)} 
+            onNavigate={navigateTo} 
+            locale={locale}
+          />
+        </React.Suspense>
+      ) : currentPath === '/terms' ? (
         <React.Suspense fallback={<LazyLoader />}>
           <CompanyPages 
-            view={currentPath.substring(1) as 'about' | 'privacy' | 'contact' | 'terms'} 
+            view="terms" 
             onNavigate={navigateTo} 
           />
         </React.Suspense>
       ) : (
         <main className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6">
+          <h1 className="sr-only">Free QR Code Generator - Custom Dynamic QR Codes with Analytics</h1>
 
         {/* Tab view controller */}
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between bg-white border border-gray-200/80 p-1.5 rounded-2xl max-w-xl shadow-xs gap-1">
@@ -1943,6 +2460,7 @@ export default function App() {
                 onTestScan={handleSimTestScan} 
                 onDownloadTrigger={handleDownloadTrigger} 
                 onChange={setCurrentProject}
+                isSaving={isSaving}
               />
             </div>
           </div>
@@ -1969,6 +2487,7 @@ export default function App() {
                 onTestScan={handleSimTestScan} 
                 onDownloadTrigger={handleDownloadTrigger} 
                 onChange={setCurrentProject}
+                isSaving={isSaving}
               />
             </div>
           </div>
@@ -2633,17 +3152,65 @@ export default function App() {
           <div className="flex flex-wrap gap-4 justify-center">
             <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">About Us</a>
             <span>•</span>
+            <a href="/why-freeqrgen" onClick={(e) => { e.preventDefault(); navigateTo('/why-freeqrgen'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Why Us</a>
+            <span>•</span>
+            <a href="/editorial-policy" onClick={(e) => { e.preventDefault(); navigateTo('/editorial-policy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Editorial Policy</a>
+            <span>•</span>
+            <a href="/research-methodology" onClick={(e) => { e.preventDefault(); navigateTo('/research-methodology'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Research Methodology</a>
+            <span>•</span>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Privacy Policy</a>
+            <span>•</span>
+            <a href="/security" onClick={(e) => { e.preventDefault(); navigateTo('/security'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Security</a>
+            <span>•</span>
+            <a href="/data-processing" onClick={(e) => { e.preventDefault(); navigateTo('/data-processing'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Data Processing</a>
+            <span>•</span>
+            <a href="/accessibility" onClick={(e) => { e.preventDefault(); navigateTo('/accessibility'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Accessibility</a>
+            <span>•</span>
+            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Contact Us</a>
+            <span>•</span>
+            <a href="/changelog" onClick={(e) => { e.preventDefault(); navigateTo('/changelog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Changelog</a>
+            <span>•</span>
+            <a href="/release-notes" onClick={(e) => { e.preventDefault(); navigateTo('/release-notes'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Release Notes</a>
+            <span>•</span>
+            <a href="/system-status" onClick={(e) => { e.preventDefault(); navigateTo('/system-status'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">System Status</a>
+            <span>•</span>
+            <a href="/careers" onClick={(e) => { e.preventDefault(); navigateTo('/careers'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Careers</a>
+            <span>•</span>
+            <a href="/media-kit" onClick={(e) => { e.preventDefault(); navigateTo('/media-kit'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Media Kit</a>
+            <span>•</span>
+            <a href="/brand-assets" onClick={(e) => { e.preventDefault(); navigateTo('/brand-assets'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Brand Assets</a>
+            <span>•</span>
+            <a href="/press" onClick={(e) => { e.preventDefault(); navigateTo('/press'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Press Center</a>
+            <span>•</span>
+            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Terms & Conditions</a>
+            <span>•</span>
             <a href="/faq" onClick={(e) => { e.preventDefault(); navigateTo('/faq'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">FAQ</a>
             <span>•</span>
             <a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Blog</a>
             <span>•</span>
-            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Privacy Policy</a>
+            <a href="/templates" onClick={(e) => { e.preventDefault(); navigateTo('/templates'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Templates</a>
             <span>•</span>
-            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Terms & Conditions</a>
+            <a href="/compare" onClick={(e) => { e.preventDefault(); navigateTo('/compare'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Comparisons</a>
+            <span>•</span>
+            <a href="/solutions" onClick={(e) => { e.preventDefault(); navigateTo('/solutions'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Solutions</a>
+            <span>•</span>
+            <a href="/industries" onClick={(e) => { e.preventDefault(); navigateTo('/industries'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Industries</a>
+            <span>•</span>
+            <a href="/use-cases" onClick={(e) => { e.preventDefault(); navigateTo('/use-cases'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Use Cases</a>
+            <span>•</span>
+            <a href="/academy" onClick={(e) => { e.preventDefault(); navigateTo('/academy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Academy</a>
+            <span>•</span>
+            <a href="/guides" onClick={(e) => { e.preventDefault(); navigateTo('/guides'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Guides</a>
+            <span>•</span>
+            <a href="/tutorials" onClick={(e) => { e.preventDefault(); navigateTo('/tutorials'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Tutorials</a>
+            <span>•</span>
+            <a href="/resources" onClick={(e) => { e.preventDefault(); navigateTo('/resources'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Resources</a>
+            <span>•</span>
+            <a href="/glossary" onClick={(e) => { e.preventDefault(); navigateTo('/glossary'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Glossary</a>
             <span>•</span>
             <a href="/embed" onClick={(e) => { e.preventDefault(); navigateTo('/embed'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Embed Badge</a>
             <span>•</span>
-            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Contact Us</a>
+            <a href="/platform/qr-analytics" onClick={(e) => { e.preventDefault(); navigateTo('/platform/qr-analytics'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Platform Suite</a>
           </div>
         </div>
       </footer>
