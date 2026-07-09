@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Save, Download, Printer, HelpCircle, Keyboard, RefreshCw } from 'lucide-react';
+import { useTranslation } from '../utils/i18n';
 
 interface ShortcutsHelpModalProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface ShortcutsHelpModalProps {
 }
 
 export default function ShortcutsHelpModal({ isOpen, onClose }: ShortcutsHelpModalProps) {
+  const { t } = useTranslation();
   // Determine if user is on Mac
   const isMac = typeof window !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const modifierKey = isMac ? '⌘' : 'Ctrl';
@@ -60,10 +62,10 @@ export default function ShortcutsHelpModal({ isOpen, onClose }: ShortcutsHelpMod
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-gray-900 tracking-tight">
-                    Keyboard Shortcuts
+                    {t('shortcuts.title', 'Keyboard Shortcuts')}
                   </h3>
                   <p className="text-[11px] text-gray-500 font-medium">
-                    Boost your productivity with quick keyboard commands
+                    {t('shortcuts.subtitle', 'Boost your productivity with quick keyboard commands')}
                   </p>
                 </div>
               </div>
@@ -88,8 +90,8 @@ export default function ShortcutsHelpModal({ isOpen, onClose }: ShortcutsHelpMod
                       <Save className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-800 block">Save Styled QR Template</span>
-                      <span className="text-[10px] text-slate-400 block">Saves your design configurations directly</span>
+                      <span className="text-xs font-bold text-slate-800 block">{t('shortcuts.save', 'Save Styled QR Template')}</span>
+                      <span className="text-[10px] text-slate-400 block">{t('shortcuts.saveDesc', 'Saves your design configurations directly')}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -106,8 +108,8 @@ export default function ShortcutsHelpModal({ isOpen, onClose }: ShortcutsHelpMod
                       <Download className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-800 block">Download QR Code</span>
-                      <span className="text-[10px] text-slate-400 block">Quickly downloads high-resolution format</span>
+                      <span className="text-xs font-bold text-slate-800 block">{t('shortcuts.download', 'Download QR Code')}</span>
+                      <span className="text-[10px] text-slate-400 block">{t('shortcuts.downloadDesc', 'Quickly downloads high-resolution format')}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -124,8 +126,8 @@ export default function ShortcutsHelpModal({ isOpen, onClose }: ShortcutsHelpMod
                       <Printer className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-800 block">Print & Export Options</span>
-                      <span className="text-[10px] text-slate-400 block">Opens print settings overlay instantly</span>
+                      <span className="text-xs font-bold text-slate-800 block">{t('shortcuts.print', 'Print & Export Options')}</span>
+                      <span className="text-[10px] text-slate-400 block">{t('shortcuts.printDesc', 'Opens print settings overlay instantly')}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -142,8 +144,8 @@ export default function ShortcutsHelpModal({ isOpen, onClose }: ShortcutsHelpMod
                       <HelpCircle className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-800 block">Open Help Shortcuts</span>
-                      <span className="text-[10px] text-slate-400 block">Displays this exact useful panel</span>
+                      <span className="text-xs font-bold text-slate-800 block">{t('shortcuts.openHelp', 'Open Help Shortcuts')}</span>
+                      <span className="text-[10px] text-slate-400 block">{t('shortcuts.openHelpDesc', 'Displays this exact useful panel')}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -158,8 +160,8 @@ export default function ShortcutsHelpModal({ isOpen, onClose }: ShortcutsHelpMod
                       <RefreshCw className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-800 block">Close Modal Windows</span>
-                      <span className="text-[10px] text-slate-400 block">Closes active overlays, dropdowns, & dialogs</span>
+                      <span className="text-xs font-bold text-slate-800 block">{t('shortcuts.close', 'Close Modal Windows')}</span>
+                      <span className="text-[10px] text-slate-400 block">{t('shortcuts.closeDesc', 'Closes active overlays, dropdowns, & dialogs')}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -173,7 +175,7 @@ export default function ShortcutsHelpModal({ isOpen, onClose }: ShortcutsHelpMod
             <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center gap-2">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping" />
               <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
-                Shortcuts are disabled while focused inside text fields or editing inputs to prevent conflicts.
+                {t('shortcuts.disabledNote', 'Shortcuts are disabled while focused inside text fields or editing inputs to prevent conflicts.')}
               </p>
             </div>
           </motion.div>

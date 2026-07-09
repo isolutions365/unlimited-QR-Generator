@@ -205,6 +205,88 @@ class ApiClient {
       body: JSON.stringify({ qrContent, currentDesign }),
     });
   }
+
+  // --- SAAS GROWTH SUITE SERVICES ---
+  async getUserProfile(refCode?: string): Promise<any> {
+    const url = refCode ? `/user/profile?refCode=${encodeURIComponent(refCode)}` : '/user/profile';
+    return this.request<any>(url);
+  }
+
+  async updateUserProfile(profile: any): Promise<any> {
+    return this.request<any>('/user/profile', {
+      method: 'POST',
+      body: JSON.stringify(profile),
+    });
+  }
+
+  async getUserReferrals(): Promise<{
+    referralCode: string;
+    clicks: number;
+    signups: number;
+    rewardTier: string;
+    unlockedFeatures: string[];
+  }> {
+    return this.request<any>('/user/referrals');
+  }
+
+  async trackReferralClick(code: string): Promise<any> {
+    return this.request<any>('/referral/click', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    });
+  }
+
+  async getCommunityPosts(): Promise<any[]> {
+    return this.request<any[]>('/community/posts');
+  }
+
+  async createCommunityPost(post: { title: string; content: string; category: string }): Promise<any> {
+    return this.request<any>('/community/posts', {
+      method: 'POST',
+      body: JSON.stringify(post),
+    });
+  }
+
+  async upvoteCommunityPost(id: string): Promise<any> {
+    return this.request<any>(`/community/posts/${id}/upvote`, {
+      method: 'POST',
+    });
+  }
+
+  async commentCommunityPost(id: string, content: string): Promise<any> {
+    return this.request<any>(`/community/posts/${id}/comment`, {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    });
+  }
+
+  async getRoadmapItems(): Promise<any[]> {
+    return this.request<any[]>('/roadmap/items');
+  }
+
+  async subscribeNewsletter(email: string, preferences?: string[]): Promise<any> {
+    return this.request<any>('/newsletter/subscribe', {
+      method: 'POST',
+      body: JSON.stringify({ email, preferences }),
+    });
+  }
+
+  async submitFeedback(feedback: { type: 'bug' | 'compliment' | 'suggestion'; satisfaction: number; text: string; email?: string; userId?: string }): Promise<any> {
+    return this.request<any>('/feedback/submit', {
+      method: 'POST',
+      body: JSON.stringify(feedback),
+    });
+  }
+
+  async getNotifications(): Promise<any[]> {
+    return this.request<any[]>('/notifications');
+  }
+
+  async markNotificationAsRead(id: string): Promise<any> {
+    return this.request<any>(`/notifications/${id}/read`, {
+      method: 'POST',
+    });
+  }
 }
 
 export const api = new ApiClient();

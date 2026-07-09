@@ -5,12 +5,13 @@ import {
   Twitter, Facebook, Linkedin, HelpCircle, FileText, Printer, ShieldAlert, Wifi, Info
 } from 'lucide-react';
 import { knowledgeArticles, KnowledgeArticle } from '../data/knowledgeData';
+import { Locale } from '../utils/translations';
 
 interface KnowledgeHubProps {
   section: 'academy' | 'blog' | 'guides' | 'tutorials' | 'resources' | 'glossary';
   initialSlug?: string | null;
   onNavigate: (path: string) => void;
-  locale?: 'en' | 'es';
+  locale?: Locale;
 }
 
 export default function KnowledgeHub({ section, initialSlug, onNavigate, locale = 'en' }: KnowledgeHubProps) {

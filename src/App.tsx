@@ -30,6 +30,9 @@ import { comparisons } from './data/compareData';
 const ProgrammaticHub = React.lazy(() => import('./components/ProgrammaticHub'));
 import { solutionsData, useCasesData, getBespokeProfile } from './data/programmaticSEOData';
 const PlatformHub = React.lazy(() => import('./components/PlatformHub'));
+const I18nDashboard = React.lazy(() => import('./components/I18nDashboard'));
+const GrowthSuite = React.lazy(() => import('./components/GrowthSuite'));
+const EnterpriseAIGateway = React.lazy(() => import('./components/EnterpriseAIGateway'));
 
 
 // Non-blocking fallback skeleton loader
@@ -41,7 +44,8 @@ const LazyLoader = () => (
     </div>
   </div>
 );
-import { Locale, navTranslations, creativeSubItems, presetToolsTranslations } from './utils/translations';
+import { Locale, navTranslations, creativeSubItems, presetToolsTranslations, isRtlLocale, extractLocaleAndPath, SUPPORTED_LOCALES } from './utils/translations';
+import { useTranslation } from './utils/i18n';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
@@ -441,18 +445,15 @@ export default function App() {
     };
   }, [user]);
 
-  // Localization State
-  const [locale, setLocale] = useState<Locale>(() => {
-    const saved = localStorage.getItem('app-locale');
-    if (saved === 'es' || saved === 'en') {
-      return saved as Locale;
-    }
-    return 'en';
-  });
+  // Localization State via Central I18n Context
+  const { locale, changeLocale, t } = useTranslation();
 
   const handleLocaleChange = (newLocale: Locale) => {
-    setLocale(newLocale);
-    localStorage.setItem('app-locale', newLocale);
+    changeLocale(newLocale);
+    // Force sync path-router state on language change
+    const { cleanPath } = extractLocaleAndPath(window.location.pathname);
+    const newPath = newLocale === 'en' ? cleanPath : `/${newLocale}${cleanPath === '/' ? '' : cleanPath}`;
+    setCurrentPath(newPath);
   };
 
   // Active configurations in the drawing board
@@ -637,12 +638,15 @@ export default function App() {
   const [isMobileCreativeOpen, setIsMobileCreativeOpen] = useState(false);
   const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
 
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const creativeMenuRef = useRef<HTMLDivElement>(null);
   const toolsMenuRef = useRef<HTMLDivElement>(null);
+  const langMenuRef = useRef<HTMLDivElement>(null);
 
-  // Close desktop mega menus on click outside
+  // Close desktop mega menus and language menus on click outside
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (creativeMenuRef.current && !creativeMenuRef.current.contains(e.target as Node)) {
@@ -650,6 +654,9 @@ export default function App() {
       }
       if (toolsMenuRef.current && !toolsMenuRef.current.contains(e.target as Node)) {
         setIsToolsOpen(false);
+      }
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
+        setIsLangDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleOutsideClick);
@@ -659,14 +666,17 @@ export default function App() {
   const showCreativeMenu = isCreativeOpen || isCreativeHovered;
   const showToolsMenu = isToolsOpen || isToolsHovered;
   
+  // Extract clean path by stripping the locale prefix for unified router state comparisons
+  const { cleanPath } = extractLocaleAndPath(currentPath);
+
   // Determine if the currently active route belongs to Free QR Tools presets
-  const isKnowledgeSection = ['/academy', '/guides', '/tutorials', '/resources', '/glossary'].some(p => currentPath.startsWith(p));
-  const isTemplatesSection = currentPath === '/templates' || currentPath.startsWith('/templates/');
-  const isCompareSection = currentPath === '/compare' || currentPath.startsWith('/compare/');
-  const isSolutionsSection = currentPath === '/solutions' || currentPath.startsWith('/solutions/');
-  const isIndustriesSection = currentPath === '/industries' || currentPath.startsWith('/industries/');
-  const isUseCasesSection = currentPath === '/use-cases' || currentPath.startsWith('/use-cases/');
-  const isPlatformSection = currentPath.startsWith('/platform/');
+  const isKnowledgeSection = ['/academy', '/guides', '/tutorials', '/resources', '/glossary'].some(p => cleanPath.startsWith(p));
+  const isTemplatesSection = cleanPath === '/templates' || cleanPath.startsWith('/templates/');
+  const isCompareSection = cleanPath === '/compare' || cleanPath.startsWith('/compare/');
+  const isSolutionsSection = cleanPath === '/solutions' || cleanPath.startsWith('/solutions/');
+  const isIndustriesSection = cleanPath === '/industries' || cleanPath.startsWith('/industries/');
+  const isUseCasesSection = cleanPath === '/use-cases' || cleanPath.startsWith('/use-cases/');
+  const isPlatformSection = cleanPath.startsWith('/platform/');
   
   const trustCenterPaths = [
     '/about', '/why-freeqrgen', '/editorial-policy', '/research-methodology', 
@@ -674,12 +684,12 @@ export default function App() {
     '/contact', '/changelog', '/release-notes', '/system-status', 
     '/careers', '/media-kit', '/brand-assets', '/press'
   ];
-  const isTrustCenterSection = trustCenterPaths.some(p => currentPath === p || currentPath.startsWith(p + '/'));
+  const isTrustCenterSection = trustCenterPaths.some(p => cleanPath === p || cleanPath.startsWith(p + '/'));
 
-  const isFreeQrToolsActive = currentPath !== '/' && currentPath !== '' && 
-    !['/faq', '/about', '/privacy', '/contact', '/terms', '/solutions', '/industries', '/use-cases'].some(p => currentPath === p || currentPath.startsWith(p + '/')) && 
-    !currentPath.startsWith('/blog') &&
-    !currentPath.startsWith('/platform') &&
+  const isFreeQrToolsActive = cleanPath !== '/' && cleanPath !== '' && 
+    !['/faq', '/about', '/privacy', '/contact', '/terms', '/solutions', '/industries', '/use-cases'].some(p => cleanPath === p || cleanPath.startsWith(p + '/')) && 
+    !cleanPath.startsWith('/blog') &&
+    !cleanPath.startsWith('/platform') &&
     !isKnowledgeSection &&
     !isTemplatesSection &&
     !isCompareSection &&
@@ -896,6 +906,39 @@ export default function App() {
     }
     canonicalLink.setAttribute('href', canonical);
 
+    // Apply country targeting and regional metadata dynamically
+    let geoRegion = document.querySelector('meta[name="geo.region"]');
+    if (!geoRegion) {
+      geoRegion = document.createElement('meta');
+      geoRegion.setAttribute('name', 'geo.region');
+      document.head.appendChild(geoRegion);
+    }
+    const regionMapping: Record<string, string> = {
+      es: 'ES', fr: 'FR', de: 'DE', pt: 'PT', it: 'IT', tr: 'TR', id: 'ID', hi: 'IN', ar: 'AE', ur: 'PK', ja: 'JP', ko: 'KR', zh: 'CN', en: 'US'
+    };
+    geoRegion.setAttribute('content', regionMapping[locale] || 'US');
+
+    // Sync hreflang tags for all 14 supported languages to achieve ultimate Search Engine crawlers index visibility
+    document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
+
+    SUPPORTED_LOCALES.forEach((loc) => {
+      const hAlternate = document.createElement('link');
+      hAlternate.setAttribute('rel', 'alternate');
+      hAlternate.setAttribute('hreflang', loc === 'en' ? 'x-default' : loc);
+      
+      const locPath = loc === 'en' ? cleanPath : `/${loc}${cleanPath === '/' ? '' : cleanPath}`;
+      hAlternate.setAttribute('href', `${rootUrl}${locPath === '/' ? '' : locPath}`);
+      document.head.appendChild(hAlternate);
+
+      if (loc === 'en') {
+        const xDefault = document.createElement('link');
+        xDefault.setAttribute('rel', 'alternate');
+        xDefault.setAttribute('hreflang', 'en');
+        xDefault.setAttribute('href', `${rootUrl}${cleanPath === '/' ? '' : cleanPath}`);
+        document.head.appendChild(xDefault);
+      }
+    });
+
     // Apply Open Graph Tags
     const ogTags = {
       'og:title': title,
@@ -933,7 +976,7 @@ export default function App() {
       tag.setAttribute('content', content);
     });
 
-  }, [currentPath]);
+  }, [currentPath, locale]);
 
   const buildHomepageSchema = () => {
     const rootUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.freeqrgen.pro';
@@ -1041,8 +1084,16 @@ export default function App() {
   }, []);
 
   const navigateTo = (path: string) => {
-    window.history.pushState({}, '', path);
-    setCurrentPath(path);
+    let targetPath = path;
+    // If we have an active non-English locale and the target path is relative and doesn't already have a locale prefix
+    if (locale && locale !== 'en') {
+      const { locale: existingLocale } = extractLocaleAndPath(path);
+      if (!existingLocale) {
+        targetPath = `/${locale}${path === '/' ? '' : path}`;
+      }
+    }
+    window.history.pushState({}, '', targetPath);
+    setCurrentPath(targetPath);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -1165,7 +1216,7 @@ export default function App() {
         id: targetId,
         name: currentProject.name || 'My Styled QR',
         type: currentProject.type || 'url',
-        content: contentVal || 'https://google.com',
+        content: contentVal || 'https://freeqrgen.pro',
         design: {
           fgColor: currentProject.design?.fgColor || '#0f172a',
           bgColor: currentProject.design?.bgColor || '#ffffff',
@@ -1341,7 +1392,7 @@ export default function App() {
     };
   }, [handleSaveProject, setIsShortcutsModalOpen]);
 
-  const slug = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
+  const slug = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
   const isLandingPage = !!landingPages[slug];
 
   return (
@@ -1674,7 +1725,7 @@ export default function App() {
             <span className="absolute inset-0 bg-indigo-50/0 group-hover/templates:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
             <LayoutTemplate className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/templates:scale-110 ${isTemplatesSection ? 'text-indigo-600' : 'text-slate-400 group-hover/templates:text-indigo-500'}`} />
             <span className={`relative z-10 font-bold ${isTemplatesSection ? 'text-indigo-600' : 'text-slate-600 group-hover/templates:text-indigo-600'} transition-colors`}>
-              Templates
+              {t('nav.templates', 'Templates')}
             </span>
             {isTemplatesSection && (
               <motion.div
@@ -1696,7 +1747,7 @@ export default function App() {
             <span className="absolute inset-0 bg-indigo-50/0 group-hover/solutions:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
             <Sparkles className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/solutions:scale-110 ${isSolutionsSection ? 'text-indigo-600' : 'text-slate-400 group-hover/solutions:text-indigo-500'}`} />
             <span className={`relative z-10 font-bold ${isSolutionsSection ? 'text-indigo-600' : 'text-slate-600 group-hover/solutions:text-indigo-600'} transition-colors`}>
-              Solutions
+              {t('nav.solutions', 'Solutions')}
             </span>
             {isSolutionsSection && (
               <motion.div
@@ -1718,7 +1769,7 @@ export default function App() {
             <span className="absolute inset-0 bg-indigo-50/0 group-hover/industries:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
             <Utensils className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/industries:scale-110 ${isIndustriesSection ? 'text-indigo-600' : 'text-slate-400 group-hover/industries:text-indigo-500'}`} />
             <span className={`relative z-10 font-bold ${isIndustriesSection ? 'text-indigo-600' : 'text-slate-600 group-hover/industries:text-indigo-600'} transition-colors`}>
-              Industries
+              {t('nav.industries', 'Industries')}
             </span>
             {isIndustriesSection && (
               <motion.div
@@ -1740,7 +1791,7 @@ export default function App() {
             <span className="absolute inset-0 bg-indigo-50/0 group-hover/usecases:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
             <Cpu className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/usecases:scale-110 ${isUseCasesSection ? 'text-indigo-600' : 'text-slate-400 group-hover/usecases:text-indigo-500'}`} />
             <span className={`relative z-10 font-bold ${isUseCasesSection ? 'text-indigo-600' : 'text-slate-600 group-hover/usecases:text-indigo-600'} transition-colors`}>
-              Use Cases
+              {t('nav.useCases', 'Use Cases')}
             </span>
             {isUseCasesSection && (
               <motion.div
@@ -1762,7 +1813,7 @@ export default function App() {
             <span className="absolute inset-0 bg-indigo-50/0 group-hover/compare:bg-indigo-50/50 transition-colors duration-300 rounded-xl" />
             <Scale className={`w-3.5 h-3.5 relative z-10 transition-transform duration-300 group-hover/compare:scale-110 ${isCompareSection ? 'text-indigo-600' : 'text-slate-400 group-hover/compare:text-indigo-500'}`} />
             <span className={`relative z-10 font-bold ${isCompareSection ? 'text-indigo-600' : 'text-slate-600 group-hover/compare:text-indigo-600'} transition-colors`}>
-              Comparisons
+              {t('nav.comparisons', 'Comparisons')}
             </span>
             {isCompareSection && (
               <motion.div
@@ -1784,7 +1835,7 @@ export default function App() {
             className="flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98] mr-1"
           >
             <Sparkles className="w-3 h-3 text-indigo-600" />
-            <span>Tour</span>
+            <span>{t('nav.tour', 'Tour')}</span>
           </button>
 
           {/* Keyboard Shortcuts Help Button */}
@@ -1792,30 +1843,81 @@ export default function App() {
             type="button"
             id="shortcuts-help-button"
             onClick={() => setIsShortcutsModalOpen(true)}
-            title="Keyboard Shortcuts (Press '?')"
+            title={`${t('shortcuts.title', 'Keyboard Shortcuts')} (Press '?')`}
             className="flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98] mr-1 animate-fade-in"
           >
             <HelpCircle className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
-            <span className="hidden sm:inline">Shortcuts</span>
+            <span className="hidden sm:inline">{t('nav.shortcuts', 'Shortcuts')}</span>
             <kbd className="hidden md:inline px-1 py-0.5 text-[9px] font-mono font-bold bg-white border border-slate-200 rounded-md text-slate-500 shadow-3xs ml-0.5">?</kbd>
           </button>
 
           {/* Language Switcher Button */}
-          <div className="bg-slate-100/80 backdrop-blur-xs rounded-xl p-0.5 border border-slate-200/60 flex items-center mr-1">
+          <div ref={langMenuRef} className="relative z-50">
             <button
               type="button"
-              onClick={() => handleLocaleChange('en')}
-              className={`px-2 py-1 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${ locale === 'en' ? 'bg-white text-indigo-600 shadow-xs ring-1 ring-black/5' : 'text-slate-500 hover:text-indigo-600' }`}
+              onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+              className="flex items-center gap-1.5 bg-slate-100/80 hover:bg-slate-100 border border-slate-200/60 text-slate-700 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98]"
             >
-              EN
+              <Globe className="w-3.5 h-3.5 text-slate-500" />
+              <span className="uppercase">{locale}</span>
+              <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-300 ${isLangDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
-            <button
-              type="button"
-              onClick={() => handleLocaleChange('es')}
-              className={`px-2 py-1 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${ locale === 'es' ? 'bg-white text-indigo-600 shadow-xs ring-1 ring-black/5' : 'text-slate-500 hover:text-indigo-600' }`}
-            >
-              ES
-            </button>
+            
+            <AnimatePresence>
+              {isLangDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ type: "spring", damping: 15, stiffness: 250 }}
+                  className="absolute right-0 mt-2 bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-2xl p-2 w-56 ring-1 ring-black/5 flex flex-col gap-0.5"
+                >
+                  <div className="px-2.5 py-1.5 border-b border-slate-100 mb-1">
+                    <span className="text-[9px] font-black uppercase tracking-wider text-indigo-600 font-mono">{t('nav.selectLanguage', 'Select Language')}</span>
+                  </div>
+                  <div className="max-h-64 overflow-y-auto custom-scrollbar flex flex-col gap-0.5">
+                    {[
+                      { code: 'en', native: 'English' },
+                      { code: 'es', native: 'Español' },
+                      { code: 'fr', native: 'Français' },
+                      { code: 'de', native: 'Deutsch' },
+                      { code: 'pt', native: 'Português' },
+                      { code: 'it', native: 'Italiano' },
+                      { code: 'tr', native: 'Türkçe' },
+                      { code: 'id', native: 'Bahasa Indonesia' },
+                      { code: 'hi', native: 'हिन्दी' },
+                      { code: 'ar', native: 'العربية' },
+                      { code: 'ur', native: 'اردو' },
+                      { code: 'ja', native: '日本語' },
+                      { code: 'ko', native: '한국어' },
+                      { code: 'zh', native: '简体中文' }
+                    ].map((lang) => (
+                      <button
+                        key={lang.code}
+                        type="button"
+                        onClick={() => {
+                          handleLocaleChange(lang.code as Locale);
+                          setIsLangDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left text-xs transition-colors cursor-pointer ${
+                          locale === lang.code 
+                            ? 'bg-indigo-50/80 text-indigo-600 font-extrabold' 
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{lang.native}</span>
+                          <span className="text-[9px] text-slate-400 font-medium font-mono uppercase">({lang.code})</span>
+                        </div>
+                        {locale === lang.code && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {authLoading ? (
@@ -2110,7 +2212,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <LayoutTemplate className="w-3.5 h-3.5 text-indigo-400" />
                     </div>
-                    <span className="font-bold text-indigo-400">Templates Hub</span>
+                    <span className="font-bold text-indigo-400">{t('nav.templatesHub', 'Templates Hub')}</span>
                   </button>
 
                   <button
@@ -2123,7 +2225,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                     </div>
-                    <span className="font-bold text-indigo-400">Solutions Directory</span>
+                    <span className="font-bold text-indigo-400">{t('nav.solutionsDir', 'Solutions Directory')}</span>
                   </button>
 
                   <button
@@ -2136,7 +2238,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <Utensils className="w-3.5 h-3.5 text-indigo-400" />
                     </div>
-                    <span className="font-bold text-indigo-400">Industries Directory</span>
+                    <span className="font-bold text-indigo-400">{t('nav.industriesDir', 'Industries Directory')}</span>
                   </button>
 
                   <button
@@ -2149,7 +2251,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <Cpu className="w-3.5 h-3.5 text-indigo-400" />
                     </div>
-                    <span className="font-bold text-indigo-400">Use Cases Directory</span>
+                    <span className="font-bold text-indigo-400">{t('nav.useCasesDir', 'Use Cases Directory')}</span>
                   </button>
 
                   <button
@@ -2162,7 +2264,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <Scale className="w-3.5 h-3.5 text-indigo-400" />
                     </div>
-                    <span className="font-bold text-indigo-400">Comparisons Directory</span>
+                    <span className="font-bold text-indigo-400">{t('nav.comparisonsDir', 'Comparisons Directory')}</span>
                   </button>
 
                   <button
@@ -2176,7 +2278,7 @@ export default function App() {
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <BarChart3 className="w-3.5 h-3.5" />
                     </div>
-                    <span className="font-bold">Scan Analytics</span>
+                    <span className="font-bold">{t('nav.scanAnalytics', 'Scan Analytics')}</span>
                   </button>
 
                   <button
@@ -2217,6 +2319,34 @@ export default function App() {
                     </div>
                     <span className="font-bold">{navTranslations[locale].privacyPolicy}</span>
                   </button>
+                  
+                  {/* Language Selector on Mobile */}
+                  <div className="mt-4 px-2.5 py-3 border-t border-slate-800/60">
+                    <span className="text-[10px] font-bold text-slate-500 block uppercase tracking-wider mb-2 font-mono">{t('nav.selectLanguage', 'Select Language')}</span>
+                    <select
+                      value={locale}
+                      onChange={(e) => {
+                        handleLocaleChange(e.target.value as Locale);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-indigo-500"
+                    >
+                      <option value="en">English (EN)</option>
+                      <option value="es">Español (ES)</option>
+                      <option value="fr">Français (FR)</option>
+                      <option value="de">Deutsch (DE)</option>
+                      <option value="pt">Português (PT)</option>
+                      <option value="it">Italiano (IT)</option>
+                      <option value="tr">Türkçe (TR)</option>
+                      <option value="id">Bahasa Indonesia (ID)</option>
+                      <option value="hi">हिन्दी (HI)</option>
+                      <option value="ar">العربية (AR)</option>
+                      <option value="ur">اردو (UR)</option>
+                      <option value="ja">日本語 (JA)</option>
+                      <option value="ko">한국어 (KO)</option>
+                      <option value="zh">简体中文 (ZH)</option>
+                    </select>
+                  </div>
                 </div>
 
               </div>
@@ -2260,7 +2390,25 @@ export default function App() {
       </AnimatePresence>
 
       {/* Primary Container Grid */}
-      {isLandingPage ? (
+      {['/profile', '/community', '/roadmap', '/testimonials', '/case-studies', '/success-stories', '/release-notes', '/feedback'].includes(cleanPath) ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          <GrowthSuite 
+            view={cleanPath.substring(1)} 
+            onNavigate={navigateTo} 
+            locale={locale} 
+            user={user} 
+            onSignInClick={handleSignInClick} 
+          />
+        </React.Suspense>
+      ) : cleanPath === '/i18n-dashboard' ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          <I18nDashboard onBack={() => navigateTo('/')} />
+        </React.Suspense>
+      ) : cleanPath === '/ai-gateway' ? (
+        <React.Suspense fallback={<LazyLoader />}>
+          <EnterpriseAIGateway onBack={() => navigateTo('/')} user={user} onSignInClick={handleSignInClick} />
+        </React.Suspense>
+      ) : isLandingPage ? (
         <React.Suspense fallback={<LazyLoader />}>
           <SEOPage 
             slug={slug} 
@@ -2268,14 +2416,14 @@ export default function App() {
             onInitiateGenerator={handleInitiateGenerator} 
           />
         </React.Suspense>
-      ) : currentPath === '/faq' ? (
+      ) : cleanPath === '/faq' ? (
         <React.Suspense fallback={<LazyLoader />}>
           <FaqSection onNavigate={navigateTo} locale={locale} />
         </React.Suspense>
-      ) : (currentPath === '/blog' || currentPath.startsWith('/blog/')) ? (
+      ) : (cleanPath === '/blog' || cleanPath.startsWith('/blog/')) ? (
         <React.Suspense fallback={<LazyLoader />}>
           <BlogSection 
-            initialSlug={currentPath.startsWith('/blog/') ? currentPath.substring(6) : null} 
+            initialSlug={cleanPath.startsWith('/blog/') ? cleanPath.substring(6) : null} 
             onNavigate={navigateTo} 
             locale={locale}
           />
@@ -2283,7 +2431,7 @@ export default function App() {
       ) : isKnowledgeSection ? (
         <React.Suspense fallback={<LazyLoader />}>
           {(() => {
-            const pathParts = currentPath.split('/');
+            const pathParts = cleanPath.split('/');
             const sectName = pathParts[1] as 'academy' | 'blog' | 'guides' | 'tutorials' | 'resources' | 'glossary';
             const artSlug = pathParts[2] || null;
             return (
@@ -2299,7 +2447,7 @@ export default function App() {
       ) : isTemplatesSection ? (
         <React.Suspense fallback={<LazyLoader />}>
           {(() => {
-            const pathParts = currentPath.split('/');
+            const pathParts = cleanPath.split('/');
             const artSlug = pathParts[2] || null;
             return (
               <TemplatesHub 
@@ -2314,7 +2462,7 @@ export default function App() {
       ) : isCompareSection ? (
         <React.Suspense fallback={<LazyLoader />}>
           {(() => {
-            const pathParts = currentPath.split('/');
+            const pathParts = cleanPath.split('/');
             const compSlug = pathParts[2] || null;
             return (
               <CompareHub 
@@ -2330,7 +2478,7 @@ export default function App() {
         <React.Suspense fallback={<LazyLoader />}>
           {(() => {
             const prefix = isSolutionsSection ? 'solutions' : isIndustriesSection ? 'industries' : 'use-cases';
-            const pathParts = currentPath.split('/');
+            const pathParts = cleanPath.split('/');
             const artSlug = pathParts[2] || null;
             return (
               <ProgrammaticHub 
@@ -2343,14 +2491,14 @@ export default function App() {
             );
           })()}
         </React.Suspense>
-      ) : currentPath === '/embed' ? (
+      ) : cleanPath === '/embed' ? (
         <React.Suspense fallback={<LazyLoader />}>
           <EmbedPage onNavigate={navigateTo} />
         </React.Suspense>
       ) : isPlatformSection ? (
         <React.Suspense fallback={<LazyLoader />}>
           <PlatformHub 
-            initialSlug={currentPath.substring(1)} 
+            initialSlug={cleanPath.substring(1)} 
             onNavigate={navigateTo} 
             locale={locale}
           />
@@ -2358,12 +2506,12 @@ export default function App() {
       ) : isTrustCenterSection ? (
         <React.Suspense fallback={<LazyLoader />}>
           <TrustCenterHub 
-            initialSlug={currentPath.substring(1)} 
+            initialSlug={cleanPath.substring(1)} 
             onNavigate={navigateTo} 
             locale={locale}
           />
         </React.Suspense>
-      ) : currentPath === '/terms' ? (
+      ) : cleanPath === '/terms' ? (
         <React.Suspense fallback={<LazyLoader />}>
           <CompanyPages 
             view="terms" 
@@ -2381,28 +2529,28 @@ export default function App() {
             className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'create' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('create')}
           >
-            Creative Station
+            {t('nav.creativeStationTab', 'Creative Station')}
           </button>
           <button
             type="button"
             className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'templates' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('templates')}
           >
-            Templates
+            {t('nav.templatesTab', 'Templates')}
           </button>
           <button
             type="button"
             className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'analytics' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('analytics')}
           >
-            Scan Analytics
+            {t('nav.analyticsTab', 'Scan Analytics')}
           </button>
           <button
             type="button"
             className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'boiler' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('boiler')}
           >
-            Mobile Packages
+            {t('nav.mobilePackagesTab', 'Mobile Packages')}
           </button>
           <button
             type="button"
@@ -2410,7 +2558,7 @@ export default function App() {
             onClick={() => setActiveTab('animations')}
           >
             <Sparkles className={`w-3.5 h-3.5 ${activeTab === 'animations' ? 'text-yellow-300 animate-spin-slow' : 'text-purple-500'}`} />
-            Animations
+            {t('nav.animationsTab', 'Animations')}
           </button>
         </div>
 
@@ -2419,7 +2567,7 @@ export default function App() {
           <div className="bg-red-55 border border-red-200/65 rounded-xl p-4 flex items-start gap-3 shadow-xs">
             <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-xs font-bold text-red-950">System Alert</h4>
+              <h4 className="text-xs font-bold text-red-950">{t('ui.systemAlert', 'System Alert')}</h4>
               <p className="text-[11px] text-red-800 mt-1 font-mono leading-relaxed">{errorMessage}</p>
             </div>
           </div>
@@ -3211,6 +3359,10 @@ export default function App() {
             <a href="/embed" onClick={(e) => { e.preventDefault(); navigateTo('/embed'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Embed Badge</a>
             <span>•</span>
             <a href="/platform/qr-analytics" onClick={(e) => { e.preventDefault(); navigateTo('/platform/qr-analytics'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Platform Suite</a>
+            <span>•</span>
+            <a href="/i18n-dashboard" onClick={(e) => { e.preventDefault(); navigateTo('/i18n-dashboard'); }} className="text-emerald-600 hover:text-emerald-700 transition-colors uppercase tracking-wider font-bold">i18n Developer Dashboard & QA</a>
+            <span>•</span>
+            <a href="/ai-gateway" onClick={(e) => { e.preventDefault(); navigateTo('/ai-gateway'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Enterprise AI & Developer Gateway</a>
           </div>
         </div>
       </footer>

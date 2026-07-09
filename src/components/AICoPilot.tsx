@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { api } from '../lib/api';
 import { QRProject } from '../types';
+import { useTranslation } from '../utils/i18n';
 
 interface AICoPilotProps {
   currentProject: Partial<QRProject>;
@@ -13,11 +14,12 @@ interface AICoPilotProps {
 }
 
 export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) {
+  const { t } = useTranslation();
   const [activeSegment, setActiveSegment] = useState<'colors' | 'styles' | 'brand' | 'audit'>('audit');
   
   // Loading and feedback states
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<React.ReactNode | null>(null);
 
   // Colors suggestions inputs and output
   const [industry, setIndustry] = useState('');
@@ -90,7 +92,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
         gradientColor: palette.gradientColor
       }
     });
-    setSuccessMessage('AI Palette applied successfully!');
+    setSuccessMessage(t('copilot.paletteApplied', 'AI Palette applied successfully!'));
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
@@ -106,7 +108,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
         logoScale: styles.logoScale || design.logoScale
       }
     });
-    setSuccessMessage('AI Style preset loaded successfully!');
+    setSuccessMessage(t('copilot.styleApplied', 'AI Style preset loaded successfully!'));
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
@@ -125,7 +127,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
         logoScale: brand.logoScale
       }
     });
-    setSuccessMessage('Full Brand Audit identity implemented!');
+    setSuccessMessage(t('copilot.brandMatchApplied', 'Full Brand Audit identity implemented!'));
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
@@ -145,10 +147,10 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
         }
       });
       setOptimizationLog(opt.vibe);
-      setSuccessMessage('QR Code metrics optimized for max clarity!');
+      setSuccessMessage(t('copilot.layoutOptimized', 'QR Code metrics optimized for max clarity!'));
       setTimeout(() => setSuccessMessage(null), 4000);
     } catch (err: any) {
-      setSuccessMessage('Could not initiate smart optimizer. Loading fallbacks...');
+      setSuccessMessage(t('copilot.optimizerFallback', 'Could not initiate smart optimizer. Loading fallbacks...'));
       setTimeout(() => setSuccessMessage(null), 3000);
     } finally {
       setLoading(false);
@@ -202,7 +204,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
 
   return (
     <div 
-      className="bg-slate-900 text-slate-100 rounded-2xl p-5 border border-slate-800 shadow-2xl relative overflow-hidden"
+      className="bg-slate-900 text-slate-100 rounded-2xl p-5 border border-slate-880 shadow-2xl relative overflow-hidden"
       id="gemini-ai-co-pilot"
     >
       {/* Decorative Aurora meshes */}
@@ -216,12 +218,12 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
             <Sparkles className="w-4 h-4 text-emerald-300 animate-spin-slow" />
           </div>
           <div>
-            <h3 className="text-xs font-black tracking-widest uppercase text-white font-mono">Gemini AI Co-Pilot™</h3>
-            <p className="text-[10px] text-slate-200 font-medium">Apple-Inspired Smart QR Analytics Suite</p>
+            <h3 className="text-xs font-black tracking-widest uppercase text-white font-mono">{t('copilot.title', 'Gemini AI Co-Pilot™')}</h3>
+            <p className="text-[10px] text-slate-200 font-medium">{t('copilot.subtitle', 'Apple-Inspired Smart QR Analytics Suite')}</p>
           </div>
         </div>
         <span className="text-[9px] px-2 py-0.5 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 font-bold uppercase tracking-wider font-mono">
-          Model 3.5 Active
+          {t('copilot.modelActive', 'Model 3.5 Active')}
         </span>
       </div>
 
@@ -241,7 +243,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                 : 'text-slate-200 hover:text-white'
             }`}
           >
-            {tab === 'audit' ? 'Live Audit' : tab === 'colors' ? 'Colors' : tab === 'styles' ? 'Styles' : 'Brand Match'}
+            {tab === 'audit' ? t('copilot.tab.audit', 'Live Audit') : tab === 'colors' ? t('copilot.tab.colors', 'Colors') : tab === 'styles' ? t('copilot.tab.styles', 'Styles') : t('copilot.tab.brand', 'Brand Match')}
           </button>
         ))}
       </div>
@@ -268,9 +270,9 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
           <div className="space-y-4">
             <div className="bg-slate-950/40 rounded-xl p-3.5 border border-slate-850/60">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-black uppercase text-slate-300 tracking-wider">Scannability Assessment</span>
+                <span className="text-[10px] font-black uppercase text-slate-300 tracking-wider">{t('copilot.scannabilityTitle', 'Scannability Assessment')}</span>
                 {isAuditing && (
-                  <span className="text-[9px] text-slate-500 animate-pulse font-mono block">auditing live...</span>
+                  <span className="text-[9px] text-slate-500 animate-pulse font-mono block">{t('copilot.auditingLive', 'auditing live...')}</span>
                 )}
               </div>
               
@@ -297,12 +299,12 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                 ) : (
                   <Cpu className="w-3.5 h-3.5 text-emerald-300 animate-pulse" />
                 )}
-                <span>Smart Layout Optimizer</span>
+                <span>{t('copilot.optimizeButton', 'Smart Layout Optimizer')}</span>
               </button>
 
               {optimizationLog && (
                 <div className="p-3 bg-slate-950/80 border border-slate-850 rounded-xl text-[10px] text-slate-400 leading-relaxed font-sans">
-                  <span className="font-extrabold text-white text-[9px] block uppercase tracking-wider mb-0.5">Optimization Report:</span>
+                  <span className="font-extrabold text-white text-[9px] block uppercase tracking-wider mb-0.5">{t('copilot.optReport', 'Optimization Report:')}</span>
                   {optimizationLog}
                 </div>
               )}
@@ -315,7 +317,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
           <div className="space-y-4">
             <form onSubmit={handleGetColorSuggestions} className="grid grid-cols-1 gap-2.5">
               <div>
-                <label htmlFor="ai-industry-segment" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Your Industry Segment</label>
+                <label htmlFor="ai-industry-segment" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">{t('copilot.label.industry', 'Your Industry Segment')}</label>
                 <input
                   id="ai-industry-segment"
                   type="text"
@@ -328,7 +330,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
               </div>
 
               <div>
-                <label htmlFor="ai-aesthetic-vibe" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Aesthetic Vibe & Mood</label>
+                <label htmlFor="ai-aesthetic-vibe" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">{t('copilot.label.vibe', 'Aesthetic Vibe & Mood')}</label>
                 <input
                   id="ai-aesthetic-vibe"
                   type="text"
@@ -345,7 +347,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                 className="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-xl text-[10px] uppercase font-black tracking-widest border border-slate-700 select-none transition-transform active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
               >
                 {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Palette className="w-3.5 h-3.5" />}
-                <span>Generate Vibe Palette</span>
+                <span>{t('copilot.generateVibe', 'Generate Vibe Palette')}</span>
               </button>
             </form>
 
@@ -364,7 +366,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                       <div className="w-6 h-6" style={{ backgroundColor: colorResult.bgColor }} title="Canvas back" />
                     </div>
                     <div>
-                      <span className="text-[9px] font-bold text-slate-400 block uppercase">Generated Recommendation</span>
+                      <span className="text-[9px] font-bold text-slate-400 block uppercase">{t('copilot.recommendation', 'Generated Recommendation')}</span>
                       <span className="text-[10px] text-white font-mono">{colorResult.primaryColor} → {colorResult.gradientColor}</span>
                     </div>
                   </div>
@@ -376,7 +378,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                     onClick={() => handleApplyPalette(colorResult)}
                     className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[9px] uppercase font-black tracking-wider transition-all cursor-pointer"
                   >
-                    Apply Palette to QR Design
+                    {t('copilot.applyPalette', 'Apply Palette to QR Design')}
                   </button>
                 </motion.div>
               )}
@@ -389,7 +391,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
           <div className="space-y-4">
             <form onSubmit={handleGetStyleSuggestions} className="grid grid-cols-1 gap-2.5">
               <div>
-                <label htmlFor="ai-target-design" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Target Design Aesthetic</label>
+                <label htmlFor="ai-target-design" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">{t('copilot.label.aesthetic', 'Target Design Aesthetic')}</label>
                 <input
                   id="ai-target-design"
                   type="text"
@@ -407,7 +409,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                 className="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-xl text-[10px] uppercase font-black tracking-widest border border-slate-700 select-none transition-transform active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
               >
                 {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Eye className="w-3.5 h-3.5" />}
-                <span>Synthesize Shape Aesthetics</span>
+                <span>{t('copilot.synthesizeAesthetics', 'Synthesize Shape Aesthetics')}</span>
               </button>
             </form>
 
@@ -420,11 +422,11 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                 >
                   <div className="grid grid-cols-2 gap-2 text-center text-[10px] font-mono font-bold bg-slate-900 p-2.5 rounded-lg border border-slate-850">
                     <div>
-                      <span className="text-[8px] text-slate-500 block uppercase">Corners</span>
+                      <span className="text-[8px] text-slate-500 block uppercase">{t('copilot.style.corners', 'Corners')}</span>
                       <span className="text-white uppercase">{styleResult.eyeStyle}</span>
                     </div>
                     <div>
-                      <span className="text-[8px] text-slate-500 block uppercase">Dots</span>
+                      <span className="text-[8px] text-slate-500 block uppercase">{t('copilot.style.dots', 'Dots')}</span>
                       <span className="text-white uppercase">{styleResult.dotStyle}</span>
                     </div>
                   </div>
@@ -436,7 +438,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                     onClick={() => handleApplyStyles(styleResult)}
                     className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[9px] uppercase font-black tracking-wider transition-all cursor-pointer"
                   >
-                    Apply Layout Styles
+                    {t('copilot.applyLayoutStyles', 'Apply Layout Styles')}
                   </button>
                 </motion.div>
               )}
@@ -449,7 +451,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
           <div className="space-y-4">
             <form onSubmit={handleGetBrandMatch} className="grid grid-cols-1 gap-3">
               <div>
-                <label htmlFor="ai-brand-name" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">Company/Product Name</label>
+                <label htmlFor="ai-brand-name" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">{t('copilot.label.brandName', 'Company/Product Name')}</label>
                 <input
                   id="ai-brand-name"
                   type="text"
@@ -462,7 +464,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
               </div>
 
               <div>
-                <label htmlFor="ai-brand-desc" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">What does your service do?</label>
+                <label htmlFor="ai-brand-desc" className="text-[9px] font-extrabold uppercase text-slate-400 tracking-widest block mb-1">{t('copilot.label.brandDesc', 'What does your service do?')}</label>
                 <textarea
                   id="ai-brand-desc"
                   placeholder="e.g. We develop secure data synchronization platforms for remote engineering teams."
@@ -479,7 +481,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                 className="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-xl text-[10px] uppercase font-black tracking-widest border border-slate-700 select-none transition-transform active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
               >
                 {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
-                <span>Complete Brand Audit</span>
+                <span>{t('copilot.brandAudit', 'Complete Brand Audit')}</span>
               </button>
             </form>
 
@@ -491,7 +493,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                   className="bg-slate-950 p-3.5 border border-slate-850 rounded-xl space-y-3"
                 >
                   <div className="bg-slate-900 px-3 py-2.5 rounded-xl border border-slate-850 text-[11px] leading-relaxed text-slate-350">
-                    <span className="text-[8px] font-extrabold text-indigo-400 block uppercase tracking-widest mb-1 font-mono">Auditor Notes</span>
+                    <span className="text-[8px] font-extrabold text-indigo-400 block uppercase tracking-widest mb-1 font-mono">{t('copilot.brandNotes', 'Auditor Notes')}</span>
                     {brandResult.explanation}
                   </div>
 
@@ -500,7 +502,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
                     onClick={() => handleApplyBrandMatch(brandResult)}
                     className="w-full py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white rounded-lg text-[9px] uppercase font-black tracking-wider transition-all cursor-pointer"
                   >
-                    Implement Completed Brand Package
+                    {t('copilot.applyBrandPackage', 'Implement Completed Brand Package')}
                   </button>
                 </motion.div>
               )}

@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Search, HelpCircle, ChevronDown, ChevronUp, Copy, Check, ArrowLeft, ShieldAlert } from 'lucide-react';
 import { faqCategories, FAQItem } from '../data/faqData';
-import { getLocalizedFaq, faqCategoryLabels } from '../utils/translations';
+import { getLocalizedFaq, faqCategoryLabels, Locale } from '../utils/translations';
 
 interface FaqSectionProps {
   onNavigate: (path: string) => void;
-  locale?: 'en' | 'es';
+  locale?: Locale;
 }
 
 export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProps) {

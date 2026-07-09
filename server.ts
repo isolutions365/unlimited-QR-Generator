@@ -4,7 +4,8 @@ import path from 'path';
 import crypto from 'crypto';
 import { createServer as createViteServer } from 'vite';
 import jwt from 'jsonwebtoken';
-import { dbInstance, hashPassword, verifyPassword } from './server/db';
+import { dbInstance, hashPassword, verifyPassword, getDb } from './server/db';
+import { doc, getDoc, getDocs, collection, query, where, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, Type } from '@google/genai';
 
@@ -395,6 +396,685 @@ async function startServer() {
     }
   });
 
+  // --- SAAS GROWTH SUITE ENDPOINTS ---
+
+  // In-memory sessions/fallbacks for robust offline/testing resilience
+  const inMemoryProfiles = new Map<string, any>();
+  const inMemoryCommunityPosts = new Map<string, any>();
+  const inMemoryNewsletter = new Map<string, any>();
+  const inMemoryFeedback = new Map<string, any>();
+  const inMemoryNotifications = new Map<string, any[]>();
+  const referralClicks = new Map<string, number>();
+  const referralSignups = new Map<string, string[]>(); // referrerId -> list of referred ids
+
+  // Helper to trigger system notifications
+  async function triggerNotification(userId: string, title: string, message: string, type: 'alert' | 'community' | 'reward') {
+    const id = `notif-${Math.random().toString(36).substring(2, 11)}`;
+    const notif = {
+      id,
+      userId,
+      title,
+      message,
+      read: false,
+      type,
+      createdAt: new Date().toISOString()
+    };
+    try {
+      const activeDb = getDb();
+      await setDoc(doc(activeDb, 'notifications', id), notif);
+    } catch (e) {
+      console.warn('Notification setDoc fallback used');
+      const list = inMemoryNotifications.get(userId) || [];
+      list.unshift(notif);
+      inMemoryNotifications.set(userId, list);
+    }
+  }
+
+  // Lazy initialize/get User Profile
+  async function getOrCreateProfile(userId: string, name: string, email: string, referrerCodeInput?: string): Promise<any> {
+    try {
+      const activeDb = getDb();
+      const profileRef = doc(activeDb, 'user_profiles', userId);
+      const snap = await getDoc(profileRef);
+      
+      if (snap.exists()) {
+        return snap.data();
+      }
+    } catch (e) {
+      console.warn('Profile read fallback');
+    }
+
+    if (inMemoryProfiles.has(userId)) {
+      return inMemoryProfiles.get(userId);
+    }
+
+    // Initialize new profile
+    const refCode = `ref-${userId.substring(4, 9)}-${Math.floor(Math.random() * 900 + 100)}`;
+    const newProfile: any = {
+      userId,
+      name,
+      email,
+      avatar: '',
+      bio: 'Professional QR Creator',
+      company: '',
+      linkedin: '',
+      twitter: '',
+      github: '',
+      defaultQrType: 'url',
+      defaultFgColor: '#0f172a',
+      defaultBgColor: '#ffffff',
+      referralCode: refCode,
+      referredBy: '',
+      xp: 10,
+      level: 1,
+      badges: ['pioneer'],
+      unlockedThemes: ['standard']
+    };
+
+    // Process Referral if provided
+    if (referrerCodeInput && referrerCodeInput !== refCode) {
+      newProfile.referredBy = referrerCodeInput;
+      // Find referrer user from profiles
+      let referrerUserId = '';
+      try {
+        const activeDb = getDb();
+        const q = query(collection(activeDb, 'user_profiles'), where('referralCode', '==', referrerCodeInput));
+        const qSnap = await getDocs(q);
+        if (!qSnap.empty) {
+          referrerUserId = qSnap.docs[0].id;
+          const referrerProfile = qSnap.docs[0].data();
+          // Update referrer Profile
+          const updatedXp = (referrerProfile.xp || 0) + 100;
+          const currentBadges = referrerProfile.badges || [];
+          if (!currentBadges.includes('influencer')) {
+            currentBadges.push('influencer');
+          }
+          const nextLvl = Math.floor(Math.sqrt(updatedXp / 100)) + 1;
+          await setDoc(doc(activeDb, 'user_profiles', referrerUserId), {
+            ...referrerProfile,
+            xp: updatedXp,
+            level: nextLvl,
+            badges: currentBadges
+          }, { merge: true });
+
+          // Notify Referrer
+          await triggerNotification(referrerUserId, '🎉 Referral Signup Bonus!', `Congratulations! Someone registered using your unique referral link. You earned 100 XP and unlocked the "Referral Specialist" badge.`, 'reward');
+        }
+      } catch (err) {
+        // Fallback search in-memory
+        for (const [rId, p] of inMemoryProfiles.entries()) {
+          if (p.referralCode === referrerCodeInput) {
+            referrerUserId = rId;
+            p.xp += 100;
+            if (!p.badges.includes('influencer')) {
+              p.badges.push('influencer');
+            }
+            p.level = Math.floor(Math.sqrt(p.xp / 100)) + 1;
+            
+            // Notify Referrer in-memory
+            const list = inMemoryNotifications.get(referrerUserId) || [];
+            list.unshift({
+              id: `notif-${Math.random().toString(36).substring(2, 11)}`,
+              userId: referrerUserId,
+              title: '🎉 Referral Signup Bonus!',
+              message: `Congratulations! Someone registered using your unique referral link. You earned 100 XP and unlocked the "Referral Specialist" badge.`,
+              read: false,
+              type: 'reward',
+              createdAt: new Date().toISOString()
+            });
+            inMemoryNotifications.set(referrerUserId, list);
+            break;
+          }
+        }
+      }
+
+      if (referrerUserId) {
+        // Log referred signup
+        const referredList = referralSignups.get(referrerUserId) || [];
+        referredList.push(userId);
+        referralSignups.set(referrerUserId, referredList);
+      }
+    }
+
+    try {
+      const activeDb = getDb();
+      await setDoc(doc(activeDb, 'user_profiles', userId), newProfile);
+    } catch (e) {
+      console.warn('Profile write fallback');
+    }
+
+    inMemoryProfiles.set(userId, newProfile);
+    
+    // Trigger Welcome notification
+    await triggerNotification(userId, '👋 Welcome to FreeQRGen.pro!', 'Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.', 'alert');
+
+    return newProfile;
+  }
+
+  // GET User Profile
+  app.get('/api/user/profile', authenticateToken, async (req: any, res) => {
+    const referrerCode = req.query.refCode as string;
+    try {
+      const profile = await getOrCreateProfile(req.user.id, req.user.name, req.user.email, referrerCode);
+      res.json(profile);
+    } catch (err) {
+      console.error('Get profile error:', err);
+      res.status(500).json({ error: 'Failed to fetch user profile.' });
+    }
+  });
+
+  // POST User Profile (Updates)
+  app.post('/api/user/profile', authenticateToken, async (req: any, res) => {
+    const { avatar, bio, company, linkedin, twitter, github, defaultQrType, defaultFgColor, defaultBgColor } = req.body;
+    try {
+      const existing = await getOrCreateProfile(req.user.id, req.user.name, req.user.email);
+      const updatedXp = (existing.xp || 10) + 15; // Give +15 XP for completing profile details
+      const nextLvl = Math.floor(Math.sqrt(updatedXp / 100)) + 1;
+      const currentBadges = existing.badges || ['pioneer'];
+      if (!currentBadges.includes('designer') && (defaultFgColor || defaultBgColor)) {
+        currentBadges.push('designer');
+      }
+
+      const updated = {
+        ...existing,
+        avatar: avatar ?? existing.avatar,
+        bio: bio ?? existing.bio,
+        company: company ?? existing.company,
+        linkedin: linkedin ?? existing.linkedin,
+        twitter: twitter ?? existing.twitter,
+        github: github ?? existing.github,
+        defaultQrType: defaultQrType ?? existing.defaultQrType,
+        defaultFgColor: defaultFgColor ?? existing.defaultFgColor,
+        defaultBgColor: defaultBgColor ?? existing.defaultBgColor,
+        xp: updatedXp,
+        level: nextLvl,
+        badges: currentBadges
+      };
+
+      try {
+        const activeDb = getDb();
+        await setDoc(doc(activeDb, 'user_profiles', req.user.id), updated);
+      } catch (e) {
+        console.warn('Profile update fallback');
+      }
+
+      inMemoryProfiles.set(req.user.id, updated);
+      res.json(updated);
+    } catch (err) {
+      console.error('Update profile error:', err);
+      res.status(500).json({ error: 'Failed to save profile changes.' });
+    }
+  });
+
+  // GET User Referrals List
+  app.get('/api/user/referrals', authenticateToken, async (req: any, res) => {
+    try {
+      const profile = await getOrCreateProfile(req.user.id, req.user.name, req.user.email);
+      const clicks = referralClicks.get(profile.referralCode) || 0;
+      const referredIds = referralSignups.get(req.user.id) || [];
+      
+      res.json({
+        referralCode: profile.referralCode,
+        clicks,
+        signups: referredIds.length,
+        rewardTier: referredIds.length >= 5 ? 'Professional Gold' : referredIds.length >= 3 ? 'Silver Creator' : referredIds.length >= 1 ? 'Bronze Ambassador' : 'Pioneer',
+        unlockedFeatures: [
+          referredIds.length >= 1 && 'High-resolution SVG Export',
+          referredIds.length >= 3 && 'Independent Finder Eye Coloring',
+          referredIds.length >= 5 && 'Dynamic Color-shifting Shaders'
+        ].filter(Boolean)
+      });
+    } catch (err) {
+      console.error('Fetch referrals error:', err);
+      res.status(500).json({ error: 'Failed to retrieve referral data.' });
+    }
+  });
+
+  // POST Track Referral Clicks
+  app.post('/api/referral/click', async (req, res) => {
+    const { code } = req.body;
+    if (!code) return res.status(400).json({ error: 'Referral code is required' });
+    
+    const count = referralClicks.get(code) || 0;
+    referralClicks.set(code, count + 1);
+    res.json({ success: true, clicks: count + 1 });
+  });
+
+  // GET Community Posts
+  app.get('/api/community/posts', async (req, res) => {
+    try {
+      let postsList: any[] = [];
+      try {
+        const activeDb = getDb();
+        const q = collection(activeDb, 'community_posts');
+        const snap = await getDocs(q);
+        postsList = snap.docs.map(d => d.data());
+      } catch (e) {
+        console.warn('Community posts read fallback');
+        postsList = Array.from(inMemoryCommunityPosts.values());
+      }
+
+      // If empty, seed initial high-fidelity posts for the SaaS dashboard
+      if (postsList.length === 0) {
+        const seededPosts = [
+          {
+            id: 'post-1',
+            userId: 'usr-seeded1',
+            authorName: 'Alex Mercer',
+            title: 'Add support for bulk QR Code generator via CSV spreadsheet uploads',
+            content: 'It would be absolutely stellar if we could upload a simple CSV spreadsheet containing rows of links and names, and get a downloaded zip file containing all the generated QR Codes instantly! This would speed up real-world product labeling and event ticket operations ten-fold.',
+            category: 'feature',
+            upvotes: ['usr-seeded2', 'usr-seeded3', 'usr-seeded4', 'usr-seeded5'],
+            comments: [
+              { id: 'c1', userId: 'usr-seeded2', authorName: 'Elena Rostova', content: 'Agreed! Bulk dynamic creation is crucial for high-traffic commerce.', createdAt: new Date(Date.now() - 3600000 * 24).toISOString() }
+            ],
+            createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
+            status: 'planned'
+          },
+          {
+            id: 'post-2',
+            userId: 'usr-seeded2',
+            authorName: 'Elena Rostova',
+            title: 'Enable interactive NFC chip tag writing and linking',
+            content: 'Since we already support physical scanning parameters, combining QR codes with custom NFC triggers would make FreeQRGen the ultimate contact points management suite.',
+            category: 'discussion',
+            upvotes: ['usr-seeded1', 'usr-seeded3'],
+            comments: [],
+            createdAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+            status: 'under_review'
+          },
+          {
+            id: 'post-3',
+            userId: 'usr-seeded3',
+            authorName: 'Dr. Sarah Chen',
+            title: 'Optimized Quiet Zone calculators for high-speed conveyor package scanners',
+            content: 'We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.',
+            category: 'template',
+            upvotes: ['usr-seeded1', 'usr-seeded2', 'usr-seeded4', 'usr-seeded5', 'usr-seeded6'],
+            comments: [],
+            createdAt: new Date(Date.now() - 3600000 * 72).toISOString(),
+            status: 'completed'
+          }
+        ];
+        
+        const activeDb = getDb();
+        for (const p of seededPosts) {
+          try {
+            await setDoc(doc(activeDb, 'community_posts', p.id), p);
+          } catch (e) {
+            inMemoryCommunityPosts.set(p.id, p);
+          }
+          postsList.push(p);
+        }
+      }
+
+      res.json(postsList);
+    } catch (err) {
+      console.error('Fetch community posts error:', err);
+      res.status(500).json({ error: 'Failed to retrieve community posts.' });
+    }
+  });
+
+  // POST Create Community Post
+  app.post('/api/community/posts', authenticateToken, async (req: any, res) => {
+    const { title, content, category } = req.body;
+    if (!title || !content || !category) {
+      return res.status(400).json({ error: 'Title, content and category are required' });
+    }
+
+    try {
+      const postId = `post-${Math.random().toString(36).substring(2, 11)}`;
+      const newPost: any = {
+        id: postId,
+        userId: req.user.id,
+        authorName: req.user.name,
+        title,
+        content,
+        category,
+        upvotes: [req.user.id],
+        comments: [],
+        createdAt: new Date().toISOString(),
+        status: category === 'feature' ? 'under_review' : 'none'
+      };
+
+      try {
+        const activeDb = getDb();
+        await setDoc(doc(activeDb, 'community_posts', postId), newPost);
+      } catch (e) {
+        console.warn('Post create fallback');
+      }
+
+      inMemoryCommunityPosts.set(postId, newPost);
+
+      // Reward author +25 XP
+      const profile = await getOrCreateProfile(req.user.id, req.user.name, req.user.email);
+      profile.xp += 25;
+      if (!profile.badges.includes('activist')) {
+        profile.badges.push('activist');
+      }
+      profile.level = Math.floor(Math.sqrt(profile.xp / 100)) + 1;
+      
+      try {
+        const activeDb = getDb();
+        await setDoc(doc(activeDb, 'user_profiles', req.user.id), profile);
+      } catch (e) {
+        inMemoryProfiles.set(req.user.id, profile);
+      }
+
+      await triggerNotification(req.user.id, '📣 Community Post Shared!', `Congratulations! Your community post "${title.substring(0, 20)}..." was published. You earned +25 XP and the "Community Pillar" badge.`, 'community');
+
+      res.status(201).json(newPost);
+    } catch (err) {
+      console.error('Create community post error:', err);
+      res.status(500).json({ error: 'Failed to publish post.' });
+    }
+  });
+
+  // POST Upvote Community Post
+  app.post('/api/community/posts/:id/upvote', authenticateToken, async (req: any, res) => {
+    const { id } = req.params;
+    try {
+      let post: any = null;
+      try {
+        const activeDb = getDb();
+        const docRef = doc(activeDb, 'community_posts', id);
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          post = snap.data();
+        }
+      } catch (e) {
+        post = inMemoryCommunityPosts.get(id);
+      }
+
+      if (!post) return res.status(404).json({ error: 'Community post not found' });
+
+      const upvotes = post.upvotes || [];
+      const index = upvotes.indexOf(req.user.id);
+      
+      if (index > -1) {
+        upvotes.splice(index, 1); // Remove vote
+      } else {
+        upvotes.push(req.user.id); // Add vote
+
+        // Reward voter +5 XP
+        const voterProfile = await getOrCreateProfile(req.user.id, req.user.name, req.user.email);
+        voterProfile.xp += 5;
+        voterProfile.level = Math.floor(Math.sqrt(voterProfile.xp / 100)) + 1;
+        try {
+          const activeDb = getDb();
+          await setDoc(doc(activeDb, 'user_profiles', req.user.id), voterProfile);
+        } catch (e) {
+          inMemoryProfiles.set(req.user.id, voterProfile);
+        }
+
+        // Notify and Reward post author (+10 XP)
+        if (post.userId !== req.user.id) {
+          try {
+            const activeDb = getDb();
+            const authorRef = doc(activeDb, 'user_profiles', post.userId);
+            const authorSnap = await getDoc(authorRef);
+            if (authorSnap.exists()) {
+              const authorProfile = authorSnap.data();
+              authorProfile.xp += 10;
+              authorProfile.level = Math.floor(Math.sqrt(authorProfile.xp / 100)) + 1;
+              await setDoc(authorRef, authorProfile);
+            }
+          } catch (e) {
+            const authorProfile = inMemoryProfiles.get(post.userId);
+            if (authorProfile) {
+              authorProfile.xp += 10;
+              authorProfile.level = Math.floor(Math.sqrt(authorProfile.xp / 100)) + 1;
+            }
+          }
+          await triggerNotification(post.userId, '👍 New Upvote Received!', `Your post "${post.title.substring(0, 20)}..." received an upvote from ${req.user.name}. You earned +10 XP.`, 'community');
+        }
+      }
+
+      post.upvotes = upvotes;
+
+      try {
+        const activeDb = getDb();
+        await setDoc(doc(activeDb, 'community_posts', id), post);
+      } catch (e) {
+        inMemoryCommunityPosts.set(id, post);
+      }
+
+      res.json(post);
+    } catch (err) {
+      console.error('Upvote post error:', err);
+      res.status(500).json({ error: 'Failed to register upvote.' });
+    }
+  });
+
+  // POST Comment on Community Post
+  app.post('/api/community/posts/:id/comment', authenticateToken, async (req: any, res) => {
+    const { id } = req.params;
+    const { content } = req.body;
+    if (!content) return res.status(400).json({ error: 'Comment content is required' });
+
+    try {
+      let post: any = null;
+      try {
+        const activeDb = getDb();
+        const docRef = doc(activeDb, 'community_posts', id);
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          post = snap.data();
+        }
+      } catch (e) {
+        post = inMemoryCommunityPosts.get(id);
+      }
+
+      if (!post) return res.status(404).json({ error: 'Community post not found' });
+
+      const comments = post.comments || [];
+      const newComment = {
+        id: `comment-${Math.random().toString(36).substring(2, 11)}`,
+        userId: req.user.id,
+        authorName: req.user.name,
+        content,
+        createdAt: new Date().toISOString()
+      };
+      
+      comments.push(newComment);
+      post.comments = comments;
+
+      try {
+        const activeDb = getDb();
+        await setDoc(doc(activeDb, 'community_posts', id), post);
+      } catch (e) {
+        inMemoryCommunityPosts.set(id, post);
+      }
+
+      // Reward commenter +10 XP
+      const commenterProfile = await getOrCreateProfile(req.user.id, req.user.name, req.user.email);
+      commenterProfile.xp += 10;
+      commenterProfile.level = Math.floor(Math.sqrt(commenterProfile.xp / 100)) + 1;
+      try {
+        const activeDb = getDb();
+        await setDoc(doc(activeDb, 'user_profiles', req.user.id), commenterProfile);
+      } catch (e) {
+        inMemoryProfiles.set(req.user.id, commenterProfile);
+      }
+
+      // Notify and Reward post author (+15 XP)
+      if (post.userId !== req.user.id) {
+        try {
+          const activeDb = getDb();
+          const authorRef = doc(activeDb, 'user_profiles', post.userId);
+          const authorSnap = await getDoc(authorRef);
+          if (authorSnap.exists()) {
+            const authorProfile = authorSnap.data();
+            authorProfile.xp += 15;
+            authorProfile.level = Math.floor(Math.sqrt(authorProfile.xp / 100)) + 1;
+            await setDoc(authorRef, authorProfile);
+          }
+        } catch (e) {
+          const authorProfile = inMemoryProfiles.get(post.userId);
+          if (authorProfile) {
+            authorProfile.xp += 15;
+            authorProfile.level = Math.floor(Math.sqrt(authorProfile.xp / 100)) + 1;
+          }
+        }
+        await triggerNotification(post.userId, '💬 New Comment Received!', `${req.user.name} commented on your post "${post.title.substring(0, 20)}...": "${content.substring(0, 15)}..."`, 'community');
+      }
+
+      res.status(201).json(post);
+    } catch (err) {
+      console.error('Comment on post error:', err);
+      res.status(500).json({ error: 'Failed to post comment.' });
+    }
+  });
+
+  // GET Roadmap Items
+  app.get('/api/roadmap/items', async (req, res) => {
+    try {
+      let postsList: any[] = [];
+      try {
+        const activeDb = getDb();
+        const q = collection(activeDb, 'community_posts');
+        const snap = await getDocs(q);
+        postsList = snap.docs.map(d => d.data());
+      } catch (e) {
+        postsList = Array.from(inMemoryCommunityPosts.values());
+      }
+
+      const roadmapItems = postsList.filter(p => p.status && p.status !== 'none');
+      res.json(roadmapItems);
+    } catch (err) {
+      console.error('Get roadmap items error:', err);
+      res.status(500).json({ error: 'Failed to retrieve roadmap.' });
+    }
+  });
+
+  // POST Newsletter Subscribe
+  app.post('/api/newsletter/subscribe', async (req, res) => {
+    const { email, preferences } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    try {
+      const sub = {
+        email,
+        subscribedAt: new Date().toISOString(),
+        preferences: preferences || ['marketing', 'product-releases', 'developer-updates']
+      };
+
+      try {
+        const activeDb = getDb();
+        await setDoc(doc(activeDb, 'newsletters', email.toLowerCase()), sub);
+      } catch (e) {
+        inMemoryNewsletter.set(email.toLowerCase(), sub);
+      }
+
+      res.json({ success: true, message: 'Subscribed to FreeQRGen.pro Gazette successfully!' });
+    } catch (err) {
+      console.error('Newsletter subscribe error:', err);
+      res.status(500).json({ error: 'Failed to record subscription.' });
+    }
+  });
+
+  // POST Feedback Submit
+  app.post('/api/feedback/submit', async (req: any, res) => {
+    const { type, satisfaction, text, email, userId } = req.body;
+    if (!type || !satisfaction || !text) {
+      return res.status(400).json({ error: 'Type, satisfaction score, and feedback text are required.' });
+    }
+
+    try {
+      const feedbackId = `feedback-${Math.random().toString(36).substring(2, 11)}`;
+      const fb = {
+        id: feedbackId,
+        userId: userId || null,
+        email: email || null,
+        type,
+        satisfaction,
+        text,
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        const activeDb = getDb();
+        await setDoc(doc(activeDb, 'feedbacks', feedbackId), fb);
+      } catch (e) {
+        inMemoryFeedback.set(feedbackId, fb);
+      }
+
+      // If registered user, reward +15 XP
+      if (userId) {
+        try {
+          const activeDb = getDb();
+          const profileRef = doc(activeDb, 'user_profiles', userId);
+          const snap = await getDoc(profileRef);
+          if (snap.exists()) {
+            const profile = snap.data();
+            profile.xp += 15;
+            if (!profile.badges.includes('vocal')) {
+              profile.badges.push('vocal');
+            }
+            profile.level = Math.floor(Math.sqrt(profile.xp / 100)) + 1;
+            await setDoc(profileRef, profile);
+          }
+        } catch (e) {
+          const profile = inMemoryProfiles.get(userId);
+          if (profile) {
+            profile.xp += 15;
+            if (!profile.badges.includes('vocal')) {
+              profile.badges.push('vocal');
+            }
+            profile.level = Math.floor(Math.sqrt(profile.xp / 100)) + 1;
+          }
+        }
+        await triggerNotification(userId, '💬 Feedback Submitted!', `Thank you for completing our CSAT survey! You scored us ${satisfaction}/10. You earned +15 XP and unlocked the "Product Advisory" badge.`, 'reward');
+      }
+
+      res.status(201).json({ success: true, message: 'Thank you for your valuable feedback! We will process it immediately.' });
+    } catch (err) {
+      console.error('Feedback submit error:', err);
+      res.status(500).json({ error: 'Failed to process feedback.' });
+    }
+  });
+
+  // GET User Notifications
+  app.get('/api/notifications', authenticateToken, async (req: any, res) => {
+    try {
+      let notifs: any[] = [];
+      try {
+        const activeDb = getDb();
+        const q = query(collection(activeDb, 'notifications'), where('userId', '==', req.user.id));
+        const snap = await getDocs(q);
+        notifs = snap.docs.map(d => d.data());
+      } catch (e) {
+        notifs = inMemoryNotifications.get(req.user.id) || [];
+      }
+
+      // Sort by newest
+      notifs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      res.json(notifs);
+    } catch (err) {
+      console.error('Get notifications error:', err);
+      res.status(500).json({ error: 'Failed to retrieve notifications.' });
+    }
+  });
+
+  // POST Mark Notification as Read
+  app.post('/api/notifications/:id/read', authenticateToken, async (req: any, res) => {
+    const { id } = req.params;
+    try {
+      try {
+        const activeDb = getDb();
+        const ref = doc(activeDb, 'notifications', id);
+        await updateDoc(ref, { read: true });
+      } catch (e) {
+        const list = inMemoryNotifications.get(req.user.id) || [];
+        const item = list.find(n => n.id === id);
+        if (item) item.read = true;
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error('Mark notification read error:', err);
+      res.status(500).json({ error: 'Failed to mark alert as read.' });
+    }
+  });
 
   // --- PREMIUM AI CAPABILITIES ENDPOINTS ---
   
@@ -421,6 +1101,51 @@ async function startServer() {
   // Helper check if Gemini API is enabled
   function isGeminiEnabled(): boolean {
     return !!process.env.GEMINI_API_KEY;
+  }
+
+  // Helper to run generateContent with robust retries and fallback models in case of 503 (service unavailable) or 429 (rate limits)
+  async function generateContentWithFallback(options: {
+    contents: string;
+    config: any;
+    primaryModel?: string;
+  }): Promise<any> {
+    const client = getGoogleAiClient();
+    const primaryModel = options.primaryModel || 'gemini-3.5-flash';
+    const fallbackModels = ['gemini-3.1-flash-lite', 'gemini-flash-latest'];
+    const modelsToTry = [primaryModel, ...fallbackModels];
+
+    let lastError: any = null;
+
+    for (const model of modelsToTry) {
+      let attempts = 2; // 2 attempts per model
+      while (attempts > 0) {
+        try {
+          const response = await client.models.generateContent({
+            model: model,
+            contents: options.contents,
+            config: options.config,
+          });
+          return response;
+        } catch (error: any) {
+          lastError = error;
+          const status = error.status || (error.error && error.error.code);
+          console.warn(`[Gemini API] Failed calling model ${model} (attempts left: ${attempts - 1}). Status: ${status}. Error:`, error.message);
+          
+          if (status === 400) {
+            attempts = 0; // stop retrying this model
+            break;
+          }
+
+          attempts--;
+          if (attempts > 0) {
+            const delayMs = (3 - attempts) * 1000;
+            await new Promise((resolve) => setTimeout(resolve, delayMs));
+          }
+        }
+      }
+    }
+
+    throw lastError || new Error('All models failed to generate content');
   }
 
   // 1. AI Color Suggestions endpoint
@@ -486,9 +1211,7 @@ async function startServer() {
         return res.json(generateLocalColorFallback(searchVibe));
       }
 
-      const client = getGoogleAiClient();
-      const response = await client.models.generateContent({
-        model: "gemini-3.5-flash",
+      const response = await generateContentWithFallback({
         contents: `Create a professional color palette matching this industry/vibe description. Make it premium and appropriate for styled QR Code usage: "${searchVibe}"`,
         config: {
           responseMimeType: "application/json",
@@ -566,9 +1289,7 @@ async function startServer() {
         return res.json(generateLocalStyleFallback(searchVibe));
       }
 
-      const client = getGoogleAiClient();
-      const response = await client.models.generateContent({
-        model: "gemini-3.5-flash",
+      const response = await generateContentWithFallback({
         contents: `Create a professional QR code styling configuration based on this brand theme: "${searchVibe}"`,
         config: {
           responseMimeType: "application/json",
@@ -646,9 +1367,7 @@ async function startServer() {
         return res.json(generateLocalBrandFallback(query));
       }
 
-      const client = getGoogleAiClient();
-      const response = await client.models.generateContent({
-        model: "gemini-3.5-flash",
+      const response = await generateContentWithFallback({
         contents: `Analyze this brand and generate the absolute perfect complete QR Code aesthetic colors and shape styling. Brand: "${brandName}". Description: "${brandDescription}"`,
         config: {
           responseMimeType: "application/json",
@@ -713,9 +1432,7 @@ async function startServer() {
         return res.json(executeDesignAudit(contentStr, currentDesign));
       }
 
-      const client = getGoogleAiClient();
-      const response = await client.models.generateContent({
-        model: "gemini-3.5-flash",
+      const response = await generateContentWithFallback({
         contents: `Provide 3-4 professional, actionable design audit recommendations for a QR Code with these parameters: Content Length: ${contentStr.length}, QR Content: "${contentStr}", Current Design Settings: ${JSON.stringify(currentDesign || {})}`,
         config: {
           responseMimeType: "application/json",
@@ -779,9 +1496,7 @@ async function startServer() {
         return res.json(executeLayoutOptimizeFallback(contentStr, currentDesign));
       }
 
-      const client = getGoogleAiClient();
-      const response = await client.models.generateContent({
-        model: "gemini-3.5-flash",
+      const response = await generateContentWithFallback({
         contents: `Generate optimal values for a QR Style configuration: QR Content: "${contentStr}" (length: ${contentStr.length}), Current Design Settings: ${JSON.stringify(currentDesign || {})}`,
         config: {
           responseMimeType: "application/json",

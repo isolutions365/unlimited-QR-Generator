@@ -4,12 +4,12 @@ import {
   BookOpen, ChevronRight, MessageSquare, AlertCircle, Sparkles, Filter 
 } from 'lucide-react';
 import { blogCategories, BlogArticle } from '../data/blogData';
-import { getLocalizedBlog } from '../utils/translations';
+import { getLocalizedBlog, Locale } from '../utils/translations';
 
 interface BlogSectionProps {
   initialSlug?: string | null;
   onNavigate: (path: string) => void;
-  locale?: 'en' | 'es';
+  locale?: Locale;
 }
 
 const blogCategoryLabelsEs: Record<string, string> = {

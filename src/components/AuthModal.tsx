@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../lib/api';
 import { Mail, Lock, User, X, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { useTranslation } from '../utils/i18n';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -9,12 +10,13 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<React.ReactNode | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -26,7 +28,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
 
     try {
       if (activeTab === 'signup') {
-        if (!name.trim()) throw new Error('Name is required');
+        if (!name.trim()) throw new Error(t('auth.nameRequired', 'Name is required') as any);
         const res = await api.register(email, password, name);
         onSuccess(res.user);
         onClose();
@@ -36,7 +38,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
         onClose();
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed. Please verify credentials.');
+      setError(err.message || t('auth.failed', 'Authentication failed. Please verify credentials.'));
     } finally {
       setIsLoading(false);
     }
@@ -57,15 +59,15 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
           <div>
             <div className="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 py-1 px-2.5 rounded-full text-[10px] font-bold font-mono mb-2">
               <Sparkles className="w-3 h-3" />
-              SECURE CLOUD SHIELD
+              {t('auth.secureCloudShield', 'SECURE CLOUD SHIELD')}
             </div>
             <h3 className="text-xl font-bold text-gray-900 tracking-tight">
-              {activeTab === 'signin' ? 'Welcome back' : 'Create account'}
+              {activeTab === 'signin' ? t('auth.welcomeBack', 'Welcome back') : t('auth.createAccount', 'Create account')}
             </h3>
             <p className="text-xs text-gray-400 mt-1">
               {activeTab === 'signin' 
-                ? 'Sign in to access saved QR designs and analytics' 
-                : 'Get started and persist your QR dashboard records'}
+                ? t('auth.signInDesc', 'Sign in to access saved QR designs and analytics') 
+                : t('auth.signUpDesc', 'Get started and persist your QR dashboard records')}
             </p>
           </div>
           <button 
@@ -91,7 +93,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
               setError(null);
             }}
           >
-            Sign In (Auth0/Clerk Style)
+            {t('auth.signInTab', 'Sign In')}
           </button>
           <button
             type="button"
@@ -105,7 +107,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
               setError(null);
             }}
           >
-            Sign Up
+            {t('auth.signUpTab', 'Sign Up')}
           </button>
         </div>
 
@@ -121,7 +123,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
           <form onSubmit={handleSubmit} className="space-y-4">
             {activeTab === 'signup' && (
               <div>
-                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Full Name</label>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">{t('auth.fullName', 'Full Name')}</label>
                 <div className="relative">
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
@@ -137,7 +139,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
             )}
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Email Address</label>
+              <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">{t('auth.emailAddress', 'Email Address')}</label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -152,7 +154,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Secure Password</label>
+              <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">{t('auth.securePassword', 'Secure Password')}</label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -181,7 +183,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
               {isLoading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                <span>{activeTab === 'signin' ? 'Sign In' : 'Create Credentials'}</span>
+                <span>{activeTab === 'signin' ? t('auth.signInButton', 'Sign In') : t('auth.signUpButton', 'Create Credentials')}</span>
               )}
             </button>
           </form>
@@ -190,7 +192,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
         {/* Modal Info Footer */}
         <div className="px-6 py-5 bg-slate-50/50 border-t border-slate-100 text-center mt-6">
           <p className="text-[10px] text-gray-400 font-mono">
-            Secure, light SQL storage engine configuration. All operations fully authenticated.
+            {t('auth.storageInfo', 'Secure, light SQL storage engine configuration. All operations fully authenticated.')}
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Sparkles, Play, Compass, Lightbulb, Zap } from 'lucide-react';
+import { useTranslation } from '../utils/i18n';
 
 interface TourWelcomeModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface TourWelcomeModalProps {
 }
 
 export default function TourWelcomeModal({ isOpen, onClose, onStart }: TourWelcomeModalProps) {
+  const { t } = useTranslation();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const startButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -80,10 +82,10 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart }: TourWelco
                 </div>
                 <div>
                   <h3 id="tour-welcome-title" className="text-base font-bold text-gray-900 tracking-tight">
-                    Interactive Workspace Tour
+                    {t('tour.welcomeTitle', 'Interactive Workspace Tour')}
                   </h3>
                   <p className="text-[11px] text-gray-500 font-medium">
-                    Let's quickly explore the Free QR Generator features
+                    {t('tour.welcomeSubtitle', "Let's quickly explore the Free QR Generator features")}
                   </p>
                 </div>
               </div>
@@ -102,7 +104,7 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart }: TourWelco
             <div className="px-6 py-4 space-y-4">
               <div className="text-sm text-slate-600 leading-relaxed space-y-3">
                 <p>
-                  Welcome! In this <strong>1-minute guided tour</strong>, we will walk you through the custom design, tracking, and folder management capabilities of our modern QR station.
+                  {t('tour.welcomeBody', 'Welcome! In this 1-minute guided tour, we will walk you through the custom design, tracking, and folder management capabilities of our modern QR station.')}
                 </p>
               </div>
 
@@ -113,8 +115,8 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart }: TourWelco
                     <Compass className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-800">Learn Visual Branding</h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Custom eye borders, gradients, dot styles, and centerpiece logo overlays.</p>
+                    <h4 className="text-xs font-bold text-slate-800">{t('tour.highlight1Title', 'Learn Visual Branding')}</h4>
+                    <p className="text-[10px] text-slate-400 mt-0.5">{t('tour.highlight1Desc', 'Custom eye borders, gradients, dot styles, and centerpiece logo overlays.')}</p>
                   </div>
                 </div>
 
@@ -123,8 +125,8 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart }: TourWelco
                     <Zap className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-800">Meet Gemini AI Design Co-Pilot</h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Let our AI instantly style QR grids perfectly tailored to your business description.</p>
+                    <h4 className="text-xs font-bold text-slate-800">{t('tour.highlight2Title', 'Meet Gemini AI Design Co-Pilot')}</h4>
+                    <p className="text-[10px] text-slate-400 mt-0.5">{t('tour.highlight2Desc', 'Let our AI instantly style QR grids perfectly tailored to your business description.')}</p>
                   </div>
                 </div>
 
@@ -133,8 +135,8 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart }: TourWelco
                     <Lightbulb className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-800">Analytics & Tracking</h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Configure link shortener tracking, scan logs, and custom redirects.</p>
+                    <h4 className="text-xs font-bold text-slate-800">{t('tour.highlight3Title', 'Analytics & Tracking')}</h4>
+                    <p className="text-[10px] text-slate-400 mt-0.5">{t('tour.highlight3Desc', 'Configure link shortener tracking, scan logs, and custom redirects.')}</p>
                   </div>
                 </div>
               </div>
@@ -147,7 +149,7 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart }: TourWelco
                 onClick={onClose}
                 className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
               >
-                Maybe Later
+                {t('tour.maybeLater', 'Maybe Later')}
               </button>
               
               <button
@@ -157,7 +159,7 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart }: TourWelco
                 className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-4 rounded-xl shadow-md shadow-indigo-500/10 hover:shadow-lg hover:shadow-indigo-500/20 active:scale-95 transition-all cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Start Tour</span>
+                <span>{t('tour.startTour', 'Start Tour')}</span>
               </button>
             </div>
           </motion.div>
