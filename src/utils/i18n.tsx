@@ -1,16 +1,81 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Locale, SUPPORTED_LOCALES, extractLocaleAndPath, isRtlLocale } from './translations';
 import { formatICU, ICUValues } from './icuFormatter';
 import * as formatters from './localeFormatter';
 import { EXPECTED_KEYS, validateLocaleDictionary, LocaleReport, generateFullReport, ValidationReport } from './i18nValidator';
+import enDictionary from '../locales/en.json';
 
 // Type-safe translation keys derived from expected keys
 export type TKey = typeof EXPECTED_KEYS[number] | (string & {});
 
+/**
+ * Validates whether the text is a brand name, URL, or technical value that must never be translated.
+ */
+export function shouldSkipTranslation(text: string): boolean {
+  const trimmed = text.trim();
+  if (trimmed.length <= 1) return true;
+
+  // 1. Only numbers, symbols, percentage, punctuation or math operations
+  if (/^[0-9\s%\+\-\*\/\\.,:;?!@#\$%\^&\*\(\)\_\[\]\{\}'"<>|=~`•\d]+$/.test(trimmed)) {
+    return true;
+  }
+
+  // 2. Brand names (case insensitive checks)
+  const lower = trimmed.toLowerCase();
+  if (
+    lower === 'free qr generator' ||
+    lower === 'freeqrgen' ||
+    lower === 'freeqrgen.pro' ||
+    lower === 'isolutions' ||
+    lower === 'isolutions ico' ||
+    lower === 'reed-solomon' ||
+    lower === 'pro' ||
+    lower === 'utc'
+  ) {
+    return true;
+  }
+
+  // 3. URLs, domains, api routes, or query strings
+  if (
+    trimmed.includes('https://') ||
+    trimmed.includes('http://') ||
+    trimmed.includes('www.') ||
+    lower.endsWith('.com') ||
+    lower.endsWith('.pro') ||
+    lower.includes('/api/') ||
+    trimmed.startsWith('?') ||
+    trimmed.startsWith('&')
+  ) {
+    return true;
+  }
+
+  // 4. File names and file extensions
+  if (/\.(json|png|svg|pdf|zip|js|ts|css|html|jpg|jpeg|gif)$/i.test(trimmed)) {
+    return true;
+  }
+
+  // 5. Tech parameters, hashes, hex codes, or code-like structures
+  if (
+    trimmed.startsWith('#') && trimmed.length <= 9 && /^[#a-fA-F0-9]+$/.test(trimmed)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+// Construct a map of English text (lowercase & trimmed) to translation key for hybrid JSON matching
+const englishToKeyMap: Record<string, string> = {};
+Object.entries(enDictionary).forEach(([key, value]) => {
+  if (typeof value === 'string') {
+    englishToKeyMap[value.trim().toLowerCase()] = key;
+  }
+});
+
 interface I18nContextType {
   locale: Locale;
   changeLocale: (newLocale: Locale) => void;
-  t: (key: TKey, defaultText: string, values?: ICUValues) => React.ReactNode;
+  t: (key: TKey, defaultText: string, values?: ICUValues) => any;
   isLoading: boolean;
   
   // Localized Formatters
@@ -25,6 +90,7 @@ interface I18nContextType {
   // Developer & Diagnostic Tooling
   requestedKeys: string[];
   loadedDictionaries: Record<string, Record<string, string>>;
+  dictionary: Record<string, string>;
   loadAllDictionariesForAnalysis: () => Promise<Record<Locale, Record<string, string>>>;
   runValidationReport: () => Promise<ValidationReport>;
 }
@@ -55,15 +121,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         return saved as Locale;
       }
     }
-    // 3. Try browser navigator languages
-    if (typeof navigator !== 'undefined' && navigator.languages) {
-      for (const lang of navigator.languages) {
-        const cleanL = lang.split('-')[0] as Locale;
-        if ((SUPPORTED_LOCALES as string[]).includes(cleanL)) {
-          return cleanL;
-        }
-      }
-    }
+    // Do NOT automatically detect browser navigator language. The website must remain 100% English by default.
+    // Translation must ONLY happen when the user manually switches the language.
     return 'en';
   });
 
@@ -146,7 +205,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Enterprise-grade Translation Function t() with ICU Support and key tracking
+   * Enterprise-grade Translation Function t() with ICU Support, key tracking
    */
   const t = (key: TKey, defaultText: string, values?: ICUValues): React.ReactNode => {
     // Collect keys used during active session
@@ -158,24 +217,24 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       }, 0);
     }
 
-    const rawMessage = dictionary[key] || defaultText;
+    if (locale === 'en') {
+      return formatICU(defaultText, values, locale);
+    }
+
+    if (shouldSkipTranslation(defaultText)) {
+      return formatICU(defaultText, values, locale);
+    }
+
+    // Check loaded dictionary first
+    const rawMessage = dictionary[key];
+
+    if (!rawMessage) {
+      // Return English default text if translation key is missing in active locale
+      return formatICU(defaultText, values, locale);
+    }
+
     return formatICU(rawMessage, values, locale);
   };
-
-  // Sync HTML attributes (lang and dir) with current locale for RTL/LTR rendering
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const html = document.documentElement;
-      html.setAttribute('lang', locale);
-      if (isRtlLocale(locale)) {
-        html.setAttribute('dir', 'rtl');
-        html.classList.add('rtl-active');
-      } else {
-        html.setAttribute('dir', 'ltr');
-        html.classList.remove('rtl-active');
-      }
-    }
-  }, [locale]);
 
   // Formatters with current active locale
   const formatDate = (date: Date | string | number, options?: Intl.DateTimeFormatOptions) =>
@@ -238,6 +297,41 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return generateFullReport(allDicts, 'en');
   };
 
+  // Generate and log a beautiful translation coverage report on startup
+  useEffect(() => {
+    const logCoverageReport = async () => {
+      try {
+        const report = await runValidationReport();
+        console.group('%c📊 FREE QR GENERATOR - I18N COVERAGE REPORT', 'color: #6366f1; font-weight: bold; font-size: 13px; padding: 4px;');
+        console.log(`%cTimestamp: %c${report.timestamp}`, 'color: #94a3b8; font-weight: bold;', 'color: #0f172a;');
+        console.log(`%cGlobal Coverage Percentage: %c${report.overallCoverage}%`, 'color: #94a3b8; font-weight: bold;', 'color: #10b981; font-weight: bold;');
+        
+        Object.entries(report.reports).forEach(([loc, r]) => {
+          const rep = r as LocaleReport;
+          const missingCount = rep.missingKeys.length;
+          const duplicateCount = rep.issues.filter(i => i.type === 'duplicate_value').length;
+          const pctColor = rep.coveragePercentage === 100 ? 'color: #10b981; font-weight: bold;' : 'color: #6366f1; font-weight: bold;';
+          
+          console.groupCollapsed(`%cLocale: %c${loc.toUpperCase()} %c(${rep.coveragePercentage}%)`, 'color: #475569; font-weight: bold;', 'color: #0f172a; font-weight: bold;', pctColor);
+          console.log(`%cTotal Keys Expected: %c${rep.totalKeys}`, 'color: #64748b;', 'color: #334155; font-weight: bold;');
+          console.log(`%cTranslated Keys: %c${rep.translatedKeys}`, 'color: #64748b;', 'color: #10b981; font-weight: bold;');
+          console.log(`%cMissing Keys count: %c${missingCount}`, 'color: #64748b;', missingCount > 0 ? 'color: #ef4444; font-weight: bold;' : 'color: #10b981; font-weight: bold;');
+          if (missingCount > 0) {
+            console.log('%cMissing Keys List:', 'color: #ef4444; font-weight: bold;', rep.missingKeys);
+          }
+          console.log(`%cDuplicate Values/Keys count: %c${duplicateCount}`, 'color: #64748b;', duplicateCount > 0 ? 'color: #f59e0b; font-weight: bold;' : 'color: #10b981;');
+          console.groupEnd();
+        });
+        console.groupEnd();
+      } catch (err) {
+        console.warn('Could not generate automatic startup i18n report:', err);
+      }
+    };
+    // Let the provider fully load before running analysis to avoid stalling initial render
+    const timer = setTimeout(logCoverageReport, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <I18nContext.Provider
       value={{
@@ -254,6 +348,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         getRelativeTimeString,
         requestedKeys: keysTracked,
         loadedDictionaries: dictionaryCache,
+        dictionary,
         loadAllDictionariesForAnalysis,
         runValidationReport,
       }}
@@ -269,4 +364,27 @@ export function useTranslation() {
     throw new Error('useTranslation must be used within an I18nProvider');
   }
   return context;
+}
+
+export function useDocumentLanguage() {
+  const { locale } = useTranslation();
+
+  useLayoutEffect(() => {
+    if (typeof window !== 'undefined') {
+      const html = document.documentElement;
+      
+      // Directly and synchronously update the HTML language to match exactly the user selected locale.
+      html.setAttribute('lang', locale);
+      
+      // Keep the overall document structure and layouts strictly in LTR direction to prevent breaking headers,
+      // footers, branding, navigation, icons, logos, and QR code widgets.
+      html.setAttribute('dir', 'ltr');
+      
+      if (isRtlLocale(locale)) {
+        html.classList.add('rtl-active');
+      } else {
+        html.classList.remove('rtl-active');
+      }
+    }
+  }, [locale]);
 }

@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { QRProject } from '../types';
 import { Sparkles, Check, Flame, Palette, Layers, Info, ShieldAlert } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -224,6 +226,7 @@ function MiniQRPreview({ design, testText }: { design: QRTemplate['design']; tes
 }
 
 export default function TemplatesTab({ currentProject, onChange }: TemplatesTabProps) {
+  const { t } = useTranslation();
   const handleApplyTemplate = (template: QRTemplate) => {
     onChange({
       ...currentProject,
@@ -294,10 +297,10 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
         <div>
           <h2 className="text-lg font-semibold tracking-tight text-gray-900 flex items-center gap-2">
             <Palette className="w-5 h-5 text-indigo-600 animate-pulse" />
-            Polished Design Templates
+            {t('templates.title', 'Polished Design Templates')}
           </h2>
           <p className="text-xs text-gray-500 mt-1">
-            Instantly apply professional stylistic directions crafted by our design system in one click.
+            {t('templates.description', 'Instantly apply professional stylistic directions crafted by our design system in one click.')}
           </p>
         </div>
       </motion.div>
@@ -325,18 +328,18 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
               {/* Template Meta Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-sm font-semibold text-gray-950 truncate">{template.name}</h3>
+                  <h3 className="text-sm font-semibold text-gray-950 truncate">{t('templates.name.' + template.id, template.name)}</h3>
                   <span className={`text-[9px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full border ${template.badgeColor}`}>
-                    {template.badge}
+                    {t('templates.badge.' + template.id, template.badge)}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-                  {template.description}
+                  {t('templates.desc.' + template.id, template.description)}
                 </p>
  
                 {/* Styled Swatch previews */}
                 <div className="flex items-center gap-1.5 mt-3">
-                  <span className="text-[10px] text-gray-400 font-mono">Palette:</span>
+                  <span className="text-[10px] text-gray-400 font-mono">{t('templates.palette', 'Palette:')}</span>
                   <div className="flex items-center gap-1">
                     <span className="w-2.5 h-2.5 rounded-full border border-gray-100" style={{ backgroundColor: template.design.bgColor }} title={`Bg: ${template.design.bgColor}`} />
                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: template.design.fgColor }} title={`Fg: ${template.design.fgColor}`} />
@@ -345,7 +348,7 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
                     )}
                   </div>
                   <span className="text-[9px] text-gray-400 font-mono capitalize ml-auto">
-                    Dots: {template.design.dotStyle} • Eyes: {template.design.eyeStyle}
+                    {t('templates.dotsLabel', 'Dots:')} {template.design.dotStyle} {t('templates.eyesLabel', '• Eyes:')} {template.design.eyeStyle}
                   </span>
                 </div>
               </div>
@@ -360,12 +363,12 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
           );
         })}
       </motion.div>
-
+ 
       {/* Bottom informational guidance */}
       <motion.div variants={itemVariants} className="bg-amber-50/60 rounded-xl p-3.5 border border-amber-100/80 flex items-start gap-2.5">
          <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
          <p className="text-[11px] text-amber-800 leading-relaxed">
-           <strong>Tip:</strong> After applying any template, you can jump back to the <strong>Creative Station</strong> tab anytime to perform precision edits, add custom center logos, or adjust the quiet zone spacing to match your unique brand requirements.
+           <strong>{t('templates.tipLabel', 'Tip:')}</strong> {t('templates.tipDesc', 'After applying any template, you can jump back to the Creative Station tab anytime to perform precision edits, add custom center logos, or adjust the quiet zone spacing to match your unique brand requirements.')}
          </p>
        </motion.div>
     </motion.div>

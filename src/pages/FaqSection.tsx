@@ -2,13 +2,17 @@ import React, { useState, useMemo } from 'react';
 import { Search, HelpCircle, ChevronDown, ChevronUp, Copy, Check, ArrowLeft, ShieldAlert } from 'lucide-react';
 import { faqCategories, FAQItem } from '../data/faqData';
 import { getLocalizedFaq, faqCategoryLabels, Locale } from '../utils/translations';
+import { useTranslation } from '../utils/i18n';
 
 interface FaqSectionProps {
   onNavigate: (path: string) => void;
   locale?: Locale;
 }
 
-export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProps) {
+export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectionProps) {
+  const { t, locale: hookLocale } = useTranslation();
+  const locale = propLocale || hookLocale;
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -44,7 +48,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
 
   // Generate dynamic Google-adhering FAQ Rich Schema (JSON-LD) dynamically inside script headers
   const jsonLdSchema = useMemo(() => {
-    const list = filteredFAQs.map((faq) => ({
+    const list = filteredFAQs.map((faq) => ({ 
       "@type": "Question",
       "name": faq.question,
       "acceptedAnswer": {
@@ -72,21 +76,19 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
         className="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors mb-8 group cursor-pointer focus:outline-hidden"
       >
         <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-        {locale === 'es' ? 'Volver a la Estación Creativa' : 'Back to Creative Station'}
+        {t('faq.backToCreative', 'Back to Creative Station')}
       </button>
 
       {/* Hero Header section */}
       <div className="space-y-4 mb-10 text-center sm:text-left">
         <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 bg-opacity-70 border border-indigo-100 rounded-full font-extrabold uppercase tracking-widest inline-block">
-          {locale === 'es' ? 'Base de Conocimiento Universal' : 'Universal Knowledge Base'}
+          {t('faq.subTitle', 'Universal Knowledge Base')}
         </span>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-none">
-          {locale === 'es' ? 'Preguntas Frecuentes' : 'Frequently Asked Questions'}
+          {t('faq.title', 'Frequently Asked Questions')}
         </h1>
         <p className="text-sm text-slate-500 max-w-xl leading-relaxed">
-          {locale === 'es'
-            ? 'Optimice la legibilidad y cree mejores experiencias con nuestras más de 25 guías detalladas, compatibilidades y descargos de responsabilidad.'
-            : 'Unlock maximum scannability and build better brand experiences with our 25+ detailed guides, hardware compatibility logs, and legal disclaimers.'}
+          {t('faq.description', 'Unlock maximum scannability and build better brand experiences with our 25+ detailed guides, hardware compatibility logs, and legal disclaimers.')}
         </p>
       </div>
 
@@ -99,9 +101,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={locale === 'es'
-            ? 'Buscar preguntas, corrección de errores, escala vectorial...'
-            : 'Search standard questions, error corrections, vector scaling, format guidelines...'}
+          placeholder={t('faq.searchPlaceholder', 'Search standard questions, error corrections, vector scaling, format guidelines...') as string}
           className="w-full h-full text-xs px-3 bg-transparent outline-none text-slate-800 placeholder:text-slate-400 font-sans"
         />
         {searchQuery && (
@@ -109,7 +109,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
             onClick={() => setSearchQuery('')}
             className="text-xs text-slate-400 hover:text-slate-600 pr-4 font-mono font-bold cursor-pointer"
           >
-            {locale === 'es' ? 'Limpiar' : 'Clear'}
+            {t('faq.clear', 'Clear')}
           </button>
         )}
       </div>
@@ -127,7 +127,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
           >
             {faqCategoryLabels[locale][cat.id] || cat.label}
           </button>
-        ))}
+        ))} 
       </div>
 
       {/* Render FAQs Accordion system */}
@@ -156,7 +156,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
                   <div className="text-slate-400 shrink-0">
                     {isExpanded ? (
                       <ChevronUp className="w-4 h-4 text-indigo-600" />
-                    ) : (
+                    ) : ( 
                       <ChevronDown className="w-4 h-4" />
                     )}
                   </div>
@@ -169,7 +169,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
                     </p>
                     <div className="mt-4 flex items-center justify-between text-[10px] font-mono font-bold text-slate-400 pt-3 border-t border-slate-100">
                       <span className="uppercase text-indigo-500 bg-indigo-50/50 px-2 py-0.5 rounded-md">
-                        {locale === 'es' ? 'Categoría' : 'Category'}: {faqCategoryLabels[locale][faq.category] || faq.category}
+                        {t('faq.categoryLabel', 'Category')}: {faqCategoryLabels[locale][faq.category] || faq.category}
                       </span>
                       <button
                         onClick={(e) => copyShareLink(faq.id, e)}
@@ -178,12 +178,12 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
                         {copiedId === faq.id ? (
                           <>
                             <Check className="w-3 h-3 text-emerald-500" />
-                            <span className="text-emerald-500">{locale === 'es' ? '¡Enlace copiado!' : 'Link Copied!'}</span>
+                            <span className="text-emerald-500">{t('faq.linkCopied', 'Link Copied!')}</span>
                           </>
                         ) : (
                           <>
                             <Copy className="w-3 h-3" />
-                            <span>{locale === 'es' ? 'Copiar ID de enlace' : 'Copy link ID'}</span>
+                            <span>{t('faq.copyLinkId', 'Copy link ID')}</span>
                           </>
                         )}
                       </button>
@@ -201,12 +201,10 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
           </div>
           <div className="space-y-1">
             <h2 className="text-sm font-extrabold text-slate-900">
-              {locale === 'es' ? 'No se encontraron preguntas' : 'No matching questions found'}
+              {t('faq.noQuestions', 'No matching questions found')}
             </h2>
             <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-              {locale === 'es'
-                ? `No pudimos encontrar preguntas que coincidan con "${searchQuery}". Pruebe con palabras clave como "caducan", "imprimir" o "WiFi".`
-                : `We couldn't locate anything matching "${searchQuery}". Try searching general keywords like "expire", "printing", or "WiFi".`}
+              {t('faq.noQuestionsDesc', 'We couldn\'t locate anything matching "{query}". Try searching general keywords like "expire", "printing", or "WiFi".', { query: searchQuery })}
             </p>
           </div>
           <button
@@ -216,7 +214,7 @@ export default function FaqSection({ onNavigate, locale = 'en' }: FaqSectionProp
             }}
             className="px-4 py-2 bg-indigo-600 hover:bg-slate-950 text-white text-xs font-bold rounded-xl transition-all shadow-md"
           >
-            {locale === 'es' ? 'Restablecer Filtros' : 'Reset All Filters'}
+            {t('faq.resetFilters', 'Reset All Filters')}
           </button>
         </div>
       )}

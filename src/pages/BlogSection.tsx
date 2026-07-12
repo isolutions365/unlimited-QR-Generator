@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { blogCategories, BlogArticle } from '../data/blogData';
 import { getLocalizedBlog, Locale } from '../utils/translations';
+import { useTranslation } from '../utils/i18n';
 
 interface BlogSectionProps {
   initialSlug?: string | null;
@@ -25,7 +26,10 @@ const blogCategoryLabelsEs: Record<string, string> = {
   "Social Media Marketing": "Marketing de Redes Sociales"
 };
 
-export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: BlogSectionProps) {
+export default function BlogSection({ initialSlug, onNavigate, locale: propLocale }: BlogSectionProps) {
+  const { t, locale: hookLocale } = useTranslation();
+  const locale = propLocale || hookLocale;
+
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeArticleSlug, setActiveArticleSlug] = useState<string | null>(initialSlug || null);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -110,7 +114,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
               className="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors group cursor-pointer focus:outline-hidden"
             >
               <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-              {locale === 'es' ? 'Volver al Centro de Artículos' : 'Back to Article Hub'}
+              {t('blog.backToHub', 'Back to Article Hub')}
             </button>
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
@@ -123,12 +127,12 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
                 {copiedLink ? (
                   <>
                     <Check className="w-3 h-3 text-emerald-500" />
-                    <span className="text-emerald-500 text-[10px]">{locale === 'es' ? '¡Copiado!' : 'Copied!'}</span>
+                    <span className="text-emerald-500 text-[10px]">{t('blog.copied', 'Copied!')}</span>
                   </>
                 ) : (
                   <>
                     <Share2 className="w-3 h-3" />
-                    <span className="text-[10px]">{locale === 'es' ? 'Compartir' : 'Share'}</span>
+                    <span className="text-[10px]">{t('blog.share', 'Share')}</span>
                   </>
                 )}
               </button>
@@ -155,7 +159,9 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
           {/* Intro paragraph with clean display styling */}
           <div id="article-intro-text" className="p-5 bg-indigo-50/40 rounded-2xl border border-indigo-100/50 text-slate-700 text-xs sm:text-sm font-semibold leading-relaxed font-sans">
             "{activeArticle.intro}"
-          </div>            {/* Process raw text rendering or structured HTML headers */}
+          </div>
+
+          {/* Process raw text rendering or structured HTML headers */}
           <div id="article-main-body" className="prose max-w-none text-slate-700 text-xs sm:text-sm leading-relaxed space-y-6">
             {activeArticle.contentMarkdown.split('\n\n').map((para, idx) => {
               if (para.startsWith('## ')) {
@@ -200,7 +206,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
           {activeArticle.relatedFAQs && activeArticle.relatedFAQs.length > 0 && (
             <div id="article-faq-container" className="pt-8 border-t border-slate-100 space-y-4">
               <h3 className="text-sm font-extrabold text-slate-950 uppercase tracking-widest font-mono">
-                {locale === 'es' ? 'Preguntas Claves del Artículo' : 'Article Core FAQs'}
+                {t('blog.coreFaqs', 'Article Core FAQs')}
               </h3>
               <div className="space-y-3">
                 {activeArticle.relatedFAQs.map((faq, index) => {
@@ -233,7 +239,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
           {activeArticle.internalLinks && activeArticle.internalLinks.length > 0 && (
             <div id="article-recommendations" className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
-                {locale === 'es' ? 'Herramientas de Trabajo Relacionadas' : 'Related Workspace Tools'}
+                {t('blog.relatedTools', 'Related Workspace Tools')}
               </span>
               <div className="flex flex-wrap gap-2">
                 {activeArticle.internalLinks.map((link, index) => (
@@ -262,15 +268,13 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-4">
               <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 bg-opacity-70 border border-indigo-100 rounded-full font-extrabold uppercase tracking-widest inline-block">
-                {locale === 'es' ? 'Blog del Generador de Códigos QR' : 'Unlimited QR Generator Blog'}
+                {t('blog.blogTitle', 'Unlimited QR Generator Blog')}
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
-                {locale === 'es' ? 'Guías de Marketing y Tecnología' : 'Marketing & Tech Guides'}
+                {t('blog.marketingGuides', 'Marketing & Tech Guides')}
               </h1>
               <p className="text-sm text-slate-500 max-w-xl leading-relaxed">
-                {locale === 'es'
-                  ? 'Manténgase actualizado con estrategias de marketing, sistemas de hospitalidad, corrección de errores y configuraciones de diseño estándar.'
-                  : 'Stay updated with strategic marketing guidelines, contactless hospitality systems, error correction, and standard design configurations.'}
+                {t('blog.marketingGuidesDesc', 'Stay updated with strategic marketing guidelines, contactless hospitality systems, error correction, and standard design configurations.')}
               </p>
             </div>
           </div>
@@ -279,14 +283,14 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
           <div className="relative">
             <div className="flex items-center gap-2 mb-3 text-[10px] font-mono font-bold text-indigo-500 uppercase">
               <Filter className="w-3.5 h-3.5" />
-              <span>{locale === 'es' ? 'Filtrar artículos por tema' : 'Filter articles by topic'}</span>
+              <span>{t('blog.filterTopic', 'Filter articles by topic')}</span>
             </div>
             <div className="flex flex-wrap gap-1.5 pb-2 overflow-x-auto border-b border-slate-100 scrollbar-none">
               <button
                 onClick={() => setSelectedCategory('all')}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${ selectedCategory === 'all' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
               >
-                {locale === 'es' ? 'Todas las Categorías' : 'All Categories'}
+                {t('blog.allCategories', 'All Categories')}
               </button>
               {blogCategories.map((cat) => (
                 <button
@@ -333,7 +337,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale = 'en' }: 
                 <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-slate-100 text-[10px] font-mono font-bold text-slate-500">
                   <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {art.date}</span>
                   <span className="text-indigo-600 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    {locale === 'es' ? 'Leer artículo' : 'Read article'} <ArrowRight className="w-3 h-3" />
+                    {t('blog.readArticle', 'Read article')} <ArrowRight className="w-3 h-3" />
                   </span>
                 </div>
               </div>

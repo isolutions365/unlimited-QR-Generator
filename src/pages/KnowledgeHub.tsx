@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { knowledgeArticles, KnowledgeArticle } from '../data/knowledgeData';
 import { Locale } from '../utils/translations';
+import { useTranslation } from '../utils/i18n';
 
 interface KnowledgeHubProps {
   section: 'academy' | 'blog' | 'guides' | 'tutorials' | 'resources' | 'glossary';
@@ -14,7 +15,10 @@ interface KnowledgeHubProps {
   locale?: Locale;
 }
 
-export default function KnowledgeHub({ section, initialSlug, onNavigate, locale = 'en' }: KnowledgeHubProps) {
+export default function KnowledgeHub({ section, initialSlug, onNavigate, locale: propLocale }: KnowledgeHubProps) {
+  const { t, locale: hookLocale } = useTranslation();
+  const locale = propLocale || hookLocale;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
@@ -49,36 +53,30 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
     return ['all', ...Array.from(new Set(list))];
   }, [section]);
 
-  // Filtered articles based on search query, category, and tag
+  // Filter articles for the current section
   const filteredArticles = useMemo(() => {
     return knowledgeArticles
       .filter(art => art.section === section)
-      .filter(art => {
-        // Search filter
-        const matchQuery = searchQuery.trim() === '' || 
+      .filter((art) => {
+        const matchesSearch = 
           art.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          art.intro.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          art.metaDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
           art.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          art.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+          art.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
         
-        // Category filter
-        const matchCategory = selectedCategory === 'all' || art.category === selectedCategory;
+        const matchesCategory = selectedCategory === 'all' || art.category === selectedCategory;
+        const matchesTag = selectedTag === 'all' || art.tags.includes(selectedTag);
 
-        // Tag filter
-        const matchTag = selectedTag === 'all' || art.tags.includes(selectedTag);
-
-        return matchQuery && matchCategory && matchTag;
+        return matchesSearch && matchesCategory && matchesTag;
       });
   }, [section, searchQuery, selectedCategory, selectedTag]);
 
-  // Handle article view selection
   const handleReadArticle = (slug: string) => {
     setActiveArticleSlug(slug);
     onNavigate(`/${section}/${slug}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Back to listing
   const handleBackToList = () => {
     setActiveArticleSlug(null);
     onNavigate(`/${section}`);
@@ -86,7 +84,6 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
     setExpandedFaqIndex(null);
   };
 
-  // Copy link
   const copyArticleLink = (slug: string) => {
     const url = `${window.location.origin}/${section}/${slug}`;
     navigator.clipboard.writeText(url).then(() => {
@@ -95,8 +92,9 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
     });
   };
 
-  // Social share triggers
-  const getShareUrl = (slug: string) => `${window.location.origin}/${section}/${slug}`;
+  const getShareUrl = (slug: string) => {
+    return `${window.location.origin}/${section}/${slug}`;
+  };
 
   // Breadcrumb schema & JSON-LD schema injection
   useEffect(() => {
@@ -118,13 +116,13 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
         {
           "@type": "ListItem",
           "position": 1,
-          "name": locale === 'es' ? 'Inicio' : 'Home',
+          "name": String(t('knowledge.home', 'Home')),
           "item": rootUrl
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": section.charAt(0).toUpperCase() + section.slice(1),
+          "name": String(t(`knowledge.sections.${section}`, section.charAt(0).toUpperCase() + section.slice(1))),
           "item": `${rootUrl}/${section}`
         },
         {
@@ -145,12 +143,12 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
       "image": "https://www.freeqrgen.pro/og-image.jpg",
       "author": {
         "@type": "Organization",
-        "name": "FreeQRGen.pro Editorial Team",
+        "name": String(t('knowledge.editorialTeam', 'FreeQRGen.pro Editorial Team')),
         "url": rootUrl
       },
       "publisher": {
         "@type": "Organization",
-        "name": "FreeQRGen.pro",
+        "name": String(t('knowledge.publisherName', 'FreeQRGen.pro')),
         "logo": {
           "@type": "ImageObject",
           "url": `${rootUrl}/favicon-32x32.png`
@@ -220,7 +218,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                 className="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors group cursor-pointer focus:outline-hidden"
               >
                 <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-                {locale === 'es' ? `Volver a ${section}` : `Back to ${section}`}
+                {t('knowledge.backTo', 'Back to {section}', { section: t(`knowledge.sections.${section}`, section) })}
               </button>
               
               {/* Social Share Group */}
@@ -235,12 +233,12 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                   {copiedLink ? (
                     <>
                       <Check className="w-3 h-3 text-emerald-500" />
-                      <span className="text-emerald-500 text-[10px]">{locale === 'es' ? '¡Copiado!' : 'Copied!'}</span>
+                      <span className="text-emerald-500 text-[10px]">{t('knowledge.copied', 'Copied!')}</span>
                     </>
                   ) : (
                     <>
                       <Share2 className="w-3 h-3" />
-                      <span className="text-[10px]">{locale === 'es' ? 'Compartir' : 'Share'}</span>
+                      <span className="text-[10px]">{t('knowledge.share', 'Share')}</span>
                     </>
                   )}
                 </button>
@@ -249,9 +247,9 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
 
             {/* Breadcrumb Indicator */}
             <nav className="flex items-center gap-1 text-[11px] font-medium text-slate-400 font-mono">
-              <button onClick={() => onNavigate('/')} className="hover:text-indigo-600">Home</button>
+              <button onClick={() => onNavigate('/')} className="hover:text-indigo-600">{t('knowledge.home', 'Home')}</button>
               <ChevronRight className="w-3 h-3" />
-              <button onClick={handleBackToList} className="hover:text-indigo-600 capitalize">{section}</button>
+              <button onClick={handleBackToList} className="hover:text-indigo-600 capitalize">{t(`knowledge.sections.${section}`, section)}</button>
               <ChevronRight className="w-3 h-3" />
               <span className="text-slate-600 truncate max-w-xs">{activeArticle.title}</span>
             </nav>
@@ -263,9 +261,9 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
               </h1>
               
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-mono font-bold text-slate-400">
-                <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Updated: {activeArticle.date}</span>
+                <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {t('knowledge.updated', 'Updated:')} {activeArticle.date}</span>
                 <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {activeArticle.readingTime}</span>
-                <span className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> By: {activeArticle.author}</span>
+                <span className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> {t('knowledge.byAuthor', 'By:')} {activeArticle.author}</span>
               </div>
             </div>
 
@@ -273,7 +271,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             <div className={`h-32 sm:h-44 w-full bg-gradient-to-r ${getGradient(activeArticle.featuredImage)} rounded-2xl shadow-xs relative overflow-hidden flex items-center p-8`}>
               <div className="absolute inset-0 bg-slate-900/10 pointer-events-none" />
               <div className="relative z-10 text-white space-y-1">
-                <span className="text-xs font-bold uppercase tracking-widest text-white/80 font-mono">FreeQRGen Authority Block</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-white/80 font-mono">{t('knowledge.authorityBlock', 'FreeQRGen Authority Block')}</span>
                 <h2 className="text-lg sm:text-2xl font-bold tracking-tight">{activeArticle.seoTitle}</h2>
               </div>
               <Sparkles className="absolute right-6 bottom-6 w-16 h-16 text-white/10" />
@@ -283,30 +281,30 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             <div className="p-5 bg-gradient-to-br from-indigo-50/50 to-slate-50 border border-indigo-100 rounded-2xl space-y-3" id="ai-summary-card">
               <div className="flex items-center gap-2 text-indigo-700 font-bold text-xs uppercase tracking-wider font-mono">
                 <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" />
-                <span>AI Search Engine Core Synthesis Box</span>
+                <span>{t('knowledge.aiSummaryTitle', 'AI Search Engine Core Synthesis Box')}</span>
               </div>
               <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed italic">
                 "{activeArticle.intro}"
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-[10px] sm:text-[11px] font-mono">
                 <div className="bg-white p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-slate-400 font-bold block uppercase tracking-wider">Entity Type:</span>
+                  <span className="text-slate-400 font-bold block uppercase tracking-wider">{t('knowledge.entityType', 'Entity Type:')}</span>
                   <span className="text-slate-800 font-extrabold">{activeArticle.aiSummaryBox.entityType}</span>
                 </div>
                 <div className="bg-white p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-slate-400 font-bold block uppercase tracking-wider">Protocol Standard:</span>
+                  <span className="text-slate-400 font-bold block uppercase tracking-wider">{t('knowledge.protocolStandard', 'Protocol Standard:')}</span>
                   <span className="text-slate-800 font-extrabold">{activeArticle.aiSummaryBox.protocolStandard}</span>
                 </div>
                 <div className="bg-white p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-slate-400 font-bold block uppercase tracking-wider">Client Compatibility:</span>
+                  <span className="text-slate-400 font-bold block uppercase tracking-wider">{t('knowledge.clientCompatibility', 'Client Compatibility:')}</span>
                   <span className="text-slate-800 font-extrabold">{activeArticle.aiSummaryBox.clientCompatibility}</span>
                 </div>
                 <div className="bg-white p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-slate-400 font-bold block uppercase tracking-wider">Primary Target Use Case:</span>
+                  <span className="text-slate-400 font-bold block uppercase tracking-wider">{t('knowledge.primaryUseCase', 'Primary Target Use Case:')}</span>
                   <span className="text-slate-800 font-extrabold">{activeArticle.aiSummaryBox.primaryUseCase}</span>
                 </div>
                 <div className="bg-white p-2.5 sm:col-span-2 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-slate-400 font-bold block uppercase tracking-wider">Offline Capability Index:</span>
+                  <span className="text-slate-400 font-bold block uppercase tracking-wider">{t('knowledge.offlineCapabilityIndex', 'Offline Capability Index:')}</span>
                   <span className="text-slate-800 font-extrabold flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     {activeArticle.aiSummaryBox.offlineCapability}
@@ -319,9 +317,9 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             <div className="p-5 bg-emerald-50/50 border border-emerald-100 rounded-2xl space-y-3" id="key-takeaways-card">
               <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider font-mono">
                 <Check className="w-4 h-4 text-emerald-600" />
-                <span>Key Takeaways (Quick Summary)</span>
+                <span>{t('knowledge.keyTakeaways', 'Key Takeaways (Quick Summary)')}</span>
               </div>
-              <ul className="space-y-2 text-xs text-slate-650 list-none pl-0">
+              <ul className="space-y-2 text-xs text-slate-655 list-none pl-0">
                 {activeArticle.keyTakeaways.map((item, idx) => (
                   <li key={idx} className="flex gap-2 items-start">
                     <span className="text-emerald-500 font-bold mt-0.5">✔</span>
@@ -374,7 +372,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                   );
                 }
                 return (
-                  <p key={idx} className="font-sans text-slate-650 leading-relaxed">
+                  <p key={idx} className="font-sans text-slate-655 leading-relaxed">
                     {para}
                   </p>
                 );
@@ -386,7 +384,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
               <div className="pt-8 border-t border-slate-100 space-y-4" id="kb-article-faqs">
                 <h3 className="text-xs font-extrabold text-slate-950 uppercase tracking-widest font-mono flex items-center gap-1.5">
                   <HelpCircle className="w-4 h-4 text-indigo-500" />
-                  {locale === 'es' ? 'Preguntas Frecuentes Relacionadas' : 'Related Frequently Asked Questions'}
+                  {t('knowledge.relatedFaqs', 'Related Frequently Asked Questions')}
                 </h3>
                 <div className="space-y-3">
                   {activeArticle.faqs.map((faq, index) => {
@@ -418,10 +416,10 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             {/* Tags footer */}
             <div className="flex flex-wrap items-center gap-2 pt-4">
               <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
-                <Tag className="w-3 h-3" /> Tags:
+                <Tag className="w-3 h-3" /> {t('knowledge.tagsLabel', 'Tags:')}
               </span>
               {activeArticle.tags.map((tag, i) => (
-                <span key={i} className="text-[10px] font-bold bg-slate-100 text-slate-650 px-2.5 py-1 rounded-md">
+                <span key={i} className="text-[10px] font-bold bg-slate-100 text-slate-655 px-2.5 py-1 rounded-md">
                   #{tag}
                 </span>
               ))}
@@ -431,7 +429,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             {activeArticle.relatedTools && activeArticle.relatedTools.length > 0 && (
               <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
-                  {locale === 'es' ? 'Herramientas Recomendadas' : 'Recommended Creator Tools'}
+                  {t('knowledge.recommendedTools', 'Recommended Creator Tools')}
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {activeArticle.relatedTools.map((link, index) => (
@@ -450,16 +448,16 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             {/* Conversion CTA Section */}
             <div className="p-6 bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-md border border-indigo-850">
               <div className="relative z-10 space-y-2 max-w-lg">
-                <h3 className="text-lg font-extrabold tracking-tight">Need a custom QR Code for your campaign?</h3>
+                <h3 className="text-lg font-extrabold tracking-tight">{t('knowledge.needCustomQr', 'Need a custom QR Code for your campaign?')}</h3>
                 <p className="text-xs text-indigo-100 leading-relaxed">
-                  Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRGen.pro. No credit card required.
+                  {t('knowledge.needCustomQrDesc', 'Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRGen.pro. No credit card required.')}
                 </p>
               </div>
               <button
                 onClick={() => onNavigate('/')}
                 className="relative z-10 bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-extrabold px-5 py-3 rounded-xl transition-all shadow-md self-start md:self-auto cursor-pointer"
               >
-                Go to QR Generator
+                {t('knowledge.goToGenerator', 'Go to QR Generator')}
               </button>
               <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial from-indigo-500/10 to-transparent pointer-events-none" />
             </div>
@@ -467,7 +465,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             {/* Related Articles Section */}
             <div className="pt-10 border-t border-slate-100 space-y-6">
               <h3 className="text-sm font-extrabold text-slate-900 tracking-tight uppercase tracking-wider font-mono">
-                Related Articles You May Enjoy
+                {t('knowledge.relatedArticles', 'Related Articles You May Enjoy')}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {knowledgeArticles
@@ -487,11 +485,11 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                       <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
                         {relArt.title}
                       </h4>
-                      <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                      <p className="text-[11px] text-slate-505 line-clamp-2 leading-relaxed">
                         {relArt.metaDescription}
                       </p>
                       <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-600 pt-1">
-                        Read Article <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                        {t('knowledge.readFullGuide', 'Read Full Guide')} <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                       </span>
                     </div>
                   ))}
@@ -504,7 +502,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             {/* Table of Contents */}
             <div className="p-4 bg-white border border-slate-200/80 rounded-2xl space-y-3 sticky top-6">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 font-mono border-b border-slate-100 pb-2">
-                Table of Contents
+                {t('knowledge.tableOfContents', 'Table of Contents')}
               </h4>
               <nav className="space-y-1.5 text-xs text-slate-500">
                 {activeArticle.tableOfContents.map((item, idx) => (
@@ -529,7 +527,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
               {/* Share Box */}
               <div className="pt-4 border-t border-slate-100 space-y-2">
                 <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
-                  Spread the Word
+                  {t('knowledge.spreadWord', 'Spread the Word')}
                 </span>
                 <div className="flex gap-2">
                   <a
@@ -567,13 +565,13 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
           {/* Header section with description */}
           <div className="space-y-3 text-center max-w-2xl mx-auto">
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
-              FreeQRGen.pro {section}
+              {t('knowledge.hubSub', 'FreeQRGen.pro {section}', { section: t(`knowledge.sections.${section}`, section) })}
             </span>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight capitalize">
-              Authority {section} Hub
+              {t('knowledge.authorityHub', 'Authority {section} Hub', { section: t(`knowledge.sections.${section}`, section) })}
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              Explore dynamic deep dives, tutorials, size requirements, printing principles, and absolute security best practices to maximize your QR marketing ROI.
+              {t('knowledge.authorityDesc', 'Explore dynamic deep dives, tutorials, size requirements, printing principles, and absolute security best practices to maximize your QR marketing ROI.')}
             </p>
           </div>
 
@@ -585,7 +583,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Search articles by title, keywords, categories or tags..."
+                  placeholder={t('knowledge.searchPlaceholder', 'Search articles by title, keywords, categories or tags...') as string}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full text-xs bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all font-sans"
@@ -595,7 +593,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
               {/* Categories filters scroll */}
               <div className="flex flex-wrap gap-1.5 items-center">
                 <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-wider mr-1 flex items-center gap-1">
-                  <Filter className="w-3 h-3" /> Filter:
+                  <Filter className="w-3 h-3" /> {t('knowledge.filter', 'Filter:')}
                 </span>
                 {categories.map((cat) => (
                   <button
@@ -604,10 +602,10 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                     className={`text-[10px] font-extrabold px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                       selectedCategory === cat 
                         ? 'bg-indigo-600 text-white' 
-                        : 'bg-white text-slate-650 border border-slate-200 hover:bg-slate-50'
+                        : 'bg-white text-slate-655 border border-slate-200 hover:bg-slate-50'
                     }`}
                   >
-                    {cat === 'all' ? 'All Categories' : cat}
+                    {cat === 'all' ? t('knowledge.allCategories', 'All Categories') : cat}
                   </button>
                 ))}
               </div>
@@ -617,7 +615,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             {tags.length > 1 && (
               <div className="flex flex-wrap gap-1.5 items-center pt-2 border-t border-slate-200/50">
                 <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-wider mr-1">
-                  Popular Tags:
+                  {t('knowledge.popularTags', 'Popular Tags:')}
                 </span>
                 {tags.map((tg) => (
                   <button
@@ -629,7 +627,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                         : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'
                     }`}
                   >
-                    {tg === 'all' ? 'All Tags' : `#${tg}`}
+                    {tg === 'all' ? t('knowledge.allTags', 'All Tags') : `#${tg}`}
                   </button>
                 ))}
               </div>
@@ -667,17 +665,17 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                         {article.title}
                       </h3>
                       
-                      <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed line-clamp-3">
+                      <p className="text-[11px] sm:text-xs text-slate-505 leading-relaxed line-clamp-3">
                         {article.metaDescription}
                       </p>
                     </div>
 
                     <div className="pt-2 flex items-center justify-between border-t border-slate-50">
                       <span className="text-[10px] text-indigo-600 font-extrabold flex items-center gap-1">
-                        Read Full Guide <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                        {t('knowledge.readFullGuide', 'Read Full Guide')} <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                       </span>
                       <span className="text-[10px] font-mono font-bold text-slate-400">
-                        by {article.author.split(' ')[0]}
+                        {t('knowledge.by', 'by {author}', { author: article.author.split(' ')[0] })}
                       </span>
                     </div>
                   </div>
@@ -688,7 +686,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
             /* Empty State */
             <div className="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-200/80 space-y-3">
               <BookOpen className="w-8 h-8 text-slate-300 mx-auto" />
-              <p className="text-xs font-bold text-slate-500">No articles match your search parameters.</p>
+              <p className="text-xs font-bold text-slate-500">{t('knowledge.noArticles', 'No articles match your search parameters.')}</p>
               <button
                 onClick={() => {
                   setSearchQuery('');
@@ -697,7 +695,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale 
                 }}
                 className="text-xs font-extrabold text-indigo-600 hover:text-indigo-800"
               >
-                Clear Search & Filters
+                {t('knowledge.clearFilters', 'Clear Search & Filters')}
               </button>
             </div>
           )}

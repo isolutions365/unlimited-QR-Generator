@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { ScanLog, QRProject } from '../types';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend, LineChart, Line } from 'recharts';
 import { BarChart3, Globe, Tablet, Users, Grid, GitCompare, Calendar, TrendingUp } from 'lucide-react';
@@ -20,7 +22,9 @@ interface AnalyticsDashboardProps {
   onPurgeAll?: () => void;
 }
 
-export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: AnalyticsDashboardProps) {
+export default function AnalyticsDashboard({
+   scans, projects, onPurgeAll }: AnalyticsDashboardProps) {
+  const { t } = useTranslation();
 
   const [hoveredCountry, setHoveredCountry] = React.useState<{ name: string; count: number; code: string } | null>(null);
 
@@ -32,6 +36,10 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
   const [compareRangeType, setCompareRangeType] = React.useState<'7days' | '30days' | 'custom'>('7days');
   const [compareStartDate, setCompareStartDate] = React.useState<string>('2026-06-22');
   const [compareEndDate, setCompareEndDate] = React.useState<string>('2026-06-29');
+
+  // Time-range filter states for scan count and trend graphs
+  const [timelineDays, setTimelineDays] = React.useState<7 | 30>(7);
+  const [trendsDays, setTrendsDays] = React.useState<7 | 30>(30);
 
   // Sync selected compare projects with actual list
   React.useEffect(() => {
@@ -235,8 +243,8 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
   // 1. Daily Scan Timeline aggregation
   const getTimelineData = () => {
     const dates: { [key: string]: number } = {};
-    // Populate last 7 days of dates initialized to 0
-    for (let i = 6; i >= 0; i--) {
+    // Populate last timelineDays of dates initialized to 0
+    for (let i = timelineDays - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
       const dayString = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
@@ -317,12 +325,12 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
     return selectedTrendProjectIds.filter(id => projects.some(p => p.id === id));
   }, [selectedTrendProjectIds, projects]);
 
-  const trends30DaysData = React.useMemo(() => {
+  const trendsData = React.useMemo(() => {
     const dates: { [key: string]: { dateLabel: string; [projectId: string]: number | string } } = {};
     const daysList: string[] = [];
 
-    // Populate last 30 days
-    for (let i = 29; i >= 0; i--) {
+    // Populate last trendsDays of dates initialized to 0
+    for (let i = trendsDays - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
       const dayLabel = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
@@ -355,7 +363,7 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
     });
 
     return daysList.map(label => dates[label]);
-  }, [scans, projects]);
+  }, [scans, projects, trendsDays]);
 
   const getProjectColor = (index: number) => {
     return PROJECT_COLORS[index % PROJECT_COLORS.length];
@@ -469,7 +477,27 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
         <div className="flex flex-col gap-6">
           {/* Timeline Chart Card */}
           <div className="p-4 rounded-xl border border-gray-100 bg-white">
-            <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase mb-4">Click Scan Metrics (last 7 days)</h3>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">Click Scan Metrics</h3>
+              <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200/40 shrink-0">
+                <button
+                  type="button"
+                  id="btn-timeline-7"
+                  onClick={() => setTimelineDays(7)}
+                  className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ timelineDays === 7 ? 'bg-white text-indigo-600 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-700' }`}
+                >
+                  Last 7 Days
+                </button>
+                <button
+                  type="button"
+                  id="btn-timeline-30"
+                  onClick={() => setTimelineDays(30)}
+                  className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ timelineDays === 30 ? 'bg-white text-indigo-600 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-700' }`}
+                >
+                  Last 30 Days
+                </button>
+              </div>
+            </div>
             <motion.div 
               className="h-48 w-full"
               initial={{ opacity: 0, scale: 0.98 }}
@@ -493,7 +521,7 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
             </motion.div>
           </div>
 
-          {/* 30-Day Daily Scan Trends per Selected Project */}
+          {/* Daily Scan Trends per Selected Project */}
           <motion.div 
             className="p-5 rounded-xl border border-gray-100 bg-white flex flex-col gap-5"
             initial={{ opacity: 0, y: 15 }}
@@ -506,9 +534,27 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
                   <TrendingUp className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">30-Day Daily Scan Trends</h3>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Toggle projects to compare active trends and daily trajectories over the last 30 days.</p>
+                  <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">Daily Scan Trends</h3>
+                  <p className="text-[11px] text-gray-400 mt-0.5">Toggle projects to compare active trends and daily trajectories over the last {trendsDays} days.</p>
                 </div>
+              </div>
+              <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200/40 shrink-0">
+                <button
+                  type="button"
+                  id="btn-trends-7"
+                  onClick={() => setTrendsDays(7)}
+                  className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ trendsDays === 7 ? 'bg-white text-indigo-600 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-700' }`}
+                >
+                  Last 7 Days
+                </button>
+                <button
+                  type="button"
+                  id="btn-trends-30"
+                  onClick={() => setTrendsDays(30)}
+                  className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ trendsDays === 30 ? 'bg-white text-indigo-600 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-700' }`}
+                >
+                  Last 30 Days
+                </button>
               </div>
             </div>
 
@@ -562,7 +608,7 @@ export default function AnalyticsDashboard({ scans, projects, onPurgeAll }: Anal
               transition={{ duration: 0.45, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={trends30DaysData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <LineChart data={trendsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <XAxis dataKey="dateLabel" tickLine={false} style={{ fontSize: 10, fill: '#64748b' }} />
                   <YAxis tickLine={false} style={{ fontSize: 10, fill: '#64748b' }} allowDecimals={false} />
                   <Tooltip 

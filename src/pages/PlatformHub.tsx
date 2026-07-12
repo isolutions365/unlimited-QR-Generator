@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { 
   Shield, Activity, FileText, Users, Award, Cpu, BookOpen, 
   Mail, Sparkles, CheckCircle2, Globe, ArrowLeft, Calendar, 
@@ -540,7 +542,7 @@ export const platformModules: PlatformModule[] = [
       'Regularly review integration logs to identify and fix code errors early.'
     ],
     commonMistakes: [
-      'Using a single API key across multiple unrelated applications, making troubleshooting difficult.',
+      'Using a single API key across many unrelated applications, making troubleshooting difficult.',
       'Ignoring API error rates on the dashboard until they impact live production services.',
       'Failing to rotate API keys annually to meet modern security compliance standards.'
     ],
@@ -912,7 +914,9 @@ interface PlatformHubProps {
   locale?: string;
 }
 
-export default function PlatformHub({ initialSlug, onNavigate, locale = 'en' }: PlatformHubProps) {
+export default function PlatformHub({
+   initialSlug, onNavigate, locale = 'en' }: PlatformHubProps) {
+  const { t } = useTranslation();
   // Extract module slug from "/platform/qr-analytics" -> "qr-analytics"
   const moduleSlug = initialSlug.startsWith('platform/') ? initialSlug.substring(9) : initialSlug;
   const activeModule = platformModules.find(m => m.slug === moduleSlug) || platformModules[0];
@@ -922,10 +926,14 @@ export default function PlatformHub({ initialSlug, onNavigate, locale = 'en' }: 
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<string | null>(null);
   const [activeCodeLang, setActiveCodeLang] = useState<'ts' | 'python' | 'go'>('ts');
 
+  // Helper to convert dynamic slug to camelCase for standardized trans keys
+  const toCamelCase = (str: string) => str.replace(/-([a-z])/g, (_, g) => g.toUpperCase());
+  const moduleKey = toCamelCase(activeModule.slug);
+
   // Sync route and metadata dynamically
   useEffect(() => {
     if (activeModule) {
-      document.title = activeModule.seoTitle;
+      document.title = t(`platform.module${moduleKey}SeoTitle`, activeModule.seoTitle);
       
       // Update/Inject meta description
       let metaDesc = document.querySelector('meta[name="description"]');
@@ -934,7 +942,7 @@ export default function PlatformHub({ initialSlug, onNavigate, locale = 'en' }: 
         metaDesc.setAttribute('name', 'description');
         document.head.appendChild(metaDesc);
       }
-      metaDesc.setAttribute('content', activeModule.metaDesc);
+      metaDesc.setAttribute('content', t(`platform.module${moduleKey}MetaDesc`, activeModule.metaDesc));
 
       // Inject canonical URL
       let canonicalLink = document.querySelector('link[rel="canonical"]');
@@ -961,8 +969,8 @@ export default function PlatformHub({ initialSlug, onNavigate, locale = 'en' }: 
             "@type": "WebPage",
             "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#webpage`,
             "url": `https://freeqrgen.pro/platform/${activeModule.slug}`,
-            "name": activeModule.seoTitle,
-            "description": activeModule.metaDesc,
+            "name": t(`platform.module${moduleKey}SeoTitle`, activeModule.seoTitle),
+            "description": t(`platform.module${moduleKey}MetaDesc`, activeModule.metaDesc),
             "breadcrumb": {
               "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`
             }
@@ -974,26 +982,26 @@ export default function PlatformHub({ initialSlug, onNavigate, locale = 'en' }: 
               {
                 "@type": "ListItem",
                 "position": 1,
-                "name": "Home",
+                "name": t('platform.schemaHome', 'Home'),
                 "item": "https://freeqrgen.pro"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Platform",
+                "name": t('platform.schemaPlatform', 'Platform'),
                 "item": "https://freeqrgen.pro/platform/qr-analytics"
               },
               {
                 "@type": "ListItem",
                 "position": 3,
-                "name": activeModule.name,
+                "name": t(`platform.module${moduleKey}Name`, activeModule.name),
                 "item": `https://freeqrgen.pro/platform/${activeModule.slug}`
               }
             ]
           },
           {
             "@type": "SoftwareApplication",
-            "name": `FreeQRGen Platform - ${activeModule.name}`,
+            "name": `FreeQRGen Platform - ${t(`platform.module${moduleKey}Name`, activeModule.name)}`,
             "applicationCategory": "BusinessApplication, DesignApplication",
             "operatingSystem": "All modern browsers",
             "offers": {
@@ -1013,7 +1021,7 @@ export default function PlatformHub({ initialSlug, onNavigate, locale = 'en' }: 
 
       schemaScript.innerHTML = JSON.stringify(structuredSchema);
     }
-  }, [activeModule]);
+  }, [activeModule, moduleKey, t]);
 
   const handleCopyCode = (code: string, id: string) => {
     navigator.clipboard.writeText(code);
@@ -1145,15 +1153,17 @@ func main() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex-1">
             <div className="flex items-center gap-2 text-indigo-300 text-xs font-bold tracking-widest uppercase mb-3">
-              <span className="px-2 py-1 bg-indigo-500/20 rounded border border-indigo-500/30">FreeQRGen.pro Platform</span>
+              <span className="px-2 py-1 bg-indigo-500/20 rounded border border-indigo-500/30">
+                {t('platform.headerBannerSub', 'FreeQRGen.pro Platform')}
+              </span>
               <span>•</span>
-              <span>Coming Soon</span>
+              <span>{t('platform.comingSoon', 'Coming Soon')}</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-4 font-sans">
-              {activeModule.h1}
+              {t(`platform.module${moduleKey}H1`, activeModule.h1)}
             </h1>
             <p className="text-slate-300 text-sm max-w-2xl leading-relaxed">
-              {activeModule.description}
+              {t(`platform.module${moduleKey}Desc`, activeModule.description)}
             </p>
           </div>
           
@@ -1162,7 +1172,7 @@ func main() {
               onClick={() => onNavigate('/')}
               className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold border border-slate-700/80 cursor-pointer flex items-center gap-2 transition-all"
             >
-              <ArrowLeft className="w-4 h-4" /> Return to Studio
+              <ArrowLeft className="w-4 h-4" /> {t('platform.returnToStudio', 'Return to Studio')}
             </button>
             <button
               onClick={() => setActiveTab(activeTab === 'landing' ? 'architecture' : 'landing')}
@@ -1170,11 +1180,11 @@ func main() {
             >
               {activeTab === 'landing' ? (
                 <>
-                  <Terminal className="w-4 h-4" /> Explore Technical Architecture
+                  <Terminal className="w-4 h-4" /> {t('platform.exploreTechnicalArchitecture', 'Explore Technical Architecture')}
                 </>
               ) : (
                 <>
-                  <BookOpen className="w-4 h-4" /> View Landing Page Content
+                  <BookOpen className="w-4 h-4" /> {t('platform.viewLandingPageContent', 'View Landing Page Content')}
                 </>
               )}
             </button>
@@ -1185,9 +1195,12 @@ func main() {
       {/* 2. Secondary Platform Navigation Sub-bar */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-6 overflow-x-auto flex items-center gap-2 py-3 scrollbar-none">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pr-2 border-r border-slate-200">Modules:</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pr-2 border-r border-slate-200">
+            {t('platform.modulesLabel', 'Modules:')}
+          </span>
           {platformModules.map(m => {
             const isActive = m.slug === activeModule.slug;
+            const mKey = toCamelCase(m.slug);
             return (
               <button
                 key={m.slug}
@@ -1199,7 +1212,7 @@ func main() {
                 }`}
               >
                 {getModuleIcon(m.iconName)}
-                {m.name}
+                {t(`platform.module${mKey}Name`, m.name)}
               </button>
             );
           })}
@@ -1217,7 +1230,7 @@ func main() {
               activeTab === 'landing' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            Product Landing Page (SEO Ready)
+            {t('platform.tabProductLanding', 'Product Landing Page (SEO Ready)')}
           </button>
           <button
             onClick={() => setActiveTab('architecture')}
@@ -1225,7 +1238,7 @@ func main() {
               activeTab === 'architecture' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            SaaS Platform Architecture Diagram
+            {t('platform.tabArchitecture', 'SaaS Platform Architecture Diagram')}
           </button>
           <button
             onClick={() => setActiveTab('database')}
@@ -1233,7 +1246,7 @@ func main() {
               activeTab === 'database' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            Database Suggestions & Schema
+            {t('platform.tabDatabase', 'Database Suggestions & Schema')}
           </button>
           <button
             onClick={() => setActiveTab('api')}
@@ -1241,7 +1254,7 @@ func main() {
               activeTab === 'api' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            Developer API & Code Samples
+            {t('platform.tabApi', 'Developer API & Code Samples')}
           </button>
           <button
             onClick={() => setActiveTab('migration')}
@@ -1249,7 +1262,7 @@ func main() {
               activeTab === 'migration' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            Rollout Plan & Regression Report
+            {t('platform.tabRollout', 'Rollout Plan & Regression Report')}
           </button>
         </div>
 
@@ -1259,49 +1272,67 @@ func main() {
             {/* Meta-statistics bar */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-xs">
-                <div className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">Status</div>
+                <div className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">
+                  {t('platform.status', 'Status')}
+                </div>
                 <div className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
                   <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
-                  In Architectural Design
+                  {t('platform.inArchitecturalDesign', 'In Architectural Design')}
                 </div>
               </div>
               <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-xs">
-                <div className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">Target Version</div>
+                <div className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">
+                  {t('platform.targetVersion', 'Target Version')}
+                </div>
                 <div className="text-sm font-bold text-slate-800">{activeModule.version}</div>
               </div>
               <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-xs">
-                <div className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">Publishing Standards</div>
+                <div className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">
+                  {t('platform.publishingStandards', 'Publishing Standards')}
+                </div>
                 <div className="text-sm font-bold text-indigo-600 flex items-center gap-1">
-                  <CheckCircle className="w-4 h-4 text-indigo-600" /> E-E-A-T Compliant
+                  <CheckCircle className="w-4 h-4 text-indigo-600" /> {t('platform.eeatCompliant', 'E-E-A-T Compliant')}
                 </div>
               </div>
               <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-xs">
-                <div className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">Technical Review</div>
-                <div className="text-sm font-bold text-slate-800">Fact Checked</div>
+                <div className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">
+                  {t('platform.technicalReview', 'Technical Review')}
+                </div>
+                <div className="text-sm font-bold text-slate-800">
+                  {t('platform.factChecked', 'Fact Checked')}
+                </div>
               </div>
             </div>
 
             {/* AI Optimization Overviews Block */}
             <div className="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl">
               <h2 className="text-xs font-extrabold text-indigo-900 tracking-wider uppercase mb-4 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-indigo-600" /> AI LLM Optimization Summary (AEO Grounding Block)
+                <Sparkles className="w-4 h-4 text-indigo-600" /> {t('platform.aiSummaryTitle', 'AI LLM Optimization Summary (AEO Grounding Block)')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">
-                  <div className="text-[10px] font-bold text-indigo-800 uppercase tracking-widest mb-1.5">Gemini Grounding Model</div>
-                  <p className="text-slate-600 text-xs leading-relaxed italic">"{activeModule.aiSummary.gemini}"</p>
+                  <div className="text-[10px] font-bold text-indigo-800 uppercase tracking-widest mb-1.5">
+                    {t('platform.geminiModel', 'Gemini Grounding Model')}
+                  </div>
+                  <p className="text-slate-600 text-xs leading-relaxed italic">"{t(`platform.module${moduleKey}AiGemini`, activeModule.aiSummary.gemini)}"</p>
                 </div>
                 <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">
-                  <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-1.5">ChatGPT / OpenAI Agent</div>
-                  <p className="text-slate-600 text-xs leading-relaxed italic">"{activeModule.aiSummary.chatgpt}"</p>
+                  <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-1.5">
+                    {t('platform.chatgptAgent', 'ChatGPT / OpenAI Agent')}
+                  </div>
+                  <p className="text-slate-600 text-xs leading-relaxed italic">"{t(`platform.module${moduleKey}AiChatgpt`, activeModule.aiSummary.chatgpt)}"</p>
                 </div>
                 <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">
-                  <div className="text-[10px] font-bold text-blue-800 uppercase tracking-widest mb-1.5">Perplexity AI Engine</div>
-                  <p className="text-slate-600 text-xs leading-relaxed italic">"{activeModule.aiSummary.perplexity}"</p>
+                  <div className="text-[10px] font-bold text-blue-800 uppercase tracking-widest mb-1.5">
+                    {t('platform.perplexityEngine', 'Perplexity AI Engine')}
+                  </div>
+                  <p className="text-slate-600 text-xs leading-relaxed italic">"{t(`platform.module${moduleKey}AiPerplexity`, activeModule.aiSummary.perplexity)}"</p>
                 </div>
                 <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">
-                  <div className="text-[10px] font-bold text-indigo-900 uppercase tracking-widest mb-1.5">Claude / Anthropic Search</div>
-                  <p className="text-slate-600 text-xs leading-relaxed italic">"{activeModule.aiSummary.claude}"</p>
+                  <div className="text-[10px] font-bold text-indigo-900 uppercase tracking-widest mb-1.5">
+                    {t('platform.claudeSearch', 'Claude / Anthropic Search')}
+                  </div>
+                  <p className="text-slate-600 text-xs leading-relaxed italic">"{t(`platform.module${moduleKey}AiClaude`, activeModule.aiSummary.claude)}"</p>
                 </div>
               </div>
             </div>
@@ -1310,29 +1341,45 @@ func main() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-6">
                 <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-4">
-                  <h3 className="text-lg font-bold text-slate-800 tracking-tight">Technical Overview & Functionality</h3>
+                  <h3 className="text-lg font-bold text-slate-800 tracking-tight">
+                    {t('platform.technicalOverviewTitle', 'Technical Overview & Functionality')}
+                  </h3>
                   <div className="h-px bg-slate-100"></div>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    At FreeQRGen.pro, we are actively designing the {activeModule.name} to act as a highly scalable plug-and-play module. By integrating directly with our existing high-performance client-side QR generation core, this module provides enterprise capabilities without impacting current static code rendering performance.
+                    {t('platform.technicalOverviewDesc1', 'At FreeQRGen.pro, we are actively designing the {{name}} to act as a highly scalable plug-and-play module. By integrating directly with our existing high-performance client-side QR generation core, this module provides enterprise capabilities without impacting current static code rendering performance.', { name: t(`platform.module${moduleKey}Name`, activeModule.name) })}
                   </p>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    Our platform architecture emphasizes local-first rendering parameters, fast edge CDN resolutions, and privacy compliance. Future integration modules can be deployed without complex system refactorings, ensuring backward compatibility for printed materials.
+                    {t('platform.technicalOverviewDesc2', 'Our platform architecture emphasizes local-first rendering parameters, fast edge CDN resolutions, and privacy compliance. Future integration modules can be deployed without complex system refactorings, ensuring backward compatibility for printed materials.')}
                   </p>
                   
                   {/* Step by Step Action Guide */}
-                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider pt-2">Operational Design Roadmap</h4>
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider pt-2">
+                    {t('platform.operationalRoadmapTitle', 'Operational Design Roadmap')}
+                  </h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs pt-1">
                     <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                      <div className="font-bold text-indigo-600 mb-1">1. Interface Draft</div>
-                      <p className="text-slate-500 text-[11px] leading-relaxed">Define parameters, REST endpoints, and local storage formats in JSON schemas.</p>
+                      <div className="font-bold text-indigo-600 mb-1">
+                        {t('platform.roadmapStep1Title', '1. Interface Draft')}
+                      </div>
+                      <p className="text-slate-500 text-[11px] leading-relaxed">
+                        {t('platform.roadmapStep1Desc', 'Define parameters, REST endpoints, and local storage formats in JSON schemas.')}
+                      </p>
                     </div>
                     <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                      <div className="font-bold text-indigo-600 mb-1">2. Sandboxed Sandbox</div>
-                      <p className="text-slate-500 text-[11px] leading-relaxed">Deploy dynamic endpoints on cloud test containers to audit real-world latency.</p>
+                      <div className="font-bold text-indigo-600 mb-1">
+                        {t('platform.roadmapStep2Title', '2. Sandboxed Sandbox')}
+                      </div>
+                      <p className="text-slate-500 text-[11px] leading-relaxed">
+                        {t('platform.roadmapStep2Desc', 'Deploy dynamic endpoints on cloud test containers to audit real-world latency.')}
+                      </p>
                     </div>
                     <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                      <div className="font-bold text-indigo-600 mb-1">3. Live Release</div>
-                      <p className="text-slate-500 text-[11px] leading-relaxed">Publish modules with feature flags, enabling seamless scaling without downtime.</p>
+                      <div className="font-bold text-indigo-600 mb-1">
+                        {t('platform.roadmapStep3Title', '3. Live Release')}
+                      </div>
+                      <p className="text-slate-500 text-[11px] leading-relaxed">
+                        {t('platform.roadmapStep3Desc', 'Publish modules with feature flags, enabling seamless scaling without downtime.')}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1340,19 +1387,31 @@ func main() {
                 {/* Editorial and Fact Check Block */}
                 <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Editorial Integrity & Peer Review</h3>
-                    <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold">E-E-A-T Verified</span>
+                    <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                      {t('platform.editorialIntegrityTitle', 'Editorial Integrity & Peer Review')}
+                    </h3>
+                    <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold">
+                      {t('platform.eeatVerified', 'E-E-A-T Verified')}
+                    </span>
                   </div>
                   <div className="h-px bg-slate-100"></div>
                   <div className="flex flex-col md:flex-row gap-6 text-xs text-slate-600 leading-relaxed">
                     <div className="flex-1 space-y-2">
-                      <div className="font-semibold text-slate-700">Author Profile: Dr. Sarah Chen</div>
-                      <p className="text-slate-500 text-[11px]">Senior Technical SEO & Optical Data Architect. Dr. Sarah Chen oversees optical verification, matrix density calibrations, and compatibility mappings to ensure search optimization integrity across our platforms.</p>
+                      <div className="font-semibold text-slate-700">
+                        {t('platform.authorProfileTitle', 'Author Profile: Dr. Sarah Chen')}
+                      </div>
+                      <p className="text-slate-500 text-[11px]">
+                        {t('platform.authorProfileDesc', 'Senior Technical SEO & Optical Data Architect. Dr. Sarah Chen oversees optical verification, matrix density calibrations, and compatibility mappings to ensure search optimization integrity across our platforms.')}
+                      </p>
                     </div>
                     <div className="w-px bg-slate-100 hidden md:block"></div>
                     <div className="flex-1 space-y-2">
-                      <div className="font-semibold text-slate-700">Reviewer Profile: Marcus Vance, CISSP</div>
-                      <p className="text-slate-500 text-[11px]">Chief Security Officer & Trust Engineer. Marcus audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.</p>
+                      <div className="font-semibold text-slate-700">
+                        {t('platform.reviewerProfileTitle', 'Reviewer Profile: Marcus Vance, CISSP')}
+                      </div>
+                      <p className="text-slate-500 text-[11px]">
+                        {t('platform.reviewerProfileDesc', 'Chief Security Officer & Trust Engineer. Marcus audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.')}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1363,21 +1422,25 @@ func main() {
                 {/* Definitive Citation Block */}
                 <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-6 rounded-2xl border border-slate-800 space-y-4">
                   <div className="text-indigo-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
-                    <Award className="w-3.5 h-3.5" /> Authority Citation Block
+                    <Award className="w-3.5 h-3.5" /> {t('platform.authorityCitationTitle', 'Authority Citation Block')}
                   </div>
-                  <h3 className="text-sm font-bold tracking-tight">Verified Definitions</h3>
+                  <h3 className="text-sm font-bold tracking-tight">
+                    {t('platform.verifiedDefinitionsTitle', 'Verified Definitions')}
+                  </h3>
                   <p className="text-slate-300 text-xs leading-relaxed italic">
-                    "{activeModule.definition}"
+                    "{t(`platform.module${moduleKey}Definition`, activeModule.definition)}"
                   </p>
                   
                   <div className="h-px bg-slate-800 my-4"></div>
                   
-                  <h4 className="text-[11px] font-bold text-indigo-300 uppercase tracking-wider">Simulated Performance Metrics</h4>
+                  <h4 className="text-[11px] font-bold text-indigo-300 uppercase tracking-wider">
+                    {t('platform.simulatedMetricsTitle', 'Simulated Performance Metrics')}
+                  </h4>
                   <div className="space-y-3 pt-1">
                     {activeModule.stats.map((st, i) => (
                       <div key={i} className="flex justify-between text-xs border-b border-slate-800/60 pb-1.5">
-                        <span className="text-slate-400">{st.label}</span>
-                        <span className="font-bold text-white">{st.value}</span>
+                        <span className="text-slate-400">{t(`platform.module${moduleKey}StatLabel${i}`, st.label)}</span>
+                        <span className="font-bold text-white">{t(`platform.module${moduleKey}StatValue${i}`, st.value)}</span>
                       </div>
                     ))}
                   </div>
@@ -1385,24 +1448,28 @@ func main() {
 
                 {/* Best Practices vs Common Mistakes */}
                 <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-4">
-                  <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Integration Best Practices</h3>
+                  <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                    {t('platform.integrationBestPracticesTitle', 'Integration Best Practices')}
+                  </h3>
                   <ul className="space-y-2 text-xs text-slate-600">
                     {activeModule.bestPractices.map((bp, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
-                        <span>{bp}</span>
+                        <span>{t(`platform.module${moduleKey}BestPractice${i}`, bp)}</span>
                       </li>
                     ))}
                   </ul>
                   
                   <div className="h-px bg-slate-100 my-4"></div>
                   
-                  <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Common Redirection Pitfalls</h3>
+                  <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                    {t('platform.commonPitfallsTitle', 'Common Redirection Pitfalls')}
+                  </h3>
                   <ul className="space-y-2 text-xs text-slate-600">
                     {activeModule.commonMistakes.map((cm, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                        <span>{cm}</span>
+                        <span>{t(`platform.module${moduleKey}CommonMistake${i}`, cm)}</span>
                       </li>
                     ))}
                   </ul>
@@ -1413,7 +1480,9 @@ func main() {
             {/* FAQ and References */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
               <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-4">
-                <h3 className="text-lg font-bold text-slate-800 tracking-tight">Frequently Asked Questions</h3>
+                <h3 className="text-lg font-bold text-slate-800 tracking-tight">
+                  {t('platform.faqTitle', 'Frequently Asked Questions')}
+                </h3>
                 <div className="h-px bg-slate-100"></div>
                 <div className="space-y-4">
                   {activeModule.faqs.map((faq, i) => {
@@ -1424,12 +1493,12 @@ func main() {
                           onClick={() => setOpenFaqIndex(isOpen ? null : i)}
                           className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-700 hover:text-indigo-600 transition-colors py-2 cursor-pointer"
                         >
-                          <span>{faq.q}</span>
+                          <span>{t(`platform.module${moduleKey}FaqQ${i}`, faq.q)}</span>
                           <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                         </button>
                         {isOpen && (
                           <p className="text-slate-500 text-xs leading-relaxed pt-1.5 pl-1 animate-slide-down">
-                            {faq.a}
+                            {t(`platform.module${moduleKey}FaqA${i}`, faq.a)}
                           </p>
                         )}
                       </div>
@@ -1440,16 +1509,18 @@ func main() {
 
               <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-4 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-800 tracking-tight">Academic Citations & Reference Papers</h3>
+                  <h3 className="text-lg font-bold text-slate-800 tracking-tight">
+                    {t('platform.citationsTitle', 'Academic Citations & Reference Papers')}
+                  </h3>
                   <div className="h-px bg-slate-100 my-4"></div>
                   <div className="space-y-4 text-xs text-slate-600">
                     {activeModule.references.map((ref, i) => (
                       <div key={i} className="flex gap-3">
                         <BookOpen className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
                         <div>
-                          <div className="font-bold text-slate-700">{ref.title}</div>
+                          <div className="font-bold text-slate-700">{t(`platform.module${moduleKey}RefTitle${i}`, ref.title)}</div>
                           <div className="text-[11px] text-slate-400">
-                            {ref.author ? `${ref.author} • ` : ''}{ref.year}
+                            {ref.author ? `${t(`platform.module${moduleKey}RefAuthor${i}`, ref.author)} • ` : ''}{ref.year}
                           </div>
                         </div>
                       </div>
@@ -1458,7 +1529,7 @@ func main() {
                 </div>
                 
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-[11px] text-slate-400 leading-relaxed mt-4">
-                  All references mapped on FreeQRGen.pro comply with standard IEEE academic guidelines, linking digital physical interactions directly to modern network routing and data protection frameworks.
+                  {t('platform.citationsFooter', 'All references mapped on FreeQRGen.pro comply with standard IEEE academic guidelines, linking digital physical interactions directly to modern network routing and data protection frameworks.')}
                 </div>
               </div>
             </div>
@@ -1470,8 +1541,12 @@ func main() {
           <div className="space-y-8 animate-fade-in">
             <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-slate-800 tracking-tight">Interactive Platform Architecture Map</h3>
-                <p className="text-xs text-slate-500 mt-1">This schematic outlines the decoupling of our core Client-Side QR Renderer from our upcoming cloud-based Dynamic API Redirection layer.</p>
+                <h3 className="text-lg font-bold text-slate-800 tracking-tight">
+                  {t('platform.archMapTitle', 'Interactive Platform Architecture Map')}
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {t('platform.archMapDesc', 'This schematic outlines the decoupling of our core Client-Side QR Renderer from our upcoming cloud-based Dynamic API Redirection layer.')}
+                </p>
               </div>
 
               {/* Graphic Flow Layout with Tailwind */}
@@ -1479,10 +1554,16 @@ func main() {
                 <div className="flex flex-col md:flex-row items-center justify-between gap-8 max-w-5xl mx-auto py-4">
                   {/* Client Interface */}
                   <div className="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center w-full md:w-52">
-                    <div className="font-bold text-xs text-indigo-400 uppercase tracking-widest mb-1">Client Interface</div>
-                    <div className="text-[10px] text-slate-300">React 19 / Tailwind UI</div>
+                    <div className="font-bold text-xs text-indigo-400 uppercase tracking-widest mb-1">
+                      {t('platform.archClientInterface', 'Client Interface')}
+                    </div>
+                    <div className="text-[10px] text-slate-300">
+                      {t('platform.archClientTech', 'React 19 / Tailwind UI')}
+                    </div>
                     <div className="h-px bg-slate-700 my-2"></div>
-                    <div className="text-[9px] text-slate-400">Handles design parameters, canvas rendering, and local-first exports</div>
+                    <div className="text-[9px] text-slate-400">
+                      {t('platform.archClientDesc', 'Handles design parameters, canvas rendering, and local-first exports')}
+                    </div>
                   </div>
 
                   {/* Flow Arrow */}
@@ -1494,11 +1575,15 @@ func main() {
                   {/* API Gateway Edge Router */}
                   <div className="bg-slate-800 border border-indigo-500/50 p-4 rounded-xl text-center w-full md:w-56 shadow-indigo-500/10 shadow-lg">
                     <div className="font-bold text-xs text-indigo-400 uppercase tracking-widest mb-1 flex items-center justify-center gap-1">
-                      <Lock className="w-3.5 h-3.5 text-indigo-400" /> Edge Gateway
+                      <Lock className="w-3.5 h-3.5 text-indigo-400" /> {t('platform.archEdgeGateway', 'Edge Gateway')}
                     </div>
-                    <div className="text-[10px] text-slate-300">Cloudflare CDN Edge Worker</div>
+                    <div className="text-[10px] text-slate-300">
+                      {t('platform.archEdgeTech', 'Cloudflare CDN Edge Worker')}
+                    </div>
                     <div className="h-px bg-slate-700 my-2"></div>
-                    <div className="text-[9px] text-indigo-300">Validates API keys, enforces rate limits, routes to DB or caching cluster</div>
+                    <div className="text-[9px] text-indigo-300">
+                      {t('platform.archEdgeDesc', 'Validates API keys, enforces rate limits, routes to DB or caching cluster')}
+                    </div>
                   </div>
 
                   {/* Flow Arrow */}
@@ -1509,13 +1594,17 @@ func main() {
 
                   {/* Core SaaS Platform Services */}
                   <div className="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center w-full md:w-60">
-                    <div className="font-bold text-xs text-indigo-400 uppercase tracking-widest mb-1">Microservices Pipeline</div>
-                    <div className="text-[10px] text-slate-300">Go / NodeJS Micro-Nodes</div>
+                    <div className="font-bold text-xs text-indigo-400 uppercase tracking-widest mb-1">
+                      {t('platform.archMicroservices', 'Microservices Pipeline')}
+                    </div>
+                    <div className="text-[10px] text-slate-300">
+                      {t('platform.archMicroservicesTech', 'Go / NodeJS Micro-Nodes')}
+                    </div>
                     <div className="h-px bg-slate-700 my-2"></div>
                     <div className="space-y-1.5 text-left text-[9px] text-slate-400 font-mono">
-                      <div className="flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Analytics Worker</div>
-                      <div className="flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Dynamic Link Redirection</div>
-                      <div className="flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Bulk Creation Queue</div>
+                      <div className="flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> {t('platform.archWorkerAnalytics', 'Analytics Worker')}</div>
+                      <div className="flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> {t('platform.archWorkerRedirect', 'Dynamic Link Redirection')}</div>
+                      <div className="flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> {t('platform.archWorkerBulk', 'Bulk Creation Queue')}</div>
                     </div>
                   </div>
                 </div>
@@ -1527,15 +1616,23 @@ func main() {
                   <div className="flex items-center gap-2">
                     <Database className="w-5 h-5 text-indigo-400" />
                     <div className="text-left">
-                      <div className="font-bold text-white">Primary Datastore</div>
-                      <p className="text-[10px] text-slate-400">PostgreSQL (Scalable relational modeling for organizations, teams, and billing rules)</p>
+                      <div className="font-bold text-white">
+                        {t('platform.archPrimaryDatastore', 'Primary Datastore')}
+                      </div>
+                      <p className="text-[10px] text-slate-400">
+                        {t('platform.archPrimaryDatastoreDesc', 'PostgreSQL (Scalable relational modeling for organizations, teams, and billing rules)')}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <RefreshCw className="w-5 h-5 text-emerald-400" />
                     <div className="text-left">
-                      <div className="font-bold text-white">In-Memory Cache Node</div>
-                      <p className="text-[10px] text-slate-400">Redis (Handles high-speed link redirects and rate limits with sub-millisecond speeds)</p>
+                      <div className="font-bold text-white">
+                        {t('platform.archCacheNode', 'In-Memory Cache Node')}
+                      </div>
+                      <p className="text-[10px] text-slate-400">
+                        {t('platform.archCacheNodeDesc', 'Redis (Handles high-speed link redirects and rate limits with sub-millisecond speeds)')}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1545,26 +1642,26 @@ func main() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
                 <div className="space-y-2">
                   <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-indigo-600" /> Static Isolation Guarantee
+                    <CheckCircle className="w-4 h-4 text-indigo-600" /> {t('platform.staticIsolationTitle', 'Static Isolation Guarantee')}
                   </h4>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    All static QR code calculations and canvas operations continue to execute 100% locally in your browser. Since these processes are fully isolated, they operate with maximum speed and privacy, completely independent of cloud servers.
+                    {t('platform.staticIsolationDesc', 'All static QR code calculations and canvas operations continue to execute 100% locally in your browser. Since these processes are fully isolated, they operate with maximum speed and privacy, completely independent of cloud servers.')}
                   </p>
                 </div>
                 <div className="space-y-2">
                   <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <Lock className="w-4 h-4 text-indigo-600" /> API Authentication & Access
+                    <Lock className="w-4 h-4 text-indigo-600" /> {t('platform.apiAuthTitle', 'API Authentication & Access')}
                   </h4>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    Our platform utilizes secure, scoped API credentials for backend authentication. In-flight requests are fully protected using industry-standard TLS 1.3 encryption, ensuring secure integrations with external business applications.
+                    {t('platform.apiAuthDesc', 'Our platform utilizes secure, scoped API credentials for backend authentication. In-flight requests are fully protected using industry-standard TLS 1.3 encryption, ensuring secure integrations with external business applications.')}
                   </p>
                 </div>
                 <div className="space-y-2">
                   <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <Activity className="w-4 h-4 text-indigo-600" /> High Availability Edge Routing
+                    <Activity className="w-4 h-4 text-indigo-600" /> {t('platform.highAvailabilityTitle', 'High Availability Edge Routing')}
                   </h4>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    Dynamic short links resolve through globally distributed cloud networks. This ensures that even during high-traffic marketing campaigns, destination routing resolves with sub-millisecond latencies, maintaining high user conversion rates.
+                    {t('platform.highAvailabilityDesc', 'Dynamic short links resolve through globally distributed cloud networks. This ensures that even during high-traffic marketing campaigns, destination routing resolves with sub-millisecond latencies, maintaining high user conversion rates.')}
                   </p>
                 </div>
               </div>
@@ -1577,45 +1674,63 @@ func main() {
           <div className="space-y-8 animate-fade-in">
             <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-slate-800 tracking-tight">Enterprise Database Suggestions & Data Models</h3>
-                <p className="text-xs text-slate-500 mt-1">To ensure absolute scalability for team collaboration, permissions, versions, and analytics histories, we propose a relational PostgreSQL schema designed for high-availability performance.</p>
+                <h3 className="text-lg font-bold text-slate-800 tracking-tight">
+                  {t('platform.dbSuggestionsTitle', 'Enterprise Database Suggestions & Data Models')}
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {t('platform.dbSuggestionsDesc', 'To ensure absolute scalability for team collaboration, permissions, versions, and analytics histories, we propose a relational PostgreSQL schema designed for high-availability performance.')}
+                </p>
               </div>
 
               {/* Relational Schemas Explorer */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Database Tables Definition</h4>
+                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                    {t('platform.dbTablesDefinition', 'Database Tables Definition')}
+                  </h4>
                   <div className="space-y-3">
-                    {databaseSchemas.map((schema, index) => (
-                      <div key={index} className="border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-                        <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 flex items-center justify-between">
-                          <span className="font-mono text-xs font-bold text-slate-800">Table: {schema.table}</span>
-                          <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[9px] font-bold uppercase">Relational</span>
+                    {databaseSchemas.map((schema, index) => {
+                      const tableKey = toCamelCase(schema.table);
+                      return (
+                        <div key={index} className="border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+                          <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 flex items-center justify-between">
+                            <span className="font-mono text-xs font-bold text-slate-800">
+                              {t('platform.dbTableLabel', 'Table: {{table}}', { table: schema.table })}
+                            </span>
+                            <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[9px] font-bold uppercase">
+                              {t('platform.dbRelational', 'Relational')}
+                            </span>
+                          </div>
+                          <div className="divide-y divide-slate-100 max-h-60 overflow-y-auto">
+                            {schema.fields.map((field, i) => {
+                              const fieldKey = toCamelCase(field.name);
+                              return (
+                                <div key={i} className="p-3 text-xs flex flex-col md:flex-row md:items-center justify-between gap-2">
+                                  <div className="space-y-0.5">
+                                    <div className="font-mono font-bold text-slate-700">{field.name}</div>
+                                    <div className="text-slate-400 text-[10px]">{t(`platform.dbDesc${tableKey}${fieldKey}`, field.desc)}</div>
+                                  </div>
+                                  <div className="text-right flex flex-col items-end gap-1 shrink-0">
+                                    <span className="font-mono text-[10px] bg-indigo-50/50 text-indigo-600 px-1.5 py-0.5 rounded font-bold">{field.type}</span>
+                                    {field.constraints && (
+                                      <span className="font-mono text-[9px] text-slate-400">{field.constraints}</span>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
-                        <div className="divide-y divide-slate-100 max-h-60 overflow-y-auto">
-                          {schema.fields.map((field, i) => (
-                            <div key={i} className="p-3 text-xs flex flex-col md:flex-row md:items-center justify-between gap-2">
-                              <div className="space-y-0.5">
-                                <div className="font-mono font-bold text-slate-700">{field.name}</div>
-                                <div className="text-slate-400 text-[10px]">{field.desc}</div>
-                              </div>
-                              <div className="text-right flex flex-col items-end gap-1 shrink-0">
-                                <span className="font-mono text-[10px] bg-indigo-50/50 text-indigo-600 px-1.5 py-0.5 rounded font-bold">{field.type}</span>
-                                {field.constraints && (
-                                  <span className="font-mono text-[9px] text-slate-400">{field.constraints}</span>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* SQL Code Sandbox Block */}
                 <div className="space-y-4">
-                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Drizzle ORM & PostgreSQL Schema Code</h4>
+                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                    {t('platform.dbDrizzleSchemaTitle', 'Drizzle ORM & PostgreSQL Schema Code')}
+                  </h4>
                   <div className="relative bg-slate-900 text-white rounded-2xl border border-slate-800 p-6 overflow-hidden">
                     <div className="absolute top-4 right-4 z-10 flex gap-2">
                       <button
@@ -1637,7 +1752,7 @@ export const users = pgTable('users', {
 });`, 'sql_drizzle')}
                         className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-[10px] font-bold cursor-pointer transition-all border border-slate-700"
                       >
-                        {copiedCodeIndex === 'sql_drizzle' ? 'Copied ✓' : 'Copy ORM Schema'}
+                        {copiedCodeIndex === 'sql_drizzle' ? t('platform.copied', 'Copied ✓') : t('platform.copyOrmSchema', 'Copy ORM Schema')}
                       </button>
                     </div>
                     <pre className="font-mono text-[10px] leading-relaxed text-slate-300 overflow-x-auto max-h-[480px]">
@@ -1696,8 +1811,12 @@ export const scanTelemetries = pgTable('scan_telemetries', {
           <div className="space-y-8 animate-fade-in">
             <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-slate-800 tracking-tight">Developer API Specifications & SDK Code Samples</h3>
-                <p className="text-xs text-slate-500 mt-1">FreeQRGen.pro is designed to empower developers. Here are the technical specifications and code implementations for programmatic dynamic QR code generation.</p>
+                <h3 className="text-lg font-bold text-slate-800 tracking-tight">
+                  {t('platform.developerApiTitle', 'Developer API Specifications & SDK Code Samples')}
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {t('platform.developerApiDesc', 'FreeQRGen.pro is designed to empower developers. Here are the technical specifications and code implementations for programmatic dynamic QR code generation.')}
+                </p>
               </div>
 
               {/* Language Selection Tabs */}
@@ -1708,7 +1827,7 @@ export const scanTelemetries = pgTable('scan_telemetries', {
                     activeCodeLang === 'ts' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  TypeScript / Node.js SDK
+                  {t('platform.sdkTypeScript', 'TypeScript / Node.js SDK')}
                 </button>
                 <button
                   onClick={() => setActiveCodeLang('python')}
@@ -1716,7 +1835,7 @@ export const scanTelemetries = pgTable('scan_telemetries', {
                     activeCodeLang === 'python' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  Python Library
+                  {t('platform.sdkPython', 'Python Library')}
                 </button>
                 <button
                   onClick={() => setActiveCodeLang('go')}
@@ -1724,7 +1843,7 @@ export const scanTelemetries = pgTable('scan_telemetries', {
                     activeCodeLang === 'go' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  Go Client
+                  {t('platform.sdkGo', 'Go Client')}
                 </button>
               </div>
 
@@ -1736,7 +1855,7 @@ export const scanTelemetries = pgTable('scan_telemetries', {
                     className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-[10px] font-bold cursor-pointer transition-all border border-slate-700 flex items-center gap-1.5"
                   >
                     <ClipboardList className="w-3 h-3" />
-                    {copiedCodeIndex === `code_${activeCodeLang}` ? 'Copied ✓' : 'Copy Snippet'}
+                    {copiedCodeIndex === `code_${activeCodeLang}` ? t('platform.copied', 'Copied ✓') : t('platform.copySnippet', 'Copy Snippet')}
                   </button>
                 </div>
                 <pre className="font-mono text-[10px] leading-relaxed text-slate-300 overflow-x-auto max-h-[480px]">
@@ -1747,45 +1866,49 @@ export const scanTelemetries = pgTable('scan_telemetries', {
               {/* HTTP Status codes & API specs block */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                 <div className="border border-slate-200 rounded-xl p-5 space-y-3">
-                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">REST Endpoints Definitions</h4>
+                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                    {t('platform.restEndpointsTitle', 'REST Endpoints Definitions')}
+                  </h4>
                   <div className="space-y-3 divide-y divide-slate-100">
                     <div className="pt-2 flex justify-between text-xs font-mono">
                       <span className="text-emerald-600 font-bold">POST /api/v1/qr/create</span>
-                      <span className="text-slate-500">Create Barcode</span>
+                      <span className="text-slate-500">{t('platform.endpointCreateBarcode', 'Create Barcode')}</span>
                     </div>
                     <div className="pt-3 flex justify-between text-xs font-mono">
                       <span className="text-indigo-600 font-bold">GET /api/v1/qr/:id</span>
-                      <span className="text-slate-500">Retrieve Barcode Meta</span>
+                      <span className="text-slate-500">{t('platform.endpointRetrieveBarcodeMeta', 'Retrieve Barcode Meta')}</span>
                     </div>
                     <div className="pt-3 flex justify-between text-xs font-mono">
                       <span className="text-amber-600 font-bold">PATCH /api/v1/qr/:id</span>
-                      <span className="text-slate-500">Update Redirection Target</span>
+                      <span className="text-slate-500">{t('platform.endpointUpdateRedirectionTarget', 'Update Redirection Target')}</span>
                     </div>
                     <div className="pt-3 flex justify-between text-xs font-mono">
                       <span className="text-blue-600 font-bold">GET /api/v1/qr/:id/analytics</span>
-                      <span className="text-slate-500">Retrieve Scan Telemetry</span>
+                      <span className="text-slate-500">{t('platform.endpointRetrieveScanTelemetry', 'Retrieve Scan Telemetry')}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="border border-slate-200 rounded-xl p-5 space-y-3">
-                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Standard API Rate Limits & Errors</h4>
+                  <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                    {t('platform.apiRateLimitsTitle', 'Standard API Rate Limits & Errors')}
+                  </h4>
                   <div className="space-y-2 text-xs text-slate-600">
                     <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                      <span className="font-bold text-slate-700">Sandbox Key Tier</span>
-                      <span>60 requests/minute</span>
+                      <span className="font-bold text-slate-700">{t('platform.sandboxKeyTier', 'Sandbox Key Tier')}</span>
+                      <span>{t('platform.sandboxKeyTierDesc', '60 requests/minute')}</span>
                     </div>
                     <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                      <span className="font-bold text-slate-700">Production Key Tier</span>
-                      <span>1,000 requests/minute</span>
+                      <span className="font-bold text-slate-700">{t('platform.productionKeyTier', 'Production Key Tier')}</span>
+                      <span>{t('platform.productionKeyTierDesc', '1,000 requests/minute')}</span>
                     </div>
                     <div className="flex justify-between border-b border-slate-100 pb-1.5 text-red-500">
-                      <span className="font-bold">429 Too Many Requests</span>
-                      <span>Rate limit quota exhausted</span>
+                      <span className="font-bold">{t('platform.err429', '429 Too Many Requests')}</span>
+                      <span>{t('platform.err429Desc', 'Rate limit quota exhausted')}</span>
                     </div>
                     <div className="flex justify-between text-red-500">
-                      <span className="font-bold">401 Unauthorized</span>
-                      <span>API key is missing or invalid</span>
+                      <span className="font-bold">{t('platform.err401', '401 Unauthorized')}</span>
+                      <span>{t('platform.err401Desc', 'API key is missing or invalid')}</span>
                     </div>
                   </div>
                 </div>
@@ -1799,36 +1922,58 @@ export const scanTelemetries = pgTable('scan_telemetries', {
           <div className="space-y-8 animate-fade-in">
             <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-slate-800 tracking-tight">Technical Rollout Plan & Regression Report</h3>
-                <p className="text-xs text-slate-500 mt-1">To maintain absolute service availability (99.99%) and safeguard current user flows, we have audited our code architecture against regression test parameters.</p>
+                <h3 className="text-lg font-bold text-slate-800 tracking-tight">
+                  {t('platform.rolloutPlanTitle', 'Technical Rollout Plan & Regression Report')}
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {t('platform.rolloutPlanDesc', 'To maintain absolute service availability (99.99%) and safeguard current user flows, we have audited our code architecture against regression test parameters.')}
+                </p>
               </div>
 
               {/* Grid with rollout plan steps */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="border border-slate-200 rounded-xl p-5 space-y-4">
                   <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sliders className="w-4 h-4 text-indigo-600" /> Platform Rollout Strategy
+                    <Sliders className="w-4 h-4 text-indigo-600" /> {t('platform.rolloutStrategyTitle', 'Platform Rollout Strategy')}
                   </h4>
                   <div className="space-y-3.5 text-xs text-slate-600">
                     <div className="flex gap-3">
-                      <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold h-fit">Phase 1</span>
+                      <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold h-fit">
+                        {t('platform.phase1', 'Phase 1')}
+                      </span>
                       <div>
-                        <div className="font-bold text-slate-700">Modular Component Ingestion</div>
-                        <p className="text-[11px] text-slate-400 mt-0.5">Introduce routes via lazy-loaded modules (`React.lazy`) to prevent bundle size increases and protect startup performance.</p>
+                        <div className="font-bold text-slate-700">
+                          {t('platform.phase1Title', 'Modular Component Ingestion')}
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
+                          {t('platform.phase1Desc', 'Introduce routes via lazy-loaded modules (React.lazy) to prevent bundle size increases and protect startup performance.')}
+                        </p>
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold h-fit">Phase 2</span>
+                      <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold h-fit">
+                        {t('platform.phase2', 'Phase 2')}
+                      </span>
                       <div>
-                        <div className="font-bold text-slate-700">Dynamic Gateway Implementation</div>
-                        <p className="text-[11px] text-slate-400 mt-0.5">Configure edge routing proxy to support CNAME branding records and dynamic redirects, resolving routes within milliseconds.</p>
+                        <div className="font-bold text-slate-700">
+                          {t('platform.phase2Title', 'Dynamic Gateway Implementation')}
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
+                          {t('platform.phase2Desc', 'Configure edge routing proxy to support CNAME branding records and dynamic redirects, resolving routes within milliseconds.')}
+                        </p>
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold h-fit">Phase 3</span>
+                      <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold h-fit">
+                        {t('platform.phase3', 'Phase 3')}
+                      </span>
                       <div>
-                        <div className="font-bold text-slate-700">Collaborative Workspace Release</div>
-                        <p className="text-[11px] text-slate-400 mt-0.5">Ship SSO integrations and organization controls under feature-flags, keeping system-wide rollouts completely clean and secure.</p>
+                        <div className="font-bold text-slate-700">
+                          {t('platform.phase3Title', 'Collaborative Workspace Release')}
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
+                          {t('platform.phase3Desc', 'Ship SSO integrations and organization controls under feature-flags, keeping system-wide rollouts completely clean and secure.')}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1837,29 +1982,33 @@ export const scanTelemetries = pgTable('scan_telemetries', {
                 {/* Audit and Verification Metrics */}
                 <div className="border border-slate-200 rounded-xl p-5 space-y-4">
                   <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                    <Shield className="w-4 h-4 text-emerald-600" /> Regression Testing Report
+                    <Shield className="w-4 h-4 text-emerald-600" /> {t('platform.regressionReportTitle', 'Regression Testing Report')}
                   </h4>
                   <div className="space-y-3 text-xs">
                     <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <span className="text-slate-600">Local Static QR Engine Validation</span>
-                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded font-bold text-[10px] uppercase">100% Passed</span>
+                      <span className="text-slate-600">{t('platform.testLocalStaticValidation', 'Local Static QR Engine Validation')}</span>
+                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded font-bold text-[10px] uppercase">
+                        {t('platform.testPassed', '100% Passed')}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <span className="text-slate-600">Lighthouse Performance Audit Rating</span>
+                      <span className="text-slate-600">{t('platform.testLighthouseRating', 'Lighthouse Performance Audit Rating')}</span>
                       <span className="font-bold text-emerald-600">98 / 100</span>
                     </div>
                     <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <span className="text-slate-600">TypeScript Type Safety & Compilations</span>
-                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded font-bold text-[10px] uppercase">Clean / Passed</span>
+                      <span className="text-slate-600">{t('platform.testTypeScriptSafety', 'TypeScript Type Safety & Compilations')}</span>
+                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded font-bold text-[10px] uppercase">
+                        {t('platform.testCleanPassed', 'Clean / Passed')}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-600">Dynamic Import Latency Overhead</span>
+                      <span className="text-slate-600">{t('platform.testDynamicImportLatency', 'Dynamic Import Latency Overhead')}</span>
                       <span className="font-bold text-emerald-600">&lt; 5ms</span>
                     </div>
                   </div>
                   
                   <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 text-[11px] text-emerald-800 leading-relaxed">
-                    <strong>Developer Pledge:</strong> Our release candidate does not modify a single line of the core barcode-generation algorithms. The system remains fully backward-compatible, ensuring printed codes continue to function perfectly.
+                    <strong>{t('platform.developerPledge', 'Developer Pledge:')}</strong> {t('platform.developerPledgeDesc', 'Our release candidate does not modify a single line of the core barcode-generation algorithms. The system remains fully backward-compatible, ensuring printed codes continue to function perfectly.')}
                   </div>
                 </div>
               </div>

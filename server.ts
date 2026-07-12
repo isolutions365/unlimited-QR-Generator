@@ -161,6 +161,50 @@ async function startServer() {
     res.json({ status: 'ok', database: 'ready', auth: 'jwt' });
   });
 
+  // Dynamic Translation Proxy Endpoint powered by Gemini AI
+  app.post('/api/translate', async (req, res) => {
+    const { text, lang } = req.body;
+    if (!text || !lang) {
+      return res.status(400).json({ error: 'text and lang parameters are required' });
+    }
+
+    if (lang === 'en') {
+      return res.json({ translated: text });
+    }
+
+    try {
+      if (!isGeminiEnabled()) {
+        return res.json({ translated: text });
+      }
+
+      const prompt = `Translate the following English user interface text into the target language: ${lang}.
+Preserve any HTML tags, variables in braces (like {name} or {count}), and spacing exactly.
+Do NOT explain your translation, do NOT provide multiple alternatives, and do NOT wrap the output in quotes or backticks unless they were in the original.
+Only output the translated text.
+
+English text: "${text}"`;
+
+      const response = await generateContentWithFallback({
+        contents: prompt,
+        config: {
+          temperature: 0.2,
+          maxOutputTokens: 500,
+        },
+      });
+
+      const translatedText = response.text?.trim() || text;
+      // Strip outer quotes if the model added them mistakenly
+      let cleanText = translatedText;
+      if (cleanText.startsWith('"') && cleanText.endsWith('"') && !text.startsWith('"')) {
+        cleanText = cleanText.slice(1, -1);
+      }
+      res.json({ translated: cleanText });
+    } catch (err) {
+      console.error('[Translation API] Error translating:', err);
+      res.json({ translated: text }); // Graceful fallback
+    }
+  });
+
   // --- AUTHENTICATION ENDPOINTS ---
 
   // User Registration
@@ -1117,7 +1161,7 @@ async function startServer() {
     let lastError: any = null;
 
     for (const model of modelsToTry) {
-      let attempts = 2; // 2 attempts per model
+      let attempts = 2; // Up to 2 attempts for normal transient issues
       while (attempts > 0) {
         try {
           const response = await client.models.generateContent({
@@ -1129,7 +1173,21 @@ async function startServer() {
         } catch (error: any) {
           lastError = error;
           const status = error.status || (error.error && error.error.code);
-          console.warn(`[Gemini API] Failed calling model ${model} (attempts left: ${attempts - 1}). Status: ${status}. Error:`, error.message);
+          const errorMsg = error.message || '';
+          
+          // Check if the model is busy, overloaded (503), or rate-limited (429)
+          const isBusyOrOverloaded = status === 503 || status === 429 || 
+            errorMsg.includes('demand') || 
+            errorMsg.includes('UNAVAILABLE') || 
+            errorMsg.includes('rate limit') ||
+            errorMsg.includes('Resource has been exhausted');
+
+          if (isBusyOrOverloaded) {
+            console.log(`[Gemini API] Note: Model ${model} is currently busy/unavailable (status: ${status}). Swapping to next fallback model immediately...`);
+            break; // Break the attempts loop for this model and proceed to the next fallback model immediately
+          }
+
+          console.log(`[Gemini API] Diagnostic: Model ${model} returned non-fatal code ${status} (attempts remaining: ${attempts - 1})`);
           
           if (status === 400) {
             attempts = 0; // stop retrying this model

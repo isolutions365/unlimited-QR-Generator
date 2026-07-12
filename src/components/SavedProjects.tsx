@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { QRProject } from '../types';
 import { 
   RefreshCw, 
@@ -22,14 +24,14 @@ interface SavedProjectsProps {
   isLoading: boolean;
 }
 
-export default function SavedProjects({
-  projects,
+export default function SavedProjects({ projects,
   onSelect,
   onDelete,
   onSeedData,
   onUpdateCategory,
   isLoading
 }: SavedProjectsProps) {
+  const { t } = useTranslation();
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
   const [newFolderName, setNewFolderName] = React.useState('');
@@ -128,9 +130,9 @@ export default function SavedProjects({
         <div>
           <h2 className="text-lg font-semibold tracking-tight text-gray-900 flex items-center gap-2">
             <Database className="w-5 h-5 text-indigo-600" />
-            Saved Designs & Projects
+            {t('saved.title', 'Saved Designs & Projects')}
           </h2>
-          <p className="text-xs text-gray-500 mt-1 flex-wrap">Manage saved QR codes, view tracking status, and filter designs by custom folder categories.</p>
+          <p className="text-xs text-gray-500 mt-1 flex-wrap">{t('saved.desc', 'Manage saved QR codes, view tracking status, and filter designs by custom folder categories.')}</p>
         </div>
 
         <div className="shrink-0 flex items-center">
@@ -141,7 +143,7 @@ export default function SavedProjects({
               className="flex items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-150 text-indigo-700 font-semibold text-xs py-1.5 px-3 rounded-xl transition-all cursor-pointer shadow-3xs"
             >
               <FolderPlus className="w-3.5 h-3.5 text-indigo-600" />
-              New Folder
+              {t('saved.newFolderBtn', 'New Folder')}
             </button>
           ) : (
             <form onSubmit={handleCreateFolderSubmit} className="flex items-center gap-1.5">
@@ -152,14 +154,14 @@ export default function SavedProjects({
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
                 maxLength={30}
-                placeholder="Folder name..."
+                placeholder={t('saved.folderPlaceholder', 'Folder name...')}
                 className="bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-36"
               />
               <button
                 type="submit"
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs py-1.5 px-2.5 rounded-xl transition-all cursor-pointer shadow-3xs"
               >
-                Create
+                {t('saved.createBtn', 'Create')}
               </button>
               <button
                 type="button"
@@ -179,13 +181,13 @@ export default function SavedProjects({
       {isLoading ? (
         <div className="py-12 flex flex-col items-center justify-center gap-3">
           <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs font-mono text-slate-600">Loading saved items...</p>
+          <p className="text-xs font-mono text-slate-600">{t('saved.loading', 'Loading saved items...')}</p>
         </div>
       ) : projects.length === 0 ? (
         <div className="py-12 text-center border-2 border-dashed border-gray-100 rounded-xl">
           <Sparkles className="w-8 h-8 text-indigo-300 mx-auto mb-2" />
-          <h3 className="text-xs font-semibold text-gray-700">No Projects Saved Yet</h3>
-          <p className="text-[11px] text-slate-600 mt-1 max-w-[200px] mx-auto">Configure a QR, add colors, assign a folder category, and click "Save Design" above.</p>
+          <h3 className="text-xs font-semibold text-gray-700">{t('saved.noProjectsTitle', 'No Projects Saved Yet')}</h3>
+          <p className="text-[11px] text-slate-600 mt-1 max-w-[200px] mx-auto">{t('saved.noProjectsDesc', 'Configure a QR, add colors, assign a folder category, and click "Save Design" above.')}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
@@ -201,7 +203,7 @@ export default function SavedProjects({
                     : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                All ({projects.length})
+                {t('saved.allCount', 'All ({count})', { count: projects.length })}
               </button>
 
               {allCategories.map(cat => {
@@ -253,7 +255,7 @@ export default function SavedProjects({
                       : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  Uncategorized ({projects.filter(p => !p.category || !p.category.trim()).length})
+                  {t('saved.uncategorizedLabel', 'Uncategorized')} ({projects.filter(p => !p.category || !p.category.trim()).length})
                 </button>
               )}
             </div>
@@ -262,8 +264,8 @@ export default function SavedProjects({
           {filteredProjects.length === 0 ? (
             <div className="py-8 text-center border-2 border-dashed border-gray-150 rounded-xl bg-slate-50/20">
               <Folder className="w-6 h-6 text-indigo-300 mx-auto mb-1.5" />
-              <h3 className="text-xs font-semibold text-gray-700">No projects in this category</h3>
-              <p className="text-[10px] text-slate-600 mt-0.5">Change filters or update project categories to view.</p>
+              <h3 className="text-xs font-semibold text-gray-700">{t('saved.noProjectsCategoryTitle', 'No projects in this category')}</h3>
+              <p className="text-[10px] text-slate-600 mt-0.5">{t('saved.noProjectsCategoryDesc', 'Change filters or update project categories to view.')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[480px] overflow-y-auto pr-1">
@@ -316,7 +318,7 @@ export default function SavedProjects({
                             className="absolute right-0 top-8 z-50 w-48 bg-white rounded-xl border border-gray-150 shadow-lg py-1.5 text-left text-xs animate-in fade-in duration-100"
                           >
                             <div className="px-2.5 py-1 text-[9px] font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-50 mb-1">
-                              Organize in Folder
+                              {t('saved.organizeTitle', 'Organize in Folder')}
                             </div>
                             
                             <button
@@ -328,7 +330,7 @@ export default function SavedProjects({
                               className={`w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer ${!proj.category ? 'text-indigo-600 font-semibold bg-indigo-50/50' : 'text-slate-600'}`}
                             >
                               <Folder className="w-3 h-3 opacity-60" />
-                              Uncategorized
+                              {t('saved.uncategorizedLabel', 'Uncategorized')}
                             </button>
                             
                             {allCategories.map(cat => (
@@ -361,7 +363,7 @@ export default function SavedProjects({
                               className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 text-indigo-600 font-semibold flex items-center gap-1.5 cursor-pointer"
                             >
                               <Plus className="w-3.5 h-3.5" />
-                              New Folder...
+                              {t('saved.newFolderBtn', 'New Folder')}...
                             </button>
                           </div>
                         )}
@@ -399,7 +401,7 @@ export default function SavedProjects({
                         </span>
                         {proj.trackingEnabled && (
                           <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600">
-                            {proj.scanCount} Scans
+                            {t('saved.scansCount', '{count} Scans', { count: proj.scanCount })}
                           </span>
                         )}
                         {proj.expiryDate && (() => {
@@ -413,7 +415,7 @@ export default function SavedProjects({
                                   : 'bg-amber-50 text-amber-700 border border-amber-100/50'
                               }`}
                             >
-                              {isExpired ? 'Expired ⚠️' : 'Timed ⏳'}
+                              {isExpired ? t('saved.expiredBadge', 'Expired ⚠️') : t('saved.timedBadge', 'Timed ⏳')}
                             </span>
                           );
                         })()}
@@ -431,7 +433,7 @@ export default function SavedProjects({
                               }}
                               className="px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[10px] font-semibold rounded transition-colors"
                             >
-                              + Seed clicks
+                              {t('saved.seedClicksBtn', '+ Seed clicks')}
                             </button>
                           )}
                           <button

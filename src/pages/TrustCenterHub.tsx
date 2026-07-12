@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { 
   Shield, Activity, FileText, Users, Award, Cpu, BookOpen, Heart, 
   Mail, Compass, Sparkles, CheckCircle2, Globe, ArrowLeft, Calendar, 
@@ -884,7 +886,9 @@ interface TrustCenterHubProps {
   locale?: string;
 }
 
-export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' }: TrustCenterHubProps) {
+export default function TrustCenterHub({
+   initialSlug, onNavigate, locale = 'en' }: TrustCenterHubProps) {
+  const { t } = useTranslation();
   const [activeSlug, setActiveSlug] = useState<string>('about');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
@@ -909,7 +913,7 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
   // Dynamic Metadata and Schema Injection
   useEffect(() => {
     // 1. Set standard page titles and meta descriptions
-    document.title = activePage.metaTitle;
+    document.title = t('trust.pageMetaTitle.' + activePage.slug, activePage.metaTitle);
     
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
@@ -917,7 +921,7 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
       metaDesc.setAttribute('name', 'description');
       document.head.appendChild(metaDesc);
     }
-    metaDesc.setAttribute('content', activePage.metaDesc);
+    metaDesc.setAttribute('content', t('trust.pageMetaDesc.' + activePage.slug, activePage.metaDesc));
 
     // 2. Set Canonical URL
     const canonicalUrl = `https://www.freeqrgen.pro/${activePage.slug}`;
@@ -931,8 +935,8 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
 
     // 3. Set Open Graph Metadata
     const ogTags = {
-      'og:title': activePage.metaTitle,
-      'og:description': activePage.metaDesc,
+      'og:title': t('trust.pageMetaTitle.' + activePage.slug, activePage.metaTitle),
+      'og:description': t('trust.pageMetaDesc.' + activePage.slug, activePage.metaDesc),
       'og:url': canonicalUrl,
       'og:type': 'website',
       'og:image': 'https://www.freeqrgen.pro/og-image.jpg'
@@ -949,8 +953,8 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
 
     // 4. Set Twitter Card Metadata
     const twitterTags = {
-      'twitter:title': activePage.metaTitle,
-      'twitter:description': activePage.metaDesc,
+      'twitter:title': t('trust.pageMetaTitle.' + activePage.slug, activePage.metaTitle),
+      'twitter:description': t('trust.pageMetaDesc.' + activePage.slug, activePage.metaDesc),
       'twitter:url': canonicalUrl,
       'twitter:image': 'https://www.freeqrgen.pro/og-image.jpg',
       'twitter:card': 'summary_large_image'
@@ -976,19 +980,19 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
         {
           '@type': 'ListItem',
           'position': 1,
-          'name': 'Home',
+          'name': t('trust.navHome', 'Home'),
           'item': 'https://www.freeqrgen.pro/'
         },
         {
           '@type': 'ListItem',
           'position': 2,
-          'name': 'Trust Center',
+          'name': t('trust.navTrustCenter', 'Trust Center'),
           'item': 'https://www.freeqrgen.pro/about'
         },
         {
           '@type': 'ListItem',
           'position': 3,
-          'name': activePage.title,
+          'name': t('trust.pageTitle.' + activePage.slug, activePage.title),
           'item': canonicalUrl
         }
       ]
@@ -997,19 +1001,19 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
     const articleSchema = {
       '@context': 'https://schema.org',
       '@type': 'Article',
-      'headline': activePage.title,
-      'description': activePage.metaDesc,
+      'headline': t('trust.pageTitle.' + activePage.slug, activePage.title),
+      'description': t('trust.pageMetaDesc.' + activePage.slug, activePage.metaDesc),
       'datePublished': '2025-04-12T08:00:00+00:00',
       'dateModified': new Date(activePage.lastUpdated).toISOString(),
       'author': {
         '@type': 'Person',
-        'name': activeAuthor.name,
-        'jobTitle': activeAuthor.role,
+        'name': t('trust.author.' + activeAuthor.id + '.name', activeAuthor.name),
+        'jobTitle': t('trust.author.' + activeAuthor.id + '.role', activeAuthor.role),
         'sameAs': activeAuthor.socials.linkedin || 'https://www.freeqrgen.pro/'
       },
       'publisher': {
         '@type': 'Organization',
-        'name': 'iSolutions ICo',
+        'name': t('trust.isolutionsIco', 'iSolutions ICo'),
         'logo': {
           '@type': 'ImageObject',
           'url': 'https://www.freeqrgen.pro/logo.png'
@@ -1024,12 +1028,12 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
     const faqSchema = {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
-      'mainEntity': activePage.faqs.map(faq => ({
+      'mainEntity': activePage.faqs.map((faq, idx) => ({
         '@type': 'Question',
-        'name': faq.q,
+        'name': t('trust.faq.' + activePage.slug + '.' + idx + '.q', faq.q),
         'acceptedAnswer': {
           '@type': 'Answer',
-          'text': faq.a
+          'text': t('trust.faq.' + activePage.slug + '.' + idx + '.a', faq.a)
         }
       }))
     };
@@ -1050,7 +1054,7 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
       const scripts = document.querySelectorAll('script[data-schema-type]');
       scripts.forEach(s => s.remove());
     };
-  }, [activePage, activeAuthor]);
+  }, [activePage, activeAuthor, t]);
 
   // Handle sidebar navigation
   const handleNav = (slug: string) => {
@@ -1092,16 +1096,20 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
             <button
               onClick={() => onNavigate('/')}
               className="p-2 hover:bg-slate-100 rounded-xl transition-all group shrink-0"
-              aria-label="Back to Creative Station"
+              aria-label={t('trust.backButton', 'Back to Creative Station')}
             >
               <ArrowLeft className="w-4 h-4 text-indigo-600 transition-transform group-hover:-translate-x-0.5" />
             </button>
             <div>
               <div className="flex items-center gap-1.5">
                 <Shield className="w-4 h-4 text-indigo-600" />
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Security & E-E-A-T Portal</span>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                  {t('trust.portalSubtitle', 'Security & E-E-A-T Portal')}
+                </span>
               </div>
-              <h1 className="text-lg font-black text-slate-900 leading-tight">FreeQRGen Trust Center</h1>
+              <h1 className="text-lg font-black text-slate-900 leading-tight">
+                {t('trust.portalTitle', 'FreeQRGen Trust Center')}
+              </h1>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -1109,19 +1117,23 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
-            <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-wide">SYSTEM: ACTIVE // 100% OPERATIONAL</span>
+            <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-wide">
+              {t('trust.systemStatusActive', 'SYSTEM: ACTIVE // 100% OPERATIONAL')}
+            </span>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb Navigation Component */}
-        <nav className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-8" aria-label="Breadcrumb">
-          <button onClick={() => onNavigate('/')} className="hover:text-indigo-600 transition-colors">HOME</button>
+        <nav className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-8" aria-label={t('trust.breadcrumb', 'Breadcrumb')}>
+          <button onClick={() => onNavigate('/')} className="hover:text-indigo-600 transition-colors">
+            {t('trust.navHome', 'HOME')}
+          </button>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-slate-400">TRUST CENTER</span>
+          <span className="text-slate-400">{t('trust.navTrustCenter', 'TRUST CENTER')}</span>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-indigo-600 truncate max-w-[200px]">{activePage.title}</span>
+          <span className="text-indigo-600 truncate max-w-[200px]">{t('trust.pageTitle.' + activePage.slug, activePage.title)}</span>
         </nav>
 
         {/* Primary Layout Grid */}
@@ -1130,11 +1142,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
           {/* LEFT COLUMN: Sidebar Navigation List of all 16 pages */}
           <div className="lg:col-span-3 space-y-4">
             <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
-              <h2 className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest px-3 mb-3">TRUST DIRECTORY</h2>
+              <h2 className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest px-3 mb-3">
+                {t('trust.directoryTitle', 'TRUST DIRECTORY')}
+              </h2>
               
               {/* Mobile Selective Nav Menu */}
               <div className="block lg:hidden mb-2">
-                <label htmlFor="trust-route-selector" className="sr-only">Select Trust Page</label>
+                <label htmlFor="trust-route-selector" className="sr-only">{t('trust.selectTrustPage', 'Select Trust Page')}</label>
                 <select 
                   id="trust-route-selector"
                   value={activeSlug}
@@ -1143,7 +1157,7 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 >
                   {trustPages.map(page => (
                     <option key={page.slug} value={page.slug}>
-                      {page.badge.replace('ABOUT THE ', '')} — {page.title.split(':')[0]}
+                      {t('trust.pageBadge.' + page.slug, page.badge).replace('ABOUT THE ', '')} — {t('trust.pageTitle.' + page.slug, page.title).split(':')[0]}
                     </option>
                   ))}
                 </select>
@@ -1165,10 +1179,10 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                     >
                       <div className="flex items-center gap-2 truncate">
                         {renderNavIcon(page.iconName, `w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`)}
-                        <span className="truncate">{page.title.split(':')[0]}</span>
+                        <span className="truncate">{t('trust.pageTitle.' + page.slug, page.title).split(':')[0]}</span>
                       </div>
                       <span className={`text-[8px] font-mono font-bold shrink-0 uppercase tracking-widest ${isActive ? 'text-indigo-100' : 'text-slate-400'}`}>
-                        {page.slug === 'privacy' || page.slug === 'security' ? 'LEGAL' : 'INFO'}
+                        {page.slug === 'privacy' || page.slug === 'security' ? t('trust.legal', 'LEGAL') : t('trust.info', 'INFO')}
                       </span>
                     </button>
                   );
@@ -1180,14 +1194,16 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
             <div className="bg-slate-900 text-white rounded-2xl p-5 border border-slate-800 shadow-sm space-y-3">
               <div className="flex items-center gap-1.5">
                 <Award className="w-4 h-4 text-indigo-400" />
-                <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-indigo-400">E-E-A-T CERTIFICATION</span>
+                <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-indigo-400">
+                  {t('trust.eeatCertification', 'E-E-A-T CERTIFICATION')}
+                </span>
               </div>
               <p className="text-[11px] text-slate-300 leading-relaxed">
-                FreeQRGen.pro is continuously optimized to guarantee the highest level of optical security, compliance safety, and data accuracy.
+                {t('trust.eeatDesc', 'FreeQRGen.pro is continuously optimized to guarantee the highest level of optical security, compliance safety, and data accuracy.')}
               </p>
               <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
-                <span>VERIFIED BY:</span>
-                <span className="text-emerald-400">iSOLUTIONS LABS</span>
+                <span>{t('trust.verifiedBy', 'VERIFIED BY:')}</span>
+                <span className="text-emerald-400">{t('trust.isolutionsLabs', 'iSOLUTIONS LABS')}</span>
               </div>
             </div>
           </div>
@@ -1202,35 +1218,35 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
               <div className="space-y-4 pb-6 border-b border-slate-200/80">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-black uppercase tracking-widest">
-                    {activePage.badge}
+                    {t('trust.pageBadge.' + activePage.slug, activePage.badge)}
                   </span>
                   <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
-                    <span>BUILD //</span>
+                    <span>{t('trust.buildLabel', 'BUILD //')}</span>
                     <span className="text-slate-800 font-black">{activePage.version}</span>
                   </div>
                 </div>
 
                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none">
-                  {activePage.title}
+                  {t('trust.pageTitle.' + activePage.slug, activePage.title)}
                 </h2>
 
                 {/* Editorial Workflow Bar */}
                 <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider pt-2">
                   <span className="flex items-center gap-1.5 shrink-0">
                     <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    PUBLISHED: 2025-04-12
+                    {t('trust.publishedLabel', 'PUBLISHED: 2025-04-12')}
                   </span>
                   <span className="flex items-center gap-1.5 shrink-0 text-slate-600">
                     <RefreshCw className="w-3.5 h-3.5 text-indigo-500 animate-spin-slow" />
-                    UPDATED: {activePage.lastUpdated}
+                    {t('trust.updatedLabel', 'UPDATED:')} {t('trust.pageLastUpdated.' + activePage.slug, activePage.lastUpdated)}
                   </span>
                   <span className="flex items-center gap-1.5 shrink-0 text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
                     <Check className="w-3 h-3 text-emerald-500" />
-                    FACT CHECKED
+                    {t('trust.factChecked', 'FACT CHECKED')}
                   </span>
                   <span className="flex items-center gap-1.5 shrink-0 text-indigo-600">
                     <Eye className="w-3.5 h-3.5" />
-                    {activePage.readingTime}
+                    {t('trust.pageReadingTime.' + activePage.slug, activePage.readingTime)}
                   </span>
                 </div>
 
@@ -1240,17 +1256,19 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                     <button 
                       onClick={() => setSelectedAuthor(activeAuthor)}
                       className="w-7 h-7 bg-indigo-600 text-white font-black text-xs rounded-full flex items-center justify-center cursor-pointer hover:bg-slate-900 transition-colors"
-                      title="View Author Bio"
+                      title={t('trust.viewAuthorBio', 'View Author Bio')}
                     >
                       {activeAuthor.avatar}
                     </button>
                     <div>
-                      <span className="block text-slate-400 font-bold uppercase text-[9px] font-mono">AUTHORED BY:</span>
+                      <span className="block text-slate-400 font-bold uppercase text-[9px] font-mono">
+                        {t('trust.authoredBy', 'AUTHORED BY:')}
+                      </span>
                       <button 
                         onClick={() => setSelectedAuthor(activeAuthor)}
                         className="font-bold text-slate-800 hover:text-indigo-600 transition-colors text-left"
                       >
-                        {activeAuthor.name}
+                        {t('trust.author.' + activeAuthor.id + '.name', activeAuthor.name)}
                       </button>
                     </div>
                   </div>
@@ -1261,17 +1279,19 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                     <button 
                       onClick={() => setSelectedAuthor(activeReviewer)}
                       className="w-7 h-7 bg-slate-800 text-white font-black text-xs rounded-full flex items-center justify-center cursor-pointer hover:bg-indigo-600 transition-colors"
-                      title="View Reviewer Bio"
+                      title={t('trust.viewReviewerBio', 'View Reviewer Bio')}
                     >
                       {activeReviewer.avatar}
                     </button>
                     <div>
-                      <span className="block text-slate-400 font-bold uppercase text-[9px] font-mono">REVIEWED BY:</span>
+                      <span className="block text-slate-400 font-bold uppercase text-[9px] font-mono">
+                        {t('trust.reviewedBy', 'REVIEWED BY:')}
+                      </span>
                       <button 
                         onClick={() => setSelectedAuthor(activeReviewer)}
                         className="font-bold text-slate-800 hover:text-indigo-600 transition-colors text-left"
                       >
-                        {activeReviewer.name}
+                        {t('trust.author.' + activeReviewer.id + '.name', activeReviewer.name)}
                       </button>
                     </div>
                   </div>
@@ -1283,7 +1303,9 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-100/50 pb-3">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-indigo-600" />
-                    <h3 className="text-xs font-black text-indigo-950 uppercase tracking-wider font-mono">AI Search Engine Quick Answer</h3>
+                    <h3 className="text-xs font-black text-indigo-950 uppercase tracking-wider font-mono">
+                      {t('trust.aiSearchAnswer', 'AI Search Engine Quick Answer')}
+                    </h3>
                   </div>
                   <div className="flex items-center gap-1 bg-white border border-slate-200/80 p-0.5 rounded-lg text-[9px] font-mono font-bold uppercase">
                     {(['gemini', 'chatgpt', 'perplexity'] as const).map(tab => (
@@ -1296,17 +1318,17 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                           : 'text-slate-500 hover:text-indigo-600'
                         }`}
                       >
-                        {tab}
+                        {t('trust.aiTab.' + tab, tab)}
                       </button>
                     ))}
                   </div>
                 </div>
                 <p className="text-xs text-slate-700 leading-relaxed italic">
-                  "{activePage.aiSummary[activeAiSummaryTab]}"
+                  "{t('trust.aiSummary.' + activePage.slug + '.' + activeAiSummaryTab, activePage.aiSummary[activeAiSummaryTab])}"
                 </p>
                 <div className="text-[9px] font-mono text-indigo-500 font-bold flex items-center gap-1">
                   <Info className="w-3 h-3 shrink-0" />
-                  PRO TIP: Optimized for direct citations on Gemini, ChatGPT Search, and Copilot feeds.
+                  {t('trust.aiProTip', 'PRO TIP: Optimized for direct citations on Gemini, ChatGPT Search, and Copilot feeds.')}
                 </div>
               </div>
 
@@ -1315,13 +1337,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'about' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      FreeQRGen.pro represents the next paradigm of contactless link and static vector delivery systems. We remove the operational paywalls, slow servers, and tracking systems typically associated with barcode generation.
+                      {t('trust.aboutP1', 'FreeQRGen.pro represents the next paradigm of contactless link and static vector delivery systems. We remove the operational paywalls, slow servers, and tracking systems typically associated with barcode generation.')}
                     </p>
                     <p>
-                      Our system is engineered to satisfy the demands of modern packaging designers, full-stack developers, and high-volume marketing directors. Static barcodes generated here run completely offline inside the browser canvas buffer, utilizing optimized libraries that ensure compliance with ISO/IEC 18004 standards. No parameters, strings, or target addresses are transmitted to central servers for storage, protecting corporate secrecy.
+                      {t('trust.aboutP2', 'Our system is engineered to satisfy the demands of modern packaging designers, full-stack developers, and high-volume marketing directors. Static barcodes generated here run completely offline inside the browser canvas buffer, utilizing optimized libraries that ensure compliance with ISO/IEC 18004 standards. No parameters, strings, or target addresses are transmitted to central servers for storage, protecting corporate secrecy.')}
                     </p>
                     <p>
-                      Supported by <strong>iSolutions ICo</strong>, we are committed to keeping access open, secure, and fast. In addition to open utilities, we develop specialized enterprise templates and integrations tailored for complex physical print runs, such as asset tracking, signage, and localized contactless nodes.
+                      {t('trust.aboutP3_1', 'Supported by ')}<strong>{t('trust.isolutionsIco', 'iSolutions ICo')}</strong>{t('trust.aboutP3_2', ', we are committed to keeping access open, secure, and fast. In addition to open utilities, we develop specialized enterprise templates and integrations tailored for complex physical print runs, such as asset tracking, signage, and localized contactless nodes.')}
                     </p>
                   </>
                 )}
@@ -1329,13 +1351,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'why-freeqrgen' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRGen.pro to offer an open, secure alternative.
+                      {t('trust.whyP1', 'The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRGen.pro to offer an open, secure alternative.')}
                     </p>
                     <p>
-                      Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static QR codes created on FreeQRGen.pro contain direct destination payloads, making them forever independent of our infrastructure.
+                      {t('trust.whyP2', 'Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static QR codes created on FreeQRGen.pro contain direct destination payloads, making them forever independent of our infrastructure.')}
                     </p>
                     <p>
-                      By moving vector calculations (SVG rendering) to client-side modules, we ensure that you can export infinite-resolution graphics for print without registering or paying licensing fees. It’s professional-grade technology, accessible to everyone.
+                      {t('trust.whyP3', 'By moving vector calculations (SVG rendering) to client-side modules, we ensure that you can export infinite-resolution graphics for print without registering or paying licensing fees. It’s professional-grade technology, accessible to everyone.')}
                     </p>
                   </>
                 )}
@@ -1343,13 +1365,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'editorial-policy' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Our content is held to the highest academic and professional standards. We reject generic, low-quality content in favor of mathematically verified material and concrete code samples.
+                      {t('trust.editorialP1', 'Our content is held to the highest academic and professional standards. We reject generic, low-quality content in favor of mathematically verified material and concrete code samples.')}
                     </p>
                     <p>
-                      All tutorials, placement guides, and documentation hosted on FreeQRGen.pro are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases.
+                      {t('trust.editorialP2', 'All tutorials, placement guides, and documentation hosted on FreeQRGen.pro are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases.')}
                     </p>
                     <p>
-                      We do not accept commercial backlink placements, sponsored promotional content, or guest posts that fail to provide technical value. By remaining completely impartial, we provide search engines and users with a reliable source of information.
+                      {t('trust.editorialP3', 'We do not accept commercial backlink placements, sponsored promotional content, or guest posts that fail to provide technical value. By remaining completely impartial, we provide search engines and users with a reliable source of information.')}
                     </p>
                   </>
                 )}
@@ -1357,13 +1379,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'research-methodology' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Our technical claims are supported by continuous testing. We measure QR scanning velocity across varying skews, light levels, and camera sensors.
+                      {t('trust.researchP1', 'Our technical claims are supported by continuous testing. We measure QR scanning velocity across varying skews, light levels, and camera sensors.')}
                     </p>
                     <p>
-                      Our optical verification laboratory utilizes simulated lighting chambers to measure scan latency under lux values ranging from dark store interiors (50 lx) to bright, direct outdoor sunlight (5,000 lx). We evaluate 2D matrix decodability up to 45-degree horizontal and vertical angles.
+                      {t('trust.researchP2', 'Our optical verification laboratory utilizes simulated lighting chambers to measure scan latency under lux values ranging from dark store interiors (50 lx) to bright, direct outdoor sunlight (5,000 lx). We evaluate 2D matrix decodability up to 45-degree horizontal and vertical angles.')}
                     </p>
                     <p>
-                      This benchmarking data allows us to optimize our rendering presets, giving you styling configurations (dot styles, eye shapes, and color gradients) that maintain perfect scannability on both legacy and modern smartphones.
+                      {t('trust.researchP3', 'This benchmarking data allows us to optimize our rendering presets, giving you styling configurations (dot styles, eye shapes, and color gradients) that maintain perfect scannability on both legacy and modern smartphones.')}
                     </p>
                   </>
                 )}
@@ -1371,13 +1393,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'privacy' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Privacy-by-Design is our core philosophy. We respect user autonomy by avoiding unnecessary tracking, cookies, and database retention pools.
+                      {t('trust.privacyP1', 'Privacy-by-Design is our core philosophy. We respect user autonomy by avoiding unnecessary tracking, cookies, and database retention pools.')}
                     </p>
                     <p>
-                      When you generate a static QR code, your text or link values are kept in localized browser memory and never sent to our servers. All dynamic campaigns anonymize visitor data, omitting personal identifiers and capturing only general regions and user-agent types.
+                      {t('trust.privacyP2', 'When you generate a static QR code, your text or link values are kept in localized browser memory and never sent to our servers. All dynamic campaigns anonymize visitor data, omitting personal identifiers and capturing only general regions and user-agent types.')}
                     </p>
                     <p>
-                      We are fully compliant with GDPR, CCPA, and COPPA frameworks. We do not integrate data brokers, behavioral ad trackers, or third-party marketing scripts, guaranteeing that your marketing funnels remain secure.
+                      {t('trust.privacyP3', 'We are fully compliant with GDPR, CCPA, and COPPA frameworks. We do not integrate data brokers, behavioral ad trackers, or third-party marketing scripts, guaranteeing that your marketing funnels remain secure.')}
                     </p>
                   </>
                 )}
@@ -1385,13 +1407,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'security' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Contactless portals are key targets for bad actors. We implement rigorous input security and sanitization protocols to defend against modern threats.
+                      {t('trust.securityP1', 'Contactless portals are key targets for bad actors. We implement rigorous input security and sanitization protocols to defend against modern threats.')}
                     </p>
                     <p>
-                      To prevent "QRishing" (QR-based phishing) and injection attacks, our systems sanitize all dynamic short-link parameters. We parse strings to remove malicious command paths, database injections, and cross-site scripting (XSS) protocols.
+                      {t('trust.securityP2', 'To prevent "QRishing" (QR-based phishing) and injection attacks, our systems sanitize all dynamic short-link parameters. We parse strings to remove malicious command paths, database injections, and cross-site scripting (XSS) protocols.')}
                     </p>
                     <p>
-                      Our global servers are hosted on premium, secure cloud networks with active DDOS protection and HTTPS-only transit policies, keeping your brand’s digital redirects insulated from transit exploits.
+                      {t('trust.securityP3', 'Our global servers are hosted on premium, secure cloud networks with active DDOS protection and HTTPS-only transit policies, keeping your brand’s digital redirects insulated from transit exploits.')}
                     </p>
                   </>
                 )}
@@ -1399,13 +1421,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'data-processing' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      FreeQRGen.pro offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates.
+                      {t('trust.dpaP1', 'FreeQRGen.pro offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates.')}
                     </p>
                     <p>
-                      Because static codes are processed strictly in browser memory, no personal data is transmitted, making compliance simple. For dynamic tracking where scan metrics are compiled, we act as a Data Processor and implement strict technical and organizational safeguards.
+                      {t('trust.dpaP2', 'Because static codes are processed strictly in browser memory, no personal data is transmitted, making compliance simple. For dynamic tracking where scan metrics are compiled, we act as a Data Processor and implement strict technical and organizational safeguards.')}
                     </p>
                     <p>
-                      We isolate all data silos and utilize only secure, GDPR-compliant European hosting servers, preventing unauthorized data processing or transfer.
+                      {t('trust.dpaP3', 'We isolate all data silos and utilize only secure, GDPR-compliant European hosting servers, preventing unauthorized data processing or transfer.')}
                     </p>
                   </>
                 )}
@@ -1413,13 +1435,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'accessibility' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                       contact-free communication should be inclusive. We optimize our web platform and publish guidelines to make physical barcodes accessible to everyone.
+                       {t('trust.accessibilityP1', 'Contact-free communication should be inclusive. We optimize our web platform and publish guidelines to make physical barcodes accessible to everyone.')}
                     </p>
                     <p>
-                      Our digital interfaces meet WCAG 2.2 AA requirements, featuring full keyboard support, ARIA descriptors, and highly visible focus states.
+                      {t('trust.accessibilityP2', 'Our digital interfaces meet WCAG 2.2 AA requirements, featuring full keyboard support, ARIA descriptors, and highly visible focus states.')}
                     </p>
                     <p>
-                      For physical campaigns, we advise placing tactile guides (such as raised borders or surrounding markers) and braille translations adjacent to printed barcodes, allowing visually impaired users to locate and scan them successfully.
+                      {t('trust.accessibilityP3', 'For physical campaigns, we advise placing tactile guides (such as raised borders or surrounding markers) and braille translations adjacent to printed barcodes, allowing visually impaired users to locate and scan them successfully.')}
                     </p>
                   </>
                 )}
@@ -1427,13 +1449,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'contact' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      We prioritize direct, transparent communication. Our support and security teams are available to address your inquiries.
+                      {t('trust.contactP1', 'We prioritize direct, transparent communication. Our support and security teams are available to address your inquiries.')}
                     </p>
                     <p>
-                      Whether you have questions about custom marketing configurations, enterprise API integration, or compliance auditing, our technical help desk is here to provide guidance.
+                      {t('trust.contactP2', 'Whether you have questions about custom marketing configurations, enterprise API integration, or compliance auditing, our technical help desk is here to provide guidance.')}
                     </p>
                     <p>
-                      Security concerns are escalated directly to our certified CISSP security officers, ensuring rapid investigation and response.
+                      {t('trust.contactP3', 'Security concerns are escalated directly to our certified CISSP security officers, ensuring rapid investigation and response.')}
                     </p>
                   </>
                 )}
@@ -1441,13 +1463,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'changelog' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      We document our continuous integration pipeline, outlining security hotfixes and framework updates chronologically.
+                      {t('trust.changelogP1', 'We document our continuous integration pipeline, outlining security hotfixes and framework updates chronologically.')}
                     </p>
                     <p>
-                      Our changelog details our release cycles, from initial builds to the current production release. We describe our technical changes clearly, giving developers insight into our platform's evolution.
+                      {t('trust.changelogP2', 'Our changelog details our release cycles, from initial builds to the current production release. We describe our technical changes clearly, giving developers insight into our platform\'s evolution.')}
                     </p>
                     <p>
-                      Every update undergoes automated unit testing, visual regression testing, and build validation to guarantee system reliability.
+                      {t('trust.changelogP3', 'Every update undergoes automated unit testing, visual regression testing, and build validation to guarantee system reliability.')}
                     </p>
                   </>
                 )}
@@ -1455,13 +1477,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'release-notes' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Our major updates focus on improving rendering efficiency and print-resolution vector output.
+                      {t('trust.releaseNotesP1', 'Our major updates focus on improving rendering efficiency and print-resolution vector output.')}
                     </p>
                     <p>
-                      Our latest release, v2.4.0, introduces high-precision vector path calculations, offline local caching, and improved custom overlay rendering, giving marketers the tools they need to deploy reliable physical campaigns.
+                      {t('trust.releaseNotesP2', 'Our latest release, v2.4.0, introduces high-precision vector path calculations, offline local caching, and improved custom overlay rendering, giving marketers the tools they need to deploy reliable physical campaigns.')}
                     </p>
                     <p>
-                      These improvements ensure that FreeQRGen.pro remains the most performant, secure, and accurate 2D barcode rendering platform on the web.
+                      {t('trust.releaseNotesP3', 'These improvements ensure that FreeQRGen.pro remains the most performant, secure, and accurate 2D barcode rendering platform on the web.')}
                     </p>
                   </>
                 )}
@@ -1469,13 +1491,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'system-status' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      We share our system uptime and historical reliability metrics openly to demonstrate our operational reliability.
+                      {t('trust.systemStatusP1', 'We share our system uptime and historical reliability metrics openly to demonstrate our operational reliability.')}
                     </p>
                     <p>
-                      Our primary hosting servers, CDNs, and DNS networks run on redundant cloud infrastructure to prevent downtime.
+                      {t('trust.systemStatusP2', 'Our primary hosting servers, CDNs, and DNS networks run on redundant cloud infrastructure to prevent downtime.')}
                     </p>
                     <p>
-                      Because static codes contain no intermediate server dependencies, they remain 100% active and scannable even during network incidents, ensuring business continuity.
+                      {t('trust.systemStatusP3', 'Because static codes contain no intermediate server dependencies, they remain 100% active and scannable even during network incidents, ensuring business continuity.')}
                     </p>
                   </>
                 )}
@@ -1483,13 +1505,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'careers' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Join us in building high-performance, open-source web applications and secure contactless communication systems.
+                      {t('trust.careersP1', 'Join us in building high-performance, open-source web applications and secure contactless communication systems.')}
                     </p>
                     <p>
-                      We are expanding our small, remote-first team of engineers and technical writers. We offer competitive compensation, flexible schedules, and a culture that values clean, well-tested code.
+                      {t('trust.careersP2', 'We are expanding our small, remote-first team of engineers and technical writers. We offer competitive compensation, flexible schedules, and a culture that values clean, well-tested code.')}
                     </p>
                     <p>
-                      If you are passionate about visual performance, security, and accessibility, we would love to hear from you.
+                      {t('trust.careersP3', 'If you are passionate about visual performance, security, and accessibility, we would love to hear from you.')}
                     </p>
                   </>
                 )}
@@ -1497,13 +1519,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'media-kit' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Access official resources and press releases to cover FreeQRGen.pro and iSolutions ICo accurately.
+                      {t('trust.mediaKitP1', 'Access official resources and press releases to cover FreeQRGen.pro and iSolutions ICo accurately.')}
                     </p>
                     <p>
-                      We provide scalable vector logos, color palette specifications, operational statistics, and founding story profiles for journalists and partners.
+                      {t('trust.mediaKitP2', 'We provide scalable vector logos, color palette specifications, operational statistics, and founding story profiles for journalists and partners.')}
                     </p>
                     <p>
-                      By sharing our benchmarking data openly, we provide media outlets with a verified, reliable source of information on optical technology trends.
+                      {t('trust.mediaKitP3', 'By sharing our benchmarking data openly, we provide media outlets with a verified, reliable source of information on optical technology trends.')}
                     </p>
                   </>
                 )}
@@ -1511,13 +1533,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'brand-assets' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Our brand design represents clean simplicity, speed, and safety.
+                      {t('trust.brandAssetsP1', 'Our brand design represents clean simplicity, speed, and safety.')}
                     </p>
                     <p>
-                      Our logo features a stylized camera viewfinder enclosing a geometric pattern. We request that all partners use our high-resolution SVG assets and respect our safe-zone margin guidelines.
+                      {t('trust.brandAssetsP2', 'Our logo features a stylized camera viewfinder enclosing a geometric pattern. We request that all partners use our high-resolution SVG assets and respect our safe-zone margin guidelines.')}
                     </p>
                     <p>
-                      This ensures that our brand is represented consistently across all digital integrations and physical print campaigns.
+                      {t('trust.brandAssetsP3', 'This ensures that our brand is represented consistently across all digital integrations and physical print campaigns.')}
                     </p>
                   </>
                 )}
@@ -1525,13 +1547,13 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {activePage.slug === 'press' && (
                   <>
                     <p className="font-medium text-slate-900 text-sm sm:text-base">
-                      Read official announcements regarding our growth, technical partnerships, and major feature releases.
+                      {t('trust.pressP1', 'Read official announcements regarding our growth, technical partnerships, and major feature releases.')}
                     </p>
                     <p>
-                      We publish regular press releases to share milestones in rendering performance, accessibility integrations, and security developments.
+                      {t('trust.pressP2', 'We publish regular press releases to share milestones in rendering performance, accessibility integrations, and security developments.')}
                     </p>
                     <p>
-                      By providing direct, technically detailed quotes from our core team, we keep media outlets accurately informed.
+                      {t('trust.pressP3', 'By providing direct, technically detailed quotes from our core team, we keep media outlets accurately informed.')}
                     </p>
                   </>
                 )}
@@ -1541,38 +1563,54 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
               <div className="border border-slate-200 bg-slate-50 rounded-2xl p-5 space-y-5">
                 <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
                   <BookOpen className="w-4 h-4 text-slate-700" />
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider font-mono">Expert Citation & Fact Sheet</h3>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider font-mono">
+                    {t('trust.expertCitation', 'Expert Citation & Fact Sheet')}
+                  </h3>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-600">
                   <div className="space-y-4">
                     <div>
-                      <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">CORE DEFINITION</span>
+                      <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">
+                        {t('trust.coreDefinition', 'CORE DEFINITION')}
+                      </span>
                       <p className="mt-1 text-slate-700 leading-relaxed font-semibold">
-                        {activePage.citationBlock.definition}
+                        {t('trust.citationBlock.definition.' + activePage.slug, activePage.citationBlock.definition)}
                       </p>
                     </div>
 
                     <div>
-                      <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">BENCHMARK STATISTICS</span>
+                      <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">
+                        {t('trust.benchmarkStatistics', 'BENCHMARK STATISTICS')}
+                      </span>
                       <div className="mt-2 space-y-2">
                         {activePage.citationBlock.statistics.map((stat, idx) => (
                           <div key={idx} className="bg-white border border-slate-100 p-2.5 rounded-xl flex items-center justify-between">
                             <div>
-                              <span className="block font-bold text-slate-800 text-[11px]">{stat.value}</span>
-                              <span className="block text-[10px] text-slate-400 mt-0.5">{stat.label}</span>
+                              <span className="block font-bold text-slate-800 text-[11px]">
+                                {t('trust.citationBlock.statistics.' + activePage.slug + '.' + idx + '.value', stat.value)}
+                              </span>
+                              <span className="block text-[10px] text-slate-400 mt-0.5">
+                                {t('trust.citationBlock.statistics.' + activePage.slug + '.' + idx + '.label', stat.label)}
+                              </span>
                             </div>
-                            <span className="text-[9px] font-mono text-indigo-500 font-bold uppercase">{stat.source.split(' ')[0]}</span>
+                            <span className="text-[9px] font-mono text-indigo-500 font-bold uppercase">
+                              {t('trust.citationBlock.statistics.' + activePage.slug + '.' + idx + '.source', stat.source).split(' ')[0]}
+                            </span>
                           </div>
                         ))}
                       </div>
                     </div>
 
                     <div>
-                      <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">FACT SHEET</span>
+                      <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">
+                        {t('trust.factSheet', 'FACT SHEET')}
+                      </span>
                       <ul className="mt-2 space-y-1.5 list-disc list-inside">
                         {activePage.citationBlock.quickFacts.map((fact, idx) => (
-                          <li key={idx} className="text-slate-600 leading-normal">{fact}</li>
+                          <li key={idx} className="text-slate-600 leading-normal">
+                            {t('trust.citationBlock.quickFacts.' + activePage.slug + '.' + idx, fact)}
+                          </li>
                         ))}
                       </ul>
                     </div>
@@ -1580,38 +1618,50 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
 
                   <div className="space-y-4">
                     <div>
-                      <span className="block text-[10px] font-mono font-bold uppercase text-emerald-600 tracking-wider">BEST PRACTICES & MATH RULES</span>
+                      <span className="block text-[10px] font-mono font-bold uppercase text-emerald-600 tracking-wider">
+                        {t('trust.bestPractices', 'BEST PRACTICES & MATH RULES')}
+                      </span>
                       <ul className="mt-2 space-y-1.5">
                         {activePage.citationBlock.bestPractices.map((bp, idx) => (
                           <li key={idx} className="flex gap-2 text-slate-700 leading-normal">
                             <span className="text-emerald-500 font-bold shrink-0">✓</span>
-                            <span>{bp}</span>
+                            <span>{t('trust.citationBlock.bestPractices.' + activePage.slug + '.' + idx, bp)}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
                     <div>
-                      <span className="block text-[10px] font-mono font-bold uppercase text-rose-600 tracking-wider">COMMON BARCODE MISTAKES</span>
+                      <span className="block text-[10px] font-mono font-bold uppercase text-rose-600 tracking-wider">
+                        {t('trust.commonMistakes', 'COMMON BARCODE MISTAKES')}
+                      </span>
                       <ul className="mt-2 space-y-1.5">
                         {activePage.citationBlock.commonMistakes.map((cm, idx) => (
                           <li key={idx} className="flex gap-2 text-slate-700 leading-normal">
                             <span className="text-rose-500 font-bold shrink-0">✗</span>
-                            <span>{cm}</span>
+                            <span>{t('trust.citationBlock.commonMistakes.' + activePage.slug + '.' + idx, cm)}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
                     <div>
-                      <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">ISO & ACADEMIC REFERENCES</span>
+                      <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">
+                        {t('trust.isoReferences', 'ISO & ACADEMIC REFERENCES')}
+                      </span>
                       <ul className="mt-2 space-y-2">
                         {activePage.citationBlock.references.map((ref, idx) => (
                           <li key={idx} className="bg-white border border-slate-100 p-2.5 rounded-xl space-y-1">
-                            <span className="block font-semibold text-slate-800 leading-tight">{ref.title}</span>
+                            <span className="block font-semibold text-slate-800 leading-tight">
+                              {t('trust.citationBlock.references.' + activePage.slug + '.' + idx + '.title', ref.title)}
+                            </span>
                             <div className="flex items-center justify-between text-[9px] text-slate-400 font-mono font-bold">
-                              <span>{ref.author || 'ISO COMMITTEE'}</span>
-                              <span>{ref.year || '2015'}</span>
+                              <span>
+                                {t('trust.citationBlock.references.' + activePage.slug + '.' + idx + '.author', ref.author || t('trust.isoCommittee', 'ISO COMMITTEE'))}
+                              </span>
+                              <span>
+                                {t('trust.citationBlock.references.' + activePage.slug + '.' + idx + '.year', ref.year || '2015')}
+                              </span>
                             </div>
                           </li>
                         ))}
@@ -1625,7 +1675,9 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
               <div className="border border-slate-200 rounded-2xl p-5 space-y-4">
                 <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
                   <Info className="w-4 h-4 text-slate-700" />
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider font-mono">Frequently Asked Questions</h3>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider font-mono">
+                    {t('trust.frequentlyAskedQuestions', 'Frequently Asked Questions')}
+                  </h3>
                 </div>
 
                 <div className="space-y-3">
@@ -1637,14 +1689,14 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                           onClick={() => setOpenFaqIndex(isOpen ? null : index)}
                           className="w-full flex items-center justify-between gap-4 p-3.5 text-left text-xs sm:text-sm font-bold bg-slate-50 hover:bg-slate-100/80 transition-colors text-slate-800 cursor-pointer"
                         >
-                          <span>{faq.q}</span>
+                          <span>{t('trust.faq.' + activePage.slug + '.' + index + '.q', faq.q)}</span>
                           <span className="text-slate-400 shrink-0 font-bold text-lg">
                             {isOpen ? '−' : '+'}
                           </span>
                         </button>
                         {isOpen && (
                           <div className="p-3.5 bg-white border-t border-slate-100 text-xs text-slate-600 leading-relaxed">
-                            {faq.a}
+                            {t('trust.faq.' + activePage.slug + '.' + index + '.a', faq.a)}
                           </div>
                         )}
                       </div>
@@ -1657,14 +1709,24 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
 
             {/* INTERNAL LINK CONNECTORS (Optimizes Domain SEO Graph) */}
             <div className="bg-white border border-slate-200/80 rounded-2xl p-5 flex flex-wrap gap-3 items-center text-xs text-slate-500">
-              <span className="font-bold text-slate-800 uppercase tracking-wider font-mono">RELATED RESOURCES:</span>
-              <a href="/faq" onClick={(e) => { e.preventDefault(); onNavigate('/faq'); }} className="text-indigo-600 hover:text-indigo-800 transition-colors underline decoration-dotted">General FAQ</a>
+              <span className="font-bold text-slate-800 uppercase tracking-wider font-mono">
+                {t('trust.relatedResources', 'RELATED RESOURCES:')}
+              </span>
+              <a href="/faq" onClick={(e) => { e.preventDefault(); onNavigate('/faq'); }} className="text-indigo-600 hover:text-indigo-800 transition-colors underline decoration-dotted">
+                {t('trust.relatedGeneralFaq', 'General FAQ')}
+              </a>
               <span>•</span>
-              <a href="/academy" onClick={(e) => { e.preventDefault(); onNavigate('/academy'); }} className="text-indigo-600 hover:text-indigo-800 transition-colors underline decoration-dotted">Academy Guides</a>
+              <a href="/academy" onClick={(e) => { e.preventDefault(); onNavigate('/academy'); }} className="text-indigo-600 hover:text-indigo-800 transition-colors underline decoration-dotted">
+                {t('trust.relatedAcademy', 'Academy Guides')}
+              </a>
               <span>•</span>
-              <a href="/templates" onClick={(e) => { e.preventDefault(); onNavigate('/templates'); }} className="text-indigo-600 hover:text-indigo-800 transition-colors underline decoration-dotted">Ready-to-Print Templates</a>
+              <a href="/templates" onClick={(e) => { e.preventDefault(); onNavigate('/templates'); }} className="text-indigo-600 hover:text-indigo-800 transition-colors underline decoration-dotted">
+                {t('trust.relatedTemplates', 'Ready-to-Print Templates')}
+              </a>
               <span>•</span>
-              <a href="/compare" onClick={(e) => { e.preventDefault(); onNavigate('/compare'); }} className="text-indigo-600 hover:text-indigo-800 transition-colors underline decoration-dotted">Technology Comparison Matrix</a>
+              <a href="/compare" onClick={(e) => { e.preventDefault(); onNavigate('/compare'); }} className="text-indigo-600 hover:text-indigo-800 transition-colors underline decoration-dotted">
+                {t('trust.relatedCompare', 'Technology Comparison Matrix')}
+              </a>
             </div>
 
           </div>
@@ -1683,52 +1745,70 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 {selectedAuthor.avatar}
               </div>
               <div>
-                <h3 className="text-lg font-black text-slate-900 leading-none">{selectedAuthor.name}</h3>
-                <span className="block text-[11px] text-indigo-600 font-bold mt-1 leading-tight">{selectedAuthor.role}</span>
-                <span className="block text-[9px] font-mono text-slate-400 mt-1 uppercase tracking-widest">{selectedAuthor.specialization.split(',')[0]}</span>
+                <h3 className="text-lg font-black text-slate-900 leading-none">
+                  {t('trust.author.' + selectedAuthor.id + '.name', selectedAuthor.name)}
+                </h3>
+                <span className="block text-[11px] text-indigo-600 font-bold mt-1 leading-tight">
+                  {t('trust.author.' + selectedAuthor.id + '.role', selectedAuthor.role)}
+                </span>
+                <span className="block text-[9px] font-mono text-slate-400 mt-1 uppercase tracking-widest">
+                  {t('trust.author.' + selectedAuthor.id + '.specialization', selectedAuthor.specialization).split(',')[0]}
+                </span>
               </div>
             </div>
 
             <div className="space-y-4 text-xs text-slate-600 leading-relaxed">
               <div>
-                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">BIOGRAPHY</span>
-                <p>{selectedAuthor.bio}</p>
+                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">
+                  {t('trust.authorBiography', 'BIOGRAPHY')}
+                </span>
+                <p>{t('trust.author.' + selectedAuthor.id + '.bio', selectedAuthor.bio)}</p>
               </div>
 
               <div>
-                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">PROFESSIONAL CREDENTIALS</span>
+                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">
+                  {t('trust.authorCredentials', 'PROFESSIONAL CREDENTIALS')}
+                </span>
                 <ul className="space-y-1 list-disc list-inside">
                   {selectedAuthor.credentials.map((cred, idx) => (
-                    <li key={idx} className="leading-snug text-slate-700">{cred}</li>
+                    <li key={idx} className="leading-snug text-slate-700">
+                      {t('trust.author.' + selectedAuthor.id + '.credentials.' + idx, cred)}
+                    </li>
                   ))}
                 </ul>
               </div>
 
               <div>
-                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">SELECTED PUBLICATIONS</span>
+                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">
+                  {t('trust.authorPublications', 'SELECTED PUBLICATIONS')}
+                </span>
                 <ul className="space-y-1 list-disc list-inside italic">
                   {selectedAuthor.publications.map((pub, idx) => (
-                    <li key={idx} className="leading-snug text-slate-700">"{pub}"</li>
+                    <li key={idx} className="leading-snug text-slate-700">
+                      "{t('trust.author.' + selectedAuthor.id + '.publications.' + idx, pub)}"
+                    </li>
                   ))}
                 </ul>
               </div>
 
               {/* Social connect links */}
               <div className="pt-4 border-t border-slate-100 flex items-center gap-4">
-                <span className="text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">CONNECT:</span>
+                <span className="text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">
+                  {t('trust.authorConnect', 'CONNECT:')}
+                </span>
                 {selectedAuthor.socials.linkedin && (
                   <a href={selectedAuthor.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                    LinkedIn <ArrowUpRight className="w-3 h-3" />
+                    {t('trust.linkedin', 'LinkedIn')} <ArrowUpRight className="w-3 h-3" />
                   </a>
                 )}
                 {selectedAuthor.socials.twitter && (
                   <a href={selectedAuthor.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                    Twitter <ArrowUpRight className="w-3 h-3" />
+                    {t('trust.twitter', 'Twitter')} <ArrowUpRight className="w-3 h-3" />
                   </a>
                 )}
                 {selectedAuthor.socials.github && (
                   <a href={selectedAuthor.socials.github} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                    GitHub <ArrowUpRight className="w-3 h-3" />
+                    {t('trust.github', 'GitHub')} <ArrowUpRight className="w-3 h-3" />
                   </a>
                 )}
               </div>
@@ -1739,7 +1819,7 @@ export default function TrustCenterHub({ initialSlug, onNavigate, locale = 'en' 
                 onClick={() => setSelectedAuthor(null)}
                 className="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer"
               >
-                Close Author Profile
+                {t('trust.closeAuthorProfile', 'Close Author Profile')}
               </button>
             </div>
           </div>

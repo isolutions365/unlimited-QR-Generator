@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Sparkles, QrCode, Shield, Activity, Share2 } from 'lucide-react';
 
 export default function QR3DExperience() {
+  const { t } = useTranslation();
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -100,7 +104,7 @@ export default function QR3DExperience() {
           <div className="w-full flex items-center justify-between z-10 [transform:translateZ(40px)]">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-indigo-500 shadow-xs" />
-              <span className="text-[10px] font-black tracking-widest text-indigo-600 uppercase font-mono">VISION QR PRO</span>
+              <span className="text-[10px] font-black tracking-widest text-indigo-600 uppercase font-mono">{t('vision.title', 'VISION QR PRO')}</span>
             </div>
             <Sparkles className="w-4 h-4 text-purple-500 animate-pulse" />
           </div>
@@ -138,11 +142,11 @@ export default function QR3DExperience() {
           <div className="w-full bg-slate-900/5 border border-slate-950/5 rounded-2xl p-2.5 flex items-center justify-between z-10 [transform:translateZ(30px)]">
             <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">
               <Shield className="w-3.5 h-3.5 text-emerald-500" />
-              <span>TLS Secured</span>
+              <span>{t('vision.tlsSecured', 'TLS Secured')}</span>
             </div>
             <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">
               <Activity className="w-3.5 h-3.5 text-indigo-500" />
-              <span>Ready</span>
+              <span>{t('vision.ready', 'Ready')}</span>
             </div>
           </div>
         </motion.div>

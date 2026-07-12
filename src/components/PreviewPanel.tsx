@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG, getEmblemFontSize } from '../utils/qrRenderer';
 import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle, Share2, Twitter, Linkedin, Facebook, ChevronDown, FileText, Scale, Sliders, Contrast, Eye, Layers, Maximize } from 'lucide-react';
@@ -15,6 +17,7 @@ interface PreviewPanelProps {
 }
 
 export default function PreviewPanel({ currentProject, onTestScan, onDownloadTrigger, onChange, isSaving = false }: PreviewPanelProps) {
+  const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [simulatedScanResult, setSimulatedScanResult] = useState<string | null>(null);
@@ -494,8 +497,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         return `
           <div style="max-width: 190mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center;">
             <div style="width: 100%; text-align: center; margin-bottom: 8px; font-family: sans-serif;" class="no-print">
-              <p style="font-size: 14px; color: #475569; font-weight: 500;">Grid Print Mode: 8 Cards formatted for standard paper cutlines</p>
-              <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; margin-bottom: 20px;">Print Cards</button>
+              <p style="font-size: 14px; color: #475569; font-weight: 500;">{t('preview.printCardsDesc', 'Grid Print Mode: 8 Cards formatted for standard paper cutlines')}</p>
+              <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; margin-bottom: 20px;">{t('preview.printCards', 'Print Cards')}</button>
             </div>
             ${cardsHtml}
           </div>
@@ -555,8 +558,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         return `
           <div style="max-width: 190mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center;">
             <div style="width: 100%; text-align: center; margin-bottom: 8px; font-family: sans-serif;" class="no-print">
-              <p style="font-size: 14px; color: #475569; font-weight: 500;">Grid Print Mode: 8 Vertical Cards formatted for standard paper cutlines</p>
-              <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; margin-bottom: 20px;">Print Cards</button>
+              <p style="font-size: 14px; color: #475569; font-weight: 500;">{t('preview.printCardsVertDesc', 'Grid Print Mode: 8 Vertical Cards formatted for standard paper cutlines')}</p>
+              <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; margin-bottom: 20px;">{t('preview.printCards', 'Print Cards')}</button>
             </div>
             ${cardsHtml}
           </div>
@@ -610,7 +613,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           </div>
           <div style="border-top: 1px solid #f1f5f9; padding-top: 25px; margin-top: 25px;">
             <p style="font-size: 16px; font-weight: 700; color: #1e293b; margin: 0; word-break: break-all;">${subText}</p>
-            <p style="font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 8px; font-family: monospace;">No App Download Required • Simply Scan with Smartphone Camera</p>
+            <p style="font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 8px; font-family: monospace;">{t('preview.noAppRequired', 'No App Download Required • Simply Scan with Smartphone Camera')}</p>
           </div>
         </div>
       `;
@@ -620,24 +623,24 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       return `
         <div style="max-width: 180mm; margin: 15mm auto; font-family: sans-serif;">
           <div style="text-align: center; margin-bottom: 25px;" class="no-print">
-            <p style="font-size: 14px; color: #475569; font-weight: 500;">Foldable Table Tent Template - Includes fold guides</p>
-            <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Print Table Tent</button>
+            <p style="font-size: 14px; color: #475569; font-weight: 500;">{t('preview.tableTentDesc', 'Foldable Table Tent Template - Includes fold guides')}</p>
+            <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">{t('preview.printTableTent', 'Print Table Tent')}</button>
           </div>
           <div style="border: 1px solid #cbd5e1; border-radius: 12px; height: 160mm; display: flex; position: relative; background: #fafafa; box-sizing: border-box;">
             <div style="flex: 1; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; transform: rotate(180deg); box-sizing: border-box; opacity: 0.85;">
               <div style="padding-top: 15px;">
                 <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase;">${companyName}</div>
                 <div style="width: 25px; height: 1.5px; background: #cbd5e1; margin: 8px auto;"></div>
-                <div style="font-size: 15px; font-weight: 800; color: #334155;">Thank You For scanning!</div>
+                <div style="font-size: 15px; font-weight: 800; color: #334155;">{t('preview.thankYouScanning', 'Thank You For scanning!')}</div>
               </div>
               <div style="padding: 6px; border: 1px solid #e2e8f0; border-radius: 8px; background: white;">
                 <img src="${qrCodeUrl}" style="width: 80px; height: 80px; display: block;" />
               </div>
-              <div style="font-size: 9px; font-weight: 600; color: #cbd5e1; letter-spacing: 2px; text-transform: uppercase;">BACK DISPLAY</div>
+              <div style="font-size: 9px; font-weight: 600; color: #cbd5e1; letter-spacing: 2px; text-transform: uppercase;">{t('preview.backDisplay', 'BACK DISPLAY')}</div>
             </div>
             
             <div style="position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; transform: translateX(-50%);">
-              <span style="background: #334155; color: white; border-radius: 10px; font-size: 8px; font-weight: 700; padding: 3px 12px; letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; transform: rotate(-90deg); z-index: 10;">FOLD LINE TO STAND</span>
+              <span style="background: #334155; color: white; border-radius: 10px; font-size: 8px; font-weight: 700; padding: 3px 12px; letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; transform: rotate(-90deg); z-index: 10;">{t('preview.foldLine', 'FOLD LINE TO STAND')}</span>
             </div>
             
             <div style="flex: 1; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; box-sizing: border-box; position: relative;">
@@ -656,7 +659,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               </div>
               <div>
                 <div style="font-size: 10px; font-family: monospace; color: #64748b; word-break: break-all; max-width: 160px;">${subText}</div>
-                <div style="font-size: 8px; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-family: monospace; margin-top: 6px;">Fold and Stand • Easy to Scan</div>
+                <div style="font-size: 8px; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-family: monospace; margin-top: 6px;">{t('preview.foldAndStand', 'Fold and Stand • Easy to Scan')}</div>
               </div>
             </div>
           </div>
@@ -683,8 +686,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       return `
         <div style="max-width: 190mm; margin: 0 auto;">
           <div style="text-align: center; margin-bottom: 25px;" class="no-print" style="font-family: sans-serif;">
-            <p style="font-size: 14px; color: #475569; font-weight: 500;">Multi-Sticker Sheet: 12 stickers with clean cutting guides</p>
-            <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Print Sheet</button>
+            <p style="font-size: 14px; color: #475569; font-weight: 500;">{t('preview.stickerSheetDesc', 'Multi-Sticker Sheet: 12 stickers with clean cutting guides')}</p>
+            <button onclick="window.print()" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">{t('preview.printSheet', 'Print Sheet')}</button>
           </div>
           <div style="display: flex; flex-wrap: wrap; justify-content: center;">
             ${stickersHtml}
@@ -965,7 +968,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Print-Ready QR Code</title>
+          <title>{t('preview.printReadyQr', 'Print-Ready QR Code')}</title>
           \${stylesHtml}
           <style>
             @media print {
@@ -1202,7 +1205,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               <svg className="w-3.5 h-3.5 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              <span>Saved to Secure Cloud</span>
+              <span>{t('preview.savedToCloud', 'Saved to Secure Cloud')}</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -1316,7 +1319,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                     ? 'bg-rose-600 hover:bg-rose-700 text-white' 
                     : 'bg-amber-500 hover:bg-amber-650 text-white'
                 }`}
-                title="Click for Scannability Diagnostics"
+                title={t('preview.tooltip.diagnostics', 'Click for Scannability Diagnostics')}
               >
                 <AlertTriangle className="w-3 h-3 stroke-[3]" />
                 <span>Risk: {hasUnreadableIssue ? 'High' : 'Medium'}</span>
@@ -1337,7 +1340,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               {/* Central scanning prompt */}
               <div className="flex flex-col items-center gap-1 bg-slate-900/95 text-white py-2 px-3.5 rounded-xl border border-slate-700/60 shadow-xl transform scale-95 group-hover:scale-100 transition-all duration-300">
                 <Camera className="w-4 h-4 text-indigo-400 animate-pulse" />
-                <span className="text-[10px] font-extrabold tracking-wider uppercase text-slate-200">READY TO SCAN</span>
+                <span className="text-[10px] font-extrabold tracking-wider uppercase text-slate-200">{t('preview.readyToScan', 'READY TO SCAN')}</span>
               </div>
             </div>
 
@@ -1482,7 +1485,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <FileType className="w-3.5 h-3.5 text-slate-600" />
-              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Download Format</span>
+              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">{t('preview.downloadFormat', 'Download Format')}</span>
             </div>
             <div className="relative">
               <button
@@ -1580,7 +1583,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             aria-label="Open Print-Ready Layout Modal"
           >
             <Printer className="w-4 h-4 text-indigo-100" />
-            <span>Print-Ready A4/Letter Page</span>
+            <span>{t('preview.printReadyPage', 'Print-Ready A4/Letter Page')}</span>
           </button>
 
           <button
@@ -1599,7 +1602,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <Share2 className="w-3.5 h-3.5 text-slate-600" />
-              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Share QR Design</span>
+              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">{t('preview.shareQrDesign', 'Share QR Design')}</span>
             </div>
             {isTargetAUrl && (
               <div className="flex bg-white border border-slate-200 p-0.5 rounded-lg shadow-3xs">
@@ -1611,7 +1614,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       ? 'bg-slate-900 text-white shadow-xs'
                       : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
                   }`}
-                  title="Share the link embedded inside the QR"
+                  title={t('preview.tooltip.shareEmbed', 'Share the link embedded inside the QR')}
                 >
                   Destination
                 </button>
@@ -1623,7 +1626,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       ? 'bg-slate-900 text-white shadow-xs'
                       : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
                   }`}
-                  title="Share the link to QR Studio builder"
+                  title={t('preview.tooltip.shareBuilder', 'Share the link to QR Studio builder')}
                 >
                   App Link
                 </button>
@@ -1632,7 +1635,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           </div>
 
           <div className="bg-white border border-slate-200/60 p-2.5 rounded-xl">
-            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Post Preview</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{t('preview.postPreview', 'Post Preview')}</span>
             <p className="text-[11px] text-slate-600 font-medium leading-relaxed italic bg-slate-50/50 p-2 rounded-lg border border-slate-100 select-all">
               "{shareText}" <span className="text-indigo-600 not-italic font-semibold break-all">{finalShareUrl}</span>
             </p>
@@ -1675,7 +1678,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         {/* Tracking Details & Copying Option */}
         {trackingEnabled && trackingUrl && (
           <div className="w-full bg-indigo-50/30 border border-indigo-100/50 rounded-xl p-3 flex flex-col gap-2 mt-1">
-            <span className="text-[10px] text-indigo-950 font-semibold uppercase tracking-wider">Tracking Short URL</span>
+            <span className="text-[10px] text-indigo-950 font-semibold uppercase tracking-wider">{t('preview.trackingShortUrl', 'Tracking Short URL')}</span>
             <div className="flex items-center justify-between gap-2 overflow-hidden bg-white px-3 py-1.5 rounded-lg border border-indigo-100">
               <span className="text-xs font-mono text-indigo-800 truncate select-all">{trackingUrl}</span>
               <div className="flex items-center gap-1.5">
@@ -1683,7 +1686,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   type="button"
                   onClick={handleCopyLink}
                   className="p-1 hover:bg-indigo-50 text-indigo-600 rounded-md transition-all"
-                  title="Copy link"
+                  title={t('preview.tooltip.copyLink', 'Copy link')}
                   aria-label="Copy short tracking URL"
                 >
                   {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
@@ -1693,7 +1696,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   target="_blank"
                   rel="noreferrer"
                   className="p-1 hover:bg-indigo-50 text-indigo-600 rounded-md transition-all"
-                  title="Test scan redirect"
+                  title={t('preview.tooltip.testScan', 'Test scan redirect')}
                   aria-label="Open tracking redirect URL in a new window"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -1711,7 +1714,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         <div className="flex items-center justify-between border-b border-slate-800 pb-3 mt-2">
           <div className="flex items-center gap-1.5 text-xs text-slate-300">
             <Smartphone className="w-4 h-4 text-indigo-400" />
-            <span>Smartphone Simulator</span>
+            <span>{t('preview.smartphoneSimulator', 'Smartphone Simulator')}</span>
           </div>
           <span className="text-[9px] px-2 py-0.5 rounded-full bg-indigo-900/50 border border-indigo-500/30 text-indigo-350 font-mono">
             LIVE DECODER
@@ -1724,11 +1727,11 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             <div className="flex flex-col items-center gap-2">
               <Camera className="w-6 h-6 text-indigo-400 animate-pulse" />
               <div className="w-32 h-1 bg-indigo-500 animate-bounce rounded-full shadow-lg shadow-indigo-500" />
-              <span className="text-[10px] text-slate-300 font-mono">Decoding modules...</span>
+              <span className="text-[10px] text-slate-300 font-mono">{t('preview.decodingModules', 'Decoding modules...')}</span>
             </div>
           ) : simulatedScanResult ? (
             <div className="text-center p-4">
-              <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-wider block mb-1">✓ QR Scan Success</span>
+              <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-wider block mb-1">{t('preview.scanSuccess', '✓ QR Scan Success')}</span>
               <p className="text-xs text-white max-w-xs break-all truncate font-mono bg-slate-900/60 p-2 rounded-lg border border-slate-800">
                 {simulatedScanResult}
               </p>
@@ -1746,7 +1749,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             </div>
           ) : (
             <div className="text-center space-y-1">
-              <p className="text-xs text-slate-300">Viewfinder ready.</p>
+              <p className="text-xs text-slate-300">{t('preview.viewfinderReady', 'Viewfinder ready.')}</p>
               <button
                 type="button"
                 onClick={simulateScan}
@@ -1788,15 +1791,15 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         <Printer className="w-5 h-5" />
                       </div>
                       <div>
-                        <h2 className="text-base font-extrabold text-slate-900 tracking-tight">Print Layout Studio</h2>
-                        <span className="text-[10px] text-slate-500 font-medium">Standardized physical media formats</span>
+                        <h2 className="text-base font-extrabold text-slate-900 tracking-tight">{t('preview.printLayoutStudio', 'Print Layout Studio')}</h2>
+                        <span className="text-[10px] text-slate-500 font-medium">{t('preview.mediaFormats', 'Standardized physical media formats')}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Settings Category 1: Layout Selection */}
                   <div className="space-y-2.5">
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">1. Select Layout Template</span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">{t('preview.stepSelectLayout', '1. Select Layout Template')}</span>
                     <div className="grid grid-cols-1 gap-2">
                       {[
                         { id: 'business_card_horizontal', label: 'Horizontal Business Card (3.5" x 2.0")', desc: 'Perfect for standard wallets & boxes' },
@@ -1829,37 +1832,37 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
                   {/* Settings Category 2: Card customizations */}
                   <div className="space-y-4 pt-1">
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">2. Brand Text Customization</span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">{t('preview.stepBrandText', '2. Brand Text Customization')}</span>
                     
                     <div className="space-y-3">
                       <div>
-                        <label htmlFor="comp-name" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Company / Brand Name</label>
+                        <label htmlFor="comp-name" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('preview.companyBrandName', 'Company / Brand Name')}</label>
                         <input
                           id="comp-name"
                           type="text"
                           value={companyName}
                           onChange={(e) => setCompanyName(e.target.value.toUpperCase())}
                           className="w-full h-9 px-3 bg-white border border-slate-250 rounded-lg text-xs font-semibold text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
-                          placeholder="CREATIVE STUDIO"
+                          placeholder={t('preview.placeholder.creativeStudio', 'CREATIVE STUDIO')}
                         />
                       </div>
 
                       {selectedLayout !== 'multi_sticker' && (
                         <div>
-                          <label htmlFor="head-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Primary Call-to-Action</label>
+                          <label htmlFor="head-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('preview.primaryCta', 'Primary Call-to-Action')}</label>
                           <input
                             id="head-text"
                             type="text"
                             value={headingText}
                             onChange={(e) => setHeadingText(e.target.value)}
                             className="w-full h-9 px-3 bg-white border border-slate-250 rounded-lg text-xs font-medium text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
-                            placeholder="SCAN TO VISIT WEBSITE"
+                            placeholder={t('preview.placeholder.scanToVisit', 'SCAN TO VISIT WEBSITE')}
                           />
                         </div>
                       )}
 
                       <div>
-                        <label htmlFor="url-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Display Text / Web URL</label>
+                        <label htmlFor="url-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('preview.displayTextUrl', 'Display Text / Web URL')}</label>
                         <input
                           id="url-text"
                           type="text"
@@ -1870,14 +1873,14 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       </div>
 
                       <div>
-                        <label htmlFor="badge-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Mini Badge Label</label>
+                        <label htmlFor="badge-text" className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('preview.miniBadgeLabel', 'Mini Badge Label')}</label>
                         <input
                           id="badge-text"
                           type="text"
                           value={badgeText}
                           onChange={(e) => setBadgeText(e.target.value.toUpperCase())}
                           className="w-full h-9 px-3 bg-white border border-slate-250 rounded-lg text-xs font-bold text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
-                          placeholder="SCAN ME"
+                          placeholder={t('preview.placeholder.scanMe', 'SCAN ME')}
                         />
                       </div>
                     </div>
@@ -1885,7 +1888,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
                   {/* Settings Category 3: Color accent */}
                   <div className="space-y-3">
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">3. Layout Color Accent</span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">{t('preview.stepColorAccent', '3. Layout Color Accent')}</span>
                     <div className="flex items-center gap-2">
                       {Object.keys(colorThemes).map((colorKey) => (
                         <button
@@ -1913,8 +1916,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                     <div className="pt-2 border-t border-slate-200 space-y-2">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-xs font-bold text-slate-800">Layout Format Mode</p>
-                          <p className="text-[10px] text-slate-600">Print 8 cards on a sheet vs. single layout</p>
+                          <p className="text-xs font-bold text-slate-800">{t('preview.layoutFormatMode', 'Layout Format Mode')}</p>
+                          <p className="text-[10px] text-slate-600">{t('preview.layoutFormatModeDesc', 'Print 8 cards on a sheet vs. single layout')}</p>
                         </div>
                         <button
                           type="button"
@@ -2035,7 +2038,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                             </div>
                             <div className="text-center w-full pt-1.5 border-t border-slate-100">
                               <p className="text-[9px] font-bold text-slate-800 truncate px-2">{subText}</p>
-                              <p className="text-[8px] text-slate-400 mt-0.5 font-medium uppercase font-mono">Simply Scan & Learn • No registration</p>
+                              <p className="text-[8px] text-slate-400 mt-0.5 font-medium uppercase font-mono">{t('preview.simplyScanLearn', 'Simply Scan & Learn • No registration')}</p>
                             </div>
                           </div>
                         );
@@ -2050,12 +2053,12 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                 <div className="pt-1">
                                   <h4 className="text-[8px] font-mono text-slate-400 uppercase tracking-widest">{companyName || 'WELCOME'}</h4>
                                   <div className="w-4 h-0.5 mx-auto my-1 bg-slate-200" />
-                                  <h3 className="text-[9px] font-bold text-slate-700 leading-tight">Thank You!</h3>
+                                  <h3 className="text-[9px] font-bold text-slate-700 leading-tight">{t('preview.thankYou', 'Thank You!')}</h3>
                                 </div>
                                 <div className="p-1 border border-slate-100 rounded-md bg-white">
                                   <img src={qrImg} className="w-[46px] h-[46px] opacity-70" alt="Print QR preview" />
                                 </div>
-                                <span className="text-[7px] text-slate-400 uppercase tracking-widest font-mono">BACK DISPLAY</span>
+                                <span className="text-[7px] text-slate-400 uppercase tracking-widest font-mono">{t('preview.backDisplay', 'BACK DISPLAY')}</span>
                               </div>
 
                               {/* Right display viewport */}
@@ -2075,7 +2078,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                 </div>
                                 <div>
                                   <span className="text-[8px] font-mono text-slate-500 block truncate max-w-[130px]">{subText}</span>
-                                  <span className="text-[6px] text-slate-400 font-bold block uppercase mt-0.5">Fold and Stand Display</span>
+                                  <span className="text-[6px] text-slate-400 font-bold block uppercase mt-0.5">{t('preview.foldStandDisplay', 'Fold and Stand Display')}</span>
                                 </div>
                               </div>
                             </div>
@@ -2114,7 +2117,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 <div className="bg-slate-800/65 backdrop-blur-xs border border-slate-700/60 p-4 rounded-xl text-center max-w-sm mt-3">
                   <div className="flex items-center justify-center gap-1.5 text-slate-300 text-xs font-semibold">
                     <Grid className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Quality Aspect Ratio Check</span>
+                    <span>{t('preview.qualityCheck', 'Quality Aspect Ratio Check')}</span>
                   </div>
                   <p className="text-[10px] text-slate-400 mt-1 leading-normal">
                     This workspace shows accurate physical layout proportions. Select your favorite theme, input copy details, and tap the print button. Cut guidelines are auto-generated!
@@ -2155,8 +2158,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                     <AlertTriangle className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
-                    <h3 className="text-sm font-black uppercase tracking-wider text-white">Scannability Inspector</h3>
-                    <p className="text-[10px] text-slate-100 opacity-90 font-medium">Real-time design & color analysis</p>
+                    <h3 className="text-sm font-black uppercase tracking-wider text-white">{t('preview.scannabilityInspector', 'Scannability Inspector')}</h3>
+                    <p className="text-[10px] text-slate-100 opacity-90 font-medium">{t('preview.inspectorDesc', 'Real-time design & color analysis')}</p>
                   </div>
                 </div>
                 <button
@@ -2175,7 +2178,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 {/* 1. Contrast Diagnostic */}
                 <div className="space-y-2 text-left">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">1. Color Contrast Ratio</span>
+                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">{t('preview.colorContrastRatio', '1. Color Contrast Ratio')}</span>
                     <span className={`text-xs font-mono font-black px-2 py-0.5 rounded ${
                       isLowContrast 
                         ? 'bg-rose-50 text-rose-700 border border-rose-100' 
@@ -2229,7 +2232,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       }}
                       className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-extrabold rounded-lg uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer border-0"
                     >
-                      <span>Fix Colors (Set Slate on White)</span>
+                      <span>{t('preview.fixColorsBtn', 'Fix Colors (Set Slate on White)')}</span>
                     </button>
                   )}
                 </div>
@@ -2238,7 +2241,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 {logoUrl ? (
                   <div className="space-y-2 pt-4 border-t border-slate-100 text-left">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">2. Center Logo Coverage</span>
+                      <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">{t('preview.centerLogoCoverage', '2. Center Logo Coverage')}</span>
                       <span className={`text-xs font-mono font-black px-2 py-0.5 rounded ${
                         isExcessiveLogo 
                           ? 'bg-rose-50 text-rose-700 border border-rose-100' 
@@ -2325,7 +2328,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 {/* 3. Data Density & Error Correction Level Diagnostic */}
                 <div className="space-y-2 pt-4 border-t border-slate-100 text-left">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">3. Data Density & Correction</span>
+                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">{t('preview.dataDensityCorrection', '3. Data Density & Correction')}</span>
                     <span className={`text-xs font-mono font-black px-2 py-0.5 rounded ${
                       isDensityHighRisk 
                         ? 'bg-rose-50 text-rose-700 border border-rose-100' 
@@ -2465,8 +2468,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         <FileText className="w-5 h-5 text-indigo-400" />
                       </div>
                       <div className="text-left">
-                        <h3 className="text-sm font-black uppercase tracking-wider text-white">Print-Ready Studio</h3>
-                        <p className="text-[10px] text-indigo-200 font-medium">Pre-press calibration & layout center</p>
+                        <h3 className="text-sm font-black uppercase tracking-wider text-white">{t('preview.printReadyStudio', 'Print-Ready Studio')}</h3>
+                        <p className="text-[10px] text-indigo-200 font-medium">{t('preview.prepressDesc', 'Pre-press calibration & layout center')}</p>
                       </div>
                     </div>
                   </div>
@@ -2515,7 +2518,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex gap-2 text-amber-800">
                         <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                         <div className="text-[10px] leading-tight font-medium">
-                          <p className="font-bold uppercase tracking-wider text-amber-900 mb-0.5">Layout Overflow Alert</p>
+                          <p className="font-bold uppercase tracking-wider text-amber-900 mb-0.5">{t('preview.layoutOverflow', 'Layout Overflow Alert')}</p>
                           Some QR copies are exceeding the physical print boundaries. Try shrinking the QR size or narrowing safe zone quiet margins.
                         </div>
                       </div>
@@ -2539,7 +2542,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>A4 Sheet</span>
+                              <span>{t('preview.a4Sheet', 'A4 Sheet')}</span>
                               <span className={`text-[9px] font-normal ${printReadyPaperSize === 'a4' ? 'text-indigo-200' : 'text-slate-400'}`}>
                                 210mm x 297mm
                               </span>
@@ -2553,7 +2556,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>US Letter</span>
+                              <span>{t('preview.usLetter', 'US Letter')}</span>
                               <span className={`text-[9px] font-normal ${printReadyPaperSize === 'letter' ? 'text-indigo-200' : 'text-slate-400'}`}>
                                 8.5" x 11" (215.9x279.4mm)
                               </span>
@@ -2609,8 +2612,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>Single QR</span>
-                              <span className="text-[8px] font-normal opacity-85">Centered pre-press</span>
+                              <span>{t('preview.singleQr', 'Single QR')}</span>
+                              <span className="text-[8px] font-normal opacity-85">{t('preview.centeredPrepress', 'Centered pre-press')}</span>
                             </button>
                             <button
                               type="button"
@@ -2621,8 +2624,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>2x2 Grid (4 Copies)</span>
-                              <span className="text-[8px] font-normal opacity-85">Even paper distribution</span>
+                              <span>{t('preview.grid2x2', '2x2 Grid (4 Copies)')}</span>
+                              <span className="text-[8px] font-normal opacity-85">{t('preview.grid2x2Desc', 'Even paper distribution')}</span>
                             </button>
                             <button
                               type="button"
@@ -2633,8 +2636,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>3x3 Grid (9 Copies)</span>
-                              <span className="text-[8px] font-normal opacity-85">Maximum paper utilization</span>
+                              <span>{t('preview.grid3x3', '3x3 Grid (9 Copies)')}</span>
+                              <span className="text-[8px] font-normal opacity-85">{t('preview.grid3x3Desc', 'Maximum paper utilization')}</span>
                             </button>
                             <button
                               type="button"
@@ -2645,8 +2648,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>4x4 Grid (16 Copies)</span>
-                              <span className="text-[8px] font-normal opacity-85">Small high-density stickers</span>
+                              <span>{t('preview.grid4x4', '4x4 Grid (16 Copies)')}</span>
+                              <span className="text-[8px] font-normal opacity-85">{t('preview.grid4x4Desc', 'Small high-density stickers')}</span>
                             </button>
                           </div>
                         </div>
@@ -2670,9 +2673,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                             className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
                           />
                           <div className="flex justify-between text-[9px] text-slate-400 font-mono">
-                            <span>15mm (Sticker)</span>
-                            <span>65mm (Recommended)</span>
-                            <span>140mm (Poster)</span>
+                            <span>{t('preview.size15mm', '15mm (Sticker)')}</span>
+                            <span>{t('preview.size65mm', '65mm (Recommended)')}</span>
+                            <span>{t('preview.size140mm', '140mm (Poster)')}</span>
                           </div>
                         </div>
 
@@ -2695,9 +2698,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                             className="w-full accent-indigo-600 h-1 bg-slate-200 rounded-lg cursor-pointer"
                           />
                           <div className="flex justify-between text-[9px] text-slate-400 font-mono">
-                            <span>2mm (Minimum)</span>
-                            <span>10mm (Balanced)</span>
-                            <span>25mm (Generous)</span>
+                            <span>{t('preview.margin2mm', '2mm (Minimum)')}</span>
+                            <span>{t('preview.margin10mm', '10mm (Balanced)')}</span>
+                            <span>{t('preview.margin25mm', '25mm (Generous)')}</span>
                           </div>
                         </div>
                       </>
@@ -2725,7 +2728,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                             <div></div>
                             
                             <div>
-                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">Left</span>
+                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">{t('preview.left', 'Left')}</span>
                               <input 
                                 type="number" 
                                 value={printReadyMarginLeft} 
@@ -2740,7 +2743,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                               </div>
                             </div>
                             <div>
-                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">Right</span>
+                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">{t('preview.right', 'Right')}</span>
                               <input 
                                 type="number" 
                                 value={printReadyMarginRight} 
@@ -2796,7 +2799,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                               <div className="space-y-3 pt-3 p-3 bg-slate-100 rounded-xl mt-2 animate-fadeIn">
                                 <div className="space-y-1">
                                   <div className="flex justify-between text-[10px] font-bold text-slate-600 font-mono">
-                                    <span>Offset X (Horizontal)</span>
+                                    <span>{t('preview.offsetX', 'Offset X (Horizontal)')}</span>
                                     <span>{printReadyCustomX}mm</span>
                                   </div>
                                   <input
@@ -2811,7 +2814,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                 </div>
                                 <div className="space-y-1">
                                   <div className="flex justify-between text-[10px] font-bold text-slate-600 font-mono">
-                                    <span>Offset Y (Vertical)</span>
+                                    <span>{t('preview.offsetY', 'Offset Y (Vertical)')}</span>
                                     <span>{printReadyCustomY}mm</span>
                                   </div>
                                   <input
@@ -2853,8 +2856,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>Original</span>
-                              <span className="text-[8px] font-normal opacity-85">Full Color</span>
+                              <span>{t('preview.colorOriginal', 'Original')}</span>
+                              <span className="text-[8px] font-normal opacity-85">{t('preview.colorFullColor', 'Full Color')}</span>
                             </button>
                             <button
                               type="button"
@@ -2865,8 +2868,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>Grayscale</span>
-                              <span className="text-[8px] font-normal opacity-85">Ink Saver</span>
+                              <span>{t('preview.colorGrayscale', 'Grayscale')}</span>
+                              <span className="text-[8px] font-normal opacity-85">{t('preview.colorInkSaver', 'Ink Saver')}</span>
                             </button>
                             <button
                               type="button"
@@ -2877,8 +2880,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                                   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              <span>Pure B&W</span>
-                              <span className="text-[8px] font-normal opacity-85">Laser Max</span>
+                              <span>{t('preview.colorPureBw', 'Pure B&W')}</span>
+                              <span className="text-[8px] font-normal opacity-85">{t('preview.colorLaserMax', 'Laser Max')}</span>
                             </button>
                           </div>
                           <p className="text-[10px] text-slate-500 leading-normal">
@@ -2892,8 +2895,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         <div className="space-y-2 pt-2 border-t border-slate-100">
                           <label className="flex items-center justify-between cursor-pointer p-1.5 hover:bg-slate-100/50 rounded-lg transition-all">
                             <div className="text-left">
-                              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Show Crop Marks</span>
-                              <p className="text-[10px] text-slate-400">Pre-press corners for physical guillotine cutting alignment.</p>
+                              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">{t('preview.showCropMarks', 'Show Crop Marks')}</span>
+                              <p className="text-[10px] text-slate-400">{t('preview.cropMarksDesc', 'Pre-press corners for physical guillotine cutting alignment.')}</p>
                             </div>
                             <input
                               type="checkbox"
@@ -2905,8 +2908,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
                           <label className="flex items-center justify-between cursor-pointer p-1.5 hover:bg-slate-100/50 rounded-lg transition-all">
                             <div className="text-left">
-                              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Show Footnote / Label</span>
-                              <p className="text-[10px] text-slate-400">Adds size, date, and custom string in footer margins.</p>
+                              <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">{t('preview.showFootnote', 'Show Footnote / Label')}</span>
+                              <p className="text-[10px] text-slate-400">{t('preview.footnoteDesc', 'Adds size, date, and custom string in footer margins.')}</p>
                             </div>
                             <input
                               type="checkbox"
@@ -2920,7 +2923,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         {/* Custom Footnote text input */}
                         {printReadyShowInfo && (
                           <div className="space-y-1 text-left animate-fadeIn">
-                            <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Custom Label String</label>
+                            <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">{t('preview.customLabelString', 'Custom Label String')}</label>
                             <input
                               type="text"
                               value={printReadyInfoText}
@@ -2949,7 +2952,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-xl uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer border-0"
                     >
                       <Printer className="w-4 h-4" />
-                      <span>Print Sheet</span>
+                      <span>{t('preview.printSheet', 'Print Sheet')}</span>
                     </button>
                   </div>
                 </div>
@@ -2967,7 +2970,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       <div className="flex items-center gap-1 border border-slate-200 rounded-lg p-0.5 bg-white">
                         <button
                           type="button"
-                          title="Zoom Out"
+                          title={t('preview.tooltip.zoomOut', 'Zoom Out')}
                           onClick={() => setPrintReadyZoom(Math.max(30, printReadyZoom - 10))}
                           className="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded text-[10px] cursor-pointer"
                         >
@@ -2978,7 +2981,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         </span>
                         <button
                           type="button"
-                          title="Zoom In"
+                          title={t('preview.tooltip.zoomIn', 'Zoom In')}
                           onClick={() => setPrintReadyZoom(Math.min(150, printReadyZoom + 10))}
                           className="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded text-[10px] cursor-pointer"
                         >
@@ -2989,7 +2992,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       <div className="flex items-center gap-1 border border-slate-200 rounded-lg p-0.5 bg-white">
                         <button
                           type="button"
-                          title="Toggle Rulers"
+                          title={t('preview.tooltip.toggleRulers', 'Toggle Rulers')}
                           onClick={() => setPrintReadyShowRulers(!printReadyShowRulers)}
                           className={`px-2 py-1 rounded text-[10px] font-bold cursor-pointer transition-all ${
                             printReadyShowRulers ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:bg-slate-100'
@@ -2999,7 +3002,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         </button>
                         <button
                           type="button"
-                          title="Toggle Grid Lines"
+                          title={t('preview.tooltip.toggleGrid', 'Toggle Grid Lines')}
                           onClick={() => setPrintReadyShowGrid(!printReadyShowGrid)}
                           className={`px-2 py-1 rounded text-[10px] font-bold cursor-pointer transition-all ${
                             printReadyShowGrid ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:bg-slate-100'
@@ -3170,7 +3173,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
                   {/* Estimated DPI / Resolution Indicator */}
                   <div className="p-3 bg-slate-50 border-t border-slate-200 text-left text-[10px] text-slate-500 font-mono flex justify-between items-center shadow-inner">
-                    <span>Estimated Pre-press Density:</span>
+                    <span>{t('preview.estimatedDensity', 'Estimated Pre-press Density:')}</span>
                     <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
                       {Math.round(2000 / (printReadyQrSize / 25.4))} DPI (Pin-sharp Vectors)
                     </span>

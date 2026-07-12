@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
 import { QRProject, ScanLog } from './types';
-import { landingPages } from './components/landing/SEODatabase';
+import { landingPages } from './pages/landing/SEODatabase';
 import { blogArticles } from './data/blogData';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
 
 // Code-splitting via React.lazy for non-critical elements (improves LCP, FCP, Speed Index)
-const SEOPage = React.lazy(() => import('./components/landing/SEOPage'));
+const SEOPage = React.lazy(() => import('./pages/landing/SEOPage'));
 const TemplatesTab = React.lazy(() => import('./components/TemplatesTab'));
 const SavedProjects = React.lazy(() => import('./components/SavedProjects'));
 const AnalyticsDashboard = React.lazy(() => import('./components/AnalyticsDashboard'));
@@ -15,24 +15,24 @@ const MobileAppMockup = React.lazy(() => import('./components/MobileAppMockup'))
 const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowcase'));
 const AuthModal = React.lazy(() => import('./components/AuthModal'));
 const ShortcutsHelpModal = React.lazy(() => import('./components/ShortcutsHelpModal'));
-const CompanyPages = React.lazy(() => import('./components/CompanyPages'));
-const TrustCenterHub = React.lazy(() => import('./components/TrustCenterHub'));
-const FaqSection = React.lazy(() => import('./components/FaqSection'));
-const BlogSection = React.lazy(() => import('./components/BlogSection'));
-const KnowledgeHub = React.lazy(() => import('./components/KnowledgeHub'));
+const CompanyPages = React.lazy(() => import('./pages/CompanyPages'));
+const TrustCenterHub = React.lazy(() => import('./pages/TrustCenterHub'));
+const FaqSection = React.lazy(() => import('./pages/FaqSection'));
+const BlogSection = React.lazy(() => import('./pages/BlogSection'));
+const KnowledgeHub = React.lazy(() => import('./pages/KnowledgeHub'));
 import { knowledgeArticles } from './data/knowledgeData';
-const TemplatesHub = React.lazy(() => import('./components/TemplatesHub'));
+const TemplatesHub = React.lazy(() => import('./pages/TemplatesHub'));
 import { templatePages } from './data/templatePagesData';
-const EmbedPage = React.lazy(() => import('./components/EmbedPage'));
+const EmbedPage = React.lazy(() => import('./pages/EmbedPage'));
 const TourWelcomeModal = React.lazy(() => import('./components/TourWelcomeModal'));
-const CompareHub = React.lazy(() => import('./components/CompareHub'));
+const CompareHub = React.lazy(() => import('./pages/CompareHub'));
 import { comparisons } from './data/compareData';
-const ProgrammaticHub = React.lazy(() => import('./components/ProgrammaticHub'));
+const ProgrammaticHub = React.lazy(() => import('./pages/ProgrammaticHub'));
 import { solutionsData, useCasesData, getBespokeProfile } from './data/programmaticSEOData';
-const PlatformHub = React.lazy(() => import('./components/PlatformHub'));
-const I18nDashboard = React.lazy(() => import('./components/I18nDashboard'));
-const GrowthSuite = React.lazy(() => import('./components/GrowthSuite'));
-const EnterpriseAIGateway = React.lazy(() => import('./components/EnterpriseAIGateway'));
+const PlatformHub = React.lazy(() => import('./pages/PlatformHub'));
+const I18nDashboard = React.lazy(() => import('./pages/I18nDashboard'));
+const GrowthSuite = React.lazy(() => import('./pages/GrowthSuite'));
+const EnterpriseAIGateway = React.lazy(() => import('./pages/EnterpriseAIGateway'));
 
 
 // Non-blocking fallback skeleton loader
@@ -45,7 +45,7 @@ const LazyLoader = () => (
   </div>
 );
 import { Locale, navTranslations, creativeSubItems, presetToolsTranslations, isRtlLocale, extractLocaleAndPath, SUPPORTED_LOCALES } from './utils/translations';
-import { useTranslation } from './utils/i18n';
+import { useTranslation, useDocumentLanguage } from './utils/i18n';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
@@ -159,7 +159,7 @@ function AnimatedHeaderTitle() {
       animate="animate"
       className="flex items-center"
     >
-      <span className="text-base font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-950 via-indigo-950 to-purple-950 flex select-none">
+      <span className="text-sm sm:text-base font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-950 via-indigo-950 to-purple-950 flex select-none">
         {letters.map((char, index) => (
           <motion.span
             key={index}
@@ -447,6 +447,7 @@ export default function App() {
 
   // Localization State via Central I18n Context
   const { locale, changeLocale, t } = useTranslation();
+  useDocumentLanguage();
 
   const handleLocaleChange = (newLocale: Locale) => {
     changeLocale(newLocale);
@@ -1465,22 +1466,23 @@ export default function App() {
           y: isScrolled ? [-10, 0] : 0,
         }}
         transition={{ type: "spring", damping: 18, stiffness: 200 }}
-        className={`sticky top-0 z-50 px-6 flex items-center justify-between border-b backdrop-blur-xl transition-all duration-500 ease-in-out ${ isScrolled ? 'py-2.5 border-slate-200/85 shadow-md bg-white/40 shadow-indigo-100/20' : 'py-5 border-slate-200/40 shadow-xs bg-white/50' }`}
+        className={`sticky top-0 z-50 px-3 sm:px-6 flex items-center justify-between gap-4 border-b backdrop-blur-xl transition-all duration-500 ease-in-out ${ isScrolled ? 'py-2 sm:py-2.5 border-slate-200/85 shadow-md bg-white/40 shadow-indigo-100/20' : 'py-3 sm:py-5 border-slate-200/40 shadow-xs bg-white/50' }`}
       >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-100/60 hover:scale-105 transition-transform duration-200">
-            <QrCode className="w-6 h-6 animate-pulse" />
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-100/60 hover:scale-105 transition-transform duration-200 shrink-0">
+            <QrCode className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
           </div>
-          <div>
+          <div className="min-w-0">
             <AnimatedHeaderTitle />
-            <p className="text-[10px] sm:text-xs font-mono text-indigo-600 font-medium tracking-wider flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> SECURE DATABOX
+            <p className="text-[9px] sm:text-xs font-mono text-indigo-600 font-medium tracking-wider flex items-center gap-1 truncate">
+              <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+              <span className="hidden min-[400px]:inline">{navTranslations[locale].secureDatabox || 'SECURE DATABOX'}</span>
             </p>
           </div>
         </div>
 
         {/* Dynamic Center Navigation for Desktop */}
-        <nav className="hidden md:flex items-center gap-6 relative">
+        <nav className="hidden xl:flex items-center xl:gap-3 2xl:gap-5 relative">
           
           {/* Creative Station Dropdown */}
           <div 
@@ -1826,13 +1828,13 @@ export default function App() {
         </nav>
 
         {/* Auth controllers & Mobile Menu Button */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Guided Tour Trigger Button */}
           <button
             type="button"
             id="tour-trigger-button"
             onClick={() => setTourOpen(true)}
-            className="flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98] mr-1"
+            className="hidden sm:flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-2.5 sm:px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98]"
           >
             <Sparkles className="w-3 h-3 text-indigo-600" />
             <span>{t('nav.tour', 'Tour')}</span>
@@ -1844,11 +1846,11 @@ export default function App() {
             id="shortcuts-help-button"
             onClick={() => setIsShortcutsModalOpen(true)}
             title={`${t('shortcuts.title', 'Keyboard Shortcuts')} (Press '?')`}
-            className="flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98] mr-1 animate-fade-in"
+            className="hidden lg:flex items-center gap-1.5 bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98] animate-fade-in"
           >
             <HelpCircle className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
-            <span className="hidden sm:inline">{t('nav.shortcuts', 'Shortcuts')}</span>
-            <kbd className="hidden md:inline px-1 py-0.5 text-[9px] font-mono font-bold bg-white border border-slate-200 rounded-md text-slate-500 shadow-3xs ml-0.5">?</kbd>
+            <span>{t('nav.shortcuts', 'Shortcuts')}</span>
+            <kbd className="px-1 py-0.5 text-[9px] font-mono font-bold bg-white border border-slate-200 rounded-md text-slate-500 shadow-3xs ml-0.5">?</kbd>
           </button>
 
           {/* Language Switcher Button */}
@@ -1856,7 +1858,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-              className="flex items-center gap-1.5 bg-slate-100/80 hover:bg-slate-100 border border-slate-200/60 text-slate-700 font-bold text-[10px] sm:text-xs py-1.5 px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98]"
+              className="flex items-center gap-1 sm:gap-1.5 bg-slate-100/80 hover:bg-slate-100 border border-slate-200/60 text-slate-700 font-bold text-[10px] sm:text-xs py-1.5 px-2.5 sm:px-3 rounded-xl transition-all duration-300 cursor-pointer shadow-3xs hover:scale-105 active:scale-[0.98]"
             >
               <Globe className="w-3.5 h-3.5 text-slate-500" />
               <span className="uppercase">{locale}</span>
@@ -1923,7 +1925,7 @@ export default function App() {
           {authLoading ? (
             <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
           ) : user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-2.5">
               {/* Desktop alerts permission bell controller */}
               <button
                 type="button"
@@ -1948,30 +1950,30 @@ export default function App() {
                 )}
               </button>
 
-              <div className="hidden sm:block text-right">
-                <span className="text-xs font-bold text-gray-800 block">{user.name}</span>
-                <span className="text-[10px] text-gray-400 block truncate max-w-[150px]">{user.email}</span>
+              <div className="hidden md:block text-right">
+                <span className="text-xs font-bold text-gray-800 block leading-tight">{user.name}</span>
+                <span className="text-[10px] text-gray-400 block truncate max-w-[100px] leading-tight">{user.email}</span>
               </div>
-              <div className="w-8 h-8 rounded-full border border-indigo-100 shadow-xs flex items-center justify-center bg-indigo-50 text-indigo-700 text-xs font-bold font-mono">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-indigo-100 shadow-xs flex items-center justify-center bg-indigo-50 text-indigo-700 text-xs font-bold font-mono">
                 {user.name ? user.name[0].toUpperCase() : 'U'}
               </div>
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="py-1.5 px-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1 border border-gray-200 cursor-pointer transition-colors"
+                className="py-1.5 px-2 sm:px-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-[10px] sm:text-xs font-semibold text-gray-700 flex items-center gap-1 border border-gray-200 cursor-pointer transition-colors"
                >
                 <LogOut className="w-3.5 h-3.5" />
-                {navTranslations[locale].signOut}
+                <span className="hidden sm:inline">{navTranslations[locale].signOut}</span>
               </button>
             </div>
           ) : (
             <button
               type="button"
               onClick={handleSignInClick}
-              className="py-2 px-4 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-md shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center gap-1.5 cursor-pointer"
+              className="py-1.5 sm:py-2 px-2.5 sm:px-4 bg-indigo-600 text-white rounded-xl text-[10px] sm:text-xs font-semibold shadow-md shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0"
             >
-              <LogIn className="w-4 h-4" />
-              {navTranslations[locale].signIn}
+              <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span>{navTranslations[locale].signIn}</span>
             </button>
           )}
 
@@ -1979,7 +1981,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl border border-slate-200 bg-white shadow-3xs cursor-pointer text-slate-700 hover:text-indigo-600 transition-all focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 active:scale-95"
+            className="xl:hidden p-1.5 sm:p-2 rounded-xl border border-slate-200 bg-white shadow-3xs cursor-pointer text-slate-700 hover:text-indigo-600 transition-all focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 active:scale-95 shrink-0"
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-navigation-menu"
             aria-label={isMobileMenuOpen ? "Close main navigation menu" : "Open main navigation menu"}
@@ -1999,7 +2001,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs md:hidden"
+              className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs xl:hidden"
             />
 
             {/* Slide-In Side Navigation Drawer */}
@@ -2010,7 +2012,7 @@ export default function App() {
               animate="visible"
               exit="exit"
               id="mobile-navigation-menu"
-              className="fixed top-0 right-0 bottom-0 z-55 w-full max-w-[320px] bg-slate-900 text-slate-100 shadow-2xl flex flex-col md:hidden border-l border-slate-800"
+              className="fixed top-0 right-0 bottom-0 z-55 w-full max-w-[320px] bg-slate-900 text-slate-100 shadow-2xl flex flex-col xl:hidden border-l border-slate-800"
               role="dialog"
               aria-modal="true"
               aria-label="Mobile Navigation Menu"
@@ -3181,9 +3183,9 @@ export default function App() {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h4 id="cookie-title" className="text-sm font-bold tracking-tight text-slate-100">Cookie Preference</h4>
+                <h4 id="cookie-title" className="text-sm font-bold tracking-tight text-slate-100">{navTranslations[locale].cookieConsentTitle || 'Cookie Preference'}</h4>
                 <p id="cookie-description" className="text-[11px] text-slate-200 leading-relaxed font-sans">
-                  We use essential cookies to safely persist state, optimize your QR customization workflow, and analyze scan activity rates.
+                  {navTranslations[locale].cookieConsentText || 'We use essential cookies to safely persist state, optimize your QR customization workflow, and analyze scan activity rates.'}
                 </p>
               </div>
             </div>
@@ -3193,14 +3195,14 @@ export default function App() {
                 onClick={handleDeclineCookies}
                 className="px-3.5 py-1.5 text-[11px] font-bold text-slate-200 hover:text-white transition-colors cursor-pointer rounded-lg hover:bg-slate-900/50"
               >
-                Decline
+                {navTranslations[locale].decline || 'Decline'}
               </button>
               <button
                 id="cookie-accept-button"
                 onClick={handleAcceptCookies}
                 className="px-4 py-2 text-[11px] font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/15 active:scale-95 transition-all cursor-pointer font-sans"
               >
-                Accept All
+                {navTranslations[locale].accept || 'Accept All'}
               </button>
             </div>
           </motion.div>
@@ -3242,10 +3244,10 @@ export default function App() {
               <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-md">
                 <QrCode className="w-5 h-5 animate-spin-slow" />
               </div>
-              <span className="font-bold text-xs text-slate-900 tracking-wider uppercase font-mono">iSolutions QR Generator</span>
+              <span className="font-bold text-xs text-slate-900 tracking-wider uppercase font-mono">{t('footer.brandName', 'iSolutions QR Generator')}</span>
             </div>
             <p className="text-xs text-slate-600 max-w-sm leading-relaxed">
-              Design customized, high-redundancy QR codes with modern color gradients, dot styles, and brand centerpieces. Complete with dynamic web link shortener tracking and real-time scan analytics.
+              {t('footer.brandDesc', 'Design customized, high-redundancy QR codes with modern color gradients, dot styles, and brand centerpieces. Complete with dynamic web link shortener tracking and real-time scan analytics.')}
             </p>
             <div className="pt-4">
               <a href="https://www.producthunt.com/posts/free-qr-generator-4" target="_blank" rel="noopener noreferrer" className="inline-block transition-transform hover:scale-102 duration-300">
@@ -3254,115 +3256,115 @@ export default function App() {
             </div>
           </div>
           <div id="footer-directory" className="md:col-span-2 space-y-4">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">Dedicated Free QR Code Solutions</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">{t('footer.directoryTitle', 'Dedicated Free QR Code Solutions')}</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
               <a href="/wifi-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                📡 Free WiFi QR Code Generator
+                {t('footer.solutionWifi', '📡 Free WiFi QR Code Generator')}
               </a>
               <a href="/whatsapp-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                💬 Free WhatsApp QR Code Generator
+                {t('footer.solutionWhatsapp', '💬 Free WhatsApp QR Code Generator')}
               </a>
               <a href="/email-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/email-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                ✉️ Free Email QR Code Generator
+                {t('footer.solutionEmail', '✉️ Free Email QR Code Generator')}
               </a>
               <a href="/sms-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/sms-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                📱 Free SMS QR Code Generator
+                {t('footer.solutionSms', '📱 Free SMS QR Code Generator')}
               </a>
               <a href="/vcard-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                📇 Free vCard QR Code Generator
+                {t('footer.solutionVcard', '📇 Free vCard QR Code Generator')}
               </a>
               <a href="/url-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/url-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                🔗 Free URL QR Code Generator
+                {t('footer.solutionUrl', '🔗 Free URL QR Code Generator')}
               </a>
               <a href="/business-card-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/business-card-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                💼 Free Business Card QR Code
+                {t('footer.solutionBusinessCard', '💼 Free Business Card QR Code')}
               </a>
               <a href="/restaurant-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                🍔 Free Restaurant QR Code
+                {t('footer.solutionRestaurant', '🍔 Free Restaurant QR Code')}
               </a>
               <a href="/facebook-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/facebook-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                📘 Free Facebook QR Code
+                {t('footer.solutionFacebook', '📘 Free Facebook QR Code')}
               </a>
               <a href="/instagram-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                📸 Free Instagram QR Code
+                {t('footer.solutionInstagram', '📸 Free Instagram QR Code')}
               </a>
               <a href="/youtube-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/youtube-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                🎥 Free YouTube QR Code
+                {t('footer.solutionYoutube', '🎥 Free YouTube QR Code')}
               </a>
               <a href="/pdf-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/pdf-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
-                📄 Free PDF QR Code Generator
+                {t('footer.solutionPdf', '📄 Free PDF QR Code Generator')}
               </a>
             </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 border-t border-slate-200 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono">
-          <p>© 2026 iSolutions QR Generator. Decoupled and fully verified local-cloud schema.</p>
+          <p>{t('footer.copyright', '© 2026 iSolutions QR Generator. Decoupled and fully verified local-cloud schema.')}</p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">About Us</a>
+            <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.aboutUs', 'About Us')}</a>
             <span>•</span>
-            <a href="/why-freeqrgen" onClick={(e) => { e.preventDefault(); navigateTo('/why-freeqrgen'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Why Us</a>
+            <a href="/why-freeqrgen" onClick={(e) => { e.preventDefault(); navigateTo('/why-freeqrgen'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.whyUs', 'Why Us')}</a>
             <span>•</span>
-            <a href="/editorial-policy" onClick={(e) => { e.preventDefault(); navigateTo('/editorial-policy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Editorial Policy</a>
+            <a href="/editorial-policy" onClick={(e) => { e.preventDefault(); navigateTo('/editorial-policy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.editorialPolicy', 'Editorial Policy')}</a>
             <span>•</span>
-            <a href="/research-methodology" onClick={(e) => { e.preventDefault(); navigateTo('/research-methodology'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Research Methodology</a>
+            <a href="/research-methodology" onClick={(e) => { e.preventDefault(); navigateTo('/research-methodology'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.researchMethodology', 'Research Methodology')}</a>
             <span>•</span>
-            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Privacy Policy</a>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.privacyPolicy', 'Privacy Policy')}</a>
             <span>•</span>
-            <a href="/security" onClick={(e) => { e.preventDefault(); navigateTo('/security'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Security</a>
+            <a href="/security" onClick={(e) => { e.preventDefault(); navigateTo('/security'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.security', 'Security')}</a>
             <span>•</span>
-            <a href="/data-processing" onClick={(e) => { e.preventDefault(); navigateTo('/data-processing'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Data Processing</a>
+            <a href="/data-processing" onClick={(e) => { e.preventDefault(); navigateTo('/data-processing'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.dataProcessing', 'Data Processing')}</a>
             <span>•</span>
-            <a href="/accessibility" onClick={(e) => { e.preventDefault(); navigateTo('/accessibility'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Accessibility</a>
+            <a href="/accessibility" onClick={(e) => { e.preventDefault(); navigateTo('/accessibility'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.accessibility', 'Accessibility')}</a>
             <span>•</span>
-            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Contact Us</a>
+            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.contactUs', 'Contact Us')}</a>
             <span>•</span>
-            <a href="/changelog" onClick={(e) => { e.preventDefault(); navigateTo('/changelog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Changelog</a>
+            <a href="/changelog" onClick={(e) => { e.preventDefault(); navigateTo('/changelog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.changelog', 'Changelog')}</a>
             <span>•</span>
-            <a href="/release-notes" onClick={(e) => { e.preventDefault(); navigateTo('/release-notes'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Release Notes</a>
+            <a href="/release-notes" onClick={(e) => { e.preventDefault(); navigateTo('/release-notes'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.releaseNotes', 'Release Notes')}</a>
             <span>•</span>
-            <a href="/system-status" onClick={(e) => { e.preventDefault(); navigateTo('/system-status'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">System Status</a>
+            <a href="/system-status" onClick={(e) => { e.preventDefault(); navigateTo('/system-status'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.systemStatus', 'System Status')}</a>
             <span>•</span>
-            <a href="/careers" onClick={(e) => { e.preventDefault(); navigateTo('/careers'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Careers</a>
+            <a href="/careers" onClick={(e) => { e.preventDefault(); navigateTo('/careers'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.careers', 'Careers')}</a>
             <span>•</span>
-            <a href="/media-kit" onClick={(e) => { e.preventDefault(); navigateTo('/media-kit'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Media Kit</a>
+            <a href="/media-kit" onClick={(e) => { e.preventDefault(); navigateTo('/media-kit'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.mediaKit', 'Media Kit')}</a>
             <span>•</span>
-            <a href="/brand-assets" onClick={(e) => { e.preventDefault(); navigateTo('/brand-assets'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Brand Assets</a>
+            <a href="/brand-assets" onClick={(e) => { e.preventDefault(); navigateTo('/brand-assets'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.brandAssets', 'Brand Assets')}</a>
             <span>•</span>
-            <a href="/press" onClick={(e) => { e.preventDefault(); navigateTo('/press'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Press Center</a>
+            <a href="/press" onClick={(e) => { e.preventDefault(); navigateTo('/press'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.press', 'Press Center')}</a>
             <span>•</span>
-            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Terms & Conditions</a>
+            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.terms', 'Terms & Conditions')}</a>
             <span>•</span>
-            <a href="/faq" onClick={(e) => { e.preventDefault(); navigateTo('/faq'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">FAQ</a>
+            <a href="/faq" onClick={(e) => { e.preventDefault(); navigateTo('/faq'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.faq', 'FAQ')}</a>
             <span>•</span>
-            <a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Blog</a>
+            <a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.blog', 'Blog')}</a>
             <span>•</span>
-            <a href="/templates" onClick={(e) => { e.preventDefault(); navigateTo('/templates'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Templates</a>
+            <a href="/templates" onClick={(e) => { e.preventDefault(); navigateTo('/templates'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.templates', 'Templates')}</a>
             <span>•</span>
-            <a href="/compare" onClick={(e) => { e.preventDefault(); navigateTo('/compare'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Comparisons</a>
+            <a href="/compare" onClick={(e) => { e.preventDefault(); navigateTo('/compare'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.compare', 'Comparisons')}</a>
             <span>•</span>
-            <a href="/solutions" onClick={(e) => { e.preventDefault(); navigateTo('/solutions'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Solutions</a>
+            <a href="/solutions" onClick={(e) => { e.preventDefault(); navigateTo('/solutions'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.solutions', 'Solutions')}</a>
             <span>•</span>
-            <a href="/industries" onClick={(e) => { e.preventDefault(); navigateTo('/industries'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Industries</a>
+            <a href="/industries" onClick={(e) => { e.preventDefault(); navigateTo('/industries'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.industries', 'Industries')}</a>
             <span>•</span>
-            <a href="/use-cases" onClick={(e) => { e.preventDefault(); navigateTo('/use-cases'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Use Cases</a>
+            <a href="/use-cases" onClick={(e) => { e.preventDefault(); navigateTo('/use-cases'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.useCases', 'Use Cases')}</a>
             <span>•</span>
-            <a href="/academy" onClick={(e) => { e.preventDefault(); navigateTo('/academy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Academy</a>
+            <a href="/academy" onClick={(e) => { e.preventDefault(); navigateTo('/academy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.academy', 'Academy')}</a>
             <span>•</span>
-            <a href="/guides" onClick={(e) => { e.preventDefault(); navigateTo('/guides'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Guides</a>
+            <a href="/guides" onClick={(e) => { e.preventDefault(); navigateTo('/guides'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.guides', 'Guides')}</a>
             <span>•</span>
-            <a href="/tutorials" onClick={(e) => { e.preventDefault(); navigateTo('/tutorials'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Tutorials</a>
+            <a href="/tutorials" onClick={(e) => { e.preventDefault(); navigateTo('/tutorials'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.tutorials', 'Tutorials')}</a>
             <span>•</span>
-            <a href="/resources" onClick={(e) => { e.preventDefault(); navigateTo('/resources'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Resources</a>
+            <a href="/resources" onClick={(e) => { e.preventDefault(); navigateTo('/resources'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.resources', 'Resources')}</a>
             <span>•</span>
-            <a href="/glossary" onClick={(e) => { e.preventDefault(); navigateTo('/glossary'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">Glossary</a>
+            <a href="/glossary" onClick={(e) => { e.preventDefault(); navigateTo('/glossary'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.glossary', 'Glossary')}</a>
             <span>•</span>
-            <a href="/embed" onClick={(e) => { e.preventDefault(); navigateTo('/embed'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Embed Badge</a>
+            <a href="/embed" onClick={(e) => { e.preventDefault(); navigateTo('/embed'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.embed', 'Embed Badge')}</a>
             <span>•</span>
-            <a href="/platform/qr-analytics" onClick={(e) => { e.preventDefault(); navigateTo('/platform/qr-analytics'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Platform Suite</a>
+            <a href="/platform/qr-analytics" onClick={(e) => { e.preventDefault(); navigateTo('/platform/qr-analytics'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.platformSuite', 'Platform Suite')}</a>
             <span>•</span>
-            <a href="/i18n-dashboard" onClick={(e) => { e.preventDefault(); navigateTo('/i18n-dashboard'); }} className="text-emerald-600 hover:text-emerald-700 transition-colors uppercase tracking-wider font-bold">i18n Developer Dashboard & QA</a>
+            <a href="/i18n-dashboard" onClick={(e) => { e.preventDefault(); navigateTo('/i18n-dashboard'); }} className="text-emerald-600 hover:text-emerald-700 transition-colors uppercase tracking-wider font-bold">{t('footer.i18nDashboard', 'i18n Developer Dashboard & QA')}</a>
             <span>•</span>
-            <a href="/ai-gateway" onClick={(e) => { e.preventDefault(); navigateTo('/ai-gateway'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">Enterprise AI & Developer Gateway</a>
+            <a href="/ai-gateway" onClick={(e) => { e.preventDefault(); navigateTo('/ai-gateway'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.aiGateway', 'Enterprise AI & Developer Gateway')}</a>
           </div>
         </div>
       </footer>

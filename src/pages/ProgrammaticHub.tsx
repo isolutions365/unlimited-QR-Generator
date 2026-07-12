@@ -17,6 +17,7 @@ import {
 } from '../data/programmaticSEOData';
 import { knowledgeArticles } from '../data/knowledgeData';
 import { templatePages } from '../data/templatePagesData';
+import { useTranslation } from '../utils/i18n';
 
 interface ProgrammaticHubProps {
   section: 'solutions' | 'industries' | 'use-cases';
@@ -33,6 +34,7 @@ export default function ProgrammaticHub({
   onInitiateGenerator,
   locale = 'en'
 }: ProgrammaticHubProps) {
+  const { t } = useTranslation();
   const [activeSlug, setActiveSlug] = useState<string | null>(initialSlug);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'hospitality' | 'medical' | 'education' | 'professional' | 'industrial'>('all');
@@ -65,34 +67,34 @@ export default function ProgrammaticHub({
           metaDesc: sol.metaDesc,
           heroGradient: 'from-indigo-600 to-purple-800',
           challenges: [
-            `Organizations struggle with manual process handovers, paper waste, and data transcription errors.`,
-            `Physical customer interaction barriers that slow down checkouts and digital sign-ups.`,
-            `Zero analytics coverage or user-consent triggers on physical print media.`
+            t('programmatic.challenge1', 'Organizations struggle with manual process handovers, paper waste, and data transcription errors.'),
+            t('programmatic.challenge2', 'Physical customer interaction barriers that slow down checkouts and digital sign-ups.'),
+            t('programmatic.challenge3', 'Zero analytics coverage or user-consent triggers on physical print media.')
           ],
-          whyQRHelps: `Deploying our customized contactless ${sol.name} enables teams to instantly bridge physical touchpoints to secure online portals, elevating service velocity and capturing telemetry safely.`,
+          whyQRHelps: t('programmatic.whyQRHelpsSolutions', 'Deploying our customized contactless {{name}} enables teams to instantly bridge physical touchpoints to secure online portals, elevating service velocity and capturing telemetry safely.', { name: sol.name }),
           workflow: [
-            `Diner, client, or attendee notices the labeled dynamic QR barcode.`,
-            `They scan with a native camera, opening direct portals or automated vCards.`,
-            `The administrator monitors scanning locations, browsers, and timeline graphs in the app dashboard.`
+            t('programmatic.workflowStep1', 'Diner, client, or attendee notices the labeled dynamic QR barcode.'),
+            t('programmatic.workflowStep2', 'They scan with a native camera, opening direct portals or automated vCards.'),
+            t('programmatic.workflowStep3', 'The administrator monitors scanning locations, browsers, and timeline graphs in the app dashboard.')
           ],
           practices: [
-            `Insert clear visual call-to-action rings around your QR code.`,
-            `Download vector formats like SVG or PDF to enable flawless high-resolution printing.`,
-            `Ensure the target destination URL is optimized for fast mobile rendering.`
+            t('programmatic.practicesStep1', 'Insert clear visual call-to-action rings around your QR code.'),
+            t('programmatic.practicesStep2', 'Download vector formats like SVG or PDF to enable flawless high-resolution printing.'),
+            t('programmatic.practicesStep3', 'Ensure the target destination URL is optimized for fast mobile rendering.')
           ],
           mistakes: [
-            `Relying on direct heavy PDF files instead of smart dynamic redirects.`,
-            `Using low-contrast light foreground colors like yellow or silver.`,
-            `Placing printed codes in low-lighting or highly reflective areas.`
+            t('programmatic.mistakesStep1', 'Relying on direct heavy PDF files instead of smart dynamic redirects.'),
+            t('programmatic.mistakesStep2', 'Using low-contrast light foreground colors like yellow or silver.'),
+            t('programmatic.mistakesStep3', 'Placing printed codes in low-lighting or highly reflective areas.')
           ],
           faq: [
-            { q: `What is the scanning limit for this ${sol.name} QR code?`, a: 'All QR codes generated on FreeQRGen.pro feature infinite scans and do not carry hidden expirations or click caps.' },
-            { q: 'Can I swap the target URL after printing the code?', a: 'Yes. If you save the design with dynamic tracking active, you can redirect visitors to updated links instantly without changing the matrix layout.' }
+            { q: t('programmatic.faqQ1Solutions', 'What is the scanning limit for this {{name}} QR code?', { name: sol.name }), a: t('programmatic.faqA1Solutions', 'All QR codes generated on FreeQRGen.pro feature infinite scans and do not carry hidden expirations or click caps.') },
+            { q: t('programmatic.faqQ2Solutions', 'Can I swap the target URL after printing the code?'), a: t('programmatic.faqA2Solutions', 'Yes. If you save the design with dynamic tracking active, you can redirect visitors to updated links instantly without changing the matrix layout.') }
           ],
           caseStudy: {
-            title: `${sol.name} Enterprise Deployment`,
-            metric: '41% increase in visitor conversions',
-            result: 'Replacing old offline friction steps with responsive barcode shortcuts automated onboarding, raising client metrics.'
+            title: t('programmatic.caseStudyTitleSolutions', '{{name}} Enterprise Deployment', { name: sol.name }),
+            metric: t('programmatic.caseStudyMetricSolutions', '41% increase in visitor conversions'),
+            result: t('programmatic.caseStudyResultSolutions', 'Replacing old offline friction steps with responsive barcode shortcuts automated onboarding, raising client metrics.')
           }
         };
       }
@@ -110,34 +112,34 @@ export default function ProgrammaticHub({
           metaDesc: uc.metaDesc,
           heroGradient: 'from-violet-600 to-indigo-800',
           challenges: [
-            `High friction steps that prevent users from manually typing complex web links.`,
-            `Wasted paper print resources and high brochure printing overheads.`,
-            `Lack of conversion metrics from standard offline displays.`
+            t('programmatic.useCasesChallenge1', 'High friction steps that prevent users from manually typing complex web links.'),
+            t('programmatic.useCasesChallenge2', 'Wasted paper print resources and high brochure printing overheads.'),
+            t('programmatic.useCasesChallenge3', 'Lack of conversion metrics from standard offline displays.')
           ],
-          whyQRHelps: `Integrating our automated ${uc.name} barcode allows users to instantly connect in-store displays and outdoor signs directly to interactive menus, forms, or maps, with zero input delays.`,
+          whyQRHelps: t('programmatic.whyQRHelpsUseCases', 'Integrating our automated {{name}} barcode allows users to instantly connect in-store displays and outdoor signs directly to interactive menus, forms, or maps, with zero input delays.', { name: uc.name }),
           workflow: [
-            `Visitor views the high-contrast printed check-in QR decal on location.`,
-            `They capture the visual target, instantly launching local guest settings or PDF guides.`,
-            `Your backend monitors total scanners and traffic sources from a single workspace.`
+            t('programmatic.useCasesWorkflowStep1', 'Visitor views the high-contrast printed check-in QR decal on location.'),
+            t('programmatic.useCasesWorkflowStep2', 'They capture the visual target, instantly launching local guest settings or PDF guides.'),
+            t('programmatic.useCasesWorkflowStep3', 'Your backend monitors total scanners and traffic sources from a single workspace.')
           ],
           practices: [
-            `Select a minimum size of 2cm x 2cm for small items, and scale up for banners.`,
-            `Include high contrast colors like deep charcoal and crisp white backgrounds.`,
-            `Preserve clean white borders around the outer edges of the code.`
+            t('programmatic.useCasesPracticesStep1', 'Select a minimum size of 2cm x 2cm for small items, and scale up for banners.'),
+            t('programmatic.useCasesPracticesStep2', 'Include high contrast colors like deep charcoal and crisp white backgrounds.'),
+            t('programmatic.useCasesPracticesStep3', 'Preserve clean white borders around the outer edges of the code.')
           ],
           mistakes: [
-            `Directing visitors to static web pages that do not match mobile viewports.`,
-            `Using fuzzy, low-resolution PNG screenshots instead of clean vector files.`,
-            `Not testing the printed code across different smartphone models before publishing.`
+            t('programmatic.useCasesMistakesStep1', 'Directing visitors to static web pages that do not match mobile viewports.'),
+            t('programmatic.useCasesMistakesStep2', 'Using fuzzy, low-resolution PNG screenshots instead of clean vector files.'),
+            t('programmatic.useCasesMistakesStep3', 'Not testing the printed code across different smartphone models before publishing.')
           ],
           faq: [
-            { q: `How do I print this QR code for this ${uc.name} setup?`, a: 'We recommend exporting in SVG or PDF format, then sending the file directly to high-quality print services to prevent blurred details.' },
-            { q: 'Is there any hidden cost or registration required?', a: 'No. FreeQRGen.pro is 100% free with unlimited generation and secure cloud options.' }
+            { q: t('programmatic.useCasesFaqQ1', 'How do I print this QR code for this {{name}} setup?', { name: uc.name }), a: t('programmatic.useCasesFaqA1', 'We recommend exporting in SVG or PDF format, then sending the file directly to high-quality print services to prevent blurred details.') },
+            { q: t('programmatic.useCasesFaqQ2', 'Is there any hidden cost or registration required?'), a: t('programmatic.useCasesFaqA2', 'No. FreeQRGen.pro is 100% free with unlimited generation and secure cloud options.') }
           ],
           caseStudy: {
-            title: `${uc.name} Implementation`,
-            metric: '3.2x faster visitor onboarding',
-            result: 'Transitioning from physical spreadsheets to high-contrast mobile scanning shortened processing queues and improved user experiences.'
+            title: t('programmatic.useCasesCaseStudyTitle', '{{name}} Implementation', { name: uc.name }),
+            metric: t('programmatic.useCasesCaseStudyMetric', '3.2x faster visitor onboarding'),
+            result: t('programmatic.useCasesCaseStudyResult', 'Transitioning from physical spreadsheets to high-contrast mobile scanning shortened processing queues and improved user experiences.')
           }
         };
       }
@@ -156,8 +158,8 @@ export default function ProgrammaticHub({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://freeqrgen.pro/" },
-          { "@type": "ListItem", "position": 2, "name": section.charAt(0).toUpperCase() + section.slice(1), "item": `https://freeqrgen.pro/${section}` }
+          { "@type": "ListItem", "position": 1, "name": t('programmatic.home', 'Home'), "item": "https://freeqrgen.pro/" },
+          { "@type": "ListItem", "position": 2, "name": section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries'), "item": `https://freeqrgen.pro/${section}` }
         ]
       };
 
@@ -184,8 +186,8 @@ export default function ProgrammaticHub({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://freeqrgen.pro/" },
-        { "@type": "ListItem", "position": 2, "name": section.charAt(0).toUpperCase() + section.slice(1), "item": `https://freeqrgen.pro/${section}` },
+        { "@type": "ListItem", "position": 1, "name": t('programmatic.home', 'Home'), "item": "https://freeqrgen.pro/" },
+        { "@type": "ListItem", "position": 2, "name": section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries'), "item": `https://freeqrgen.pro/${section}` },
         { "@type": "ListItem", "position": 3, "name": activeProfile.name, "item": canonicalUrl }
       ]
     };
@@ -203,12 +205,12 @@ export default function ProgrammaticHub({
     const howToSchema = {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      "name": `How to Setup a QR Code for ${activeProfile.name}`,
+      "name": t('programmatic.howToSetupTitle', 'How to Setup a QR Code for {{name}}', { name: activeProfile.name }),
       "description": activeProfile.metaDesc,
       "step": activeProfile.workflow.map((step, idx) => ({
         "@type": "HowToStep",
         "position": idx + 1,
-        "name": `Step ${idx + 1}: Implementation`,
+        "name": t('programmatic.stepNum', 'Step {{num}}: Implementation', { num: idx + 1 }),
         "text": step
       }))
     };
@@ -221,11 +223,11 @@ export default function ProgrammaticHub({
       "image": "https://www.freeqrgen.pro/og-image.jpg",
       "author": {
         "@type": "Organization",
-        "name": "FreeQRGen.pro Editorial Board"
+        "name": t('programmatic.authorName', 'FreeQRGen.pro Editorial Board')
       },
       "publisher": {
         "@type": "Organization",
-        "name": "Free QR Code Generator Inc.",
+        "name": t('programmatic.publisherName', 'Free QR Code Generator Inc.'),
         "logo": {
           "@type": "ImageObject",
           "url": "https://www.freeqrgen.pro/favicon-32x32.png"
@@ -258,7 +260,7 @@ export default function ProgrammaticHub({
     
     let typePreset: any = 'url';
     let defaultContent = `https://freeqrgen.pro/?ref=${activeProfile.slug}`;
-    let defaultName = `${activeProfile.name} Campaign QR`;
+    let defaultName = t('programmatic.presetDefaultName', '{{name}} Campaign QR', { name: activeProfile.name });
 
     if (activeProfile.slug === 'wifi-guest-onboarding' || activeProfile.slug === 'office-lobby-wifi') {
       typePreset = 'wifi';
@@ -322,6 +324,18 @@ export default function ProgrammaticHub({
     return matchesCategory && matchesSearch;
   });
 
+  const getTabLabel = (tab: string) => {
+    switch (tab) {
+      case 'all': return t('programmatic.tabAll', 'All');
+      case 'hospitality': return t('programmatic.tabHospitality', 'Hospitality');
+      case 'medical': return t('programmatic.tabMedical', 'Medical');
+      case 'education': return t('programmatic.tabEducation', 'Education');
+      case 'professional': return t('programmatic.tabProfessional', 'Professional');
+      case 'industrial': return t('programmatic.tabIndustrial', 'Industrial');
+      default: return tab;
+    }
+  };
+
   return (
     <div className="w-full bg-slate-50 min-h-screen text-slate-800 antialiased selection:bg-indigo-600 selection:text-white pb-24" id="programmatic-seo-hub">
       {/* Dynamic Subpage / Detail View */}
@@ -338,11 +352,11 @@ export default function ProgrammaticHub({
               <nav className="flex items-center gap-2 text-xs text-white/70 mb-6 font-medium">
                 <button onClick={() => onNavigate('/')} className="hover:text-white transition-colors flex items-center gap-1">
                   <Home className="w-3.5 h-3.5" />
-                  Home
+                  {t('programmatic.home', 'Home')}
                 </button>
                 <ChevronRight className="w-3 h-3 text-white/40" />
                 <button onClick={() => onNavigate(`/${section}`)} className="hover:text-white transition-colors uppercase tracking-wider">
-                  {section}
+                  {section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries')}
                 </button>
                 <ChevronRight className="w-3 h-3 text-white/40" />
                 <span className="text-white font-bold truncate">{activeProfile.name}</span>
@@ -355,13 +369,14 @@ export default function ProgrammaticHub({
                 </span>
                 <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1 animate-pulse">
                   <Star className="w-2.5 h-2.5 fill-emerald-300" />
-                  Topical Authority verified
+                  {t('programmatic.topicalAuthorityVerified', 'Topical Authority verified')}
                 </span>
               </div>
 
               {/* Title */}
               <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight uppercase font-sans mb-4 max-w-4xl">
-                QR Codes for <span className="underline decoration-indigo-400 decoration-wavy underline-offset-4">{activeProfile.name}</span>
+                {t('programmatic.qrCodesFor', 'QR Codes for')}{' '}
+                <span className="underline decoration-indigo-400 decoration-wavy underline-offset-4">{activeProfile.name}</span>
               </h1>
               
               <p className="text-base md:text-lg text-white/80 max-w-2xl leading-relaxed font-normal mb-8">
@@ -375,13 +390,13 @@ export default function ProgrammaticHub({
                   className="px-6 py-4 bg-white text-indigo-950 hover:bg-slate-100 active:scale-[0.98] transition-all rounded-xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-lg shadow-black/10 cursor-pointer"
                 >
                   <Cpu className="w-4 h-4 text-indigo-600 animate-spin" />
-                  Launch {activeProfile.name} Creator
+                  {t('programmatic.launchCreator', 'Launch {{name}} Creator', { name: activeProfile.name })}
                 </button>
                 <button
                   onClick={() => onNavigate(`/${section}`)}
                   className="px-5 py-4 bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl font-bold text-xs flex items-center justify-center gap-2 text-white transition-colors cursor-pointer"
                 >
-                  View Directory
+                  {t('programmatic.viewDirectory', 'View Directory')}
                 </button>
               </div>
             </div>
@@ -396,10 +411,10 @@ export default function ProgrammaticHub({
               <div className="bg-white rounded-2xl border border-slate-200/80 p-6 md:p-8 shadow-2xs">
                 <h3 className="text-xs uppercase tracking-widest text-indigo-600 font-black mb-4 flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  Key Operational Bottlenecks
+                  {t('programmatic.keyOperationalBottlenecks', 'Key Operational Bottlenecks')}
                 </h3>
                 <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight mb-4">
-                  The Challenges Faced by Modern {activeProfile.name} Administrations
+                  {t('programmatic.challengesFacedBy', 'The Challenges Faced by Modern {{name}} Administrations', { name: activeProfile.name })}
                 </h2>
                 <ul className="space-y-4">
                   {activeProfile.challenges.map((challenge, idx) => (
@@ -418,10 +433,10 @@ export default function ProgrammaticHub({
                 <div className="absolute inset-0 bg-grid-white/[0.03]" />
                 <h3 className="text-xs uppercase tracking-widest text-indigo-300 font-black mb-3 flex items-center gap-1.5 relative z-10">
                   <Sparkles className="w-4 h-4 text-indigo-300" />
-                  The Digital Bridge solution
+                  {t('programmatic.theDigitalBridgeSolution', 'The Digital Bridge solution')}
                 </h3>
                 <h2 className="text-xl md:text-2xl font-black tracking-tight mb-4 relative z-10">
-                  Why QR Codes are Transforming {activeProfile.name}
+                  {t('programmatic.whyQrCodesAreTransforming', 'Why QR Codes are Transforming {{name}}', { name: activeProfile.name })}
                 </h2>
                 <p className="text-slate-200 text-sm md:text-base leading-relaxed relative z-10">
                   {activeProfile.whyQRHelps}
@@ -432,7 +447,7 @@ export default function ProgrammaticHub({
               <div className="bg-white rounded-2xl border border-slate-200/80 p-6 md:p-8 shadow-2xs">
                 <h3 className="text-xs uppercase tracking-widest text-indigo-600 font-black mb-6 flex items-center gap-1.5">
                   <Cpu className="w-4 h-4 text-indigo-600" />
-                  Interactive Workflow Diagram
+                  {t('programmatic.interactiveWorkflowDiagram', 'Interactive Workflow Diagram')}
                 </h3>
                 
                 {/* Visual steps connection line */}
@@ -443,7 +458,7 @@ export default function ProgrammaticHub({
                         {idx + 1}
                       </div>
                       <h4 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider">
-                        {idx === 0 ? 'Discovery Phase' : idx === 1 ? 'Optical Scan' : 'Instant Action'}
+                        {idx === 0 ? t('programmatic.discoveryPhase', 'Discovery Phase') : idx === 1 ? t('programmatic.opticalScan', 'Optical Scan') : t('programmatic.instantAction', 'Instant Action')}
                       </h4>
                       <p className="text-slate-500 text-xs leading-relaxed">
                         {step}
@@ -458,7 +473,7 @@ export default function ProgrammaticHub({
                 <div className="bg-emerald-50/40 border border-emerald-100 rounded-2xl p-6">
                   <h3 className="text-xs uppercase tracking-widest text-emerald-700 font-black mb-4 flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    Best Practices (Do This)
+                    {t('programmatic.bestPracticesDoThis', 'Best Practices (Do This)')}
                   </h3>
                   <ul className="space-y-3">
                     {activeProfile.practices.map((item, idx) => (
@@ -473,7 +488,7 @@ export default function ProgrammaticHub({
                 <div className="bg-red-50/40 border border-red-100 rounded-2xl p-6">
                   <h3 className="text-xs uppercase tracking-widest text-red-700 font-black mb-4 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 text-red-600" />
-                    Common Pitfalls (Avoid)
+                    {t('programmatic.commonPitfallsAvoid', 'Common Pitfalls (Avoid)')}
                   </h3>
                   <ul className="space-y-3">
                     {activeProfile.mistakes.map((item, idx) => (
@@ -490,33 +505,33 @@ export default function ProgrammaticHub({
               <div className="bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
                 <div className="absolute inset-0 bg-grid-white/[0.02]" />
                 <div className="absolute top-0 right-0 p-4 bg-indigo-600/25 border-b border-l border-white/10 text-[9px] font-black uppercase tracking-widest font-mono">
-                  Printers Guidelines
+                  {t('programmatic.printersGuidelines', 'Printers Guidelines')}
                 </div>
                 
                 <h3 className="text-xs uppercase tracking-widest text-indigo-400 font-black mb-4 flex items-center gap-1.5">
                   <Printer className="w-4 h-4 text-indigo-400" />
-                  Physical Printing & Media Guidelines
+                  {t('programmatic.physicalPrintingAndMediaGuidelines', 'Physical Printing & Media Guidelines')}
                 </h3>
                 <h2 className="text-lg md:text-xl font-bold tracking-tight mb-4">
-                  Technical Checklist for physical {activeProfile.name} decals
+                  {t('programmatic.technicalChecklistFor', 'Technical Checklist for physical {{name}} decals', { name: activeProfile.name })}
                 </h2>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-300">
                   <div className="flex gap-2 items-start">
                     <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0 mt-1.5" />
-                    <span><strong>Scale bounds</strong>: Ensure a minimum printable size of 20mm x 20mm for menu sheets, and over 1.2m width for outdoor banners.</span>
+                    <span><strong>{t('programmatic.scaleBounds', 'Scale bounds')}</strong>: {t('programmatic.scaleBoundsDesc', 'Ensure a minimum printable size of 20mm x 20mm for menu sheets, and over 1.2m width for outdoor banners.')}</span>
                   </div>
                   <div className="flex gap-2 items-start">
                     <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0 mt-1.5" />
-                    <span><strong>Redundancy selection</strong>: Prefer Error Correction Level Q (25%) or H (30%) to resist grease spills and scratch damage.</span>
+                    <span><strong>{t('programmatic.redundancySelection', 'Redundancy selection')}</strong>: {t('programmatic.redundancySelectionDesc', 'Prefer Error Correction Level Q (25%) or H (30%) to resist grease spills and scratch damage.')}</span>
                   </div>
                   <div className="flex gap-2 items-start">
                     <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0 mt-1.5" />
-                    <span><strong>Color Contrast rules</strong>: Keep the barcode module dark (#000000 or deep indigo) printed on pristine white backdrops.</span>
+                    <span><strong>{t('programmatic.colorContrastRules', 'Color Contrast rules')}</strong>: {t('programmatic.colorContrastRulesDesc', 'Keep the barcode module dark (#000000 or deep indigo) printed on pristine white backdrops.')}</span>
                   </div>
                   <div className="flex gap-2 items-start">
                     <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0 mt-1.5" />
-                    <span><strong>Texture finish</strong>: Print with non-glare matte finishes. Avoid highly reflective glass laminations.</span>
+                    <span><strong>{t('programmatic.textureFinish', 'Texture finish')}</strong>: {t('programmatic.textureFinishDesc', 'Print with non-glare matte finishes. Avoid highly reflective glass laminations.')}</span>
                   </div>
                 </div>
               </div>
@@ -525,7 +540,7 @@ export default function ProgrammaticHub({
               <div className="bg-white rounded-2xl border border-slate-200/80 p-6 md:p-8 shadow-2xs">
                 <h3 className="text-xs uppercase tracking-widest text-indigo-600 font-black mb-6 flex items-center gap-1.5">
                   <HelpCircle className="w-4 h-4 text-indigo-600" />
-                  Frequently Asked Questions
+                  {t('programmatic.frequentlyAskedQuestions', 'Frequently Asked Questions')}
                 </h3>
                 
                 <div className="space-y-4">
@@ -571,9 +586,9 @@ export default function ProgrammaticHub({
                 <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl" />
                 <div className="flex items-center gap-2 mb-4">
                   <span className="bg-indigo-500/20 text-indigo-300 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded border border-indigo-500/30">
-                    Real Case Study
+                    {t('programmatic.realCaseStudy', 'Real Case Study')}
                   </span>
-                  <span className="text-[10px] text-slate-400 font-bold">{activeProfile.name} sector</span>
+                  <span className="text-[10px] text-slate-400 font-bold">{t('programmatic.sector', '{{name}} sector', { name: activeProfile.name })}</span>
                 </div>
                 
                 <h3 className="font-extrabold text-sm text-slate-100 mb-2">
@@ -592,7 +607,7 @@ export default function ProgrammaticHub({
               {/* Recommended QR Type Box */}
               <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-2xs">
                 <h3 className="font-black text-xs text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
-                  Recommended QR configurations
+                  {t('programmatic.recommendedQrConfigurations', 'Recommended QR configurations')}
                 </h3>
                 
                 <div className="space-y-4">
@@ -601,9 +616,9 @@ export default function ProgrammaticHub({
                       <Sparkles className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-800 text-xs uppercase tracking-tight">Dynamic URL Barcode</h4>
+                      <h4 className="font-bold text-slate-800 text-xs uppercase tracking-tight">{t('programmatic.dynamicUrlBarcode', 'Dynamic URL Barcode')}</h4>
                       <p className="text-slate-500 text-[10px] leading-relaxed mt-0.5">
-                        Enables price editing, metrics telemetry tracking, and dynamic link expirations instantly.
+                        {t('programmatic.dynamicUrlBarcodeDesc', 'Enables price editing, metrics telemetry tracking, and dynamic link expirations instantly.')}
                       </p>
                     </div>
                   </div>
@@ -613,9 +628,9 @@ export default function ProgrammaticHub({
                       <Palette className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-800 text-xs uppercase tracking-tight">Custom Centerpiece Logo</h4>
+                      <h4 className="font-bold text-slate-800 text-xs uppercase tracking-tight">{t('programmatic.customCenterpieceLogo', 'Custom Centerpiece Logo')}</h4>
                       <p className="text-slate-500 text-[10px] leading-relaxed mt-0.5">
-                        Build user-trust by overlaying a branded logo inside the center of the barcode grid layout.
+                        {t('programmatic.customCenterpieceLogoDesc', 'Build user-trust by overlaying a branded logo inside the center of the barcode grid layout.')}
                       </p>
                     </div>
                   </div>
@@ -626,7 +641,7 @@ export default function ProgrammaticHub({
               <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-2xs">
                 <h3 className="font-black text-xs text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2 flex items-center gap-1.5">
                   <BookOpen className="w-3.5 h-3.5 text-slate-500" />
-                  Related Knowledge guides
+                  {t('programmatic.relatedKnowledgeGuides', 'Related Knowledge guides')}
                 </h3>
                 
                 <div className="space-y-3">
@@ -641,7 +656,7 @@ export default function ProgrammaticHub({
                           {article.title}
                         </span>
                         <span className="block text-[10px] text-slate-400 mt-0.5 font-mono">
-                          GUIDES // {article.readingTime}
+                          {t('programmatic.guidesTagWithTime', 'GUIDES // {{time}}', { time: article.readingTime })}
                         </span>
                       </div>
                       <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-transform group-hover:translate-x-0.5 mt-0.5 shrink-0" />
@@ -654,7 +669,7 @@ export default function ProgrammaticHub({
               <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-2xs">
                 <h3 className="font-black text-xs text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2 flex items-center gap-1.5">
                   <LayoutTemplate className="w-3.5 h-3.5 text-slate-500" />
-                  Printable Templates
+                  {t('programmatic.printableTemplates', 'Printable Templates')}
                 </h3>
                 
                 <div className="space-y-3">
@@ -688,22 +703,24 @@ export default function ProgrammaticHub({
           <nav className="flex items-center gap-2 text-xs text-slate-400 mb-6 font-medium">
             <button onClick={() => onNavigate('/')} className="hover:text-indigo-600 transition-colors flex items-center gap-1">
               <Home className="w-3.5 h-3.5" />
-              Home
+              {t('programmatic.home', 'Home')}
             </button>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-slate-700 font-bold uppercase tracking-wider">{section} Directory</span>
+            <span className="text-slate-700 font-bold uppercase tracking-wider">
+              {section === 'solutions' ? t('programmatic.solutionsDirectory', 'Solutions Directory') : section === 'use-cases' ? t('programmatic.useCasesDirectory', 'Use Cases Directory') : t('programmatic.industriesDirectory', 'Industries Directory')}
+            </span>
           </nav>
 
           {/* Directory Title */}
           <div className="mb-10 text-center max-w-2xl mx-auto">
             <span className="bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-indigo-100 shadow-3xs inline-block mb-3">
-              Programmatic Hub // Topical Network
+              {t('programmatic.hubBadge', 'Programmatic Hub // Topical Network')}
             </span>
             <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight uppercase mb-3">
-              Professional QR Code {section === 'solutions' ? 'Solutions' : section === 'use-cases' ? 'Use Cases' : 'Industries'}
+              {t('programmatic.professionalQrCodeTitle', 'Professional QR Code {{type}}', { type: section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries') })}
             </h1>
             <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-medium">
-              Browse highly authoritative, technical frameworks and physical printing guides designed to eliminate contactless service friction.
+              {t('programmatic.directorySubtitle', 'Browse highly authoritative, technical frameworks and physical printing guides designed to eliminate contactless service friction.')}
             </p>
           </div>
 
@@ -714,7 +731,7 @@ export default function ProgrammaticHub({
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
-                placeholder={`Search ${section}...`}
+                placeholder={t('programmatic.searchPlaceholder', 'Search {{section}}...', { section: section })}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 rounded-xl text-xs font-medium placeholder-slate-400 text-slate-800 transition-all outline-none"
@@ -729,7 +746,7 @@ export default function ProgrammaticHub({
                   onClick={() => setActiveCategoryTab(tab)}
                   className={`px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${activeCategoryTab === tab ? 'bg-white text-indigo-950 shadow-2xs' : 'text-slate-500 hover:text-slate-800'}`}
                 >
-                  {tab}
+                  {getTabLabel(tab)}
                 </button>
               ))}
             </div>
@@ -767,7 +784,7 @@ export default function ProgrammaticHub({
                           </span>
                           {!hasBespoke && (
                             <span className="text-[8px] bg-indigo-50 text-indigo-600 font-bold px-1.5 py-0.5 rounded border border-indigo-100 uppercase tracking-widest font-mono">
-                              AUTO
+                              {t('programmatic.auto', 'AUTO')}
                             </span>
                           )}
                         </div>
@@ -786,7 +803,7 @@ export default function ProgrammaticHub({
 
                     {/* Card Footer Tagline */}
                     <div className="mt-5 pt-3 border-t border-slate-50 flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-400 group-hover:text-indigo-600 transition-colors">
-                      <span>Explore Authority File</span>
+                      <span>{t('programmatic.exploreAuthorityFile', 'Explore Authority File')}</span>
                       <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-indigo-600 transition-transform group-hover:translate-x-0.5" />
                     </div>
                   </motion.div>
@@ -798,9 +815,9 @@ export default function ProgrammaticHub({
             {filteredItems.length === 0 && (
               <div className="col-span-full py-16 bg-white border border-slate-150 rounded-2xl text-center">
                 <Search className="w-8 h-8 text-slate-300 mx-auto mb-3" />
-                <h4 className="font-extrabold text-slate-800 text-sm uppercase tracking-wide">No directory item found</h4>
+                <h4 className="font-extrabold text-slate-800 text-sm uppercase tracking-wide">{t('programmatic.noDirectoryItemFound', 'No directory item found')}</h4>
                 <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">
-                  We couldn't find matches for "{searchQuery}". Try searching general keywords like "Hospitality" or "Retail".
+                  {t('programmatic.noMatchesFound', 'We couldn\'t find matches for "{{query}}". Try searching general keywords like "Hospitality" or "Retail".', { query: searchQuery })}
                 </p>
               </div>
             )}

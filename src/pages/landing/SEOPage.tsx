@@ -37,7 +37,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { QRProject } from '../../types';
-import QR3DExperience from '../QR3DExperience';
+import QR3DExperience from '../../components/QR3DExperience';
 
 interface SEOPageProps {
   slug: string;
@@ -120,13 +120,13 @@ export default function SEOPage({
   if (!pageData) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
-        <h1 className="text-xl font-bold text-gray-900">SEO Page Not Found</h1>
-        <p className="text-xs text-gray-400 mt-2">The requested landing page route configuration could not be loaded.</p>
+        <h1 className="text-xl font-bold text-gray-900">{t('seo.pageNotFound', 'SEO Page Not Found')}</h1>
+        <p className="text-xs text-gray-400 mt-2">{t('seo.pageNotFoundDesc', 'The requested landing page route configuration could not be loaded.')}</p>
         <button 
           onClick={() => onSelectRoute('/')} 
           className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold cursor-pointer"
         >
-          Return to Dashboard
+          {t('seo.returnToDashboard', 'Return to Dashboard')}
         </button>
       </div>
     );
@@ -177,31 +177,31 @@ export default function SEOPage({
     return {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      "name": "How to Create a URL QR Code with FreeQRGen.pro",
-      "description": "Step-by-step instructions for creating a custom styled URL QR code with logos, colors, and scan counts.",
+      "name": t('seo.schemaHowToName', 'How to Create a URL QR Code with FreeQRGen.pro'),
+      "description": t('seo.schemaHowToDesc', 'Step-by-step instructions for creating a custom styled URL QR code with logos, colors, and scan counts.'),
       "step": [
         {
           "@type": "HowToStep",
-          "name": "Input Destination Link",
-          "text": "Paste your complete target URL into the input field, including the http:// or https:// protocol.",
+          "name": t('seo.schemaStep1Name', 'Input Destination Link'),
+          "text": t('seo.schemaStep1Text', 'Paste your complete target URL into the input field, including the http:// or https:// protocol.'),
           "url": "https://www.freeqrgen.pro/url-qr-generator"
         },
         {
           "@type": "HowToStep",
-          "name": "Select Branding & Colors",
-          "text": "Choose a stylish linear gradient or solid color, custom eye shapes, and pixel patterns.",
+          "name": t('seo.schemaStep2Name', 'Select Branding & Colors'),
+          "text": t('seo.schemaStep2Text', 'Choose a stylish linear gradient or solid color, custom eye shapes, and pixel patterns.'),
           "url": "https://www.freeqrgen.pro/url-qr-generator"
         },
         {
           "@type": "HowToStep",
-          "name": "Embed Centerpiece Logo",
-          "text": "Upload your brand logo or select standard social icons with High error correction settings.",
+          "name": t('seo.schemaStep3Name', 'Embed Centerpiece Logo'),
+          "text": t('seo.schemaStep3Text', 'Upload your brand logo or select standard social icons with High error correction settings.'),
           "url": "https://www.freeqrgen.pro/url-qr-generator"
         },
         {
           "@type": "HowToStep",
-          "name": "Export & Print Layout",
-          "text": "Download the code as high-resolution PNG, or scalable vector SVG/PDF.",
+          "name": t('seo.schemaStep4Name', 'Export & Print Layout'),
+          "text": t('seo.schemaStep4Text', 'Download the code as high-resolution PNG, or scalable vector SVG/PDF.'),
           "url": "https://www.freeqrgen.pro/url-qr-generator"
         }
       ]
@@ -212,8 +212,8 @@ export default function SEOPage({
     return {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
-      "name": "QR Code Analytics Hub - " + pageData.h1,
-      "operatingSystem": "All Mobile, Tablet, and Desktop web browsers",
+      "name": t('seo.schemaSoftwareAppName', 'QR Code Analytics Hub - ') + pageData.h1,
+      "operatingSystem": t('seo.schemaSoftwareOS', 'All Mobile, Tablet, and Desktop web browsers'),
       "applicationCategory": "DesignApplication, BusinessApplication",
       "offers": {
         "@type": "Offer",
@@ -237,7 +237,7 @@ export default function SEOPage({
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Home",
+          "name": t('seo.breadcrumbHome', 'Home'),
           "item": rootUrl
         },
         {
@@ -286,10 +286,10 @@ export default function SEOPage({
               className="hover:text-indigo-600 transition-colors flex items-center gap-1 cursor-pointer font-semibold"
             >
               <Home className="w-3.5 h-3.5" />
-              Home
+              {t('seo.home', 'Home')}
             </button>
             <span className="text-slate-300">/</span>
-            <span className="text-slate-400">Generators</span>
+            <span className="text-slate-400">{t('seo.generators', 'Generators')}</span>
             <span className="text-slate-300">/</span>
             <span className="text-slate-900 font-bold tracking-tight">{pageData.keyword}</span>
           </nav>
@@ -301,7 +301,7 @@ export default function SEOPage({
               className="inline-flex items-center gap-2 text-xs text-indigo-600 hover:text-indigo-800 font-bold group cursor-pointer transition-colors"
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              Back to Main Workshop
+              {t('seo.backToMainWorkshop', 'Back to Main Workshop')}
             </button>
           </div>
 
@@ -310,7 +310,7 @@ export default function SEOPage({
             <div className="md:col-span-8 flex flex-col gap-4">
               <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100/50 px-3.5 py-1.5 rounded-full max-w-fit font-semibold text-indigo-700 text-xs">
                 {getPageIcon()}
-                <span className="text-[10px] tracking-wider uppercase font-black">100% Free Service</span>
+                <span className="text-[10px] tracking-wider uppercase font-black">{t('seo.freeService', '100% Free Service')}</span>
               </div>
               
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 font-sans">
@@ -331,7 +331,7 @@ export default function SEOPage({
                   <Flame className="w-5 h-5 text-yellow-300" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-widest">Aesthetic Optimization</h4>
+                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-widest">{t('seo.aestheticOptimization', 'Aesthetic Optimization')}</h4>
                   <p className="text-xs text-slate-400 mt-0.5">{pageData.intro.highlight}</p>
                 </div>
               </div>
@@ -340,17 +340,17 @@ export default function SEOPage({
             {/* Simulated Live Preview Card sidebar with Glassmorphism UI */}
             <div className="md:col-span-4 flex flex-col gap-4 bg-white/60 p-5 rounded-3xl border border-slate-200/50 shadow-xl relative overflow-hidden backdrop-blur-md">
               <div className="flex items-center justify-between border-b border-indigo-150 pb-2 text-slate-400 select-none">
-                <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-wider font-mono">Live Preset Sandbox</span>
-                <span className="text-[9px] bg-indigo-50/80 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">3D ACTIVE</span>
+                <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-wider font-mono">{t('seo.livePresetSandbox', 'Live Preset Sandbox')}</span>
+                <span className="text-[9px] bg-indigo-50/80 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">{t('seo.threeDActive', '3D ACTIVE')}</span>
               </div>
               
               <QR3DExperience />
 
               <button 
                 onClick={handleCtaInitiation}
-                className="w-full py-3.5 px-4 bg-indigo-600 text-white hover:bg-slate-900 text-xs font-bold rounded-2xl transition-all shadow-md shadow-indigo-200/30 flex items-center justify-center gap-2 group active:scale-[0.98] cursor-pointer"
+                className="w-full py-3.5 px-4 bg-indigo-600 text-white hover:bg-slate-950 text-xs font-bold rounded-2xl transition-all shadow-md shadow-indigo-200/30 flex items-center justify-center gap-2 group active:scale-[0.98] cursor-pointer"
               >
-                Launch Builder (Free)
+                {t('seo.launchBuilderFree', 'Launch Builder (Free)')}
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
@@ -426,7 +426,7 @@ export default function SEOPage({
                         {step.step}
                       </div>
                       <div>
-                        <h5 className="text-xs font-bold text-slate-950 tracking-tight">{step.title}</h5>
+                        <h5 className="text-xs font-bold text-slate-955 tracking-tight">{step.title}</h5>
                         <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">{step.desc}</p>
                       </div>
                     </div>
@@ -461,10 +461,10 @@ export default function SEOPage({
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
                   <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
-                    Questions About Our {pageData.h1}
+                    {t('seo.questionsAboutOur', 'Questions About Our')} {pageData.h1}
                   </h2>
                 </div>
-                <p className="text-xs text-slate-500 -mt-2">Review common queries from other digital marketers and developers regarding operations.</p>
+                <p className="text-xs text-slate-500 -mt-2">{t('seo.faqDescription', 'Review common queries from other digital marketers and developers regarding operations.')}</p>
                 
                 <div className="flex flex-col gap-3 mt-6">
                   {pageData.faqs.map((faq, idx) => {
@@ -521,13 +521,13 @@ export default function SEOPage({
               <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full text-slate-800 text-[10px] font-bold font-mono">
                   <Sparkles className="w-3 h-3 text-indigo-600" />
-                  <span>GENERATIVE ENGINE OPTIMIZATION (GEO) HUB</span>
+                  <span>{t('seo.geoHub', 'GENERATIVE ENGINE OPTIMIZATION (GEO) HUB')}</span>
                 </div>
                 <h2 className="text-2xl font-black tracking-tight text-slate-950 font-sans">
-                  AI Reference & Citation Guide for {pageData.keyword}s
+                  {t('seo.aiReferenceTitle', 'AI Reference & Citation Guide for {{keyword}}s', { keyword: pageData.keyword })}
                 </h2>
                 <p className="text-xs text-slate-500 leading-relaxed max-w-2xl">
-                  Structured technical specifications, best practices, and verified answers optimized for ingestion by conversational AI engines including Gemini, ChatGPT, Perplexity, and Google AI Overviews.
+                  {t('seo.aiReferenceDesc', 'Structured technical specifications, best practices, and verified answers optimized for ingestion by conversational AI engines including Gemini, ChatGPT, Perplexity, and Google AI Overviews.')}
                 </p>
               </div>
 
@@ -536,7 +536,7 @@ export default function SEOPage({
                 <div id="quick-definition" className="p-5 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-3 shadow-md">
                   <div className="flex items-center gap-2 text-indigo-400 font-mono text-[10px] uppercase font-bold tracking-wider">
                     <QrCode className="w-4 h-4" />
-                    <span>Quick Definition</span>
+                    <span>{t('seo.quickDefinition', 'Quick Definition')}</span>
                   </div>
                   <p className="text-xs leading-relaxed text-slate-200">
                     {aeoData.quickDefinition}
@@ -546,7 +546,7 @@ export default function SEOPage({
                 <div id="ai-summary-50" className="p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/60 space-y-3">
                   <div className="flex items-center gap-2 text-indigo-700 font-mono text-[10px] uppercase font-bold tracking-wider">
                     <Sparkles className="w-4 h-4" />
-                    <span>50-Word AI Summary</span>
+                    <span>{t('seo.aiSummaryTitle', '50-Word AI Summary')}</span>
                   </div>
                   <p className="text-xs leading-relaxed text-slate-700 font-medium">
                     {aeoData.aiSummary50}
@@ -559,31 +559,31 @@ export default function SEOPage({
                 <div className="px-5 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900 flex items-center gap-2">
                     <Activity className="w-3.5 h-3.5 text-indigo-600" />
-                    Entity Knowledge Graph Attributes
+                    {t('seo.entityKnowledgeGraph', 'Entity Knowledge Graph Attributes')}
                   </span>
-                  <span className="text-[10px] font-mono text-slate-400">SCHEMA.ORG COMPLIANT</span>
+                  <span className="text-[10px] font-mono text-slate-400">{t('seo.schemaCompliant', 'SCHEMA.ORG COMPLIANT')}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 text-center font-mono text-[10px]">
                   <div className="p-4 space-y-1">
-                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">Entity Type</span>
+                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.entityType', 'Entity Type')}</span>
                     <span className="text-slate-800 block font-semibold">{aeoData.aiSummaryBox.entityType}</span>
                   </div>
                   <div className="p-4 space-y-1">
-                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">Protocol/Standard</span>
+                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.protocolStandard', 'Protocol/Standard')}</span>
                     <span className="text-slate-800 block font-semibold truncate px-1" title={aeoData.aiSummaryBox.protocolStandard}>
                       {aeoData.aiSummaryBox.protocolStandard}
                     </span>
                   </div>
                   <div className="p-4 space-y-1">
-                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">Compatibility</span>
+                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.compatibility', 'Compatibility')}</span>
                     <span className="text-slate-800 block font-semibold">{aeoData.aiSummaryBox.clientCompatibility}</span>
                   </div>
                   <div className="p-4 space-y-1">
-                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">Primary Use Case</span>
+                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.primaryUseCase', 'Primary Use Case')}</span>
                     <span className="text-slate-800 block font-semibold">{aeoData.aiSummaryBox.primaryUseCase}</span>
                   </div>
                   <div className="p-4 space-y-1">
-                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">Offline Mode</span>
+                    <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.offlineMode', 'Offline Mode')}</span>
                     <span className="text-slate-800 block font-semibold">{aeoData.aiSummaryBox.offlineCapability}</span>
                   </div>
                 </div>
@@ -593,7 +593,7 @@ export default function SEOPage({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div id="what-is-this-qr" className="space-y-3">
                   <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                    What is a {pageData.keyword}?
+                    {t('seo.whatIsA', 'What is a {{keyword}}?', { keyword: pageData.keyword })}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     {aeoData.whatIsIt}
@@ -602,7 +602,7 @@ export default function SEOPage({
 
                 <div id="when-should-you-use-it" className="space-y-3">
                   <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                    When should you use this format?
+                    {t('seo.whenShouldYouUse', 'When should you use this format?')}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     {aeoData.whenToUse}
@@ -617,7 +617,7 @@ export default function SEOPage({
                 <div id="aeo-benefits" className="space-y-4">
                   <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <CheckCircle className="w-4 h-4 text-emerald-500" />
-                    Key Benefits & Advantages
+                    {t('seo.keyBenefitsAdvantages', 'Key Benefits & Advantages')}
                   </h4>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.benefits.map((benefit, i) => (
@@ -633,7 +633,7 @@ export default function SEOPage({
                 <div id="aeo-mistakes" className="space-y-4">
                   <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <Flame className="w-4 h-4 text-rose-500" />
-                    Common Mistakes to Avoid
+                    {t('seo.commonMistakesToAvoid', 'Common Mistakes to Avoid')}
                   </h4>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.commonMistakes.map((mistake, i) => (
@@ -649,7 +649,7 @@ export default function SEOPage({
                 <div id="aeo-best-practices" className="space-y-4">
                   <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-indigo-500" />
-                    Pro Implementation Best Practices
+                    {t('seo.proImplementationBestPractices', 'Pro Implementation Best Practices')}
                   </h4>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.bestPractices.map((practice, i) => (
@@ -665,8 +665,8 @@ export default function SEOPage({
 
               {/* 11. Key Takeaways Card */}
               <div id="key-takeaways" className="p-5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-4">
-                <h4 className="text-xs font-bold text-slate-950 uppercase tracking-widest font-mono">
-                  Essential Takeaways & Technical Summary
+                <h4 className="text-xs font-bold text-slate-955 uppercase tracking-widest font-mono">
+                  {t('seo.essentialTakeaways', 'Essential Takeaways & Technical Summary')}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {aeoData.keyTakeaways.map((takeaway, i) => (
@@ -683,7 +683,7 @@ export default function SEOPage({
               {/* 8. FAQs (Independently citable answer boxes) */}
               <div id="citable-faqs" className="space-y-4">
                 <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                  Technical Reference & FAQ
+                  {t('seo.technicalReferenceFaq', 'Technical Reference & FAQ')}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {aeoData.faqs.map((faq, i) => (
@@ -702,7 +702,7 @@ export default function SEOPage({
               {/* 9. Related Guides */}
               <div id="related-guides" className="space-y-4">
                 <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                  Related Technical Guides & Publications
+                  {t('seo.relatedGuidesTitle', 'Related Technical Guides & Publications')}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {aeoData.relatedGuides.map((guide, i) => (
@@ -714,7 +714,7 @@ export default function SEOPage({
                         </p>
                       </div>
                       <span className="text-[9px] text-indigo-600 font-bold uppercase mt-3 hover:underline cursor-pointer">
-                        Read Publication →
+                        {t('seo.readPublication', 'Read Publication →')}
                       </span>
                     </div>
                   ))}
@@ -724,7 +724,7 @@ export default function SEOPage({
               {/* 10. Related Tools */}
               <div id="related-tools" className="space-y-3">
                 <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-widest font-mono">
-                  COMPLEMENTARY QR CODES & UTILITIES
+                  {t('seo.complementaryQrCodes', 'COMPLEMENTARY QR CODES & UTILITIES')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {aeoData.relatedTools.map((tool, i) => (
@@ -734,7 +734,7 @@ export default function SEOPage({
                       onClick={() => onSelectRoute(`/${tool.slug}`)}
                       className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-medium text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
                     >
-                      🛠️ {tool.name}
+                      {t('seo.toolIcon', '🛠️ ')}{tool.name}
                     </button>
                   ))}
                 </div>
@@ -748,11 +748,11 @@ export default function SEOPage({
             <div className="flex items-center gap-2 select-none">
               <QrCode className="w-4 h-4 text-indigo-400" />
               <h4 className="text-[11px] uppercase tracking-widest font-black text-slate-200">
-                SEO Authority and Authority Distribution Directories
+                {t('seo.seoAuthorityTitle', 'SEO Authority and Authority Distribution Directories')}
               </h4>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              Explore our separate high-performance QR code generator landing pages tailored for business promotions, wireless network setups, visual socials discovery, and contactless restaurant menu builders below:
+              {t('seo.seoAuthorityDesc', 'Explore our separate high-performance QR code generator landing pages tailored for business promotions, wireless network setups, visual socials discovery, and contactless restaurant menu builders below:')}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4 select-none">
               {(Object.keys(landingPages)).map((key) => {
@@ -769,7 +769,7 @@ export default function SEOPage({
                         : 'bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
                     }`}
                   >
-                    🚀 {item.h1}
+                    {t('seo.rocketIcon', '🚀 ')}{item.h1}
                   </button>
                 );
               })}
@@ -791,12 +791,12 @@ export default function SEOPage({
               <Star className="w-4 h-4 fill-amber-500" />
             </div>
             <p className="text-[11px] font-semibold text-slate-800 leading-normal">
-              Trusted by over 2490+ creative modern businesses, dining rooms, and local wifi managers globally for styling QR presets.
+              {t('seo.trustedBy', 'Trusted by over 2490+ creative modern businesses, dining rooms, and local wifi managers globally for styling QR presets.')}
             </p>
             <div className="flex gap-3 text-[10px] text-slate-500 font-mono font-bold">
-              <span>99.9% Up-rate</span>
+              <span>{t('seo.uprate', '99.9% Up-rate')}</span>
               <span>•</span>
-              <span>Ultra HD Scalable</span>
+              <span>{t('seo.ultraHdScalable', 'Ultra HD Scalable')}</span>
             </div>
           </div>
 
@@ -808,32 +808,32 @@ export default function SEOPage({
             
             <button 
               onClick={handleCtaInitiation}
-              className="py-3 px-4 bg-white text-indigo-950 hover:bg-slate-950 hover:text-white text-xs font-bold rounded-xl transition-all shadow-md mt-4 flex items-center justify-center gap-2 group cursor-pointer"
+              className="py-3 px-4 bg-white text-indigo-955 hover:bg-slate-950 hover:text-white text-xs font-bold rounded-xl transition-all shadow-md mt-4 flex items-center justify-center gap-2 group cursor-pointer"
             >
               {pageData.cta.buttonText}
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
-            <span className="text-[9px] text-indigo-300 text-center uppercase tracking-widest font-mono select-none">No logins required to start</span>
+            <span className="text-[9px] text-indigo-300 text-center uppercase tracking-widest font-mono select-none">{t('seo.noLoginsRequired', 'No logins required to start')}</span>
           </div>
 
           {/* Secure Trust features badge */}
           <div className="bg-slate-50 border border-slate-200/60 p-5 rounded-3xl space-y-3 font-mono">
             <div className="flex items-center gap-2 text-indigo-700 font-bold text-[10px] tracking-wider uppercase">
               <ShieldCheck className="w-4 h-4 shrink-0" />
-              <span>Prisine Security Standards</span>
+              <span>{t('seo.pristineSecurityStandards', 'Pristine Security Standards')}</span>
             </div>
             <ul className="text-[10px] text-slate-500 space-y-2 leading-relaxed">
               <li className="flex items-start gap-2">
                 <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
-                No credentials are ever transmitted to any remote servers. Only you see standard details.
+                {t('seo.securityFeature1', 'No credentials are ever transmitted to any remote servers. Only you see standard details.')}
               </li>
               <li className="flex items-start gap-2">
                 <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
-                Error correction checks keep your codes parseable if scratched.
+                {t('seo.securityFeature2', 'Error correction checks keep your codes parseable if scratched.')}
               </li>
               <li className="flex items-start gap-2">
                 <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
-                Supports PNG rasterizers, standard vector SVGs, and vector PDFs.
+                {t('seo.securityFeature3', 'Supports PNG rasterizers, standard vector SVGs, and vector PDFs.')}
               </li>
             </ul>
           </div>

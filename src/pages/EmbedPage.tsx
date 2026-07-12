@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { ArrowLeft, Copy, Check, Code, Sparkles, ExternalLink, ShieldAlert, Heart, Info, Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -13,14 +15,16 @@ interface BadgeOption {
   html: string;
 }
 
-export default function EmbedPage({ onNavigate }: EmbedPageProps) {
+export default function EmbedPage({
+   onNavigate }: EmbedPageProps) {
+  const { t } = useTranslation();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const badges: BadgeOption[] = [
     {
       id: 'light-minimal',
-      name: 'Light Minimalist',
-      description: 'Clean off-white capsule with subtle borders and premium indigo accent. Integrates smoothly on any standard modern page.',
+      name: t('embed.badge.light', 'Light Minimalist'),
+      description: t('embed.badge.light.desc', 'Clean off-white capsule with subtle borders and premium indigo accent. Integrates smoothly on any standard modern page.'),
       html: `<a href="https://www.freeqrgen.pro" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; color: #1e293b; text-decoration: none; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); transition: all 0.2s ease; width: fit-content; max-width: 200px;" onmouseover="this.style.borderColor='#cbd5e1';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)'" onmouseout="this.style.borderColor='#e2e8f0';this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)'">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h2v2h-2z"></path><path d="M18 18h2v2h-2z"></path><path d="M14 18h2v2h-2z"></path><path d="M18 14h2v2h-2z"></path></svg>
   <span style="white-space: nowrap;">QR Codes by <strong style="color: #4f46e5; font-weight: 700;">Free QR Generator</strong></span>
@@ -28,8 +32,8 @@ export default function EmbedPage({ onNavigate }: EmbedPageProps) {
     },
     {
       id: 'dark-sleek',
-      name: 'Dark Matte Sleek',
-      description: 'Sophisticated dark slate badge designed for dark-themed footers, panels, or dashboards. Violet accent highlights branding.',
+      name: t('embed.badge.dark', 'Dark Matte Sleek'),
+      description: t('embed.badge.dark.desc', 'Sophisticated dark slate badge designed for dark-themed footers, panels, or dashboards. Violet accent highlights branding.'),
       html: `<a href="https://www.freeqrgen.pro" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; color: #f8fafc; text-decoration: none; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); transition: all 0.2s ease; width: fit-content; max-width: 200px;" onmouseover="this.style.borderColor='#475569';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.3)'" onmouseout="this.style.borderColor='#334155';this.style.boxShadow='0 1px 2px rgba(0,0,0,0.2)'">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h2v2h-2z"></path><path d="M18 18h2v2h-2z"></path><path d="M14 18h2v2h-2z"></path><path d="M18 14h2v2h-2z"></path></svg>
   <span style="white-space: nowrap;">QR Codes by <strong style="color: #a78bfa; font-weight: 700;">Free QR Generator</strong></span>
@@ -37,8 +41,8 @@ export default function EmbedPage({ onNavigate }: EmbedPageProps) {
     },
     {
       id: 'indigo-gradient',
-      name: 'Royal Indigo Gradient',
-      description: 'Bold interactive pill boasting a professional twilight indigo gradient. High-contrast white typography with dynamic shadow effects.',
+      name: t('embed.badge.indigo', 'Royal Indigo Gradient'),
+      description: t('embed.badge.indigo.desc', 'Bold interactive pill boasting a professional twilight indigo gradient. High-contrast white typography with dynamic shadow effects.'),
       html: `<a href="https://www.freeqrgen.pro" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border: none; border-radius: 9999px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; color: #ffffff; text-decoration: none; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); transition: all 0.2s ease; width: fit-content; max-width: 200px;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 16px rgba(79, 70, 229, 0.35)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(79, 70, 229, 0.25)'">
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h2v2h-2z"></path><path d="M18 18h2v2h-2z"></path><path d="M14 18h2v2h-2z"></path><path d="M18 14h2v2h-2z"></path></svg>
   <span style="white-space: nowrap;">QR Codes by <strong style="color: #ffffff; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">Free QR Generator</strong></span>
@@ -46,8 +50,8 @@ export default function EmbedPage({ onNavigate }: EmbedPageProps) {
     },
     {
       id: 'borderless-subtle',
-      name: 'Slate Minimal Borderless',
-      description: 'Ultra-clean background-free badge using simple neutral tones. Blends directly into standard light text sections or footers.',
+      name: t('embed.badge.slate', 'Slate Minimal Borderless'),
+      description: t('embed.badge.slate.desc', 'Ultra-clean background-free badge using simple neutral tones. Blends directly into standard light text sections or footers.'),
       html: `<a href="https://www.freeqrgen.pro" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; background: transparent; border: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 500; color: #64748b; text-decoration: none; transition: all 0.2s ease; width: fit-content;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#64748b'">
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h2v2h-2z"></path><path d="M18 18h2v2h-2z"></path><path d="M14 18h2v2h-2z"></path><path d="M18 14h2v2h-2z"></path></svg>
   <span style="white-space: nowrap;">QR Codes by <strong style="font-weight: 700;">Free QR Generator</strong></span>
@@ -70,24 +74,24 @@ export default function EmbedPage({ onNavigate }: EmbedPageProps) {
         className="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors mb-8 group cursor-pointer focus:outline-hidden"
       >
         <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-        Back to Creative Station
+        {t('embed.backButton', 'Back to Creative Station')}
       </button>
 
       {/* Header section */}
       <div className="space-y-4 mb-12">
         <div className="flex items-center gap-2">
           <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-extrabold uppercase tracking-widest inline-block">
-            Developer & Partner Widgets
+            {t('embed.badgePartner', 'Developer & Partner Widgets')}
           </span>
           <span className="text-[10px] bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-extrabold uppercase tracking-widest inline-block flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-emerald-600" /> SEO Optimized
+            <Sparkles className="w-3 h-3 text-emerald-600" /> {t('embed.seoOptimized', 'SEO Optimized')}
           </span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-none">
-          Get Our "Powered By" Badge
+          {t('embed.title', 'Get Our "Powered By" Badge')}
         </h1>
         <p className="text-base text-slate-600 max-w-3xl leading-relaxed">
-          Show your support for public open-source web utilities! Embed a lightweight, gorgeous widget in your website footer or side section. This snippet is fully inline-styled with zero external CSS or JavaScript files, assuring perfect speed and layout security.
+          {t('embed.desc', 'Show your support for public open-source web utilities! Embed a lightweight, gorgeous widget in your website footer or side section. This snippet is fully inline-styled with zero external CSS or JavaScript files, assuring perfect speed and layout security.')}
         </p>
       </div>
 
@@ -126,15 +130,15 @@ export default function EmbedPage({ onNavigate }: EmbedPageProps) {
                       ? 'bg-emerald-500 text-white border-emerald-400'
                       : 'bg-slate-850 hover:bg-slate-800 text-slate-300 border-slate-700'
                   } cursor-pointer`}
-                  title="Copy Embed Snippet"
+                  title={t('embed.copySnippetTitle', 'Copy Embed Snippet')}
                 >
                   {copiedId === badge.id ? (
                     <span className="flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5">
-                      <Check className="w-3 h-3 stroke-[3]" /> Copied!
+                      <Check className="w-3 h-3 stroke-[3]" /> {t('embed.copied', 'Copied!')}
                     </span>
                   ) : (
                     <span className="flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5">
-                      <Copy className="w-3 h-3" /> Copy Snippet
+                      <Copy className="w-3 h-3" /> {t('embed.copySnippet', 'Copy Snippet')}
                     </span>
                   )}
                 </button>
@@ -148,17 +152,17 @@ export default function EmbedPage({ onNavigate }: EmbedPageProps) {
           <div className="bg-gradient-to-br from-indigo-50/30 to-purple-50/20 p-6 rounded-2xl border border-indigo-100/50 space-y-4">
             <h4 className="text-xs font-extrabold text-slate-900 tracking-wider uppercase flex items-center gap-2">
               <Heart className="w-4 h-4 text-rose-500 fill-rose-500 animate-pulse" />
-              Why partner with us?
+              {t('embed.partnerTitle', 'Why partner with us?')}
             </h4>
             <div className="space-y-3.5 text-xs text-slate-600 leading-relaxed">
               <p>
-                <strong className="text-slate-800">Support Free Software:</strong> iSolutions QR Generator is a 100% free, unlimited, ad-free toolkit designed for local stores, schools, and developers. Placing a badge helps us stay free forever.
+                <strong className="text-slate-800">{t('embed.partner1Title', 'Support Free Software:')}</strong> {t('embed.partner1Desc', 'iSolutions QR Generator is a 100% free, unlimited, ad-free toolkit designed for local stores, schools, and developers. Placing a badge helps us stay free forever.')}
               </p>
               <p>
-                <strong className="text-slate-800">Boost SEO Authority:</strong> Linking to high-quality dynamic web generators elevates domain trust parameters securely.
+                <strong className="text-slate-800">{t('embed.partner2Title', 'Boost SEO Authority:')}</strong> {t('embed.partner2Desc', 'Linking to high-quality dynamic web generators elevates domain trust parameters securely.')}
               </p>
               <p>
-                <strong className="text-slate-800">Lightweight & Safe:</strong> The widget does not load external tracking scripts or analytics assets, ensuring absolute load speed compliance.
+                <strong className="text-slate-800">{t('embed.partner3Title', 'Lightweight & Safe:')}</strong> {t('embed.partner3Desc', 'The widget does not load external tracking scripts or analytics assets, ensuring absolute load speed compliance.')}
               </p>
             </div>
           </div>
@@ -166,12 +170,12 @@ export default function EmbedPage({ onNavigate }: EmbedPageProps) {
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
             <h4 className="text-xs font-extrabold text-slate-900 tracking-wider uppercase flex items-center gap-2">
               <Info className="w-4 h-4 text-indigo-500" />
-              Integration Tips
+              {t('embed.tipsTitle', 'Integration Tips')}
             </h4>
             <ul className="space-y-2 text-[11px] text-slate-650 leading-relaxed list-disc list-inside">
-              <li>Place the HTML snippet inside your footer area or sidebar widget placeholder.</li>
-              <li>You can adjust the inline <code className="bg-slate-50 px-1 py-0.5 rounded font-mono text-slate-600">max-width</code> or padding parameter to fit any bespoke column widths.</li>
-              <li>No style bleeding: inline CSS rules prevent global stylesheet pollution.</li>
+              <li>{t('embed.tip1', 'Place the HTML snippet inside your footer area or sidebar widget placeholder.')}</li>
+              <li>{t('embed.tip2', 'You can adjust the inline <code>max-width</code> or padding parameter to fit any bespoke column widths.', { code: (chunks) => <code className="bg-slate-50 px-1 py-0.5 rounded font-mono text-slate-600">{chunks}</code> })}</li>
+              <li>{t('embed.tip3', 'No style bleeding: inline CSS rules prevent global stylesheet pollution.')}</li>
             </ul>
           </div>
         </div>

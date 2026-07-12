@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { QRProject } from '../types';
 import { Palette, Check, Sparkles, CheckCircle2, AlertTriangle, XCircle, Info, Compass, Eye, Layout } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -17,7 +19,9 @@ interface ColorPaletteProps {
   onChange: (project: Partial<QRProject>) => void;
 }
 
-export default function ColorPalette({ currentProject, onChange }: ColorPaletteProps) {
+export default function ColorPalette({
+   currentProject, onChange }: ColorPaletteProps) {
+  const { t } = useTranslation();
   // Extract values with default fallbacks
   const fgColor = currentProject.design?.fgColor || '#0f172a';
   const bgColor = currentProject.design?.bgColor || '#ffffff';

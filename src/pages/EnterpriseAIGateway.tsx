@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Sparkles, Shield, Cpu, Sliders, Play, Trash, Check, Copy, AlertCircle, 
@@ -18,12 +20,16 @@ interface EnterpriseAIGatewayProps {
   onSignInClick: () => void;
 }
 
-export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: EnterpriseAIGatewayProps) {
+export default function EnterpriseAIGateway({
+   onBack, user, onSignInClick }: EnterpriseAIGatewayProps) {
+  const { t } = useTranslation();
   const [activeNavTab, setActiveNavTab] = useState<string>('architecture');
   
   // Provider state (Step 2)
   const [activeProvider, setActiveProvider] = useState<AIProvider>(aiService.getActiveProvider());
-  const [promptInput, setPromptInput] = useState<string>('Harmonize a scan-safe high-end color palette for an airport luggage brand with terminal markers.');
+  const [promptInput, setPromptInput] = useState<string>(
+    t('enterprise.defaultPromptInput', 'Harmonize a scan-safe high-end color palette for an airport luggage brand with terminal markers.')
+  );
   const [generationOutput, setGenerationOutput] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generationStats, setGenerationStats] = useState<any>(null);
@@ -41,7 +47,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
   // Prompt templates state (Step 5)
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('qr_designer');
   const [variableValues, setVariableValues] = useState<Record<string, string>>({
-    brandType: 'luxury watchmaker',
+    brandType: t('enterprise.defaultBrandType', 'luxury watchmaker'),
     accentColor: '#4f46e5'
   });
   const [compiledPrompt, setCompiledPrompt] = useState<string>('');
@@ -62,17 +68,17 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
 
   // Security layer logs (Step 10)
   const [securityLogs, setSecurityLogs] = useState<any[]>([
-    { timestamp: 'Just now', action: 'API_KEY_AUTH', status: 'SUCCESS', details: 'Key masked (api_key_01) validated. Rate limit (enterprise_high) holds.', severity: 'info' },
-    { timestamp: '3 mins ago', action: 'PROMPT_INPUT_CHECK', status: 'PASSED', details: 'No command-injection heuristics detected on user query.', severity: 'info' },
-    { timestamp: '10 mins ago', action: 'PROVIDER_ROUTE', status: 'ROUTED', details: 'Rerouted model target to server-side Gemini 3.5 node cluster.', severity: 'info' },
-    { timestamp: '1 hour ago', action: 'RATE_LIMIT_CHECK', status: 'WARNING', details: 'IP subnet 198.51.100.42 reached 85% of standard allowance.', severity: 'warning' },
+    { timestamp: t('enterprise.logJustNow', 'Just now'), action: 'API_KEY_AUTH', status: 'SUCCESS', details: t('enterprise.logDetailsKeyAuth', 'Key masked (api_key_01) validated. Rate limit (enterprise_high) holds.'), severity: 'info' },
+    { timestamp: t('enterprise.logThreeMinsAgo', '3 mins ago'), action: 'PROMPT_INPUT_CHECK', status: 'PASSED', details: t('enterprise.logDetailsPromptCheck', 'No command-injection heuristics detected on user query.'), severity: 'info' },
+    { timestamp: t('enterprise.logTenMinsAgo', '10 mins ago'), action: 'PROVIDER_ROUTE', status: 'ROUTED', details: t('enterprise.logDetailsProviderRoute', 'Rerouted model target to server-side Gemini 3.5 node cluster.'), severity: 'info' },
+    { timestamp: t('enterprise.logOneHourAgo', '1 hour ago'), action: 'RATE_LIMIT_CHECK', status: 'WARNING', details: t('enterprise.logDetailsRateLimitWarning', 'IP subnet 198.51.100.42 reached 85% of standard allowance.'), severity: 'warning' },
   ]);
 
   // Handle Provider Switch
   const handleProviderSwitch = (provider: AIProvider) => {
     aiService.setActiveProvider(provider);
     setActiveProvider(provider);
-    addSecurityLog('PROVIDER_SWITCH', 'SUCCESS', `Active LLM inference target switched to ${provider.toUpperCase()}`);
+    addSecurityLog('PROVIDER_SWITCH', 'SUCCESS', t('enterprise.providerSwitchSuccessLog', 'Active LLM inference target switched to {{provider}}', { provider: provider.toUpperCase() }));
   };
 
   // Run Playground text generation (Mock framework simulation)
@@ -80,7 +86,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
     e.preventDefault();
     setIsGenerating(true);
     setGenerationOutput('');
-    addSecurityLog('PLAYGROUND_GENERATE_START', 'IN_PROGRESS', `Query sent to provider: ${activeProvider}`);
+    addSecurityLog('PLAYGROUND_GENERATE_START', 'IN_PROGRESS', t('enterprise.playgroundGenerateStartLog', 'Query sent to provider: {{provider}}', { provider: activeProvider }));
     
     setTimeout(async () => {
       const res = await aiService.generateText({ prompt: promptInput });
@@ -91,7 +97,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
         model: res.modelVersion
       });
       setIsGenerating(false);
-      addSecurityLog('PLAYGROUND_GENERATE_COMPLETE', 'SUCCESS', `Returned ${res.usage.totalTokens} tokens in ${res.latencyMs}ms via ${res.modelVersion}`);
+      addSecurityLog('PLAYGROUND_GENERATE_COMPLETE', 'SUCCESS', t('enterprise.playgroundGenerateCompleteLog', 'Returned {{tokens}} tokens in {{latency}}ms via {{model}}', { tokens: res.usage.totalTokens, latency: res.latencyMs, model: res.modelVersion }));
     }, 850);
   };
 
@@ -105,7 +111,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
       logoWidthPercent
     });
     setHealthReport(report);
-    addSecurityLog('QR_HEALTH_AUDIT', 'SUCCESS', `Run heuristic metrics scan. Contrast: ${report.contrastRatio.toFixed(2)}:1. Score: ${report.overallScore}/100.`);
+    addSecurityLog('QR_HEALTH_AUDIT', 'SUCCESS', t('enterprise.qrHealthAuditLog', 'Run heuristic metrics scan. Contrast: {{contrast}}:1. Score: {{score}}/100.', { contrast: report.contrastRatio.toFixed(2), score: report.overallScore }));
   };
 
   // Compile prompt variables
@@ -135,14 +141,14 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
     automationCenter.addWorkflow(newW);
     setWorkflows([...workflows, newW]);
     setNewWorkflowName('');
-    addSecurityLog('WORKFLOW_REGISTER', 'SUCCESS', `Created custom automation workflow: "${newWorkflowName}"`);
+    addSecurityLog('WORKFLOW_REGISTER', 'SUCCESS', t('enterprise.workflowRegisterLog', 'Created custom automation workflow: "{{name}}"', { name: newWorkflowName }));
   };
 
   // Toggle Feature Flag
   const toggleFlag = (flag: string) => {
     featureFlagSystem.toggleFlag(flag);
     setFeatureFlags({ ...featureFlagSystem.getFlags() });
-    addSecurityLog('FEATURE_FLAG_TOGGLE', 'SUCCESS', `Feature flag "${flag}" state modified.`);
+    addSecurityLog('FEATURE_FLAG_TOGGLE', 'SUCCESS', t('enterprise.featureFlagToggleLog', 'Feature flag "{{flag}}" state modified.', { flag }));
   };
 
   // Generate API Key
@@ -152,12 +158,12 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
     const newK = apiGateway.generateNewKey(newKeyLabel);
     setApiKeys([...apiKeys, newK]);
     setNewKeyLabel('');
-    addSecurityLog('API_KEY_CREATE', 'SUCCESS', `Generated secure system credential: "${newKeyLabel}"`);
+    addSecurityLog('API_KEY_CREATE', 'SUCCESS', t('enterprise.apiKeyCreateLog', 'Generated secure system credential: "{{label}}"', { label: newKeyLabel }));
   };
 
   const addSecurityLog = (action: string, status: string, details: string, severity: 'info' | 'warning' | 'critical' = 'info') => {
     setSecurityLogs(prev => [
-      { timestamp: 'Just now', action, status, details, severity },
+      { timestamp: t('enterprise.logJustNow', 'Just now'), action, status, details, severity },
       ...prev
     ]);
   };
@@ -180,14 +186,20 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold font-mono uppercase bg-indigo-50 border border-indigo-200 text-indigo-700 py-0.5 px-2 rounded-md">Enterprise Gateway</span>
-                <span className="text-[10px] font-bold font-mono uppercase bg-emerald-50 border border-emerald-200 text-emerald-700 py-0.5 px-2 rounded-md">Architecture Phase</span>
+                <span className="text-[10px] font-bold font-mono uppercase bg-indigo-50 border border-indigo-200 text-indigo-700 py-0.5 px-2 rounded-md">
+                  {t('enterprise.gatewayLabel', 'Enterprise Gateway')}
+                </span>
+                <span className="text-[10px] font-bold font-mono uppercase bg-emerald-50 border border-emerald-200 text-emerald-700 py-0.5 px-2 rounded-md">
+                  {t('enterprise.architecturePhase', 'Architecture Phase')}
+                </span>
               </div>
-              <h1 className="text-2xl font-black text-slate-800 tracking-tight uppercase mt-0.5">Developer Hub & AI Core</h1>
+              <h1 className="text-2xl font-black text-slate-800 tracking-tight uppercase mt-0.5">
+                {t('enterprise.developerHubTitle', 'Developer Hub & AI Core')}
+              </h1>
             </div>
           </div>
           <p className="text-xs text-slate-500 mt-2 leading-relaxed max-w-2xl">
-            Audit, simulate, and configure FreeQRGen.pro's enterprise AI pipeline routing, real-time diagnostic safety centers, automated CRM webhooks, developer api keys, and modular system toggles.
+            {t('enterprise.developerHubDesc', "Audit, simulate, and configure FreeQRGen.pro's enterprise AI pipeline routing, real-time diagnostic safety centers, automated CRM webhooks, developer api keys, and modular system toggles.")}
           </p>
         </div>
         
@@ -196,7 +208,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
           className="flex items-center gap-2 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-all cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Exit Developer Hub</span>
+          <span>{t('enterprise.exitHub', 'Exit Developer Hub')}</span>
         </button>
       </div>
 
@@ -206,18 +218,20 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
         {/* Navigation Sidebar Drawer */}
         <aside className="w-full lg:w-64 bg-slate-900 border border-slate-800 rounded-2xl p-4 shrink-0 shadow-xl">
           <div className="mb-4 border-b border-slate-800 pb-3 text-left">
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-mono">Platform Nodes</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-mono">
+              {t('enterprise.platformNodes', 'Platform Nodes')}
+            </span>
           </div>
           <nav className="flex flex-col gap-1">
             {[
-              { id: 'architecture', label: 'AI Service Layer', icon: Cpu, badge: 'Step 2' },
-              { id: 'registry', label: 'AI Module Registry', icon: Layers, badge: 'Step 3' },
-              { id: 'health', label: 'QR Health Center', icon: Activity, badge: 'Step 4' },
-              { id: 'prompt', label: 'Prompt & CRM Flows', icon: Sliders, badge: 'Steps 5-6' },
-              { id: 'integration', label: 'Integration Hub', icon: Globe, badge: 'Step 7' },
-              { id: 'gateway', label: 'API Keys & Gateway', icon: Key, badge: 'Step 8' },
-              { id: 'flags', label: 'Flags & Security', icon: Shield, badge: 'Steps 9-10' },
-              { id: 'reports', label: 'Architectural Reports', icon: FileText, badge: 'Steps 11-13' },
+              { id: 'architecture', label: t('enterprise.tabAIServiceLayer', 'AI Service Layer'), icon: Cpu, badge: t('enterprise.badgeStep2', 'Step 2') },
+              { id: 'registry', label: t('enterprise.tabAIModuleRegistry', 'AI Module Registry'), icon: Layers, badge: t('enterprise.badgeStep3', 'Step 3') },
+              { id: 'health', label: t('enterprise.tabQRHealthCenter', 'QR Health Center'), icon: Activity, badge: t('enterprise.badgeStep4', 'Step 4') },
+              { id: 'prompt', label: t('enterprise.tabPromptCRMFlows', 'Prompt & CRM Flows'), icon: Sliders, badge: t('enterprise.badgeSteps5to6', 'Steps 5-6') },
+              { id: 'integration', label: t('enterprise.tabIntegrationHub', 'Integration Hub'), icon: Globe, badge: t('enterprise.badgeStep7', 'Step 7') },
+              { id: 'gateway', label: t('enterprise.tabAPIKeysGateway', 'API Keys & Gateway'), icon: Key, badge: t('enterprise.badgeStep8', 'Step 8') },
+              { id: 'flags', label: t('enterprise.tabFlagsSecurity', 'Flags & Security'), icon: Shield, badge: t('enterprise.badgeSteps9to10', 'Steps 9-10') },
+              { id: 'reports', label: t('enterprise.tabArchitecturalReports', 'Architectural Reports'), icon: FileText, badge: t('enterprise.badgeSteps11to13', 'Steps 11-13') },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeNavTab === tab.id;
@@ -245,12 +259,18 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
 
           {/* Reused Systems Audit Checklist */}
           <div className="mt-6 pt-5 border-t border-slate-800 text-left">
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-mono block mb-3">Reused Core Modules</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-mono block mb-3">
+              {t('enterprise.reusedCoreModules', 'Reused Core Modules')}
+            </span>
             <div className="space-y-1.5">
               {[
-                'Authentication', 'Routing Infrastructure', 'Enterprise SEO Configs', 
-                'Internationalization Engine', 'Active Notification center', 
-                'User Profiles DB Sync', 'Community Hub Ledger'
+                t('enterprise.modAuth', 'Authentication'),
+                t('enterprise.modRouting', 'Routing Infrastructure'),
+                t('enterprise.modSeo', 'Enterprise SEO Configs'),
+                t('enterprise.modI18n', 'Internationalization Engine'),
+                t('enterprise.modNotifications', 'Active Notification center'),
+                t('enterprise.modProfiles', 'User Profiles DB Sync'),
+                t('enterprise.modLedger', 'Community Hub Ledger')
               ].map((sys) => (
                 <div key={sys} className="flex items-center gap-2 text-[10px] text-slate-400 font-medium">
                   <div className="w-3.5 h-3.5 rounded-sm bg-emerald-950/50 border border-emerald-800 flex items-center justify-center text-emerald-400 shrink-0">
@@ -270,16 +290,22 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
           {activeNavTab === 'architecture' && (
             <div className="p-6 md:p-8 space-y-6">
               <div className="border-b border-slate-150 pb-4">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">Step 2 Specification</span>
-                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">Enterprise AI Service Layer Routing</h2>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">
+                  {t('enterprise.step2Spec', 'Step 2 Specification')}
+                </span>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">
+                  {t('enterprise.serviceLayerTitle', 'Enterprise AI Service Layer Routing')}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Decouple AI pipelines from user interfaces. Support direct hot-switching between core global intelligence providers while remaining compliant with strict cloud sandboxing requirements.
+                  {t('enterprise.serviceLayerDesc', 'Decouple AI pipelines from user interfaces. Support direct hot-switching between core global intelligence providers while remaining compliant with strict cloud sandboxing requirements.')}
                 </p>
               </div>
 
               {/* Provider Grid Selector */}
               <div>
-                <h3 className="text-xs font-black uppercase text-slate-400 font-mono mb-3">Select Intelligence Provider Nodes</h3>
+                <h3 className="text-xs font-black uppercase text-slate-400 font-mono mb-3">
+                  {t('enterprise.selectProviderNodes', 'Select Intelligence Provider Nodes')}
+                </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {aiService.getProviders().map((p) => (
                     <div 
@@ -301,7 +327,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                         )}
                       </div>
                       <span className="text-xs font-extrabold text-slate-700 block">{p.name}</span>
-                      <span className="text-[10px] font-mono font-medium text-slate-400 mt-1 block">Key: {p.apiKeyEnvVar}</span>
+                      <span className="text-[10px] font-mono font-medium text-slate-400 mt-1 block">
+                        {t('enterprise.keyLabel', 'Key')}: {p.apiKeyEnvVar}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -311,25 +339,29 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
               <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="w-4.5 h-4.5 text-indigo-600" />
-                  <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">AI Service Inference Playground</h3>
+                  <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">
+                    {t('enterprise.inferencePlayground', 'AI Service Inference Playground')}
+                  </h3>
                 </div>
 
                 <form onSubmit={handlePlaygroundGenerate} className="space-y-4">
                   <div>
-                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">Interactive Diagnostic Prompt</label>
+                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">
+                      {t('enterprise.diagnosticPromptLabel', 'Interactive Diagnostic Prompt')}
+                    </label>
                     <input 
                       type="text" 
                       value={promptInput}
                       onChange={(e) => setPromptInput(e.target.value)}
                       className="w-full text-xs border border-slate-200 rounded-xl p-3 bg-white focus:outline-none focus:border-indigo-500 font-sans"
-                      placeholder="Enter testing prompts..."
+                      placeholder={t('enterprise.testingPromptsPlaceholder', 'Enter testing prompts...')}
                       required
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-slate-400 font-mono">
-                      Active: <strong className="text-indigo-600 uppercase">{activeProvider}</strong> (No API costs incurred)
+                      {t('enterprise.activeLabel', 'Active:')} <strong className="text-indigo-600 uppercase">{activeProvider}</strong> {t('enterprise.noApiCosts', '(No API costs incurred)')}
                     </span>
                     <button 
                       type="submit" 
@@ -339,12 +371,12 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                       {isGenerating ? (
                         <>
                           <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                          <span>Routing Query...</span>
+                          <span>{t('enterprise.routingQuery', 'Routing Query...')}</span>
                         </>
                       ) : (
                         <>
                           <Play className="w-3.5 h-3.5 fill-current" />
-                          <span>Execute Inference</span>
+                          <span>{t('enterprise.executeInference', 'Execute Inference')}</span>
                         </>
                       )}
                     </button>
@@ -359,16 +391,18 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                       animate={{ opacity: 1, y: 0 }}
                       className="mt-4 pt-4 border-t border-slate-200 text-left space-y-2"
                     >
-                      <span className="text-[9px] font-black font-mono uppercase bg-slate-200 py-0.5 px-2 rounded-sm text-slate-600">Response Payload</span>
+                      <span className="text-[9px] font-black font-mono uppercase bg-slate-200 py-0.5 px-2 rounded-sm text-slate-600">
+                        {t('enterprise.responsePayload', 'Response Payload')}
+                      </span>
                       <p className="text-xs font-mono bg-white p-3 border border-slate-200 rounded-xl leading-relaxed text-slate-700">
                         {generationOutput}
                       </p>
                       
                       {generationStats && (
                         <div className="flex gap-4 text-[10px] text-slate-400 font-mono pt-1">
-                          <span>Latency: <strong>{generationStats.latency}ms</strong></span>
-                          <span>Usage: <strong>{generationStats.tokens} tokens</strong></span>
-                          <span>Model Node: <strong>{generationStats.model}</strong></span>
+                          <span>{t('enterprise.latencyLabel', 'Latency:')} <strong>{generationStats.latency}{t('enterprise.latencyUnitMs', 'ms')}</strong></span>
+                          <span>{t('enterprise.usageLabel', 'Usage:')} <strong>{generationStats.tokens} {t('enterprise.tokens', 'tokens')}</strong></span>
+                          <span>{t('enterprise.modelNodeLabel', 'Model Node:')} <strong>{generationStats.model}</strong></span>
                         </div>
                       )}
                     </motion.div>
@@ -382,10 +416,14 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
           {activeNavTab === 'registry' && (
             <div className="p-6 md:p-8 space-y-6">
               <div className="border-b border-slate-150 pb-4">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">Step 3 Specification</span>
-                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">AI Module Registry Ledger</h2>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">
+                  {t('enterprise.step3Spec', 'Step 3 Specification')}
+                </span>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">
+                  {t('enterprise.moduleRegistryTitle', 'AI Module Registry Ledger')}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Decoupled directory configuration maps feature requirements and license tiers, permitting modular on-demand injection of complex cognitive layers.
+                  {t('enterprise.moduleRegistryDesc', 'Decoupled directory configuration maps feature requirements and license tiers, permitting modular on-demand injection of complex cognitive layers.')}
                 </p>
               </div>
 
@@ -413,7 +451,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                       <p className="text-[11px] text-slate-500 mt-1 leading-normal">{m.description}</p>
                     </div>
                     <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                      <span>Injected Endpoint:</span>
+                      <span>{t('enterprise.injectedEndpoint', 'Injected Endpoint:')}</span>
                       <span className="font-bold text-slate-600">/api/ai/module/{m.id}</span>
                     </div>
                   </div>
@@ -426,10 +464,14 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
           {activeNavTab === 'health' && (
             <div className="p-6 md:p-8 space-y-6">
               <div className="border-b border-slate-150 pb-4">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">Step 4 Specification</span>
-                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">QR Code Health Center Simulator</h2>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">
+                  {t('enterprise.step4Spec', 'Step 4 Specification')}
+                </span>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">
+                  {t('enterprise.healthCenterTitle', 'QR Code Health Center Simulator')}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Advanced validation engine running pre-print contrast sweeps, quiet-zone padding audits, and logo-overlay area analysis to guarantee perfect physical scans globally.
+                  {t('enterprise.healthCenterDesc', 'Advanced validation engine running pre-print contrast sweeps, quiet-zone padding audits, and logo-overlay area analysis to guarantee perfect physical scans globally.')}
                 </p>
               </div>
 
@@ -437,10 +479,14 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                 
                 {/* Configuration Panel */}
                 <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
-                  <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight border-b border-slate-200 pb-2">Target Parameters</h3>
+                  <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight border-b border-slate-200 pb-2">
+                    {t('enterprise.targetParameters', 'Target Parameters')}
+                  </h3>
                   
                   <div>
-                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">Modules Color (Foreground)</label>
+                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">
+                      {t('enterprise.fgColorLabel', 'Modules Color (Foreground)')}
+                    </label>
                     <div className="flex gap-2">
                       <input 
                         type="color" 
@@ -458,7 +504,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">Background Color</label>
+                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">
+                      {t('enterprise.bgColorLabel', 'Background Color')}
+                    </label>
                     <div className="flex gap-2">
                       <input 
                         type="color" 
@@ -476,7 +524,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">Quiet Zone Padding (modules)</label>
+                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">
+                      {t('enterprise.quietZoneLabel', 'Quiet Zone Padding (modules)')}
+                    </label>
                     <input 
                       type="range" 
                       min="0" 
@@ -486,14 +536,18 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                       className="w-full accent-indigo-600 mt-1"
                     />
                     <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-0.5">
-                      <span>0 modules</span>
-                      <span className="font-bold text-indigo-600">{quietZoneSize} modules</span>
-                      <span>10 modules</span>
+                      <span>{t('enterprise.modulesZero', '0 modules')}</span>
+                      <span className="font-bold text-indigo-600">
+                        {t('enterprise.modulesCount', '{{count}} modules', { count: quietZoneSize })}
+                      </span>
+                      <span>{t('enterprise.modulesTen', '10 modules')}</span>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">Center Logo Overlay Size</label>
+                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">
+                      {t('enterprise.logoSizeLabel', 'Center Logo Overlay Size')}
+                    </label>
                     <input 
                       type="range" 
                       min="0" 
@@ -503,9 +557,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                       className="w-full accent-indigo-600 mt-1"
                     />
                     <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-0.5">
-                      <span>0% (None)</span>
+                      <span>{t('enterprise.nonePercent', '0% (None)')}</span>
                       <span className="font-bold text-indigo-600">{logoWidthPercent}%</span>
-                      <span>40%</span>
+                      <span>{t('enterprise.fortyPercent', '40%')}</span>
                     </div>
                   </div>
 
@@ -513,7 +567,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                     onClick={triggerHealthAudit}
                     className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
                   >
-                    Recalculate Diagnostics
+                    {t('enterprise.recalculateDiagnostics', 'Recalculate Diagnostics')}
                   </button>
                 </div>
 
@@ -521,9 +575,13 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                 <div className="lg:col-span-2 space-y-4">
                   <div className="border border-slate-200 rounded-2xl p-5 bg-white space-y-4">
                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                      <h4 className="text-xs font-black uppercase text-slate-800 tracking-tight">Active Scan Integrity Report</h4>
+                      <h4 className="text-xs font-black uppercase text-slate-800 tracking-tight">
+                        {t('enterprise.integrityReportTitle', 'Active Scan Integrity Report')}
+                      </h4>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs text-slate-400 font-medium">Overall Health:</span>
+                        <span className="text-xs text-slate-400 font-medium">
+                          {t('enterprise.overallHealth', 'Overall Health:')}
+                        </span>
                         <span className={`text-sm font-black font-mono ${
                           healthReport.overallScore >= 90 ? 'text-emerald-600' :
                           healthReport.overallScore >= 70 ? 'text-amber-500' :
@@ -553,15 +611,19 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                     {/* Safe physical print size advisor */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <span className="text-[10px] text-slate-400 font-mono font-bold block uppercase">Min Physical Print Width</span>
+                        <span className="text-[10px] text-slate-400 font-mono font-bold block uppercase">
+                          {t('enterprise.minPrintWidth', 'Min Physical Print Width')}
+                        </span>
                         <span className="text-sm font-black text-slate-800 mt-1 block">
-                          {Math.max(2, Math.ceil(moduleCount * 0.8))} mm (DPI 300)
+                          {Math.max(2, Math.ceil(moduleCount * 0.8))} {t('enterprise.mmDpi', 'mm (DPI 300)')}
                         </span>
                       </div>
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <span className="text-[10px] text-slate-400 font-mono font-bold block uppercase">Recommended Distance</span>
+                        <span className="text-[10px] text-slate-400 font-mono font-bold block uppercase">
+                          {t('enterprise.recommendedDistance', 'Recommended Distance')}
+                        </span>
                         <span className="text-sm font-black text-slate-800 mt-1 block">
-                          {((Math.max(2, Math.ceil(moduleCount * 0.8)) * 10) / 100).toFixed(1)} cm maximum range
+                          {((Math.max(2, Math.ceil(moduleCount * 0.8)) * 10) / 100).toFixed(1)} {t('enterprise.cmMaxRangeSuffix', 'cm maximum range')}
                         </span>
                       </div>
                     </div>
@@ -590,7 +652,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                             </span>
                           </div>
                           <p className="text-[11px] text-slate-500 mt-0.5">{diag.message}</p>
-                          <p className="text-[10px] font-bold text-indigo-600 mt-1">🔧 Recommendation: {diag.recommendation}</p>
+                          <p className="text-[10px] font-bold text-indigo-600 mt-1">
+                            🔧 {t('enterprise.recommendationPrefix', 'Recommendation:')} {diag.recommendation}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -605,10 +669,14 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
           {activeNavTab === 'prompt' && (
             <div className="p-6 md:p-8 space-y-6">
               <div className="border-b border-slate-150 pb-4">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">Steps 5-6 Specification</span>
-                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">AI Prompts & CRM Automation</h2>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">
+                  {t('enterprise.steps56Spec', 'Steps 5-6 Specification')}
+                </span>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">
+                  {t('enterprise.promptsCRMTitle', 'AI Prompts & CRM Automation')}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Define corporate system prompt templates with sandbox variable compilers and register asynchronous callback triggers tied directly to core platform activities.
+                  {t('enterprise.promptsCRMDesc', 'Define corporate system prompt templates with sandbox variable compilers and register asynchronous callback triggers tied directly to core platform activities.')}
                 </p>
               </div>
 
@@ -619,11 +687,15 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                 <div className="border border-slate-200 rounded-2xl p-5 bg-white space-y-4">
                   <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                     <Sliders className="w-4.5 h-4.5 text-indigo-600" />
-                    <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">Prompt Template Compiler</h3>
+                    <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">
+                      {t('enterprise.promptCompilerTitle', 'Prompt Template Compiler')}
+                    </h3>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">Select System Blueprint</label>
+                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">
+                      {t('enterprise.selectSystemBlueprint', 'Select System Blueprint')}
+                    </label>
                     <select 
                       value={selectedTemplateId} 
                       onChange={(e) => {
@@ -642,14 +714,20 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                   {promptManager.getTemplates().filter(t => t.id === selectedTemplateId).map(temp => (
                     <div key={temp.id} className="space-y-3 pt-2">
                       <div className="bg-slate-50 p-3 rounded-xl text-[11px] text-slate-600 space-y-1.5 border border-slate-100">
-                        <span className="font-extrabold uppercase font-mono text-[9px] text-slate-400 block">System Instruction:</span>
+                        <span className="font-extrabold uppercase font-mono text-[9px] text-slate-400 block">
+                          {t('enterprise.systemInstruction', 'System Instruction:')}
+                        </span>
                         <p>{temp.systemInstruction}</p>
-                        <span className="font-extrabold uppercase font-mono text-[9px] text-slate-400 block pt-1">User Template:</span>
+                        <span className="font-extrabold uppercase font-mono text-[9px] text-slate-400 block pt-1">
+                          {t('enterprise.userTemplate', 'User Template:')}
+                        </span>
                         <p className="font-mono text-[10px] text-indigo-600">{temp.userPromptTemplate}</p>
                       </div>
 
                       <div className="space-y-2">
-                        <span className="text-[10px] font-bold uppercase text-slate-400 font-mono block">Define Variable Overrides</span>
+                        <span className="text-[10px] font-bold uppercase text-slate-400 font-mono block">
+                          {t('enterprise.defineVariableOverrides', 'Define Variable Overrides')}
+                        </span>
                         {temp.variables.map(v => (
                           <div key={v} className="flex items-center gap-2">
                             <span className="text-[10px] font-mono text-slate-500 w-24 shrink-0">{v}:</span>
@@ -657,7 +735,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                               type="text"
                               value={variableValues[v] || ''}
                               onChange={(e) => setVariableValues({ ...variableValues, [v]: e.target.value })}
-                              placeholder={`Enter ${v}`}
+                              placeholder={t('enterprise.enterVar', 'Enter {{variable}}', { variable: v })}
                               className="flex-1 text-xs border border-slate-200 rounded-xl p-1.5 focus:outline-none"
                             />
                           </div>
@@ -668,12 +746,14 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                         onClick={() => handleCompilePrompt(temp.id)}
                         className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all cursor-pointer"
                       >
-                        Compile Prompt Blueprint
+                        {t('enterprise.compilePromptBlueprint', 'Compile Prompt Blueprint')}
                       </button>
 
                       {compiledPrompt && (
                         <div className="pt-2">
-                          <span className="text-[9px] font-black font-mono uppercase text-indigo-600 block mb-1">Compiled Prompt Target Output</span>
+                          <span className="text-[9px] font-black font-mono uppercase text-indigo-600 block mb-1">
+                            {t('enterprise.compiledPromptOutput', 'Compiled Prompt Target Output')}
+                          </span>
                           <p className="text-xs font-mono bg-indigo-50/30 p-2.5 border border-indigo-100/50 rounded-xl text-slate-700">
                             {compiledPrompt}
                           </p>
@@ -687,7 +767,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                 <div className="border border-slate-200 rounded-2xl p-5 bg-white space-y-4">
                   <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                     <Bell className="w-4.5 h-4.5 text-indigo-600" />
-                    <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">CRM Automation Workflows</h3>
+                    <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">
+                      {t('enterprise.crmWorkflowsTitle', 'CRM Automation Workflows')}
+                    </h3>
                   </div>
 
                   <div className="space-y-2 max-h-[220px] overflow-y-auto">
@@ -698,51 +780,64 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                             <span className="text-xs font-bold text-slate-800">{w.name}</span>
                             <span className="text-[9px] font-mono bg-indigo-50 border border-indigo-100 text-indigo-700 py-0.2 px-1 rounded-sm">{w.actionType}</span>
                           </div>
-                          <p className="text-[10px] font-mono text-slate-400 mt-1">Trigger: {w.trigger}</p>
+                          <p className="text-[10px] font-mono text-slate-400 mt-1">
+                            {t('enterprise.triggerLabel', 'Trigger:')} {w.trigger}
+                          </p>
                         </div>
-                        <span className={`w-2 h-2 rounded-full shrink-0 ${w.isEnabled ? 'bg-emerald-500' : 'bg-slate-300'}`} title={w.isEnabled ? 'Active Workflow' : 'Disabled'} />
+                        <span 
+                          className={`w-2 h-2 rounded-full shrink-0 ${w.isEnabled ? 'bg-emerald-500' : 'bg-slate-300'}`} 
+                          title={w.isEnabled ? t('enterprise.activeWorkflow', 'Active Workflow') : t('enterprise.disabledWorkflow', 'Disabled')} 
+                        />
                       </div>
                     ))}
                   </div>
 
                   {/* Register Workflow */}
                   <form onSubmit={handleAddWorkflow} className="border-t border-slate-100 pt-4 space-y-3">
-                    <span className="text-[10px] font-bold uppercase text-slate-400 font-mono block">Register System Trigger Callback</span>
+                    <span className="text-[10px] font-bold uppercase text-slate-400 font-mono block">
+                      {t('enterprise.registerTriggerCallback', 'Register System Trigger Callback')}
+                    </span>
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="block text-[9px] text-slate-400 font-bold uppercase">Trigger Scenario</label>
+                        <label className="block text-[9px] text-slate-400 font-bold uppercase">
+                          {t('enterprise.triggerScenario', 'Trigger Scenario')}
+                        </label>
                         <select 
                           value={newWorkflowTrigger} 
                           onChange={(e) => setNewWorkflowTrigger(e.target.value)}
                           className="w-full text-[11px] border border-slate-200 rounded-xl p-2 bg-white"
                         >
-                          <option value="on_qr_created">After QR Created</option>
-                          <option value="on_qr_downloaded">After Download</option>
-                          <option value="on_user_registered">After Registration</option>
-                          <option value="on_newsletter_signup">Newsletter Signup</option>
+                          <option value="on_qr_created">{t('enterprise.optAfterQrCreated', 'After QR Created')}</option>
+                          <option value="on_qr_downloaded">{t('enterprise.optAfterDownload', 'After Download')}</option>
+                          <option value="on_user_registered">{t('enterprise.optAfterRegistration', 'After Registration')}</option>
+                          <option value="on_newsletter_signup">{t('enterprise.optNewsletterSignup', 'Newsletter Signup')}</option>
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[9px] text-slate-400 font-bold uppercase">Action Node</label>
+                        <label className="block text-[9px] text-slate-400 font-bold uppercase">
+                          {t('enterprise.actionNode', 'Action Node')}
+                        </label>
                         <select 
                           value={newWorkflowAction} 
                           onChange={(e) => setNewWorkflowAction(e.target.value)}
                           className="w-full text-[11px] border border-slate-200 rounded-xl p-2 bg-white"
                         >
-                          <option value="webhook">REST Webhook URL</option>
-                          <option value="email">SMTP Email Trigger</option>
-                          <option value="analytics">Google Analytics</option>
+                          <option value="webhook">{t('enterprise.optRestWebhook', 'REST Webhook URL')}</option>
+                          <option value="email">{t('enterprise.optSmtpEmail', 'SMTP Email Trigger')}</option>
+                          <option value="analytics">{t('enterprise.optGoogleAnalytics', 'Google Analytics')}</option>
                         </select>
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">Workflow Name</label>
+                      <label className="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">
+                        {t('enterprise.workflowName', 'Workflow Name')}
+                      </label>
                       <input 
                         type="text" 
                         value={newWorkflowName}
                         onChange={(e) => setNewWorkflowName(e.target.value)}
-                        placeholder="e.g. Sync new registrants to Slack channel"
+                        placeholder={t('enterprise.workflowPlaceholder', 'e.g. Sync new registrants to Slack channel')}
                         className="w-full text-xs border border-slate-200 rounded-xl p-2"
                         required
                       />
@@ -752,7 +847,7 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                       type="submit"
                       className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
                     >
-                      Register Automation Blueprint (+15 XP)
+                      {t('enterprise.registerAutomationBlueprint', 'Register Automation Blueprint (+15 XP)')}
                     </button>
                   </form>
                 </div>
@@ -765,10 +860,14 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
           {activeNavTab === 'integration' && (
             <div className="p-6 md:p-8 space-y-6">
               <div className="border-b border-slate-150 pb-4">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">Step 7 Specification</span>
-                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">Enterprise Integration Hub</h2>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">
+                  {t('enterprise.step7Spec', 'Step 7 Specification')}
+                </span>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">
+                  {t('enterprise.integrationHubTitle', 'Enterprise Integration Hub')}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Pre-compiled pipelines mapped directly for enterprise hubs, executing live background webhooks with built-in retry schedules.
+                  {t('enterprise.integrationHubDesc', 'Pre-compiled pipelines mapped directly for enterprise hubs, executing live background webhooks with built-in retry schedules.')}
                 </p>
               </div>
 
@@ -787,7 +886,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                         </span>
                       </div>
                       <div className="space-y-1">
-                        <span className="text-[9px] font-mono text-slate-400 uppercase">Config parameters:</span>
+                        <span className="text-[9px] font-mono text-slate-400 uppercase">
+                          {t('enterprise.configParams', 'Config parameters:')}
+                        </span>
                         <div className="flex flex-wrap gap-1">
                           {c.configParams.map(param => (
                             <span key={param} className="text-[9px] bg-slate-50 border border-slate-200 text-slate-600 rounded py-0.5 px-1.5 font-sans">
@@ -798,9 +899,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                       </div>
                     </div>
                     <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[10px] font-mono">
-                      <span className="text-slate-400">Status Node:</span>
+                      <span className="text-slate-400">{t('enterprise.statusNode', 'Status Node:')}</span>
                       <span className={c.status === 'connected' ? 'text-emerald-600 font-bold' : 'text-slate-400'}>
-                        {c.status === 'connected' ? 'Active Integration Link' : 'Dormant'}
+                        {c.status === 'connected' ? t('enterprise.activeIntegrationLink', 'Active Integration Link') : t('enterprise.dormant', 'Dormant')}
                       </span>
                     </div>
                   </div>
@@ -812,14 +913,18 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
                   <div className="flex items-center gap-2">
                     <Code className="w-4.5 h-4.5 text-indigo-400" />
-                    <span className="text-xs font-black tracking-widest text-indigo-400 font-mono uppercase">Webhook Response Payload Simulator</span>
+                    <span className="text-xs font-black tracking-widest text-indigo-400 font-mono uppercase">
+                      {t('enterprise.webhookSimulatorTitle', 'Webhook Response Payload Simulator')}
+                    </span>
                   </div>
                   <span className="text-[9px] bg-indigo-950 border border-indigo-800 text-indigo-300 py-0.5 px-2 rounded font-mono">POST /v1/webhook</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <span className="text-[10px] text-slate-400 font-mono block">Simulate Event Body:</span>
+                    <span className="text-[10px] text-slate-400 font-mono block">
+                      {t('enterprise.simulateEventBody', 'Simulate Event Body:')}
+                    </span>
                     <pre className="text-[10px] font-mono bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-emerald-400 leading-relaxed overflow-x-auto">
 {`{
   "event": "qr.created",
@@ -835,7 +940,9 @@ export default function EnterpriseAIGateway({ onBack, user, onSignInClick }: Ent
                     </pre>
                   </div>
                   <div className="space-y-2">
-                    <span className="text-[10px] text-slate-400 font-mono block">Target Receiver Headers:</span>
+                    <span className="text-[10px] text-slate-400 font-mono block">
+                      {t('enterprise.targetReceiverHeaders', 'Target Receiver Headers:')}
+                    </span>
                     <pre className="text-[10px] font-mono bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-slate-300 leading-relaxed overflow-x-auto">
 {`HTTP/1.1 200 OK
 Content-Type: application/json
@@ -859,17 +966,23 @@ X-Subscription-Tier: Enterprise-High
           {activeNavTab === 'gateway' && (
             <div className="p-6 md:p-8 space-y-6">
               <div className="border-b border-slate-150 pb-4">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">Step 8 Specification</span>
-                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">Enterprise API Gateway Credentials</h2>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">
+                  {t('enterprise.step8Spec', 'Step 8 Specification')}
+                </span>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">
+                  {t('enterprise.apiGatewayTitle', 'Enterprise API Gateway Credentials')}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Establish authorization credentials to allow corporate servers to bypass default rate-limiting mechanisms and interface directly with our high-speed routing services.
+                  {t('enterprise.apiGatewayDesc', 'Establish authorization credentials to allow corporate servers to bypass default rate-limiting mechanisms and interface directly with our high-speed routing services.')}
                 </p>
               </div>
 
               {/* API Key management lists */}
               <div className="space-y-4">
                 <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left">
-                  <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight border-b border-slate-200 pb-2 mb-4">Active System API Credentials</h3>
+                  <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight border-b border-slate-200 pb-2 mb-4">
+                    {t('enterprise.activeApiCredentials', 'Active System API Credentials')}
+                  </h3>
                   
                   <div className="space-y-3">
                     {apiKeys.map(key => (
@@ -879,14 +992,18 @@ X-Subscription-Tier: Enterprise-High
                             <span className="text-xs font-bold text-slate-800">{key.label}</span>
                             <span className="text-[8px] bg-slate-100 py-0.2 px-1.5 rounded text-slate-400 font-mono font-bold uppercase">{key.rateLimitTier}</span>
                           </div>
-                          <p className="text-[10px] font-mono text-slate-400 mt-0.5">Created: {key.created.toLocaleDateString()} • Masked: {key.maskedKey}</p>
+                          <p className="text-[10px] font-mono text-slate-400 mt-0.5">
+                            {t('enterprise.createdLabel', 'Created:')} {key.created.toLocaleDateString()} • {t('enterprise.maskedLabel', 'Masked:')} {key.maskedKey}
+                          </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-mono text-slate-500">Calls: <strong>{key.usageCount}</strong></span>
+                          <span className="text-[10px] font-mono text-slate-500">
+                            {t('enterprise.callsLabel', 'Calls:')} <strong>{key.usageCount}</strong>
+                          </span>
                           <button
                             onClick={() => copyKeyText(key.keyId, key.maskedKey)}
                             className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-600 transition-colors border border-slate-100 shrink-0"
-                            title="Copy Simulated Key"
+                            title={t('enterprise.copySimulatedKey', 'Copy Simulated Key')}
                           >
                             {copiedKeyId === key.keyId ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                           </button>
@@ -899,12 +1016,14 @@ X-Subscription-Tier: Enterprise-High
                 {/* Generate New Credentials */}
                 <form onSubmit={handleCreateApiKey} className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row items-end gap-3">
                   <div className="flex-1 text-left w-full">
-                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">Create System Credential Token</label>
+                    <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">
+                      {t('enterprise.createSystemCredential', 'Create System Credential Token')}
+                    </label>
                     <input 
                       type="text" 
                       value={newKeyLabel}
                       onChange={(e) => setNewKeyLabel(e.target.value)}
-                      placeholder="e.g. AWS Lambda Ingress API Client"
+                      placeholder={t('enterprise.apiKeyPlaceholder', 'e.g. AWS Lambda Ingress API Client')}
                       className="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:outline-none focus:border-indigo-500"
                       required
                     />
@@ -913,26 +1032,34 @@ X-Subscription-Tier: Enterprise-High
                     type="submit"
                     className="py-2.5 px-5 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all cursor-pointer whitespace-nowrap"
                   >
-                    Generate API Token (+10 XP)
+                    {t('enterprise.generateApiToken', 'Generate API Token (+10 XP)')}
                   </button>
                 </form>
               </div>
 
               {/* GraphQL / REST specs mapping */}
               <div className="border border-slate-200 bg-slate-50 rounded-2xl p-5 space-y-3 text-left">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-200 py-0.5 px-2 rounded text-slate-600">Enterprise Specification Outline</span>
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-tight">Standardized Endpoint Schemas</h4>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-200 py-0.5 px-2 rounded text-slate-600">
+                  {t('enterprise.specOutline', 'Enterprise Specification Outline')}
+                </span>
+                <h4 className="text-xs font-black text-slate-800 uppercase tracking-tight">
+                  {t('enterprise.endpointSchemas', 'Standardized Endpoint Schemas')}
+                </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
                   <div className="bg-white p-3 rounded-xl border border-slate-150">
-                    <span className="text-[10px] text-slate-400 font-bold block uppercase">REST Architecture Endpoints</span>
+                    <span className="text-[10px] text-slate-400 font-bold block uppercase">
+                      {t('enterprise.restEndpoints', 'REST Architecture Endpoints')}
+                    </span>
                     <ul className="space-y-1 mt-2 text-slate-600">
-                      <li>• GET <span className="font-bold">/v1/qr</span> - Query metadata list</li>
-                      <li>• POST <span className="font-bold">/v1/qr</span> - Create custom dynamic matrix</li>
-                      <li>• GET <span className="font-bold">/v1/qr/:id/analytics</span> - Get counts</li>
+                      <li>• GET <span className="font-bold">/v1/qr</span> - {t('enterprise.queryMetadataDesc', 'Query metadata list')}</li>
+                      <li>• POST <span className="font-bold">/v1/qr</span> - {t('enterprise.createDynamicMatrixDesc', 'Create custom dynamic matrix')}</li>
+                      <li>• GET <span className="font-bold">/v1/qr/:id/analytics</span> - {t('enterprise.getCountsDesc', 'Get counts')}</li>
                     </ul>
                   </div>
                   <div className="bg-white p-3 rounded-xl border border-slate-150">
-                    <span className="text-[10px] text-slate-400 font-bold block uppercase">GraphQL Schema Query Node</span>
+                    <span className="text-[10px] text-slate-400 font-bold block uppercase">
+                      {t('enterprise.graphqlSchema', 'GraphQL Schema Query Node')}
+                    </span>
                     <pre className="text-[9px] text-indigo-600 mt-2 overflow-x-auto whitespace-pre-wrap">
 {`type Query {
   qrCode(id: ID!): QrCodeNode
@@ -949,10 +1076,14 @@ X-Subscription-Tier: Enterprise-High
           {activeNavTab === 'flags' && (
             <div className="p-6 md:p-8 space-y-6">
               <div className="border-b border-slate-150 pb-4">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">Steps 9-10 Specification</span>
-                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">Feature Flags & Security Center</h2>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">
+                  {t('enterprise.steps910Spec', 'Steps 9-10 Specification')}
+                </span>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">
+                  {t('enterprise.flagsSecurityTitle', 'Feature Flags & Security Center')}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Toggle target environments safely. The security ledger monitors and alerts system operations in real-time, checking validation credentials.
+                  {t('enterprise.flagsSecurityDesc', 'Toggle target environments safely. The security ledger monitors and alerts system operations in real-time, checking validation credentials.')}
                 </p>
               </div>
 
@@ -963,7 +1094,9 @@ X-Subscription-Tier: Enterprise-High
                 <div className="border border-slate-200 rounded-2xl p-5 bg-white space-y-4">
                   <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                     <Sliders className="w-4.5 h-4.5 text-indigo-600" />
-                    <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">Active System Feature Flags</h3>
+                    <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">
+                      {t('enterprise.activeFeatureFlags', 'Active System Feature Flags')}
+                    </h3>
                   </div>
 
                   <div className="space-y-3">
@@ -989,7 +1122,9 @@ X-Subscription-Tier: Enterprise-High
                 <div className="border border-slate-200 rounded-2xl p-5 bg-white space-y-4">
                   <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                     <Shield className="w-4.5 h-4.5 text-indigo-600" />
-                    <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">Active Security Log Trail</h3>
+                    <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">
+                      {t('enterprise.securityLogTrail', 'Active Security Log Trail')}
+                    </h3>
                   </div>
 
                   <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-1">
@@ -1020,10 +1155,14 @@ X-Subscription-Tier: Enterprise-High
           {activeNavTab === 'reports' && (
             <div className="p-6 md:p-8 space-y-6">
               <div className="border-b border-slate-150 pb-4">
-                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">Steps 11-13 Specifications</span>
-                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">Enterprise Architectural Audit Reports</h2>
+                <span className="text-[10px] font-bold font-mono uppercase bg-slate-100 py-1 px-2.5 rounded-full text-slate-500">
+                  {t('enterprise.steps1113Spec', 'Steps 11-13 Specifications')}
+                </span>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight uppercase mt-2">
+                  {t('enterprise.auditReportsTitle', 'Enterprise Architectural Audit Reports')}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Review complete specifications, performance statistics, and roadmap milestones validated by our Chief AI Architect node.
+                  {t('enterprise.auditReportsDesc', 'Review complete specifications, performance statistics, and roadmap milestones validated by our Chief AI Architect node.')}
                 </p>
               </div>
 
@@ -1031,24 +1170,24 @@ X-Subscription-Tier: Enterprise-High
               <div className="space-y-4">
                 {[
                   {
-                    title: 'AI Architecture & Module Routing Report (Step 2 & 3)',
-                    content: 'Core AI service layers are fully decoupled from components. Standard named interfaces guarantee complete vendor portability. The system automatically handles local model fallbacks if remote SaaS pipelines fail. Dynamic module registries resolve and bundle splitting limits initial load metrics, securing Lighthouse scores above 95%.'
+                    title: t('enterprise.report1Title', 'AI Architecture & Module Routing Report (Step 2 & 3)'),
+                    content: t('enterprise.report1Content', 'Core AI service layers are fully decoupled from components. Standard named interfaces guarantee complete vendor portability. The system automatically handles local model fallbacks if remote SaaS pipelines fail. Dynamic module registries resolve and bundle splitting limits initial load metrics, securing Lighthouse scores above 95%.')
                   },
                   {
-                    title: 'CRM Automation & Integration Hub Report (Step 5, 6 & 7)',
-                    content: 'Supports asynchronous trigger callback hooks mapping core state activities (on_qr_created, on_qr_downloaded) directly onto corporate webhook systems. Secret sign keys protect delivered webhook frames. Out-of-the-box support for corporate hubs (Zapier, Slack, Make) requires zero manual configuration overrides.'
+                    title: t('enterprise.report2Title', 'CRM Automation & Integration Hub Report (Step 5, 6 & 7)'),
+                    content: t('enterprise.report2Content', 'Supports asynchronous trigger callback hooks mapping core state activities (on_qr_created, on_qr_downloaded) directly onto corporate webhook systems. Secret sign keys protect delivered webhook frames. Out-of-the-box support for corporate hubs (Zapier, Slack, Make) requires zero manual configuration overrides.')
                   },
                   {
-                    title: 'API Gateway & Security Layer Compliance (Step 8 & 10)',
-                    content: 'Establish secure key life cycle controllers. API metrics logs, consumption credits counters, and relative tier limits are enforced programmatically. Sandbox rate checkers protect endpoints from command-injection attempts and abuse anomalies.'
+                    title: t('enterprise.report3Title', 'API Gateway & Security Layer Compliance (Step 8 & 10)'),
+                    content: t('enterprise.report3Content', 'Establish secure key life cycle controllers. API metrics logs, consumption credits counters, and relative tier limits are enforced programmatically. Sandbox rate checkers protect endpoints from command-injection attempts and abuse anomalies.')
                   },
                   {
-                    title: 'Lighthouse & Performance Report (Step 12)',
-                    content: 'No AI intelligence libraries are loaded in the primary browser bundle. All cognitive components, prompt templates, and diagnostics calculations are lazy-loaded on-demand through clean path splits. Bundle-splitting ensures that non-administrative clients load only core layout bundles.'
+                    title: t('enterprise.report4Title', 'Lighthouse & Performance Report (Step 12)'),
+                    content: t('enterprise.report4Content', 'No AI intelligence libraries are loaded in the primary browser bundle. All cognitive components, prompt templates, and diagnostics calculations are lazy-loaded on-demand through clean path splits. Bundle-splitting ensures that non-administrative clients load only core layout bundles.')
                   },
                   {
-                    title: 'Future AI Roadmap Strategy',
-                    content: 'Milestone 1: Incorporate real-time camera validation feedback matrices. Milestone 2: Establish vector error-correction models optimized for small print tags. Milestone 3: Roll out generative color advisors paired with localized language matrices.'
+                    title: t('enterprise.report5Title', 'Future AI Roadmap Strategy'),
+                    content: t('enterprise.report5Content', 'Milestone 1: Incorporate real-time camera validation feedback matrices. Milestone 2: Establish vector error-correction models optimized for small print tags. Milestone 3: Roll out generative color advisors paired with localized language matrices.')
                   }
                 ].map((item, index) => (
                   <div key={index} className="border border-slate-200 bg-slate-50 rounded-xl p-4 text-left">

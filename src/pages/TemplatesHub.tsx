@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { 
   ChevronRight, Home, Sparkles, ArrowRight, Check, HelpCircle, 
   ChevronDown, BookOpen, LayoutTemplate, Star, Info, Cpu, 
@@ -14,12 +16,14 @@ interface TemplatesHubProps {
   locale?: string;
 }
 
-export default function TemplatesHub({ 
+export default function TemplatesHub({
+   
   initialSlug, 
   onNavigate, 
   onInitiateGenerator,
   locale = 'en' 
 }: TemplatesHubProps) {
+  const { t } = useTranslation();
   const [activeSlug, setActiveSlug] = useState<string | null>(initialSlug);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'hospitality' | 'professional' | 'seo' | 'social' | 'utilities' | 'retail' | 'creative'>('all');
@@ -65,13 +69,13 @@ export default function TemplatesHub({
           {
             "@type": "ListItem",
             "position": 1,
-            "name": "Home",
+            "name": t('templates.breadcrumbHome', 'Home'),
             "item": "https://freeqrgen.pro/"
           },
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "Templates",
+            "name": t('templates.breadcrumbTemplates', 'Templates'),
             "item": "https://freeqrgen.pro/templates"
           }
         ]
@@ -103,13 +107,13 @@ export default function TemplatesHub({
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Home",
+          "name": t('templates.breadcrumbHome', 'Home'),
           "item": "https://freeqrgen.pro/"
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "Templates",
+          "name": t('templates.breadcrumbTemplates', 'Templates'),
           "item": "https://freeqrgen.pro/templates"
         },
         {
@@ -137,7 +141,7 @@ export default function TemplatesHub({
     const howToSchema = {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      "name": `How to Create a Custom ${activeTemplate.title}`,
+      "name": `${t('templates.howToCreateCustom', 'How to Create a Custom')} ${activeTemplate.title}`,
       "description": activeTemplate.metaDescription,
       "step": activeTemplate.steps.map(s => ({
         "@type": "HowToStep",
@@ -170,7 +174,7 @@ export default function TemplatesHub({
       const existing = document.getElementById(scriptId);
       if (existing) existing.remove();
     };
-  }, [activeTemplate]);
+  }, [activeTemplate, t]);
 
   const handleTemplateClick = (slug: string) => {
     onNavigate(`/templates/${slug}`);
@@ -181,14 +185,14 @@ export default function TemplatesHub({
   };
 
   const categoriesList = [
-    { id: 'all', label: 'All Templates' },
-    { id: 'hospitality', label: 'Hospitality & Dining' },
-    { id: 'professional', label: 'Professional vCards' },
-    { id: 'seo', label: 'Local SEO Booster' },
-    { id: 'social', label: 'Social Networks' },
-    { id: 'utilities', label: 'Office & Utilities' },
-    { id: 'retail', label: 'Retail & Commerce' },
-    { id: 'creative', label: 'Portfolios' }
+    { id: 'all', label: t('templates.catAll', 'All Templates') },
+    { id: 'hospitality', label: t('templates.catHospitality', 'Hospitality & Dining') },
+    { id: 'professional', label: t('templates.catProfessional', 'Professional vCards') },
+    { id: 'seo', label: t('templates.catSeo', 'Local SEO Booster') },
+    { id: 'social', label: t('templates.catSocial', 'Social Networks') },
+    { id: 'utilities', label: t('templates.catUtilities', 'Office & Utilities') },
+    { id: 'retail', label: t('templates.catRetail', 'Retail & Commerce') },
+    { id: 'creative', label: t('templates.catCreative', 'Portfolios') }
   ] as const;
 
   // View individual template landing page
@@ -197,20 +201,20 @@ export default function TemplatesHub({
       <div className="bg-slate-50 min-h-screen pb-20 font-sans" id="template-detail-container">
         {/* Breadcrumb section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-3 px-4 rounded-xl border border-slate-100 shadow-sm" aria-label="Breadcrumb">
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-3 px-4 rounded-xl border border-slate-100 shadow-sm" aria-label={t('templates.ariaBreadcrumb', 'Breadcrumb')}>
             <button 
               onClick={() => onNavigate('/')} 
               className="hover:text-indigo-600 flex items-center gap-1 transition-colors"
             >
               <Home className="w-3.5 h-3.5" />
-              <span>Home</span>
+              <span>{t('templates.breadcrumbHome', 'Home')}</span>
             </button>
             <ChevronRight className="w-3 h-3 text-slate-300" />
             <button 
               onClick={handleBackToDirectory} 
               className="hover:text-indigo-600 transition-colors"
             >
-              Templates
+              {t('templates.breadcrumbTemplates', 'Templates')}
             </button>
             <ChevronRight className="w-3 h-3 text-slate-300" />
             <span className="text-slate-800 font-semibold truncate max-w-[200px] sm:max-w-none">{activeTemplate.title}</span>
@@ -244,14 +248,14 @@ export default function TemplatesHub({
                     })}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-indigo-600 text-white font-bold text-sm tracking-wide shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all cursor-pointer group"
                   >
-                    <span>Use This Template Now</span>
+                    <span>{t('templates.useTemplateNow', 'Use This Template Now')}</span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </button>
                   <button
                     onClick={handleBackToDirectory}
                     className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-slate-800 text-slate-200 font-bold text-sm tracking-wide hover:bg-slate-700 transition-colors cursor-pointer border border-slate-700"
                   >
-                    Browse Directory
+                    {t('templates.browseDirectory', 'Browse Directory')}
                   </button>
                 </div>
               </div>
@@ -264,23 +268,23 @@ export default function TemplatesHub({
                       <div className="absolute inset-0 bg-indigo-600/5 group-hover:bg-indigo-600/10 transition-colors" />
                       <div className="w-40 h-40 bg-slate-950 rounded p-2 flex flex-col justify-between text-white text-left select-none shadow-inner">
                         <div className="flex items-center justify-between text-[10px] opacity-70">
-                          <span>FreeQRGen</span>
-                          <span className="px-1 bg-white/20 rounded font-mono uppercase text-[8px] tracking-widest font-bold">2D</span>
+                          <span>{t('templates.brandName', 'FreeQRGen')}</span>
+                          <span className="px-1 bg-white/20 rounded font-mono uppercase text-[8px] tracking-widest font-bold">{t('templates.twoD', '2D')}</span>
                         </div>
                         <div className="font-mono text-center text-xs font-bold my-2 tracking-widest break-all px-1 bg-white/10 py-1 rounded">
-                          {activeTemplate.qrType.toUpperCase()} PAYLOAD
+                          {activeTemplate.qrType.toUpperCase()} {t('templates.payload', 'PAYLOAD')}
                         </div>
                         <div className="flex justify-between items-end text-[9px]">
                           <span className="truncate max-w-[100px]">{activeTemplate.qrName}</span>
-                          <span className="font-bold text-[8px] bg-indigo-500 text-white px-1.5 py-0.5 rounded uppercase">PRESET</span>
+                          <span className="font-bold text-[8px] bg-indigo-50 text-white px-1.5 py-0.5 rounded uppercase">{t('templates.preset', 'PRESET')}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <h3 className="text-white font-bold text-sm">Visual Live Prototype</h3>
+                    <h3 className="text-white font-bold text-sm">{t('templates.visualPrototype', 'Visual Live Prototype')}</h3>
                     <p className="text-xs text-slate-400 leading-snug">
-                      Click 'Use This Template' to load this verified standard configurations directly into the design board.
+                      {t('templates.prototypeDesc', "Click 'Use This Template' to load this verified standard configurations directly into the design board.")}
                     </p>
                   </div>
                 </div>
@@ -299,7 +303,7 @@ export default function TemplatesHub({
             <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
                 <Info className="w-5 h-5 text-indigo-500" />
-                <span>Authority Overview & Specs</span>
+                <span>{t('templates.authorityOverview', 'Authority Overview & Specs')}</span>
               </h2>
               <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
                 {activeTemplate.intro}
@@ -310,7 +314,7 @@ export default function TemplatesHub({
             <div className="space-y-6">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-indigo-500" />
-                <span>Standard Production Use Cases</span>
+                <span>{t('templates.standardUseCases', 'Standard Production Use Cases')}</span>
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {activeTemplate.useCases.map((uc, i) => (
@@ -329,7 +333,7 @@ export default function TemplatesHub({
             <div className="space-y-6">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-indigo-500" />
-                <span>Strategic Business Benefits</span>
+                <span>{t('templates.businessBenefits', 'Strategic Business Benefits')}</span>
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {activeTemplate.benefits.map((b, i) => (
@@ -348,7 +352,7 @@ export default function TemplatesHub({
             <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-6">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
                 <FileText className="w-5 h-5 text-indigo-500" />
-                <span>Step-by-Step Creation Guide</span>
+                <span>{t('templates.stepGuide', 'Step-by-Step Creation Guide')}</span>
               </h2>
               <div className="space-y-4">
                 {activeTemplate.steps.map((s, i) => (
@@ -370,7 +374,7 @@ export default function TemplatesHub({
               <div className="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100/50 space-y-4">
                 <h3 className="font-bold text-emerald-900 text-base flex items-center gap-2">
                   <Check className="w-5 h-5 text-emerald-600" />
-                  <span>Best Practices</span>
+                  <span>{t('templates.bestPractices', 'Best Practices')}</span>
                 </h3>
                 <ul className="space-y-3">
                   {activeTemplate.bestPractices.map((bp, i) => (
@@ -385,7 +389,7 @@ export default function TemplatesHub({
               <div className="bg-rose-50/50 p-6 rounded-2xl border border-rose-100/50 space-y-4">
                 <h3 className="font-bold text-rose-900 text-base flex items-center gap-2">
                   <AlertTriangle className="w-5 h-5 text-rose-600" />
-                  <span>Common Mistakes</span>
+                  <span>{t('templates.commonMistakes', 'Common Mistakes')}</span>
                 </h3>
                 <ul className="space-y-3">
                   {activeTemplate.commonMistakes.map((cm, i) => (
@@ -402,7 +406,7 @@ export default function TemplatesHub({
             <div className="space-y-4">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
                 <HelpCircle className="w-5 h-5 text-indigo-500" />
-                <span>Frequently Asked Questions</span>
+                <span>{t('templates.faqs', 'Frequently Asked Questions')}</span>
               </h2>
               <div className="space-y-2">
                 {activeTemplate.faqs.map((f, idx) => {
@@ -437,32 +441,32 @@ export default function TemplatesHub({
               <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
                 <Bot className="w-5 h-5 text-indigo-400" />
-                <h3 className="font-extrabold text-sm tracking-wide text-white uppercase">AI Search Summary</h3>
+                <h3 className="font-extrabold text-sm tracking-wide text-white uppercase">{t('templates.aiSearchSummary', 'AI Search Summary')}</h3>
               </div>
               <div className="space-y-3.5 text-xs">
                 <div>
-                  <span className="text-slate-400 block font-semibold mb-0.5">Entity / Category</span>
+                  <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.entityCategory', 'Entity / Category')}</span>
                   <span className="font-mono text-indigo-300 font-bold">{activeTemplate.aiSummaryBox.entityType}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block font-semibold mb-0.5">Standard / Protocol</span>
+                  <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.standardProtocol', 'Standard / Protocol')}</span>
                   <span className="font-mono text-slate-200">{activeTemplate.aiSummaryBox.protocolStandard}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block font-semibold mb-0.5">Client Compatibility</span>
+                  <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.clientCompatibility', 'Client Compatibility')}</span>
                   <span className="text-slate-200 leading-relaxed">{activeTemplate.aiSummaryBox.clientCompatibility}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block font-semibold mb-0.5">Primary Target Action</span>
+                  <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.primaryTargetAction', 'Primary Target Action')}</span>
                   <span className="text-slate-200 leading-relaxed">{activeTemplate.aiSummaryBox.primaryUseCase}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block font-semibold mb-0.5">Offline Functionality</span>
+                  <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.offlineFunctionality', 'Offline Functionality')}</span>
                   <span className="font-semibold text-emerald-400">{activeTemplate.aiSummaryBox.offlineCapability}</span>
                 </div>
               </div>
               <p className="text-[10px] text-slate-500 leading-snug border-t border-slate-800 pt-3">
-                Structured in compliance with Llama-3, Claude-3.5, and Gemini-Pro semantic retrieval constraints. Verified 100% factual.
+                {t('templates.aiNotice', 'Structured in compliance with Llama-3, Claude-3.5, and Gemini-Pro semantic retrieval constraints. Verified 100% factual.')}
               </p>
             </div>
 
@@ -470,7 +474,7 @@ export default function TemplatesHub({
             <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
               <h3 className="font-bold text-slate-900 text-sm tracking-wide uppercase flex items-center gap-1.5">
                 <Cpu className="w-4 h-4 text-indigo-500" />
-                <span>Key Takeaways</span>
+                <span>{t('templates.keyTakeawaysTitle', 'Key Takeaways')}</span>
               </h3>
               <ul className="space-y-3 text-xs sm:text-sm text-slate-500">
                 {activeTemplate.keyTakeaways.map((kt, i) => (
@@ -486,9 +490,9 @@ export default function TemplatesHub({
             <div className="bg-gradient-to-br from-indigo-50 to-slate-50 p-6 rounded-2xl border border-indigo-100 space-y-4 text-center">
               <LayoutTemplate className="w-10 h-10 text-indigo-500 mx-auto" />
               <div className="space-y-1">
-                <h4 className="font-bold text-slate-900 text-sm">Need a Custom Design?</h4>
+                <h4 className="font-bold text-slate-900 text-sm">{t('templates.needCustomDesign', 'Need a Custom Design?')}</h4>
                 <p className="text-xs text-slate-500 leading-normal">
-                  Initialize this specific preset template and configure pixel colors, logos, and frames instantly.
+                  {t('templates.needCustomDesignDesc', 'Initialize this specific preset template and configure pixel colors, logos, and frames instantly.')}
                 </p>
               </div>
               <button
@@ -499,39 +503,39 @@ export default function TemplatesHub({
                 })}
                 className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-indigo-500 transition-colors cursor-pointer"
               >
-                <span>Activate Generator</span>
+                <span>{t('templates.activateGenerator', 'Activate Generator')}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </button>
             </div>
 
             {/* Related Tools */}
             <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-              <h3 className="font-bold text-slate-900 text-sm tracking-wide uppercase">Related QR Tools</h3>
+              <h3 className="font-bold text-slate-900 text-sm tracking-wide uppercase">{t('templates.relatedQrTools', 'Related QR Tools')}</h3>
               <div className="space-y-1.5">
                 <button 
                   onClick={() => onNavigate('/url-qr-generator')} 
                   className="w-full text-left p-2.5 rounded-lg text-xs font-bold text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-colors border border-dashed border-slate-100"
                 >
-                  🌐 Standard URL QR Creator
+                  {t('templates.toolUrl', '🌐 Standard URL QR Creator')}
                 </button>
                 <button 
                   onClick={() => onNavigate('/wifi-qr-generator')} 
                   className="w-full text-left p-2.5 rounded-lg text-xs font-bold text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-colors border border-dashed border-slate-100"
                 >
-                  📶 Password-Free WiFi Creator
+                  {t('templates.toolWifi', '📶 Password-Free WiFi Creator')}
                 </button>
                 <button 
                   onClick={() => onNavigate('/vcard-qr-generator')} 
                   className="w-full text-left p-2.5 rounded-lg text-xs font-bold text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-colors border border-dashed border-slate-100"
                 >
-                  📇 Executive vCard Exchange
+                  {t('templates.toolVcard', '📇 Executive vCard Exchange')}
                 </button>
               </div>
             </div>
 
             {/* Related Templates */}
             <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-              <h3 className="font-bold text-slate-900 text-sm tracking-wide uppercase">Related Templates</h3>
+              <h3 className="font-bold text-slate-900 text-sm tracking-wide uppercase">{t('templates.relatedTemplates', 'Related Templates')}</h3>
               <div className="space-y-1.5">
                 {activeTemplate.relatedTemplates.map((rt, i) => (
                   <button
@@ -550,7 +554,7 @@ export default function TemplatesHub({
             <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-3">
               <h3 className="font-bold text-slate-900 text-sm tracking-wide uppercase flex items-center gap-1.5">
                 <BookOpen className="w-4 h-4 text-indigo-500" />
-                <span>Authority Literature</span>
+                <span>{t('templates.authorityLiterature', 'Authority Literature')}</span>
               </h3>
               <div className="space-y-1.5">
                 {activeTemplate.relatedArticles.map((ra, i) => (
@@ -578,16 +582,16 @@ export default function TemplatesHub({
       
       {/* Directory Breadcrumbs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-3 px-4 rounded-xl border border-slate-100 shadow-sm" aria-label="Breadcrumb">
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-3 px-4 rounded-xl border border-slate-100 shadow-sm" aria-label={t('templates.ariaBreadcrumb', 'Breadcrumb')}>
           <button 
             onClick={() => onNavigate('/')} 
             className="hover:text-indigo-600 flex items-center gap-1 transition-colors"
           >
             <Home className="w-3.5 h-3.5" />
-            <span>Home</span>
+            <span>{t('templates.breadcrumbHome', 'Home')}</span>
           </button>
           <ChevronRight className="w-3 h-3 text-slate-300" />
-          <span className="text-slate-800 font-semibold">Templates Directory</span>
+          <span className="text-slate-800 font-semibold">{t('templates.directoryBreadcrumb', 'Templates Directory')}</span>
         </nav>
       </div>
 
@@ -595,10 +599,10 @@ export default function TemplatesHub({
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
-            High-Performance <span className="text-indigo-600">QR Code Templates</span>
+            {t('templates.highPerformance', 'High-Performance')} <span className="text-indigo-600">{t('templates.qrCodeTemplates', 'QR Code Templates')}</span>
           </h1>
           <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
-            Access our verified, schema-optimized 2D barcode templates designed to capture high-intent physical traffic. Jumpstart campaigns with pristine layouts.
+            {t('templates.directorySubheading', 'Access our verified, schema-optimized 2D barcode templates designed to capture high-intent physical traffic. Jumpstart campaigns with pristine layouts.')}
           </p>
         </div>
 
@@ -611,7 +615,7 @@ export default function TemplatesHub({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search high-intent templates (e.g. WiFi, menu, vcard...)"
+                placeholder={t('templates.searchPlaceholder', 'Search high-intent templates (e.g. WiFi, menu, vcard...)')}
                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
               />
             </div>
@@ -622,7 +626,7 @@ export default function TemplatesHub({
                 className="px-4 py-3 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1 shrink-0"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                Clear
+                {t('templates.clear', 'Clear')}
               </button>
             )}
           </div>
@@ -663,7 +667,7 @@ export default function TemplatesHub({
                       {tpl.badge}
                     </span>
                     <span className="font-mono text-[9px] text-slate-400 uppercase">
-                      Type: {tpl.qrType}
+                      {t('templates.cardType', 'Type:')} {tpl.qrType}
                     </span>
                   </div>
 
@@ -685,14 +689,14 @@ export default function TemplatesHub({
                     })}
                     className="text-xs font-bold text-slate-600 hover:text-indigo-600 transition-colors flex items-center gap-1"
                   >
-                    <span>Use Template</span>
+                    <span>{t('templates.useTemplate', 'Use Template')}</span>
                   </button>
 
                   <button
                     onClick={() => handleTemplateClick(tpl.slug)}
                     className="inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 transition-colors cursor-pointer"
                   >
-                    <span>Read Guide</span>
+                    <span>{t('templates.readGuide', 'Read Guide')}</span>
                     <ChevronRight className="w-3 h-3" />
                   </button>
                 </div>
@@ -702,15 +706,15 @@ export default function TemplatesHub({
         ) : (
           <div className="text-center bg-white p-12 rounded-3xl border border-slate-100 max-w-md mx-auto space-y-3">
             <LayoutTemplate className="w-12 h-12 text-slate-300 mx-auto" />
-            <h3 className="font-bold text-slate-800 text-base">No templates found</h3>
+            <h3 className="font-bold text-slate-800 text-base">{t('templates.noTemplatesFound', 'No templates found')}</h3>
             <p className="text-xs text-slate-500">
-              No templates matched your current filter criteria. Try clearing search or category filters.
+              {t('templates.noTemplatesMatched', 'No templates matched your current filter criteria. Try clearing search or category filters.')}
             </p>
             <button
               onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-500 transition-all"
             >
-              Reset Filters
+              {t('templates.resetFilters', 'Reset Filters')}
             </button>
           </div>
         )}

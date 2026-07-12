@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { Smartphone, Code, Cpu, SmartphoneIcon } from 'lucide-react';
 
 export default function MobileAppMockup() {
+  const { t } = useTranslation();
+  
   const [activeTab, setActiveTab] = useState<'rn' | 'flutter'>('rn');
 
   const rnCode = `import React from 'react';
@@ -57,7 +61,7 @@ class ScannerScreen extends StatelessWidget {
           <span>9:41 AM</span>
           <div className="flex gap-1 items-center">
             <span className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-ping" />
-            <span>Scan App</span>
+            <span>{t('mockup.scanApp', 'Scan App')}</span>
           </div>
         </div>
 
@@ -70,9 +74,9 @@ class ScannerScreen extends StatelessWidget {
           <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-indigo-500" />
 
           <SmartphoneIcon className="w-10 h-10 text-indigo-400 animate-pulse" />
-          <p className="text-[11px] font-semibold tracking-wide uppercase text-slate-300">Scanning Camera Active</p>
+          <p className="text-[11px] font-semibold tracking-wide uppercase text-slate-300">{t('mockup.activeScanning', 'Scanning Camera Active')}</p>
           <span className="text-[9px] text-slate-500 text-center max-w-[160px]">
-            Ready to scan and parse customized styled QR vector outputs instantly.
+            {t('mockup.readyScan', 'Ready to scan and parse customized styled QR vector outputs instantly.')}
           </span>
         </div>
 
@@ -86,10 +90,10 @@ class ScannerScreen extends StatelessWidget {
         <div>
           <h3 className="text-sm font-semibold text-white flex items-center gap-2">
             <Cpu className="w-4 h-4 text-indigo-400" />
-            Native Camera Scanning Boiler
+            {t('mockup.title', 'Native Camera Scanning Boiler')}
           </h3>
           <p className="text-[11px] text-slate-400 mt-1">
-            Download completed Native smartphone wrappers configuring decoders for Android and iOS devices.
+            {t('mockup.desc', 'Download completed Native smartphone wrappers configuring decoders for Android and iOS devices.')}
           </p>
         </div>
 

@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { QRProject } from '../types';
 import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -115,14 +117,14 @@ const quickStyles = [
   }
 ];
 
-export default function ControlPanel({
-  currentProject,
+export default function ControlPanel({ currentProject,
   onChange: parentOnChange,
   onSave,
   isSaving,
   userEmail,
   projects = []
 }: ControlPanelProps) {
+  const { t } = useTranslation();
   const [localProject, setLocalProject] = useState<Partial<QRProject>>(currentProject);
   const lastPropagatedProjectRef = useRef<Partial<QRProject>>(currentProject);
   const isDebouncingRef = useRef<boolean>(false);
@@ -407,7 +409,7 @@ export default function ControlPanel({
           <Sparkles className="w-5 h-5 text-indigo-600" />
           Customize Your QR Code
         </h2>
-        <p className="text-xs text-gray-500 mt-1">Configure type, contents, custom styles, and centerpiece tags.</p>
+        <p className="text-xs text-gray-500 mt-1">{t('control.desc', 'Configure type, contents, custom styles, and centerpiece tags.')}</p>
       </motion.div>
 
       {/* Target Content Types */}
@@ -422,7 +424,7 @@ export default function ControlPanel({
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
-        <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-3">QR Code Type</label>
+        <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-3">{t('control.qrCodeType', 'QR Code Type')}</label>
         <div className="grid grid-cols-5 gap-2">
           {(
             [
@@ -486,12 +488,12 @@ export default function ControlPanel({
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-4"
       >
         <div>
-          <label htmlFor="project-name-input" className="block text-xs font-semibold text-slate-800 mb-1">Project Name</label>
+          <label htmlFor="project-name-input" className="block text-xs font-semibold text-slate-800 mb-1">{t('control.projectNameLabel', 'Project Name')}</label>
           <input
             id="project-name-input"
             type="text"
             className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
-            placeholder="e.g. My Website QR"
+            placeholder={t('control.placeholder.projectName', 'e.g. My Website QR')}
             value={localProject.name || ''}
             onChange={e => onChange({ ...localProject, name: e.target.value }, true)}
           />
@@ -499,7 +501,7 @@ export default function ControlPanel({
 
         {localProject.type === 'url' && (
           <div>
-            <label htmlFor="target-url-input" className="block text-xs font-semibold text-slate-800 mb-1">Target Website URL</label>
+            <label htmlFor="target-url-input" className="block text-xs font-semibold text-slate-800 mb-1">{t('control.targetWebsiteUrl', 'Target Website URL')}</label>
             <div className="flex gap-2">
               <input
                 id="target-url-input"
@@ -555,11 +557,11 @@ export default function ControlPanel({
 
         {localProject.type === 'text' && (
           <div>
-            <label htmlFor="plain-text-input" className="block text-xs font-semibold text-slate-800 mb-1">Plain Text</label>
+            <label htmlFor="plain-text-input" className="block text-xs font-semibold text-slate-800 mb-1">{t('control.plainText', 'Plain Text')}</label>
             <textarea
               id="plain-text-input"
               className="w-full text-sm px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 h-20 bg-white text-slate-800"
-              placeholder="Add raw text to encode..."
+              placeholder={t('control.placeholder.rawText', 'Add raw text to encode...')}
               value={localProject.content || ''}
               onChange={e => onChange({ ...localProject, content: e.target.value }, true)}
             />
@@ -568,15 +570,15 @@ export default function ControlPanel({
 
         {localProject.type === 'wifi' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
-            <h4 className="text-xs font-semibold text-slate-850">WiFi Integration Setting</h4>
-            <p className="text-[11px] text-slate-600">Auto-configured to connect to wifi spots securely.</p>
+            <h4 className="text-xs font-semibold text-slate-850">{t('control.wifiIntegrationSetting', 'WiFi Integration Setting')}</h4>
+            <p className="text-[11px] text-slate-600">{t('control.wifiDesc', 'Auto-configured to connect to wifi spots securely.')}</p>
             <div>
-              <label htmlFor="wifi-ssid-input" className="block text-[10px] font-semibold text-slate-800 mb-1">WiFi Network ID / SSID</label>
+              <label htmlFor="wifi-ssid-input" className="block text-[10px] font-semibold text-slate-800 mb-1">{t('control.wifiSsid', 'WiFi Network ID / SSID')}</label>
               <input
                 id="wifi-ssid-input"
                 type="text"
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
-                placeholder="WiFi Network ID / SSID"
+                placeholder={t('control.placeholder.ssid', 'WiFi Network ID / SSID')}
                 onChange={e => {
                   const parts = (localProject.content || '').split(';');
                   const pass = parts[2] || '';
@@ -585,12 +587,12 @@ export default function ControlPanel({
               />
             </div>
             <div>
-              <label htmlFor="wifi-pass-input" className="block text-[10px] font-semibold text-slate-800 mb-1">WiFi Password</label>
+              <label htmlFor="wifi-pass-input" className="block text-[10px] font-semibold text-slate-800 mb-1">{t('control.wifiPasswordLabel', 'WiFi Password')}</label>
               <input
                 id="wifi-pass-input"
                 type="password"
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
-                placeholder="WiFi Password"
+                placeholder={t('control.placeholder.password', 'WiFi Password')}
                 onChange={e => {
                   const parts = (localProject.content || '').split(';');
                   const ss = parts[0]?.replace('WIFI:S:', '') || '';
@@ -603,12 +605,12 @@ export default function ControlPanel({
 
         {localProject.type === 'email' && (
           <div className="space-y-2">
-            <label htmlFor="email-recipient-input" className="block text-xs font-semibold text-slate-800">Recipient Email Address</label>
+            <label htmlFor="email-recipient-input" className="block text-xs font-semibold text-slate-800">{t('control.vcardEmailLabel', 'Recipient Email Address')}</label>
             <input
               id="email-recipient-input"
               type="email"
               className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-slate-800"
-              placeholder="Recipient Email Address"
+              placeholder={t('control.placeholder.vcardEmail', 'Recipient Email Address')}
               onChange={e => onChange({ ...localProject, content: `mailto:${e.target.value}` }, true)}
             />
           </div>
@@ -616,14 +618,14 @@ export default function ControlPanel({
 
         {localProject.type === 'card' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
-            <h4 className="text-xs font-semibold text-slate-850 font-mono">vCard Contact Credentials</h4>
+            <h4 className="text-xs font-semibold text-slate-850 font-mono">{t('control.vcardContactCredentials', 'vCard Contact Credentials')}</h4>
             <div>
-              <label htmlFor="vcard-name-input" className="block text-[10px] font-semibold text-slate-800 mb-1">Full Name</label>
+              <label htmlFor="vcard-name-input" className="block text-[10px] font-semibold text-slate-800 mb-1">{t('control.fullNameLabel', 'Full Name')}</label>
               <input
                 id="vcard-name-input"
                 type="text"
                 className="w-full text-xs px-3 py-1.5 rounded-md border border-gray-200 bg-white text-slate-800"
-                placeholder="Full Name"
+                placeholder={t('control.placeholder.fullName', 'Full Name')}
                 value={localProject.content?.includes('N:') ? localProject.content.split('N:')[1]?.split('\n')[0] : ''}
                 onChange={e => onChange({ ...localProject, content: `BEGIN:VCARD\nVERSION:3.0\nN:${e.target.value}\nEND:VCARD` }, true)}
               />
@@ -633,7 +635,7 @@ export default function ControlPanel({
 
         {localProject.type === 'phone' && (
           <div className="space-y-2">
-            <label htmlFor="phone-number-input" className="block text-xs font-semibold text-slate-800">Phone Number</label>
+            <label htmlFor="phone-number-input" className="block text-xs font-semibold text-slate-800">{t('control.phoneNumberLabel', 'Phone Number')}</label>
             <input
               id="phone-number-input"
               type="tel"
@@ -647,20 +649,20 @@ export default function ControlPanel({
               })()}
               onChange={e => onChange({ ...localProject, content: `tel:${e.target.value.trim()}` }, true)}
             />
-            <span className="text-[10px] text-slate-600 block font-sans">Encodes standard cellular dialing protocols automatically.</span>
+            <span className="text-[10px] text-slate-600 block font-sans">{t('control.phoneDesc', 'Encodes standard cellular dialing protocols automatically.')}</span>
           </div>
         )}
 
         {localProject.type === 'sms' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
-            <h4 className="text-xs font-semibold text-slate-850">Pre-composed SMS Text</h4>
+            <h4 className="text-xs font-semibold text-slate-850">{t('control.smsText', 'Pre-composed SMS Text')}</h4>
             <div>
-              <label htmlFor="sms-phone-input" className="block text-[10px] font-semibold text-slate-800 mb-1">Recipient Phone Number</label>
+              <label htmlFor="sms-phone-input" className="block text-[10px] font-semibold text-slate-800 mb-1">{t('control.recipientPhone', 'Recipient Phone Number')}</label>
               <input
                 id="sms-phone-input"
                 type="tel"
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white text-slate-800"
-                placeholder="Recipient Phone Number"
+                placeholder={t('control.placeholder.phone', 'Recipient Phone Number')}
                 value={(() => {
                   if (localProject.content?.startsWith('sms:')) {
                     const queryIdx = localProject.content.indexOf('?');
@@ -684,11 +686,11 @@ export default function ControlPanel({
               />
             </div>
             <div>
-              <label htmlFor="sms-msg-textarea" className="block text-[10px] font-semibold text-slate-800 mb-1">Prefilled Message Body</label>
+              <label htmlFor="sms-msg-textarea" className="block text-[10px] font-semibold text-slate-800 mb-1">{t('control.prefilledMessage', 'Prefilled Message Body')}</label>
               <textarea
                 id="sms-msg-textarea"
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white h-16 text-slate-800"
-                placeholder="Prefilled message body"
+                placeholder={t('control.placeholder.prefilledMessage', 'Prefilled message body')}
                 value={(() => {
                   if (localProject.content?.startsWith('sms:')) {
                     const queryIdx = localProject.content.indexOf('?body=');
@@ -716,7 +718,7 @@ export default function ControlPanel({
 
         {localProject.type === 'social' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
-            <h4 className="text-xs font-semibold text-slate-850">Social Media Profile</h4>
+            <h4 className="text-xs font-semibold text-slate-850">{t('control.socialProfile', 'Social Media Profile')}</h4>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: 'instagram', label: 'Instagram', prefix: 'https://instagram.com/' },
@@ -770,12 +772,12 @@ export default function ControlPanel({
                   return 'https://instagram.com/';
                 })()}
               </span>
-              <label htmlFor="social-username-input" className="sr-only">Social Username or Contact</label>
+              <label htmlFor="social-username-input" className="sr-only">{t('control.socialUsername', 'Social Username or Contact')}</label>
               <input
                 id="social-username-input"
                 type="text"
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white mt-1 font-mono text-slate-800"
-                placeholder="username, handle, or contact number"
+                placeholder={t('control.placeholder.socialUsername', 'username, handle, or contact number')}
                 value={(() => {
                   const content = localProject.content || '';
                   if (content.includes('instagram.com/')) return content.split('instagram.com/')[1] || '';
@@ -807,7 +809,7 @@ export default function ControlPanel({
 
         {localProject.type === 'crypto' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
-            <h4 className="text-xs font-semibold text-slate-850">Cryptocurrency Address</h4>
+            <h4 className="text-xs font-semibold text-slate-850">{t('control.cryptoAddress', 'Cryptocurrency Address')}</h4>
             <div className="grid grid-cols-4 gap-1.5">
               {[
                 { id: 'bitcoin', label: 'BTC', prefix: 'bitcoin:' },
@@ -854,12 +856,12 @@ export default function ControlPanel({
                   return 'bitcoin:';
                 })()}
               </span>
-              <label htmlFor="crypto-address-input" className="sr-only">Cryptocurrency Address</label>
+              <label htmlFor="crypto-address-input" className="sr-only">{t('control.cryptoAddress', 'Cryptocurrency Address')}</label>
               <input
                 id="crypto-address-input"
                 type="text"
                 className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white mt-1 font-mono text-slate-800"
-                placeholder="Wallet destination hash"
+                placeholder={t('control.placeholder.cryptoAddress', 'Wallet destination hash')}
                 value={(() => {
                   const content = localProject.content || '';
                   if (content.startsWith('bitcoin:')) return content.split('bitcoin:')[1] || '';
@@ -888,7 +890,7 @@ export default function ControlPanel({
         {localProject.type === 'geo' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-slate-850">Maps Geolocation</h4>
+              <h4 className="text-xs font-semibold text-slate-850">{t('control.mapsGeolocation', 'Maps Geolocation')}</h4>
               <button
                 type="button"
                 onClick={() => {
@@ -914,12 +916,12 @@ export default function ControlPanel({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label htmlFor="geo-latitude-input" className="text-[10px] text-slate-700 block mb-0.5 font-semibold">Latitude</label>
+                <label htmlFor="geo-latitude-input" className="text-[10px] text-slate-700 block mb-0.5 font-semibold">{t('control.latitude', 'Latitude')}</label>
                 <input
                   id="geo-latitude-input"
                   type="text"
                   className="w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white font-mono text-slate-800"
-                  placeholder="e.g. 37.7749"
+                  placeholder={t('control.placeholder.latitude', 'e.g. 37.7749')}
                   value={(() => {
                     if (localProject.content?.startsWith('geo:')) {
                       return localProject.content.substring(4).split(',')[0] || '';
@@ -940,12 +942,12 @@ export default function ControlPanel({
               </div>
 
               <div>
-                <label htmlFor="geo-longitude-input" className="text-[10px] text-slate-700 block mb-0.5 font-semibold">Longitude</label>
+                <label htmlFor="geo-longitude-input" className="text-[10px] text-slate-700 block mb-0.5 font-semibold">{t('control.longitude', 'Longitude')}</label>
                 <input
                   id="geo-longitude-input"
                   type="text"
                   className="w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white font-mono text-slate-800"
-                  placeholder="e.g. -122.4194"
+                  placeholder={t('control.placeholder.longitude', 'e.g. -122.4194')}
                   value={(() => {
                     if (localProject.content?.startsWith('geo:')) {
                       return localProject.content.substring(4).split(',')[1] || '';
@@ -970,7 +972,7 @@ export default function ControlPanel({
 
         {localProject.type === 'app' && (
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
-            <h4 className="text-xs font-semibold text-slate-850">Smart App Store Setup</h4>
+            <h4 className="text-xs font-semibold text-slate-850">{t('control.smartAppSetup', 'Smart App Store Setup')}</h4>
             <p className="text-[11px] text-slate-600 font-medium">
               Users scanning this QR code will be dynamically redirected to the appropriate store based on their device.
             </p>
@@ -983,7 +985,7 @@ export default function ControlPanel({
             )}
 
             <div>
-              <label htmlFor="app-ios-input" className="block text-[10px] font-semibold text-slate-800 mb-1">iOS App Store Link</label>
+              <label htmlFor="app-ios-input" className="block text-[10px] font-semibold text-slate-800 mb-1">{t('control.iosAppStoreLink', 'iOS App Store Link')}</label>
               <input
                 id="app-ios-input"
                 type="url"
@@ -1013,7 +1015,7 @@ export default function ControlPanel({
             </div>
 
             <div>
-              <label htmlFor="app-android-input" className="block text-[10px] font-semibold text-slate-800 mb-1">Google Play Store Link</label>
+              <label htmlFor="app-android-input" className="block text-[10px] font-semibold text-slate-800 mb-1">{t('control.googlePlayStoreLink', 'Google Play Store Link')}</label>
               <input
                 id="app-android-input"
                 type="url"
@@ -1043,7 +1045,7 @@ export default function ControlPanel({
             </div>
 
             <div>
-              <label htmlFor="app-fallback-input" className="block text-[10px] font-semibold text-slate-800 mb-1">Fallback Website / Desktop Link (Optional)</label>
+              <label htmlFor="app-fallback-input" className="block text-[10px] font-semibold text-slate-800 mb-1">{t('control.fallbackLink', 'Fallback Website / Desktop Link (Optional)')}</label>
               <input
                 id="app-fallback-input"
                 type="url"
@@ -1098,7 +1100,7 @@ export default function ControlPanel({
               <Wand2 className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
               Quick Style Presets
             </h3>
-            <span className="text-[10px] text-gray-600 block">Apply curated style combinations instantly.</span>
+            <span className="text-[10px] text-gray-600 block">{t('control.quickStylesDesc', 'Apply curated style combinations instantly.')}</span>
           </div>
         </div>
 
@@ -1171,32 +1173,32 @@ export default function ControlPanel({
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm grid grid-cols-2 gap-4"
       >
        <div>
-          <label htmlFor="eye-style-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase block mb-2">Corner Eyes</label>
+          <label htmlFor="eye-style-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase block mb-2">{t('control.cornerEyes', 'Corner Eyes')}</label>
           <select
             id="eye-style-select"
             className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
             value={localProject.design?.eyeStyle || 'square'}
             onChange={e => setDesignField('eyeStyle', e.target.value)}
           >
-            <option value="square">Square Frame</option>
-            <option value="rounded">Rounded Frame</option>
-            <option value="circle">Smooth Circles</option>
-            <option value="leaf">Elegant Leaf</option>
+            <option value="square">{t('control.squareFrame', 'Square Frame')}</option>
+            <option value="rounded">{t('control.roundedFrame', 'Rounded Frame')}</option>
+            <option value="circle">{t('control.smoothCircles', 'Smooth Circles')}</option>
+            <option value="leaf">{t('control.elegantLeaf', 'Elegant Leaf')}</option>
           </select>
         </div>
 
         <div>
-          <label htmlFor="dot-style-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-2">Internal Dots</label>
+          <label htmlFor="dot-style-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-2">{t('control.internalDots', 'Internal Dots')}</label>
           <select
             id="dot-style-select"
             className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
             value={localProject.design?.dotStyle || 'square'}
             onChange={e => setDesignField('dotStyle', e.target.value)}
           >
-            <option value="square">Standard Square</option>
-            <option value="rounded">Smooth Rounded</option>
-            <option value="dots">Circular Dots</option>
-            <option value="classy">Classy Starbursts</option>
+            <option value="square">{t('control.standardSquare', 'Standard Square')}</option>
+            <option value="rounded">{t('control.smoothRounded', 'Smooth Rounded')}</option>
+            <option value="dots">{t('control.circularDots', 'Circular Dots')}</option>
+            <option value="classy">{t('control.classyStarbursts', 'Classy Starbursts')}</option>
           </select>
         </div>
       </motion.div>
@@ -1218,7 +1220,7 @@ export default function ControlPanel({
               <SquareDot className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
               Outer Edge Label Frame
             </h3>
-            <span className="text-[10px] text-gray-600 block">Add a beautiful, styled badge-frame around your QR.</span>
+            <span className="text-[10px] text-gray-600 block">{t('control.frameDesc', 'Add a beautiful, styled badge-frame around your QR.')}</span>
           </div>
           {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' ? (
             <button
@@ -1309,7 +1311,7 @@ export default function ControlPanel({
           <div className="space-y-3 pt-2 border-t border-gray-100/60">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">Frame Shape Color</span>
+                <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">{t('control.frameShapeColor', 'Frame Shape Color')}</span>
                 <div className="flex items-center gap-2">
                   <input
                     id="frame-color-picker"
@@ -1324,7 +1326,7 @@ export default function ControlPanel({
               </div>
 
               <div>
-                <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">Label Text Color</span>
+                <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">{t('control.labelTextColor', 'Label Text Color')}</span>
                 <div className="flex items-center gap-2">
                   <input
                     id="frame-text-color-picker"
@@ -1343,7 +1345,7 @@ export default function ControlPanel({
             <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100/40">
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <label htmlFor="frame-font-size-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">Font Size</label>
+                  <label htmlFor="frame-font-size-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">{t('control.fontSize', 'Font Size')}</label>
                   <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.frameFontSize ?? 20}px</span>
                 </div>
                 <input
@@ -1359,15 +1361,15 @@ export default function ControlPanel({
               </div>
 
               <div>
-                <label htmlFor="frame-text-position-select" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block mb-1.5">Text Position</label>
+                <label htmlFor="frame-text-position-select" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block mb-1.5">{t('control.textPosition', 'Text Position')}</label>
                 <select
                   id="frame-text-position-select"
                   className="w-full text-xs px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
                   value={localProject.design?.frameTextPosition || 'bottom'}
                   onChange={e => setDesignField('frameTextPosition', e.target.value)}
                 >
-                  <option value="bottom">Bottom Banner</option>
-                  <option value="top">Top Banner</option>
+                  <option value="bottom">{t('control.bottomBanner', 'Bottom Banner')}</option>
+                  <option value="top">{t('control.topBanner', 'Top Banner')}</option>
                 </select>
               </div>
             </div>
@@ -1388,8 +1390,8 @@ export default function ControlPanel({
       >
         <div className="flex justify-between items-center">
           <div>
-            <span className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">Finder Eye Colors</span>
-            <span className="text-[10px] text-gray-600 block">Independently color the three main corner eyes.</span>
+            <span className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">{t('control.finderEyeColors', 'Finder Eye Colors')}</span>
+            <span className="text-[10px] text-gray-600 block">{t('control.finderEyeDesc', 'Independently color the three main corner eyes.')}</span>
           </div>
           {(localProject.design?.eyeColorTopLeft || localProject.design?.eyeColorTopRight || localProject.design?.eyeColorBottomLeft) ? (
             <button
@@ -1409,7 +1411,7 @@ export default function ControlPanel({
         <div className="grid grid-cols-3 gap-3 pt-1">
           {/* Top-Left Eye */}
           <div className="flex flex-col items-center p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 transition-all">
-            <label htmlFor="eye-color-tl" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">Top-Left</label>
+            <label htmlFor="eye-color-tl" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">{t('control.topLeft', 'Top-Left')}</label>
             <div className="relative group">
               <input
                 id="eye-color-tl"
@@ -1428,7 +1430,7 @@ export default function ControlPanel({
 
           {/* Top-Right Eye */}
           <div className="flex flex-col items-center p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 transition-all">
-            <label htmlFor="eye-color-tr" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">Top-Right</label>
+            <label htmlFor="eye-color-tr" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">{t('control.topRight', 'Top-Right')}</label>
             <div className="relative group">
               <input
                 id="eye-color-tr"
@@ -1447,7 +1449,7 @@ export default function ControlPanel({
 
           {/* Bottom-Left Eye */}
           <div className="flex flex-col items-center p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 transition-all">
-            <label htmlFor="eye-color-bl" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">Bottom-Left</label>
+            <label htmlFor="eye-color-bl" className="text-[10px] text-slate-700 font-bold mb-1.5 text-center cursor-pointer">{t('control.bottomLeft', 'Bottom-Left')}</label>
             <div className="relative group">
               <input
                 id="eye-color-bl"
@@ -1481,8 +1483,8 @@ export default function ControlPanel({
           <div className="flex items-center gap-2">
             <Sparkles className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
             <div>
-              <span className="text-xs font-semibold text-slate-900 block">Smart Optimization</span>
-              <span className="text-[10px] text-slate-500 block">Auto-balances error correction & module spacing.</span>
+              <span className="text-xs font-semibold text-slate-900 block">{t('control.smartOptimization', 'Smart Optimization')}</span>
+              <span className="text-[10px] text-slate-500 block">{t('control.smartOptDesc', 'Auto-balances error correction & module spacing.')}</span>
             </div>
           </div>
           <button
@@ -1523,7 +1525,7 @@ export default function ControlPanel({
           <div className="bg-white/60 p-3 rounded-lg border border-indigo-100/50 space-y-2.5 text-slate-700 text-xs animate-in fade-in duration-200">
             <div className="flex items-center gap-1.5 text-[10px] font-bold text-indigo-600 uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
-              <span>Readability Engine Active</span>
+              <span>{t('control.readabilityActive', 'Readability Engine Active')}</span>
             </div>
             
             <div className="space-y-2 text-[11px] leading-relaxed">
@@ -1567,7 +1569,7 @@ export default function ControlPanel({
             {/* Manual QR Module Spacing slider (visible when smartOptimize is false) */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label htmlFor="manual-padding-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">Module Spacing (Padding)</label>
+                <label htmlFor="manual-padding-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">{t('control.moduleSpacingPadding', 'Module Spacing (Padding)')}</label>
                 <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.modulePadding ?? 0}%</span>
               </div>
               <input
@@ -1602,7 +1604,7 @@ export default function ControlPanel({
         <div className="flex justify-between items-center mb-1.5">
           <div className="flex items-center gap-1.5">
             <Maximize className="w-3.5 h-3.5 text-indigo-500" />
-            <label htmlFor="quiet-zone-range" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">Quiet Zone (Margin)</label>
+            <label htmlFor="quiet-zone-range" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.quietZoneMargin', 'Quiet Zone (Margin)')}</label>
           </div>
           <span className="text-xs text-indigo-600 font-mono font-bold bg-indigo-50 px-1.5 py-0.5 rounded">
             {localProject.design?.margin ?? 20}px
@@ -1672,7 +1674,7 @@ export default function ControlPanel({
         className={`p-4 rounded-xl border transition-all duration-300 shadow-sm ${ localProject.design?.smartOptimize ? 'bg-gray-100/40 border-gray-200/30 opacity-60' : 'bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80' }`}
       >
         <div className="flex justify-between items-center mb-2">
-          <label htmlFor="error-correction-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">Error Correction Level</label>
+          <label htmlFor="error-correction-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.errorCorrectionLevel', 'Error Correction Level')}</label>
           <span className="text-xs text-indigo-600 font-mono font-bold">
             {localProject.design?.errorCorrectionLevel || 'H'}
             {localProject.design?.smartOptimize && " (Auto)"}
@@ -1690,10 +1692,10 @@ export default function ControlPanel({
               setDesignField('errorCorrectionLevel', val);
             }}
           >
-            <option value="L">L (7% Recovery) — Low density, simple pattern</option>
-            <option value="M">M (15% Recovery) — Medium density, standard balance</option>
-            <option value="Q">Q (25% Recovery) — Quartile density, high reliability</option>
-            <option value="H">H (30% Recovery) — High density, best for logos & complexity</option>
+            <option value="L">{t('control.eccLDesc', 'L (7% Recovery) — Low density, simple pattern')}</option>
+            <option value="M">{t('control.eccMDesc', 'M (15% Recovery) — Medium density, standard balance')}</option>
+            <option value="Q">{t('control.eccQDesc', 'Q (25% Recovery) — Quartile density, high reliability')}</option>
+            <option value="H">{t('control.eccHDesc', 'H (30% Recovery) — High density, best for logos & complexity')}</option>
           </select>
           
           <p className="text-[10px] text-gray-600 leading-relaxed">
@@ -1723,7 +1725,7 @@ export default function ControlPanel({
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-3"
       >
         <div className="flex justify-between items-center">
-          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">Emblem Center Logo</label>
+          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">Emblem {t('control.tab.logo', 'Center Logo')}</label>
           {localProject.design?.logoUrl && (
             <button
               type="button"
@@ -1741,14 +1743,14 @@ export default function ControlPanel({
             id="emblem-url-input"
             type="text"
             className="w-full text-xs px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-850"
-            placeholder="e.g. Google, QR, or text/emoji"
+            placeholder={t('control.placeholder.logoText', 'e.g. Google, QR, or text/emoji')}
             value={localProject.design?.logoUrl || ''}
             onChange={e => {
               setUploadError(null);
               setDesignField('logoUrl', e.target.value, true);
             }}
           />
-          <p className="text-[10px] text-gray-600 mt-1">Accepts short words, emojis, or external secure image URLs.</p>
+          <p className="text-[10px] text-gray-600 mt-1">{t('control.logoUrlDesc', 'Accepts short words, emojis, or external secure image URLs.')}</p>
         </div>
 
         {/* Drag and Drop Upload Area */}
@@ -1771,9 +1773,9 @@ export default function ControlPanel({
           <UploadCloud className={`w-6 h-6 ${isDragging ? 'text-indigo-600 animate-pulse' : 'text-gray-400'}`} />
           <div className="text-center">
             <span className="text-xs font-medium text-gray-700 block">
-              Drag & drop logo image, or <span className="text-indigo-600 font-semibold">browse</span>
+              Drag & drop logo image, or <span className="text-indigo-600 font-semibold">{t('control.browse', 'browse')}</span>
             </span>
-            <span className="text-[9px] text-gray-400 block mt-0.5">Supports PNG, JPG, SVG, WebP up to 2MB</span>
+            <span className="text-[9px] text-gray-400 block mt-0.5">{t('control.logoUploadLimits', 'Supports PNG, JPG, SVG, WebP up to 2MB')}</span>
           </div>
         </div>
 
@@ -1820,7 +1822,7 @@ export default function ControlPanel({
             {/* Logo Rotation Slider */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label htmlFor="logo-rotation-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">Logo Rotation</label>
+                <label htmlFor="logo-rotation-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">{t('control.logoRotationLabel', 'Logo Rotation')}</label>
                 <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.logoRotation ?? 0}°</span>
               </div>
               <input
@@ -1838,7 +1840,7 @@ export default function ControlPanel({
             {/* Logo Scale Slider */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label htmlFor="logo-scale-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">Logo Size / Scale</label>
+                <label htmlFor="logo-scale-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">{t('control.logoScaleLabel', 'Logo Size / Scale')}</label>
                 <span className="text-[11px] text-indigo-600 font-mono font-bold">{Math.round((localProject.design?.logoScale ?? 0.18) * 100)}%</span>
               </div>
               <input
@@ -1857,7 +1859,7 @@ export default function ControlPanel({
             <div className="pt-3 border-t border-gray-200/50">
               <div className="flex items-center justify-between">
                 <div>
-                  <span id="logo-autocenter-label" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">Auto-Center Position</span>
+                  <span id="logo-autocenter-label" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">{t('control.logoAutoCenterLabel', 'Auto-Center Position')}</span>
                   <p className="text-[9px] text-gray-600 leading-normal mt-0.5 max-w-[190px]">
                     Maintains the correct offset relative to the finder eye frames automatically.
                   </p>
@@ -1879,8 +1881,8 @@ export default function ControlPanel({
               {/* Real-time Visual Alignment Preview Box */}
               <div className="mt-4 p-3 bg-slate-50 border border-slate-150 rounded-xl space-y-2.5">
                 <div className="flex justify-between items-center text-[10px] font-bold text-gray-900 uppercase tracking-wider">
-                  <span>Alignment Simulator Preview</span>
-                  <span className="text-[9px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded cursor-default select-none">Live viewport</span>
+                  <span>{t('control.alignmentTitle', 'Alignment Simulator Preview')}</span>
+                  <span className="text-[9px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded cursor-default select-none">{t('control.liveViewport', 'Live viewport')}</span>
                 </div>
                 
                 <div className="flex items-center gap-3.5">
@@ -1977,7 +1979,7 @@ export default function ControlPanel({
                     </p>
                     <div className="flex items-center gap-1.5 pt-0.5 text-[8px] text-slate-400 font-semibold uppercase tracking-wider">
                       <span className="inline-block w-1 h-1 rounded-full bg-slate-400" />
-                      <span>Hover grid to show alignment guides</span>
+                      <span>{t('control.alignmentHover', 'Hover grid to show alignment guides')}</span>
                     </div>
                   </div>
                 </div>
@@ -1986,16 +1988,16 @@ export default function ControlPanel({
                            {/* Conditionally show Manual Offset controls when Auto-Center is disabled or show dynamic calculation when active */}
               {localProject.design?.logoAutoCenter !== false ? (
                 <div className="mt-3 p-3 bg-indigo-50/50 border border-indigo-100/60 rounded-xl space-y-2 text-slate-700 animate-in fade-in duration-200">
-                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block">Automatic Weight Balancing</span>
+                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block">{t('control.weightBalancing', 'Automatic Weight Balancing')}</span>
                   <div className="grid grid-cols-2 gap-2 text-[10px]">
                     <div className="bg-white/80 p-2 rounded-lg border border-indigo-50/50 flex flex-col justify-center">
-                      <span className="text-slate-500 text-[8.5px]">Offset X (Horizontal)</span>
+                      <span className="text-slate-500 text-[8.5px]">{t('control.offsetX', 'Offset X (Horizontal)')}</span>
                       <span className="font-mono font-bold text-slate-800 text-[11px] mt-0.5">
                         +{calculateAutoCenterOffsets().offsetX} px
                       </span>
                     </div>
                     <div className="bg-white/80 p-2 rounded-lg border border-indigo-50/50 flex flex-col justify-center">
-                      <span className="text-slate-500 text-[8.5px]">Offset Y (Vertical)</span>
+                      <span className="text-slate-500 text-[8.5px]">{t('control.offsetY', 'Offset Y (Vertical)')}</span>
                       <span className="font-mono font-bold text-slate-800 text-[11px] mt-0.5">
                         +{calculateAutoCenterOffsets().offsetY} px
                       </span>
@@ -2007,12 +2009,12 @@ export default function ControlPanel({
                 </div>
               ) : (
                 <div className="mt-3.5 p-3 bg-white border border-gray-250/60 rounded-xl space-y-3 shadow-2xs animate-in fade-in duration-200">
-                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block mb-1">Manual Center Fine-Tuning</span>
+                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block mb-1">{t('control.manualFineTuning', 'Manual Center Fine-Tuning')}</span>
                   
                   {/* Manual X Offset slider */}
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label htmlFor="logo-offset-x" className="text-[9px] font-semibold text-gray-950 uppercase tracking-wider">Offset X (Horizontal)</label>
+                      <label htmlFor="logo-offset-x" className="text-[9px] font-semibold text-gray-950 uppercase tracking-wider">{t('control.offsetX', 'Offset X (Horizontal)')}</label>
                       <span className="text-[10px] text-slate-700 font-mono font-bold">
                         {(localProject.design?.logoOffsetX ?? 0) > 0 ? `+${localProject.design?.logoOffsetX ?? 0}` : localProject.design?.logoOffsetX ?? 0} px
                       </span>
@@ -2032,7 +2034,7 @@ export default function ControlPanel({
                   {/* Manual Y Offset slider */}
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label htmlFor="logo-offset-y" className="text-[9px] font-semibold text-gray-950 uppercase tracking-wider">Offset Y (Vertical)</label>
+                      <label htmlFor="logo-offset-y" className="text-[9px] font-semibold text-gray-950 uppercase tracking-wider">{t('control.offsetY', 'Offset Y (Vertical)')}</label>
                       <span className="text-[10px] text-slate-700 font-mono font-bold">
                         {(localProject.design?.logoOffsetY ?? 0) > 0 ? `+${localProject.design?.logoOffsetY ?? 0}` : localProject.design?.logoOffsetY ?? 0} px
                       </span>
@@ -2074,8 +2076,8 @@ export default function ControlPanel({
         className="flex items-center justify-between bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100/30 transition-all duration-300"
       >
         <div>
-          <span className="text-xs font-semibold text-emerald-950 block">Animate Color Shift</span>
-          <span className="text-[10px] text-emerald-700 block">Gradually transitions the QR pattern colors over time using Framer Motion.</span>
+          <span className="text-xs font-semibold text-emerald-950 block">{t('control.animateColorShift', 'Animate Color Shift')}</span>
+          <span className="text-[10px] text-emerald-700 block">{t('control.colorShiftDesc', 'Gradually transitions the QR pattern colors over time using Framer Motion.')}</span>
         </div>
         <button
           type="button"
@@ -2104,8 +2106,8 @@ export default function ControlPanel({
         className="flex items-center justify-between bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50 transition-all duration-300"
       >
         <div>
-          <span className="text-xs font-semibold text-indigo-950 block">Enable Short URL & Analytics</span>
-          <span className="text-[10px] text-indigo-700 block">Collects visitor scan location, hardware, and browser logs.</span>
+          <span className="text-xs font-semibold text-indigo-950 block">{t('control.enableShortUrl', 'Enable Short URL & Analytics')}</span>
+          <span className="text-[10px] text-indigo-700 block">{t('control.shortUrlDesc', 'Collects visitor scan location, hardware, and browser logs.')}</span>
         </div>
         <button
           type="button"
@@ -2129,7 +2131,7 @@ export default function ControlPanel({
       >
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-slate-600" />
-          <span className="text-xs font-semibold text-gray-900">Optional Link Expiration</span>
+          <span className="text-xs font-semibold text-gray-900">{t('control.linkExpiration', 'Optional Link Expiration')}</span>
         </div>
 
         <p className="text-[10px] text-gray-600 leading-normal">
@@ -2184,7 +2186,7 @@ export default function ControlPanel({
             {/* Auto-Enable Tracking Warning */}
             {!localProject.trackingEnabled && (
               <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 text-[10px] text-amber-800 flex items-start gap-2">
-                <span className="font-bold">⚠️ Warning:</span>
+                <span className="font-bold">{t('control.warning', '⚠️ Warning:')}</span>
                 <span>
                   Dynamic Link is currently disabled. Link Expiration requires enabling <strong>Short URL & Analytics</strong> to function properly.
                 </span>
@@ -2256,7 +2258,7 @@ export default function ControlPanel({
       >
         <div className="flex items-center gap-2">
           <Folder className="w-4 h-4 text-indigo-600" />
-          <span className="text-xs font-semibold text-slate-950">Folder / Category</span>
+          <span className="text-xs font-semibold text-slate-950">{t('control.folderCategory', 'Folder / Category')}</span>
         </div>
 
         <p className="text-[10px] text-slate-600 leading-normal">
@@ -2269,7 +2271,7 @@ export default function ControlPanel({
             type="text"
             aria-label="Folder or Category"
             className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-            placeholder="Type or select folders (e.g. Marketing)"
+            placeholder={t('control.placeholder.folder', 'Type or select folders (e.g. Marketing)')}
             value={localProject.category || ''}
             onChange={(e) => onChange({ ...localProject, category: e.target.value }, true)}
             maxLength={40}
@@ -2320,7 +2322,7 @@ export default function ControlPanel({
           ) : (
             <>
               <Check className="w-4 h-4" />
-              <span>Save Design to Cloud</span>
+              <span>{t('control.saveDesign', 'Save Design to Cloud')}</span>
               <kbd className="ml-1.5 px-1.5 py-0.5 text-[9px] bg-indigo-950 text-indigo-100 border border-indigo-500/30 rounded font-mono font-bold select-none tracking-normal uppercase">Ctrl+S</kbd>
             </>
           )}

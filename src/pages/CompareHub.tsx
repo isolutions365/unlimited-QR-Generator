@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../utils/i18n';
+
 import { 
   ChevronRight, Home, Sparkles, ArrowRight, Check, HelpCircle, 
   ChevronDown, BookOpen, LayoutTemplate, Star, Info, Cpu, 
@@ -14,12 +16,14 @@ interface CompareHubProps {
   locale?: string;
 }
 
-export default function CompareHub({ 
+export default function CompareHub({
+   
   initialSlug, 
   onNavigate, 
   onInitiateGenerator,
   locale = 'en' 
 }: CompareHubProps) {
+  const { t } = useTranslation();
   const [activeSlug, setActiveSlug] = useState<string | null>(initialSlug);
   const [searchQuery, setSearchQuery] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);

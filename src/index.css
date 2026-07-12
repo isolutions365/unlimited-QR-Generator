@@ -290,5 +290,60 @@ body, html {
   border-color: rgba(129, 140, 248, 0.35) !important;
 }
 
+/* ==========================================
+   Professional RTL Support for Arabic & Urdu 
+   ========================================== */
+
+/* Apply RTL and right-align ONLY to genuine content paragraphs, descriptions, list items, and headings */
+.rtl-active p,
+.rtl-active li,
+.rtl-active h1,
+.rtl-active h2,
+.rtl-active h3,
+.rtl-active h4,
+.rtl-active h5,
+.rtl-active h6,
+.rtl-active .content-paragraph,
+.rtl-active blockquote,
+.rtl-active label,
+.rtl-active .rtl-content {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Permanently lock Branding, Logos, Brand Name, URLs, QR Codes, Icons, and non-content fields to LTR direction */
+.rtl-active .ltr-lock,
+.rtl-active .logo,
+.rtl-active .brand-name,
+.rtl-active .url-display,
+.rtl-active .qr-code,
+.rtl-active svg,
+.rtl-active .lucide,
+.rtl-active input,
+.rtl-active textarea,
+.rtl-active select,
+.rtl-active .font-mono,
+.rtl-active code,
+.rtl-active pre {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Use CSS Logical Properties instead of physical margins/paddings on RTL content paragraphs to adapt beautifully */
+.rtl-active p,
+.rtl-active li,
+.rtl-active h1,
+.rtl-active h2,
+.rtl-active h3,
+.rtl-active h4,
+.rtl-active h5,
+.rtl-active h6,
+.rtl-active .content-paragraph {
+  margin-inline-start: unset;
+  margin-inline-end: unset;
+  padding-inline-start: unset;
+  padding-inline-end: unset;
+}
+
 
 
