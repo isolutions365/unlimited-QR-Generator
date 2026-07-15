@@ -246,14 +246,14 @@ export default function ControlPanel({ currentProject,
 
   const getUrlError = (url: string): { type: 'error' | 'warning' | 'info'; message: string; action?: () => void } | null => {
     if (!url || !url.trim()) {
-      return { type: 'info', message: 'Enter the destination web link above. A valid link is required to generate the QR code.' };
+      return { type: 'info', message: t('control.err.enterWebLink', 'Enter the destination web link above. A valid link is required to generate the QR code.') };
     }
 
     const trimmed = url.trim();
     
     // Check for spaces
     if (/\s/.test(trimmed)) {
-      return { type: 'error', message: 'URLs cannot contain spaces. Please check for accidental spaces.' };
+      return { type: 'error', message: t('control.err.noSpaces', 'URLs cannot contain spaces. Please check for accidental spaces.') };
     }
 
     // Check if missing protocol
@@ -262,7 +262,7 @@ export default function ControlPanel({ currentProject,
       // Suggest adding https://
       return {
         type: 'warning',
-        message: 'Missing required protocol! Smartphone scanners need "http://" or "https://" to recognize this as a web link.',
+        message: t('control.err.missingProtocol', 'Missing required protocol! Smartphone scanners need "http://" or "https://" to recognize this as a web link.'),
         action: () => {
           onChange({ ...localProject, content: `https://${trimmed}` });
         }
@@ -274,10 +274,10 @@ export default function ControlPanel({ currentProject,
       const urlObj = new URL(trimmed);
       const host = urlObj.hostname;
       if (!host.includes('.') || host.split('.').filter(Boolean).length < 2) {
-        return { type: 'error', message: 'Invalid website domain. Make sure you entered a full address (e.g. domain.com).' };
+        return { type: 'error', message: t('control.err.invalidDomain', 'Invalid website domain. Make sure you entered a full address (e.g. domain.com).') };
       }
     } catch (e) {
-      return { type: 'error', message: 'Invalid URL format. Please enter a valid website address (e.g. https://example.com).' };
+      return { type: 'error', message: t('control.err.invalidUrlFormat', 'Invalid URL format. Please enter a valid website address (e.g. https://example.com).') };
     }
 
     return null;
@@ -341,11 +341,11 @@ export default function ControlPanel({ currentProject,
 
   const validateAndProcessFile = (file: File) => {
     if (!file.type.startsWith('image/')) {
-      setUploadError('Only image files (PNG, JPG, SVG, WebP, etc.) are allowed.');
+      setUploadError(t('control.err.onlyImages', 'Only image files (PNG, JPG, SVG, WebP, etc.) are allowed.'));
       return;
     }
     if (file.size > 2 * 1024 * 1024) {
-      setUploadError('Image size is too large (max 2MB).');
+      setUploadError(t('control.err.imageTooLarge', 'Image size is too large (max 2MB).'));
       return;
     }
 
@@ -356,7 +356,7 @@ export default function ControlPanel({ currentProject,
       }
     };
     reader.onerror = () => {
-      setUploadError('Failed to read the file.');
+      setUploadError(t('control.err.failedToReadFile', 'Failed to read the file.'));
     };
     reader.readAsDataURL(file);
   };
@@ -407,7 +407,7 @@ export default function ControlPanel({ currentProject,
       <motion.div variants={itemVariants}>
         <h2 className="text-lg font-semibold tracking-tight text-gray-900 flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-indigo-600" />
-          Customize Your QR Code
+          {t('control.customizeTitle', 'Customize Your QR Code')}
         </h2>
         <p className="text-xs text-gray-500 mt-1">{t('control.desc', 'Configure type, contents, custom styles, and centerpiece tags.')}</p>
       </motion.div>
@@ -468,7 +468,7 @@ export default function ControlPanel({ currentProject,
                 />
 
                 <Icon className={`w-4 h-4 transition-colors ${isSelected ? 'text-white' : type.color}`} />
-                <span className="text-[10px] font-medium">{type.label}</span>
+                <span className="text-[10px] font-medium">{t('control.type.' + type.id, type.label)}</span>
               </button>
             );
           })}
@@ -517,12 +517,12 @@ export default function ControlPanel({ currentProject,
                   animate={{ opacity: 1, scale: 1 }}
                   type="button"
                   onClick={urlError.action}
-                  title="Add https://"
+                  title={t('control.addHttps', 'Add https://')}
                   className="px-3.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 active:scale-[0.95] text-amber-700 transition-all flex items-center justify-center cursor-pointer relative group"
                 >
                   <Link2 className="w-4 h-4" />
                   <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-md">
-                    Add https://
+                    {t('control.addHttps', 'Add https://')}
                   </span>
                 </motion.button>
               )}
@@ -546,7 +546,7 @@ export default function ControlPanel({ currentProject,
                       onClick={urlError.action}
                       className="text-[10px] font-bold bg-amber-600 hover:bg-amber-750 text-white px-2.5 py-1 rounded-md transition-colors inline-flex items-center gap-1 active:scale-[0.97]"
                     >
-                      <span>Fix: Add "https://" prefix</span>
+                      <span>{t('control.fixAddHttps', 'Fix: Add "https://" prefix')}</span>
                     </button>
                   )}
                 </div>
@@ -640,7 +640,7 @@ export default function ControlPanel({ currentProject,
               id="phone-number-input"
               type="tel"
               className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="+1 (555) 000-0000"
+              placeholder={t('control.placeholder.phoneVal', '+1 (555) 000-0000')}
               value={(() => {
                 if (localProject.content?.startsWith('tel:')) {
                   return localProject.content.substring(4);
@@ -761,7 +761,7 @@ export default function ControlPanel({ currentProject,
             
             <div>
               <span className="text-[10px] text-slate-650 font-mono">
-                Platform Path: {(() => {
+                {t('control.platformPath', 'Platform Path:')} {(() => {
                   const content = localProject.content || '';
                   if (content.includes('instagram.com/')) return 'https://instagram.com/';
                   if (content.includes('x.com/')) return 'https://x.com/';
@@ -847,7 +847,7 @@ export default function ControlPanel({ currentProject,
 
             <div>
               <span className="text-[10px] text-slate-650 font-mono">
-                Asset Prefix: {(() => {
+                {t('control.assetPrefix', 'Asset Prefix:')} {(() => {
                   const content = localProject.content || '';
                   if (content.startsWith('bitcoin:')) return 'bitcoin:';
                   if (content.startsWith('ethereum:')) return 'ethereum:';
@@ -910,7 +910,7 @@ export default function ControlPanel({ currentProject,
                 className="text-[9px] text-indigo-600 hover:text-indigo-800 font-bold bg-white px-2 py-1 rounded border border-gray-200 shadow-3xs cursor-pointer inline-flex items-center gap-1"
               >
                 <MapPin className="w-3 h-3 text-indigo-500" />
-                Locate Me
+                {t('control.locateMe', 'Locate Me')}
               </button>
             </div>
 
@@ -974,13 +974,13 @@ export default function ControlPanel({ currentProject,
           <div className="p-3 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
             <h4 className="text-xs font-semibold text-slate-850">{t('control.smartAppSetup', 'Smart App Store Setup')}</h4>
             <p className="text-[11px] text-slate-600 font-medium">
-              Users scanning this QR code will be dynamically redirected to the appropriate store based on their device.
+              {t('control.appSetupDesc', 'Users scanning this QR code will be dynamically redirected to the appropriate store based on their device.')}
             </p>
             
             {/* Warning if tracking is disabled */}
             {!localProject.trackingEnabled && (
               <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-[10px] text-amber-800 leading-relaxed">
-                <strong>Note:</strong> Device detection requires tracking to be enabled. We have automatically enabled tracking for this QR code.
+                <strong>{t('control.note', 'Note:')}</strong> {t('control.appTrackingNotice', 'Device detection requires tracking to be enabled. We have automatically enabled tracking for this QR code.')}
               </div>
             )}
 
@@ -1098,7 +1098,7 @@ export default function ControlPanel({ currentProject,
           <div>
             <h3 className="text-xs font-semibold text-gray-900 tracking-wider uppercase flex items-center gap-1.5">
               <Wand2 className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
-              Quick Style Presets
+              {t('control.quickStylePresets', 'Quick Style Presets')}
             </h3>
             <span className="text-[10px] text-gray-600 block">{t('control.quickStylesDesc', 'Apply curated style combinations instantly.')}</span>
           </div>
@@ -1142,10 +1142,10 @@ export default function ControlPanel({ currentProject,
 
                 <div className="min-w-0 flex-1">
                   <div className="text-[11px] font-bold text-slate-800 leading-tight truncate">
-                    {preset.name}
+                    {t('control.preset.' + preset.name.replace(/\s+/g, ''), preset.name)}
                   </div>
                   <div className="text-[9px] text-slate-500 truncate">
-                    {preset.description}
+                    {t('control.presetDesc.' + preset.name.replace(/\s+/g, ''), preset.description)}
                   </div>
                 </div>
               </button>
@@ -1218,7 +1218,7 @@ export default function ControlPanel({ currentProject,
           <div>
             <h3 className="text-xs font-semibold text-gray-900 tracking-wider uppercase flex items-center gap-1.5">
               <SquareDot className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
-              Outer Edge Label Frame
+              {t('control.outerEdgeLabelFrame', 'Outer Edge Label Frame')}
             </h3>
             <span className="text-[10px] text-gray-600 block">{t('control.frameDesc', 'Add a beautiful, styled badge-frame around your QR.')}</span>
           </div>
@@ -1230,7 +1230,7 @@ export default function ControlPanel({ currentProject,
               }}
               className="text-[10px] text-red-500 hover:text-red-700 font-semibold cursor-pointer"
             >
-              Remove Outer Frame
+              {t('control.removeOuterFrame', 'Remove Outer Frame')}
             </button>
           ) : null}
         </div>
@@ -1267,10 +1267,10 @@ export default function ControlPanel({ currentProject,
                 className={`p-2 rounded-lg border text-left transition-all flex flex-col justify-between h-[54px] cursor-pointer ${ isSelected ? 'border-indigo-600 bg-indigo-50/25 ring-1 ring-indigo-500/25' : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/50' }`}
               >
                 <div className="text-[10.5px] font-bold text-gray-900 flex items-center justify-between w-full">
-                  <span>{preset.label}</span>
+                  <span>{t('control.framePreset.' + preset.id, preset.label)}</span>
                   {isSelected && <Check className="w-3 h-3 text-indigo-600 stroke-[3]" />}
                 </div>
-                <div className="text-[9px] text-gray-600 truncate w-full">{preset.desc}</div>
+                <div className="text-[9px] text-gray-600 truncate w-full">{t('control.framePresetDesc.' + preset.id, preset.desc)}</div>
               </button>
             );
           })}
@@ -1280,7 +1280,7 @@ export default function ControlPanel({ currentProject,
         {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' && (
           <div className="space-y-1.5 pt-1">
             <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block animate-fade-in">
-              {localProject.design?.frameStyle === 'custom' ? 'Custom Frame Label Text' : 'Override Preset Label Text'}
+              {localProject.design?.frameStyle === 'custom' ? t('control.customFrameLabelText', 'Custom Frame Label Text') : t('control.overridePresetLabelText', 'Override Preset Label Text')}
             </label>
             <input
               id="custom-frame-text"
@@ -1289,19 +1289,19 @@ export default function ControlPanel({ currentProject,
               className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder={(() => {
                 const style = localProject.design?.frameStyle;
-                if (style === 'scan-me') return 'e.g. SCAN ME';
-                if (style === 'visit-website') return 'e.g. VISIT WEBSITE';
-                if (style === 'wifi-password') return 'e.g. WIFI PASSWORD';
-                if (style === 'download-app') return 'e.g. DOWNLOAD APP';
-                if (style === 'follow-us') return 'e.g. FOLLOW US';
-                if (style === 'join-wifi') return 'e.g. JOIN WIFI';
-                return 'e.g. SCAN TO REGISTER';
+                if (style === 'scan-me') return t('control.framePlaceholder.scanMe', 'e.g. SCAN ME');
+                if (style === 'visit-website') return t('control.framePlaceholder.visitWebsite', 'e.g. VISIT WEBSITE');
+                if (style === 'wifi-password') return t('control.framePlaceholder.wifiPassword', 'e.g. WIFI PASSWORD');
+                if (style === 'download-app') return t('control.framePlaceholder.downloadApp', 'e.g. DOWNLOAD APP');
+                if (style === 'follow-us') return t('control.framePlaceholder.followUs', 'e.g. FOLLOW US');
+                if (style === 'join-wifi') return t('control.framePlaceholder.joinWifi', 'e.g. JOIN WIFI');
+                return t('control.framePlaceholder.custom', 'e.g. SCAN TO REGISTER');
               })()}
               value={localProject.design?.frameText || ''}
               onChange={e => setDesignField('frameText', e.target.value, true)}
             />
             <span className="text-[9.5px] text-gray-600 block leading-tight">
-              Type custom wording to override or personalize the selected banner layout. Max 20 chars.
+              {t('control.typeCustomWording', 'Type custom wording to override or personalize the selected banner layout. Max 20 chars.')}
             </span>
           </div>
         )}
@@ -1403,7 +1403,7 @@ export default function ControlPanel({ currentProject,
               }}
               className="text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold transition-colors cursor-pointer"
             >
-              Reset to Theme
+              {t('control.resetToTheme', 'Reset to Theme')}
             </button>
           ) : null}
         </div>
@@ -1424,7 +1424,7 @@ export default function ControlPanel({ currentProject,
               />
             </div>
             <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
-              {localProject.design?.eyeColorTopLeft ? localProject.design.eyeColorTopLeft : 'Inherited'}
+              {localProject.design?.eyeColorTopLeft ? localProject.design.eyeColorTopLeft : t('control.inherited', 'Inherited')}
             </span>
           </div>
 
@@ -1443,7 +1443,7 @@ export default function ControlPanel({ currentProject,
               />
             </div>
             <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
-              {localProject.design?.eyeColorTopRight ? localProject.design.eyeColorTopRight : 'Inherited'}
+              {localProject.design?.eyeColorTopRight ? localProject.design.eyeColorTopRight : t('control.inherited', 'Inherited')}
             </span>
           </div>
 
@@ -1462,7 +1462,7 @@ export default function ControlPanel({ currentProject,
               />
             </div>
             <span className="text-[9px] font-mono text-slate-600 mt-1 uppercase block truncate max-w-full">
-              {localProject.design?.eyeColorBottomLeft ? localProject.design.eyeColorBottomLeft : 'Inherited'}
+              {localProject.design?.eyeColorBottomLeft ? localProject.design.eyeColorBottomLeft : t('control.inherited', 'Inherited')}
             </span>
           </div>
         </div>
@@ -1532,9 +1532,9 @@ export default function ControlPanel({ currentProject,
               <div className="flex items-start gap-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
                 <div>
-                  <strong className="text-slate-800">Error Correction: </strong>
+                  <strong className="text-slate-800">{t('control.errorCorrectionLabel', 'Error Correction:')} </strong>
                   <span className="text-slate-600">
-                    Set to <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.errorCorrectionLevel || 'H')}</span> based on centerpiece logo scale & URL complexity.
+                    {t('control.errorCorrectionLevelDescStart', 'Set to ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.errorCorrectionLevel || 'H')}</span>{t('control.errorCorrectionLevelDescEnd', ' based on centerpiece logo scale & URL complexity.')}
                   </span>
                 </div>
               </div>
@@ -1542,9 +1542,9 @@ export default function ControlPanel({ currentProject,
               <div className="flex items-start gap-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
                 <div>
-                  <strong className="text-slate-800">Module Spacing: </strong>
+                  <strong className="text-slate-800">{t('control.moduleSpacingLabel', 'Module Spacing:')} </strong>
                   <span className="text-slate-600">
-                    Optimized to <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.modulePadding ?? 0)}% padding</span> to guarantee camera scanning readability.
+                    {t('control.moduleSpacingDescStart', 'Optimized to ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.modulePadding ?? 0)}% padding</span>{t('control.moduleSpacingDescEnd', ' to guarantee camera scanning readability.')}
                   </span>
                 </div>
               </div>
@@ -1552,16 +1552,16 @@ export default function ControlPanel({ currentProject,
               <div className="flex items-start gap-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
                 <div>
-                  <strong className="text-slate-800">Quiet Zone Margin: </strong>
+                  <strong className="text-slate-800">{t('control.quietZoneMarginLabel', 'Quiet Zone Margin:')} </strong>
                   <span className="text-slate-600">
-                    Locked at a safe minimum of <span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.margin ?? 20)}px</span> to prevent edge-crop issues.
+                    {t('control.quietZoneMarginDescStart', 'Locked at a safe minimum of ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.margin ?? 20)}px</span>{t('control.quietZoneMarginDescEnd', ' to prevent edge-crop issues.')}
                   </span>
                 </div>
               </div>
             </div>
 
             <p className="text-[9px] text-slate-400 font-medium">
-              * Design parameter sliders below are auto-managed. Disable Smart Optimization to adjust them manually.
+              {t('control.designParamsNotice', '* Design parameter sliders below are auto-managed. Disable Smart Optimization to adjust them manually.')}
             </p>
           </div>
         ) : (
@@ -1583,7 +1583,7 @@ export default function ControlPanel({ currentProject,
                 onChange={e => setDesignField('modulePadding', parseInt(e.target.value, 10), true)}
               />
               <span className="text-[9.5px] text-gray-600 block mt-1">
-                Adjusts the physical space between individual modules to customize dot density.
+                {t('control.adjustPhysicalSpace', 'Adjusts the physical space between individual modules to customize dot density.')}
               </span>
             </div>
           </div>
@@ -1624,14 +1624,14 @@ export default function ControlPanel({ currentProject,
         {/* Material Presets Selector */}
         <div className="mt-3.5">
           <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2 flex items-center gap-1">
-            <Layers className="w-3 h-3 text-slate-400" /> Recommended Margin by Print Material
+            <Layers className="w-3 h-3 text-slate-400" /> {t('control.recommendedMarginByPrint', 'Recommended Margin by Print Material')}
           </span>
           <div className="grid grid-cols-2 gap-1.5">
             {[
-              { name: 'Paper & Screens', size: 20, desc: 'Digital or smooth paper' },
-              { name: 'Textured Paper', size: 35, desc: 'Kraft, cardboard, textured' },
-              { name: 'Glossy & Metal', size: 30, desc: 'Reflective, metallic prints' },
-              { name: 'Fabric & Apparel', size: 50, desc: 'Folds, stretchable surfaces' }
+              { id: 'paperScreens', name: 'Paper & Screens', size: 20, desc: 'Digital or smooth paper' },
+              { id: 'texturedPaper', name: 'Textured Paper', size: 35, desc: 'Kraft, cardboard, textured' },
+              { id: 'glossyMetal', name: 'Glossy & Metal', size: 30, desc: 'Reflective, metallic prints' },
+              { id: 'fabricApparel', name: 'Fabric & Apparel', size: 50, desc: 'Folds, stretchable surfaces' }
             ].map(preset => {
               const isActive = (localProject.design?.margin ?? 20) === preset.size;
               return (
@@ -1647,10 +1647,10 @@ export default function ControlPanel({ currentProject,
                   }`}
                 >
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-bold truncate pr-1">{preset.name}</span>
+                    <span className="text-[10px] font-bold truncate pr-1">{t('control.material.' + preset.id, preset.name)}</span>
                     <span className="text-[9px] font-mono font-semibold text-indigo-600 bg-indigo-50 px-1 rounded shrink-0">{preset.size}px</span>
                   </div>
-                  <span className="text-[8px] text-slate-400 block truncate leading-tight mt-0.5">{preset.desc}</span>
+                  <span className="text-[8px] text-slate-400 block truncate leading-tight mt-0.5">{t('control.materialDesc.' + preset.id, preset.desc)}</span>
                 </button>
               );
             })}
@@ -1658,7 +1658,7 @@ export default function ControlPanel({ currentProject,
         </div>
 
         <p className="text-[10px] text-gray-500 mt-3 leading-relaxed">
-          The quiet zone surrounds your code with clean breathing room so scanners can instantly identify pattern edges, especially on textured, glossy, or stretchable physical materials.
+          {t('control.quietZoneDescLong', 'The quiet zone surrounds your code with clean breathing room so scanners can instantly identify pattern edges, especially on textured, glossy, or stretchable physical materials.')}
         </p>
       </motion.div>
 
@@ -1700,13 +1700,13 @@ export default function ControlPanel({ currentProject,
           
           <p className="text-[10px] text-gray-600 leading-relaxed">
             {localProject.design?.smartOptimize 
-              ? "Managed automatically by Smart Optimization to secure optimal recovery budget based on content depth and brand logo."
+              ? t('control.smartOptimizeEccDesc', 'Managed automatically by Smart Optimization to secure optimal recovery budget based on content depth and brand logo.')
               : (() => {
                   const ec = localProject.design?.errorCorrectionLevel || 'H';
-                  if (ec === 'L') return 'Low recovery budget. Simplest rendering, but vulnerable to slight scratches/smudges.';
-                  if (ec === 'M') return 'Medium recovery budget. Standard balanced configuration used across normal scanners.';
-                  if (ec === 'Q') return 'Quartile recovery budget. Retains scannability even when up to 25% of the print surface is dirty or torn.';
-                  return 'High recovery budget (Highly Recommended). Perfect for complex, custom QR patterns and centerpiece custom brand logo overlays.';
+                  if (ec === 'L') return t('control.eccLBudget', 'Low recovery budget. Simplest rendering, but vulnerable to slight scratches/smudges.');
+                  if (ec === 'M') return t('control.eccMBudget', 'Medium recovery budget. Standard balanced configuration used across normal scanners.');
+                  if (ec === 'Q') return t('control.eccQBudget', 'Quartile recovery budget. Retains scannability even when up to 25% of the print surface is dirty or torn.');
+                  return t('control.eccHBudget', 'High recovery budget (Highly Recommended). Perfect for complex, custom QR patterns and centerpiece custom brand logo overlays.');
                 })()}
           </p>
         </div>
@@ -1725,14 +1725,14 @@ export default function ControlPanel({ currentProject,
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-3"
       >
         <div className="flex justify-between items-center">
-          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">Emblem {t('control.tab.logo', 'Center Logo')}</label>
+          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.emblemCenterLogo', 'Emblem Center Logo')}</label>
           {localProject.design?.logoUrl && (
             <button
               type="button"
               onClick={clearLogo}
               className="text-[10px] text-red-600 hover:text-red-800 font-semibold transition-colors cursor-pointer"
             >
-              Clear Emblem
+              {t('control.clearEmblem', 'Clear Emblem')}
             </button>
           )}
         </div>
@@ -1773,7 +1773,7 @@ export default function ControlPanel({ currentProject,
           <UploadCloud className={`w-6 h-6 ${isDragging ? 'text-indigo-600 animate-pulse' : 'text-gray-400'}`} />
           <div className="text-center">
             <span className="text-xs font-medium text-gray-700 block">
-              Drag & drop logo image, or <span className="text-indigo-600 font-semibold">{t('control.browse', 'browse')}</span>
+              {t('control.dragDropLogo', 'Drag & drop logo image, or')} <span className="text-indigo-600 font-semibold">{t('control.browse', 'browse')}</span>
             </span>
             <span className="text-[9px] text-gray-400 block mt-0.5">{t('control.logoUploadLimits', 'Supports PNG, JPG, SVG, WebP up to 2MB')}</span>
           </div>
@@ -1808,10 +1808,10 @@ export default function ControlPanel({ currentProject,
               <div className="overflow-hidden">
                 <span className="text-xs font-medium text-gray-800 block truncate">
                   {localProject.design.logoUrl.startsWith('data:image') 
-                    ? 'Uploaded Base64 Emblem Image' 
+                    ? t('control.uploadedBase64Emblem', 'Uploaded Base64 Emblem Image') 
                     : localProject.design.logoUrl.startsWith('http') 
-                      ? 'External Image URL' 
-                      : `Text Emblem: "${localProject.design.logoUrl}"`}
+                      ? t('control.externalImageUrl', 'External Image URL') 
+                      : t('control.textEmblemLabel', 'Text Emblem: "{logoUrl}"', { logoUrl: localProject.design.logoUrl })}
                 </span>
                 <span className="text-[9px] font-mono text-gray-400 block truncate max-w-[180px]">
                   {localProject.design.logoUrl}
@@ -1861,7 +1861,7 @@ export default function ControlPanel({ currentProject,
                 <div>
                   <span id="logo-autocenter-label" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">{t('control.logoAutoCenterLabel', 'Auto-Center Position')}</span>
                   <p className="text-[9px] text-gray-600 leading-normal mt-0.5 max-w-[190px]">
-                    Maintains the correct offset relative to the finder eye frames automatically.
+                    {t('control.autoCenterDesc', 'Maintains the correct offset relative to the finder eye frames automatically.')}
                   </p>
                 </div>
                 <button
@@ -1970,12 +1970,12 @@ export default function ControlPanel({ currentProject,
                   {/* Alignment description or status helper */}
                   <div className="flex-1 space-y-1">
                     <span className="text-[10px] font-bold text-slate-800 block">
-                      {localProject.design?.logoAutoCenter !== false ? '✨ Optical Auto-Balanced' : '🔧 Manually Adjusted'}
+                      {localProject.design?.logoAutoCenter !== false ? t('control.opticalAutoBalanced', '✨ Optical Auto-Balanced') : t('control.manuallyAdjusted', '🔧 Manually Adjusted')}
                     </span>
                     <p className="text-[8.5px] text-slate-500 leading-normal">
                       {localProject.design?.logoAutoCenter !== false 
-                        ? 'Logo shifted slightly top-left to achieve visual symmetry with asymmetric finder pattern count.' 
-                        : 'Custom offset coordinates applied over the physical grid coordinate origin.'}
+                        ? t('control.logoAutoCenterDescription', 'Logo shifted slightly top-left to achieve visual symmetry with asymmetric finder pattern count.') 
+                        : t('control.logoManualOffsetDescription', 'Custom offset coordinates applied over the physical grid coordinate origin.')}
                     </p>
                     <div className="flex items-center gap-1.5 pt-0.5 text-[8px] text-slate-400 font-semibold uppercase tracking-wider">
                       <span className="inline-block w-1 h-1 rounded-full bg-slate-400" />
@@ -2004,7 +2004,7 @@ export default function ControlPanel({ currentProject,
                     </div>
                   </div>
                   <p className="text-[8.5px] text-slate-500 leading-normal mt-1">
-                    Balanced calculated offset accounts for standard QR Code eye pattern asymmetry ({calculateAutoCenterOffsets().modulesCount}x{calculateAutoCenterOffsets().modulesCount} grid), automatically shifting the centerpiece slightly top-left by 4% of eye footprint size to ensure absolute visual/optical balance.
+                    {t('control.autoCenterOffsetFormulaDesc', 'Balanced calculated offset accounts for standard QR Code eye pattern asymmetry ({modulesCount}x{modulesCount} grid), automatically shifting the centerpiece slightly top-left by 4% of eye footprint size to ensure absolute visual/optical balance.', { modulesCount: calculateAutoCenterOffsets().modulesCount })}
                   </p>
                 </div>
               ) : (
@@ -2054,7 +2054,7 @@ export default function ControlPanel({ currentProject,
                   <div className="flex items-center gap-1.5 pt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse shrink-0" />
                     <p className="text-[8.5px] leading-relaxed text-slate-500 font-medium">
-                      Manually shift logo placement in pixels relative to the physical center.
+                      {t('control.manualShiftLogoDesc', 'Manually shift logo placement in pixels relative to the physical center.')}
                     </p>
                   </div>
                 </div>
@@ -2135,13 +2135,13 @@ export default function ControlPanel({ currentProject,
         </div>
 
         <p className="text-[10px] text-gray-600 leading-normal">
-          Deactivate this QR code on a specific date. Once expired, visitors will see a custom message or be sent to an alternate URL.
+          {t('control.linkExpirationDescLong', 'Deactivate this QR code on a specific date. Once expired, visitors will see a custom message or be sent to an alternate URL.')}
         </p>
 
         {/* Expiry Enabled / Date Customizer */}
         <div className="space-y-1.5">
           <label htmlFor="expiry-date-input" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
-            Expiration Date & Time
+            {t('control.expirationDateTime', 'Expiration Date & Time')}
           </label>
           <div className="flex gap-2">
             <input
@@ -2175,7 +2175,7 @@ export default function ControlPanel({ currentProject,
                 })}
                 className="px-2.5 py-2 text-xs font-semibold text-red-600 bg-red-100/35 hover:bg-red-100 rounded-xl transition cursor-pointer"
               >
-                Clear
+                {t('control.clear', 'Clear')}
               </button>
             )}
           </div>
@@ -2188,7 +2188,7 @@ export default function ControlPanel({ currentProject,
               <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 text-[10px] text-amber-800 flex items-start gap-2">
                 <span className="font-bold">{t('control.warning', '⚠️ Warning:')}</span>
                 <span>
-                  Dynamic Link is currently disabled. Link Expiration requires enabling <strong>Short URL & Analytics</strong> to function properly.
+                  {t('control.expiryTrackingWarningStart', 'Dynamic Link is currently disabled. Link Expiration requires enabling ')}<strong>{t('control.shortUrlAnalyticsLabel', 'Short URL & Analytics')}</strong>{t('control.expiryTrackingWarningEnd', ' to function properly.')}
                 </span>
               </div>
             )}
@@ -2196,7 +2196,7 @@ export default function ControlPanel({ currentProject,
             {/* Redirect Action Selector */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
-                Post-Expiration Action
+                {t('control.postExpirationAction', 'Post-Expiration Action')}
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -2204,14 +2204,14 @@ export default function ControlPanel({ currentProject,
                   onClick={() => onChange({ ...localProject, expiryRedirectType: 'message' })}
                   className={`py-2 px-3 text-center text-[10px] sm:text-xs font-medium rounded-xl border transition-all cursor-pointer ${ (localProject.expiryRedirectType || 'message') === 'message' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50' }`}
                 >
-                  custom message
+                  {t('control.customMessage', 'custom message')}
                 </button>
                 <button
                   type="button"
                   onClick={() => onChange({ ...localProject, expiryRedirectType: 'url' })}
                   className={`py-2 px-3 text-center text-[10px] sm:text-xs font-medium rounded-xl border transition-all cursor-pointer ${ localProject.expiryRedirectType === 'url' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50' }`}
                 >
-                  different url
+                  {t('control.differentUrl', 'different url')}
                 </button>
               </div>
             </div>
@@ -2220,13 +2220,13 @@ export default function ControlPanel({ currentProject,
             {(localProject.expiryRedirectType || 'message') === 'message' ? (
               <div className="space-y-1.5">
                 <label htmlFor="expiry-message-textarea" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
-                  Custom Message text
+                  {t('control.customMessageText', 'Custom Message text')}
                 </label>
                 <textarea
                   id="expiry-message-textarea"
                   rows={2}
                   className="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                  placeholder="e.g., This QR code has reached its designated expiration date and is no longer active."
+                  placeholder={t('control.placeholder.expiryMessage', 'e.g., This QR code has reached its designated expiration date and is no longer active.')}
                   value={localProject.expiryMessage || ''}
                   onChange={(e) => onChange({ ...localProject, expiryMessage: e.target.value }, true)}
                 />
@@ -2234,13 +2234,13 @@ export default function ControlPanel({ currentProject,
             ) : (
               <div className="space-y-1.5">
                 <label htmlFor="expiry-redirect-url-input" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
-                  Fallback Destination URL
+                  {t('control.fallbackDestinationUrl', 'Fallback Destination URL')}
                 </label>
                 <input
                   id="expiry-redirect-url-input"
                   type="url"
                   className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                  placeholder="e.g., https://yoursite.com/new-dest"
+                  placeholder={t('control.placeholder.expiryUrl', 'e.g., https://yoursite.com/new-dest')}
                   value={localProject.expiryRedirectUrl || ''}
                   onChange={(e) => onChange({ ...localProject, expiryRedirectUrl: e.target.value }, true)}
                 />
@@ -2262,7 +2262,7 @@ export default function ControlPanel({ currentProject,
         </div>
 
         <p className="text-[10px] text-slate-600 leading-normal">
-          Organize your QR designs in categories to keep your workspace structured (e.g., <em className="not-italic font-medium text-slate-700">Client A, Marketing, Personal</em>).
+          {t('control.organizeCategoryDescStart', 'Organize your QR designs in categories to keep your workspace structured (e.g., ')}<em className="not-italic font-medium text-slate-700">{t('control.organizeCategoryDescSample', 'Client A, Marketing, Personal')}</em>{t('control.organizeCategoryDescEnd', ').')}
         </p>
 
         <div className="space-y-2">
@@ -2299,7 +2299,7 @@ export default function ControlPanel({ currentProject,
                       })}
                       className={`text-[9px] font-medium px-2.5 py-1 rounded-full transition cursor-pointer select-none ${ isSelected ? 'bg-indigo-600 text-white font-semibold' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }`}
                     >
-                      {sug}
+                      {sug === 'Client A' ? t('control.category.clientA', 'Client A') : sug === 'Marketing' ? t('control.category.marketing', 'Marketing') : sug === 'Personal' ? t('control.category.personal', 'Personal') : sug}
                     </button>
                   );
                 })}

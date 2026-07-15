@@ -140,27 +140,27 @@ export default function URLQRContent({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium">
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>No Watermark Ever</span>
+            <span>{t('urlqr.trustNoWatermark', 'No Watermark Ever')}</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>No Registration Required</span>
+            <span>{t('urlqr.trustNoReg', 'No Registration Required')}</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>100% Free Forever</span>
+            <span>{t('urlqr.trustFree', '100% Free Forever')}</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Local Browser Processing</span>
+            <span>{t('urlqr.trustLocal', 'Local Browser Processing')}</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>High-Speed Vector Export</span>
+            <span>{t('urlqr.trustVector', 'High-Speed Vector Export')}</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Enterprise-Grade Security</span>
+            <span>{t('urlqr.trustEnterprise', 'Enterprise-Grade Security')}</span>
           </div>
         </div>
       </section>
@@ -176,16 +176,15 @@ export default function URLQRContent({
         <p className="text-sm text-slate-600">
           The transformation of a standard alphanumeric string (like a website URL) into a scanable physical matrix involves precise mathematical encoding. Standard QR codes support four primary modes: numeric, alphanumeric, byte, and Kanji. URL QR codes primarily rely on <strong>Byte Mode</strong>, which supports 8-bit characters and successfully accommodates protocol standards, query parameters, subfolders, and hashtags.
         </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Static URL QR Encoding</h4>
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.staticUrlEncoding', 'Static URL QR Encoding')}</h4>
             <p className="text-xs text-slate-600">
               In a static QR code, the target link is hardcoded directly into the black-and-white module grid. The length of your URL directly affects the physical density of the code. A longer URL containing tracking parameters creates a highly dense matrix with hundreds of tiny pixel blocks, which require high print resolutions and large scan distances.
             </p>
           </div>
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Dynamic URL QR Encoding</h4>
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.dynamicUrlEncoding', 'Dynamic URL QR Encoding')}</h4>
             <p className="text-xs text-slate-600">
               A dynamic QR code encodes a short, standardized URL that redirects the user to the final destination through an intermediary routing server. Because the encoded string is short, the physical grid remains clean and simple, scanning almost instantly from any distance. Furthermore, the final destination can be updated remotely at any time without reprinting.
             </p>
@@ -209,9 +208,9 @@ export default function URLQRContent({
           <table className="min-w-full divide-y divide-slate-200 text-xs">
             <thead className="bg-slate-50">
               <tr>
-                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">Technical Parameter</th>
-                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">Static URL QR Code</th>
-                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">Dynamic URL QR Code</th>
+                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.technicalParameter', 'Technical Parameter')}</th>
+                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.staticUrlQrCode', 'Static URL QR Code')}</th>
+                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.dynamicUrlQrCode', 'Dynamic URL QR Code')}</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-slate-100">

@@ -12,6 +12,7 @@ export type TKey = typeof EXPECTED_KEYS[number] | (string & {});
  * Validates whether the text is a brand name, URL, or technical value that must never be translated.
  */
 export function shouldSkipTranslation(text: string): boolean {
+  if (!text) return true;
   const trimmed = text.trim();
   if (trimmed.length <= 1) return true;
 

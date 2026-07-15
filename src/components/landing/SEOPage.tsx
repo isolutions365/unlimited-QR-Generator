@@ -281,15 +281,15 @@ export default function SEOPage({
           
           {/* Breadcrumb row */}
           <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest leading-none select-none">
-            <button 
+             <button 
               onClick={() => onSelectRoute('/')} 
               className="hover:text-indigo-600 transition-colors flex items-center gap-1 cursor-pointer font-semibold"
             >
               <Home className="w-3.5 h-3.5" />
-              Home
+              {t('landing.home', 'Home')}
             </button>
             <span className="text-slate-300">/</span>
-            <span className="text-slate-400">Generators</span>
+            <span className="text-slate-400">{t('landing.generators', 'Generators')}</span>
             <span className="text-slate-300">/</span>
             <span className="text-slate-900 font-bold tracking-tight">{pageData.keyword}</span>
           </nav>
@@ -301,7 +301,7 @@ export default function SEOPage({
               className="inline-flex items-center gap-2 text-xs text-indigo-600 hover:text-indigo-800 font-bold group cursor-pointer transition-colors"
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              Back to Main Workshop
+              {t('landing.backToWorkshop', 'Back to Main Workshop')}
             </button>
           </div>
 
@@ -310,7 +310,7 @@ export default function SEOPage({
             <div className="md:col-span-8 flex flex-col gap-4">
               <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100/50 px-3.5 py-1.5 rounded-full max-w-fit font-semibold text-indigo-700 text-xs">
                 {getPageIcon()}
-                <span className="text-[10px] tracking-wider uppercase font-black">100% Free Service</span>
+                <span className="text-[10px] tracking-wider uppercase font-black">{t('landing.freeService', '100% Free Service')}</span>
               </div>
               
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 font-sans">
@@ -331,7 +331,7 @@ export default function SEOPage({
                   <Flame className="w-5 h-5 text-yellow-300" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-widest">Aesthetic Optimization</h4>
+                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-widest">{t('landing.aestheticOpt', 'Aesthetic Optimization')}</h4>
                   <p className="text-xs text-slate-400 mt-0.5">{pageData.intro.highlight}</p>
                 </div>
               </div>
@@ -340,8 +340,8 @@ export default function SEOPage({
             {/* Simulated Live Preview Card sidebar with Glassmorphism UI */}
             <div className="md:col-span-4 flex flex-col gap-4 bg-white/60 p-5 rounded-3xl border border-slate-200/50 shadow-xl relative overflow-hidden backdrop-blur-md">
               <div className="flex items-center justify-between border-b border-indigo-150 pb-2 text-slate-400 select-none">
-                <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-wider font-mono">Live Preset Sandbox</span>
-                <span className="text-[9px] bg-indigo-50/80 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">3D ACTIVE</span>
+                <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-wider font-mono">{t('landing.liveSandbox', 'Live Preset Sandbox')}</span>
+                <span className="text-[9px] bg-indigo-50/80 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">{t('landing.3dActive', '3D ACTIVE')}</span>
               </div>
               
               <QR3DExperience />
@@ -350,7 +350,7 @@ export default function SEOPage({
                 onClick={handleCtaInitiation}
                 className="w-full py-3.5 px-4 bg-indigo-600 text-white hover:bg-slate-900 text-xs font-bold rounded-2xl transition-all shadow-md shadow-indigo-200/30 flex items-center justify-center gap-2 group active:scale-[0.98] cursor-pointer"
               >
-                Launch Builder (Free)
+                {t('landing.launchBuilder', 'Launch Builder (Free)')}
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
