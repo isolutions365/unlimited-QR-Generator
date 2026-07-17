@@ -1,0 +1,100 @@
+{
+  "en": {
+    "language": "English",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "ar": {
+    "language": "Arabic",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "ur": {
+    "language": "Urdu",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "de": {
+    "language": "German",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "fr": {
+    "language": "French",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "es": {
+    "language": "Spanish",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "pt": {
+    "language": "Portuguese",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "it": {
+    "language": "Italian",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "tr": {
+    "language": "Turkish",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "id": {
+    "language": "Indonesian",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "hi": {
+    "language": "Hindi",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "zh": {
+    "language": "Chinese",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "ja": {
+    "language": "Japanese",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  },
+  "ko": {
+    "language": "Korean",
+    "totalKeys": 3039,
+    "missingKeysCount": 0,
+    "emptyKeysCount": 0,
+    "coveragePercent": "100.00%"
+  }
+}

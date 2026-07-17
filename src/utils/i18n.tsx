@@ -3,9 +3,39 @@ import { Locale, SUPPORTED_LOCALES, extractLocaleAndPath, isRtlLocale } from './
 import { formatICU, ICUValues } from './icuFormatter';
 import * as formatters from './localeFormatter';
 import { EXPECTED_KEYS, validateLocaleDictionary, LocaleReport, generateFullReport, ValidationReport } from './i18nValidator';
-import dataJson from '../locales/data.json';
+import en from '../locales/en.json';
+import ar from '../locales/ar.json';
+import ur from '../locales/ur.json';
+import de from '../locales/de.json';
+import fr from '../locales/fr.json';
+import es from '../locales/es.json';
+import pt from '../locales/pt.json';
+import it from '../locales/it.json';
+import tr from '../locales/tr.json';
+import id from '../locales/id.json';
+import hi from '../locales/hi.json';
+import zh from '../locales/zh.json';
+import ja from '../locales/ja.json';
+import ko from '../locales/ko.json';
 
-const enDictionary = (dataJson as any).translations?.en || {};
+const translations: Record<string, Record<string, string>> = {
+  en,
+  ar,
+  ur,
+  de,
+  fr,
+  es,
+  pt,
+  it,
+  tr,
+  id,
+  hi,
+  zh,
+  ja,
+  ko
+};
+
+const enDictionary = en;
 
 // Type-safe translation keys derived from expected keys
 export type TKey = typeof EXPECTED_KEYS[number] | (string & {});
@@ -122,9 +152,7 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 // In-memory cache for loaded translation dictionaries
-const dictionaryCache: Record<string, Record<string, string>> = (dataJson as any).translations || {
-  en: {}, // English falls back directly to the in-code default text
-};
+const dictionaryCache: Record<string, Record<string, string>> = translations;
 
 // Tracks keys invoked by components during runtime
 const runtimeKeySet = new Set<string>();
@@ -169,7 +197,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   // Synchronously load translation dictionary when locale changes
   useEffect(() => {
     setIsLoading(true);
-    const dict = (dataJson as any).translations?.[locale] || {};
+    const dict = translations[locale] || {};
     setDictionary(dict);
     setIsLoading(false);
   }, [locale]);
@@ -241,10 +269,10 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     formatters.getRelativeTimeString(date, locale);
 
   /**
-   * Loads all supported dictionaries directly from the static data.json source.
+   * Loads all supported dictionaries directly from individual imports.
    */
   const loadAllDictionariesForAnalysis = async (): Promise<Record<Locale, Record<string, string>>> => {
-    return (dataJson as any).translations || {};
+    return translations as Record<Locale, Record<string, string>>;
   };
 
   /**
