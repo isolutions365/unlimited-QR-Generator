@@ -65,7 +65,7 @@ export default function LanguageSelector({ currentLocale, onSelect }: LanguageSe
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className={`absolute ${isRtl ? 'left-0' : 'right-0'} top-full mt-2 w-72 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden`}
+            className="absolute right-0 top-full mt-2 w-72 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden"
           >
             <div className="p-2 border-b border-slate-100">
               <div className="relative">

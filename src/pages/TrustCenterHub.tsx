@@ -1157,7 +1157,7 @@ export default function TrustCenterHub({
                 >
                   {trustPages.map(page => (
                     <option key={page.slug} value={page.slug}>
-                      {t('trust.pageBadge.' + page.slug, page.badge).replace('ABOUT THE ', '')} — {t('trust.pageTitle.' + page.slug, page.title).split(':')[0]}
+                      {String(t('trust.pageBadge.' + page.slug, page.badge)).replace('ABOUT THE ', '')} — {String(t('trust.pageTitle.' + page.slug, page.title)).split(':')[0]}
                     </option>
                   ))}
                 </select>

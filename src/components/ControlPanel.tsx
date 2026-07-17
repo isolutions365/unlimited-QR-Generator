@@ -176,7 +176,7 @@ export default function ControlPanel({ currentProject,
 
     const newDesign = { ...design };
 
-    const hasLogo = !!newDesign.logoUrl && newDesign.logoUrl.trim() !== '';
+    const hasLogo = !!newDesign.logoUrl && ((val) => (val || '').trim())(newDesign.logoUrl) !== '';
     const logoScale = newDesign.logoScale ?? 0.18;
     const contentLength = content ? content.length : 0;
 
@@ -245,11 +245,11 @@ export default function ControlPanel({ currentProject,
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getUrlError = (url: string): { type: 'error' | 'warning' | 'info'; message: string; action?: () => void } | null => {
-    if (!url || !url.trim()) {
+    if (!url || !((val) => (val || '').trim())(url)) {
       return { type: 'info', message: t('control.err.enterWebLink', 'Enter the destination web link above. A valid link is required to generate the QR code.') };
     }
 
-    const trimmed = url.trim();
+    const trimmed = ((val) => (val || '').trim())(url);
     
     // Check for spaces
     if (/\s/.test(trimmed)) {
@@ -647,7 +647,7 @@ export default function ControlPanel({ currentProject,
                 }
                 return '';
               })()}
-              onChange={e => onChange({ ...localProject, content: `tel:${e.target.value.trim()}` }, true)}
+              onChange={e => onChange({ ...localProject, content: `tel:${((val) => (val || '').trim())(e.target.value)}` }, true)}
             />
             <span className="text-[10px] text-slate-600 block font-sans">{t('control.phoneDesc', 'Encodes standard cellular dialing protocols automatically.')}</span>
           </div>
@@ -673,7 +673,7 @@ export default function ControlPanel({ currentProject,
                   return '';
                 })()}
                 onChange={e => {
-                  const phone = e.target.value.trim();
+                  const phone = ((val) => (val || '').trim())(e.target.value);
                   let existingMsg = '';
                   if (localProject.content?.startsWith('sms:')) {
                     const queryIdx = localProject.content.indexOf('?body=');
@@ -789,7 +789,7 @@ export default function ControlPanel({ currentProject,
                   return content;
                 })()}
                 onChange={e => {
-                  const handle = e.target.value.trim().replace(/^@/, '');
+                  const handle = (((val) => (val || '').trim())(e.target.value)).replace(/^@/, '');
                   const currentPrefix = (() => {
                     const content = localProject.content || '';
                     if (content.includes('instagram.com/')) return 'https://instagram.com/';
@@ -871,7 +871,7 @@ export default function ControlPanel({ currentProject,
                   return content;
                 })()}
                 onChange={e => {
-                  const addr = e.target.value.trim();
+                  const addr = ((val) => (val || '').trim())(e.target.value);
                   const currentPrefix = (() => {
                     const content = localProject.content || '';
                     if (content.startsWith('bitcoin:')) return 'bitcoin:';
@@ -929,7 +929,7 @@ export default function ControlPanel({ currentProject,
                     return '';
                   })()}
                   onChange={e => {
-                    const lat = e.target.value.trim();
+                    const lat = ((val) => (val || '').trim())(e.target.value);
                     const existingLng = (() => {
                       if (localProject.content?.startsWith('geo:')) {
                         return localProject.content.substring(4).split(',')[1] || '';
@@ -955,7 +955,7 @@ export default function ControlPanel({ currentProject,
                     return '';
                   })()}
                   onChange={e => {
-                    const lng = e.target.value.trim();
+                    const lng = ((val) => (val || '').trim())(e.target.value);
                     const existingLat = (() => {
                       if (localProject.content?.startsWith('geo:')) {
                         return localProject.content.substring(4).split(',')[0] || '';
@@ -2281,14 +2281,14 @@ export default function ControlPanel({ currentProject,
           {(() => {
             const DEFAULT_SUGGESTIONS = ['Client A', 'Marketing', 'Personal'];
             const existing = (projects || [])
-              .map(p => p.category?.trim())
+              .map(p => ((val) => (val || '').trim())(p.category))
               .filter(Boolean) as string[];
             const suggestions = Array.from(new Set([...DEFAULT_SUGGESTIONS, ...existing])).slice(0, 8);
 
             return suggestions.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {suggestions.map((sug) => {
-                  const isSelected = localProject.category?.trim().toLowerCase() === sug.trim().toLowerCase();
+                  const isSelected = (((val) => (val || '').trim())(localProject.category ?? "")).toLowerCase() === (((val) => (val || '').trim())(sug ?? "")).toLowerCase();
                   return (
                     <button
                       key={sug}

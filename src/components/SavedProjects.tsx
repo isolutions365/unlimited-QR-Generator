@@ -66,7 +66,7 @@ export default function SavedProjects({ projects,
   };
 
   const handleCreateFolder = (name: string) => {
-    const trimmed = name.trim();
+    const trimmed = ((val) => (val || '').trim())(name);
     if (!trimmed) return;
     if (customFolders.some(f => f.toLowerCase() === trimmed.toLowerCase())) {
       return;
@@ -78,7 +78,7 @@ export default function SavedProjects({ projects,
 
   const handleCreateFolderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newFolderName.trim()) {
+    if (((val) => (val || '').trim())(newFolderName)) {
       handleCreateFolder(newFolderName);
       setNewFolderName('');
       setIsCreatingFolder(false);
@@ -105,7 +105,7 @@ export default function SavedProjects({ projects,
     const derivedCats = Array.from(
       new Set(
         (projects || [])
-          .map(p => p.category?.trim())
+          .map(p => ((val) => (val || '').trim())(p.category))
           .filter(Boolean) as string[]
       )
     );
@@ -118,9 +118,9 @@ export default function SavedProjects({ projects,
   const filteredProjects = React.useMemo(() => {
     if (!activeCategory) return (projects || []);
     if (activeCategory === 'uncategorized') {
-      return (projects || []).filter(p => !p.category || !p.category.trim());
+      return (projects || []).filter(p => !p.category || !((val) => (val || '').trim())(p.category));
     }
-    return (projects || []).filter(p => p.category?.trim().toLowerCase() === activeCategory.toLowerCase());
+    return (projects || []).filter(p => (((val) => (val || '').trim())(p.category ?? "")).toLowerCase() === (((val) => (val || '').trim())(activeCategory ?? "")).toLowerCase());
   }, [projects, activeCategory]);
 
   return (
@@ -207,7 +207,7 @@ export default function SavedProjects({ projects,
               </button>
 
               {allCategories.map(cat => {
-                const count = projects.filter(p => p.category?.trim().toLowerCase() === cat.toLowerCase()).length;
+                const count = projects.filter(p => (((val) => (val || '').trim())(p.category ?? "")).toLowerCase() === (((val) => (val || '').trim())(cat ?? "")).toLowerCase()).length;
                 const isCustom = customFolders.some(f => f.toLowerCase() === cat.toLowerCase());
                 return (
                   <div
@@ -245,7 +245,7 @@ export default function SavedProjects({ projects,
                 );
               })}
 
-              {projects.some(p => !p.category || !p.category.trim()) && (
+              {projects.some(p => !p.category || !((val) => (val || '').trim())(p.category)) && (
                 <button
                   type="button"
                   onClick={() => setActiveCategory('uncategorized')}
@@ -255,7 +255,7 @@ export default function SavedProjects({ projects,
                       : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  {t('saved.uncategorizedLabel', 'Uncategorized')} ({projects.filter(p => !p.category || !p.category.trim()).length})
+                  {t('saved.uncategorizedLabel', 'Uncategorized')} ({projects.filter(p => !p.category || !((val) => (val || '').trim())(p.category)).length})
                 </button>
               )}
             </div>
@@ -354,9 +354,9 @@ export default function SavedProjects({ projects,
                               type="button"
                               onClick={() => {
                                 const newFolder = prompt('Enter a name for the new folder:');
-                                if (newFolder && newFolder.trim()) {
-                                  handleCreateFolder(newFolder.trim());
-                                  handleMoveProject(proj.id, newFolder.trim());
+                                if (newFolder && ((val) => (val || '').trim())(newFolder)) {
+                                  handleCreateFolder(((val) => (val || '').trim())(newFolder));
+                                  handleMoveProject(proj.id, ((val) => (val || '').trim())(newFolder));
                                 }
                                 setMovingProjectId(null);
                               }}

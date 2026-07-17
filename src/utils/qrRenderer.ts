@@ -77,7 +77,7 @@ export async function renderStyledQR(
     if (options.frameStyle === 'join-wifi') label = 'JOIN WIFI';
     if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
 
-    if (options.frameText && options.frameText.trim() !== '') {
+    if (options.frameText && ((val) => (val || '').trim())(options.frameText) !== '') {
       label = options.frameText;
     }
     label = label.toUpperCase();
@@ -471,7 +471,7 @@ export function generateStyledSVG(
     if (options.frameStyle === 'join-wifi') label = 'JOIN WIFI';
     if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
 
-    if (options.frameText && options.frameText.trim() !== '') {
+    if (options.frameText && ((val) => (val || '').trim())(options.frameText) !== '') {
       label = options.frameText;
     }
     label = label.toUpperCase();

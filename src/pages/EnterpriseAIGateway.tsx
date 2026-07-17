@@ -129,7 +129,7 @@ export default function EnterpriseAIGateway({
   // Add Workflow
   const handleAddWorkflow = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newWorkflowName.trim()) return;
+    if (!((val) => (val || '').trim())(newWorkflowName)) return;
     const newW = {
       id: `w_${Date.now()}`,
       name: newWorkflowName,
@@ -154,7 +154,7 @@ export default function EnterpriseAIGateway({
   // Generate API Key
   const handleCreateApiKey = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newKeyLabel.trim()) return;
+    if (!((val) => (val || '').trim())(newKeyLabel)) return;
     const newK = apiGateway.generateNewKey(newKeyLabel);
     setApiKeys([...apiKeys, newK]);
     setNewKeyLabel('');

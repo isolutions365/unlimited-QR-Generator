@@ -1,5 +1,5 @@
-import { faqData, FAQItem, faqCategories } from '../data/faqData';
-import { blogArticles, BlogArticle, blogCategories } from '../data/blogData';
+import { getFaqData, FAQItem, faqCategories } from '../data/faqData';
+import { getBlogArticles, BlogArticle, blogCategories } from '../data/blogData';
 
 export type Locale = 'en' | 'ar' | 'ur' | 'es' | 'fr' | 'de' | 'pt' | 'it' | 'tr' | 'id' | 'hi' | 'ja' | 'ko' | 'zh';
 
@@ -630,52 +630,52 @@ export const presetToolsTranslations: Record<Locale, { name: string; desc: strin
     { name: 'पीडीएफ क्यूआर', slug: 'pdf-qr-generator', desc: 'रेस्तरां मेनू और गाइड लोड करने वाले संपर्क रहित गतिशील दस्तावेज़।' },
     { name: 'वाईफाई क्यूआर', slug: 'wifi-qr-generator', desc: 'बिना पासवर्ड टाइप किए मेहमानों को स्थानीय वायरलेस राउटर से जोड़ें।' },
     { name: 'vCard क्यूआर', slug: 'vcard-qr-generator', desc: 'स्कैनर के साथ तुरंत डिजिटल संपर्क रिकॉर्ड साझा करें।' },
-    { name: 'ईमेल क्यूआर', slug: 'email-qr-generator', desc: 'अनुकूलित संदेश मुख्य भाग पाठ के साथ प्राप्तकर्ता पते पहले से सेट करें।' },
-    { name: 'एसएमएस क्यूआर', slug: 'sms-qr-generator', desc: 'पहले से निर्धारित फोन नंबरों के साथ सीधे टेक्स्ट संदेश लिखें।' },
-    { name: 'व्हाट्सएप क्यूआर', slug: 'whatsapp-qr-generator', desc: 'समर्थन कर्मचारियों के साथ त्वरित अनुकूलित व्हाट्सएप चैट शुरू करें।' },
-    { name: 'सोशल क्यूआर', slug: 'instagram-qr-generator', desc: 'इंस्टाग्राम, फेसबुक और यूट्यूब के लिए अपने बायो लिंक को एक साथ लाएं।' },
-    { name: 'टेक्स्ट क्यूआर', slug: 'text-qr', desc: 'प्लेन टेक्स्ट, ऑफलाइन लॉग और गुप्त कुंजी सुरक्षित रूप से संग्रहीत करें।' },
-    { name: 'ऐप स्टोर क्यूआर', slug: 'app-store-qr', desc: 'आगंतुकों को सीधे ऐप स्टोर / प्ले स्टोर डाउनलोड पर निर्देशित करें।' },
+    { name: 'ईमेल क्यूआर', slug: 'email-qr-generator', desc: 'कस्टम संदेश के साथ प्राप्तकर्ता का ईमेल पता पहले से सेट करें।' },
+    { name: 'एसएमएस क्यूआर', slug: 'sms-qr-generator', desc: 'पहले से निर्धारित फ़ोन नंबर के साथ सीधे टेक्स्ट संदेश लिखें।' },
+    { name: 'व्हाट्सएप क्यूआर', slug: 'whatsapp-qr-generator', desc: 'सहायता टीम के साथ तुरंत अनुकूलित चैट शुरू करें।' },
+    { name: 'सोशल क्यूआर', slug: 'instagram-qr-generator', desc: 'इंस्टाग्राम, फेसबुक और यूट्यूब बायो लिंक को एक साथ जोड़ें।' },
+    { name: 'टेक्स्ट क्यूआर', slug: 'text-qr', desc: 'सामान्य टेक्स्ट, ऑफ़लाइन लॉग और सीक्रेट कीज़ स्टोर करें।' },
+    { name: 'ऐप स्टोर क्यूआर', slug: 'app-store-qr', desc: 'विज़िटर्स को सीधे ऐप स्टोर या प्ले स्टोर डाउनलोड पर भेजें।' }
   ],
   ja: [
-    { name: 'URL QR', slug: 'url-qr-generator', desc: 'リアルタイムで追跡可能な短縮リンクを使用した安全なウェブ転送。' },
-    { name: 'PDF QR', slug: 'pdf-qr-generator', desc: 'レストランのメニューやガイドを読み込む非接触型ダイナミックドキュメント。' },
-    { name: 'Wi-Fi QR', slug: 'wifi-qr-generator', desc: 'パスワード入力不要でゲストをローカルWi-Fiルーターに自動接続。' },
-    { name: 'vCard QR', slug: 'vcard-qr-generator', desc: '詳細なデジタル連絡先レコードをスキャナーに即座に共有。' },
-    { name: 'メール QR', slug: 'email-qr-generator', desc: '件名や本文を事前設定した宛先メールを構成。' },
-    { name: 'SMS QR', slug: 'sms-qr-generator', desc: '事前割り当てされた電話番号へ直接送信するテキストメッセージを作成。' },
-    { name: 'WhatsApp QR', slug: 'whatsapp-qr-generator', desc: 'サポートスタッフとのカスタマイズされた即時チャットを起動。' },
-    { name: 'ソーシャル QR', slug: 'instagram-qr-generator', desc: 'Instagram、Facebook、Youtubeのリンクを1つに集約。' },
-    { name: 'テキスト QR', slug: 'text-qr', desc: 'プレーンテキスト、オフラインログ、秘密キーマトリックスを格納。' },
-    { name: 'アプリストア QR', slug: 'app-store-qr', desc: '訪問者をApp Store / Play Storeのダウンロード画面へ直接誘導。' },
+    { name: 'URL QR', slug: 'url-qr-generator', desc: '追跡可能な短縮リンクによる安全なWebリダイレクト。' },
+    { name: 'PDF QR', slug: 'pdf-qr-generator', desc: 'メニューやガイドを読み込む非接触型ダイナミックドキュメント。' },
+    { name: 'WiFi QR', slug: 'wifi-qr-generator', desc: 'パスワード入力なしでローカルルーターに自動接続。' },
+    { name: 'vCard QR', slug: 'vcard-qr-generator', desc: '豊富なデジタル連絡先レコードをスキャナーに即座に共有。' },
+    { name: 'メール QR', slug: 'email-qr-generator', desc: '件名や本文をカスタマイズしたメールアドレス의 사전 설정。' },
+    { name: 'SMS QR', slug: 'sms-qr-generator', desc: '指定された電話番号への直接テキストメッセージ作成。' },
+    { name: 'WhatsApp QR', slug: 'whatsapp-qr-generator', desc: 'サポートスタッフとのカスタマイズされたチャットを即座に開始。' },
+    { name: 'ソーシャル QR', slug: 'instagram-qr-generator', desc: 'Instagram、Facebook、Youtubeのリンクを1つに統合。' },
+    { name: 'テキスト QR', slug: 'text-qr', desc: 'プレーンテキスト、オフラインログ、秘密鍵マトリックスを保存。' },
+    { name: 'アプリストア QR', slug: 'app-store-qr', desc: 'App Store / Play Storeのダウンロードページへ直接誘導。' }
   ],
   ko: [
-    { name: 'URL QR', slug: 'url-qr-generator', desc: '실시간 추적이 가능한 단축 링크를 이용한 안전한 웹 리다이렉트.' },
-    { name: 'PDF QR', slug: 'pdf-qr-generator', desc: '식당 메뉴판 및 가이드를 제공하는 비접촉식 동적 문서 연결.' },
-    { name: 'WiFi QR', slug: 'wifi-qr-generator', desc: '비밀번호를 입력하지 않고도 손님을 로컬 무선 공유기에 자동 연결.' },
-    { name: 'vCard QR', slug: 'vcard-qr-generator', desc: '풍부한 정보가 담긴 디지털 연락처를 스캐너에 즉시 공유.' },
-    { name: '이메일 QR', slug: 'email-qr-generator', desc: '메시지 본문 내용이 사전 설정된 수신 이메일 바로 쓰기.' },
-    { name: 'SMS QR', slug: 'sms-qr-generator', desc: '지정된 전화번호로 보낼 다이렉트 문자 메시지 작성.' },
-    { name: 'WhatsApp QR', slug: 'whatsapp-qr-generator', desc: '지원 상담원과 즉시 연결되는 맞춤형 왓츠앱 채팅 시작.' },
-    { name: '소셜 QR', slug: 'instagram-qr-generator', desc: '인스타그램, 페이스북, 유튜브 등의 바이오 링크를 한곳에 집약.' },
-    { name: '텍스트 QR', slug: 'text-qr', desc: '일반 텍스트, 오프라인 로그 및 비밀 키 행렬 저장.' },
-    { name: '앱스토어 QR', slug: 'app-store-qr', desc: '방문자를 앱스토어 / 플레이스토어 다운로드 주소로 직접 안내.' },
+    { name: 'URL QR', slug: 'url-qr-generator', desc: '실시간 추적 가능한 단축 링크로 안전한 웹 리디렉션.' },
+    { name: 'PDF QR', slug: 'pdf-qr-generator', desc: '메뉴 및 가이드를 로드하는 비접촉식 다이내믹 문서.' },
+    { name: 'WiFi QR', slug: 'wifi-qr-generator', desc: '비밀번호 입력 없이 로컬 무선 공유기에 자동 연결.' },
+    { name: 'vCard QR', slug: 'vcard-qr-generator', desc: '풍부한 디지털 연락처 정보를 스캐너에 즉시 공유.' },
+    { name: '이메일 QR', slug: 'email-qr-generator', desc: '사용자 지정 본문 템플릿과 수신 이메일 주소 사전 구성.' },
+    { name: 'SMS QR', slug: 'sms-qr-generator', desc: '지정된 전화번호로 직접 전송할 텍스트 메시지 작성.' },
+    { name: 'WhatsApp QR', slug: 'whatsapp-qr-generator', desc: '고객 지원팀과 실시간 맞춤형 채팅 즉시 시작.' },
+    { name: '소셜 QR', slug: 'instagram-qr-generator', desc: '인스타그램, 페이스북, 유튜브 프로필 링크 통합.' },
+    { name: '텍스트 QR', slug: 'text-qr', desc: '일반 텍스트, 오프라인 로그 및 비밀 키 매트릭스 저장.' },
+    { name: '앱 스토어 QR', slug: 'app-store-qr', desc: '방문자를 앱 스토어 / 플레이 스토어 다운로드로 직접 유도.' }
   ],
   zh: [
-    { name: '网址二维码', slug: 'url-qr-generator', desc: '安全网页跳转，配有实时可追踪的缩短链接。' },
-    { name: 'PDF二维码', slug: 'pdf-qr-generator', desc: '非接触式动态文档，可加载餐厅菜单与操作指南。' },
-    { name: 'WiFi二维码', slug: 'wifi-qr-generator', desc: '免输密码，自动配对访客连接至本地无线路由器。' },
-    { name: 'vCard二维码', slug: 'vcard-qr-generator', desc: '向扫描用户立即分享丰富的数字化联系人档案。' },
-    { name: '电子邮件二维码', slug: 'email-qr-generator', desc: '预先配置收件人地址与自定义的正文模板。' },
-    { name: '短信二维码', slug: 'sms-qr-generator', desc: '使用预设的电话号码编写直接发送的文字短信。' },
-    { name: 'WhatsApp二维码', slug: 'whatsapp-qr-generator', desc: '立即触发与服务团队的自定义 WhatsApp 实时对话。' },
-    { name: '社交二维码', slug: 'instagram-qr-generator', desc: '整合 Instagram、Facebook 和 Youtube 的多链主页。' },
-    { name: '文本二维码', slug: 'text-qr', desc: '存储原生文本键、离线可复制日志和秘钥矩阵。' },
-    { name: '应用商店二维码', slug: 'app-store-qr', desc: '引导访客直接访问苹果 App Store 或安卓应用商店下载页面。' },
-  ],
+    { name: 'URL 二维码', slug: 'url-qr-generator', desc: '安全网页重定向，配有实时可追踪的短链接。' },
+    { name: 'PDF 二维码', slug: 'pdf-qr-generator', desc: '无接触动态文档，轻松加载餐厅菜单与指南。' },
+    { name: 'WiFi 二维码', slug: 'wifi-qr-generator', desc: '无需输入密码，即可自动将访客连接至本地路由器。' },
+    { name: 'vCard 二维码', slug: 'vcard-qr-generator', desc: '立即向扫描仪分享丰富的电子联系人名片。' },
+    { name: '电子邮件 二维码', slug: 'email-qr-generator', desc: '预先配置收件人地址与自定义的正文模板。' },
+    { name: '短信 二维码', slug: 'sms-qr-generator', desc: '编写带有预设电话号码的直接文本短信。' },
+    { name: 'WhatsApp 二维码', slug: 'whatsapp-qr-generator', desc: '立即与客服人员启动自定义的即时聊天。' },
+    { name: '社交 二维码', slug: 'instagram-qr-generator', desc: '将您的 Instagram、Facebook 和 Youtube 链接合并。' },
+    { name: '文本 二维码', slug: 'text-qr', desc: '存储纯文本、离线日志及密钥矩阵。' },
+    { name: '应用商店 二维码', slug: 'app-store-qr', desc: '引导访客直接访问 App Store / Play Store 下载页面。' }
+  ]
 };
 
-// FAQ Translations Mapping
+// FAQ Category Translations Mapping
 export const faqCategoryLabels: Record<Locale, Record<string, string>> = {
   en: {
     all: "All Questions",
@@ -686,9 +686,9 @@ export const faqCategoryLabels: Record<Locale, Record<string, string>> = {
     business: "Business & Commercial"
   },
   ar: {
-    all: "جميع الأسئلة",
-    general: "المفاهيم العامة والأساسية",
-    creation: "إنشاء الـ QR",
+    all: "كل الأسئلة",
+    general: "العامة والأساسيات",
+    creation: "إنشاء QR",
     customization: "التخصيص والتصميم",
     security: "الأمان والخصوصية",
     business: "الأعمال والتجارة"
@@ -696,23 +696,23 @@ export const faqCategoryLabels: Record<Locale, Record<string, string>> = {
   ur: {
     all: "تمام سوالات",
     general: "عام اور بنیادی باتیں",
-    creation: "QR کی تخلیق",
+    creation: "QR تخلیق",
     customization: "تخصیص اور اسٹائلنگ",
     security: "سیکیورٹی اور رازداری",
     business: "کاروبار اور تجارتی"
   },
   es: {
     all: "Todas las preguntas",
-    general: "Conceptos Básicos",
+    general: "General y básico",
     creation: "Creación de QR",
-    customization: "Personalización y Estilo",
-    security: "Seguridad y Privacidad",
-    business: "Comercial y Negocios"
+    customization: "Personalización y estilo",
+    security: "Seguridad y privacidad",
+    business: "Negocios y comercial"
   },
   fr: {
     all: "Toutes les questions",
-    general: "Généralités & Bases",
-    creation: "Création de QR",
+    general: "Général & Essentiels",
+    creation: "Création QR",
     customization: "Personnalisation & Style",
     security: "Sécurité & Confidentialité",
     business: "Affaires & Commercial"
@@ -735,7 +735,7 @@ export const faqCategoryLabels: Record<Locale, Record<string, string>> = {
   },
   it: {
     all: "Tutte le domande",
-    general: "Generali & Nozioni di base",
+    general: "Generale & Base",
     creation: "Creazione QR",
     customization: "Personalizzazione & Stile",
     security: "Sicurezza & Privacy",
@@ -743,11 +743,11 @@ export const faqCategoryLabels: Record<Locale, Record<string, string>> = {
   },
   tr: {
     all: "Tüm Sorular",
-    general: "Genel ve Temel Bilgiler",
+    general: "Genel & Temeller",
     creation: "QR Oluşturma",
-    customization: "Özelleştirme ve Tasarım",
-    security: "Güvenlik ve Gizlilik",
-    business: "İş ve Ticari"
+    customization: "Özelleştirme & Stil",
+    security: "Güvenlik & Gizlilik",
+    business: "İş & Ticari"
   },
   id: {
     all: "Semua Pertanyaan",
@@ -767,343 +767,39 @@ export const faqCategoryLabels: Record<Locale, Record<string, string>> = {
   },
   ja: {
     all: "すべての質問",
-    general: "一般的な基礎知識",
-    creation: "QRコード作成",
-    customization: "カスタマイズとデザイン",
+    general: "一般と基本",
+    creation: "QR作成",
+    customization: "カスタマイズとスタイル",
     security: "セキュリティとプライバシー",
-    business: "ビジネスと商用利用"
+    business: "ビジネスと商業"
   },
   ko: {
     all: "모든 질문",
-    general: "일반 및 기본 정보",
-    creation: "QR 코드 생성",
-    customization: "맞춤 설정 및 디자인",
-    security: "보안 및 개인정보 보호",
-    business: "비즈니스 및 상업용"
+    general: "일반 및 기본",
+    creation: "QR 생성",
+    customization: "맞춤 설정 및 스타일",
+    security: "보안 및 개인정보",
+    business: "비즈니스 및 상업"
   },
   zh: {
     all: "所有问题",
     general: "通用与基础",
-    creation: "二维码创建",
-    customization: "自定义与样式",
+    creation: "二维码生成",
+    customization: "定制与样式",
     security: "安全与隐私",
-    business: "商业与应用"
-  }
-};
-
-const faqTranslationsEs: Record<string, { question: string; answer: string }> = {
-  "what-is-qr-code": {
-    question: "¿Qué es un código QR?",
-    answer: "Un código QR (código de respuesta rápida) es un código de barras matricial bidimensional diseñado originalmente en 1994 para la industria de la automotriz en Japón. Consiste en cuadrados negros dispuestos en una cuadrícula sobre un fondo blanco, legibles por cámaras, teléfonos inteligentes y escáneres dedicados. Almacenan significativamente más datos que los códigos de barras de una dimensión estándar, incluidos enlaces, texto plano, información de contacto, credenciales de redes inalámbricas y coordenadas."
-  },
-  "how-do-qr-codes-work": {
-    question: "¿Cómo funcionan los códigos QR?",
-    answer: "Los códigos QR funcionan traduciendo información digital en números binarios representados por patrones de puntos claros y oscuros. Tres grandes cuadrados de posicionamiento en las esquinas ayudan a la cámara a detectar la rotación y el ángulo de lectura. Además, cuentan con algoritmos de corrección de errores matemáticos integrados (como Reed-Solomon), lo que permite que sigan siendo completamente utilizables incluso si se ensucian, dañan, rayan o cubren parcialmente."
-  },
-  "is-unlimited-qr-free": {
-    question: "¿Es gratis el Generador de QR Ilimitado?",
-    answer: "Sí, Unlimited QR Generator es 100% gratuito. No hay tarifas de suscripción mensuales, compras en la aplicación ni muros de pago premium requeridos para diseñar, descargar o guardar códigos QR vectoriales de alta calidad en su computadora o móvil."
-  },
-  "can-i-create-unlimited": {
-    question: "¿Puedo crear códigos QR ilimitados?",
-    answer: "¡Absolutamente! No hay límites en la cantidad de códigos QR estáticos o dinámicos que puede crear en nuestra plataforma. Puede diseñar tantos códigos como sea necesario para uso personal o comercial. Todo el motor vectorial compila localmente en su propio navegador en tiempo real."
-  },
-  "do-qr-codes-expire": {
-    question: "¿Caducan los códigos QR?",
-    answer: "No, los códigos QR estáticos nunca caducan. Debido a que codifican los datos (como una URL de destino, una contraseña de WiFi o un vCard) directamente en la cuadrícula visible, seguirán funcionando para siempre mientras los datos de destino permanezcan sin cambios. Los códigos QR dinámicos en nuestra plataforma también permanecen activos a menos que decida eliminarlos manualmente desde su panel."
-  },
-  "can-i-customize-colors": {
-    question: "¿Puedo personalizar los colores del código QR?",
-    answer: "Sí, nuestro diseñador interactivo le permite modificar por completo los colores de primer plano y de fondo. Puede configurar colores sólidos, degradados lineales o radiales suaves con transiciones de color, y estilos de esquinas de ojos personalizados. Le sugerimos mantener un alto contraste con el fondo para que cualquier cámara física lo escanee de inmediato."
-  },
-  "can-i-add-logos": {
-    question: "¿Puedo agregar logotipos a mis códigos QR?",
-    answer: "Sí, puede arrastrar y soltar cualquier logotipo de marca o cargar imágenes personalizadas en formato PNG o SVG para incrustarlo en el centro exacto de su código QR. La plataforma aplica niveles robustos de corrección de errores para asegurar que la lectura del escáner ignore la sección del logotipo central y recupere todos los datos sin problemas."
-  },
-  "are-qr-codes-secure": {
-    question: "¿Son seguros los códigos QR?",
-    answer: "En sí mismos, los códigos de barras bidimensionales son contenedores pasivos de datos y no pueden albergar virus o software malicioso de forma activa. Sin embargo, pueden dirigir a los usuarios a sitios web con software fraudulento o descargas maliciosas. Siempre verifique la URL mostrada por su aplicación de escáner de cámara preferida antes de descargar archivos o introducir información confidencial."
-  },
-  "can-businesses-use-them": {
-    question: "¿Pueden las empresas usarlos comercialmente?",
-    answer: "Sí, la tecnología de códigos QR es de dominio público, lo que significa que cualquier empresa o particular puede usarlos globalmente sin pagar regalías o licencias comerciales. Son soluciones perfectas para dirigir la publicidad tradicional a experiencias web dinámicas e interactivas."
-  },
-  "wifi-qr-codes": {
-    question: "¿Puedo crear códigos QR para WiFi?",
-    answer: "Sí, ofrecemos un generador dedicado para redes WiFi. Puede ingresar el nombre exacto de la red (SSID), la clave de acceso de su enrutador inalámbrico y seleccionar el protocolo de encriptación estándar (WPA/WPA2, WEP o Abierto). Al escanear el código en dispositivos móviles, se mostrará un aviso del sistema para conectarse a la red en un solo toque."
-  },
-  "vcard-qr-codes": {
-    question: "¿Puedo crear códigos de vCard?",
-    answer: "Sí, puede ingresar nombres de contacto, números de teléfono, correos electrónicos, direcciones y enlaces comerciales para generar archivos de contacto vCard completos. Al escanearse, sugerirá inmediatamente agregar toda la información directamente a la agenda del dispositivo físico, evitando errores ortográficos de entrada."
-  },
-  "social-media-qr": {
-    question: "¿Puedo crear códigos de redes sociales?",
-    answer: "¡Sí! Nuestra sección de páginas de biografía le permite unificar múltiples enlaces a Instagram, YouTube, Facebook, TikTok y X en una hermosa página integrada, para simplificar los embudos de conversión y maximizar las métricas sociales corporativas."
-  },
-  "can-qr-be-printed": {
-    question: "¿Se pueden imprimir los códigos QR?",
-    answer: "Por supuesto. De hecho, se imprimen comúnmente en folletos, vallas publicitarias, tarjetas de presentación, menús de restaurantes y etiquetas de empaque. Recomendamos descargar el archivo en formato SVG vectorial para escalar su tamaño indefinidamente sin perder resolución en imprentas masivas."
-  },
-  "why-not-scanning": {
-    question: "¿Por qué mi código QR no se escanea?",
-    answer: "Los problemas más comunes son: bajo contraste de color entre el primer plano y el fondo (por ejemplo, amarillo sobre blanco); modificaciones de diseño demasiado agresivas que alteran los patrones oculares del lector; impresiones borrosas con tinta corrida o tamaños inferiores a 2 cm. Asegúrese de que la relación de contraste sea óptima antes de imprimir."
-  },
-  "formats-supported": {
-    question: "¿Qué formatos de archivo se admiten?",
-    answer: "Nuestra estación admite la exportación en PNG de alta resolución para usos cotidianos en web y SVG vectorial para impresiones a gran escala en pancartas y materiales corporativos."
-  },
-  "no-account-needed": {
-    question: "¿Necesito registrarme para obtener una cuenta?",
-    answer: "No, el generador funciona en su totalidad de forma abierta y totalmente local en su navegador web. El registro de cuenta le ofrece funciones de guardado en la nube para sus plantillas preferidas y acceso completo a los reportes históricos del panel de análisis."
-  },
-  "are-qr-stored": {
-    question: "¿Se almacenan mis códigos QR en el servidor?",
-    answer: "Los códigos estáticos se evalúan de forma puramente local en el espacio aislado de su navegador sandbox y nunca se envían a nuestros servidores web. Los códigos dinámicos con estadísticas se registran de forma segura en bases de datosFirestore cifradas en la nube para facilitar flujos analíticos en tiempo real."
-  },
-  "how-to-contact-support": {
-    question: "¿Cómo contacto al soporte técnico?",
-    answer: "Puede enviar sus preguntas directamente a admin@isolutionsico.com o completar el práctico formulario interactivo en la sección de contacto. El equipo busca resolver todas las inquietudes técnicas dentro de las 24 horas hábiles posteriores a su recepción."
-  },
-  "can-i-change-static-qr": {
-    question: "¿Puede modificarse el enlace de un QR estático impreso?",
-    answer: "No, los códigos estáticos hornean la información en el patrón visual, lo que requiere volver a imprimir el código si la URL de destino cambia. Para actualizaciones flexibles sin reimpresión, use nuestros códigos dinámicos en su lugar."
-  },
-  "what-is-error-correction": {
-    question: "¿Qué es la corrección de errores de códigos QR?",
-    answer: "La corrección de errores integrada le permite al código seguir siendo elegible para la cámara incluso si se ensucia o se rompe parcialmente. Se admiten cuatro niveles generales: Bajo (L) de 7%, Medio (M) de 15%, Cuartil (Q) de 25% y Alto (H) de 30% (perfecto para soportar logotipos agregados)."
-  },
-  "best-size-for-printing": {
-    question: "¿Cuál es el tamaño ideal para impresión?",
-    answer: "El tamaño final depende de la distancia del escáner al objeto físico, manteniendo una relación promedio de 10:1 (un folleto a 1 metro de distancia debe usar al menos un código impreso de 10x10 cm). En general, mantenga un tamaño de al menos 2x2 cm."
-  },
-  "can-qr-record-gps": {
-    question: "¿Escanear un código QR puede recopilar mi GPS?",
-    answer: "No de forma automática, puesto que la lectura de la cámara no tiene privilegios de geolocalización propios sin consentimiento. Sin embargo, los códigos dinámicos estiman métricas agregadas aproximadas utilizando la dirección IP de la solicitud de redirección."
-  },
-  "how-many-characters": {
-    question: "¿Cuántos caracteres puede almacenar un código QR?",
-    answer: "Admite hasta 7,089 caracteres numéricos, 4,296 alfanuméricos o 2,953 bytes tradicionales. Cuantos más datos agregue, más denso será el patrón visual de la cuadrícula, por lo que sugerimos usar enlaces cortos en sus campañas."
-  },
-  "are-there-hidden-scans": {
-    question: "¿Existe un límite de escaneos para sus códigos?",
-    answer: "No, no hay límites de escaneo en Unlimited QR Generator. Los códigos se pueden escanear millones de veces sin interrupción de conexiones, redirecciones intermedias o tarifas de tráfico ocultas."
-  },
-  "do-qr-work-offline": {
-    question: "¿Funcionan los códigos QR sin conexión a Internet?",
-    answer: "Los códigos estáticos que almacenan contenido puramente fuera de línea (como WiFi, vCard, texto o SMS) se procesan instantáneamente en las apps de cámara nativas sin internet. Los códigos que enlazan a sitios web requerirán de conexión activa."
+    business: "商业与企业"
   }
 };
 
 export function getLocalizedFaq(locale: Locale): FAQItem[] {
-  if (locale === 'en') return faqData;
-  return faqData.map(item => {
-    const translation = faqTranslationsEs[item.id];
-    if (translation) {
-      return {
-        ...item,
-        question: translation.question,
-        answer: translation.answer
-      };
-    }
-    return item;
-  });
+  return getFaqData(locale);
 }
 
-// Blog Articles Translations
-const blogTranslationsEs: Record<string, {
-  title: string;
-  intro: string;
-  contentMarkdown: string;
-  relatedFAQs: { question: string; answer: string }[];
-  internalLinks: { label: string; url: string }[];
-}> = {
-  "what-is-qr-code-how-it-works": {
-    title: "¿Qué es un código QR y cómo funciona?",
-    intro: "Los códigos QR de respuesta rápida han pasado de ser sistemas especializados de seguimiento automotriz en los años 90 a convertirse en símbolos mundiales de conveniencia interactiva. Esta guía revela los algoritmos y la ciencia de los gráficos bidimensionales.",
-    contentMarkdown: `## Comprensión del estándar de matriz 2D
+export function getLocalizedBlog(locale: Locale): BlogArticle[] {
+  return getBlogArticles(locale);
+}
 
-A diferencia de los códigos de barras unidimensionales tradicionales que codifican números a lo largo de un solo eje de escaneo lineal, los códigos QR son **símbolos de matriz bidimensional**. Almacenan datos tanto en el eje horizontal como en el vertical, lo que les permite capturar hasta 300 veces más información que los códigos estándar.
-
-### Componentes visuales clave de un código QR
-
-Cuando observa un código QR de diseño personalizado, verá varios elementos lógicos que ayudan a la cámara a leerlo con precisión:
-1. **Patrones de posición (Finder)**: Los tres cuadrados grandes concéntricos en las esquinas que orientan rápidamente el escáner y detectan la rotación del papel.
-2. **Patrones de alineación**: Cuadrículas de posicionamiento menores útiles para ajustar la legibilidad en formas curvas como botellas o vasos.
-3. **Patrón de tiempo (Timing)**: Líneas alternas de puntos que conectan las guías para mapear la escala de la cuadrícula física.
-4. **Información de formato**: Detalla la versión de datos y el corrector de errores activo.
-5. **Zona silenciosa (Quiet Zone)**: El margen libre de ruido o letras que enmarca todo el perímetro para aislar el código.
-
-### Codificación del canal binario
-
-Los motores de cálculo dividen la información (ya sean redes WiFi, enlaces o tarjetas de presentación) en una estructura binaria de blanco y negro, organizados en módulos:
-* **Formato numérico**: Ideal para números de serie o teléfonos.
-* **Formato alfanumérico**: Permite mayúsculas, algunos caracteres de puntuación y números.
-* **Formato Byte (binario de 8 bits)**: El estándar universal para textos, URLs y campañas de marketing dinámico.
-
-### El poder del algoritmo corrector Reed-Solomon
-
-Una de las grandes ventajas de la tecnología QR es su resistencia a daños. Gracias al **algoritmo algebraico de Reed-Solomon**, el software de renderizado escribe redundancias matemáticas en la imagen. Si el papel impreso se rompe, ensucia o raya, la cámara es capaz de reconstruir la matriz sin perder información. Ofrecemos cuatro niveles:
-* **Nivel L**: Corrige hasta el 7% de módulos perdidos.
-* **Nivel M**: Corrige hasta el 15% de módulos perdidos.
-* **Nivel Q**: Corrige hasta el 25% de módulos perdidos.
-* **Nivel H**: Corrige hasta el 30% de módulos perdidos (ideal para logotipos centralizados).`,
-    relatedFAQs: [
-      {
-        question: "¿Pueden las cámaras comunes leer un código dañado?",
-        answer: "Sí, si se genera en nivel de corrección Q o H, puede resistir rayones severos o logotipos sin fallar en el escaneo."
-      }
-    ],
-    internalLinks: [
-      { label: "Crear un código QR personalizado", url: "/" },
-      { label: "Ver preguntas frecuentes", url: "/faq" }
-    ]
-  },
-  "10-ways-businesses-use-qr-codes-increase-sales": {
-    title: "10 Formas en que las Empresas utilizan Códigos QR para aumentar las Ventas",
-    intro: "Las marcas buscan constantemente conectar la publicidad física con interacciones web inmediatas de alta conversión. Descubra diez formas innovadoras para optimizar sus campañas comerciales hoy.",
-    contentMarkdown: `## Conectando el marketing tradicional con herramientas web
-
-El material impreso tradicional (letreros, cajas o volantes) tiene una limitación clásica de interacción: los usuarios se cansan de escribir enlaces largos en sus móviles de forma manual. El código QR unifica ambos mundos con un solo escaneo.
-
-### 10 Estrategias comerciales de alto impacto
-
-1. **Vínculos de empaque interactivos**: Acceda a manuales de ensamble detallados o videos instructivos escaneando un código en la caja del producto.
-2. **Soportes de mesa inalámbricos**: Implemente menús digitales cómodos en restaurantes para reducir tiempos de atención del camarero.
-3. **Escaneo de tiendas de apps**: Comparta un solo código dinámico que reconozca si el visitante usa iOS o Android, para dirigirlo a la tienda correcta.
-4. **Incentivos de cupón rápido**: Ofrezca descuentos rápidos en caja a cambio del registro del cliente en su boletín mensual.
-5. **Programas dinámicos de eventos**: Permita a los asistentes de congresos descargar planos pdf del recinto y agendas actualizadas.
-6. **Tarjetas de presentación inteligentes**: Guarde datos completos de contacto comercial de vCard para evitar ingresos ortográficos manuales en la agenda de teléfonos.
-7. **Consolidadores de perfiles sociales (Bio Links)**: Centralice enlaces a redes sociales (YouTube, TikTok, Facebook) en una sola landing.
-8. **Pagos instantáneos sin contacto**: Muestre códigos QR fijos para recibir transferencias bancarias de inmediato.
-9. **Formularios de contacto directos**: Facilite encuestas de servicio al cliente en puntos físicos para fidelizar la atención.
-10. **Recopiladores de reseñas públicas**: Anime a los comensales y visitantes a dejar calificaciones agregadas en plataformas de reputación internacional mediante stands de mesa.`,
-    relatedFAQs: [
-      {
-        question: "¿Sugieren usar estadísticas de escaneo para campañas?",
-        answer: "Sí, el rastreo dinámico le permite conocer horas de escaneo, navegadores más comunes y áreas metropolitanas para fundamentar sus inversiones."
-      }
-    ],
-    internalLinks: [
-      { label: "Comience a diseñar un vCard", url: "/" }
-    ]
-  },
-  "how-to-create-wifi-qr-code": {
-    title: "Cómo crear un Código QR de WiFi para Invitados",
-    intro: "¿Cansado de dictar contraseñas largas y repetir caracteres especiales a los invitados de su local? Aprenda a consolidar las contraseñas en un código QR de emparejamiento automático.",
-    contentMarkdown: `## Evitando contraseñas difíciles escritas en papel
-
-Proporcionar WiFi en oficinas, hoteles y restaurantes de paso suele generar fricción técnica y contraseñas equivocadas debido a caracteres confusos. Con un código QR el proceso se realiza con un rápido enfoque.
-
-### Sintaxis del protocolo de encriptación inalámbrica
-
-El código de barras WiFi utiliza una estructura de sintaxis estándar reconocida por las cámaras nativas de iOS y Android:
-
-\`WIFI:S:MyNetworkSSID;T:WPA;P:SecretMyPassword;H:false;;\`
-
-Donde:
-* **WIFI:** Inicia la interpretación del enrutador.
-* **S:** Es el nombre de la red SSID exacto (sensible a mayúsculas).
-* **T:** El tipo de seguridad web de su módem (WPA/WPA2, WEP).
-* **P:** La contraseña de red.
-* **H:** Indica si es una red invisible u oculta (verdadero/falso).
-
-### Configuración paso a paso
-
-1. **Seleccione la pestaña de WiFi**: Abra el Unlimited QR Generator y marque el canal de emparejamiento WiFi.
-2. **Escriba el SSID**: Ingrese el nombre exacto de la red WiFi de su router.
-3. **Seguridad**: Elija WPA/WPA2 para routers estándar del mercado.
-4. **Introduzca la contraseña**: Ingrese la contraseña de red de su establecimiento.
-5. **Estilice a mano**: Añada colores, marcos de ojos circulares o un icono para sugerir la naturaleza inalámbrica de la conexión.
-6. **Descargue el SVG**: Descargue el archivo en vectores e imprímalo en stands de mesa.`,
-    relatedFAQs: [
-      {
-        question: "¿Los clientes necesitan una app para emparejar la WiFi?",
-        answer: "No, las cámaras incorporadas en la mayoría de los sistemas operativos interpretan este protocolo de forma automática."
-      }
-    ],
-    internalLinks: [
-      { label: "Generar código WiFi de inmediato", url: "/" }
-    ]
-  },
-  "qr-codes-restaurants-digital-menus": {
-    title: "Códigos QR en Restaurantes y Menús Digitales",
-    intro: "Modernice el servicio de mesa de su restaurante disminuyendo costos de reimpresión de cartas de papel mediante el uso de menús sin contacto.",
-    contentMarkdown: `## La transformación digital de la gastronomía
-
-Las cartas tradicionales de cartón se desgastan con facilidad, son difíciles de sanitizar y caras de modificar ante cambios estacionales. Los stands QR en las mesas permiten enlazar a los clientes con un sitio web con menús digitales interactivos.
-
-### Beneficios operativos principales
-
-* **Precios actualizados al instante**: Si un platillo se agota antes del cierre de cocina, puede actualizar la carta en línea sin gastos de imprenta.
-* **Fomento del ticket promedio**: Una carta digital con fotos atractivas y sugerencias cruzadas aumenta el valor de cada orden de comida habitualmente.
-* **Eficiencia de camareros**: Los clientes revisan y ordenan apenas se sientan, permitiendo al staff enfocarse en un servicio de mesa impecable.
-* **Cartas en múltiples idiomas**: Configure redirecciones de acuerdo al idioma preferido de cada comensal para acoger turistas extranjeros.`,
-    relatedFAQs: [
-      {
-        question: "¿Puedo usar el mismo código QR para actualizar menús estacionales?",
-        answer: "Sí, mediante la opción de QR dinámico, puede redefinir la dirección de red o el menú PDF de destino sin cambiar el gráfico impreso."
-      }
-    ],
-    internalLinks: [
-      { label: "Diseñar un menú QR", url: "/" }
-    ]
-  },
-  "best-qr-code-marketing-strategies": {
-    title: "Mejores Estrategias de Marketing con Códigos QR",
-    intro: "Simplemente colocar un gráfico de puntos oscuros sobre un cartel pasivo ya no es suficiente para asegurar escaneos de clientes. Aprenda a estilizar estos códigos de manera atractiva.",
-    contentMarkdown: `## Convirtiendo el Código QR en una Herramienta de Conversión Activa
-
-El marketing actual de alto nivel combina tipografías seleccionadas, consistencia de colores y llamadas a la acción explícitas. El código QR debe diseñarse de forma coherente con su marca gráfica para maximizar retornos empresariales.
-
-### Reglas clave para el diseño de campañas QR
-
-* **Llamada a la Acción (CTA) específica**: Un código sin indicaciones recibe poca atención. Use textos complementarios como *"Escanee para ver el menú"* o *"Obtenga 15% de descuento aquí"*.
-* **Monitoreo de estadísticas dinámicas**: Registre el ROI de su publicidad en exteriores revisando estadísticas geográficas de escaneo en tiempo real.
-* **Colores corporativos e inserción de logos**: Agregue los colores principales de su negocio y coloque su logotipo para inspirar confianza y profesionalidad.
-* **Ubicaciones aptas**: Evite la instalación de códigos en vehículos en movimiento rápido o pancartas reflectantes con brillos excesivos que impidan la lectura de la lente.`,
-    relatedFAQs: [
-      {
-        question: "¿Cómo monitoreo las estadísticas agregadas de escaneo?",
-        answer: "Acceda a la sección de análisis para consultar reportes históricos clasificados por hora, zona geográfica estimada y tipos de móvil."
-      }
-    ],
-    internalLinks: [
-      { label: "Iniciar campaña y revisar análisis", url: "/analytics" }
-    ]
-  },
-  "qr-codes-events-conferences": {
-    title: "Códigos QR para Eventos y Conferencias",
-    intro: "Optimice el ingreso de miles de visitantes a sus congresos mediante credenciales con códigos QR, simplificando acreditaciones y accesos a salas de expositores.",
-    contentMarkdown: `## Acreditación rápida y carpetas digitales sin papel
-
-La logística de eventos suele ser compleja. Integrar códigos QR en acreditaciones impresas y salas físicas acelera el flujo de registro considerablemente.
-
-### Flujos sencillos de agilización logística
-
-1. **Ingresos rápidos sin filas**: Envíe pases digitales cómodos por correo que el staff pueda escanear de manera ágil en las entradas.
-2. **Agendas y perfiles digitales**: Coloque letreros exteriores en la entrada de las salas que apunten a los horarios de ponencias y biografías de los expertos.
-3. **Guías de salas de exhibición**: Reduzca mapas impresos permitiendo descargar planos interactivos del recinto desde un código QR principal.
-4. **Resumen de encuestas de satisfacción**: Facilite encuestas de ponencia rápidas instalando códigos de Google Forms en los asientos o salidas.`,
-    relatedFAQs: [
-      {
-        question: "¿Se admiten creaciones de códigos en volumen masivo?",
-        answer: "Nuestra infraestructura está preparada para responder de forma masiva. Contáctenos para recibir asesoramiento de integraciones de bases de datos."
-      }
-    ],
-    internalLinks: [
-      { label: "Diseñar pases de eventos impresos", url: "/" }
-    ]
-  },
-  "qr-codes-in-education": {
-    title: "Los Códigos QR en la Educación Escolar",
-    intro: "Las aulas se benefician de herramientas interactivas eficaces. Aprenda a enriquecer los libros de texto y las tareas con recursos en audio y lecciones en video.",
-    contentMarkdown: `## Vinculando textos escolares con actividades interactivas
-
-Instalar códigos QR en esquinas de hojas impresas o en pizarras de avisos estimula el autoaprendizaje interactivo en escuelas de educación inicial y superior.
-
-### Casos de uso escolar cotidianos
-
-* **Audio de idiomas directo**: Facilite grabaciones de pronunciación correctas al lado de listas de palabras extranjeras en folletos escolares de estudio.
+/* pronunciación correctas al lado de listas de palabras extranjeras en folletos escolares de estudio.
 * **Consultas de hojas de resultados**: Proporcione códigos de respuestas de exámenes en paneles públicos para promover la autoevaluación guiada.
 * **Tutoriales de tareas complejas**: Agregue códigos que apunten a explicaciones en video sencillas de álgebra o ciencia junto a las actividades.
 * **Informes de padres y apoderados**: Imprima códigos en informes escolares para abrir bitácoras de profesores de forma cómoda.`,
@@ -1191,21 +887,4 @@ Los códigos de barras 2D continúan ganando espacio y protagonismo técnico int
     ]
   }
 };
-
-export function getLocalizedBlog(locale: Locale): BlogArticle[] {
-  if (locale === 'en') return blogArticles;
-  return blogArticles.map(art => {
-    const translation = blogTranslationsEs[art.slug];
-    if (translation) {
-      return {
-        ...art,
-        title: translation.title,
-        intro: translation.intro,
-        contentMarkdown: translation.contentMarkdown,
-        relatedFAQs: translation.relatedFAQs,
-        internalLinks: translation.internalLinks
-      };
-    }
-    return art;
-  });
-}
+*/

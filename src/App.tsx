@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
 import { QRProject, ScanLog } from './types';
 import { landingPages } from './pages/landing/SEODatabase';
-import { blogArticles } from './data/blogData';
+import { getBlogArticles } from './data/blogData';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
 
@@ -48,6 +48,7 @@ import { Locale, navTranslations, creativeSubItems, presetToolsTranslations, isR
 import { useTranslation, useDocumentLanguage } from './utils/i18n';
 import MobileDrawer from './components/MobileDrawer';
 import Header from './components/Header';
+import Logo from './components/Logo';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
@@ -781,7 +782,7 @@ export default function App() {
       description = 'Explore modern design tips, tutorials, and advanced marketing strategies for dynamic and static QR codes. Master QR code scanning engagement and conversion.';
     } else if (currentPath.startsWith('/blog/')) {
       const blogSlug = currentPath.substring(6);
-      const article = blogArticles.find(art => art.slug === blogSlug);
+      const article = getBlogArticles(locale).find(art => art.slug === blogSlug);
       if (article) {
         title = `${article.metaTitle} | FreeQRGen.pro Blog`;
         description = article.metaDescription;
@@ -1115,6 +1116,7 @@ export default function App() {
 
   // Control state for Clerk/Auth0-style Login Dialog
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<'signin' | 'signup'>('signin');
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
 
   // Detect when user has scrolled down the page to condense the header
@@ -1178,6 +1180,13 @@ export default function App() {
   // SignIn and Authentication dialog activation
   const handleSignInClick = () => {
     setErrorMessage(null);
+    setAuthModalTab('signin');
+    setIsAuthModalOpen(true);
+  };
+
+  const handleSignUpClick = () => {
+    setErrorMessage(null);
+    setAuthModalTab('signup');
     setIsAuthModalOpen(true);
   };
 
@@ -1208,7 +1217,7 @@ export default function App() {
 
       let contentVal = currentProject.content || '';
       if (currentProject.type === 'url' && typeof contentVal === 'string') {
-        contentVal = contentVal.trim().replace(/\/+$/, '');
+        contentVal = (((val) => (val || '').trim())(contentVal)).replace(/\/+$/, '');
         // Update local state so user sees the cleaned content value in UI
         setCurrentProject(prev => ({ ...prev, content: contentVal }));
       }
@@ -1474,6 +1483,10 @@ export default function App() {
             getPresetIcon={getPresetIcon}
             setActiveTab={setActiveTab}
             navTranslations={navTranslations}
+            user={user}
+            onSignInClick={handleSignInClick}
+            onSignUpClick={handleSignUpClick}
+            onSignOut={handleSignOut}
         />
 
 
@@ -2188,13 +2201,13 @@ export default function App() {
             <section className="space-y-6">
               <div className="text-center max-w-2xl mx-auto space-y-2">
                 <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-extrabold uppercase tracking-widest inline-block">
-                  High Performance Directory
+                  {t('directory.badge')}
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                   {t("home.popularQrTools")}
                 </h2>
                 <p className="text-xs text-slate-500 leading-normal">
-                  Create customized, pixel-perfect QR presets with absolute local encryption. Select highly optimized categories below to launch specialized templates.
+                  {t('directory.desc')}
                 </p>
               </div>
 
@@ -2207,7 +2220,7 @@ export default function App() {
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t("tools.wifi.title")}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
-                      Share secure wireless access keys instantly without disclosing the underlying password details to anyone.
+                      {t('directory.wifi.desc')}
                     </p>
                   </div>
                   <a
@@ -2216,7 +2229,7 @@ export default function App() {
                     onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
                     className="mt-4 text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5"
                   >
-                    Launch Custom Generator
+                    {t('directory.wifi.btn')}
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                   </a>
                 </div>
@@ -2229,7 +2242,7 @@ export default function App() {
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-910">{t("tools.whatsapp.title")}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
-                      Scale conversions with standard chat presets. Simply hover and tap to start real conversational chats immediately.
+                      {t('directory.whatsapp.desc')}
                     </p>
                   </div>
                   <a
@@ -2238,7 +2251,7 @@ export default function App() {
                     onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
                     className="mt-4 text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1.5"
                   >
-                    Launch WhatsApp Tool
+                    {t('directory.whatsapp.btn')}
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                   </a>
                 </div>
@@ -2251,7 +2264,7 @@ export default function App() {
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t("tools.url.title")}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
-                      Redirect clients to landing pages, social profiles, and premium digital portfolios with inline shortened link trackers.
+                      {t('directory.url.desc')}
                     </p>
                   </div>
                   <a
@@ -2260,7 +2273,7 @@ export default function App() {
                     onClick={(e) => { e.preventDefault(); navigateTo('/url-qr-generator'); }}
                     className="mt-4 text-xs font-bold text-pink-600 hover:text-pink-800 flex items-center gap-1.5"
                   >
-                    Launch URL Tool
+                    {t('directory.url.btn')}
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                   </a>
                 </div>
@@ -2271,9 +2284,9 @@ export default function App() {
                     <div className="w-10 h-10 bg-amber-50 text-amber-800 rounded-xl flex items-center justify-center mb-4">
                       <Utensils className="w-5 h-5 text-amber-800" />
                     </div>
-                    <h3 className="text-sm font-extrabold text-slate-900">Restaurant QR Code</h3>
+                    <h3 className="text-sm font-extrabold text-slate-900">{t('directory.restaurant.title')}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
-                      Upgrade dining rooms to pristine, contactless digital menu boards. Free PDF upload and dynamic redirection.
+                      {t('directory.restaurant.desc')}
                     </p>
                   </div>
                   <a
@@ -2282,7 +2295,7 @@ export default function App() {
                     onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
                     className="mt-4 text-xs font-bold text-amber-800 hover:text-amber-950 flex items-center gap-1.5"
                   >
-                    Launch Restaurant Tool
+                    {t('directory.restaurant.btn')}
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                   </a>
                 </div>
@@ -2293,9 +2306,9 @@ export default function App() {
                     <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
                       <Contact className="w-5 h-5 text-purple-600" />
                     </div>
-                    <h3 className="text-sm font-extrabold text-slate-900">vCard Digital Business Card</h3>
+                    <h3 className="text-sm font-extrabold text-slate-900">{t('directory.vcard.title')}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
-                      Embed direct contact records, telephone links, mail headers, and social usernames directly onto one scan-card.
+                      {t('directory.vcard.desc')}
                     </p>
                   </div>
                   <a
@@ -2304,7 +2317,7 @@ export default function App() {
                     onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
                     className="mt-4 text-xs font-bold text-purple-600 hover:text-purple-800 flex items-center gap-1.5"
                   >
-                    Launch vCard Tool
+                    {t('directory.vcard.btn')}
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                   </a>
                 </div>
@@ -2315,9 +2328,9 @@ export default function App() {
                     <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
                       <Instagram className="w-5 h-5 text-indigo-650" />
                     </div>
-                    <h3 className="text-sm font-extrabold text-slate-900">Instagram QR Code</h3>
+                    <h3 className="text-sm font-extrabold text-slate-900">{t('directory.instagram.title')}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
-                      Build high-social influence with beautiful, fast-loading follow tags optimized for flyers, storefront boards, and business prints.
+                      {t('directory.instagram.desc')}
                     </p>
                   </div>
                   <a
@@ -2326,7 +2339,7 @@ export default function App() {
                     onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }}
                     className="mt-4 text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1.5"
                   >
-                    Launch Instagram Tool
+                    {t('directory.instagram.btn')}
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                   </a>
                 </div>
@@ -2339,25 +2352,25 @@ export default function App() {
               
               <div className="max-w-2xl space-y-2 relative z-10">
                 <span className="text-[9px] uppercase tracking-widest font-black text-indigo-600 font-mono inline-block">
-                  Live Usage Statistics and Trends
+                  {t('recent.badge')}
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
-                  Recently Used QR Categories
+                  {t('recent.title')}
                 </h3>
                 <p className="text-xs text-slate-600 leading-normal">
-                  Over 14,000 professional campaigns style high-contrast QR visual patterns monthly. See active metrics:
+                  {t('recent.desc')}
                 </p>
               </div>
 
               {/* Category Filter Controls */}
               <div id="category-filter-bar" className="flex flex-wrap gap-2 mt-6 pb-4 border-b border-slate-200 relative z-10">
                 {[
-                  { id: 'all', label: 'All Categories' },
-                  { id: 'wifi', label: 'WiFi Pairing' },
-                  { id: 'whatsapp', label: 'WhatsApp' },
-                  { id: 'vcard', label: 'vCards' },
-                  { id: 'restaurant', label: 'Menus' },
-                  { id: 'social', label: 'Social Media' }
+                  { id: 'all', label: t('recent.tab.all') },
+                  { id: 'wifi', label: t('recent.tab.wifi') },
+                  { id: 'whatsapp', label: t('recent.tab.whatsapp') },
+                  { id: 'vcard', label: t('recent.tab.vcard') },
+                  { id: 'restaurant', label: t('recent.tab.menus') },
+                  { id: 'social', label: t('recent.tab.social') }
                 ].map((cat) => (
                   <button
                     key={cat.id}
@@ -2386,10 +2399,10 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-indigo-600 font-bold uppercase block">📡 Wireless Tech Integration • 2 min ago</span>
+                          <span className="text-[10px] font-mono text-indigo-600 font-bold uppercase block">{t('recent.card.wifi.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">{t("tools.wifi.pairing")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            Used by 1,480+ local hosts, cafeteria managers, and Airbnb operations. Allows direct, no-type scan router pairing.
+                            {t('recent.card.wifi.desc')}
                           </p>
                         </div>
 
@@ -2414,7 +2427,7 @@ export default function App() {
                           onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
                           className="mt-4 text-xs font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1"
                         >
-                          Explore Free WiFi lander
+                          {t('recent.card.wifi.link')}
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
@@ -2429,10 +2442,10 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-emerald-800 font-bold uppercase block">💬 Chat Integrations • 10 min ago</span>
+                          <span className="text-[10px] font-mono text-emerald-800 font-bold uppercase block">{t('recent.card.whatsapp.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">{t("tools.whatsapp.support")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            Used by retail stores and digital agencies to enable rapid customer service requests. Launches formatted text templates.
+                            {t('recent.card.whatsapp.desc')}
                           </p>
                         </div>
 
@@ -2457,7 +2470,7 @@ export default function App() {
                           onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
                           className="mt-4 text-xs font-bold text-emerald-800 group-hover:text-emerald-950 flex items-center gap-1"
                         >
-                          Explore WhatsApp lander
+                          {t('recent.card.whatsapp.link')}
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
@@ -2472,10 +2485,10 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-purple-600 font-bold uppercase block">📇 Business Connectivity • 15 min ago</span>
+                          <span className="text-[10px] font-mono text-purple-600 font-bold uppercase block">{t('recent.card.vcard.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-purple-600 transition-colors">{t("tools.vcards.rich")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            Designed weekly by real estate brokers and dynamic consulting networks. Instantly saves primary contact cards.
+                            {t('recent.card.vcard.desc')}
                           </p>
                         </div>
 
@@ -2500,7 +2513,7 @@ export default function App() {
                           onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
                           className="mt-4 text-xs font-bold text-purple-600 group-hover:text-purple-800 flex items-center gap-1"
                         >
-                          Explore vCard lander
+                          {t('recent.card.vcard.link')}
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
@@ -2515,10 +2528,10 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-amber-800 font-bold uppercase block">📊 Dynamic Menu Hosting • 1 hr ago</span>
+                          <span className="text-[10px] font-mono text-amber-800 font-bold uppercase block">{t('recent.card.restaurant.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-amber-800 transition-colors">{t("tools.menus.pdf")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            Leveraged by cafes, visual bistros, and contactless fast-food spots. Keeps dynamic menu files editable and local.
+                            {t('recent.card.restaurant.desc')}
                           </p>
                         </div>
 
@@ -2543,7 +2556,7 @@ export default function App() {
                           onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
                           className="mt-4 text-xs font-bold text-amber-800 group-hover:text-amber-950 flex items-center gap-1"
                         >
-                          Explore Restaurant lander
+                          {t('recent.card.restaurant.link')}
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
@@ -2555,13 +2568,13 @@ export default function App() {
                       <div 
                         id="recent-social-card" 
                         className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.35),0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group"
-                        style={{ transition: 'all 0.3s ease', contentVisibility: 'auto' }}
+                        style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-pink-600 font-bold uppercase block">📲 Bio Links & Socials • 2 hrs ago</span>
+                          <span className="text-[10px] font-mono text-pink-600 font-bold uppercase block">{t('recent.card.social.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-pink-600 transition-colors">{t("tools.social.hubs")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            Designed weekly by micro-influencers, content creators, and local artists to map multiple platforms inside a single aesthetic scan.
+                            {t('recent.card.social.desc')}
                           </p>
                         </div>
 
@@ -2586,7 +2599,7 @@ export default function App() {
                           onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }}
                           className="mt-4 text-xs font-bold text-pink-600 group-hover:text-pink-800 flex items-center gap-1"
                         >
-                          Explore Instagram lander
+                          {t('recent.card.social.link')}
                           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
                         </a>
                       </div>
@@ -2604,7 +2617,7 @@ export default function App() {
                 'social'
               ].filter(id => selectedCategoryFilter === 'all' || selectedCategoryFilter === id).length > 4 && (
                 <div id="scroll-indicator" className="flex items-center justify-center gap-2 mt-4 text-[10px] uppercase tracking-wider font-mono font-bold text-indigo-600 sm:hidden">
-                  <span>Swipe horizontally to view categories</span>
+                  <span>{t('recent.swipe')}</span>
                   <motion.div
                     animate={{ x: [0, 6, 0] }}
                     transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
@@ -2618,7 +2631,7 @@ export default function App() {
             {/* Complete Internal Linking Related Pages grid */}
             <section id="guide-relations" className="space-y-4">
               <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider font-mono">
-                Related Free QR Generation Guides
+                {t('guides.relatedTitle')}
               </h3>
               <div className="w-full h-[1px] bg-slate-200" />
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
@@ -2641,7 +2654,7 @@ export default function App() {
                         </p>
                       </div>
                       <span className="text-[9px] font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1 mt-1">
-                        Read Guide <ArrowRight className="w-2.5 h-2.5 transition-transform group-hover:translate-x-0.5" />
+                        {t('guides.readGuide')} <ArrowRight className="w-2.5 h-2.5 transition-transform group-hover:translate-x-0.5" />
                       </span>
                     </a>
                   );
@@ -2701,6 +2714,7 @@ export default function App() {
         <AuthModal 
           isOpen={isAuthModalOpen} 
           onClose={() => setIsAuthModalOpen(false)} 
+          initialTab={authModalTab}
           onSuccess={(u) => {
             setUser(u);
             setIsAuthModalOpen(false);
@@ -2724,15 +2738,16 @@ export default function App() {
       </React.Suspense>
 
       {/* Footer with rich SEO directory links */}
-      <footer id="app-footer" className="py-16 border-t border-slate-200 bg-slate-50/50 text-slate-600 mt-12">
+      <footer id="app-footer" dir="ltr" className="py-16 border-t border-slate-200 bg-slate-50/50 text-slate-600 mt-12">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div id="footer-branding" className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-md">
-                <QrCode className="w-5 h-5 animate-spin-slow" />
-              </div>
-              <span className="font-bold text-xs text-slate-900 tracking-wider uppercase font-mono">{t('footer.brandName', 'iSolutions QR Generator')}</span>
-            </div>
+            <button 
+              onClick={() => navigateTo('/')} 
+              className="flex items-center text-left focus:outline-hidden hover:opacity-95 active:scale-98 transition-all cursor-pointer"
+              aria-label="Free QR Generator Home"
+            >
+              <Logo size={42} />
+            </button>
             <p className="text-xs text-slate-600 max-w-sm leading-relaxed">
               {t('footer.brandDesc', 'Design customized, high-redundancy QR codes with modern color gradients, dot styles, and brand centerpieces. Complete with dynamic web link shortener tracking and real-time scan analytics.')}
             </p>

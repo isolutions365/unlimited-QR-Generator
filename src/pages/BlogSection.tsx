@@ -13,22 +13,14 @@ interface BlogSectionProps {
   locale?: Locale;
 }
 
-const blogCategoryLabelsEs: Record<string, string> = {
-  "QR Code Guides": "Guías de Códigos QR",
-  "Business Marketing": "Marketing de Negocios",
-  "Digital Marketing": "Marketing Digital",
-  "Small Business Tools": "Herramientas para PYMEs",
-  "Technology": "Tecnología",
-  "Contactless Solutions": "Soluciones sin Contacto",
-  "Restaurant QR Menus": "Menús QR de Restaurantes",
-  "Event QR Codes": "Códigos QR de Eventos",
-  "Education QR Codes": "Códigos QR de Educación",
-  "Social Media Marketing": "Marketing de Redes Sociales"
-};
-
 export default function BlogSection({ initialSlug, onNavigate, locale: propLocale }: BlogSectionProps) {
   const { t, locale: hookLocale } = useTranslation();
   const locale = propLocale || hookLocale;
+
+  const getCategoryLabel = (category: string) => {
+    const key = `blog.category.${category.toLowerCase().replace(/\s+/g, '_')}`;
+    return t(key, category);
+  };
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeArticleSlug, setActiveArticleSlug] = useState<string | null>(initialSlug || null);
@@ -118,7 +110,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
             </button>
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
-                {locale === 'es' ? (blogCategoryLabelsEs[activeArticle.category] || activeArticle.category) : activeArticle.category}
+                {getCategoryLabel(activeArticle.category)}
               </span>
               <button
                 onClick={() => copyArticleLink(activeArticle.slug)}
@@ -298,7 +290,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${ selectedCategory === cat ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
                 >
-                  {locale === 'es' ? (blogCategoryLabelsEs[cat] || cat) : cat}
+                  {getCategoryLabel(cat)}
                 </button>
               ))}
             </div>
@@ -319,7 +311,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
                   <div className="p-6 space-y-3">
                     <div className="flex items-center justify-between text-[10px] font-mono font-bold text-slate-500">
                       <span className="text-indigo-600">
-                        {locale === 'es' ? (blogCategoryLabelsEs[art.category] || art.category) : art.category}
+                        {getCategoryLabel(art.category)}
                       </span>
                       <span>{art.readingTime}</span>
                     </div>

@@ -55,3 +55,5 @@ export interface ScanLog {
   ip: string;
   userId: string;
 }
+
+export type AppTab = 'create' | 'templates' | 'analytics' | 'boiler' | 'animations';

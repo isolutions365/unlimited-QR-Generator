@@ -7,11 +7,18 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: (user: { id: string; email: string; name: string }) => void;
+  initialTab?: 'signin' | 'signup';
 }
 
-export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'signin' }: AuthModalProps) {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
+  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>(initialTab);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setActiveTab(initialTab);
+    }
+  }, [isOpen, initialTab]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -28,7 +35,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
 
     try {
       if (activeTab === 'signup') {
-        if (!name.trim()) throw new Error(t('auth.nameRequired', 'Name is required') as any);
+        if (!((val) => (val || '').trim())(name)) throw new Error(t('auth.nameRequired', 'Name is required') as any);
         const res = await api.register(email, password, name);
         onSuccess(res.user);
         onClose();

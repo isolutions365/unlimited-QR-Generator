@@ -165,10 +165,10 @@ export default function ColorPalette({
       >
         <div className="flex items-center justify-between mb-3">
           <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">
-            Color Palette
+            {t('colorPalette.presetLabel')}
           </label>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-100 text-slate-500 font-mono">
-            {activePalette}
+            {activePalette === 'Custom' ? t('colorPalette.custom') : activePalette}
           </span>
         </div>
 
@@ -239,7 +239,7 @@ export default function ColorPalette({
                 }}
               >
                 <Palette className="w-3.5 h-3.5 text-amber-600" />
-                <span>Custom</span>
+                <span>{t('colorPalette.custom')}</span>
               </button>
             </div>
           </div>
@@ -247,7 +247,7 @@ export default function ColorPalette({
           {/* Color pickers selection */}
           <div className="grid grid-cols-2 gap-3 mt-1">
             <div className="relative">
-              <label htmlFor="fg-color-picker" className="text-[10px] text-gray-600 font-medium block mb-1">Foreground Color</label>
+              <label htmlFor="fg-color-picker" className="text-[10px] text-gray-600 font-medium block mb-1">{t('colorPalette.fgLabel')}</label>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition-all duration-200">
                 <input
                   type="color"
@@ -268,7 +268,7 @@ export default function ColorPalette({
             </div>
 
             <div>
-              <label htmlFor="bg-color-picker" className="text-[10px] text-gray-600 font-medium block mb-1">Background Color</label>
+              <label htmlFor="bg-color-picker" className="text-[10px] text-gray-600 font-medium block mb-1">{t('colorPalette.bgLabel')}</label>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition-all duration-200 font-sans">
                 <input
                   type="color"
@@ -298,7 +298,7 @@ export default function ColorPalette({
       >
         <div className="flex items-center justify-between mb-2">
           <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">
-            Gradient Style
+            {t('colorPalette.gradientTitle')}
           </label>
         </div>
 
@@ -311,7 +311,7 @@ export default function ColorPalette({
               className={`py-1.5 rounded-lg border text-xs capitalize transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${ gradientType === g ? 'bg-gray-900 text-white border-gray-900 font-semibold shadow-xs' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50' }`}
               onClick={() => updateDesignFields({ gradientType: g }, true)}
             >
-              {g}
+              {g === 'none' ? t('control.type.none', 'none') : g === 'linear' ? t('control.type.linear', 'linear') : t('control.type.radial', 'radial')}
             </button>
           ))}
         </div>
@@ -328,7 +328,7 @@ export default function ColorPalette({
               <div className="flex items-center justify-between gap-3 mt-2 bg-white/60 p-2 rounded-xl border border-gray-200/50">
                 <div className="flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
-                  <span className="text-[10px] text-gray-600 font-semibold">Gradient Destination:</span>
+                  <span className="text-[10px] text-gray-600 font-semibold">{t('colorPalette.gradientDestination')}</span>
                 </div>
                 <div className="flex items-center gap-1.5 bg-white px-2 py-1 rounded-lg border border-gray-200 shrink-0">
                   <input
@@ -361,16 +361,16 @@ export default function ColorPalette({
           <div className="flex items-center gap-2">
             <Compass className="w-4 h-4 text-indigo-500 animate-spin-slow" style={{ animationDuration: '8s' }} />
             <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">
-              Brand Harmony
+              {t('colorPalette.brandHarmony')}
             </label>
           </div>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-indigo-50 text-indigo-600 font-mono">
-            Color Theory
+            {t('colorPalette.colorTheory')}
           </span>
         </div>
 
         <p className="text-[11px] text-slate-500 leading-relaxed">
-          Select a palette model below to automatically discover complementary colors that perfectly balance your primary design.
+          {t('colorPalette.brandHarmonyDesc')}
         </p>
 
         {/* Harmony Mode Selector Buttons */}
@@ -393,17 +393,17 @@ export default function ColorPalette({
                 }
               }}
             >
-              {mode === 'monochromatic' ? 'Mono' : mode}
+              {mode === 'monochromatic' ? t('colorPalette.harmony.monochromatic') : t('colorPalette.harmony.' + mode)}
             </button>
           ))}
         </div>
 
         {/* Selected Mode Summary */}
         <div className="text-[10px] text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100 italic leading-snug">
-          {harmonyType === 'complementary' && 'Complementary: Uses exact opposite hues to create high-contrast, high-energy accents.'}
-          {harmonyType === 'analogous' && 'Analogous: adjacent hues that look incredibly smooth and share similar warm or cool tones.'}
-          {harmonyType === 'triadic' && 'Triadic: Uses three evenly spaced colors to achieve vibrant, highly-balanced accents.'}
-          {harmonyType === 'monochromatic' && 'Monochromatic: Explores shades and tints of your main color for a cohesive, minimal look.'}
+          {harmonyType === 'complementary' && t('colorPalette.harmony.desc.complementary')}
+          {harmonyType === 'analogous' && t('colorPalette.harmony.desc.analogous')}
+          {harmonyType === 'triadic' && t('colorPalette.harmony.desc.triadic')}
+          {harmonyType === 'monochromatic' && t('colorPalette.harmony.desc.monochromatic')}
         </div>
 
         {/* Harmony Swatches Grid */}
@@ -455,7 +455,7 @@ export default function ColorPalette({
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-bold text-slate-700">
-                    Apply Accent Color: <span className="font-mono text-indigo-600 uppercase">{selectedHarmonyColor}</span>
+                    {t('colorPalette.applyAccent')} <span className="font-mono text-indigo-600 uppercase">{selectedHarmonyColor}</span>
                   </span>
                   {activeSwatch && (
                     <span className="text-[9px] text-slate-400 leading-tight">
@@ -479,7 +479,7 @@ export default function ColorPalette({
                 >
                   <Sparkles className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
                   <span>
-                    {appliedField === 'gradient' ? 'Applied! ✓' : 'Set Gradient'}
+                    {appliedField === 'gradient' ? t('colorPalette.applied') : t('colorPalette.setGradient')}
                   </span>
                 </button>
 
@@ -495,7 +495,7 @@ export default function ColorPalette({
                 >
                   <Layout className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                   <span>
-                    {appliedField === 'frame' ? 'Applied! ✓' : 'Set Frame'}
+                    {appliedField === 'frame' ? t('colorPalette.applied') : t('colorPalette.setFrame')}
                   </span>
                 </button>
 
@@ -515,7 +515,7 @@ export default function ColorPalette({
                 >
                   <Eye className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                   <span>
-                    {appliedField === 'eyes' ? 'Applied! ✓' : 'Set Eyes'}
+                    {appliedField === 'eyes' ? t('colorPalette.applied') : t('colorPalette.setEyes')}
                   </span>
                 </button>
               </div>
@@ -531,10 +531,10 @@ export default function ColorPalette({
       >
         <div className="flex items-center justify-between">
           <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block">
-            QR Scannability Checker
+            {t('scannability.title')}
           </label>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-100 text-slate-500 font-mono">
-            Contrast Status
+            {t('scannability.statusLabel')}
           </span>
         </div>
 
@@ -544,8 +544,8 @@ export default function ColorPalette({
           let statusBorder = 'border-emerald-200/60';
           let statusText = 'text-emerald-800';
           let statusIconColor = 'text-emerald-500';
-          let statusTitle = 'Perfect Contrast';
-          let statusDesc = `Excellent contrast ratio of ${finalContrast.toFixed(1)}:1. This QR code will scan flawlessly under any normal or dim lighting conditions on all mobile devices.`;
+          let statusTitle = t('scannability.status.perfect.title');
+          let statusDesc = t('scannability.status.perfect.desc', undefined, { ratio: finalContrast.toFixed(1) });
           let StatusIcon = CheckCircle2;
 
           if (finalContrast < 3) {
@@ -553,24 +553,24 @@ export default function ColorPalette({
             statusBorder = 'border-rose-200/60';
             statusText = 'text-rose-800';
             statusIconColor = 'text-rose-500';
-            statusTitle = 'High Scan Failure Risk';
-            statusDesc = `Critical warning! Very low contrast ratio of ${finalContrast.toFixed(1)}:1. Camera scanners will likely fail to read this QR code. Please increase the contrast between the foreground and background colors immediately.`;
+            statusTitle = t('scannability.status.risk.title');
+            statusDesc = t('scannability.status.risk.desc', undefined, { ratio: finalContrast.toFixed(1) });
             StatusIcon = XCircle;
           } else if (finalContrast < 4.5) {
             statusBg = 'bg-amber-50/40';
             statusBorder = 'border-amber-200/60';
             statusText = 'text-amber-800';
             statusIconColor = 'text-amber-500';
-            statusTitle = 'Moderate Scan Risk';
-            statusDesc = `Contrast ratio of ${finalContrast.toFixed(1)}:1 is below ideal levels. Some older devices or dim environments may struggle to decode this QR code. Consider making the foreground darker or background lighter.`;
+            statusTitle = t('scannability.status.moderate.title');
+            statusDesc = t('scannability.status.moderate.desc', undefined, { ratio: finalContrast.toFixed(1) });
             StatusIcon = AlertTriangle;
           } else if (finalContrast < 7) {
             statusBg = 'bg-blue-50/30';
             statusBorder = 'border-blue-200/60';
             statusText = 'text-blue-800';
             statusIconColor = 'text-blue-500';
-            statusTitle = 'Good Scannability';
-            statusDesc = `Good contrast ratio of ${finalContrast.toFixed(1)}:1. Highly readable by almost all modern smartphone camera scanners. Safe for production use.`;
+            statusTitle = t('scannability.status.good.title');
+            statusDesc = t('scannability.status.good.desc', undefined, { ratio: finalContrast.toFixed(1) });
             StatusIcon = CheckCircle2;
           }
 
@@ -597,18 +597,18 @@ export default function ColorPalette({
           <div className="p-3 bg-slate-50/50 rounded-lg border border-slate-200/40 flex flex-col gap-2">
             <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">
               <Info className="w-3.5 h-3.5 text-slate-400" />
-              <span>Scannability Tips</span>
+              <span>{t('scannability.tipsTitle')}</span>
             </div>
             
             <div className="space-y-1.5">
               {isInverted && (
                 <p className="text-[10px] text-slate-500 leading-relaxed">
-                  <strong className="text-slate-600">Inverted QR Code:</strong> You are using a light foreground on a dark background. While modern smartphones read this easily, some legacy barcode scanners and older scanner apps cannot process inverted codes. Consider using a dark foreground on a light background for maximum physical print safety.
+                  <strong className="text-slate-600">{t('scannability.invertedTitle')}</strong> {t('scannability.invertedDesc')}
                 </p>
               )}
               {gradientType !== 'none' && gradientContrast < primaryContrast && (
                 <p className="text-[10px] text-slate-500 leading-relaxed">
-                  <strong className="text-slate-600">Gradient Warning:</strong> Your secondary gradient color ({localGradientColor}) has lower contrast ({gradientContrast.toFixed(1)}:1) than the main color ({primaryContrast.toFixed(1)}:1). Make sure the gradient stays dark enough relative to the background across the entire code.
+                  <strong className="text-slate-600">{t('scannability.gradientTitle')}</strong> {t('scannability.gradientDesc', undefined, { gradColor: localGradientColor, gradContrast: gradientContrast.toFixed(1), mainContrast: primaryContrast.toFixed(1) })}
                 </p>
               )}
             </div>

@@ -14,7 +14,7 @@ export default function D3WorldHeatmap({ scans, onHoverCountry, hoveredCountryNa
   // Normalize location strings for heatmap coordination mapping
   const normalizeCountry = (loc: string): string => {
     if (!loc) return 'Global';
-    const l = loc.toLowerCase().trim();
+    const l = ((val) => (val || '').trim())(loc.toLowerCase());
     if (l.includes('united states') || l === 'us' || l === 'usa') return 'United States';
     if (l.includes('united kingdom') || l === 'uk' || l === 'gb' || l === 'great britain') return 'United Kingdom';
     if (l.includes('germany') || l === 'de') return 'Germany';

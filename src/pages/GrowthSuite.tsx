@@ -171,7 +171,7 @@ export default function GrowthSuite({
       onSignInClick();
       return;
     }
-    if (!newPostTitle.trim() || !newPostContent.trim()) return;
+    if (!((val) => (val || '').trim())(newPostTitle) || !((val) => (val || '').trim())(newPostContent)) return;
 
     try {
       setLoading(true);
@@ -211,7 +211,7 @@ export default function GrowthSuite({
       return;
     }
     const content = commentInputs[postId];
-    if (!content || !content.trim()) return;
+    if (!content || !((val) => (val || '').trim())(content)) return;
 
     try {
       await api.commentCommunityPost(postId, content);
@@ -225,7 +225,7 @@ export default function GrowthSuite({
   // Handle Newsletter Subscribe
   const handleNewsletterSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newsletterEmail.trim()) return;
+    if (!((val) => (val || '').trim())(newsletterEmail)) return;
     try {
       setNewsletterLoading(true);
       await api.subscribeNewsletter(newsletterEmail);
@@ -245,7 +245,7 @@ export default function GrowthSuite({
   // Handle Feedback Submission
   const handleFeedbackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!feedbackText.trim()) return;
+    if (!((val) => (val || '').trim())(feedbackText)) return;
     try {
       setLoading(true);
       await api.submitFeedback({

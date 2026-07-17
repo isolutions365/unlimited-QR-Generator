@@ -70,7 +70,7 @@ function parseAndRender(
         const tagHeader = pattern.substring(i + 1, closeTagIdx);
         const isClosing = tagHeader.startsWith('/');
         if (!isClosing) {
-          const tagName = tagHeader.trim();
+          const tagName = ((val) => (val || '').trim())(tagHeader);
           const closingTag = `</${tagName}>`;
           const closingTagIdx = pattern.indexOf(closingTag, closeTagIdx);
           
@@ -136,7 +136,7 @@ function renderICUBlock(
   values: ICUValues,
   locale: string
 ): React.ReactNode {
-  const parts = block.split(',').map(s => s.trim());
+  const parts = block.split(',').map(s => ((val) => (val || '').trim())(s));
   const variable = parts[0];
 
   if (!(variable in values)) {
@@ -151,7 +151,7 @@ function renderICUBlock(
   }
 
   const formatType = parts[1];
-  const choiceStr = parts.slice(2).join(',').trim();
+  const choiceStr = ((val) => (val || '').trim())(parts.slice(2).join(','));
 
   if (formatType === 'plural') {
     return resolvePlural(Number(val), choiceStr, values, locale);
@@ -232,7 +232,7 @@ function parseChoices(choicesStr: string): Record<string, string> {
 
     let keyStart = i;
     while (i < choicesStr.length && !/\s/.test(choicesStr[i]) && choicesStr[i] !== '{') i++;
-    const key = choicesStr.substring(keyStart, i).trim();
+    const key = ((val) => (val || '').trim())(choicesStr.substring(keyStart, i));
 
     // Find opening bracket
     while (i < choicesStr.length && choicesStr[i] !== '{') i++;

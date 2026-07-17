@@ -3,17 +3,40 @@ import { Locale, SUPPORTED_LOCALES, extractLocaleAndPath, isRtlLocale } from './
 import { formatICU, ICUValues } from './icuFormatter';
 import * as formatters from './localeFormatter';
 import { EXPECTED_KEYS, validateLocaleDictionary, LocaleReport, generateFullReport, ValidationReport } from './i18nValidator';
-import enDictionary from '../locales/en.json';
+import dataJson from '../locales/data.json';
+
+const enDictionary = (dataJson as any).translations?.en || {};
 
 // Type-safe translation keys derived from expected keys
 export type TKey = typeof EXPECTED_KEYS[number] | (string & {});
 
 /**
+ * Robust localized getter function that retrieves a string value for a given key
+ * from a dictionary. It guarantees a string return value, entirely avoiding
+ * runtime 'undefined' errors when calling .trim() on the result.
+ */
+export function getLocalizedText(
+  dictionary: Record<string, string>,
+  key: string,
+  defaultValue: string = ''
+): string {
+  if (!dictionary || typeof key !== 'string') {
+    return defaultValue;
+  }
+  const value = dictionary[key];
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  return String(value);
+}
+
+/**
  * Validates whether the text is a brand name, URL, or technical value that must never be translated.
  */
-export function shouldSkipTranslation(text: string): boolean {
-  if (!text) return true;
-  const trimmed = text.trim();
+export function shouldSkipTranslation(text: any): boolean {
+  if (text === undefined || text === null) return true;
+  const textStr = String(text);
+  const trimmed = ((val) => (val || '').trim())(textStr);
   if (trimmed.length <= 1) return true;
 
   // 1. Only numbers, symbols, percentage, punctuation or math operations
@@ -69,14 +92,14 @@ export function shouldSkipTranslation(text: string): boolean {
 const englishToKeyMap: Record<string, string> = {};
 Object.entries(enDictionary).forEach(([key, value]) => {
   if (typeof value === 'string') {
-    englishToKeyMap[value.trim().toLowerCase()] = key;
+    englishToKeyMap[(((val) => (val || '').trim())(value)).toLowerCase()] = key;
   }
 });
 
 interface I18nContextType {
   locale: Locale;
   changeLocale: (newLocale: Locale) => void;
-  t: (key: TKey, defaultText: string, values?: ICUValues) => any;
+  t: (key: TKey, defaultText?: string, values?: ICUValues) => any;
   isLoading: boolean;
   
   // Localized Formatters
@@ -99,7 +122,7 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 // In-memory cache for loaded translation dictionaries
-const dictionaryCache: Record<string, Record<string, string>> = {
+const dictionaryCache: Record<string, Record<string, string>> = (dataJson as any).translations || {
   en: {}, // English falls back directly to the in-code default text
 };
 
@@ -143,53 +166,12 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [locale]);
 
-  // Lazy-load translation dictionary when locale changes with caching
+  // Synchronously load translation dictionary when locale changes
   useEffect(() => {
-    if (locale === 'en') {
-      setDictionary({});
-      return;
-    }
-
-    // Try in-memory cache first
-    if (dictionaryCache[locale]) {
-      setDictionary(dictionaryCache[locale]);
-      return;
-    }
-
-    // Try Session Storage cache to reduce redundant network transfers
-    try {
-      const cached = sessionStorage.getItem(`i18n-cache-${locale}`);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        dictionaryCache[locale] = parsed;
-        setDictionary(parsed);
-        return;
-      }
-    } catch (_) {}
-
     setIsLoading(true);
-    // Dynamically load translation JSON file
-    import(`../locales/${locale}.json`)
-      .then((module) => {
-        const dict = module.default || module;
-        dictionaryCache[locale] = dict;
-        
-        // Save to session storage cache
-        try {
-          sessionStorage.setItem(`i18n-cache-${locale}`, JSON.stringify(dict));
-        } catch (_) {}
-
-        setDictionary(dict);
-      })
-      .catch((err) => {
-        console.warn(`Could not load translation file for locale: ${locale}`, err);
-        // Fallback to empty dictionary so it resolves to defaultText inline
-        dictionaryCache[locale] = {};
-        setDictionary({});
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const dict = (dataJson as any).translations?.[locale] || {};
+    setDictionary(dict);
+    setIsLoading(false);
   }, [locale]);
 
   const changeLocale = (newLocale: Locale) => {
@@ -208,7 +190,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   /**
    * Enterprise-grade Translation Function t() with ICU Support, key tracking
    */
-  const t = (key: TKey, defaultText: string, values?: ICUValues): React.ReactNode => {
+  const t = (key: TKey, defaultText?: string, values?: ICUValues): React.ReactNode => {
     // Collect keys used during active session
     if (!runtimeKeySet.has(key)) {
       runtimeKeySet.add(key);
@@ -217,24 +199,23 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         setKeysTracked(Array.from(runtimeKeySet));
       }, 0);
     }
+    
+    // Try to get message from current active locale dictionary
+    let message = dictionary[key];
 
-    if (locale === 'en') {
-      return formatICU(defaultText, values, locale);
+    // If not found, and active locale is not English, look up in English dictionary as fallback
+    if (message === undefined || message === null) {
+      message = enDictionary[key];
     }
 
-    if (shouldSkipTranslation(defaultText)) {
-      return formatICU(defaultText, values, locale);
+    // Determine fallback text to use
+    const textToUse = message !== undefined && message !== null ? String(message) : (defaultText || key);
+
+    if (shouldSkipTranslation(textToUse)) {
+      return formatICU(textToUse, values, locale);
     }
 
-    // Check loaded dictionary first
-    const rawMessage = dictionary[key];
-
-    if (!rawMessage) {
-      // Return English default text if translation key is missing in active locale
-      return formatICU(defaultText, values, locale);
-    }
-
-    return formatICU(rawMessage, values, locale);
+    return formatICU(textToUse, values, locale);
   };
 
   // Formatters with current active locale
@@ -260,34 +241,10 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     formatters.getRelativeTimeString(date, locale);
 
   /**
-   * Dynamically loads all supported dictionaries.
-   * Crucial for background diagnostics and validation auditing without manual user navigation.
+   * Loads all supported dictionaries directly from the static data.json source.
    */
   const loadAllDictionariesForAnalysis = async (): Promise<Record<Locale, Record<string, string>>> => {
-    const allDicts: Record<Locale, Record<string, string>> = {} as any;
-    
-    await Promise.all(
-      SUPPORTED_LOCALES.map(async (l) => {
-        if (l === 'en') {
-          allDicts[l] = {};
-          return;
-        }
-        if (dictionaryCache[l]) {
-          allDicts[l] = dictionaryCache[l];
-          return;
-        }
-        try {
-          const mod = await import(`../locales/${l}.json`);
-          const dict = mod.default || mod;
-          dictionaryCache[l] = dict;
-          allDicts[l] = dict;
-        } catch (_) {
-          allDicts[l] = {};
-        }
-      })
-    );
-
-    return allDicts;
+    return (dataJson as any).translations || {};
   };
 
   /**
