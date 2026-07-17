@@ -374,7 +374,7 @@ export default function CompanyPages({
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1 text-left">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">Full Name</label>
+                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">{t('company.labelName', 'Full Name')}</label>
                       <input
                         type="text"
                         required
@@ -386,7 +386,7 @@ export default function CompanyPages({
                     </div>
 
                     <div className="space-y-1 text-left">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">Email Address</label>
+                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">{t('company.labelEmail', 'Email Address')}</label>
                       <input
                         type="email"
                         required
@@ -399,7 +399,7 @@ export default function CompanyPages({
                   </div>
 
                   <div className="space-y-1 text-left">
-                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">Subject</label>
+                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">{t('company.labelSubject', 'Subject')}</label>
                     <input
                       type="text"
                       required
@@ -411,7 +411,7 @@ export default function CompanyPages({
                   </div>
 
                   <div className="space-y-1 text-left">
-                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">Message Body</label>
+                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">{t('company.labelMessage', 'Message Body')}</label>
                     <textarea
                       rows={4}
                       required
