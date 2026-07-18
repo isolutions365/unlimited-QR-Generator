@@ -1,9 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import dotenv from 'dotenv';
-import { GoogleGenAI, Type } from '@google/genai';
-
-dotenv.config();
+import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -14,246 +11,274 @@ const ai = new GoogleGenAI({
   }
 });
 
-const languages = {
-  ar: 'Arabic',
-  ur: 'Urdu',
-  fr: 'French',
-  de: 'German',
-  es: 'Spanish',
-  it: 'Italian',
-  pt: 'Portuguese',
-  tr: 'Turkish',
-  id: 'Indonesian',
-  hi: 'Hindi',
-  ja: 'Japanese',
-  ko: 'Korean',
-  zh: 'Chinese (Simplified)'
+const LANGUAGE_NAMES = {
+  it: "Italian",
+  tr: "Turkish",
+  id: "Indonesian",
+  hi: "Hindi",
+  zh: "Chinese (Simplified)",
+  ja: "Japanese",
+  ko: "Korean"
 };
 
-function log(msg) {
-  console.log(msg);
-  fs.appendFileSync('translate_progress.log', msg + '\n', 'utf8');
+const BATCH_SIZE = 50;
+
+async function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function shouldTranslate(enVal, targetVal) {
-  if (targetVal === undefined) return true;
-  if (enVal !== targetVal) return false;
-  
-  // If no letters (only numbers, punctuation, symbols, spaces, emojis, etc.)
-  if (!/[a-zA-Z]/.test(enVal)) return false;
-  
-  // Brand names and technical terms that should NEVER be translated as standalone values
-  const noTranslate = [
-    'freeqrgen.pro', 'free qr generator', 'isolutions', 'qr code', 'qr codes',
-    'wi-fi', 'ssid', 'url', 'wpa', 'wep', 'vcard', 'pdf', 'png', 'svg', 'utc',
-    'saas', 'api', 'http', 'https', 'gps', 'geo'
-  ];
-  const normalized = enVal.toLowerCase().trim();
-  if (noTranslate.includes(normalized)) return false;
-  if (noTranslate.some(term => normalized === term || normalized === term + '.' || normalized === term + '!')) return false;
-  
-  return true;
-}
-
-// Helper to chunk an array
-function chunkArray(array, size) {
-  const result = [];
-  for (let i = 0; i < array.length; i += size) {
-    result.push(array.slice(i, i + size));
+function cleanAndParseJson(text) {
+  let cleaned = text.trim();
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/, "");
   }
-  return result;
+  cleaned = cleaned.trim();
+
+  const firstBrace = cleaned.indexOf('{');
+  const firstBracket = cleaned.indexOf('[');
+  
+  let startIdx = -1;
+  let endIdx = -1;
+  
+  if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+    startIdx = firstBrace;
+    endIdx = cleaned.lastIndexOf('}');
+  } else if (firstBracket !== -1) {
+    startIdx = firstBracket;
+    endIdx = cleaned.lastIndexOf(']');
+  }
+  
+  if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+    cleaned = cleaned.slice(startIdx, endIdx + 1);
+  }
+  return JSON.parse(cleaned);
 }
 
-// Low-level batch translation function using a specific model
-async function translateBatch(batch, langName, model) {
-  const payload = {};
-  const properties = {};
-  const requiredKeys = [];
-
-  batch.forEach(({ key, value }) => {
-    payload[key] = value;
-    properties[key] = {
-      type: Type.STRING,
-      description: `The professional ${langName} translation for: "${value}"`
-    };
-    requiredKeys.push(key);
-  });
-
-  const prompt = `You are a professional software translator for a premium QR code generator application.
-Translate the following English key-value pairs into ${langName}.
+async function translateBatch(enBatch, targetLangName) {
+  const prompt = `You are an expert software localization translator.
+Translate the following English translation key-value pairs (in JSON format) into ${targetLangName}.
 
 Rules:
-1. Preserve all placeholders like {count}, {name}, {{variable}}, {something}, {value}, {time}, {date}, etc. EXACTLY as they are in English. Do not translate or modify the words or variables inside the braces/brackets.
-2. Preserve all HTML tags (e.g. <strong>, </strong>, <br>, <a>, etc.) and Markdown formatting exactly.
-3. NEVER translate the following brand and product terms (keep them exactly as they are in English):
-   - "FreeQRGen.pro"
-   - "Free QR Generator"
-   - "iSolutions"
-   - "QR Code"
-   - "QR Codes"
-4. Translate all other text professionally, naturally, and contextually for a modern SaaS product/utility.
-5. Return ONLY a valid JSON object matching the input keys with their translated values.
+1. Return ONLY a valid JSON object where keys match the input keys EXACTLY and the values are translated into ${targetLangName}.
+2. Keep the keys unchanged.
+3. Translate ONLY the values.
+4. Preserve all formatting, markdown, HTML tags, and placeholders EXACTLY.
+   Examples of placeholders to keep unchanged:
+   - {{count}}
+   - {{name}}
+   - {url}
+   - {section}
+   - {author}
+   - {speed}
+   - and any other placeholders inside curly braces.
+5. Ensure any double quotes inside the translated values are properly escaped as \\" to maintain valid JSON syntax.
+6. Do not add any conversational text or surrounding markdown blocks (like \`\`\`json) in your response. Return only the raw JSON.
 
-Input:
-${JSON.stringify(payload, null, 2)}`;
+Input JSON:
+${JSON.stringify(enBatch, null, 2)}`;
 
-  const response = await ai.models.generateContent({
-    model,
-    contents: prompt,
-    config: {
-      responseMimeType: 'application/json',
-      responseSchema: {
-        type: Type.OBJECT,
-        properties,
-        required: requiredKeys
-      }
-    },
-  });
-
-  const text = response.text?.trim();
-  if (!text) {
-    throw new Error('Empty response from model');
-  }
-
-  const translated = JSON.parse(text);
-  return translated;
-}
-
-// High-level batch translation with automatic model switching, retries, and backoff
-async function translateBatchWithRetry(batch, langName) {
-  const maxAttempts = 10;
-  let delay = 5000;
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    // Use gemini-3.1-flash-lite as primary (highly stable and fast), fallback to gemini-3.5-flash
-    const model = attempt <= 5 ? 'gemini-3.1-flash-lite' : 'gemini-3.5-flash';
+  let attempts = 0;
+  while (attempts < 5) {
     try {
-      const result = await translateBatch(batch, langName, model);
-      return result;
-    } catch (err) {
-      log(`  [Attempt ${attempt}/${maxAttempts} with ${model} failed]: ${err.message}`);
-      if (attempt === maxAttempts) {
-        throw err;
+      const response = await ai.models.generateContent({
+        model: "gemini-3.1-flash-lite",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          temperature: 0.1,
+        }
+      });
+
+      const text = response.text;
+      if (!text) {
+        throw new Error("Empty response from Gemini");
       }
-      const jitter = Math.random() * 3000;
-      const actualDelay = delay + jitter;
-      log(`  Waiting ${Math.round(actualDelay)}ms before retrying...`);
-      await new Promise(r => setTimeout(r, actualDelay));
-      delay = Math.min(delay * 1.5, 30000); // Cap backoff at 30 seconds
-    }
-  }
-}
 
-async function run() {
-  // Append to progress log instead of overwriting, to preserve history
-  fs.appendFileSync('translate_progress.log', '\n=== Translation Log Resumed ===\n', 'utf8');
-
-  const enPath = path.join('src', 'locales', 'en.json');
-  if (!fs.existsSync(enPath)) {
-    log('English locale file not found at: ' + enPath);
-    process.exit(1);
-  }
-
-  const en = JSON.parse(fs.readFileSync(enPath, 'utf8'));
-  const enKeys = Object.keys(en);
-
-  log(`Loaded English locale with ${enKeys.length} keys.`);
-
-  // Process languages sequentially to minimize API concurrency issues
-  for (const [loc, langName] of Object.entries(languages)) {
-    log(`\n==============================================`);
-    log(`Processing Locale: ${loc} (${langName})`);
-    log(`==============================================`);
-
-    const locPath = path.join('src', 'locales', `${loc}.json`);
-    let target = {};
-    if (fs.existsSync(locPath)) {
+      let translated;
       try {
-        target = JSON.parse(fs.readFileSync(locPath, 'utf8'));
-      } catch (e) {
-        log(`  Could not parse existing ${loc}.json, starting fresh.`);
+        translated = cleanAndParseJson(text);
+      } catch (parseErr) {
+        console.error(`[Parse Debug] Failed parsing. Text length: ${text.length}`);
+        console.error(`[Parse Debug] First 50 chars: ${JSON.stringify(text.slice(0, 50))}`);
+        console.error(`[Parse Debug] Last 100 chars: ${JSON.stringify(text.slice(-100))}`);
+        throw parseErr;
       }
-    }
-
-    // Determine keys needing translation
-    const itemsToTranslate = [];
-    enKeys.forEach(k => {
-      if (shouldTranslate(en[k], target[k])) {
-        itemsToTranslate.push({ key: k, value: en[k] });
-      } else {
-        if (target[k] === undefined) {
-          target[k] = en[k];
+      
+      // Auto-correct any model key typos
+      const expectedKeys = Object.keys(enBatch);
+      const corrected = {};
+      for (const k in translated) {
+        if (expectedKeys.includes(k)) {
+          corrected[k] = translated[k];
+        } else {
+          // Fuzzy-match key typos like repeating words
+          const match = expectedKeys.find(expectedKey => {
+            return expectedKey.toLowerCase() === k.toLowerCase().replace(/developerdeveloper/g, "developer") ||
+                   expectedKey.toLowerCase().replace(/developer/g, "") === k.toLowerCase().replace(/developer/g, "") ||
+                   expectedKey.toLowerCase().replace(/[^a-z0-9]/g, "") === k.toLowerCase().replace(/[^a-z0-9]/g, "");
+          });
+          if (match) {
+            console.warn(`[Key Typo Correction] Auto-mapped "${k}" to expected key "${match}"`);
+            corrected[match] = translated[k];
+          } else {
+            corrected[k] = translated[k];
+          }
         }
       }
+      translated = corrected;
+      
+      const missingKeys = Object.keys(enBatch).filter(k => !(k in translated));
+      if (missingKeys.length > 0) {
+        console.warn(`[Warning] Translated batch missing keys: ${missingKeys.join(', ')}. Retrying...`);
+        attempts++;
+        await delay(2000 * attempts);
+        continue;
+      }
+
+      return translated;
+    } catch (e) {
+      console.error(`[Error] Translate batch failed (Attempt ${attempts + 1}): ${e.message}`);
+      attempts++;
+      await delay(3000 * attempts);
+    }
+  }
+  throw new Error(`Failed to translate batch after 5 attempts`);
+}
+
+async function main() {
+  const args = process.argv.slice(2);
+  let languagesToProcess = LANGUAGE_NAMES;
+  if (args.length > 0) {
+    languagesToProcess = {};
+    args.forEach(arg => {
+      const lang = arg.toLowerCase();
+      if (LANGUAGE_NAMES[lang]) {
+        languagesToProcess[lang] = LANGUAGE_NAMES[lang];
+      } else {
+        console.warn(`[Warning] Unknown language code: ${arg}`);
+      }
     });
+  }
 
-    log(`  Total keys: ${enKeys.length}`);
-    log(`  Already translated/untranslatable: ${enKeys.length - itemsToTranslate.length}`);
-    log(`  Keys needing translation: ${itemsToTranslate.length}`);
+  const enPath = path.join('src', 'locales', 'en.json');
+  const enData = JSON.parse(fs.readFileSync(enPath, 'utf8'));
+  const enKeys = Object.keys(enData);
+  console.log(`Loaded English source with ${enKeys.length} keys.`);
 
-    if (itemsToTranslate.length === 0) {
-      log(`  No keys need translation for ${loc}. Saving file to align keys.`);
-      const aligned = {};
-      enKeys.forEach(k => {
-        aligned[k] = target[k] !== undefined ? target[k] : en[k];
-      });
-      fs.writeFileSync(locPath, JSON.stringify(aligned, null, 2), 'utf8');
+  // Migrate old combined progress file to individual files
+  const oldProgressPath = path.join('src', 'locales', '.translation_progress.json');
+  if (fs.existsSync(oldProgressPath)) {
+    try {
+      const oldProgress = JSON.parse(fs.readFileSync(oldProgressPath, 'utf8'));
+      for (const [langCode, keys] of Object.entries(oldProgress)) {
+        const individualPath = path.join('src', 'locales', `.translation_progress_${langCode}.json`);
+        if (!fs.existsSync(individualPath)) {
+          fs.writeFileSync(individualPath, JSON.stringify(keys, null, 2), 'utf8');
+          console.log(`Migrated old progress for ${langCode} to ${individualPath}`);
+        }
+      }
+      fs.unlinkSync(oldProgressPath);
+    } catch (e) {
+      console.warn("Failed migrating old progress file:", e.message);
+    }
+  }
+
+  for (const [langCode, langName] of Object.entries(languagesToProcess)) {
+    console.log(`\n========================================`);
+    console.log(`Processing ${langName} (${langCode})...`);
+    console.log(`========================================`);
+
+    const targetPath = path.join('src', 'locales', `${langCode}.json`);
+    let targetData = {};
+    if (fs.existsSync(targetPath)) {
+      try {
+        targetData = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
+      } catch (e) {
+        console.warn(`Failed to parse existing ${langCode}.json, starting fresh:`, e.message);
+      }
+    }
+
+    const progressPath = path.join('src', 'locales', `.translation_progress_${langCode}.json`);
+    let progressKeys = {};
+    if (fs.existsSync(progressPath)) {
+      try {
+        progressKeys = JSON.parse(fs.readFileSync(progressPath, 'utf8'));
+      } catch (e) {
+        console.warn(`Failed to parse progress for ${langCode}, starting fresh:`, e.message);
+      }
+    }
+
+    const keysToTranslate = enKeys.filter(k => !progressKeys[k]);
+    console.log(`${langName}: ${keysToTranslate.length} keys left to translate.`);
+
+    if (keysToTranslate.length === 0) {
+      console.log(`All keys for ${langName} are already translated!`);
       continue;
     }
 
-    // Batch size of 80 ensures fast, stable translations with structured outputs
-    const BATCH_SIZE = 80;
-    const batches = chunkArray(itemsToTranslate, BATCH_SIZE);
-    log(`  Divided into ${batches.length} batches of size up to ${BATCH_SIZE}.`);
+    for (let i = 0; i < keysToTranslate.length; i += BATCH_SIZE) {
+      const batchKeys = keysToTranslate.slice(i, i + BATCH_SIZE);
+      const batchNum = Math.floor(i / BATCH_SIZE) + 1;
+      const totalBatches = Math.ceil(keysToTranslate.length / BATCH_SIZE);
+      console.log(`Translating batch ${batchNum} / ${totalBatches} for ${langName} (${batchKeys.length} keys)...`);
 
-    for (let i = 0; i < batches.length; i++) {
-      const batch = batches[i];
-      log(`  Translating batch ${i + 1}/${batches.length} (${batch.length} keys)...`);
-      
+      const enBatch = {};
+      batchKeys.forEach(k => {
+        enBatch[k] = enData[k];
+      });
+
       try {
-        const translatedBatch = await translateBatchWithRetry(batch, langName);
-        Object.entries(translatedBatch).forEach(([k, v]) => {
-          target[k] = v;
+        const translatedBatch = await translateBatch(enBatch, langName);
+
+        batchKeys.forEach(k => {
+          targetData[k] = translatedBatch[k];
+          progressKeys[k] = true;
         });
 
-        // Write incremental updates to file after every batch so we don't lose progress
-        const aligned = {};
-        enKeys.forEach(k => {
-          aligned[k] = target[k] !== undefined ? target[k] : en[k];
-        });
-        fs.writeFileSync(locPath, JSON.stringify(aligned, null, 2), 'utf8');
-      } catch (batchErr) {
-        log(`  [CRITICAL] Batch ${i + 1} failed permanently after all retries: ${batchErr.message}`);
-        log('  Falling back to English values for failed batch keys to maintain key alignment.');
-        batch.forEach(({ key, value }) => {
-          if (target[key] === undefined) {
-            target[key] = value;
-          }
-        });
+        fs.writeFileSync(targetPath, JSON.stringify(targetData, null, 2), 'utf8');
+        fs.writeFileSync(progressPath, JSON.stringify(progressKeys, null, 2), 'utf8');
+
+        console.log(`Saved batch to ${targetPath}.`);
+        await delay(300);
+      } catch (e) {
+        console.error(`FATAL error processing batch: ${e.message}`);
+        console.log(`Pausing before retrying same batch...`);
+        await delay(5000);
+        i -= BATCH_SIZE; 
       }
-
-      // Respectful throttle between sequential batches to maintain high API stability
-      await new Promise(r => setTimeout(r, 2000));
     }
 
-    // Final alignment check and write to ensure perfectly ordered keys matching en.json
-    const finalAligned = {};
-    enKeys.forEach(k => {
-      finalAligned[k] = target[k] !== undefined ? target[k] : en[k];
-    });
-    fs.writeFileSync(locPath, JSON.stringify(finalAligned, null, 2), 'utf8');
-
-    let remainingIdentical = 0;
-    Object.keys(en).forEach(k => {
-      if (shouldTranslate(en[k], finalAligned[k])) remainingIdentical++;
-    });
-    log(`  Finished ${loc}. Remaining keys identical to English: ${remainingIdentical}`);
+    console.log(`Finished ${langName}!`);
   }
 
-  log('\nAll locales processed successfully!');
+  console.log(`\nReconstructing data.json with new translations...`);
+  const locales = ['en', 'ar', 'ur', 'de', 'fr', 'es', 'pt', 'it', 'tr', 'id', 'hi', 'zh', 'ja', 'ko'];
+  const dataPath = path.join('src', 'locales', 'data.json');
+  if (fs.existsSync(dataPath)) {
+    const dataContent = fs.readFileSync(dataPath, 'utf8');
+    const transIndex = dataContent.indexOf('"translations"');
+    if (transIndex !== -1) {
+      const commaIndex = dataContent.lastIndexOf(',', transIndex);
+      const intactPart = dataContent.slice(0, commaIndex);
+      try {
+        const baseObj = JSON.parse(intactPart + '}');
+        const translations = {};
+        locales.forEach(loc => {
+          const filePath = path.join('src', 'locales', `${loc}.json`);
+          if (fs.existsSync(filePath)) {
+            translations[loc] = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          }
+        });
+        baseObj.translations = translations;
+        fs.writeFileSync(dataPath, JSON.stringify(baseObj, null, 2), 'utf8');
+        console.log(`Updated ${dataPath} successfully!`);
+      } catch (e) {
+        console.error(`Failed to update data.json:`, e.message);
+      }
+    }
+  }
+
+  console.log(`All translations and integration complete!`);
 }
 
-run().catch(err => {
-  log('Fatal translation engine error: ' + err.message);
-  process.exit(1);
-});
+main().catch(console.error);
