@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "what-is-qr-code-how-it-works",
+    "title": "What Is a QR Code and How Does It Work?",
+    "metaTitle": "What Is a QR Code & How Do QR Codes Work? Complete Guide",
+    "metaDescription": "Learn everything about QR codes: what they are, how they work, error correction, and the mechanics of 2D matrix grids in this technical guide.",
+    "category": "QR Code Guides",
+    "date": "June 2, 2026",
+    "readingTime": "5 min read",
+    "author": "iSolutions Technical Team",
+    "intro": "Quick Response (QR) codes have transitioned from niche automotive tracking systems in the mid-1990s to universal symbols of digital convenience today. This guide uncovers the math, science, and practical mechanics underpinning the iconic black-and-white grids.",
+    "contentMarkdown": "## Understanding the 2D Matrix Standard\n\nUnlike traditional 1D barcodes that encode numbers along a single linear scanner axis, QR codes are **two-dimensional matrix symbols**. They store data along both the horizontal and vertical axes, allowing them to capture up to 300 times more data than standard barcodes. This 2D grid structure enables fast-focus scanning, immediate coordinate lookups, and multi-mode text alignment.\n\n### Key Visual Components of a QR Code\n\nWhen you look at a custom generated QR Code, you'll observe several recurring landmarks that help scanner software read information accurately:\n\n1. **Finder Patterns (Position Detection)**: The three large concentric squares in the corners (top-left, top-right, bottom-left) that orient the scanner camera and help it register the bounds of the code instantly.\n2. **Alignment Patterns**: Smaller squares used to calibrate physical distortion, curved surfaces (like on bottles or cups), and printing skew.\n3. **Timing Patterns**: Alternating black-and-white modules linking the finder patterns that define the grid coordinate coordinates.\n4. **Format Information**: Pixels detailing the specific data encoding type (alphanumeric, raw bytes, etc.) and selected error correction presets.\n5. **Quiet Zone**: The continuous clear margin surrounding the perimeter of the code, preventing environmental noise from corrupting standard scans.\n\n### How Data Is Encoded Inside the Grid\n\nThe core processing engine translates digital payloads (such as web links, WiFi credentials, or contact cards) into direct binary states—represented structurally as bright or dark modules. Level-by-level parameters are calculated using standardized modes:\n* **Numeric Mode**: Best for phone contacts and serial numbers.\n* **Alphanumeric Mode**: Supports alphanumeric characters and capital punctuation.\n* **Byte Mode (8-bit binary)**: The universal standard for URLs, vCards, and dynamic campaigns.\n\n### The Power of Reed-Solomon Error Correction\n\nOne of the most remarkable features of QR code technology is its built-in robustness. Using **Reed-Solomon algebraic algorithms**, the converter encodes redundant data sequences into the grid. If a printed label becomes scratched, wet, or partly covered by an image logo, the scanning software mathematically reconstructs the missing pixels. We offer four levels of correction:\n* **Level L**: Restores up to 7% of missing modules.\n* **Level M**: Restores up to 15% of missing modules.\n* **Level Q**: Restores up to 25% of missing modules.\n* **Level H**: Restores up to 30% of missing modules (ideal for custom brand logos).",
+    "relatedFAQs": [
+      {
+        "question": "Can standard readers scan damaged QR codes?",
+        "answer": "Yes, if the code utilizes level Q or H error correction, it can easily handle scuffs or central embedded branding logos without failing."
+      },
+      {
+        "question": "Does size affect scannability?",
+        "answer": "Absolutely. We advise a minimum print width of 2cm x 2cm to allow mobile phone lenses to focus clearly on the individual grid dots."
+      }
+    ],
+    "internalLinks": [
+      {
+        "label": "Create a Custom QR Code",
+        "url": "/"
+      },
+      {
+        "label": "Read Our FAQs",
+        "url": "/faq"
+      }
+    ]
+  }
+]

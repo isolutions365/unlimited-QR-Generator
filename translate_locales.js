@@ -251,33 +251,6 @@ async function main() {
     console.log(`Finished ${langName}!`);
   }
 
-  console.log(`\nReconstructing data.json with new translations...`);
-  const locales = ['en', 'ar', 'ur', 'de', 'fr', 'es', 'pt', 'it', 'tr', 'id', 'hi', 'zh', 'ja', 'ko'];
-  const dataPath = path.join('src', 'locales', 'data.json');
-  if (fs.existsSync(dataPath)) {
-    const dataContent = fs.readFileSync(dataPath, 'utf8');
-    const transIndex = dataContent.indexOf('"translations"');
-    if (transIndex !== -1) {
-      const commaIndex = dataContent.lastIndexOf(',', transIndex);
-      const intactPart = dataContent.slice(0, commaIndex);
-      try {
-        const baseObj = JSON.parse(intactPart + '}');
-        const translations = {};
-        locales.forEach(loc => {
-          const filePath = path.join('src', 'locales', `${loc}.json`);
-          if (fs.existsSync(filePath)) {
-            translations[loc] = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-          }
-        });
-        baseObj.translations = translations;
-        fs.writeFileSync(dataPath, JSON.stringify(baseObj, null, 2), 'utf8');
-        console.log(`Updated ${dataPath} successfully!`);
-      } catch (e) {
-        console.error(`Failed to update data.json:`, e.message);
-      }
-    }
-  }
-
   console.log(`All translations and integration complete!`);
 }
 
