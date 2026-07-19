@@ -3037,5 +3037,12 @@
   "guides.item.pdf-qr-generator.title": "免费 PDF 二维码生成器",
   "guides.item.pdf-qr-generator.desc": "将您的实体手册数字化。扫描即可查看和下载 PDF 文档。",
   "urlqr.trustVector": "高速矢量导出",
-  "urlqr.verifyDestination": "验证目标地址"
+  "urlqr.verifyDestination": "验证目标地址",
+  "nav.signUp": "Sign Up",
+  "colorPalette.slate": "Slate",
+  "colorPalette.indigo": "Indigo",
+  "colorPalette.emerald": "Emerald",
+  "colorPalette.cherry": "Cherry",
+  "colorPalette.violet": "Violet",
+  "colorPalette.amber": "Amber"
 }

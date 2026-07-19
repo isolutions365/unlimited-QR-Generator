@@ -3037,5 +3037,12 @@
   "urlqr.verifyDestination": "التحقق من الوجهة",
   "vision.ready": "جاهز",
   "vision.title": "رؤية QR Code للمحترفين",
-  "vision.tlsSecured": "محمي عبر TLS"
+  "vision.tlsSecured": "محمي عبر TLS",
+  "nav.signUp": "Sign Up",
+  "colorPalette.slate": "Slate",
+  "colorPalette.indigo": "Indigo",
+  "colorPalette.emerald": "Emerald",
+  "colorPalette.cherry": "Cherry",
+  "colorPalette.violet": "Violet",
+  "colorPalette.amber": "Amber"
 }

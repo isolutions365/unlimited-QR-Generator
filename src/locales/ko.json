@@ -3037,5 +3037,12 @@
   "guides.item.pdf-qr-generator.title": "무료 PDF QR 코드 생성기",
   "guides.item.pdf-qr-generator.desc": "물리적 매뉴얼을 디지털로 전환하세요. 스캔하여 PDF 문서를 보고 다운로드하세요.",
   "urlqr.trustVector": "고속 벡터 내보내기",
-  "urlqr.verifyDestination": "목적지 확인"
+  "urlqr.verifyDestination": "목적지 확인",
+  "nav.signUp": "Sign Up",
+  "colorPalette.slate": "Slate",
+  "colorPalette.indigo": "Indigo",
+  "colorPalette.emerald": "Emerald",
+  "colorPalette.cherry": "Cherry",
+  "colorPalette.violet": "Violet",
+  "colorPalette.amber": "Amber"
 }

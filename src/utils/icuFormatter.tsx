@@ -18,13 +18,19 @@ export function formatICU(
 ): React.ReactNode {
   if (!message) return '';
 
+  // Convert double curly braces {{variable}} to single curly braces {variable} for standard ICU compatibility
+  let normalizedMessage = message;
+  if (message.includes('{{')) {
+    normalizedMessage = message.replace(/\{\{/g, '{').replace(/\}\}/g, '}');
+  }
+
   // Fast path: if there are no brackets or tags, return raw text
-  if (!message.includes('{') && !message.includes('<')) {
-    return message;
+  if (!normalizedMessage.includes('{') && !normalizedMessage.includes('<')) {
+    return normalizedMessage;
   }
 
   try {
-    return parseAndRender(message, values, locale);
+    return parseAndRender(normalizedMessage, values, locale);
   } catch (error) {
     console.error('ICU parsing failed for message:', message, error);
     return message; // Graceful degradation
@@ -118,6 +124,12 @@ function parseAndRender(
   // Simplify results: if single string, return string
   if (result.length === 1 && typeof result[0] === 'string') {
     return result[0];
+  }
+
+  // If all elements are strings, join them into a single string to avoid rendering React elements/arrays in place of strings
+  const allStrings = result.every(node => typeof node === 'string');
+  if (allStrings) {
+    return result.join('');
   }
   
   return result.map((node, index) => (

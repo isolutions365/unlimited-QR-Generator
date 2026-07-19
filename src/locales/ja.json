@@ -3037,5 +3037,12 @@
   "guides.item.pdf-qr-generator.title": "無料PDF QRコード生成ツール",
   "guides.item.pdf-qr-generator.desc": "物理的なマニュアルをデジタル化。スキャンしてPDFドキュメントを閲覧・ダウンロードできます。",
   "urlqr.trustVector": "高速ベクターエクスポート",
-  "urlqr.verifyDestination": "宛先を確認"
+  "urlqr.verifyDestination": "宛先を確認",
+  "nav.signUp": "Sign Up",
+  "colorPalette.slate": "Slate",
+  "colorPalette.indigo": "Indigo",
+  "colorPalette.emerald": "Emerald",
+  "colorPalette.cherry": "Cherry",
+  "colorPalette.violet": "Violet",
+  "colorPalette.amber": "Amber"
 }

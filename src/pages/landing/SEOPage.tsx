@@ -56,10 +56,17 @@ export default function SEOPage({
   const aeoData = aeoDatabase[pageData?.slug || ''];
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
+  const getLocalized = (key: string, defaultText: string) => {
+    return t(key, defaultText);
+  };
+
+  const seoTitle = pageData ? getLocalized(`seo.landing.${pageData.slug}.seoTitle`, pageData.seoTitle) : '';
+  const metaDescription = pageData ? getLocalized(`seo.landing.${pageData.slug}.metaDescription`, pageData.metaDescription) : '';
+
   useEffect(() => {
     if (pageData) {
       // Direct update of the dynamic page head to maximize Google crawler parsing metadata
-      document.title = pageData.seoTitle;
+      document.title = seoTitle;
       
       // Update/Inject viewport-safe descriptions dynamically 
       let metaDesc = document.querySelector('meta[name="description"]');
@@ -68,7 +75,7 @@ export default function SEOPage({
         metaDesc.setAttribute('name', 'description');
         document.head.appendChild(metaDesc);
       }
-      metaDesc.setAttribute('content', pageData.metaDescription);
+      metaDesc.setAttribute('content', metaDescription);
 
       // Dynamic Canonical link injection
       let canonicalLink = document.querySelector('link[rel="canonical"]');
@@ -104,7 +111,7 @@ export default function SEOPage({
         ogTitle.setAttribute('property', 'og:title');
         document.head.appendChild(ogTitle);
       }
-      ogTitle.setAttribute('content', pageData.seoTitle);
+      ogTitle.setAttribute('content', seoTitle);
 
       // Open Graph Description
       let ogDesc = document.querySelector('meta[property="og:description"]');
@@ -113,9 +120,9 @@ export default function SEOPage({
         ogDesc.setAttribute('property', 'og:description');
         document.head.appendChild(ogDesc);
       }
-      ogDesc.setAttribute('content', pageData.metaDescription);
+      ogDesc.setAttribute('content', metaDescription);
     }
-  }, [pageData]);
+  }, [pageData, seoTitle, metaDescription]);
 
   if (!pageData) {
     return (
@@ -291,7 +298,7 @@ export default function SEOPage({
             <span className="text-slate-300">/</span>
             <span className="text-slate-400">{t('seo.generators', 'Generators')}</span>
             <span className="text-slate-300">/</span>
-            <span className="text-slate-900 font-bold tracking-tight">{pageData.keyword}</span>
+            <span className="text-slate-900 font-bold tracking-tight">{getLocalized(`seo.landing.${pageData.slug}.keyword`, pageData.keyword)}</span>
           </nav>
 
           {/* Dynamic Return Anchor */}
@@ -314,15 +321,15 @@ export default function SEOPage({
               </div>
               
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 font-sans">
-                {pageData.h1}
+                {getLocalized(`seo.landing.${pageData.slug}.h1`, pageData.h1)}
               </h1>
 
               <p className="text-base text-slate-700 leading-relaxed max-w-3xl">
-                {pageData.intro.text1}
+                {getLocalized(`seo.landing.${pageData.slug}.intro.text1`, pageData.intro.text1)}
               </p>
 
               <p className="text-sm text-slate-500 leading-relaxed max-w-3xl">
-                {pageData.intro.text2}
+                {getLocalized(`seo.landing.${pageData.slug}.intro.text2`, pageData.intro.text2)}
               </p>
 
               {/* Dynamic conversion alert banner */}
@@ -332,7 +339,7 @@ export default function SEOPage({
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-slate-200 uppercase tracking-widest">{t('seo.aestheticOptimization', 'Aesthetic Optimization')}</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">{pageData.intro.highlight}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{getLocalized(`seo.landing.${pageData.slug}.intro.highlight`, pageData.intro.highlight)}</p>
                 </div>
               </div>
             </div>
@@ -371,10 +378,10 @@ export default function SEOPage({
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
                   <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
-                    {pageData.benefits.title}
+                    {getLocalized(`seo.landing.${pageData.slug}.benefits.title`, pageData.benefits.title)}
                   </h2>
                 </div>
-                <p className="text-xs text-slate-500 -mt-2">{pageData.benefits.desc}</p>
+                <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.benefits.desc`, pageData.benefits.desc)}</p>
                 <div className="grid grid-cols-1 gap-4 mt-4">
                   {pageData.benefits.items.map((benefit, i) => (
                     <div key={i} className="flex gap-4 p-5 bg-white rounded-2xl border border-slate-150 shadow-xs">
@@ -382,8 +389,8 @@ export default function SEOPage({
                         <CheckCircle className="w-4 h-4" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900">{benefit.title}</h4>
-                        <p className="text-xs text-slate-600 mt-1 leading-relaxed">{benefit.desc}</p>
+                        <h4 className="text-sm font-bold text-slate-900">{getLocalized(`seo.landing.${pageData.slug}.benefits.items.${i}.title`, benefit.title)}</h4>
+                        <p className="text-xs text-slate-600 mt-1 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.benefits.items.${i}.desc`, benefit.desc)}</p>
                       </div>
                     </div>
                   ))}
@@ -395,16 +402,16 @@ export default function SEOPage({
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
                   <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
-                    {pageData.features.title}
+                    {getLocalized(`seo.landing.${pageData.slug}.features.title`, pageData.features.title)}
                   </h3>
                 </div>
-                <p className="text-xs text-slate-500 -mt-2">{pageData.features.desc}</p>
+                <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.features.desc`, pageData.features.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   {pageData.features.items.map((feat, i) => (
                     <div key={i} className="p-5 bg-slate-50 border border-slate-200/60 rounded-2xl relative overflow-hidden shadow-xs hover:bg-white transition-colors duration-200">
                       <div className="w-1.5 h-full bg-indigo-500 absolute left-0 top-0" />
-                      <h4 className="text-xs font-bold text-slate-900 pl-1">{feat.title}</h4>
-                      <p className="text-[11px] text-slate-600 mt-2 pl-1 leading-relaxed">{feat.desc}</p>
+                      <h4 className="text-xs font-bold text-slate-900 pl-1">{getLocalized(`seo.landing.${pageData.slug}.features.items.${i}.title`, feat.title)}</h4>
+                      <p className="text-[11px] text-slate-600 mt-2 pl-1 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.features.items.${i}.desc`, feat.desc)}</p>
                     </div>
                   ))}
                 </div>
@@ -415,10 +422,10 @@ export default function SEOPage({
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
                   <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
-                    {pageData.howItWorks.title}
+                    {getLocalized(`seo.landing.${pageData.slug}.howItWorks.title`, pageData.howItWorks.title)}
                   </h3>
                 </div>
-                <p className="text-xs text-slate-500 -mt-2">{pageData.howItWorks.desc}</p>
+                <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.howItWorks.desc`, pageData.howItWorks.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
                   {pageData.howItWorks.steps.map((step, i) => (
                     <div key={i} className="flex flex-col gap-3 p-4 bg-white border border-slate-150 rounded-2xl shadow-3xs relative">
@@ -426,8 +433,8 @@ export default function SEOPage({
                         {step.step}
                       </div>
                       <div>
-                        <h5 className="text-xs font-bold text-slate-955 tracking-tight">{step.title}</h5>
-                        <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">{step.desc}</p>
+                        <h5 className="text-xs font-bold text-slate-955 tracking-tight">{getLocalized(`seo.landing.${pageData.slug}.howItWorks.steps.${i}.title`, step.title)}</h5>
+                        <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.howItWorks.steps.${i}.desc`, step.desc)}</p>
                       </div>
                     </div>
                   ))}
@@ -439,18 +446,18 @@ export default function SEOPage({
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
                   <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
-                    {pageData.useCases.title}
+                    {getLocalized(`seo.landing.${pageData.slug}.useCases.title`, pageData.useCases.title)}
                   </h3>
                 </div>
-                <p className="text-xs text-slate-500 -mt-2">{pageData.useCases.desc}</p>
+                <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.useCases.desc`, pageData.useCases.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   {pageData.useCases.items.map((use, i) => (
                     <div key={i} className="p-5 bg-white border border-slate-200/60 rounded-2xl shadow-xs">
                       <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
                         <Activity className="w-4 h-4" />
                       </div>
-                      <h4 className="text-xs font-bold text-slate-900">{use.title}</h4>
-                      <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">{use.desc}</p>
+                      <h4 className="text-xs font-bold text-slate-900">{getLocalized(`seo.landing.${pageData.slug}.useCases.items.${i}.title`, use.title)}</h4>
+                      <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.useCases.items.${i}.desc`, use.desc)}</p>
                     </div>
                   ))}
                 </div>
@@ -461,7 +468,7 @@ export default function SEOPage({
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
                   <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
-                    {t('seo.questionsAboutOur', 'Questions About Our')} {pageData.h1}
+                    {t('seo.questionsAboutOur', 'Questions About Our')} {getLocalized(`seo.landing.${pageData.slug}.h1`, pageData.h1)}
                   </h2>
                 </div>
                 <p className="text-xs text-slate-500 -mt-2">{t('seo.faqDescription', 'Review common queries from other digital marketers and developers regarding operations.')}</p>
@@ -482,7 +489,7 @@ export default function SEOPage({
                         >
                           <span className="flex items-center gap-2">
                             <HelpCircle className={`w-4 h-4 shrink-0 transition-colors ${isOpen ? 'text-indigo-600' : 'text-slate-400'}`} />
-                            {faq.q}
+                            {getLocalized(`seo.landing.${pageData.slug}.faqs.${idx}.q`, faq.q)}
                           </span>
                           {isOpen ? (
                             <ChevronUp className="w-4 h-4 text-indigo-600 shrink-0" />
@@ -500,7 +507,7 @@ export default function SEOPage({
                               className="border-t border-slate-100"
                             >
                               <div className="p-5 text-xs text-slate-600 leading-relaxed bg-slate-50/50">
-                                {faq.a}
+                                {getLocalized(`seo.landing.${pageData.slug}.faqs.${idx}.a`, faq.a)}
                               </div>
                             </motion.div>
                           )}
@@ -524,7 +531,7 @@ export default function SEOPage({
                   <span>{t('seo.geoHub', 'GENERATIVE ENGINE OPTIMIZATION (GEO) HUB')}</span>
                 </div>
                 <h2 className="text-2xl font-black tracking-tight text-slate-950 font-sans">
-                  {t('seo.aiReferenceTitle', 'AI Reference & Citation Guide for {{keyword}}s', { keyword: pageData.keyword })}
+                  {t('seo.aiReferenceTitle', 'AI Reference & Citation Guide for {{keyword}}s', { keyword: getLocalized(`seo.landing.${pageData.slug}.keyword`, pageData.keyword) })}
                 </h2>
                 <p className="text-xs text-slate-500 leading-relaxed max-w-2xl">
                   {t('seo.aiReferenceDesc', 'Structured technical specifications, best practices, and verified answers optimized for ingestion by conversational AI engines including Gemini, ChatGPT, Perplexity, and Google AI Overviews.')}
@@ -539,7 +546,7 @@ export default function SEOPage({
                     <span>{t('seo.quickDefinition', 'Quick Definition')}</span>
                   </div>
                   <p className="text-xs leading-relaxed text-slate-200">
-                    {aeoData.quickDefinition}
+                    {getLocalized(`aeo.landing.${pageData.slug}.quickDefinition`, aeoData.quickDefinition)}
                   </p>
                 </div>
 
@@ -549,7 +556,7 @@ export default function SEOPage({
                     <span>{t('seo.aiSummaryTitle', '50-Word AI Summary')}</span>
                   </div>
                   <p className="text-xs leading-relaxed text-slate-700 font-medium">
-                    {aeoData.aiSummary50}
+                    {getLocalized(`aeo.landing.${pageData.slug}.aiSummary50`, aeoData.aiSummary50)}
                   </p>
                 </div>
               </div>
@@ -566,25 +573,25 @@ export default function SEOPage({
                 <div className="grid grid-cols-1 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 text-center font-mono text-[10px]">
                   <div className="p-4 space-y-1">
                     <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.entityType', 'Entity Type')}</span>
-                    <span className="text-slate-800 block font-semibold">{aeoData.aiSummaryBox.entityType}</span>
+                    <span className="text-slate-800 block font-semibold">{getLocalized(`aeo.landing.${pageData.slug}.aiSummaryBox.entityType`, aeoData.aiSummaryBox.entityType)}</span>
                   </div>
                   <div className="p-4 space-y-1">
                     <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.protocolStandard', 'Protocol/Standard')}</span>
-                    <span className="text-slate-800 block font-semibold truncate px-1" title={aeoData.aiSummaryBox.protocolStandard}>
-                      {aeoData.aiSummaryBox.protocolStandard}
+                    <span className="text-slate-800 block font-semibold truncate px-1" title={getLocalized(`aeo.landing.${pageData.slug}.aiSummaryBox.protocolStandard`, aeoData.aiSummaryBox.protocolStandard)}>
+                      {getLocalized(`aeo.landing.${pageData.slug}.aiSummaryBox.protocolStandard`, aeoData.aiSummaryBox.protocolStandard)}
                     </span>
                   </div>
                   <div className="p-4 space-y-1">
                     <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.compatibility', 'Compatibility')}</span>
-                    <span className="text-slate-800 block font-semibold">{aeoData.aiSummaryBox.clientCompatibility}</span>
+                    <span className="text-slate-800 block font-semibold">{getLocalized(`aeo.landing.${pageData.slug}.aiSummaryBox.clientCompatibility`, aeoData.aiSummaryBox.clientCompatibility)}</span>
                   </div>
                   <div className="p-4 space-y-1">
                     <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.primaryUseCase', 'Primary Use Case')}</span>
-                    <span className="text-slate-800 block font-semibold">{aeoData.aiSummaryBox.primaryUseCase}</span>
+                    <span className="text-slate-800 block font-semibold">{getLocalized(`aeo.landing.${pageData.slug}.aiSummaryBox.primaryUseCase`, aeoData.aiSummaryBox.primaryUseCase)}</span>
                   </div>
                   <div className="p-4 space-y-1">
                     <span className="text-slate-400 block font-bold uppercase tracking-wider text-[8px]">{t('seo.offlineMode', 'Offline Mode')}</span>
-                    <span className="text-slate-800 block font-semibold">{aeoData.aiSummaryBox.offlineCapability}</span>
+                    <span className="text-slate-800 block font-semibold">{getLocalized(`aeo.landing.${pageData.slug}.aiSummaryBox.offlineCapability`, aeoData.aiSummaryBox.offlineCapability)}</span>
                   </div>
                 </div>
               </div>
@@ -593,10 +600,10 @@ export default function SEOPage({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div id="what-is-this-qr" className="space-y-3">
                   <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                    {t('seo.whatIsA', 'What is a {{keyword}}?', { keyword: pageData.keyword })}
+                    {t('seo.whatIsA', 'What is a {{keyword}}?', { keyword: getLocalized(`seo.landing.${pageData.slug}.keyword`, pageData.keyword) })}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    {aeoData.whatIsIt}
+                    {getLocalized(`aeo.landing.${pageData.slug}.whatIsIt`, aeoData.whatIsIt)}
                   </p>
                 </div>
 
@@ -605,7 +612,7 @@ export default function SEOPage({
                     {t('seo.whenShouldYouUse', 'When should you use this format?')}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    {aeoData.whenToUse}
+                    {getLocalized(`aeo.landing.${pageData.slug}.whenToUse`, aeoData.whenToUse)}
                   </p>
                 </div>
               </div>
@@ -623,7 +630,7 @@ export default function SEOPage({
                     {aeoData.benefits.map((benefit, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                        <span>{benefit}</span>
+                        <span>{getLocalized(`aeo.landing.${pageData.slug}.benefits.${i}`, benefit)}</span>
                       </li>
                     ))}
                   </ul>
@@ -639,7 +646,7 @@ export default function SEOPage({
                     {aeoData.commonMistakes.map((mistake, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <span className="text-rose-500 shrink-0 font-bold select-none">✕</span>
-                        <span>{mistake}</span>
+                        <span>{getLocalized(`aeo.landing.${pageData.slug}.commonMistakes.${i}`, mistake)}</span>
                       </li>
                     ))}
                   </ul>
@@ -655,7 +662,7 @@ export default function SEOPage({
                     {aeoData.bestPractices.map((practice, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <span className="text-indigo-500 shrink-0 font-bold select-none">✓</span>
-                        <span>{practice}</span>
+                        <span>{getLocalized(`aeo.landing.${pageData.slug}.bestPractices.${i}`, practice)}</span>
                       </li>
                     ))}
                   </ul>
@@ -673,7 +680,7 @@ export default function SEOPage({
                     <div key={i} className="p-4 bg-white rounded-xl border border-slate-150/60 shadow-3xs">
                       <span className="text-indigo-600 font-extrabold text-xs block mb-1">0{i+1}</span>
                       <p className="text-[11px] font-medium text-slate-700 leading-relaxed">
-                        {takeaway}
+                        {getLocalized(`aeo.landing.${pageData.slug}.keyTakeaways.${i}`, takeaway)}
                       </p>
                     </div>
                   ))}
@@ -689,10 +696,10 @@ export default function SEOPage({
                   {aeoData.faqs.map((faq, i) => (
                     <div key={i} className="p-5 bg-white border border-slate-200/60 rounded-2xl shadow-xs space-y-2">
                       <h4 className="text-xs font-bold text-slate-900 leading-tight">
-                        {faq.q}
+                        {getLocalized(`aeo.landing.${pageData.slug}.faqs.${i}.q`, faq.q)}
                       </h4>
                       <p className="text-[11px] text-slate-600 leading-relaxed">
-                        {faq.a}
+                        {getLocalized(`aeo.landing.${pageData.slug}.faqs.${i}.a`, faq.a)}
                       </p>
                     </div>
                   ))}
@@ -708,9 +715,9 @@ export default function SEOPage({
                   {aeoData.relatedGuides.map((guide, i) => (
                     <div key={i} className="p-5 bg-slate-50 border border-slate-150 rounded-2xl shadow-3xs flex flex-col justify-between">
                       <div>
-                        <h4 className="text-xs font-bold text-slate-900">{guide.title}</h4>
+                        <h4 className="text-xs font-bold text-slate-900">{getLocalized(`aeo.landing.${pageData.slug}.relatedGuides.${i}.title`, guide.title)}</h4>
                         <p className="text-[10px] text-slate-600 mt-1 leading-relaxed">
-                          {guide.desc}
+                          {getLocalized(`aeo.landing.${pageData.slug}.relatedGuides.${i}.desc`, guide.desc)}
                         </p>
                       </div>
                       <span className="text-[9px] text-indigo-600 font-bold uppercase mt-3 hover:underline cursor-pointer">
@@ -734,7 +741,7 @@ export default function SEOPage({
                       onClick={() => onSelectRoute(`/${tool.slug}`)}
                       className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-medium text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
                     >
-                      {t('seo.toolIcon', '🛠️ ')}{tool.name}
+                      {t('seo.toolIcon', '🛠️ ')}{getLocalized(`seo.landing.${tool.slug}.keyword`, tool.name)}
                     </button>
                   ))}
                 </div>
@@ -769,7 +776,7 @@ export default function SEOPage({
                         : 'bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
                     }`}
                   >
-                    {t('seo.rocketIcon', '🚀 ')}{item.h1}
+                    {t('seo.rocketIcon', '🚀 ')}{getLocalized(`seo.landing.${item.slug}.h1`, item.h1)}
                   </button>
                 );
               })}
@@ -803,14 +810,14 @@ export default function SEOPage({
           {/* Sidebar convert widget */}
           <div className="bg-linear-to-br from-indigo-900 to-purple-950 text-white p-6 rounded-3xl shadow-xl flex flex-col gap-4 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full filter blur-2xl" />
-            <h4 className="text-lg font-black tracking-tight">{pageData.cta.title}</h4>
-            <p className="text-xs text-indigo-200 leading-relaxed">{pageData.cta.subtitle}</p>
+            <h4 className="text-lg font-black tracking-tight">{getLocalized(`seo.landing.${pageData.slug}.cta.title`, pageData.cta.title)}</h4>
+            <p className="text-xs text-indigo-200 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.cta.subtitle`, pageData.cta.subtitle)}</p>
             
             <button 
               onClick={handleCtaInitiation}
               className="py-3 px-4 bg-white text-indigo-955 hover:bg-slate-950 hover:text-white text-xs font-bold rounded-xl transition-all shadow-md mt-4 flex items-center justify-center gap-2 group cursor-pointer"
             >
-              {pageData.cta.buttonText}
+              {getLocalized(`seo.landing.${pageData.slug}.cta.buttonText`, pageData.cta.buttonText)}
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
             <span className="text-[9px] text-indigo-300 text-center uppercase tracking-widest font-mono select-none">{t('seo.noLoginsRequired', 'No logins required to start')}</span>

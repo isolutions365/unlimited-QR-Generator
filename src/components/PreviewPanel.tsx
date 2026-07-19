@@ -287,7 +287,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const dotStyleName = currentProject.design?.dotStyle || 'square';
   const eyeStyleName = currentProject.design?.eyeStyle || 'square';
   const fgColorHex = currentProject.design?.fgColor || '#0f172a';
-  const shareText = `Check out my custom QR design 🎨: ${dotStyleName} style dots and ${eyeStyleName} style eyes in ${fgColorHex}. Created on QR Studio!`;
+  const shareText = t('preview.shareTextTemplate', 'Check out my custom QR design 🎨: {dotStyle} style dots and {eyeStyle} style eyes in {fgColor}. Created on QR Studio!', { dotStyle: dotStyleName, eyeStyle: eyeStyleName, fgColor: fgColorHex });
 
   const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(finalShareUrl)}`;
   const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(finalShareUrl)}`;
@@ -1717,7 +1717,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             <span>{t('preview.smartphoneSimulator', 'Smartphone Simulator')}</span>
           </div>
           <span className="text-[9px] px-2 py-0.5 rounded-full bg-indigo-900/50 border border-indigo-500/30 text-indigo-350 font-mono">
-            LIVE DECODER
+            {t('preview.liveDecoder', 'LIVE DECODER')}
           </span>
         </div>
 
@@ -1742,7 +1742,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   rel="noreferrer"
                   className="inline-flex items-center gap-1 text-[11px] text-indigo-400 hover:text-indigo-300 mt-2 hover:underline"
                 >
-                  Visit Destination URL
+                  {t('preview.visitDestinationUrl', 'Visit Destination URL')}
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               )}
@@ -1756,7 +1756,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 rounded-lg text-[10px] uppercase font-semibold transition-all border border-slate-800 cursor-pointer"
                 aria-label="Scan Canvas QR Code"
               >
-                Scan Canvas QR
+                {t('preview.scanCanvasQr', 'Scan Canvas QR')}
               </button>
             </div>
           )}

@@ -3037,5 +3037,12 @@
   "guides.item.pdf-qr-generator.title": "Generator Kode QR PDF Gratis",
   "guides.item.pdf-qr-generator.desc": "Jadikan manual fisik Anda digital. Pindai untuk melihat dan mengunduh dokumen PDF.",
   "urlqr.trustVector": "Ekspor Vektor Berkecepatan Tinggi",
-  "urlqr.verifyDestination": "Verifikasi Tujuan"
+  "urlqr.verifyDestination": "Verifikasi Tujuan",
+  "nav.signUp": "Sign Up",
+  "colorPalette.slate": "Slate",
+  "colorPalette.indigo": "Indigo",
+  "colorPalette.emerald": "Emerald",
+  "colorPalette.cherry": "Cherry",
+  "colorPalette.violet": "Violet",
+  "colorPalette.amber": "Amber"
 }

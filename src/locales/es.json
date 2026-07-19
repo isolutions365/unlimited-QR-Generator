@@ -3037,5 +3037,12 @@
   "urlqr.verifyDestination": "Verify Destination",
   "vision.ready": "Listo",
   "vision.title": "VISION QR PRO",
-  "vision.tlsSecured": "Protegido por TLS"
+  "vision.tlsSecured": "Protegido por TLS",
+  "nav.signUp": "Sign Up",
+  "colorPalette.slate": "Slate",
+  "colorPalette.indigo": "Indigo",
+  "colorPalette.emerald": "Emerald",
+  "colorPalette.cherry": "Cherry",
+  "colorPalette.violet": "Violet",
+  "colorPalette.amber": "Amber"
 }

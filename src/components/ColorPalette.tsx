@@ -168,7 +168,7 @@ export default function ColorPalette({
             {t('colorPalette.presetLabel')}
           </label>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-100 text-slate-500 font-mono">
-            {activePalette === 'Custom' ? t('colorPalette.custom') : activePalette}
+            {activePalette === 'Custom' ? t('colorPalette.custom') : t('colorPalette.' + activePalette.toLowerCase(), activePalette)}
           </span>
         </div>
 
@@ -205,7 +205,7 @@ export default function ColorPalette({
                       }}
                     />
                     <span className={isActive ? 'text-indigo-700  font-semibold' : 'text-gray-600 '}>
-                      {col.name}
+                      {t('colorPalette.' + col.name.toLowerCase(), col.name)}
                     </span>
                     {isActive && (
                       <motion.span
@@ -311,7 +311,7 @@ export default function ColorPalette({
               className={`py-1.5 rounded-lg border text-xs capitalize transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${ gradientType === g ? 'bg-gray-900 text-white border-gray-900 font-semibold shadow-xs' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50' }`}
               onClick={() => updateDesignFields({ gradientType: g }, true)}
             >
-              {g === 'none' ? t('control.type.none', 'none') : g === 'linear' ? t('control.type.linear', 'linear') : t('control.type.radial', 'radial')}
+              {g === 'none' ? t('palette.solidFill', 'Solid Fill') : g === 'linear' ? t('palette.linearGradient', 'Linear Gradient') : t('palette.radialGradient', 'Radial Gradient')}
             </button>
           ))}
         </div>
@@ -436,7 +436,7 @@ export default function ColorPalette({
 
                 <div className="text-center w-full">
                   <span className="text-[10px] font-bold text-slate-800 block truncate leading-tight">
-                    {swatch.name}
+                    {t('colorPalette.harmony.swatch.' + swatch.name.toLowerCase().replace(/ /g, '_'), swatch.name)}
                   </span>
                   <span className="text-[9px] font-mono text-slate-400 uppercase block font-semibold leading-none mt-0.5">
                     {swatch.hex}
@@ -459,7 +459,7 @@ export default function ColorPalette({
                   </span>
                   {activeSwatch && (
                     <span className="text-[9px] text-slate-400 leading-tight">
-                      {activeSwatch.role}
+                      {t('colorPalette.harmony.role.' + activeSwatch.name.toLowerCase().replace(/ /g, '_'), activeSwatch.role)}
                     </span>
                   )}
                 </div>

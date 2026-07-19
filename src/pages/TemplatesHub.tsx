@@ -119,7 +119,7 @@ export default function TemplatesHub({
         {
           "@type": "ListItem",
           "position": 3,
-          "name": activeTemplate.title,
+          "name": t('templates.item.' + activeTemplate.slug + '.title', activeTemplate.title),
           "item": canonicalUrl
         }
       ]
@@ -141,8 +141,8 @@ export default function TemplatesHub({
     const howToSchema = {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      "name": `${t('templates.howToCreateCustom', 'How to Create a Custom')} ${activeTemplate.title}`,
-      "description": activeTemplate.metaDescription,
+      "name": `${t('templates.howToCreateCustom', 'How to Create a Custom')} ${t('templates.item.' + activeTemplate.slug + '.title', activeTemplate.title)}`,
+      "description": t('templates.item.' + activeTemplate.slug + '.desc', activeTemplate.metaDescription),
       "step": activeTemplate.steps.map(s => ({
         "@type": "HowToStep",
         "position": parseInt(s.step),
@@ -217,7 +217,7 @@ export default function TemplatesHub({
               {t('templates.breadcrumbTemplates', 'Templates')}
             </button>
             <ChevronRight className="w-3 h-3 text-slate-300" />
-            <span className="text-slate-800 font-semibold truncate max-w-[200px] sm:max-w-none">{activeTemplate.title}</span>
+            <span className="text-slate-800 font-semibold truncate max-w-[200px] sm:max-w-none">{t('templates.item.' + activeTemplate.slug + '.title', activeTemplate.title)}</span>
           </nav>
         </div>
 
@@ -230,13 +230,13 @@ export default function TemplatesHub({
               <div className="lg:col-span-7 space-y-6">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase">
                   <LayoutTemplate className="w-3.5 h-3.5" />
-                  <span>{activeTemplate.badge}</span>
+                  <span>{t('templates.badge.' + activeTemplate.badge.replace(/ & /g, '_and_').replace(/ /g, '_').toLowerCase(), activeTemplate.badge)}</span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                  {activeTemplate.heading}
+                  {t('templates.item.' + activeTemplate.slug + '.heading', t('templates.item.' + activeTemplate.slug + '.title', activeTemplate.heading))}
                 </h1>
                 <p className="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
-                  {activeTemplate.subheading}
+                  {t('templates.item.' + activeTemplate.slug + '.subheading', t('templates.item.' + activeTemplate.slug + '.desc', activeTemplate.subheading))}
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
@@ -306,7 +306,7 @@ export default function TemplatesHub({
                 <span>{t('templates.authorityOverview', 'Authority Overview & Specs')}</span>
               </h2>
               <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
-                {activeTemplate.intro}
+                {t('templates.item.' + activeTemplate.slug + '.intro', activeTemplate.intro)}
               </p>
             </div>
 
@@ -322,8 +322,12 @@ export default function TemplatesHub({
                     <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
                       {i + 1}
                     </div>
-                    <h3 className="font-bold text-slate-900 text-sm">{uc.title}</h3>
-                    <p className="text-xs text-slate-500 leading-relaxed">{uc.desc}</p>
+                    <h3 className="font-bold text-slate-900 text-sm">
+                      {t('templates.item.' + activeTemplate.slug + '.useCases.' + i + '.title', uc.title)}
+                    </h3>
+                    <p className="text-xs text-slate-500 leading-relaxed">
+                      {t('templates.item.' + activeTemplate.slug + '.useCases.' + i + '.desc', uc.desc)}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -341,8 +345,12 @@ export default function TemplatesHub({
                     <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                       <Check className="w-4 h-4" />
                     </div>
-                    <h3 className="font-bold text-slate-900 text-sm">{b.title}</h3>
-                    <p className="text-xs text-slate-500 leading-relaxed">{b.desc}</p>
+                    <h3 className="font-bold text-slate-900 text-sm">
+                      {t('templates.item.' + activeTemplate.slug + '.benefits.' + i + '.title', b.title)}
+                    </h3>
+                    <p className="text-xs text-slate-500 leading-relaxed">
+                      {t('templates.item.' + activeTemplate.slug + '.benefits.' + i + '.desc', b.desc)}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -361,8 +369,12 @@ export default function TemplatesHub({
                       {s.step}
                     </div>
                     <div className="space-y-1">
-                      <h3 className="font-bold text-slate-900 text-sm sm:text-base">{s.title}</h3>
-                      <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{s.desc}</p>
+                      <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                        {t('templates.item.' + activeTemplate.slug + '.steps.' + i + '.title', s.title)}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        {t('templates.item.' + activeTemplate.slug + '.steps.' + i + '.desc', s.desc)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -380,7 +392,7 @@ export default function TemplatesHub({
                   {activeTemplate.bestPractices.map((bp, i) => (
                     <li key={i} className="flex gap-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
                       <span className="text-emerald-600 font-bold shrink-0">•</span>
-                      <span>{bp}</span>
+                      <span>{t('templates.item.' + activeTemplate.slug + '.bestPractices.' + i, bp)}</span>
                     </li>
                   ))}
                 </ul>
@@ -395,7 +407,7 @@ export default function TemplatesHub({
                   {activeTemplate.commonMistakes.map((cm, i) => (
                     <li key={i} className="flex gap-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
                       <span className="text-rose-600 font-bold shrink-0">•</span>
-                      <span>{cm}</span>
+                      <span>{t('templates.item.' + activeTemplate.slug + '.commonMistakes.' + i, cm)}</span>
                     </li>
                   ))}
                 </ul>
@@ -417,12 +429,12 @@ export default function TemplatesHub({
                         onClick={() => setOpenFaq(isOpen ? null : idx)}
                         className="w-full text-left p-4 flex justify-between items-center font-bold text-slate-800 text-sm hover:bg-slate-50 transition-colors"
                       >
-                        <span>{f.q}</span>
+                        <span>{t('templates.item.' + activeTemplate.slug + '.faqs.' + idx + '.q', f.q)}</span>
                         <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                       </button>
                       {isOpen && (
-                        <div className="p-4 pt-0 text-xs sm:text-sm text-slate-500 leading-relaxed border-t border-slate-50 bg-slate-50/20">
-                          {f.a}
+                        <div className="p-4 pt-0 text-xs sm:text-sm text-slate-500 leading-relaxed border-t border-slate-50 bg-slate-50/20 text-slate-600">
+                          {t('templates.item.' + activeTemplate.slug + '.faqs.' + idx + '.a', f.a)}
                         </div>
                       )}
                     </div>
@@ -446,23 +458,33 @@ export default function TemplatesHub({
               <div className="space-y-3.5 text-xs">
                 <div>
                   <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.entityCategory', 'Entity / Category')}</span>
-                  <span className="font-mono text-indigo-300 font-bold">{activeTemplate.aiSummaryBox.entityType}</span>
+                  <span className="font-mono text-indigo-300 font-bold">
+                    {t('templates.item.' + activeTemplate.slug + '.aiSummaryBox.entityType', activeTemplate.aiSummaryBox.entityType)}
+                  </span>
                 </div>
                 <div>
                   <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.standardProtocol', 'Standard / Protocol')}</span>
-                  <span className="font-mono text-slate-200">{activeTemplate.aiSummaryBox.protocolStandard}</span>
+                  <span className="font-mono text-slate-200">
+                    {t('templates.item.' + activeTemplate.slug + '.aiSummaryBox.protocolStandard', activeTemplate.aiSummaryBox.protocolStandard)}
+                  </span>
                 </div>
                 <div>
                   <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.clientCompatibility', 'Client Compatibility')}</span>
-                  <span className="text-slate-200 leading-relaxed">{activeTemplate.aiSummaryBox.clientCompatibility}</span>
+                  <span className="text-slate-200 leading-relaxed">
+                    {t('templates.item.' + activeTemplate.slug + '.aiSummaryBox.clientCompatibility', activeTemplate.aiSummaryBox.clientCompatibility)}
+                  </span>
                 </div>
                 <div>
                   <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.primaryTargetAction', 'Primary Target Action')}</span>
-                  <span className="text-slate-200 leading-relaxed">{activeTemplate.aiSummaryBox.primaryUseCase}</span>
+                  <span className="text-slate-200 leading-relaxed">
+                    {t('templates.item.' + activeTemplate.slug + '.aiSummaryBox.primaryUseCase', activeTemplate.aiSummaryBox.primaryUseCase)}
+                  </span>
                 </div>
                 <div>
                   <span className="text-slate-400 block font-semibold mb-0.5">{t('templates.offlineFunctionality', 'Offline Functionality')}</span>
-                  <span className="font-semibold text-emerald-400">{activeTemplate.aiSummaryBox.offlineCapability}</span>
+                  <span className="font-semibold text-emerald-400">
+                    {t('templates.item.' + activeTemplate.slug + '.aiSummaryBox.offlineCapability', activeTemplate.aiSummaryBox.offlineCapability)}
+                  </span>
                 </div>
               </div>
               <p className="text-[10px] text-slate-500 leading-snug border-t border-slate-800 pt-3">
@@ -480,7 +502,7 @@ export default function TemplatesHub({
                 {activeTemplate.keyTakeaways.map((kt, i) => (
                   <li key={i} className="flex gap-2 leading-relaxed">
                     <span className="text-indigo-500 font-bold">•</span>
-                    <span>{kt}</span>
+                    <span>{t('templates.item.' + activeTemplate.slug + '.keyTakeaways.' + i, kt)}</span>
                   </li>
                 ))}
               </ul>
@@ -664,7 +686,7 @@ export default function TemplatesHub({
                   {/* Card Header Info */}
                   <div className="flex items-start justify-between gap-2">
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600 border border-indigo-100">
-                      {tpl.badge}
+                      {t('templates.badge.' + tpl.badge.replace(/ & /g, '_and_').replace(/ /g, '_').toLowerCase(), tpl.badge)}
                     </span>
                     <span className="font-mono text-[9px] text-slate-400 uppercase">
                       {t('templates.cardType', 'Type:')} {tpl.qrType}
@@ -672,11 +694,11 @@ export default function TemplatesHub({
                   </div>
 
                   <h3 className="font-extrabold text-slate-900 text-base group-hover:text-indigo-600 transition-colors">
-                    {tpl.title}
+                    {t('templates.item.' + tpl.slug + '.title', tpl.title)}
                   </h3>
 
                   <p className="text-slate-500 text-xs leading-relaxed line-clamp-3">
-                    {tpl.metaDescription}
+                    {t('templates.item.' + tpl.slug + '.desc', tpl.metaDescription)}
                   </p>
                 </div>
 

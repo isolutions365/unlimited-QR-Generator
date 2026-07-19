@@ -2631,7 +2631,7 @@ export default function App() {
             {/* Complete Internal Linking Related Pages grid */}
             <section id="guide-relations" className="space-y-4">
               <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider font-mono">
-                {t('guides.relatedTitle')}
+                {t('guides.title', 'Related Free QR Generation Guides')}
               </h3>
               <div className="w-full h-[1px] bg-slate-200" />
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
@@ -2647,10 +2647,10 @@ export default function App() {
                     >
                       <div className="min-w-0">
                         <span className="block text-[11px] font-extrabold text-slate-900 group-hover:text-indigo-600 truncate">
-                          🚀 {item.h1}
+                          🚀 {t(`guides.item.${item.slug}.title`, item.h1)}
                         </span>
                         <p className="text-[9px] text-slate-600 mt-1 leading-relaxed truncate-3-lines min-h-[25px]">
-                          {item.intro.highlight}
+                          {t(`guides.item.${item.slug}.desc`, item.intro.highlight)}
                         </p>
                       </div>
                       <span className="text-[9px] font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1 mt-1">

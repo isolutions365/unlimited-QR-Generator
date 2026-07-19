@@ -3037,5 +3037,12 @@
   "guides.item.pdf-qr-generator.title": "मुफ्त PDF QR कोड जनरेटर",
   "guides.item.pdf-qr-generator.desc": "अपने भौतिक मैनुअल को डिजिटल बनाएं। PDF दस्तावेज़ देखने और डाउनलोड करने के लिए स्कैन करें।",
   "urlqr.trustVector": "हाई-स्पीड वेक्टर एक्सपोर्ट",
-  "urlqr.verifyDestination": "गंतव्य सत्यापित करें"
+  "urlqr.verifyDestination": "गंतव्य सत्यापित करें",
+  "nav.signUp": "Sign Up",
+  "colorPalette.slate": "Slate",
+  "colorPalette.indigo": "Indigo",
+  "colorPalette.emerald": "Emerald",
+  "colorPalette.cherry": "Cherry",
+  "colorPalette.violet": "Violet",
+  "colorPalette.amber": "Amber"
 }

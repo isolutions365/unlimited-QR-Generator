@@ -3037,5 +3037,12 @@
   "guides.item.pdf-qr-generator.title": "Generatore gratuito di codici QR PDF",
   "guides.item.pdf-qr-generator.desc": "Rendi digitali i tuoi manuali fisici. Scansiona per visualizzare e scaricare documenti PDF.",
   "urlqr.trustVector": "Esportazione vettoriale ad alta velocità",
-  "urlqr.verifyDestination": "Verifica destinazione"
+  "urlqr.verifyDestination": "Verifica destinazione",
+  "nav.signUp": "Sign Up",
+  "colorPalette.slate": "Slate",
+  "colorPalette.indigo": "Indigo",
+  "colorPalette.emerald": "Emerald",
+  "colorPalette.cherry": "Cherry",
+  "colorPalette.violet": "Violet",
+  "colorPalette.amber": "Amber"
 }

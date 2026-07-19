@@ -52,7 +52,28 @@ export default function ProgrammaticHub({
     if (!activeSlug) return null;
 
     if (section === 'industries') {
-      return getBespokeProfile(activeSlug);
+      const rawProfile = getBespokeProfile(activeSlug);
+      return {
+        ...rawProfile,
+        name: t('programmatic.industry.' + rawProfile.slug + '.name', rawProfile.name),
+        badge: t('programmatic.industry.' + rawProfile.slug + '.badge', rawProfile.badge),
+        metaTitle: t('programmatic.industry.' + rawProfile.slug + '.metaTitle', rawProfile.metaTitle),
+        metaDesc: t('programmatic.industry.' + rawProfile.slug + '.metaDesc', rawProfile.metaDesc),
+        whyQRHelps: t('programmatic.industry.' + rawProfile.slug + '.whyQRHelps', rawProfile.whyQRHelps),
+        challenges: rawProfile.challenges.map((c, i) => t('programmatic.industry.' + rawProfile.slug + '.challenges.' + i, c)),
+        workflow: rawProfile.workflow.map((w, i) => t('programmatic.industry.' + rawProfile.slug + '.workflow.' + i, w)),
+        practices: rawProfile.practices.map((p, i) => t('programmatic.industry.' + rawProfile.slug + '.practices.' + i, p)),
+        mistakes: rawProfile.mistakes.map((m, i) => t('programmatic.industry.' + rawProfile.slug + '.mistakes.' + i, m)),
+        faq: rawProfile.faq.map((f, i) => ({
+          q: t('programmatic.industry.' + rawProfile.slug + '.faq.' + i + '.q', f.q),
+          a: t('programmatic.industry.' + rawProfile.slug + '.faq.' + i + '.a', f.a)
+        })),
+        caseStudy: {
+          title: t('programmatic.industry.' + rawProfile.slug + '.caseStudy.title', rawProfile.caseStudy.title),
+          metric: t('programmatic.industry.' + rawProfile.slug + '.caseStudy.metric', rawProfile.caseStudy.metric),
+          result: t('programmatic.industry.' + rawProfile.slug + '.caseStudy.result', rawProfile.caseStudy.result)
+        }
+      };
     }
 
     if (section === 'solutions') {
@@ -681,10 +702,10 @@ export default function ProgrammaticHub({
                     >
                       <div className="min-w-0">
                         <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors truncate">
-                          {tpl.title}
+                          {t('templates.item.' + tpl.slug + '.title', tpl.title)}
                         </span>
                         <span className="block text-[10px] text-slate-400 mt-0.5 uppercase font-bold text-[9px]">
-                          {tpl.badge}
+                          {t('templates.badge.' + tpl.badge.replace(/ & /g, '_and_').replace(/ /g, '_').toLowerCase(), tpl.badge)}
                         </span>
                       </div>
                       <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-transform group-hover:translate-x-0.5 mt-0.5 shrink-0" />
@@ -780,7 +801,7 @@ export default function ProgrammaticHub({
                         
                         <div className="flex items-center gap-1.5">
                           <span className="text-[9px] font-extrabold text-slate-400 bg-slate-100 border border-slate-150 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                            {item.badge}
+                            {t('programmatic.badge.' + item.badge.toLowerCase(), item.badge)}
                           </span>
                           {!hasBespoke && (
                             <span className="text-[8px] bg-indigo-50 text-indigo-600 font-bold px-1.5 py-0.5 rounded border border-indigo-100 uppercase tracking-widest font-mono">
@@ -792,12 +813,12 @@ export default function ProgrammaticHub({
 
                       {/* Card Content Title & Info */}
                       <h3 className="font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors uppercase tracking-tight text-sm mb-2 flex items-center gap-1.5">
-                        {item.name}
+                        {t('programmatic.item.' + item.slug + '.title', item.name)}
                         <ArrowUpRight className="w-3.5 h-3.5 text-slate-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
                       </h3>
 
                       <p className="text-slate-500 text-xs leading-relaxed line-clamp-2">
-                        {item.metaDesc || (item as any).desc}
+                        {t('programmatic.item.' + item.slug + '.desc', item.metaDesc || (item as any).desc)}
                       </p>
                     </div>
 

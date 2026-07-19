@@ -748,11 +748,11 @@ export default function SEOPage({
             <div className="flex items-center gap-2 select-none">
               <QrCode className="w-4 h-4 text-indigo-400" />
               <h4 className="text-[11px] uppercase tracking-widest font-black text-slate-200">
-                SEO Authority and Authority Distribution Directories
+                {t('seo.seoAuthorityTitle', 'SEO Authority and Authority Distribution Directories')}
               </h4>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              Explore our separate high-performance QR code generator landing pages tailored for business promotions, wireless network setups, visual socials discovery, and contactless restaurant menu builders below:
+              {t('seo.seoAuthorityDesc', 'Explore our separate high-performance QR code generator landing pages tailored for business promotions, wireless network setups, visual socials discovery, and contactless restaurant menu builders below:')}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4 select-none">
               {(Object.keys(landingPages)).map((key) => {
@@ -769,7 +769,7 @@ export default function SEOPage({
                         : 'bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
                     }`}
                   >
-                    🚀 {item.h1}
+                    {t('seo.rocketIcon', '🚀 ')}{t(`guides.item.${item.slug}.title`, item.h1)}
                   </button>
                 );
               })}
