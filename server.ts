@@ -4,10 +4,16 @@ import path from 'path';
 import crypto from 'crypto';
 import { createServer as createViteServer } from 'vite';
 import jwt from 'jsonwebtoken';
-import { dbInstance, hashPassword, verifyPassword, getDb } from './server/db';
+import { dbInstance, hashPassword, verifyPassword, getDb, isFallbackMode } from './server/db';
 import { doc, getDoc, getDocs, collection, query, where, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, Type } from '@google/genai';
+
+function checkFallback() {
+  if (isFallbackMode) {
+    throw new Error('Fallback mode is active');
+  }
+}
 
 // Map of userId to active WebSocket connections
 const wsClients = new Map<string, Set<WebSocket>>();
@@ -464,6 +470,7 @@ English text: "${text}"`;
       createdAt: new Date().toISOString()
     };
     try {
+      checkFallback();
       const activeDb = getDb();
       await setDoc(doc(activeDb, 'notifications', id), notif);
     } catch (e) {
@@ -477,6 +484,7 @@ English text: "${text}"`;
   // Lazy initialize/get User Profile
   async function getOrCreateProfile(userId: string, name: string, email: string, referrerCodeInput?: string): Promise<any> {
     try {
+      checkFallback();
       const activeDb = getDb();
       const profileRef = doc(activeDb, 'user_profiles', userId);
       const snap = await getDoc(profileRef);
@@ -521,6 +529,7 @@ English text: "${text}"`;
       // Find referrer user from profiles
       let referrerUserId = '';
       try {
+        checkFallback();
         const activeDb = getDb();
         const q = query(collection(activeDb, 'user_profiles'), where('referralCode', '==', referrerCodeInput));
         const qSnap = await getDocs(q);
@@ -689,6 +698,7 @@ English text: "${text}"`;
     try {
       let postsList: any[] = [];
       try {
+        checkFallback();
         const activeDb = getDb();
         const q = collection(activeDb, 'community_posts');
         const snap = await getDocs(q);
@@ -744,6 +754,7 @@ English text: "${text}"`;
         const activeDb = getDb();
         for (const p of seededPosts) {
           try {
+            checkFallback();
             await setDoc(doc(activeDb, 'community_posts', p.id), p);
           } catch (e) {
             inMemoryCommunityPosts.set(p.id, p);
@@ -975,6 +986,7 @@ English text: "${text}"`;
     try {
       let postsList: any[] = [];
       try {
+        checkFallback();
         const activeDb = getDb();
         const q = collection(activeDb, 'community_posts');
         const snap = await getDocs(q);
@@ -1004,6 +1016,7 @@ English text: "${text}"`;
       };
 
       try {
+        checkFallback();
         const activeDb = getDb();
         await setDoc(doc(activeDb, 'newsletters', email.toLowerCase()), sub);
       } catch (e) {
@@ -1037,6 +1050,7 @@ English text: "${text}"`;
       };
 
       try {
+        checkFallback();
         const activeDb = getDb();
         await setDoc(doc(activeDb, 'feedbacks', feedbackId), fb);
       } catch (e) {
@@ -1046,6 +1060,7 @@ English text: "${text}"`;
       // If registered user, reward +15 XP
       if (userId) {
         try {
+          checkFallback();
           const activeDb = getDb();
           const profileRef = doc(activeDb, 'user_profiles', userId);
           const snap = await getDoc(profileRef);
@@ -1083,6 +1098,7 @@ English text: "${text}"`;
     try {
       let notifs: any[] = [];
       try {
+        checkFallback();
         const activeDb = getDb();
         const q = query(collection(activeDb, 'notifications'), where('userId', '==', req.user.id));
         const snap = await getDocs(q);
@@ -1105,6 +1121,7 @@ English text: "${text}"`;
     const { id } = req.params;
     try {
       try {
+        checkFallback();
         const activeDb = getDb();
         const ref = doc(activeDb, 'notifications', id);
         await updateDoc(ref, { read: true });

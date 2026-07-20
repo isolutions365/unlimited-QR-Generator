@@ -228,45 +228,92 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       }, 0);
     }
     
-    // Try to get message from current active locale dictionary
-    let message = dictionary[key];
+    try {
+      // Try to get message from current active locale dictionary
+      let message = dictionary[key];
 
-    // If not found, and active locale is not English, look up in English dictionary as fallback
-    if (message === undefined || message === null) {
-      message = enDictionary[key];
-    }
+      // If not found, and active locale is not English, look up in English dictionary as fallback
+      if (message === undefined || message === null) {
+        message = enDictionary[key];
+      }
 
-    // Determine fallback text to use
-    const textToUse = message !== undefined && message !== null ? String(message) : (defaultText || key);
+      // Determine fallback text to use
+      const textToUse = message !== undefined && message !== null ? String(message) : (defaultText || key);
 
-    if (shouldSkipTranslation(textToUse)) {
+      if (shouldSkipTranslation(textToUse)) {
+        return formatICU(textToUse, values, locale);
+      }
+
       return formatICU(textToUse, values, locale);
+    } catch (err) {
+      console.warn(`[i18n] Error translating or formatting key "${key}":`, err);
+      return defaultText || key;
     }
-
-    return formatICU(textToUse, values, locale);
   };
 
   // Formatters with current active locale
-  const formatDate = (date: Date | string | number, options?: Intl.DateTimeFormatOptions) =>
-    formatters.formatDate(date, locale, options);
+  const formatDate = (date: Date | string | number, options?: Intl.DateTimeFormatOptions) => {
+    try {
+      return formatters.formatDate(date, locale, options);
+    } catch (e) {
+      console.warn('[i18n] formatDate fallback:', e);
+      return String(date);
+    }
+  };
 
-  const formatTime = (date: Date | string | number, options?: Intl.DateTimeFormatOptions) =>
-    formatters.formatTime(date, locale, options);
+  const formatTime = (date: Date | string | number, options?: Intl.DateTimeFormatOptions) => {
+    try {
+      return formatters.formatTime(date, locale, options);
+    } catch (e) {
+      console.warn('[i18n] formatTime fallback:', e);
+      return String(date);
+    }
+  };
 
-  const formatNumber = (value: number | string, options?: Intl.NumberFormatOptions) =>
-    formatters.formatNumber(value, locale, options);
+  const formatNumber = (value: number | string, options?: Intl.NumberFormatOptions) => {
+    try {
+      return formatters.formatNumber(value, locale, options);
+    } catch (e) {
+      console.warn('[i18n] formatNumber fallback:', e);
+      return String(value);
+    }
+  };
 
-  const formatPercent = (value: number | string, decimalPlaces?: number) =>
-    formatters.formatPercent(value, locale, decimalPlaces);
+  const formatPercent = (value: number | string, decimalPlaces?: number) => {
+    try {
+      return formatters.formatPercent(value, locale, decimalPlaces);
+    } catch (e) {
+      console.warn('[i18n] formatPercent fallback:', e);
+      return String(value);
+    }
+  };
 
-  const formatCurrency = (value: number | string, currency?: string, options?: Intl.NumberFormatOptions) =>
-    formatters.formatCurrency(value, currency, locale, options);
+  const formatCurrency = (value: number | string, currency?: string, options?: Intl.NumberFormatOptions) => {
+    try {
+      return formatters.formatCurrency(value, currency, locale, options);
+    } catch (e) {
+      console.warn('[i18n] formatCurrency fallback:', e);
+      return String(value);
+    }
+  };
 
-  const formatRelativeTime = (value: number, unit?: Intl.RelativeTimeFormatUnit) =>
-    formatters.formatRelativeTime(value, unit, locale);
+  const formatRelativeTime = (value: number, unit?: Intl.RelativeTimeFormatUnit) => {
+    try {
+      return formatters.formatRelativeTime(value, unit, locale);
+    } catch (e) {
+      console.warn('[i18n] formatRelativeTime fallback:', e);
+      return String(value);
+    }
+  };
 
-  const getRelativeTimeString = (date: Date | string | number) =>
-    formatters.getRelativeTimeString(date, locale);
+  const getRelativeTimeString = (date: Date | string | number) => {
+    try {
+      return formatters.getRelativeTimeString(date, locale);
+    } catch (e) {
+      console.warn('[i18n] getRelativeTimeString fallback:', e);
+      return String(date);
+    }
+  };
 
   /**
    * Loads all supported dictionaries directly from individual imports.

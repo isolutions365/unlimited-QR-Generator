@@ -284,8 +284,28 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const isTargetAUrl = textToEncode.startsWith('http://') || textToEncode.startsWith('https://');
   const finalShareUrl = shareLinkType === 'destination' && isTargetAUrl ? textToEncode : appUrl;
   
-  const dotStyleName = currentProject.design?.dotStyle || 'square';
-  const eyeStyleName = currentProject.design?.eyeStyle || 'square';
+  const getDotStyleTranslation = (style: string) => {
+    switch (style) {
+      case 'square': return t('control.standardSquare', 'Standard Square');
+      case 'rounded': return t('control.smoothRounded', 'Smooth Rounded');
+      case 'dots': return t('control.circularDots', 'Circular Dots');
+      case 'classy': return t('control.classyStarbursts', 'Classy Starbursts');
+      default: return style;
+    }
+  };
+
+  const getEyeStyleTranslation = (style: string) => {
+    switch (style) {
+      case 'square': return t('control.squareFrame', 'Square Frame');
+      case 'rounded': return t('control.roundedFrame', 'Rounded Frame');
+      case 'circle': return t('control.smoothCircles', 'Smooth Circles');
+      case 'leaf': return t('control.elegantLeaf', 'Elegant Leaf');
+      default: return style;
+    }
+  };
+
+  const dotStyleName = getDotStyleTranslation(currentProject.design?.dotStyle || 'square');
+  const eyeStyleName = getEyeStyleTranslation(currentProject.design?.eyeStyle || 'square');
   const fgColorHex = currentProject.design?.fgColor || '#0f172a';
   const shareText = t('preview.shareTextTemplate', 'Check out my custom QR design 🎨: {dotStyle} style dots and {eyeStyle} style eyes in {fgColor}. Created on QR Studio!', { dotStyle: dotStyleName, eyeStyle: eyeStyleName, fgColor: fgColorHex });
 
@@ -1322,7 +1342,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 title={t('preview.tooltip.diagnostics', 'Click for Scannability Diagnostics')}
               >
                 <AlertTriangle className="w-3 h-3 stroke-[3]" />
-                <span>Risk: {hasUnreadableIssue ? 'High' : 'Medium'}</span>
+                <span>{t('preview.riskLabel', 'Risk:')} {hasUnreadableIssue ? t('preview.riskHigh', 'High') : t('preview.riskMedium', 'Medium')}</span>
               </button>
             )}
 
@@ -1458,7 +1478,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         {/* Informative metadata text */}
         <div className="text-center">
           <p className="text-xs font-semibold text-gray-800">
-            {trackingEnabled ? '🚀 Short Url Tracking Active' : '💾 Direct QR Code'}
+            {trackingEnabled ? t('preview.shortUrlTrackingActive', '🚀 Short Url Tracking Active') : t('preview.directQrCode', '💾 Direct QR Code')}
           </p>
           <span className="text-[10px] text-slate-600 font-mono select-all truncate max-w-[260px] block mt-0.5">
             {textToEncode}
@@ -1472,8 +1492,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   : 'bg-amber-50 text-amber-700 border border-amber-100/50'
               }`}>
                 {isExpired 
-                  ? `Expired ⚠️ (${new Date(currentProject.expiryDate).toLocaleDateString()})` 
-                  : `Expires ⏳ (${new Date(currentProject.expiryDate).toLocaleDateString()})`
+                  ? `${t('preview.expiredState', 'Expired ⚠️')} (${new Date(currentProject.expiryDate).toLocaleDateString()})` 
+                  : `${t('preview.expiresState', 'Expires ⏳')} (${new Date(currentProject.expiryDate).toLocaleDateString()})`
                 }
               </span>
             );
@@ -1517,9 +1537,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                       role="listbox"
                     >
                       {[
-                        { value: 'PNG', label: 'PNG Image', desc: 'Standard raster, perfect for web & screen' },
-                        { value: 'SVG', label: 'SVG Vector', desc: 'Infinitely scalable vector format for print' },
-                        { value: 'PDF', label: 'PDF Document', desc: 'High-resolution print-ready A4 document' }
+                        { value: 'PNG', label: t('preview.formatPngLabel', 'PNG Image'), desc: t('preview.formatPngDesc', 'Standard raster, perfect for web & screen') },
+                        { value: 'SVG', label: t('preview.formatSvgLabel', 'SVG Vector'), desc: t('preview.formatSvgDesc', 'Infinitely scalable vector format for print') },
+                        { value: 'PDF', label: t('preview.formatPdfLabel', 'PDF Document'), desc: t('preview.formatPdfDesc', 'High-resolution print-ready A4 document') }
                       ].map((item) => (
                         <li key={item.value} role="option" aria-selected={selectedFormat === item.value}>
                           <button
@@ -1561,7 +1581,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               aria-label={`Download QR Code as ${selectedFormat}`}
             >
               <Download className="w-4 h-4" />
-              <span>Download {selectedFormat}</span>
+              <span>{t('preview.downloadAction', 'Download')} {selectedFormat}</span>
               <kbd className="hidden sm:inline-block px-1 py-0.2 bg-zinc-800 text-zinc-300 rounded text-[9px] font-mono font-bold ml-1 uppercase">Ctrl+D</kbd>
             </button>
             <button
@@ -1571,7 +1591,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               aria-label="Open Print Layout Studio"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Print</span>
+              <span>{t('preview.printAction', 'Print')}</span>
               <kbd className="hidden sm:inline-block px-1 py-0.2 bg-indigo-50 border border-indigo-100 text-indigo-800 rounded text-[9px] font-mono font-bold uppercase ml-1">Ctrl+P</kbd>
             </button>
           </div>
@@ -1593,7 +1613,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             aria-label="Simulate Live QR Code Scanner Viewfinder Test"
           >
             <Smartphone className="w-3.5 h-3.5" />
-            Live Viewfinder Scan Test
+            {t('preview.liveScanTest', 'Live Viewfinder Scan Test')}
           </button>
         </div>
 
@@ -1616,7 +1636,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   }`}
                   title={t('preview.tooltip.shareEmbed', 'Share the link embedded inside the QR')}
                 >
-                  Destination
+                  {t('preview.destinationTab', 'Destination')}
                 </button>
                 <button
                   type="button"
@@ -1628,7 +1648,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   }`}
                   title={t('preview.tooltip.shareBuilder', 'Share the link to QR Studio builder')}
                 >
-                  App Link
+                  {t('preview.appLinkTab', 'App Link')}
                 </button>
               </div>
             )}
@@ -1650,7 +1670,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               aria-label="Share on Twitter / X"
             >
               <Twitter className="w-3 h-3 fill-current" />
-              Twitter / X
+              {t('preview.shareTwitter', 'Twitter / X')}
             </a>
             <a
               href={linkedinShareUrl}
@@ -1660,7 +1680,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               aria-label="Share on LinkedIn"
             >
               <Linkedin className="w-3 h-3 fill-current" />
-              LinkedIn
+              {t('preview.shareLinkedin', 'LinkedIn')}
             </a>
             <a
               href={facebookShareUrl}
@@ -1670,7 +1690,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               aria-label="Share on Facebook"
             >
               <Facebook className="w-3 h-3 fill-current" />
-              Facebook
+              {t('preview.shareFacebook', 'Facebook')}
             </a>
           </div>
         </div>

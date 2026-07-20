@@ -926,100 +926,110 @@ export default function PlatformHub({
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<string | null>(null);
   const [activeCodeLang, setActiveCodeLang] = useState<'ts' | 'python' | 'go'>('ts');
 
-  // Helper to convert dynamic slug to camelCase for standardized trans keys
-  const toCamelCase = (str: string) => str.replace(/-([a-z])/g, (_, g) => g.toUpperCase());
+  // Helper to convert dynamic slug to camelCase with capitalized first letter for standardized trans keys
+  const toCamelCase = (str: string) => {
+    if (!str) return '';
+    const camel = str.replace(/-([a-z])/g, (_, g) => g.toUpperCase());
+    return camel.charAt(0).toUpperCase() + camel.slice(1);
+  };
   const moduleKey = toCamelCase(activeModule.slug);
 
   // Sync route and metadata dynamically
   useEffect(() => {
-    if (activeModule) {
-      document.title = t(`platform.module${moduleKey}SeoTitle`, activeModule.seoTitle);
-      
-      // Update/Inject meta description
-      let metaDesc = document.querySelector('meta[name="description"]');
-      if (!metaDesc) {
-        metaDesc = document.createElement('meta');
-        metaDesc.setAttribute('name', 'description');
-        document.head.appendChild(metaDesc);
-      }
-      metaDesc.setAttribute('content', t(`platform.module${moduleKey}MetaDesc`, activeModule.metaDesc));
+    try {
+      if (activeModule) {
+        document.title = t(`platform.module${moduleKey}SeoTitle`, activeModule.seoTitle);
+        
+        // Update/Inject meta description
+        let metaDesc = document.querySelector('meta[name="description"]');
+        if (!metaDesc) {
+          metaDesc = document.createElement('meta');
+          metaDesc.setAttribute('name', 'description');
+          document.head.appendChild(metaDesc);
+        }
+        metaDesc.setAttribute('content', t(`platform.module${moduleKey}MetaDesc`, activeModule.metaDesc));
 
-      // Inject canonical URL
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      canonicalLink.setAttribute('href', `https://freeqrgen.pro/platform/${activeModule.slug}`);
+        // Inject canonical URL
+        let canonicalLink = document.querySelector('link[rel="canonical"]');
+        if (!canonicalLink) {
+          canonicalLink = document.createElement('link');
+          canonicalLink.setAttribute('rel', 'canonical');
+          document.head.appendChild(canonicalLink);
+        }
+        canonicalLink.setAttribute('href', `https://freeqrgen.pro/platform/${activeModule.slug}`);
 
-      // Inject JSON-LD structured schema for rich indexing
-      let schemaScript = document.getElementById('platform-schema-ld');
-      if (!schemaScript) {
-        schemaScript = document.createElement('script');
-        schemaScript.setAttribute('type', 'application/ld+json');
-        schemaScript.setAttribute('id', 'platform-schema-ld');
-        document.head.appendChild(schemaScript);
-      }
+        // Inject JSON-LD structured schema for rich indexing
+        let schemaScript = document.getElementById('platform-schema-ld');
+        if (!schemaScript) {
+          schemaScript = document.createElement('script');
+          schemaScript.setAttribute('type', 'application/ld+json');
+          schemaScript.setAttribute('id', 'platform-schema-ld');
+          document.head.appendChild(schemaScript);
+        }
 
-      const structuredSchema = {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebPage",
-            "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#webpage`,
-            "url": `https://freeqrgen.pro/platform/${activeModule.slug}`,
-            "name": t(`platform.module${moduleKey}SeoTitle`, activeModule.seoTitle),
-            "description": t(`platform.module${moduleKey}MetaDesc`, activeModule.metaDesc),
-            "breadcrumb": {
-              "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`
-            }
-          },
-          {
-            "@type": "BreadcrumbList",
-            "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`,
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": t('platform.schemaHome', 'Home'),
-                "item": "https://freeqrgen.pro"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": t('platform.schemaPlatform', 'Platform'),
-                "item": "https://freeqrgen.pro/platform/qr-analytics"
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": t(`platform.module${moduleKey}Name`, activeModule.name),
-                "item": `https://freeqrgen.pro/platform/${activeModule.slug}`
+        const structuredSchema = {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebPage",
+              "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#webpage`,
+              "url": `https://freeqrgen.pro/platform/${activeModule.slug}`,
+              "name": t(`platform.module${moduleKey}SeoTitle`, activeModule.seoTitle),
+              "description": t(`platform.module${moduleKey}MetaDesc`, activeModule.metaDesc),
+              "breadcrumb": {
+                "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`
               }
-            ]
-          },
-          {
-            "@type": "SoftwareApplication",
-            "name": `FreeQRGen Platform - ${t(`platform.module${moduleKey}Name`, activeModule.name)}`,
-            "applicationCategory": "BusinessApplication, DesignApplication",
-            "operatingSystem": "All modern browsers",
-            "offers": {
-              "@type": "Offer",
-              "price": "0.00",
-              "priceCurrency": "USD"
             },
-            "releaseNotes": "https://freeqrgen.pro/release-notes",
-            "author": {
-              "@type": "Organization",
-              "name": "iSolutions ICo",
-              "url": "https://freeqrgen.pro"
+            {
+              "@type": "BreadcrumbList",
+              "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`,
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": t('platform.schemaHome', 'Home'),
+                  "item": "https://freeqrgen.pro"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": t('platform.schemaPlatform', 'Platform'),
+                  "item": "https://freeqrgen.pro/platform/qr-analytics"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": t(`platform.module${moduleKey}Name`, activeModule.name),
+                  "item": `https://freeqrgen.pro/platform/${activeModule.slug}`
+                }
+              ]
+            },
+            {
+              "@type": "SoftwareApplication",
+              "name": `FreeQRGen Platform - ${t(`platform.module${moduleKey}Name`, activeModule.name)}`,
+              "applicationCategory": "BusinessApplication, DesignApplication",
+              "operatingSystem": "All modern browsers",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              },
+              "releaseNotes": "https://freeqrgen.pro/release-notes",
+              "author": {
+                "@type": "Organization",
+                "name": "iSolutions ICo",
+                "url": "https://freeqrgen.pro"
+              }
             }
-          }
-        ]
-      };
+          ]
+        };
 
-      schemaScript.innerHTML = JSON.stringify(structuredSchema);
+        if (schemaScript) {
+          schemaScript.innerHTML = JSON.stringify(structuredSchema);
+        }
+      }
+    } catch (error) {
+      console.warn("DOM metadata sync skipped due to sandbox environment constraints: ", error);
     }
   }, [activeModule, moduleKey, t]);
 

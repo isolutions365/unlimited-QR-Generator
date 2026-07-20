@@ -33,6 +33,7 @@ const PlatformHub = React.lazy(() => import('./pages/PlatformHub'));
 const I18nDashboard = React.lazy(() => import('./pages/I18nDashboard'));
 const GrowthSuite = React.lazy(() => import('./pages/GrowthSuite'));
 const EnterpriseAIGateway = React.lazy(() => import('./pages/EnterpriseAIGateway'));
+import ErrorBoundary from './components/ErrorBoundary';
 
 
 // Non-blocking fallback skeleton loader
@@ -1404,6 +1405,23 @@ export default function App() {
 
   const slug = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
   const isLandingPage = !!landingPages[slug];
+  const isSubpage = ['/profile', '/community', '/roadmap', '/testimonials', '/case-studies', '/success-stories', '/release-notes', '/feedback'].includes(cleanPath) ||
+    cleanPath === '/i18n-dashboard' ||
+    cleanPath === '/ai-gateway' ||
+    isLandingPage ||
+    cleanPath === '/faq' ||
+    cleanPath === '/blog' ||
+    cleanPath.startsWith('/blog/') ||
+    isKnowledgeSection ||
+    isTemplatesSection ||
+    isCompareSection ||
+    isSolutionsSection ||
+    isIndustriesSection ||
+    isUseCasesSection ||
+    cleanPath === '/embed' ||
+    isPlatformSection ||
+    isTrustCenterSection ||
+    cleanPath === '/terms';
 
   return (
     <div className="min-h-screen bg-slate-50/80 text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased">
@@ -1892,134 +1910,138 @@ export default function App() {
       </AnimatePresence>
 
       {/* Primary Container Grid */}
-      {['/profile', '/community', '/roadmap', '/testimonials', '/case-studies', '/success-stories', '/release-notes', '/feedback'].includes(cleanPath) ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <GrowthSuite 
-            view={cleanPath.substring(1)} 
-            onNavigate={navigateTo} 
-            locale={locale} 
-            user={user} 
-            onSignInClick={handleSignInClick} 
-          />
-        </React.Suspense>
-      ) : cleanPath === '/i18n-dashboard' ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <I18nDashboard onBack={() => navigateTo('/')} />
-        </React.Suspense>
-      ) : cleanPath === '/ai-gateway' ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <EnterpriseAIGateway onBack={() => navigateTo('/')} user={user} onSignInClick={handleSignInClick} />
-        </React.Suspense>
-      ) : isLandingPage ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <SEOPage 
-            slug={slug} 
-            onSelectRoute={navigateTo} 
-            onInitiateGenerator={handleInitiateGenerator} 
-          />
-        </React.Suspense>
-      ) : cleanPath === '/faq' ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <FaqSection onNavigate={navigateTo} locale={locale} />
-        </React.Suspense>
-      ) : (cleanPath === '/blog' || cleanPath.startsWith('/blog/')) ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <BlogSection 
-            initialSlug={cleanPath.startsWith('/blog/') ? cleanPath.substring(6) : null} 
-            onNavigate={navigateTo} 
-            locale={locale}
-          />
-        </React.Suspense>
-      ) : isKnowledgeSection ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          {(() => {
-            const pathParts = cleanPath.split('/');
-            const sectName = pathParts[1] as 'academy' | 'blog' | 'guides' | 'tutorials' | 'resources' | 'glossary';
-            const artSlug = pathParts[2] || null;
-            return (
-              <KnowledgeHub 
-                section={sectName}
-                initialSlug={artSlug}
-                onNavigate={navigateTo}
+      {isSubpage ? (
+        <ErrorBoundary isInline>
+          {['/profile', '/community', '/roadmap', '/testimonials', '/case-studies', '/success-stories', '/release-notes', '/feedback'].includes(cleanPath) ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <GrowthSuite 
+                view={cleanPath.substring(1)} 
+                onNavigate={navigateTo} 
+                locale={locale} 
+                user={user} 
+                onSignInClick={handleSignInClick} 
+              />
+            </React.Suspense>
+          ) : cleanPath === '/i18n-dashboard' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <I18nDashboard onBack={() => navigateTo('/')} />
+            </React.Suspense>
+          ) : cleanPath === '/ai-gateway' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <EnterpriseAIGateway onBack={() => navigateTo('/')} user={user} onSignInClick={handleSignInClick} />
+            </React.Suspense>
+          ) : isLandingPage ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <SEOPage 
+                slug={slug} 
+                onSelectRoute={navigateTo} 
+                onInitiateGenerator={handleInitiateGenerator} 
+              />
+            </React.Suspense>
+          ) : cleanPath === '/faq' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <FaqSection onNavigate={navigateTo} locale={locale} />
+            </React.Suspense>
+          ) : (cleanPath === '/blog' || cleanPath.startsWith('/blog/')) ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <BlogSection 
+                initialSlug={cleanPath.startsWith('/blog/') ? cleanPath.substring(6) : null} 
+                onNavigate={navigateTo} 
                 locale={locale}
               />
-            );
-          })()}
-        </React.Suspense>
-      ) : isTemplatesSection ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          {(() => {
-            const pathParts = cleanPath.split('/');
-            const artSlug = pathParts[2] || null;
-            return (
-              <TemplatesHub 
-                initialSlug={artSlug}
-                onNavigate={navigateTo}
-                onInitiateGenerator={handleInitiateGenerator}
+            </React.Suspense>
+          ) : isKnowledgeSection ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              {(() => {
+                const pathParts = cleanPath.split('/');
+                const sectName = pathParts[1] as 'academy' | 'blog' | 'guides' | 'tutorials' | 'resources' | 'glossary';
+                const artSlug = pathParts[2] || null;
+                return (
+                  <KnowledgeHub 
+                    section={sectName}
+                    initialSlug={artSlug}
+                    onNavigate={navigateTo}
+                    locale={locale}
+                  />
+                );
+              })()}
+            </React.Suspense>
+          ) : isTemplatesSection ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              {(() => {
+                const pathParts = cleanPath.split('/');
+                const artSlug = pathParts[2] || null;
+                return (
+                  <TemplatesHub 
+                    initialSlug={artSlug}
+                    onNavigate={navigateTo}
+                    onInitiateGenerator={handleInitiateGenerator}
+                    locale={locale}
+                  />
+                );
+              })()}
+            </React.Suspense>
+          ) : isCompareSection ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              {(() => {
+                const pathParts = cleanPath.split('/');
+                const compSlug = pathParts[2] || null;
+                return (
+                  <CompareHub 
+                    initialSlug={compSlug}
+                    onNavigate={navigateTo}
+                    onInitiateGenerator={handleInitiateGenerator}
+                    locale={locale}
+                  />
+                );
+              })()}
+            </React.Suspense>
+          ) : (isSolutionsSection || isIndustriesSection || isUseCasesSection) ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              {(() => {
+                const prefix = isSolutionsSection ? 'solutions' : isIndustriesSection ? 'industries' : 'use-cases';
+                const pathParts = cleanPath.split('/');
+                const artSlug = pathParts[2] || null;
+                return (
+                  <ProgrammaticHub 
+                    section={prefix}
+                    initialSlug={artSlug}
+                    onNavigate={navigateTo}
+                    onInitiateGenerator={handleInitiateGenerator}
+                    locale={locale}
+                  />
+                );
+              })()}
+            </React.Suspense>
+          ) : cleanPath === '/embed' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <EmbedPage onNavigate={navigateTo} />
+            </React.Suspense>
+          ) : isPlatformSection ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <PlatformHub 
+                initialSlug={cleanPath.substring(1)} 
+                onNavigate={navigateTo} 
                 locale={locale}
               />
-            );
-          })()}
-        </React.Suspense>
-      ) : isCompareSection ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          {(() => {
-            const pathParts = cleanPath.split('/');
-            const compSlug = pathParts[2] || null;
-            return (
-              <CompareHub 
-                initialSlug={compSlug}
-                onNavigate={navigateTo}
-                onInitiateGenerator={handleInitiateGenerator}
+            </React.Suspense>
+          ) : isTrustCenterSection ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <TrustCenterHub 
+                initialSlug={cleanPath.substring(1)} 
+                onNavigate={navigateTo} 
                 locale={locale}
               />
-            );
-          })()}
-        </React.Suspense>
-      ) : (isSolutionsSection || isIndustriesSection || isUseCasesSection) ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          {(() => {
-            const prefix = isSolutionsSection ? 'solutions' : isIndustriesSection ? 'industries' : 'use-cases';
-            const pathParts = cleanPath.split('/');
-            const artSlug = pathParts[2] || null;
-            return (
-              <ProgrammaticHub 
-                section={prefix}
-                initialSlug={artSlug}
-                onNavigate={navigateTo}
-                onInitiateGenerator={handleInitiateGenerator}
-                locale={locale}
+            </React.Suspense>
+          ) : cleanPath === '/terms' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <CompanyPages 
+                view="terms" 
+                onNavigate={navigateTo} 
               />
-            );
-          })()}
-        </React.Suspense>
-      ) : cleanPath === '/embed' ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <EmbedPage onNavigate={navigateTo} />
-        </React.Suspense>
-      ) : isPlatformSection ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <PlatformHub 
-            initialSlug={cleanPath.substring(1)} 
-            onNavigate={navigateTo} 
-            locale={locale}
-          />
-        </React.Suspense>
-      ) : isTrustCenterSection ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <TrustCenterHub 
-            initialSlug={cleanPath.substring(1)} 
-            onNavigate={navigateTo} 
-            locale={locale}
-          />
-        </React.Suspense>
-      ) : cleanPath === '/terms' ? (
-        <React.Suspense fallback={<LazyLoader />}>
-          <CompanyPages 
-            view="terms" 
-            onNavigate={navigateTo} 
-          />
-        </React.Suspense>
+            </React.Suspense>
+          ) : null}
+        </ErrorBoundary>
       ) : (
         <main className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6">
           <h1 className="sr-only">Free QR Code Generator - Custom Dynamic QR Codes with Analytics</h1>
@@ -2122,12 +2144,14 @@ export default function App() {
             
             {/* Left side Workspace Templates controls */}
             <div className="lg:col-span-7 flex flex-col gap-6">
-              <React.Suspense fallback={<LazyLoader />}>
-                <TemplatesTab
-                  currentProject={currentProject}
-                  onChange={setCurrentProject}
-                />
-              </React.Suspense>
+              <ErrorBoundary isInline>
+                <React.Suspense fallback={<LazyLoader />}>
+                  <TemplatesTab
+                    currentProject={currentProject}
+                    onChange={setCurrentProject}
+                  />
+                </React.Suspense>
+              </ErrorBoundary>
             </div>
 
             {/* Right side Live Previews boards */}
@@ -2147,9 +2171,11 @@ export default function App() {
         {activeTab === 'analytics' && (
           <div className="max-w-4xl mx-auto w-full">
             {user ? (
-              <React.Suspense fallback={<LazyLoader />}>
-                <AnalyticsDashboard scans={scans} projects={projects} onPurgeAll={handlePurgeAllScans} />
-              </React.Suspense>
+              <ErrorBoundary isInline>
+                <React.Suspense fallback={<LazyLoader />}>
+                  <AnalyticsDashboard scans={scans} projects={projects} onPurgeAll={handlePurgeAllScans} />
+                </React.Suspense>
+              </ErrorBoundary>
             ) : (
               <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm flex flex-col items-center justify-center">
                 <div className="w-16 h-16 bg-slate-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
@@ -2173,21 +2199,25 @@ export default function App() {
 
         {activeTab === 'boiler' && (
           <div className="max-w-4xl mx-auto w-full">
-            <React.Suspense fallback={<LazyLoader />}>
-              <MobileAppMockup />
-            </React.Suspense>
+            <ErrorBoundary isInline>
+              <React.Suspense fallback={<LazyLoader />}>
+                <MobileAppMockup />
+              </React.Suspense>
+            </ErrorBoundary>
           </div>
         )}
 
         {activeTab === 'animations' && (
           <div className="w-full">
-            <React.Suspense fallback={<LazyLoader />}>
-              <AnimationsShowcase
-                currentProject={currentProject}
-                onChange={setCurrentProject}
-                onDownloadTrigger={handleDownloadTrigger}
-              />
-            </React.Suspense>
+            <ErrorBoundary isInline>
+              <React.Suspense fallback={<LazyLoader />}>
+                <AnimationsShowcase
+                  currentProject={currentProject}
+                  onChange={setCurrentProject}
+                  onDownloadTrigger={handleDownloadTrigger}
+                />
+              </React.Suspense>
+            </ErrorBoundary>
           </div>
         )}
 

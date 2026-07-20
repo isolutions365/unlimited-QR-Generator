@@ -4,6 +4,7 @@ import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
+  isInline?: boolean;
 }
 
 interface State {
@@ -28,13 +29,41 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
   private handleReset = () => {
     this.setState({ hasError: false, error: null });
-    window.location.reload();
+    if (!this.props.isInline) {
+      window.location.reload();
+    }
   };
 
   public render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback;
+      }
+
+      if (this.props.isInline) {
+        return (
+          <div className="bg-red-50/20 border border-red-100/60 rounded-2xl p-6 my-4 text-center space-y-4 max-w-xl mx-auto">
+            <div className="mx-auto w-10 h-10 bg-red-50 text-red-600 rounded-full flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Failed to render section</h4>
+              <p className="text-[11px] text-slate-500 max-w-sm mx-auto leading-relaxed">
+                {this.state.error?.message || 'An error occurred while loading this modular component.'}
+              </p>
+            </div>
+            <div className="flex justify-center gap-2">
+              <button
+                type="button"
+                onClick={this.handleReset}
+                className="py-1.5 px-3 bg-slate-900 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 hover:bg-black transition-all active:scale-95 cursor-pointer"
+              >
+                <RefreshCw className="w-3 h-3" />
+                Retry Loading
+              </button>
+            </div>
+          </div>
+        );
       }
 
       return (

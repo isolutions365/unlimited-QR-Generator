@@ -121,6 +121,7 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
 
 // Read Firebase configurations and initialize lazily to prevent blocking startup / render latency
 export let db: any;
+export let isFallbackMode = false;
 
 export function getDb() {
   if (!db) {
@@ -170,6 +171,7 @@ export function getDb() {
 
     if (!firebaseConfig || !firebaseConfig.apiKey) {
       console.warn("Warning: Firebase is running with fallback mock credentials. Real-time scanning sync features will be offline. Please supply system variables or verify .env layout.");
+      isFallbackMode = true;
       firebaseConfig = {
         apiKey: "dummy-api-key-fallback-for-tests",
         authDomain: "dummy-domain.firebaseapp.com",
@@ -203,6 +205,7 @@ async function testConnection() {
     console.log("Firebase connection verified and fully operational.");
   } catch (error: any) {
     console.log("Firebase initialization completed cleanly (latency-saver mode enabled).");
+    isFallbackMode = true;
   }
 }
 // Run in next tick so module load finishes immediately.

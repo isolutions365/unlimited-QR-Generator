@@ -135,7 +135,7 @@ export default function GrowthSuite({
 
   useEffect(() => {
     loadData();
-  }, [user, activeTab]);
+  }, [user]);
 
   // Handle Profile Update
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -370,10 +370,10 @@ export default function GrowthSuite({
                   <span 
                     key={badge} 
                     className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider bg-indigo-50 border border-indigo-100 text-indigo-700 py-0.5 px-2 rounded-full font-mono"
-                    title={t('growth.unlockedBadge', 'Unlocked Badge: {{badge}}', { badge })}
+                    title={t('growth.unlockedBadge', 'Unlocked Badge: {{badge}}', { badge: t('growth.badge.' + badge, badge) })}
                   >
                     <Award className="w-2.5 h-2.5" />
-                    {badge}
+                    {t('growth.badge.' + badge, badge)}
                   </span>
                 ))}
               </div>
@@ -418,12 +418,12 @@ export default function GrowthSuite({
                       }`}
                     >
                       <div className="flex items-center justify-between gap-1 mb-1">
-                        <span className="font-extrabold text-xs tracking-tight">{notif.title}</span>
+                        <span className="font-extrabold text-xs tracking-tight">{t(notif.title, notif.title)}</span>
                         {!notif.read && (
                           <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
                         )}
                       </div>
-                      <p className="text-[10px] leading-relaxed text-slate-300">{notif.message}</p>
+                      <p className="text-[10px] leading-relaxed text-slate-300">{t(notif.message, notif.message)}</p>
                     </div>
                   ))
                 )}
@@ -477,7 +477,7 @@ export default function GrowthSuite({
                     <div className="text-left">
                       <h2 className="text-xl font-black text-slate-800 tracking-tight uppercase">{profile?.name}</h2>
                       <p className="text-xs text-slate-400 font-mono mt-0.5">{profile?.email}</p>
-                      <p className="text-xs text-slate-600 italic mt-1">"{profile?.bio}"</p>
+                      <p className="text-xs text-slate-600 italic mt-1">"{t(profile?.bio, profile?.bio)}"</p>
                     </div>
                   </div>
                   <button
@@ -812,17 +812,17 @@ export default function GrowthSuite({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="inline-flex text-[9px] font-bold uppercase tracking-wider bg-indigo-100/60 text-indigo-700 border border-indigo-100/30 px-2 py-0.5 rounded-full font-mono">
-                            {post.category}
+                            {t('growth.category.' + post.category, post.category)}
                           </span>
                           {post.status && post.status !== 'none' && (
                             <span className="inline-flex text-[9px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-full font-mono">
-                              {post.status}
+                              {t('growth.status.' + post.status, post.status)}
                             </span>
                           )}
                           <span className="text-[10px] text-slate-400 font-mono">{post.authorName}</span>
                         </div>
-                        <h3 className="text-sm font-extrabold text-slate-800 leading-snug uppercase">{post.title}</h3>
-                        <p className="text-xs text-slate-600 mt-2 leading-relaxed">{post.content}</p>
+                        <h3 className="text-sm font-extrabold text-slate-800 leading-snug uppercase">{t(post.title, post.title)}</h3>
+                        <p className="text-xs text-slate-600 mt-2 leading-relaxed">{t(post.content, post.content)}</p>
 
                         {/* Comments section */}
                         {post.comments && post.comments.length > 0 && (
@@ -835,7 +835,7 @@ export default function GrowthSuite({
                                     {new Date(comment.createdAt).toLocaleDateString()}
                                   </span>
                                 </div>
-                                <p className="text-slate-600 pl-0.5 leading-relaxed">{comment.content}</p>
+                                <p className="text-slate-600 pl-0.5 leading-relaxed">{t(comment.content, comment.content)}</p>
                               </div>
                             ))}
                           </div>
@@ -950,9 +950,9 @@ export default function GrowthSuite({
                 <div className="space-y-3">
                   {roadmap.filter(p => p.status === 'planned').map(item => (
                     <div key={item.id} className="bg-slate-50/50 border border-slate-200 rounded-xl p-4">
-                      <span className="text-[9px] font-bold text-slate-400 font-mono block mb-1 uppercase">{item.category}</span>
-                      <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-tight leading-snug">{item.title}</h4>
-                      <p className="text-[11px] text-slate-500 mt-1.5 leading-normal truncate">{item.content}</p>
+                      <span className="text-[9px] font-bold text-slate-400 font-mono block mb-1 uppercase">{t('growth.category.' + item.category, item.category)}</span>
+                      <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-tight leading-snug">{t(item.title, item.title)}</h4>
+                      <p className="text-[11px] text-slate-500 mt-1.5 leading-normal truncate">{t(item.content, item.content)}</p>
                       <div className="mt-3.5 pt-2 border-t border-slate-150 flex items-center justify-between">
                         <span className="text-[9px] font-bold font-mono text-slate-400">{t('growth.upvotesCount', '{{count}} Upvotes', { count: item.upvotes?.length || 0 })}</span>
                         <button 
@@ -978,9 +978,9 @@ export default function GrowthSuite({
                 <div className="space-y-3">
                   {roadmap.filter(p => p.status === 'under_review').map(item => (
                     <div key={item.id} className="bg-indigo-50/10 border border-indigo-100/60 rounded-xl p-4">
-                      <span className="text-[9px] font-bold text-indigo-400 font-mono block mb-1 uppercase">{item.category}</span>
-                      <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-tight leading-snug">{item.title}</h4>
-                      <p className="text-[11px] text-slate-500 mt-1.5 leading-normal truncate">{item.content}</p>
+                      <span className="text-[9px] font-bold text-indigo-400 font-mono block mb-1 uppercase">{t('growth.category.' + item.category, item.category)}</span>
+                      <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-tight leading-snug">{t(item.title, item.title)}</h4>
+                      <p className="text-[11px] text-slate-500 mt-1.5 leading-normal truncate">{t(item.content, item.content)}</p>
                       <div className="w-full bg-slate-100 rounded-full h-1 mt-3.5">
                         <div className="bg-purple-600 h-1 rounded-full animate-pulse" style={{ width: '65%' }} />
                       </div>
@@ -1004,9 +1004,9 @@ export default function GrowthSuite({
                 <div className="space-y-3">
                   {roadmap.filter(p => p.status === 'completed').map(item => (
                     <div key={item.id} className="bg-emerald-50/20 border border-emerald-100/60 rounded-xl p-4">
-                      <span className="text-[9px] font-bold text-emerald-500 font-mono block mb-1 uppercase">{item.category}</span>
-                      <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-tight leading-snug">{item.title}</h4>
-                      <p className="text-[11px] text-slate-500 mt-1.5 leading-normal truncate">{item.content}</p>
+                      <span className="text-[9px] font-bold text-emerald-500 font-mono block mb-1 uppercase">{t('growth.category.' + item.category, item.category)}</span>
+                      <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-tight leading-snug">{t(item.title, item.title)}</h4>
+                      <p className="text-[11px] text-slate-500 mt-1.5 leading-normal truncate">{t(item.content, item.content)}</p>
                       <div className="mt-3.5 pt-2 border-t border-slate-150 flex items-center justify-between">
                         <span className="text-[9px] font-bold font-mono text-slate-400">{t('growth.upvotesCount', '{{count}} Upvotes', { count: item.upvotes?.length || 0 })}</span>
                         <div className="flex items-center gap-1">

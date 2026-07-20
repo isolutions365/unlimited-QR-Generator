@@ -110,8 +110,8 @@ function parseAndRender(
     }
 
     // Regular character
-    let nextBrace = pattern.indexOf('{', i);
-    let nextTag = pattern.indexOf('<', i);
+    let nextBrace = pattern.indexOf('{', i + 1);
+    let nextTag = pattern.indexOf('<', i + 1);
     let nextStop = pattern.length;
     
     if (nextBrace !== -1 && nextBrace < nextStop) nextStop = nextBrace;

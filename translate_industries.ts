@@ -150,7 +150,7 @@ ${JSON.stringify(generalToTranslate, null, 2)}`;
 
     try {
       const resp = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-3.1-flash-lite',
         contents: generalPrompt,
         config: { responseMimeType: 'application/json' }
       });
@@ -182,31 +182,53 @@ ${JSON.stringify(generalToTranslate, null, 2)}`;
 
   console.log(`Found ${profiles.length} industry profiles to process.`);
 
-  // Process in batches of 5
-  const batchSize = 5;
-  for (let i = 0; i < profiles.length; i += batchSize) {
-    const batch = profiles.slice(i, i + batchSize);
-    console.log(`\nProcessing batch ${Math.floor(i / batchSize) + 1} (${batch.map(p => p.slug).join(', ')})`);
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-    const promises = batch.map(async (profile) => {
-      const slug = profile.slug;
-      const flat = flattenIndustryProfile(slug, profile);
-      const toTranslate: Record<string, string> = {};
-      for (const [key, value] of Object.entries(flat)) {
-        if (!urJson[key]) {
-          toTranslate[key] = value;
+  async function generateWithRetry(prompt: string, maxRetries = 4): Promise<any> {
+    let attempt = 0;
+    while (attempt < maxRetries) {
+      try {
+        const resp = await ai.models.generateContent({
+          model: 'gemini-3.1-flash-lite',
+          contents: prompt,
+          config: { responseMimeType: 'application/json' }
+        });
+        return resp;
+      } catch (err: any) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw err;
         }
+        const backoff = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+        console.warn(`[Gemini API] Request failed (attempt ${attempt}/${maxRetries}): ${err?.message || err}. Retrying in ${Math.round(backoff)}ms...`);
+        await delay(backoff);
       }
+    }
+  }
 
-      const count = Object.keys(toTranslate).length;
-      if (count === 0) {
-        console.log(`[${slug}] Already fully translated.`);
-        return;
+  // Process sequentially to prevent concurrent request spikes and 503 errors
+  for (let i = 0; i < profiles.length; i++) {
+    const profile = profiles[i];
+    const slug = profile.slug;
+    console.log(`\nProcessing profile ${i + 1}/${profiles.length}: ${slug}`);
+
+    const flat = flattenIndustryProfile(slug, profile);
+    const toTranslate: Record<string, string> = {};
+    for (const [key, value] of Object.entries(flat)) {
+      if (!urJson[key]) {
+        toTranslate[key] = value;
       }
+    }
 
-      console.log(`[${slug}] Translating ${count} missing strings...`);
+    const count = Object.keys(toTranslate).length;
+    if (count === 0) {
+      console.log(`[${slug}] Already fully translated.`);
+      continue;
+    }
 
-      const prompt = `Translate the following English strings from a QR code solutions directory website into highly natural, professionally polished Urdu suitable for headings, descriptions, and FAQs.
+    console.log(`[${slug}] Translating ${count} missing strings...`);
+
+    const prompt = `Translate the following English strings from a QR code solutions directory website into highly natural, professionally polished Urdu suitable for headings, descriptions, and FAQs.
 The strings are for the specific industry page: "${slug}".
 Keep the JSON keys exactly the same. Only translate the values.
 Ensure correct grammatical terminology in Urdu (e.g., use standard translation terms like 'کیو آر کوڈ' for 'QR Code', 'بزنس کارڈ' for 'Business Card', etc.). Keep brand names like 'FreeQRGen.pro' unchanged.
@@ -215,35 +237,31 @@ Make sure placeholders are kept exactly as is.
 Here is the JSON of English strings:
 ${JSON.stringify(toTranslate, null, 2)}`;
 
-      try {
-        const resp = await ai.models.generateContent({
-          model: 'gemini-3.5-flash',
-          contents: prompt,
-          config: { responseMimeType: 'application/json' }
-        });
+    try {
+      const resp = await generateWithRetry(prompt);
 
-        let cleanText = resp.text || '{}';
-        cleanText = cleanText.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
-        const parsedTranslations = JSON.parse(cleanText);
+      let cleanText = resp.text || '{}';
+      cleanText = cleanText.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+      const parsedTranslations = JSON.parse(cleanText);
 
-        let merged = 0;
-        for (const [key, val] of Object.entries(parsedTranslations)) {
-          if (typeof val === 'string') {
-            urJson[key] = val;
-            merged++;
-          }
+      let merged = 0;
+      for (const [key, val] of Object.entries(parsedTranslations)) {
+        if (typeof val === 'string') {
+          urJson[key] = val;
+          merged++;
         }
-        console.log(`[${slug}] Successfully merged ${merged} translated keys.`);
-      } catch (err) {
-        console.error(`[${slug}] Error:`, err);
       }
-    });
+      console.log(`[${slug}] Successfully merged ${merged} translated keys.`);
+      
+      // Save progress after each successful profile
+      fs.writeFileSync(localePath, JSON.stringify(urJson, null, 2), 'utf-8');
+      
+      // Small cooling down delay to be gentle to the API
+      await delay(300);
 
-    await Promise.all(promises);
-
-    // Save batch progress
-    fs.writeFileSync(localePath, JSON.stringify(urJson, null, 2), 'utf-8');
-    console.log(`Saved progress for batch ${Math.floor(i / batchSize) + 1}.`);
+    } catch (err) {
+      console.error(`[${slug}] Failed to translate after retries:`, err);
+    }
   }
 
   console.log('\nAll done! Industry translations fully updated in src/locales/ur.json');
