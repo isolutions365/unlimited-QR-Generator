@@ -3279,5 +3279,18 @@
   "preview.liveDecoder": "LIVE DECODER",
   "preview.visitDestinationUrl": "Visit Destination URL",
   "preview.scanCanvasQr": "Scan Canvas QR",
-  "preview.shareTextTemplate": "Check out my custom QR design 🎨: {dotStyle} style dots and {eyeStyle} style eyes in {fgColor}. Created on QR Studio!"
+  "preview.shareTextTemplate": "Check out my custom QR design 🎨: {dotStyle} style dots and {eyeStyle} style eyes in {fgColor}. Created on QR Studio!",
+  "auth.accessRestrictedDesc": "Please sign in or create a secure account to access real-time visitor logs and Recharts dashboard layouts.",
+  "auth.signInSignUpButton": "Sign In / Sign Up",
+  "error.signInToSave": "Please sign in or create an account to save QR designs to your library.",
+  "error.signInToSimulate": "Please sign in first to simulate scan events on your layout.",
+  "error.seedFailed": "Verification Error: Seed writing failed. Make sure user is fully logged in.",
+  "error.downloadSuccessClaimSession": "🎯 Applet downloaded successfully! To prevent losing this beautifully styled QR template and unlock real-time scan analytics, claim your secure cloud session now.",
+  "confirm.clearAllScans": "Are you sure you want to clear all scans logs? This is irreversible.",
+  "confirm.deletePreset": "Are you sure you want to delete this QR preset?",
+  "error.loadAnalyticsFailed": "Error occurred while loading analytics records.",
+  "error.saveFailed": "Error occurred while saving configurations.",
+  "error.removeFailed": "Error removing item from the database.",
+  "error.updateFolderFailed": "Error occurred while updating folder category.",
+  "error.clearLogsFailed": "Error clearing logs."
 }

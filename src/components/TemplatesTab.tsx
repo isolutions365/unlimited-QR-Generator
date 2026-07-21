@@ -202,7 +202,7 @@ function MiniQRPreview({ design, testText }: { design: QRTemplate['design']; tes
 
   useEffect(() => {
     if (canvasRef.current) {
-      renderStyledQR(canvasRef.current, testText || 'https://google.com', {
+      renderStyledQR(canvasRef.current, testText || 'https://freeqrgen.pro', {
         fgColor: design.fgColor,
         bgColor: design.bgColor,
         gradientType: design.gradientType,
@@ -226,7 +226,8 @@ function MiniQRPreview({ design, testText }: { design: QRTemplate['design']; tes
 }
 
 export default function TemplatesTab({ currentProject, onChange }: TemplatesTabProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const isRtl = locale === 'ar' || locale === 'ur';
   const handleApplyTemplate = (template: QRTemplate) => {
     onChange({
       ...currentProject,
@@ -260,7 +261,7 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
     );
   };
 
-  const sampleUrl = currentProject.content || 'https://google.com';
+  const sampleUrl = currentProject.content || 'https://freeqrgen.pro';
 
   const containerVariants: any = {
     hidden: { opacity: 0 },
@@ -320,7 +321,7 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
               }}
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               onClick={() => handleApplyTemplate(template)}
-              className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-4 ${ active ? 'bg-gradient-to-r from-indigo-50/70 to-purple-50/40 border-indigo-300 shadow-xs ring-1 ring-indigo-300 ' : 'bg-white/40 border-gray-150 hover:bg-white hover:border-gray-250 ' }`}
+              className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-4 ${isRtl ? 'rtl-active' : ''} ${ active ? 'bg-gradient-to-r from-indigo-50/70 to-purple-50/40 border-indigo-300 shadow-xs ring-1 ring-indigo-300 ' : 'bg-white/40 border-gray-150 hover:bg-white hover:border-gray-250 ' }`}
             >
               {/* Mini Interactive QR Code rendered live */}
               <MiniQRPreview design={template.design} testText={sampleUrl} />

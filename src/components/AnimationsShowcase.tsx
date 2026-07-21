@@ -32,7 +32,7 @@ export default function AnimationsShowcase({
   }, [currentProject.design?.colorShift]);
 
   // Render the styled QR code pattern whenever the project design details change
-  const textToEncode = currentProject.content || 'https://google.com';
+  const textToEncode = currentProject.content || 'https://freeqrgen.pro';
 
   useEffect(() => {
     if (canvasRef.current) {

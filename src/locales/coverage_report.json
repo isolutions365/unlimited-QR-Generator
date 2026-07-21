@@ -1,100 +1,100 @@
 {
   "en": {
     "language": "English",
-    "totalKeys": 3039,
+    "totalKeys": 3281,
     "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "emptyKeysCount": 1,
+    "coveragePercent": "99.97%"
   },
   "ar": {
     "language": "Arabic",
-    "totalKeys": 3039,
+    "totalKeys": 3281,
     "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "emptyKeysCount": 1,
+    "coveragePercent": "99.97%"
   },
   "ur": {
     "language": "Urdu",
-    "totalKeys": 3039,
+    "totalKeys": 3281,
     "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "emptyKeysCount": 1,
+    "coveragePercent": "99.97%"
   },
   "de": {
     "language": "German",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "fr": {
     "language": "French",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "es": {
     "language": "Spanish",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "pt": {
     "language": "Portuguese",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "it": {
     "language": "Italian",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "tr": {
     "language": "Turkish",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "id": {
     "language": "Indonesian",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "hi": {
     "language": "Hindi",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "zh": {
     "language": "Chinese",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "ja": {
     "language": "Japanese",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 1,
+    "coveragePercent": "92.81%"
   },
   "ko": {
     "language": "Korean",
-    "totalKeys": 3039,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 0,
-    "coveragePercent": "100.00%"
+    "totalKeys": 3281,
+    "missingKeysCount": 235,
+    "emptyKeysCount": 2,
+    "coveragePercent": "92.78%"
   }
 }

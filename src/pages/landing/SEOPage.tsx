@@ -51,7 +51,8 @@ interface SEOPageProps {
 
 export default function SEOPage({
    slug, onSelectRoute, onInitiateGenerator }: SEOPageProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const isRtl = locale === 'ar' || locale === 'ur';
   const pageData = landingPages[slug];
   const aeoData = aeoDatabase[pageData?.slug || ''];
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -384,7 +385,7 @@ export default function SEOPage({
                 <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.benefits.desc`, pageData.benefits.desc)}</p>
                 <div className="grid grid-cols-1 gap-4 mt-4">
                   {pageData.benefits.items.map((benefit, i) => (
-                    <div key={i} className="flex gap-4 p-5 bg-white rounded-2xl border border-slate-150 shadow-xs">
+                    <div key={i} className={`flex gap-4 p-5 bg-white rounded-2xl border border-slate-150 shadow-xs ${isRtl ? 'rtl-active' : ''}`}>
                       <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-xl max-h-fit shrink-0 mt-0.5">
                         <CheckCircle className="w-4 h-4" />
                       </div>
@@ -408,7 +409,7 @@ export default function SEOPage({
                 <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.features.desc`, pageData.features.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   {pageData.features.items.map((feat, i) => (
-                    <div key={i} className="p-5 bg-slate-50 border border-slate-200/60 rounded-2xl relative overflow-hidden shadow-xs hover:bg-white transition-colors duration-200">
+                    <div key={i} className={`p-5 bg-slate-50 border border-slate-200/60 rounded-2xl relative overflow-hidden shadow-xs hover:bg-white transition-colors duration-200 ${isRtl ? 'rtl-active' : ''}`}>
                       <div className="w-1.5 h-full bg-indigo-500 absolute left-0 top-0" />
                       <h4 className="text-xs font-bold text-slate-900 pl-1">{getLocalized(`seo.landing.${pageData.slug}.features.items.${i}.title`, feat.title)}</h4>
                       <p className="text-[11px] text-slate-600 mt-2 pl-1 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.features.items.${i}.desc`, feat.desc)}</p>
@@ -428,7 +429,7 @@ export default function SEOPage({
                 <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.howItWorks.desc`, pageData.howItWorks.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
                   {pageData.howItWorks.steps.map((step, i) => (
-                    <div key={i} className="flex flex-col gap-3 p-4 bg-white border border-slate-150 rounded-2xl shadow-3xs relative">
+                    <div key={i} className={`flex flex-col gap-3 p-4 bg-white border border-slate-150 rounded-2xl shadow-3xs relative ${isRtl ? 'rtl-active' : ''}`}>
                       <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs select-none">
                         {step.step}
                       </div>
@@ -452,7 +453,7 @@ export default function SEOPage({
                 <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.useCases.desc`, pageData.useCases.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   {pageData.useCases.items.map((use, i) => (
-                    <div key={i} className="p-5 bg-white border border-slate-200/60 rounded-2xl shadow-xs">
+                    <div key={i} className={`p-5 bg-white border border-slate-200/60 rounded-2xl shadow-xs ${isRtl ? 'rtl-active' : ''}`}>
                       <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
                         <Activity className="w-4 h-4" />
                       </div>
@@ -540,7 +541,7 @@ export default function SEOPage({
 
               {/* 1. Quick Definition & 2. 50-word AI Summary Box */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div id="quick-definition" className="p-5 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-3 shadow-md">
+                <div id="quick-definition" className={`p-5 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-3 shadow-md ${isRtl ? 'rtl-active' : ''}`}>
                   <div className="flex items-center gap-2 text-indigo-400 font-mono text-[10px] uppercase font-bold tracking-wider">
                     <QrCode className="w-4 h-4" />
                     <span>{t('seo.quickDefinition', 'Quick Definition')}</span>
@@ -550,7 +551,7 @@ export default function SEOPage({
                   </p>
                 </div>
 
-                <div id="ai-summary-50" className="p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/60 space-y-3">
+                <div id="ai-summary-50" className={`p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/60 space-y-3 ${isRtl ? 'rtl-active' : ''}`}>
                   <div className="flex items-center gap-2 text-indigo-700 font-mono text-[10px] uppercase font-bold tracking-wider">
                     <Sparkles className="w-4 h-4" />
                     <span>{t('seo.aiSummaryTitle', '50-Word AI Summary')}</span>
@@ -671,13 +672,13 @@ export default function SEOPage({
               </div>
 
               {/* 11. Key Takeaways Card */}
-              <div id="key-takeaways" className="p-5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-4">
+              <div id="key-takeaways" className={`p-5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-4 ${isRtl ? 'rtl-active' : ''}`}>
                 <h4 className="text-xs font-bold text-slate-955 uppercase tracking-widest font-mono">
                   {t('seo.essentialTakeaways', 'Essential Takeaways & Technical Summary')}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {aeoData.keyTakeaways.map((takeaway, i) => (
-                    <div key={i} className="p-4 bg-white rounded-xl border border-slate-150/60 shadow-3xs">
+                    <div key={i} className={`p-4 bg-white rounded-xl border border-slate-150/60 shadow-3xs ${isRtl ? 'rtl-active' : ''}`}>
                       <span className="text-indigo-600 font-extrabold text-xs block mb-1">0{i+1}</span>
                       <p className="text-[11px] font-medium text-slate-700 leading-relaxed">
                         {getLocalized(`aeo.landing.${pageData.slug}.keyTakeaways.${i}`, takeaway)}
@@ -694,7 +695,7 @@ export default function SEOPage({
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {aeoData.faqs.map((faq, i) => (
-                    <div key={i} className="p-5 bg-white border border-slate-200/60 rounded-2xl shadow-xs space-y-2">
+                    <div key={i} className={`p-5 bg-white border border-slate-200/60 rounded-2xl shadow-xs space-y-2 ${isRtl ? 'rtl-active' : ''}`}>
                       <h4 className="text-xs font-bold text-slate-900 leading-tight">
                         {getLocalized(`aeo.landing.${pageData.slug}.faqs.${i}.q`, faq.q)}
                       </h4>
@@ -713,7 +714,7 @@ export default function SEOPage({
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {aeoData.relatedGuides.map((guide, i) => (
-                    <div key={i} className="p-5 bg-slate-50 border border-slate-150 rounded-2xl shadow-3xs flex flex-col justify-between">
+                    <div key={i} className={`p-5 bg-slate-50 border border-slate-150 rounded-2xl shadow-3xs flex flex-col justify-between ${isRtl ? 'rtl-active' : ''}`}>
                       <div>
                         <h4 className="text-xs font-bold text-slate-900">{getLocalized(`aeo.landing.${pageData.slug}.relatedGuides.${i}.title`, guide.title)}</h4>
                         <p className="text-[10px] text-slate-600 mt-1 leading-relaxed">

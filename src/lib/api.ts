@@ -113,7 +113,7 @@ class ApiClient {
   }
 
   // --- PREMIUM AI CO-PILOT REST SERVICES ---
-  async suggestColors(industry: string, promptVibe: string): Promise<{
+  async suggestColors(industry: string, promptVibe: string, locale?: string): Promise<{
     primaryColor: string;
     secondaryColor: string;
     bgColor: string;
@@ -130,11 +130,11 @@ class ApiClient {
       description: string;
     }>('/ai/suggest-colors', {
       method: 'POST',
-      body: JSON.stringify({ industry, promptVibe }),
+      body: JSON.stringify({ industry, promptVibe, locale }),
     });
   }
 
-  async suggestStyles(vibe: string): Promise<{
+  async suggestStyles(vibe: string, locale?: string): Promise<{
     dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
     eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
     errorCorrectionLevel: 'L' | 'M' | 'Q' | 'H';
@@ -149,11 +149,11 @@ class ApiClient {
       description: string;
     }>('/ai/suggest-styles', {
       method: 'POST',
-      body: JSON.stringify({ vibe }),
+      body: JSON.stringify({ vibe, locale }),
     });
   }
 
-  async brandMatch(brandName: string, brandDescription: string): Promise<{
+  async brandMatch(brandName: string, brandDescription: string, locale?: string): Promise<{
     primaryColor: string;
     gradientType: 'none' | 'linear' | 'radial';
     gradientColor: string;
@@ -174,22 +174,22 @@ class ApiClient {
       explanation: string;
     }>('/ai/brand-match', {
       method: 'POST',
-      body: JSON.stringify({ brandName, brandDescription }),
+      body: JSON.stringify({ brandName, brandDescription, locale }),
     });
   }
 
-  async getDesignRecommendations(qrContent: string, currentDesign: any): Promise<{
+  async getDesignRecommendations(qrContent: string, currentDesign: any, locale?: string): Promise<{
     recommendations: string[];
   }> {
     return this.request<{
       recommendations: string[];
     }>('/ai/design-recommendations', {
       method: 'POST',
-      body: JSON.stringify({ qrContent, currentDesign }),
+      body: JSON.stringify({ qrContent, currentDesign, locale }),
     });
   }
 
-  async getLayoutOptimization(qrContent: string, currentDesign: any): Promise<{
+  async getLayoutOptimization(qrContent: string, currentDesign: any, locale?: string): Promise<{
     optimizedErrorCorrection: 'L' | 'M' | 'Q' | 'H';
     optimizedMargin: number;
     optimizedLogoScale: number;
@@ -202,7 +202,7 @@ class ApiClient {
       vibe: string;
     }>('/ai/layout-optimize', {
       method: 'POST',
-      body: JSON.stringify({ qrContent, currentDesign }),
+      body: JSON.stringify({ qrContent, currentDesign, locale }),
     });
   }
 

@@ -291,7 +291,7 @@ export default function ProgrammaticHub({
       defaultContent = 'BEGIN:VCARD\nFN:John Doe\nORG:Enterprise\nTEL:1234567\nEMAIL:john@example.com\nEND:VCARD';
     } else if (activeProfile.slug === 'app-download-marketing') {
       typePreset = 'app';
-      defaultContent = JSON.stringify({ ios: 'https://apps.apple.com', android: 'https://play.google.com', fallback: 'https://google.com' });
+      defaultContent = JSON.stringify({ ios: 'https://apps.apple.com', android: 'https://play.google.com', fallback: 'https://freeqrgen.pro' });
     } else if (activeProfile.slug === 'restaurant' || activeProfile.slug === 'cafe') {
       typePreset = 'url';
       defaultContent = `https://freeqrgen.pro/menu-demo`;

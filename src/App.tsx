@@ -64,7 +64,7 @@ const INITIAL_DESIGN: Partial<QRProject> = {
   id: '',
   name: 'My Custom QR Code',
   type: 'url',
-  content: 'https://google.com',
+  content: 'https://freeqrgen.pro',
   design: {
     fgColor: '#0f172a',
     bgColor: '#ffffff',
@@ -1163,7 +1163,7 @@ export default function App() {
       setScans(scanLogs);
     } catch (err: any) {
       console.error('Error fetching user data dashboard:', err);
-      setErrorMessage(err.message || 'Error occurred while loading analytics records.');
+      setErrorMessage(err.message || t('error.loadAnalyticsFailed', 'Error occurred while loading analytics records.'));
     } finally {
       setIsLoadingData(false);
     }
@@ -1204,7 +1204,7 @@ export default function App() {
   // Create or Update QR Design project
   const handleSaveProject = async () => {
     if (!user) {
-      setErrorMessage('Please sign in or create an account to save QR designs to your library.');
+      setErrorMessage(t('error.signInToSave', 'Please sign in or create an account to save QR designs to your library.'));
       setIsAuthModalOpen(true);
       return;
     }
@@ -1258,7 +1258,7 @@ export default function App() {
       await fetchUserData();
     } catch (err: any) {
       console.error(err);
-      setErrorMessage(err.message || 'Error occurred while saving configurations.');
+      setErrorMessage(err.message || t('error.saveFailed', 'Error occurred while saving configurations.'));
     } finally {
       setIsSaving(false);
     }
@@ -1272,7 +1272,7 @@ export default function App() {
 
   // Delete project from database ledger
   const handleDeleteProject = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this QR preset?')) return;
+    if (!confirm(t('confirm.deletePreset', 'Are you sure you want to delete this QR preset?'))) return;
     try {
       setErrorMessage(null);
       await api.deleteProject(id);
@@ -1281,7 +1281,7 @@ export default function App() {
       }
       await fetchUserData();
     } catch (err: any) {
-      setErrorMessage(err.message || 'Error removing item from the database.');
+      setErrorMessage(err.message || t('error.removeFailed', 'Error removing item from the database.'));
     }
   };
 
@@ -1306,7 +1306,7 @@ export default function App() {
       await fetchUserData();
     } catch (err: any) {
       console.error(err);
-      setErrorMessage(err.message || 'Error occurred while updating folder category.');
+      setErrorMessage(err.message || t('error.updateFolderFailed', 'Error occurred while updating folder category.'));
     }
   };
 
@@ -1321,7 +1321,7 @@ export default function App() {
   // Generate / Seed mock scan analytics logs (for testing Recharts)
   const handleSeedScanClick = async (projectId: string, trackingId: string) => {
     if (!user) {
-      setErrorMessage('Please sign in first to simulate scan events on your layout.');
+      setErrorMessage(t('error.signInToSimulate', 'Please sign in first to simulate scan events on your layout.'));
       setIsAuthModalOpen(true);
       return;
     }
@@ -1330,18 +1330,18 @@ export default function App() {
       await fetchUserData();
     } catch (err: any) {
       console.error(err);
-      setErrorMessage('Verification Error: Seed writing failed. Make sure user is fully logged in.');
+      setErrorMessage(t('error.seedFailed', 'Verification Error: Seed writing failed. Make sure user is fully logged in.'));
     }
   };
 
   // Wipe scans logs completely
   const handlePurgeAllScans = async () => {
-    if (!confirm('Are you sure you want to clear all scans logs? This is irreversible.')) return;
+    if (!confirm(t('confirm.clearAllScans', 'Are you sure you want to clear all scans logs? This is irreversible.'))) return;
     try {
       await api.purgeScans();
       await fetchUserData();
     } catch (err: any) {
-      setErrorMessage(err.message || 'Error clearing logs.');
+      setErrorMessage(err.message || t('error.clearLogsFailed', 'Error clearing logs.'));
     }
   };
 
@@ -1350,7 +1350,7 @@ export default function App() {
     if (!user) {
       setTimeout(() => {
         setErrorMessage(
-          '🎯 Applet downloaded successfully! To prevent losing this beautifully styled QR template and unlock real-time scan analytics, claim your secure cloud session now.'
+          t('error.downloadSuccessClaimSession', '🎯 Applet downloaded successfully! To prevent losing this beautifully styled QR template and unlock real-time scan analytics, claim your secure cloud session now.')
         );
         setIsAuthModalOpen(true);
       }, 400);
@@ -2183,14 +2183,14 @@ export default function App() {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 tracking-tight">{t('auth.accessRestricted', 'Access Restricted')}</h3>
                 <p className="text-xs text-gray-400 mt-2 max-w-sm mx-auto leading-relaxed">
-                  Please sign in or create a secure account to access real-time visitor logs and Recharts dashboard layouts.
+                  {t('auth.accessRestrictedDesc', 'Please sign in or create a secure account to access real-time visitor logs and Recharts dashboard layouts.')}
                 </p>
                 <button
                   type="button"
                   onClick={handleSignInClick}
                   className="mt-6 py-2.5 px-6 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-md shadow-indigo-100 hover:bg-indigo-700 transition-all cursor-pointer"
                 >
-                  Sign In / Sign Up Card
+                  {t('auth.signInSignUpButton', 'Sign In / Sign Up')}
                 </button>
               </div>
             )}
@@ -2243,7 +2243,7 @@ export default function App() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                 {/* 1. WiFi QR Generator */}
-                <div id="tool-wifi-card" className="bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-indigo-500/50 hover:shadow-md transition-all group flex flex-col justify-between">
+                <div id="tool-wifi-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-indigo-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
                     <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4 font-bold">
                       <Wifi className="w-5 h-5 text-indigo-600" />
@@ -2265,7 +2265,7 @@ export default function App() {
                 </div>
 
                 {/* 2. WhatsApp Channels */}
-                <div id="tool-whatsapp-card" className="bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-emerald-500/50 hover:shadow-md transition-all group flex flex-col justify-between">
+                <div id="tool-whatsapp-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-emerald-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
                     <div className="w-10 h-10 bg-emerald-50 text-emerald-800 rounded-xl flex items-center justify-center mb-4">
                       <Phone className="w-5 h-5 text-emerald-800" />
@@ -2287,7 +2287,7 @@ export default function App() {
                 </div>
 
                 {/* 3. URL Web link */}
-                <div id="tool-url-card" className="bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-pink-500/50 hover:shadow-md transition-all group flex flex-col justify-between">
+                <div id="tool-url-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-pink-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
                     <div className="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center mb-4">
                       <Globe className="w-5 h-5 text-pink-600" />
@@ -2309,7 +2309,7 @@ export default function App() {
                 </div>
 
                 {/* 4. Restaurant menus */}
-                <div id="tool-restaurant-card" className="bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-amber-500/50 hover:shadow-md transition-all group flex flex-col justify-between">
+                <div id="tool-restaurant-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-amber-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
                     <div className="w-10 h-10 bg-amber-50 text-amber-800 rounded-xl flex items-center justify-center mb-4">
                       <Utensils className="w-5 h-5 text-amber-800" />
@@ -2331,7 +2331,7 @@ export default function App() {
                 </div>
 
                 {/* 5. Business card */}
-                <div id="tool-vcard-card" className="bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-purple-500/50 hover:shadow-md transition-all group flex flex-col justify-between">
+                <div id="tool-vcard-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-purple-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
                     <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
                       <Contact className="w-5 h-5 text-purple-600" />
@@ -2353,7 +2353,7 @@ export default function App() {
                 </div>
 
                 {/* 6. Instagram profile */}
-                <div id="tool-instagram-card" className="bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-rose-500/50 hover:shadow-md transition-all group flex flex-col justify-between">
+                <div id="tool-instagram-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-rose-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
                     <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
                       <Instagram className="w-5 h-5 text-indigo-650" />
@@ -2425,7 +2425,7 @@ export default function App() {
                     <motion.div key="wifi-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-wifi-card" 
-                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[inset_0_0_15px_rgba(99,102,241,0.35),0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group"
+                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[inset_0_0_15px_rgba(99,102,241,0.35),0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
@@ -2468,7 +2468,7 @@ export default function App() {
                     <motion.div key="whatsapp-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-whatsapp-card" 
-                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group"
+                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
@@ -2511,7 +2511,7 @@ export default function App() {
                     <motion.div key="vcard-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-vcard-card" 
-                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[inset_0_0_15px_rgba(168,85,247,0.35),0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group"
+                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[inset_0_0_15px_rgba(168,85,247,0.35),0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
@@ -2554,7 +2554,7 @@ export default function App() {
                     <motion.div key="restaurant-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-restaurant-card" 
-                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[inset_0_0_15px_rgba(245,158,11,0.35),0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group"
+                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[inset_0_0_15px_rgba(245,158,11,0.35),0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
@@ -2597,7 +2597,7 @@ export default function App() {
                     <motion.div key="social-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
                       <div 
                         id="recent-social-card" 
-                        className="h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.35),0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group"
+                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.35),0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">

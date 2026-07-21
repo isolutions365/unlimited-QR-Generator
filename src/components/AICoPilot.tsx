@@ -14,7 +14,7 @@ interface AICoPilotProps {
 }
 
 export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [activeSegment, setActiveSegment] = useState<'colors' | 'styles' | 'brand' | 'audit'>('audit');
   
   // Loading and feedback states
@@ -41,7 +41,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
   const [optimizationLog, setOptimizationLog] = useState<string | null>(null);
 
   // Deconstruct content/design from project safely
-  const qrContent = currentProject.content || 'https://google.com';
+  const qrContent = currentProject.content || 'https://freeqrgen.pro';
   const design = currentProject.design || {
     fgColor: '#0f172a',
     bgColor: '#ffffff',
@@ -59,7 +59,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
     const fetchAudit = async () => {
       setIsAuditing(true);
       try {
-        const res = await api.getDesignRecommendations(qrContent, design);
+        const res = await api.getDesignRecommendations(qrContent, design, locale);
         if (active) {
           setRecommendations(res.recommendations || []);
         }
@@ -136,7 +136,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
     setLoading(true);
     setOptimizationLog(null);
     try {
-      const opt = await api.getLayoutOptimization(qrContent, design);
+      const opt = await api.getLayoutOptimization(qrContent, design, locale);
       onChange({
         ...currentProject,
         design: {
@@ -163,7 +163,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
     setLoading(true);
     setColorResult(null);
     try {
-      const res = await api.suggestColors(industry, promptVibe);
+      const res = await api.suggestColors(industry, promptVibe, locale);
       setColorResult(res);
     } catch (err: any) {
       console.error(err);
@@ -178,7 +178,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
     setLoading(true);
     setStyleResult(null);
     try {
-      const res = await api.suggestStyles(styleVibe);
+      const res = await api.suggestStyles(styleVibe, locale);
       setStyleResult(res);
     } catch (err: any) {
       console.error(err);
@@ -193,7 +193,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
     setLoading(true);
     setBrandResult(null);
     try {
-      const res = await api.brandMatch(brandName, brandDesc);
+      const res = await api.brandMatch(brandName, brandDesc, locale);
       setBrandResult(res);
     } catch (err: any) {
       console.error(err);

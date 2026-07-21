@@ -162,7 +162,23 @@ async function main() {
         const isMissing = targetVal === undefined;
         const isCopyOfEnglish = targetVal === enVal;
 
-        if ((isMissing || isCopyOfEnglish) && !shouldSkipTranslation(key, enVal)) {
+        const isNewKey = [
+          'auth.accessRestrictedDesc',
+          'auth.signInSignUpButton',
+          'error.signInToSave',
+          'error.signInToSimulate',
+          'error.seedFailed',
+          'error.downloadSuccessClaimSession',
+          'confirm.clearAllScans',
+          'confirm.deletePreset',
+          'error.loadAnalyticsFailed',
+          'error.saveFailed',
+          'error.removeFailed',
+          'error.updateFolderFailed',
+          'error.clearLogsFailed'
+        ].includes(key);
+
+        if (isMissing && isNewKey && !shouldSkipTranslation(key, enVal)) {
           keysToTranslate.push({ key, val: enVal });
         }
       }

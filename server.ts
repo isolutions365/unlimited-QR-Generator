@@ -1223,9 +1223,89 @@ English text: "${text}"`;
     throw lastError || new Error('All models failed to generate content');
   }
 
+  function getLocalizedText(key: string, locale: string = 'en'): string {
+    const dictionary: Record<string, Record<string, string>> = {
+      ar: {
+        'url_too_long': "تحتوي وجهة الرابط على أكثر من 90 حرفاً. نقترح بشدة تمكين إعادة التوجيه الديناميكي لتقليل كثافة الـ QR وضمان المسح الفوري السلس.",
+        'non_white_bg': "الخلفية الخاصة بك ليست بيضاء. يرجى التأكد من أن التباين بين النقاط ولون الخلفية لا يقل عن 4:1 لتجنب مشاكل المسح.",
+        'custom_logo': "تم تكوين شعار مخصص في الوسط. نقترح اختيار مستوى تصحيح خطأ عالٍ (H) لحماية أنماط النقاط المغطاة بالشعار.",
+        'perfect_contrast': "نسبة التباين مذهلة ومثالية. يحقق تصميمك حالياً امتثالاً بنسبة 100٪ لإرشادات المسح القياسية.",
+        'good_gradient': "توزيع التدرج اللوني متناسب للغاية ويحافظ على وضوح ممتاز عبر جميع عدسات الكاميرا.",
+        'svg_recommendation': "استخدم تنسيق المتجهات القياسي (.SVG) للحصول على طباعة مادية فائقة الدقة على اللافتات أو المنتجات.",
+        'layout_vibe': "تم حساب مقاييس التخطيط المثالية لموازنة كثافة النقاط مع حماية الشعار، مما يقلل وقت المسح بنسبة تصل إلى 25٪.",
+        'colors_fallback_tech': "لوحة ألوان مستقبلية للوضع الداكن مع تدرج سيان كهربائي ونيلي عميق، مصممة خصيصاً للعلامات التجارية التقنية الرائدة.",
+        'colors_fallback_eco': "جمالية خضراء طبيعية نظيفة مقترنة باللون الأبيض، تمثل الاستدامة والوعي البيئي والموثوقية.",
+        'colors_fallback_luxury': "درجات الفحم الغنية والعنبر العميق مع خلفية أنيقة، مصممة لتمثيل الفخامة والجودة الراقية.",
+        'colors_fallback_creative': "تدرج شعاعي وردي مشرق ومميز لجذب الانتباه البصري الفوري وتأسيس حضور إبداعي قوي.",
+        'colors_fallback_default': "التدرج الأزرق الكلاسيكي عالي الحيوية. يوفر قراءة استثنائية وتباين مسح رائع وجاذبية تقنية مميزة.",
+        'style_fallback_luxury': "نمط انسيابي راقٍ مقترن بإطار دائري مميز. يعكس الفخامة المطلقة والجمال العصري الأنيق.",
+        'style_fallback_playful': "نقاط دائرية لطيفة وودودة مع إطارات مستديرة ناعمة، تعطي طابعاً ترحيبياً وتقنياً دافئاً.",
+        'style_fallback_tech': "نقاط تقنية مستوحاة من شاشات الأوامر مع إطارات مربعة كلاسيكية. تصميم نظيف ومثالي للشركات التقنية الهندسیة.",
+        'style_fallback_default': "نقاط مربعة كلاسيكية متينة مع حماية تصحيح خطأ عالية (H). مصممة للتوافق الأقصى مع جميع أجهزة المسح."
+      },
+      ur: {
+        'url_too_long': "آپ کے منزل کے یو آر ایل میں 90 سے زیادہ حروف ہیں۔ ہم بلاک کی کثافت کو کم کرنے اور فوری اسکیننگ کو یقینی بنانے کے لیے ڈائنامک ری ڈائریکشن کو فعال کرنے کی سختی سے تجویز کرتے ہیں۔",
+        'non_white_bg': "آپ کا پس منظر سفید نہیں ہے۔ براہ کرم یقینی بنائیں کہ اسکیننگ کے مسائل سے بچنے کے لیے کینوس اور ماڈیولز کے درمیان تباین کم از کم 4:1 ہے۔",
+        'custom_logo': "ایک حسب ضرورت لوگو ترتیب دیا گیا ہے۔ ہم لوگو کے نیچے چھپے ہوئے ماڈیول پیٹرنز کی حفاظت کے لیے ہائی (H) تصحیح کی سطح کو منتخب کرنے کی تجویز دیتے ہیں۔",
+        'perfect_contrast': "تناسب تباین شاندار ہے۔ آپ کا ڈیزائن اس وقت ڈیجیٹل پڑھنے کے رہنما خطوط کے ساتھ 100٪ مطابقت رکھتا ہے۔",
+        'good_gradient': "گریڈینٹ کی تقسیم اچھی طرح متناسب ہے؛ تمام کیمروں میں اعلیٰ وضاحت برقرار رکھتی ہے۔",
+        'svg_recommendation': "دکان کے بینرز یا پروموشنل سامان پر اعلیٰ معیار کی طباعت کے لیے معیاری ویکٹر فارمیٹ (.SVG) استعمال کریں۔",
+        'layout_vibe': "لوگو کی حفاظت کے ساتھ ماڈیول کی کثافت کو متوازن کرنے کے لیے بہترین لے آؤٹ میٹرکس کا حساب لگایا گیا ہے، جس سے اسکیننگ کا وقت 25٪ تک کم ہوجاتا ہے۔",
+        'colors_fallback_tech': "الیکٹرک سیان اور گہرے انڈگو گریڈینٹ کے ساتھ مستقبل کا ڈارک موڈ سیٹ اپ، جو ٹیکنالوجی کے برانڈز کے لیے موزوں ہے۔",
+        'colors_fallback_eco': "ایک نامیاتی، صاف سبز جمالیات سفید کے ساتھ جوڑی، جو پائیداری اور ماحولیاتی بیداری کی نمائندگی کرتی ہے۔",
+        'colors_fallback_luxury': "گہرا چارکول اور امبر رنگوں کا مجموعہ، جو برانڈ کی خوبصورتی اور پریمیم معیار کی نمائندگی کرتا ہے۔",
+        'colors_fallback_creative': "فوری طور پر توجہ مبذول کرنے اور برانڈ کی تخلیقی خصوصیات کو قائم کرنے کے لیے ایک متحرک نیون گلابی ریڈیل سیٹ اپ۔",
+        'colors_fallback_default': "ہمارے بنیادی پیلیٹ سے کلاسک نیلا گریڈینٹ۔ غیر معمولی اسکیننگ کی کارکردگی اور کلاسک کشش پیش کرتا ہے۔",
+        'style_fallback_luxury': "ایک کلاسی مائع انداز اور دائرہ نما آئی عناصر کی خصوصیت۔ بہترین لگژری اور برانڈ کی خوبصورتی کی عکاسی کرتا ہے۔",
+        'style_fallback_playful': "دوستانہ، اعلیٰ اسکین ایبلٹی گول بلاک ماڈیولز اور گول فریم بارڈرز۔ ایک انتہائی پرکشش اور دوستانہ شخصیت دیتا ہے۔",
+        'style_fallback_tech': "ہائی ٹیک ٹرمینل ڈاٹس روایتی مربع فریموں کے ساتھ جوڑے۔ انجینئرنگ سے چلنے والی برانڈنگ کے لیے بہترین۔",
+        'style_fallback_default': "کلاسک مضبوط مربع جس میں غلطی کی کوریج زیادہ سے زیادہ (H) پر سیٹ ہے۔ اسکینر کی مطابقت کو یقینی بنانے کے لیے تیار کیا گیا ہے۔"
+      },
+      tr: {
+        'url_too_long': "Hedef URL'niz 90'dan fazla karakter içeriyor. Blok yoğunluğunu azaltmak ve eski akıllı telefonlarda bile anında tarama sağlamak için Dinamik Yönlendirmeyi (Kısa URL) etkinleştirmenizi önemle tavsiye ederiz.",
+        'non_white_bg': "Arka planınız beyaz değil. Doğrudan güneş ışığı veya karanlık ortam koşullarında tarama sorunlarını önlemek için modülleriniz ile tuval arasındaki kontrastın en az 4:1 olduğundan emin olun.",
+        'custom_logo': "Özel bir orta logo yapılandırıldı. Logonun kapladığı hayati modül desenlerini korumak için Yüksek (H) Hata Düzeltme toleransı seçmenizi öneririz.",
+        'perfect_contrast': "Kontrast oranı muhteşem. Tasarımınız şu anda dijital okuma standardı yönergeleriyle %100 uyumludur.",
+        'good_gradient': "Gradiyent dağılımı iyi oranlanmıştır; tüm kameralarda yüksek netlik sağlar.",
+        'svg_recommendation': "Mağaza afişleri veya promosyon ürünleri üzerine yüksek çözünürlüklü fiziksel baskı için standart vektör formatı (.SVG) kullanın.",
+        'layout_vibe': "Ortalama tarama gecikmesini %25'e kadar azaltarak, modül yoğunluğunu logo korumasıyla dengelemek için optimize edilmiş yerleşim metrikleri hesaplandı.",
+        'colors_fallback_tech': "İleri görüşlü teknoloji markaları için tasarlanmış, elektrikli camgöbeği ve derin çivit mavisi gradyanlı fütüristik karanlık mod kurulumu.",
+        'colors_fallback_eco': "Sürdürülebilirliği, çevre bilincini ve güveni temsil eden, beyaz dengeleriyle eşleştirilmiş organik, temiz bir yeşil estetik.",
+        'colors_fallback_luxury': "Premium işçiliği ve lüks kaliteyi temsil etmek için tasarlanmış, temiz arduvaz zeminlerle birleştirilmiş zengin kömür ve derin kehribar tonları.",
+        'colors_fallback_creative': "Anında görsel dikkat çekmek ve güçlü yaratıcı vurgular oluşturmak için tasarlanmış canlı ve etkileyici bir neon gül radyal kurulumu.",
+        'colors_fallback_default': "Klasik yüksek canlılıkta mavi gradyan. Olağanüstü okunabilirlik, yüksek tarayıcı kontrastı ve klasik teknoloji çekiciliği sunar.",
+        'style_fallback_luxury': "Klasik sıvı stili ve uyumlu daire göz öğeleri. Premium lüksü ve marka zarafetini yansıtır.",
+        'style_fallback_playful': "Samimi, yüksek taranabilirlikte yuvarlatılmış blok modülleri ve yuvarlatılmış çerçeve kenarlıkları. Sıcak ve teknoloji dostu bir kişilik kazandırır.",
+        'style_fallback_tech': "Geleneksel kare çerçevelerle eşleştirilmiş yüksek teknoloji terminal noktaları. Temiz, teknik ve mühendislik odaklı markalama için optimize edilmiştir.",
+        'style_fallback_default': "Kare hata toleransı Yüksek (H) olarak ayarlanmış klasik sağlam kareler. Maksimum tarayıcı uyumluluğu için tasarlanmıştır."
+      },
+      en: {
+        'url_too_long': "Your destination URL contains over 90 characters. We strongly suggest enabling Dynamic Redirection (Short URL) to reduce block density and ensure instant scanning, even for older smartphones.",
+        'non_white_bg': "Your background is non-white. Please make sure the contrast between your modules and the canvas is at least 4:1 to prevent scanning issues under direct sunlight or dark ambient conditions.",
+        'custom_logo': "A custom center logo is configured. We suggest selecting High (H) Error Correction redundancy to protect vital module patterns covered by the center logo.",
+        'perfect_contrast': "Contrast ratio is spectacular. Your design currently achieves 100% compliance with digital read standard guidelines.",
+        'good_gradient': "Gradient distribution is well-proportioned; maintains high clarity across all cameras.",
+        'svg_recommendation': "Use standard vector format (.SVG) for high-resolution physical printing on shop banners or promotional merchandise.",
+        'layout_vibe': "Calculated optimal layout metrics to balance module density with logo occlusion protection, reducing average scan latency by up to 25%.",
+        'colors_fallback_tech': "Futuristic dark mode setup with an electric cyan and deep indigo gradient, tailored for forward-thinking technology brands.",
+        'colors_fallback_eco': "An organic, clean green aesthetic paired with white balances, representing sustainability, environmental awareness, and trust.",
+        'colors_fallback_luxury': "Rich charcoal and deep amber hues combined with clean slate backdrops, engineered to represent premium craftsmanship and upscale quality.",
+        'colors_fallback_creative': "A lively and expressive neon-rose radial setup designed to attract instant visual attention and establish strong creative accents.",
+        'colors_fallback_default': "The classic high-vibrancy blue gradient from our Core palette. Offers exceptional readability, high scanner contrast, and classic tech appeal.",
+        'style_fallback_luxury': "Featuring a classy liquid style and matching circle eye elements. Reflects absolute premium luxury, high-end design, and precise brand elegance.",
+        'style_fallback_playful': "Friendly, high-readability rounded block modules and rounded frame borders. Gives a highly approachable, warm, and tech-friendly personality.",
+        'style_fallback_tech': "High-tech terminal dots paired with traditional square frames. Clean, technical, and optimized for engineering-driven branding.",
+        'style_fallback_default': "Classic robust squares with error coverage maxed to High (H). Engineered for maximum scanner compatibility and zero-latency redirection."
+      }
+    };
+
+    const activeLocale = locale === 'ar' || locale === 'ur' || locale === 'tr' ? locale : 'en';
+    return dictionary[activeLocale]?.[key] || dictionary['en']?.[key] || '';
+  }
+
   // 1. AI Color Suggestions endpoint
   app.post('/api/ai/suggest-colors', authenticateToken, async (req: any, res) => {
-    const { industry, promptVibe } = req.body;
+    const { industry, promptVibe, locale } = req.body;
     const searchVibe = `${industry || ''} ${promptVibe || ''}`.trim().toLowerCase();
 
     // High fidelity, intelligent fallback presets matching requested aesthetic parameters
@@ -1237,7 +1317,7 @@ English text: "${text}"`;
           bgColor: "#0F172A",
           gradientType: "linear",
           gradientColor: "#06B6D4",
-          description: "Futuristic dark mode setup with an electric cyan and deep indigo gradient, tailored for forward-thinking technology brands."
+          description: getLocalizedText('colors_fallback_tech', locale) || "Futuristic dark mode setup with an electric cyan and deep indigo gradient, tailored for forward-thinking technology brands."
         };
       }
       if (vibeStr.includes('eco') || vibeStr.includes('nature') || vibeStr.includes('plant') || vibeStr.includes('green')) {
@@ -1247,7 +1327,7 @@ English text: "${text}"`;
           bgColor: "#FFFFFF",
           gradientType: "none",
           gradientColor: "#10B981",
-          description: "An organic, clean green aesthetic paired with white balances, representing sustainability, environmental awareness, and trust."
+          description: getLocalizedText('colors_fallback_eco', locale) || "An organic, clean green aesthetic paired with white balances, representing sustainability, environmental awareness, and trust."
         };
       }
       if (vibeStr.includes('luxury') || vibeStr.includes('elegant') || vibeStr.includes('gold') || vibeStr.includes('class')) {
@@ -1257,7 +1337,7 @@ English text: "${text}"`;
           bgColor: "#F8FAFC",
           gradientType: "linear",
           gradientColor: "#B45309",
-          description: "Rich charcoal and deep amber hues combined with clean slate backdrops, engineered to represent premium craftsmanship and upscale quality."
+          description: getLocalizedText('colors_fallback_luxury', locale) || "Rich charcoal and deep amber hues combined with clean slate backdrops, engineered to represent premium craftsmanship and upscale quality."
         };
       }
       if (vibeStr.includes('creative') || vibeStr.includes('art') || vibeStr.includes('play')) {
@@ -1267,7 +1347,7 @@ English text: "${text}"`;
           bgColor: "#FFFFFF",
           gradientType: "radial",
           gradientColor: "#EC4899",
-          description: "A lively and expressive neon-rose radial setup designed to attract instant visual attention and establish strong creative accents."
+          description: getLocalizedText('colors_fallback_creative', locale) || "A lively and expressive neon-rose radial setup designed to attract instant visual attention and establish strong creative accents."
         };
       }
       // Standard Premium Default
@@ -1277,7 +1357,7 @@ English text: "${text}"`;
         bgColor: "#FFFFFF",
         gradientType: "linear",
         gradientColor: "#4F46E5",
-        description: "The classic high-vibrancy blue gradient from our Core palette. Offers exceptional readability, high scanner contrast, and classic tech appeal."
+        description: getLocalizedText('colors_fallback_default', locale) || "The classic high-vibrancy blue gradient from our Core palette. Offers exceptional readability, high scanner contrast, and classic tech appeal."
       };
     };
 
@@ -1286,8 +1366,10 @@ English text: "${text}"`;
         return res.json(generateLocalColorFallback(searchVibe));
       }
 
+      const languageInstruction = locale ? `IMPORTANT: The user is currently viewing the application in the locale/language: "${locale}". You MUST generate the text descriptions, explanations, and recommendation strings in the "${locale}" language (e.g., if locale is 'ar' write in Arabic, if 'ur' write in Urdu, if 'tr' write in Turkish, etc.). Do NOT output English if the locale is a non-English language.` : '';
+
       const response = await generateContentWithFallback({
-        contents: `Create a professional color palette matching this industry/vibe description. Make it premium and appropriate for styled QR Code usage: "${searchVibe}"`,
+        contents: `Create a professional color palette matching this industry/vibe description. Make it premium and appropriate for styled QR Code usage: "${searchVibe}"\n\n${languageInstruction}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -1318,7 +1400,7 @@ English text: "${text}"`;
 
   // 2. AI QR Style Suggestions endpoint
   app.post('/api/ai/suggest-styles', authenticateToken, async (req: any, res) => {
-    const { vibe } = req.body;
+    const { vibe, locale } = req.body;
     const searchVibe = (vibe || '').toLowerCase();
 
     const generateLocalStyleFallback = (vibeStr: string) => {
@@ -1328,7 +1410,7 @@ English text: "${text}"`;
           eyeStyle: "circle",
           errorCorrectionLevel: "H",
           logoScale: 0.18,
-          description: "Featuring a classy liquid style and matching circle eye elements. Reflects absolute premium luxury, high-end design, and precise brand elegance."
+          description: getLocalizedText('style_fallback_luxury', locale) || "Featuring a classy liquid style and matching circle eye elements. Reflects absolute premium luxury, high-end design, and precise brand elegance."
         };
       }
       if (vibeStr.includes('playful') || vibeStr.includes('fun') || vibeStr.includes('casual')) {
@@ -1337,7 +1419,7 @@ English text: "${text}"`;
           eyeStyle: "rounded",
           errorCorrectionLevel: "Q",
           logoScale: 0.19,
-          description: "Friendly, high-readability rounded block modules and rounded frame borders. Gives a highly approachable, warm, and tech-friendly personality."
+          description: getLocalizedText('style_fallback_playful', locale) || "Friendly, high-readability rounded block modules and rounded frame borders. Gives a highly approachable, warm, and tech-friendly personality."
         };
       }
       if (vibeStr.includes('tech') || vibeStr.includes('data') || vibeStr.includes('cyber')) {
@@ -1346,7 +1428,7 @@ English text: "${text}"`;
           eyeStyle: "square",
           errorCorrectionLevel: "M",
           logoScale: 0.17,
-          description: "High-tech terminal dots paired with traditional square frames. Clean, technical, and optimized for engineering-driven branding."
+          description: getLocalizedText('style_fallback_tech', locale) || "High-tech terminal dots paired with traditional square frames. Clean, technical, and optimized for engineering-driven branding."
         };
       }
       // Standard beautiful fallback
@@ -1355,7 +1437,7 @@ English text: "${text}"`;
         eyeStyle: "square",
         errorCorrectionLevel: "H",
         logoScale: 0.18,
-        description: "Classic robust squares with error coverage maxed to High (H). Engineered for maximum scanner compatibility and zero-latency redirection."
+        description: getLocalizedText('style_fallback_default', locale) || "Classic robust squares with error coverage maxed to High (H). Engineered for maximum scanner compatibility and zero-latency redirection."
       };
     };
 
@@ -1364,8 +1446,10 @@ English text: "${text}"`;
         return res.json(generateLocalStyleFallback(searchVibe));
       }
 
+      const languageInstruction = locale ? `IMPORTANT: The user is currently viewing the application in the locale/language: "${locale}". You MUST generate the text descriptions, explanations, and recommendation strings in the "${locale}" language (e.g., if locale is 'ar' write in Arabic, if 'ur' write in Urdu, if 'tr' write in Turkish, etc.). Do NOT output English if the locale is a non-English language.` : '';
+
       const response = await generateContentWithFallback({
-        contents: `Create a professional QR code styling configuration based on this brand theme: "${searchVibe}"`,
+        contents: `Create a professional QR code styling configuration based on this brand theme: "${searchVibe}"\n\n${languageInstruction}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -1395,7 +1479,7 @@ English text: "${text}"`;
 
   // 3. AI Brand Matcher endpoint
   app.post('/api/ai/brand-match', authenticateToken, async (req: any, res) => {
-    const { brandName, brandDescription } = req.body;
+    const { brandName, brandDescription, locale } = req.body;
     const query = `${brandName || ''} ${brandDescription || ''}`.trim().toLowerCase();
 
     const generateLocalBrandFallback = (qStr: string) => {
@@ -1409,7 +1493,7 @@ English text: "${text}"`;
           dotStyle: "classy",
           eyeStyle: "leaf",
           logoScale: 0.18,
-          explanation: "We've matched your organic brand with leafy eye structures, sophisticated classy dots, and a radiant forest green linear gradient."
+          explanation: getLocalizedText('style_fallback_luxury', locale) || "We've matched your organic brand with leafy eye structures, sophisticated classy dots, and a radiant forest green linear gradient."
         };
       }
       if (qStr.includes('cyber') || qStr.includes('game') || qStr.includes('software') || qStr.includes('dev')) {
@@ -1421,7 +1505,7 @@ English text: "${text}"`;
           dotStyle: "dots",
           eyeStyle: "square",
           logoScale: 0.17,
-          explanation: "A high-tech neon violet-to-pink gradient matched with micro-dots, ideal for bleeding-edge gaming and engineering hubs."
+          explanation: getLocalizedText('style_fallback_tech', locale) || "A high-tech neon violet-to-pink gradient matched with micro-dots, ideal for bleeding-edge gaming and engineering hubs."
         };
       }
       // Default modern corporate
@@ -1433,7 +1517,7 @@ English text: "${text}"`;
         dotStyle: "rounded",
         eyeStyle: "circle",
         logoScale: 0.18,
-        explanation: "Matched with deep corporate slate and high-contrast indigo gradient highlights, featuring rounded components for an open, modern UX."
+        explanation: getLocalizedText('style_fallback_default', locale) || "Matched with deep corporate slate and high-contrast indigo gradient highlights, featuring rounded components for an open, modern UX."
       };
     };
 
@@ -1442,8 +1526,10 @@ English text: "${text}"`;
         return res.json(generateLocalBrandFallback(query));
       }
 
+      const languageInstruction = locale ? `IMPORTANT: The user is currently viewing the application in the locale/language: "${locale}". You MUST generate the text descriptions, explanations, and recommendation strings in the "${locale}" language (e.g., if locale is 'ar' write in Arabic, if 'ur' write in Urdu, if 'tr' write in Turkish, etc.). Do NOT output English if the locale is a non-English language.` : '';
+
       const response = await generateContentWithFallback({
-        contents: `Analyze this brand and generate the absolute perfect complete QR Code aesthetic colors and shape styling. Brand: "${brandName}". Description: "${brandDescription}"`,
+        contents: `Analyze this brand and generate the absolute perfect complete QR Code aesthetic colors and shape styling. Brand: "${brandName}". Description: "${brandDescription}"\n\n${languageInstruction}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -1476,29 +1562,29 @@ English text: "${text}"`;
 
   // 4. AI Design Recommendations endpoint (public to support instant landing-page scannability audit)
   app.post(['/api/ai/design-recommendations', '/ai/design-recommendations'], async (req: any, res) => {
-    const { qrContent, currentDesign } = req.body;
+    const { qrContent, currentDesign, locale } = req.body;
     const contentStr = qrContent || '';
 
     const executeDesignAudit = (cText: string, design: any) => {
       const tips = [];
       if (cText.length > 90) {
-        tips.push("Your destination URL contains over 90 characters. We strongly suggest enabling Dynamic Redirection (Short URL) to reduce block density and ensure instant scanning, even for older smartphones.");
+        tips.push(getLocalizedText('url_too_long', locale) || "Your destination URL contains over 90 characters. We strongly suggest enabling Dynamic Redirection (Short URL) to reduce block density and ensure instant scanning, even for older smartphones.");
       }
       if (design?.bgColor && design?.fgColor) {
         // Simple hex contrast checker placeholder logic:
         const isWhiteBg = design.bgColor.toLowerCase() === '#ffffff' || design.bgColor.toLowerCase() === '#fff';
         if (!isWhiteBg && design.gradientType === 'none') {
-          tips.push("Your background is non-white. Please make sure the contrast between your modules and the canvas is at least 4:1 to prevent scanning issues under direct sunlight or dark ambient conditions.");
+          tips.push(getLocalizedText('non_white_bg', locale) || "Your background is non-white. Please make sure the contrast between your modules and the canvas is at least 4:1 to prevent scanning issues under direct sunlight or dark ambient conditions.");
         }
       }
       if (design?.logoUrl) {
-         tips.push("A custom center logo is configured. We suggest selecting High (H) Error Correction redundancy to protect vital module patterns covered by the center logo.");
+         tips.push(getLocalizedText('custom_logo', locale) || "A custom center logo is configured. We suggest selecting High (H) Error Correction redundancy to protect vital module patterns covered by the center logo.");
       }
       if (tips.length === 0) {
-        tips.push("Contrast ratio is spectacular. Your design currently achieves 100% compliance with digital read standard guidelines.");
-        tips.push("Gradient distribution is well-proportioned; maintains high clarity across all cameras.");
+        tips.push(getLocalizedText('perfect_contrast', locale) || "Contrast ratio is spectacular. Your design currently achieves 100% compliance with digital read standard guidelines.");
+        tips.push(getLocalizedText('good_gradient', locale) || "Gradient distribution is well-proportioned; maintains high clarity across all cameras.");
       }
-      tips.push("Use standard vector format (.SVG) for high-resolution physical printing on shop banners or promotional merchandise.");
+      tips.push(getLocalizedText('svg_recommendation', locale) || "Use standard vector format (.SVG) for high-resolution physical printing on shop banners or promotional merchandise.");
       return { recommendations: tips };
     };
 
@@ -1507,8 +1593,10 @@ English text: "${text}"`;
         return res.json(executeDesignAudit(contentStr, currentDesign));
       }
 
+      const languageInstruction = locale ? `IMPORTANT: The user is currently viewing the application in the locale/language: "${locale}". You MUST generate the text descriptions, explanations, and recommendation strings in the "${locale}" language (e.g., if locale is 'ar' write in Arabic, if 'ur' write in Urdu, if 'tr' write in Turkish, etc.). Do NOT output English if the locale is a non-English language.` : '';
+
       const response = await generateContentWithFallback({
-        contents: `Provide 3-4 professional, actionable design audit recommendations for a QR Code with these parameters: Content Length: ${contentStr.length}, QR Content: "${contentStr}", Current Design Settings: ${JSON.stringify(currentDesign || {})}`,
+        contents: `Provide 3-4 professional, actionable design audit recommendations for a QR Code with these parameters: Content Length: ${contentStr.length}, QR Content: "${contentStr}", Current Design Settings: ${JSON.stringify(currentDesign || {})}\n\n${languageInstruction}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -1537,7 +1625,7 @@ English text: "${text}"`;
 
   // 5. Smart Layout Optimizer endpoint
   app.post('/api/ai/layout-optimize', authenticateToken, async (req: any, res) => {
-    const { qrContent, currentDesign } = req.body;
+    const { qrContent, currentDesign, locale } = req.body;
     const contentStr = qrContent || '';
 
     const executeLayoutOptimizeFallback = (cText: string, design: any) => {
@@ -1562,7 +1650,7 @@ English text: "${text}"`;
         optimizedErrorCorrection: ecc,
         optimizedMargin: margin,
         optimizedLogoScale: logoScale,
-        vibe: "Calculated optimal layout metrics to balance module density with logo occlusion protection, reducing average scan latency by up to 25%."
+        vibe: getLocalizedText('layout_vibe', locale) || "Calculated optimal layout metrics to balance module density with logo occlusion protection, reducing average scan latency by up to 25%."
       };
     };
 
@@ -1571,8 +1659,10 @@ English text: "${text}"`;
         return res.json(executeLayoutOptimizeFallback(contentStr, currentDesign));
       }
 
+      const languageInstruction = locale ? `IMPORTANT: The user is currently viewing the application in the locale/language: "${locale}". You MUST generate the text descriptions, explanations, and recommendation strings in the "${locale}" language (e.g., if locale is 'ar' write in Arabic, if 'ur' write in Urdu, if 'tr' write in Turkish, etc.). Do NOT output English if the locale is a non-English language.` : '';
+
       const response = await generateContentWithFallback({
-        contents: `Generate optimal values for a QR Style configuration: QR Content: "${contentStr}" (length: ${contentStr.length}), Current Design Settings: ${JSON.stringify(currentDesign || {})}`,
+        contents: `Generate optimal values for a QR Style configuration: QR Content: "${contentStr}" (length: ${contentStr.length}), Current Design Settings: ${JSON.stringify(currentDesign || {})}\n\n${languageInstruction}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {

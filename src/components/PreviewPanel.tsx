@@ -120,7 +120,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const frameFontSize = currentProject.design?.frameFontSize || 20;
   const frameTextPosition = currentProject.design?.frameTextPosition || 'bottom';
 
-  const qrContent = currentProject.content || 'https://google.com';
+  const qrContent = currentProject.content || 'https://freeqrgen.pro';
   const appUrl = (window as any).location?.origin || '';
   const trackingId = currentProject.trackingId || '';
   const trackingEnabled = currentProject.trackingEnabled || false;

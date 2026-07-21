@@ -117,6 +117,45 @@ const quickStyles = [
   }
 ];
 
+const eccDetails = {
+  L: {
+    title: "Low (7% Recovery)",
+    reliability: 1,
+    capacity: 4,
+    damageLabel: "7% damage tolerance",
+    capacityLabel: "Maximum data storage",
+    desc: "Simplest QR density. Adds minimal redundant data, keeping the pattern less dense and highly legible with long URLs. However, minor scratches or dust will make scanning difficult.",
+    recommendation: "Best for simple, clean static URLs on high-quality flat surfaces with no center logo."
+  },
+  M: {
+    title: "Medium (15% Recovery)",
+    reliability: 2,
+    capacity: 3,
+    damageLabel: "15% damage tolerance",
+    capacityLabel: "High data storage",
+    desc: "The standard default configuration. Combines a moderate amount of error correction with a relatively simple, clean pattern layout.",
+    recommendation: "Recommended for general corporate use, packaging, and digital display environments."
+  },
+  Q: {
+    title: "Quartile (25% Recovery)",
+    reliability: 3,
+    capacity: 2,
+    damageLabel: "25% damage tolerance",
+    capacityLabel: "Moderate data storage",
+    desc: "Provides enhanced quartile protection. Adds redundant dots so that the code remains scannable even if up to a quarter of its surface is dirty or torn.",
+    recommendation: "Ideal for industrial, logistics, or rugged outdoor applications exposed to weather."
+  },
+  H: {
+    title: "High (30% Recovery)",
+    reliability: 4,
+    capacity: 1,
+    damageLabel: "30% damage tolerance",
+    capacityLabel: "Lower data storage limit",
+    desc: "Maximum error recovery capacity. Dedicates 30% of the QR area to redundant self-healing modules. Mandatory when overlaying custom center logos.",
+    recommendation: "Highly recommended for custom branded QR codes with centerpiece logo/emblem overlays."
+  }
+};
+
 export default function ControlPanel({ currentProject,
   onChange: parentOnChange,
   onSave,
@@ -126,6 +165,7 @@ export default function ControlPanel({ currentProject,
 }: ControlPanelProps) {
   const { t } = useTranslation();
   const [localProject, setLocalProject] = useState<Partial<QRProject>>(currentProject);
+  const [showEccTooltip, setShowEccTooltip] = useState(false);
   const lastPropagatedProjectRef = useRef<Partial<QRProject>>(currentProject);
   const isDebouncingRef = useRef<boolean>(false);
 
@@ -289,7 +329,7 @@ export default function ControlPanel({ currentProject,
   const calculateAutoCenterOffsets = () => {
     const errorCorrectionLevel = localProject.design?.errorCorrectionLevel || 'H';
     const margin = typeof localProject.design?.margin === 'number' ? localProject.design?.margin : 20;
-    const qrContent = localProject.content || 'https://google.com';
+    const qrContent = localProject.content || 'https://freeqrgen.pro';
     const trackingEnabled = localProject.trackingEnabled || false;
     const trackingId = localProject.trackingId || '';
     const appUrl = (window as any).location?.origin || '';
@@ -1673,8 +1713,102 @@ export default function ControlPanel({ currentProject,
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
         className={`p-4 rounded-xl border transition-all duration-300 shadow-sm ${ localProject.design?.smartOptimize ? 'bg-gray-100/40 border-gray-200/30 opacity-60' : 'bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80' }`}
       >
-        <div className="flex justify-between items-center mb-2">
-          <label htmlFor="error-correction-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.errorCorrectionLevel', 'Error Correction Level')}</label>
+        <div className="flex justify-between items-center mb-2 relative">
+          <div className="flex items-center gap-1.5">
+            <label htmlFor="error-correction-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.errorCorrectionLevel', 'Error Correction Level')}</label>
+            <div className="relative inline-block">
+              <button
+                type="button"
+                onMouseEnter={() => setShowEccTooltip(true)}
+                onMouseLeave={() => setShowEccTooltip(false)}
+                onClick={() => setShowEccTooltip(!showEccTooltip)}
+                onFocus={() => setShowEccTooltip(true)}
+                onBlur={() => setShowEccTooltip(false)}
+                className="text-slate-400 hover:text-indigo-600 transition-colors p-0.5 rounded-full focus:outline-none focus:ring-1 focus:ring-indigo-500/50 flex items-center justify-center cursor-pointer"
+                aria-label="Error Correction Level Tradeoffs Info"
+              >
+                <Info className="w-3.5 h-3.5" />
+              </button>
+              
+              {showEccTooltip && (
+                <div 
+                  className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mb-2 w-72 bg-slate-900 text-white text-xs rounded-xl p-4 shadow-xl border border-slate-800 transition-all duration-200"
+                >
+                  {(() => {
+                    const ec = (localProject.design?.errorCorrectionLevel || 'H') as 'L' | 'M' | 'Q' | 'H';
+                    const detail = eccDetails[ec] || eccDetails.H;
+                    return (
+                      <div className="space-y-3 pointer-events-none">
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                          <span className="font-bold text-[11px] text-indigo-400 uppercase tracking-wider">
+                            Level {ec}: {detail.title}
+                          </span>
+                          {localProject.design?.smartOptimize && (
+                            <span className="text-[9px] bg-indigo-950 text-indigo-300 border border-indigo-800/80 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                              Auto
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Tradeoff Gauges */}
+                        <div className="space-y-2.5">
+                          <div>
+                            <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
+                              <span>Scan Reliability</span>
+                              <span className="font-semibold text-slate-255">{detail.damageLabel}</span>
+                            </div>
+                            <div className="flex gap-1">
+                              {[1, 2, 3, 4].map((step) => (
+                                <div
+                                  key={step}
+                                  className={`h-1.5 flex-1 rounded-sm ${
+                                    step <= detail.reliability
+                                      ? 'bg-emerald-500'
+                                      : 'bg-slate-800'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
+                              <span>Data Capacity</span>
+                              <span className="font-semibold text-slate-205">{detail.capacityLabel}</span>
+                            </div>
+                            <div className="flex gap-1">
+                              {[1, 2, 3, 4].map((step) => (
+                                <div
+                                  key={step}
+                                  className={`h-1.5 flex-1 rounded-sm ${
+                                    step <= detail.capacity
+                                      ? 'bg-indigo-500'
+                                      : 'bg-slate-800'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-[10px] text-slate-300 leading-relaxed font-normal">
+                          {detail.desc}
+                        </p>
+
+                        {/* Practical recommendation */}
+                        <div className="border-t border-slate-800/80 pt-2 text-[9px] text-slate-450 leading-relaxed">
+                          <strong className="text-indigo-300">Recommendation:</strong> {detail.recommendation}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  {/* Arrow */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 md:left-3 md:translate-x-0 -mt-1 border-4 border-transparent border-t-slate-900" />
+                </div>
+              )}
+            </div>
+          </div>
           <span className="text-xs text-indigo-600 font-mono font-bold">
             {localProject.design?.errorCorrectionLevel || 'H'}
             {localProject.design?.smartOptimize && " (Auto)"}
