@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from '../utils/i18n';
+import { isRtlLocale } from '../utils/translations';
 
 import { QRProject } from '../types';
 import { Sparkles, Check, Flame, Palette, Layers, Info, ShieldAlert } from 'lucide-react';
@@ -227,7 +228,7 @@ function MiniQRPreview({ design, testText }: { design: QRTemplate['design']; tes
 
 export default function TemplatesTab({ currentProject, onChange }: TemplatesTabProps) {
   const { t, locale } = useTranslation();
-  const isRtl = locale === 'ar' || locale === 'ur';
+  const isRtl = isRtlLocale(locale);
   const handleApplyTemplate = (template: QRTemplate) => {
     onChange({
       ...currentProject,
@@ -330,25 +331,25 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-sm font-semibold text-gray-950 truncate">{t('templates.name.' + template.id, template.name)}</h3>
-                  <span className={`text-[9px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full border ${template.badgeColor}`}>
+                  <span className={`text-[9px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full border ltr-lock ${template.badgeColor}`}>
                     {t('templates.badge.' + template.id, template.badge)}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
                   {t('templates.desc.' + template.id, template.description)}
                 </p>
- 
+
                 {/* Styled Swatch previews */}
-                <div className="flex items-center gap-1.5 mt-3">
-                  <span className="text-[10px] text-gray-400 font-mono">{t('templates.palette', 'Palette:')}</span>
-                  <div className="flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded-full border border-gray-100" style={{ backgroundColor: template.design.bgColor }} title={`Bg: ${template.design.bgColor}`} />
-                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: template.design.fgColor }} title={`Fg: ${template.design.fgColor}`} />
+                <div className="flex items-center gap-1.5 mt-3 ltr-lock">
+                  <span className="text-[10px] text-gray-400 font-mono ltr-lock">{t('templates.palette', 'Palette:')}</span>
+                  <div className="flex items-center gap-1 ltr-lock">
+                    <span className="w-2.5 h-2.5 rounded-full border border-gray-100 ltr-lock" style={{ backgroundColor: template.design.bgColor }} title={`Bg: ${template.design.bgColor}`} />
+                    <span className="w-2.5 h-2.5 rounded-full ltr-lock" style={{ backgroundColor: template.design.fgColor }} title={`Fg: ${template.design.fgColor}`} />
                     {template.design.gradientType !== 'none' && (
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: template.design.gradientColor }} title={`Gradient: ${template.design.gradientColor}`} />
+                      <span className="w-2.5 h-2.5 rounded-full ltr-lock" style={{ backgroundColor: template.design.gradientColor }} title={`Gradient: ${template.design.gradientColor}`} />
                     )}
                   </div>
-                  <span className="text-[9px] text-gray-400 font-mono capitalize ml-auto">
+                  <span className="text-[9px] text-gray-400 font-mono capitalize ml-auto ltr-lock">
                     {t('templates.dotsLabel', 'Dots:')} {template.design.dotStyle} {t('templates.eyesLabel', '• Eyes:')} {template.design.eyeStyle}
                   </span>
                 </div>
@@ -356,8 +357,8 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
  
               {/* Selection Checkmark Button */}
               <div className="shrink-0 self-center">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all ${ active ? 'bg-indigo-600 border-indigo-600 text-white scale-110 shadow-3xs ' : 'bg-white border-gray-200 text-transparent group-hover:border-gray-300 ' }`}>
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all ltr-lock ${ active ? 'bg-indigo-600 border-indigo-600 text-white scale-110 shadow-3xs ' : 'bg-white border-gray-200 text-transparent group-hover:border-gray-300 ' }`}>
+                  <Check className="w-3.5 h-3.5 stroke-[3] ltr-lock" />
                 </div>
               </div>
             </motion.div>

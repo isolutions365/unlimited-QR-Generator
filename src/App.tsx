@@ -2245,8 +2245,8 @@ export default function App() {
                 {/* 1. WiFi QR Generator */}
                 <div id="tool-wifi-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-indigo-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
-                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4 font-bold">
-                      <Wifi className="w-5 h-5 text-indigo-600" />
+                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4 font-bold ltr-lock">
+                      <Wifi className="w-5 h-5 text-indigo-600 ltr-lock" />
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t("tools.wifi.title")}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
@@ -2257,18 +2257,18 @@ export default function App() {
                     id="tool-wifi-link"
                     href="/wifi-qr-generator"
                     onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5"
+                    className="mt-4 text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.wifi.btn')}
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
                   </a>
                 </div>
 
                 {/* 2. WhatsApp Channels */}
                 <div id="tool-whatsapp-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-emerald-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
-                    <div className="w-10 h-10 bg-emerald-50 text-emerald-800 rounded-xl flex items-center justify-center mb-4">
-                      <Phone className="w-5 h-5 text-emerald-800" />
+                    <div className="w-10 h-10 bg-emerald-50 text-emerald-800 rounded-xl flex items-center justify-center mb-4 ltr-lock">
+                      <Phone className="w-5 h-5 text-emerald-800 ltr-lock" />
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-910">{t("tools.whatsapp.title")}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
@@ -2279,18 +2279,18 @@ export default function App() {
                     id="tool-whatsapp-link"
                     href="/whatsapp-qr-generator"
                     onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1.5"
+                    className="mt-4 text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.whatsapp.btn')}
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
                   </a>
                 </div>
 
                 {/* 3. URL Web link */}
                 <div id="tool-url-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-pink-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
-                    <div className="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center mb-4">
-                      <Globe className="w-5 h-5 text-pink-600" />
+                    <div className="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center mb-4 ltr-lock">
+                      <Globe className="w-5 h-5 text-pink-600 ltr-lock" />
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t("tools.url.title")}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
@@ -2301,18 +2301,18 @@ export default function App() {
                     id="tool-url-link"
                     href="/url-qr-generator"
                     onClick={(e) => { e.preventDefault(); navigateTo('/url-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-pink-600 hover:text-pink-800 flex items-center gap-1.5"
+                    className="mt-4 text-xs font-bold text-pink-600 hover:text-pink-800 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.url.btn')}
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
                   </a>
                 </div>
 
                 {/* 4. Restaurant menus */}
                 <div id="tool-restaurant-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-amber-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
-                    <div className="w-10 h-10 bg-amber-50 text-amber-800 rounded-xl flex items-center justify-center mb-4">
-                      <Utensils className="w-5 h-5 text-amber-800" />
+                    <div className="w-10 h-10 bg-amber-50 text-amber-800 rounded-xl flex items-center justify-center mb-4 ltr-lock">
+                      <Utensils className="w-5 h-5 text-amber-800 ltr-lock" />
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t('directory.restaurant.title')}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
@@ -2323,18 +2323,18 @@ export default function App() {
                     id="tool-restaurant-link"
                     href="/restaurant-qr-generator"
                     onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-amber-800 hover:text-amber-950 flex items-center gap-1.5"
+                    className="mt-4 text-xs font-bold text-amber-800 hover:text-amber-950 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.restaurant.btn')}
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
                   </a>
                 </div>
 
                 {/* 5. Business card */}
                 <div id="tool-vcard-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-purple-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
-                    <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
-                      <Contact className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4 ltr-lock">
+                      <Contact className="w-5 h-5 text-purple-600 ltr-lock" />
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t('directory.vcard.title')}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
@@ -2345,18 +2345,18 @@ export default function App() {
                     id="tool-vcard-link"
                     href="/vcard-qr-generator"
                     onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-purple-600 hover:text-purple-800 flex items-center gap-1.5"
+                    className="mt-4 text-xs font-bold text-purple-600 hover:text-purple-800 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.vcard.btn')}
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
                   </a>
                 </div>
 
                 {/* 6. Instagram profile */}
                 <div id="tool-instagram-card" className={`bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-rose-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
-                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
-                      <Instagram className="w-5 h-5 text-indigo-650" />
+                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4 ltr-lock">
+                      <Instagram className="w-5 h-5 text-indigo-600 ltr-lock" />
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t('directory.instagram.title')}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
@@ -2367,10 +2367,10 @@ export default function App() {
                     id="tool-instagram-link"
                     href="/instagram-qr-generator"
                     onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1.5"
+                    className="mt-4 text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.instagram.btn')}
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
                   </a>
                 </div>
               </div>
@@ -2423,13 +2423,13 @@ export default function App() {
                 <AnimatePresence mode="popLayout">
                   {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'wifi') && (
                     <motion.div key="wifi-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div 
+                       <div 
                         id="recent-wifi-card" 
                         className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[inset_0_0_15px_rgba(99,102,241,0.35),0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-indigo-600 font-bold uppercase block">{t('recent.card.wifi.badge')}</span>
+                          <span className="text-[10px] text-indigo-600 font-bold uppercase block rtl-content">{t('recent.card.wifi.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">{t("tools.wifi.pairing")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             {t('recent.card.wifi.desc')}
@@ -2437,9 +2437,9 @@ export default function App() {
                         </div>
 
                         <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
-                            <span>{t("tools.scan.activityRate")}</span>
-                            <span className="font-extrabold text-slate-800"><RollingNumber value={Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)} />%</span>
+                          <div className="flex justify-between items-center text-[10px] text-slate-500">
+                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                            <span className="font-mono font-extrabold text-slate-800 ltr-lock"><RollingNumber value={Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)} />%</span>
                           </div>
                           <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
@@ -2455,10 +2455,10 @@ export default function App() {
                           id="recent-wifi-link"
                           href="/wifi-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1 ltr-lock"
                         >
                           {t('recent.card.wifi.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
                         </a>
                       </div>
                     </motion.div>
@@ -2472,7 +2472,7 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-emerald-800 font-bold uppercase block">{t('recent.card.whatsapp.badge')}</span>
+                          <span className="text-[10px] text-emerald-800 font-bold uppercase block rtl-content">{t('recent.card.whatsapp.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">{t("tools.whatsapp.support")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             {t('recent.card.whatsapp.desc')}
@@ -2480,9 +2480,9 @@ export default function App() {
                         </div>
 
                         <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
-                            <span>{t("tools.scan.activityRate")}</span>
-                            <span className="font-extrabold text-slate-800">{Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%</span>
+                          <div className="flex justify-between items-center text-[10px] text-slate-500">
+                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                            <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%</span>
                           </div>
                           <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
@@ -2498,10 +2498,10 @@ export default function App() {
                           id="recent-whatsapp-link"
                           href="/whatsapp-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/whatsapp-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-emerald-800 group-hover:text-emerald-950 flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-emerald-800 group-hover:text-emerald-950 flex items-center gap-1 ltr-lock"
                         >
                           {t('recent.card.whatsapp.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
                         </a>
                       </div>
                     </motion.div>
@@ -2515,7 +2515,7 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-purple-600 font-bold uppercase block">{t('recent.card.vcard.badge')}</span>
+                          <span className="text-[10px] text-purple-600 font-bold uppercase block rtl-content">{t('recent.card.vcard.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-purple-600 transition-colors">{t("tools.vcards.rich")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             {t('recent.card.vcard.desc')}
@@ -2523,9 +2523,9 @@ export default function App() {
                         </div>
 
                         <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
-                            <span>{t("tools.scan.activityRate")}</span>
-                            <span className="font-extrabold text-slate-800">{Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%</span>
+                          <div className="flex justify-between items-center text-[10px] text-slate-500">
+                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                            <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%</span>
                           </div>
                           <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
@@ -2541,10 +2541,10 @@ export default function App() {
                           id="recent-vcard-link"
                           href="/vcard-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-purple-600 group-hover:text-purple-800 flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-purple-600 group-hover:text-purple-800 flex items-center gap-1 ltr-lock"
                         >
                           {t('recent.card.vcard.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
                         </a>
                       </div>
                     </motion.div>
@@ -2558,7 +2558,7 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-amber-800 font-bold uppercase block">{t('recent.card.restaurant.badge')}</span>
+                          <span className="text-[10px] text-amber-800 font-bold uppercase block rtl-content">{t('recent.card.restaurant.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-amber-800 transition-colors">{t("tools.menus.pdf")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             {t('recent.card.restaurant.desc')}
@@ -2566,9 +2566,9 @@ export default function App() {
                         </div>
 
                         <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
-                            <span>{t("tools.scan.activityRate")}</span>
-                            <span className="font-extrabold text-slate-800">{Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%</span>
+                          <div className="flex justify-between items-center text-[10px] text-slate-500">
+                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                            <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%</span>
                           </div>
                           <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
@@ -2584,10 +2584,10 @@ export default function App() {
                           id="recent-restaurant-link"
                           href="/restaurant-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-amber-800 group-hover:text-amber-950 flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-amber-800 group-hover:text-amber-955 flex items-center gap-1 ltr-lock"
                         >
                           {t('recent.card.restaurant.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
                         </a>
                       </div>
                     </motion.div>
@@ -2601,7 +2601,7 @@ export default function App() {
                         style={{ transition: 'all 0.3s ease' }}
                       >
                         <div className="space-y-1">
-                          <span className="text-[10px] font-mono text-pink-600 font-bold uppercase block">{t('recent.card.social.badge')}</span>
+                          <span className="text-[10px] text-pink-600 font-bold uppercase block rtl-content">{t('recent.card.social.badge')}</span>
                           <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-pink-600 transition-colors">{t("tools.social.hubs")}</h4>
                           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                             {t('recent.card.social.desc')}
@@ -2609,9 +2609,9 @@ export default function App() {
                         </div>
 
                         <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] font-mono text-slate-500">
-                            <span>{t("tools.scan.activityRate")}</span>
-                            <span className="font-extrabold text-slate-800">{Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%</span>
+                          <div className="flex justify-between items-center text-[10px] text-slate-500">
+                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                            <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%</span>
                           </div>
                           <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                             <motion.div 
@@ -2627,10 +2627,10 @@ export default function App() {
                           id="recent-social-link"
                           href="/instagram-qr-generator"
                           onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-pink-600 group-hover:text-pink-800 flex items-center gap-1"
+                          className="mt-4 text-xs font-bold text-pink-600 group-hover:text-pink-800 flex items-center gap-1 ltr-lock"
                         >
                           {t('recent.card.social.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2" />
+                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
                         </a>
                       </div>
                     </motion.div>

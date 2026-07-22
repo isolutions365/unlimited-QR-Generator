@@ -134,7 +134,7 @@ export default function URLQRContent({
       {/* Trust Signals Block */}
       <section className="mt-10 bg-indigo-50/50 rounded-2xl border border-indigo-100/50 p-6 space-y-4">
         <h3 className="text-sm font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-2 select-none">
-          <ShieldCheck className="w-5 h-5 text-indigo-600" />
+          <ShieldCheck className="w-5 h-5 text-indigo-600 ltr-lock" />
           {t('urlqr.trustTitle', 'Pristine Quality & Trust Security Standard')}
         </h3>
         <p className="text-xs text-slate-600">
@@ -142,27 +142,27 @@ export default function URLQRContent({
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium">
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustNoWatermark', 'No Watermark Ever')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustNoReg', 'No Registration Required')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>{t('urlqr.trustFree', '100% Free Forever')}</span>
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
+            <span className="ltr-lock">{t('urlqr.trustFree', '100% Free Forever')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustLocal', 'Local Browser Processing')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustVector', 'High-Speed Vector Export')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustEnterprise', 'Enterprise-Grade Security')}</span>
           </div>
         </div>
@@ -278,15 +278,13 @@ export default function URLQRContent({
             </div>
           ))}
         </div>
-      </section>
-
-      {/* Dynamic CTA Card Section */}
-      <section className="mt-12 p-6 sm:p-8 bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 rounded-2xl text-white shadow-xl relative overflow-hidden">
+      </section>      {/* Dynamic CTA Card Section */}
+      <section className="mt-12 p-6 sm:p-8 bg-gradient-to-br from-indigo-900 via-indigo-955 to-slate-900 rounded-2xl text-white shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="space-y-4 max-w-xl">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            {t('urlqr.ctaBadge', '100% Free & Unlimited')}
+            <Sparkles className="w-3.5 h-3.5 ltr-lock" />
+            <span className="ltr-lock">{t('urlqr.ctaBadge', '100% Free & Unlimited')}</span>
           </span>
           <h3 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
             {t('urlqr.ctaTitle', 'Ready to Build Your Custom URL QR Code?')}
@@ -298,10 +296,10 @@ export default function URLQRContent({
             <a
               href="#"
               onClick={(e) => navTo(e, '/')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-indigo-950 text-sm font-bold rounded-lg shadow-md hover:bg-indigo-50 hover:scale-[1.02] transition-all duration-200"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-indigo-955 text-sm font-bold rounded-lg shadow-md hover:bg-indigo-50 hover:scale-[1.02] transition-all duration-200"
             >
               <span>{t('urlqr.ctaButton', 'Generate Free QR Code Now')}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 ltr-lock" />
             </a>
           </div>
         </div>

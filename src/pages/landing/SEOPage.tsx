@@ -386,8 +386,8 @@ export default function SEOPage({
                 <div className="grid grid-cols-1 gap-4 mt-4">
                   {pageData.benefits.items.map((benefit, i) => (
                     <div key={i} className={`flex gap-4 p-5 bg-white rounded-2xl border border-slate-150 shadow-xs ${isRtl ? 'rtl-active' : ''}`}>
-                      <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-xl max-h-fit shrink-0 mt-0.5">
-                        <CheckCircle className="w-4 h-4" />
+                      <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-xl max-h-fit shrink-0 mt-0.5 ltr-lock">
+                        <CheckCircle className="w-4 h-4 ltr-lock" />
                       </div>
                       <div>
                         <h4 className="text-sm font-bold text-slate-900">{getLocalized(`seo.landing.${pageData.slug}.benefits.items.${i}.title`, benefit.title)}</h4>
@@ -430,7 +430,7 @@ export default function SEOPage({
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
                   {pageData.howItWorks.steps.map((step, i) => (
                     <div key={i} className={`flex flex-col gap-3 p-4 bg-white border border-slate-150 rounded-2xl shadow-3xs relative ${isRtl ? 'rtl-active' : ''}`}>
-                      <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs select-none">
+                      <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs select-none ltr-lock">
                         {step.step}
                       </div>
                       <div>
@@ -454,8 +454,8 @@ export default function SEOPage({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   {pageData.useCases.items.map((use, i) => (
                     <div key={i} className={`p-5 bg-white border border-slate-200/60 rounded-2xl shadow-xs ${isRtl ? 'rtl-active' : ''}`}>
-                      <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
-                        <Activity className="w-4 h-4" />
+                      <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3 ltr-lock">
+                        <Activity className="w-4 h-4 ltr-lock" />
                       </div>
                       <h4 className="text-xs font-bold text-slate-900">{getLocalized(`seo.landing.${pageData.slug}.useCases.items.${i}.title`, use.title)}</h4>
                       <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.useCases.items.${i}.desc`, use.desc)}</p>
@@ -542,8 +542,8 @@ export default function SEOPage({
               {/* 1. Quick Definition & 2. 50-word AI Summary Box */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div id="quick-definition" className={`p-5 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-3 shadow-md ${isRtl ? 'rtl-active' : ''}`}>
-                  <div className="flex items-center gap-2 text-indigo-400 font-mono text-[10px] uppercase font-bold tracking-wider">
-                    <QrCode className="w-4 h-4" />
+                  <div className="flex items-center gap-2 text-indigo-400 font-mono text-[10px] uppercase font-bold tracking-wider ltr-lock">
+                    <QrCode className="w-4 h-4 ltr-lock" />
                     <span>{t('seo.quickDefinition', 'Quick Definition')}</span>
                   </div>
                   <p className="text-xs leading-relaxed text-slate-200">
@@ -552,8 +552,8 @@ export default function SEOPage({
                 </div>
 
                 <div id="ai-summary-50" className={`p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/60 space-y-3 ${isRtl ? 'rtl-active' : ''}`}>
-                  <div className="flex items-center gap-2 text-indigo-700 font-mono text-[10px] uppercase font-bold tracking-wider">
-                    <Sparkles className="w-4 h-4" />
+                  <div className="flex items-center gap-2 text-indigo-700 font-mono text-[10px] uppercase font-bold tracking-wider ltr-lock">
+                    <Sparkles className="w-4 h-4 ltr-lock" />
                     <span>{t('seo.aiSummaryTitle', '50-Word AI Summary')}</span>
                   </div>
                   <p className="text-xs leading-relaxed text-slate-700 font-medium">
@@ -624,13 +624,13 @@ export default function SEOPage({
                 {/* Benefits */}
                 <div id="aeo-benefits" className="space-y-4">
                   <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-emerald-500" />
+                    <CheckCircle className="w-4 h-4 text-emerald-500 ltr-lock" />
                     {t('seo.keyBenefitsAdvantages', 'Key Benefits & Advantages')}
                   </h4>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.benefits.map((benefit, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                        <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 ltr-lock" />
                         <span>{getLocalized(`aeo.landing.${pageData.slug}.benefits.${i}`, benefit)}</span>
                       </li>
                     ))}
@@ -640,13 +640,13 @@ export default function SEOPage({
                 {/* Common mistakes */}
                 <div id="aeo-mistakes" className="space-y-4">
                   <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Flame className="w-4 h-4 text-rose-500" />
+                    <Flame className="w-4 h-4 text-rose-500 ltr-lock" />
                     {t('seo.commonMistakesToAvoid', 'Common Mistakes to Avoid')}
                   </h4>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.commonMistakes.map((mistake, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <span className="text-rose-500 shrink-0 font-bold select-none">✕</span>
+                        <span className="text-rose-500 shrink-0 font-bold select-none ltr-lock">✕</span>
                         <span>{getLocalized(`aeo.landing.${pageData.slug}.commonMistakes.${i}`, mistake)}</span>
                       </li>
                     ))}
@@ -656,13 +656,13 @@ export default function SEOPage({
                 {/* Best practices */}
                 <div id="aeo-best-practices" className="space-y-4">
                   <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-indigo-500" />
+                    <Award className="w-4 h-4 text-indigo-500 ltr-lock" />
                     {t('seo.proImplementationBestPractices', 'Pro Implementation Best Practices')}
                   </h4>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.bestPractices.map((practice, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <span className="text-indigo-500 shrink-0 font-bold select-none">✓</span>
+                        <span className="text-indigo-500 shrink-0 font-bold select-none ltr-lock">✓</span>
                         <span>{getLocalized(`aeo.landing.${pageData.slug}.bestPractices.${i}`, practice)}</span>
                       </li>
                     ))}
@@ -679,7 +679,7 @@ export default function SEOPage({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {aeoData.keyTakeaways.map((takeaway, i) => (
                     <div key={i} className={`p-4 bg-white rounded-xl border border-slate-150/60 shadow-3xs ${isRtl ? 'rtl-active' : ''}`}>
-                      <span className="text-indigo-600 font-extrabold text-xs block mb-1">0{i+1}</span>
+                      <span className="text-indigo-600 font-extrabold text-xs block mb-1 ltr-lock">0{i+1}</span>
                       <p className="text-[11px] font-medium text-slate-700 leading-relaxed">
                         {getLocalized(`aeo.landing.${pageData.slug}.keyTakeaways.${i}`, takeaway)}
                       </p>
@@ -791,17 +791,17 @@ export default function SEOPage({
 
           {/* Star Trust Banner */}
           <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col gap-4 select-none text-center items-center">
-            <div className="flex gap-1 text-amber-500">
-              <Star className="w-4 h-4 fill-amber-500" />
-              <Star className="w-4 h-4 fill-amber-500" />
-              <Star className="w-4 h-4 fill-amber-500" />
-              <Star className="w-4 h-4 fill-amber-500" />
-              <Star className="w-4 h-4 fill-amber-500" />
+            <div className="flex gap-1 text-amber-500 ltr-lock">
+              <Star className="w-4 h-4 fill-amber-500 ltr-lock" />
+              <Star className="w-4 h-4 fill-amber-500 ltr-lock" />
+              <Star className="w-4 h-4 fill-amber-500 ltr-lock" />
+              <Star className="w-4 h-4 fill-amber-500 ltr-lock" />
+              <Star className="w-4 h-4 fill-amber-500 ltr-lock" />
             </div>
             <p className="text-[11px] font-semibold text-slate-800 leading-normal">
               {t('seo.trustedBy', 'Trusted by over 2490+ creative modern businesses, dining rooms, and local wifi managers globally for styling QR presets.')}
             </p>
-            <div className="flex gap-3 text-[10px] text-slate-500 font-mono font-bold">
+            <div className="flex gap-3 text-[10px] text-slate-500 font-mono font-bold ltr-lock">
               <span>{t('seo.uprate', '99.9% Up-rate')}</span>
               <span>•</span>
               <span>{t('seo.ultraHdScalable', 'Ultra HD Scalable')}</span>
@@ -819,7 +819,7 @@ export default function SEOPage({
               className="py-3 px-4 bg-white text-indigo-955 hover:bg-slate-950 hover:text-white text-xs font-bold rounded-xl transition-all shadow-md mt-4 flex items-center justify-center gap-2 group cursor-pointer"
             >
               {getLocalized(`seo.landing.${pageData.slug}.cta.buttonText`, pageData.cta.buttonText)}
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 ltr-lock" />
             </button>
             <span className="text-[9px] text-indigo-300 text-center uppercase tracking-widest font-mono select-none">{t('seo.noLoginsRequired', 'No logins required to start')}</span>
           </div>
@@ -827,20 +827,20 @@ export default function SEOPage({
           {/* Secure Trust features badge */}
           <div className="bg-slate-50 border border-slate-200/60 p-5 rounded-3xl space-y-3 font-mono">
             <div className="flex items-center gap-2 text-indigo-700 font-bold text-[10px] tracking-wider uppercase">
-              <ShieldCheck className="w-4 h-4 shrink-0" />
+              <ShieldCheck className="w-4 h-4 shrink-0 ltr-lock" />
               <span>{t('seo.pristineSecurityStandards', 'Pristine Security Standards')}</span>
             </div>
             <ul className="text-[10px] text-slate-500 space-y-2 leading-relaxed">
               <li className="flex items-start gap-2">
-                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
+                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5 ltr-lock" />
                 {t('seo.securityFeature1', 'No credentials are ever transmitted to any remote servers. Only you see standard details.')}
               </li>
               <li className="flex items-start gap-2">
-                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
+                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5 ltr-lock" />
                 {t('seo.securityFeature2', 'Error correction checks keep your codes parseable if scratched.')}
               </li>
               <li className="flex items-start gap-2">
-                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
+                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5 ltr-lock" />
                 {t('seo.securityFeature3', 'Supports PNG rasterizers, standard vector SVGs, and vector PDFs.')}
               </li>
             </ul>
