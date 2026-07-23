@@ -2,6 +2,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
   sendPasswordResetEmail,
   sendEmailVerification,
@@ -34,10 +36,37 @@ export async function signupWithEmail(
 }
 
 /**
- * Service 3: Google Login
+ * Service 3: Google Login (With Popup & Redirect Fallback)
  */
-export async function loginWithGoogle(): Promise<UserCredential> {
-  return await signInWithPopup(auth, googleProvider);
+export async function loginWithGoogle(): Promise<UserCredential | null> {
+  try {
+    return await signInWithPopup(auth, googleProvider);
+  } catch (err: any) {
+    console.warn('[Firebase Auth] Popup sign-in error, trying redirect fallback:', err?.code || err?.message);
+    if (
+      err.code === 'auth/popup-blocked' ||
+      err.code === 'auth/popup-closed-by-user' ||
+      err.code === 'auth/cancelled-popup-request' ||
+      err.code === 'auth/operation-not-supported-in-this-environment' ||
+      err.message?.includes('popup')
+    ) {
+      await signInWithRedirect(auth, googleProvider);
+      return null;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Check redirect result on load
+ */
+export async function checkGoogleRedirectResult(): Promise<UserCredential | null> {
+  try {
+    return await getRedirectResult(auth);
+  } catch (err: any) {
+    console.warn('[Firebase Auth] Redirect result check notice:', err);
+    return null;
+  }
 }
 
 /**

@@ -23,7 +23,7 @@ interface FirebaseAuthContextType {
   error: string | null;
   loginWithEmail: (email: string, pass: string) => Promise<UserCredential>;
   signupWithEmail: (email: string, pass: string, displayName?: string) => Promise<UserCredential>;
-  loginWithGoogle: () => Promise<UserCredential>;
+  loginWithGoogle: () => Promise<UserCredential | null>;
   logout: () => Promise<void>;
   sendPasswordReset: (email: string) => Promise<void>;
   sendEmailVerification: () => Promise<void>;
