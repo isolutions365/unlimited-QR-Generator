@@ -21,8 +21,22 @@ class ApiClient {
 
   private async request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const url = path.startsWith('/api') ? path : `/api${path}`;
-    const headers = { ...this.getHeaders(), ...options.headers };
+    const headers = { ...this.getHeaders(), ...options.headers } as Record<string, string>;
     
+    if (path.includes('signup') || path.includes('register') || path.includes('auth')) {
+      console.log(`[ApiClient Request -> ${options.method || 'GET'} ${url}]`, {
+        path,
+        fullUrl: url,
+        method: options.method || 'GET',
+        headers: {
+          'Content-Type': headers['Content-Type'],
+          'Authorization': headers['Authorization'] 
+            ? `${headers['Authorization'].slice(0, 15)}...` 
+            : 'None (No Bearer Token Attached)'
+        }
+      });
+    }
+
     const response = await fetch(url, {
       ...options,
       headers,
@@ -42,15 +56,77 @@ class ApiClient {
   }
 
   // Authentication API
+  async signup(email: string, password: string, name: string): Promise<{ token: string; user: UserSession }> {
+    const payload = { email, password: password ? '***' : '', name };
+    const requestPath = '/auth/register';
+    const resolvedUrl = requestPath.startsWith('/api') ? requestPath : `/api${requestPath}`;
+    const currentHeaders = this.getHeaders() as Record<string, string>;
+    const token = localStorage.getItem('qr_jwt_token');
+
+    console.log('[api.signup Called]', {
+      endpoint: requestPath,
+      resolvedUrl,
+      payload,
+      authorizationHeader: currentHeaders['Authorization'] 
+        ? `${currentHeaders['Authorization'].slice(0, 15)}...` 
+        : 'None (Unauthenticated Signup Request)',
+      hasExistingToken: Boolean(token),
+      timestamp: new Date().toISOString()
+    });
+
+    try {
+      const result = await this.register(email, password, name);
+      console.log('[api.signup Success]', { resolvedUrl, user: result.user });
+      return result;
+    } catch (err: any) {
+      console.error('[api.signup Failure]', {
+        endpoint: requestPath,
+        resolvedUrl,
+        error: err.message || err,
+      });
+      throw err;
+    }
+  }
+
   async register(email: string, password: string, name: string): Promise<{ token: string; user: UserSession }> {
     let res: { token: string; user: UserSession };
+    const payload = { email, password: password ? '***' : '', name };
+    const primaryPath = '/auth/register';
+    const primaryUrl = primaryPath.startsWith('/api') ? primaryPath : `/api${primaryPath}`;
+    const currentHeaders = this.getHeaders() as Record<string, string>;
+    const existingToken = localStorage.getItem('qr_jwt_token');
+
+    console.log('[api.register Attempting Primary Request]', {
+      path: primaryPath,
+      url: primaryUrl,
+      payload,
+      authorizationHeader: currentHeaders['Authorization'] 
+        ? `${currentHeaders['Authorization'].slice(0, 15)}...` 
+        : 'None (Standard Public Signup)',
+      hasExistingToken: Boolean(existingToken)
+    });
+
     try {
       res = await this.request<{ token: string; user: UserSession }>('/auth/register', {
         method: 'POST',
         body: JSON.stringify({ email, password, name }),
       });
     } catch (err: any) {
+      console.warn('[api.register Primary Request Failed]', {
+        path: primaryPath,
+        url: primaryUrl,
+        error: err.message
+      });
+
       if (err.message && err.message.includes('404')) {
+        const fallbackPath = '/signup';
+        const fallbackUrl = `/api${fallbackPath}`;
+        console.log('[api.register Attempting Fallback Request]', {
+          path: fallbackPath,
+          url: fallbackUrl,
+          payload
+        });
+
         res = await this.request<{ token: string; user: UserSession }>('/signup', {
           method: 'POST',
           body: JSON.stringify({ email, password, name }),

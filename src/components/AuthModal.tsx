@@ -80,7 +80,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
           <button 
             type="button"
             onClick={onClose}
-            className="p-1.5 hover:bg-gray-100 rounded-xl text-gray-400 hover:text-gray-700 transition-colors"
+            disabled={isLoading}
+            className="p-1.5 hover:bg-gray-100 rounded-xl text-gray-400 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X className="w-5 h-5" />
           </button>
@@ -90,7 +91,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
         <div className="px-6 mb-4 flex border-b border-gray-100">
           <button
             type="button"
-            className={`pb-3 text-xs font-semibold px-4 transition-all border-b-2 ${
+            disabled={isLoading}
+            className={`pb-3 text-xs font-semibold px-4 transition-all border-b-2 disabled:opacity-50 disabled:cursor-not-allowed ${
               activeTab === 'signin' 
                 ? 'border-indigo-600 text-indigo-600' 
                 : 'border-transparent text-gray-400 hover:text-gray-700'
@@ -104,7 +106,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
           </button>
           <button
             type="button"
-            className={`pb-3 text-xs font-semibold px-4 transition-all border-b-2 ${
+            disabled={isLoading}
+            className={`pb-3 text-xs font-semibold px-4 transition-all border-b-2 disabled:opacity-50 disabled:cursor-not-allowed ${
               activeTab === 'signup' 
                 ? 'border-indigo-600 text-indigo-600' 
                 : 'border-transparent text-gray-400 hover:text-gray-700'
@@ -136,10 +139,11 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
                   <input
                     type="text"
                     required
+                    disabled={isLoading}
                     placeholder="Jane Doe"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors"
+                    className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -152,10 +156,11 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
                 <input
                   type="email"
                   required
+                  disabled={isLoading}
                   placeholder="name@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
@@ -167,15 +172,17 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
+                  disabled={isLoading}
                   placeholder="••••••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 <button
                   type="button"
+                  disabled={isLoading}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -185,10 +192,13 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 bg-indigo-600 text-white rounded-2xl text-xs font-semibold shadow-xl shadow-indigo-150 hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5"
+              className="w-full py-3.5 bg-indigo-600 text-white rounded-2xl text-xs font-semibold shadow-xl shadow-indigo-150 hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>{t('auth.submitting', 'Submitting...')}</span>
+                </>
               ) : (
                 <span>{activeTab === 'signin' ? t('auth.signInButton', 'Sign In') : t('auth.signUpButton', 'Create Credentials')}</span>
               )}
