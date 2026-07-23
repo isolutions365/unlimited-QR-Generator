@@ -12,7 +12,7 @@ class ApiClient {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
-    const token = localStorage.getItem('qr_jwt_token');
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('qr_jwt_token') : null;
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -54,6 +54,73 @@ class ApiClient {
     }
 
     return response.json();
+  }
+
+  // Diagnostic helper to test /api/signup endpoint explicitly
+  async diagnosticTestSignup(email = 'diagnostic_test@example.com', password = 'TestPassword123!', name = 'Diagnostic User'): Promise<any> {
+    const rawEndpoint = '/api/signup';
+    const cleanPath: string = rawEndpoint.startsWith('/') ? rawEndpoint : `/${rawEndpoint}`;
+    const pathUrl = cleanPath.startsWith('/api/') || cleanPath === '/api' ? cleanPath : `/api${cleanPath}`;
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+    const fullUrl = `${baseUrl}${pathUrl}`;
+    const payload = { email, password, name };
+    const headers = { ...this.getHeaders() } as Record<string, string>;
+
+    console.log('[DIAGNOSTIC TEST SIGNUP INITIALIZED]', {
+      rawEndpoint,
+      pathUrl,
+      fullUrl,
+      baseOrigin: baseUrl,
+      exactHeaders: headers,
+      payload,
+      timestamp: new Date().toISOString()
+    });
+
+    try {
+      const response = await fetch(fullUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      const responseContentType = response.headers.get('Content-Type') || '';
+      const isHtml = responseContentType.includes('text/html');
+      let responseBody: any;
+
+      if (isHtml) {
+        responseBody = await response.text();
+      } else {
+        responseBody = await response.json().catch(() => null);
+      }
+
+      console.log('[DIAGNOSTIC TEST SIGNUP RESULT]', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        contentType: responseContentType,
+        isHtmlResponse: isHtml,
+        responseBody,
+        headersSent: headers,
+        requestUrl: fullUrl
+      });
+
+      return {
+        status: response.status,
+        ok: response.ok,
+        url: fullUrl,
+        headers,
+        payload,
+        body: responseBody
+      };
+    } catch (error: any) {
+      console.error('[DIAGNOSTIC TEST SIGNUP ERROR]', {
+        message: error.message,
+        error,
+        url: fullUrl,
+        headers
+      });
+      throw error;
+    }
   }
 
   // Authentication API
