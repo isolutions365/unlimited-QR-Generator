@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../lib/api';
-import { loginWithEmail, signupWithEmail, loginWithGoogle, verifyUserEmail } from '../lib/firebaseAuthServices';
-import { Mail, Lock, User, X, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { loginWithEmail, signupWithEmail, loginWithGoogle, verifyUserEmail, sendPasswordReset } from '../lib/firebaseAuthServices';
+import { Mail, Lock, User, X, Eye, EyeOff, Sparkles, KeyRound, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 
 interface AuthModalProps {
@@ -27,7 +27,45 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
   const [error, setError] = useState<React.ReactNode | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Password reset modal states
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [isResetLoading, setIsResetLoading] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = useState(false);
+
   if (!isOpen) return null;
+
+  const handlePasswordResetSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetError(null);
+    setResetSuccess(false);
+
+    if (!resetEmail.trim()) {
+      setResetError(t('auth.emailRequired', 'Email address is required.') as string);
+      return;
+    }
+
+    setIsResetLoading(true);
+    try {
+      await sendPasswordReset(resetEmail.trim());
+      setResetSuccess(true);
+    } catch (err: any) {
+      let errMsg = err.message || t('auth.resetFailed', 'Failed to send password reset email.');
+      if (err.code === 'auth/user-not-found') {
+        errMsg = t('auth.userNotFound', 'No account found with this email address.');
+      } else if (err.code === 'auth/invalid-email') {
+        errMsg = t('auth.invalidEmail', 'Please enter a valid email address.');
+      } else if (err.code === 'auth/too-many-requests') {
+        errMsg = t('auth.tooManyRequests', 'Too many requests. Please try again later.');
+      } else if (err.code === 'auth/network-request-failed') {
+        errMsg = t('auth.networkError', 'Network error. Please check your connection and try again.');
+      }
+      setResetError(errMsg);
+    } finally {
+      setIsResetLoading(false);
+    }
+  };
 
   const handleGoogleLogin = async () => {
     setError(null);
@@ -285,6 +323,23 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              {activeTab === 'signin' && (
+                <div className="flex justify-end mt-2">
+                  <button
+                    type="button"
+                    disabled={isLoading}
+                    onClick={() => {
+                      setResetEmail(email);
+                      setResetError(null);
+                      setResetSuccess(false);
+                      setShowResetModal(true);
+                    }}
+                    className="text-[11px] font-medium text-indigo-600 hover:text-indigo-800 transition-colors disabled:opacity-50"
+                  >
+                    {t('auth.forgotPasswordLink', 'Forgot Password?')}
+                  </button>
+                </div>
+              )}
             </div>
 
             <button
@@ -311,6 +366,100 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
           </p>
         </div>
       </div>
+
+      {/* Forgot Password Sub-Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-60 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div 
+            className="bg-white rounded-3xl w-full max-w-sm border border-slate-100 shadow-2xl relative overflow-hidden flex flex-col p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center gap-2 text-indigo-600">
+                <KeyRound className="w-5 h-5" />
+                <h4 className="text-base font-bold text-gray-900">{t('auth.resetPasswordTitle', 'Reset Password')}</h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowResetModal(false)}
+                disabled={isResetLoading}
+                className="p-1 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              {t('auth.resetPasswordDesc', 'Enter your registered email address below and we will send you a link to reset your password.')}
+            </p>
+
+            {resetError && (
+              <div className="bg-red-50 border border-red-100 rounded-xl p-3 text-[11px] text-red-600 font-mono mb-4 leading-relaxed">
+                {resetError}
+              </div>
+            )}
+
+            {resetSuccess ? (
+              <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-[11px] text-emerald-700 mb-2 flex flex-col items-center text-center gap-2">
+                <CheckCircle2 className="w-7 h-7 text-emerald-600" />
+                <p className="font-semibold text-xs text-emerald-900">
+                  {t('auth.resetSentHeader', 'Reset Link Sent')}
+                </p>
+                <p className="text-emerald-700 leading-relaxed text-xs">
+                  {t('auth.resetSuccessMsg', 'Password reset email has been sent. Please check your inbox and spam folder.')}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowResetModal(false)}
+                  className="mt-2 w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-semibold hover:bg-emerald-700 transition-colors shadow-sm"
+                >
+                  {t('auth.backToSignIn', 'Back to Sign In')}
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handlePasswordResetSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">{t('auth.emailAddress', 'Email Address')}</label>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="email"
+                      required
+                      disabled={isResetLoading}
+                      placeholder="name@company.com"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    disabled={isResetLoading}
+                    onClick={() => setShowResetModal(false)}
+                    className="w-1/2 py-3 bg-slate-100 text-slate-700 rounded-2xl text-xs font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50"
+                  >
+                    {t('auth.cancel', 'Cancel')}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isResetLoading}
+                    className="w-1/2 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {isResetLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <span>{t('auth.sendResetLink', 'Send Link')}</span>
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
