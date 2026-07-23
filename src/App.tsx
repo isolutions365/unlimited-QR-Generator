@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
+import { useFirebaseAuth } from './context/FirebaseAuthContext';
 import { QRProject, ScanLog } from './types';
 import { landingPages } from './pages/landing/SEODatabase';
 import { getBlogArticles } from './data/blogData';
@@ -274,6 +275,7 @@ const categoryCardVariants: any = {
 };
 
 export default function App() {
+  const { user: fbUser, loading: fbLoading, logout: fbLogout } = useFirebaseAuth();
   const [user, setUser] = useState<UserSession | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [projects, setProjects] = useState<QRProject[]>([]);
@@ -1160,18 +1162,26 @@ export default function App() {
 
   // Listen to Authentication updates
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const u = await api.me();
+    if (fbLoading) return;
+
+    if (fbUser) {
+      setUser({
+        id: fbUser.uid,
+        email: fbUser.email || '',
+        name: fbUser.displayName || fbUser.email?.split('@')[0] || 'User'
+      });
+      setAuthLoading(false);
+    } else {
+      // Fallback check to express backend api.me() if present
+      api.me().then((u) => {
         setUser(u);
-      } catch (err) {
-        console.error('Session verify failed:', err);
-      } finally {
+      }).catch(() => {
+        setUser(null);
+      }).finally(() => {
         setAuthLoading(false);
-      }
-    };
-    initAuth();
-  }, []);
+      });
+    }
+  }, [fbUser, fbLoading]);
 
   // Fetch projects & scans when logged in
   const fetchUserData = async () => {
@@ -1215,7 +1225,12 @@ export default function App() {
   };
 
   // Sign out session
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    try {
+      await fbLogout();
+    } catch (err) {
+      console.warn('[Firebase Auth] Signout notice:', err);
+    }
     api.logout();
     setUser(null);
     setCurrentProject(INITIAL_DESIGN);

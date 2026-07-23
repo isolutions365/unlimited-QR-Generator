@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { api } from '../lib/api';
+import { loginWithEmail, signupWithEmail, verifyUserEmail } from '../lib/firebaseAuthServices';
 import { Mail, Lock, User, X, Eye, EyeOff, Sparkles } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 
@@ -36,16 +37,47 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
     try {
       if (activeTab === 'signup') {
         if (!((val) => (val || '').trim())(name)) throw new Error(t('auth.nameRequired', 'Name is required') as any);
-        const res = await api.register(email, password, name);
-        onSuccess(res.user);
+        
+        // Firebase Email Signup
+        const cred = await signupWithEmail(email, password, name);
+        
+        // Automatically send email verification
+        try {
+          await verifyUserEmail(cred.user);
+        } catch (vErr) {
+          console.warn('[Firebase Auth] Verification email notice:', vErr);
+        }
+
+        const userObj = {
+          id: cred.user.uid,
+          email: cred.user.email || email,
+          name: cred.user.displayName || name || email.split('@')[0]
+        };
+        onSuccess(userObj);
         onClose();
       } else {
-        const res = await api.login(email, password);
-        onSuccess(res.user);
+        // Firebase Email Login
+        const cred = await loginWithEmail(email, password);
+        const userObj = {
+          id: cred.user.uid,
+          email: cred.user.email || email,
+          name: cred.user.displayName || email.split('@')[0]
+        };
+        onSuccess(userObj);
         onClose();
       }
     } catch (err: any) {
-      setError(err.message || t('auth.failed', 'Authentication failed. Please verify credentials.'));
+      let errMsg = err.message || t('auth.failed', 'Authentication failed. Please verify credentials.');
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        errMsg = t('auth.invalidCredentials', 'Invalid email or password. Please try again.');
+      } else if (err.code === 'auth/email-already-in-use') {
+        errMsg = t('auth.emailInUse', 'An account with this email address already exists.');
+      } else if (err.code === 'auth/weak-password') {
+        errMsg = t('auth.weakPassword', 'Password should be at least 6 characters long.');
+      } else if (err.code === 'auth/invalid-email') {
+        errMsg = t('auth.invalidEmail', 'Please enter a valid email address.');
+      }
+      setError(errMsg);
     } finally {
       setIsLoading(false);
     }
