@@ -208,9 +208,6 @@ async function testConnection() {
     isFallbackMode = true;
   }
 }
-// Run in next tick so module load finishes immediately.
-setTimeout(testConnection, 50);
-
 // In-memory user fallback store for resilience
 const inMemoryUsers = new Map<string, DbUser>();
 

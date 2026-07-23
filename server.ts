@@ -75,9 +75,6 @@ const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('he
 export const app = express();
 app.use(express.json());
 
-async function startServer() {
-  const PORT = 3000;
-
   // SEO Redirection Engine: 301 redirect non-www, Netlify URLs, old domains, and temporary domains to the primary www domain
   app.use((req, res, next) => {
     const host = (req.headers.host || '').toLowerCase();
@@ -1995,7 +1992,9 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
 
 
   // --- VITE MIDDLEWARE INTERFACE ---
-  if (process.env.NODE_ENV !== 'production') {
+  async function startServer() {
+    const PORT = 3000;
+    if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
