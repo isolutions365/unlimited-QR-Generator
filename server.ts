@@ -2036,12 +2036,10 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
             wss.emit('connection', ws, request, decoded.id);
           });
         });
-      } else {
-        socket.destroy();
       }
+      // If pathname is not '/ws', allow Vite HMR or other upgrade handlers to manage the socket
     } catch (error) {
-      console.error('[WS Upgrade] Error in connection upgrading:', error);
-      socket.destroy();
+      console.warn('[WS Upgrade] Error in connection upgrading:', error);
     }
   });
 }

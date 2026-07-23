@@ -427,7 +427,7 @@ export default function App() {
         };
 
         ws.onerror = (wsErr) => {
-          console.error('[WS Socket] Client connection error recorded:', wsErr);
+          console.debug('[WS Socket] Connection status update:', wsErr);
         };
       } catch (e) {
         console.error('[WS Socket] Connection build error:', e);
@@ -690,7 +690,7 @@ export default function App() {
   const isTrustCenterSection = trustCenterPaths.some(p => cleanPath === p || cleanPath.startsWith(p + '/'));
 
   const isFreeQrToolsActive = cleanPath !== '/' && cleanPath !== '' && 
-    !['/faq', '/about', '/privacy', '/contact', '/terms', '/solutions', '/industries', '/use-cases'].some(p => cleanPath === p || cleanPath.startsWith(p + '/')) && 
+    !['/faq', '/about', '/privacy', '/contact', '/terms', '/solutions', '/industries', '/use-cases', '/signup', '/signin', '/login', '/register', '/auth'].some(p => cleanPath === p || cleanPath.startsWith(p + '/')) && 
     !cleanPath.startsWith('/blog') &&
     !cleanPath.startsWith('/platform') &&
     !isKnowledgeSection &&
@@ -1086,7 +1086,34 @@ export default function App() {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
+  // Control state for Clerk/Auth0-style Login Dialog
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<'signin' | 'signup'>('signin');
+
+  // Trigger Auth Modal automatically when direct auth routes are accessed via browser URL
+  useEffect(() => {
+    if (['/signup', '/register'].includes(cleanPath)) {
+      setAuthModalTab('signup');
+      setIsAuthModalOpen(true);
+    } else if (['/signin', '/login', '/auth'].includes(cleanPath)) {
+      setAuthModalTab('signin');
+      setIsAuthModalOpen(true);
+    }
+  }, [cleanPath]);
+
   const navigateTo = (path: string) => {
+    const { cleanPath: targetClean } = extractLocaleAndPath(path);
+    if (['/signup', '/register'].includes(targetClean)) {
+      setAuthModalTab('signup');
+      setIsAuthModalOpen(true);
+      return;
+    }
+    if (['/signin', '/login', '/auth'].includes(targetClean)) {
+      setAuthModalTab('signin');
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     let targetPath = path;
     // If we have an active non-English locale and the target path is relative and doesn't already have a locale prefix
     if (locale && locale !== 'en') {
@@ -1114,10 +1141,6 @@ export default function App() {
     setActiveTab('create');
     navigateTo('/');
   };
-
-  // Control state for Clerk/Auth0-style Login Dialog
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState<'signin' | 'signup'>('signin');
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
 
   // Detect when user has scrolled down the page to condense the header
