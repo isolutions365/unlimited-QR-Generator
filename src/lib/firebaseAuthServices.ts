@@ -8,6 +8,7 @@ import {
   sendPasswordResetEmail,
   sendEmailVerification,
   updateProfile,
+  fetchSignInMethodsForEmail,
   UserCredential,
   User
 } from 'firebase/auth';
@@ -101,4 +102,16 @@ export async function getFirebaseIdToken(forceRefresh: boolean = false): Promise
   const currentUser = auth.currentUser;
   if (!currentUser) return null;
   return await currentUser.getIdToken(forceRefresh);
+}
+
+/**
+ * Service 8: Get Sign-In Methods for Email
+ */
+export async function getSignInMethods(email: string): Promise<string[]> {
+  try {
+    return await fetchSignInMethodsForEmail(auth, email);
+  } catch (err: any) {
+    console.warn('[Firebase Auth] fetchSignInMethodsForEmail notice:', err?.message || err);
+    return [];
+  }
 }
