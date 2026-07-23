@@ -1319,7 +1319,7 @@ English text: "${text}"`;
   }
 
   // 1. AI Color Suggestions endpoint
-  app.post('/api/ai/suggest-colors', authenticateToken, async (req: any, res) => {
+  app.post('/api/ai/suggest-colors', async (req: any, res) => {
     const { industry, promptVibe, locale } = req.body;
     const searchVibe = `${industry || ''} ${promptVibe || ''}`.trim().toLowerCase();
 
@@ -1414,7 +1414,7 @@ English text: "${text}"`;
   });
 
   // 2. AI QR Style Suggestions endpoint
-  app.post('/api/ai/suggest-styles', authenticateToken, async (req: any, res) => {
+  app.post('/api/ai/suggest-styles', async (req: any, res) => {
     const { vibe, locale } = req.body;
     const searchVibe = (vibe || '').toLowerCase();
 
@@ -1493,7 +1493,7 @@ English text: "${text}"`;
   });
 
   // 3. AI Brand Matcher endpoint
-  app.post('/api/ai/brand-match', authenticateToken, async (req: any, res) => {
+  app.post('/api/ai/brand-match', async (req: any, res) => {
     const { brandName, brandDescription, locale } = req.body;
     const query = `${brandName || ''} ${brandDescription || ''}`.trim().toLowerCase();
 
@@ -1639,7 +1639,7 @@ English text: "${text}"`;
   });
 
   // 5. Smart Layout Optimizer endpoint
-  app.post('/api/ai/layout-optimize', authenticateToken, async (req: any, res) => {
+  app.post('/api/ai/layout-optimize', async (req: any, res) => {
     const { qrContent, currentDesign, locale } = req.body;
     const contentStr = qrContent || '';
 

@@ -1172,14 +1172,8 @@ export default function App() {
       });
       setAuthLoading(false);
     } else {
-      // Fallback check to express backend api.me() if present
-      api.me().then((u) => {
-        setUser(u);
-      }).catch(() => {
-        setUser(null);
-      }).finally(() => {
-        setAuthLoading(false);
-      });
+      setUser(null);
+      setAuthLoading(false);
     }
   }, [fbUser, fbLoading]);
 

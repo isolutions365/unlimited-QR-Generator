@@ -59,5 +59,35 @@ service cloud.firestore {
       // Prevent anyone from updating or deleting historical logs
       allow update, delete: if false;
     }
+
+    // --- NOTIFICATIONS COLLECTION ---
+    match /notifications/{notificationId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // --- COMMUNITY POSTS COLLECTION ---
+    match /communityPosts/{postId} {
+      allow read: if true;
+      allow create, update: if isSignedIn();
+      allow delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+    }
+
+    // --- ROADMAP ITEMS COLLECTION ---
+    match /roadmapItems/{itemId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // --- NEWSLETTER SUBSCRIBERS COLLECTION ---
+    match /newsletterSubscribers/{subId} {
+      allow create: if true;
+      allow read, write: if isSignedIn();
+    }
+
+    // --- FEEDBACK COLLECTION ---
+    match /feedback/{feedbackId} {
+      allow create: if true;
+      allow read, write: if isSignedIn();
+    }
   }
 }
