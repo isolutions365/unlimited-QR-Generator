@@ -72,11 +72,11 @@ function notifyUserOfScan(userId: string, scan: any, projectName: string) {
 // Fixed hardcoded JWT secret fallback vulnerability by generating a high-entropy random key when process.env is empty
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 
-async function startServer() {
-  const app = express();
-  const PORT = 3000;
+export const app = express();
+app.use(express.json());
 
-  app.use(express.json());
+async function startServer() {
+  const PORT = 3000;
 
   // SEO Redirection Engine: 301 redirect non-www, Netlify URLs, old domains, and temporary domains to the primary www domain
   app.use((req, res, next) => {
@@ -2044,4 +2044,8 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
   });
 }
 
-startServer();
+export default app;
+
+if (!process.env.VERCEL) {
+  startServer();
+}
