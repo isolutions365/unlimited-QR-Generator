@@ -217,7 +217,13 @@ English text: "${text}"`;
   // --- AUTHENTICATION ENDPOINTS ---
 
   // User Registration (support multiple route aliases for compatibility)
-  app.post(['/api/auth/register', '/api/auth/signup', '/api/register', '/api/signup'], validateAuthPayload, async (req, res) => {
+  app.post([
+    '/api/auth/register', '/api/auth/register/',
+    '/api/auth/signup', '/api/auth/signup/',
+    '/api/register', '/api/register/',
+    '/api/signup', '/api/signup/',
+    '/api/v1/auth/register', '/api/v1/auth/signup', '/api/v1/register', '/api/v1/signup'
+  ], validateAuthPayload, async (req, res) => {
     const { email, password, name } = req.body;
 
     try {
@@ -252,7 +258,13 @@ English text: "${text}"`;
   });
 
   // User Login (support multiple route aliases)
-  app.post(['/api/auth/login', '/api/auth/signin', '/api/login', '/api/signin'], validateAuthPayload, async (req, res) => {
+  app.post([
+    '/api/auth/login', '/api/auth/login/',
+    '/api/auth/signin', '/api/auth/signin/',
+    '/api/login', '/api/login/',
+    '/api/signin', '/api/signin/',
+    '/api/v1/auth/login', '/api/v1/auth/signin', '/api/v1/login', '/api/v1/signin'
+  ], validateAuthPayload, async (req, res) => {
     const { email, password } = req.body;
 
     try {

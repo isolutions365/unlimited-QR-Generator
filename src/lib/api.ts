@@ -20,7 +20,8 @@ class ApiClient {
   }
 
   private async request<T>(path: string, options: RequestInit = {}): Promise<T> {
-    const url = path.startsWith('/api') ? path : `/api${path}`;
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    const url = cleanPath.startsWith('/api/') || cleanPath === '/api' ? cleanPath : `/api${cleanPath}`;
     const headers = { ...this.getHeaders(), ...options.headers } as Record<string, string>;
     
     if (path.includes('signup') || path.includes('register') || path.includes('auth')) {
@@ -57,107 +58,59 @@ class ApiClient {
 
   // Authentication API
   async signup(email: string, password: string, name: string): Promise<{ token: string; user: UserSession }> {
-    const payload = { email, password: password ? '***' : '', name };
-    const requestPath = '/auth/register';
-    const resolvedUrl = requestPath.startsWith('/api') ? requestPath : `/api${requestPath}`;
-    const currentHeaders = this.getHeaders() as Record<string, string>;
-    const token = localStorage.getItem('qr_jwt_token');
-
-    console.log('[api.signup Called]', {
-      endpoint: requestPath,
-      resolvedUrl,
-      payload,
-      authorizationHeader: currentHeaders['Authorization'] 
-        ? `${currentHeaders['Authorization'].slice(0, 15)}...` 
-        : 'None (Unauthenticated Signup Request)',
-      hasExistingToken: Boolean(token),
-      timestamp: new Date().toISOString()
-    });
-
-    try {
-      const result = await this.register(email, password, name);
-      console.log('[api.signup Success]', { resolvedUrl, user: result.user });
-      return result;
-    } catch (err: any) {
-      console.error('[api.signup Failure]', {
-        endpoint: requestPath,
-        resolvedUrl,
-        error: err.message || err,
-      });
-      throw err;
-    }
+    return this.register(email, password, name);
   }
 
   async register(email: string, password: string, name: string): Promise<{ token: string; user: UserSession }> {
-    let res: { token: string; user: UserSession };
-    const payload = { email, password: password ? '***' : '', name };
-    const primaryPath = '/auth/register';
-    const primaryUrl = primaryPath.startsWith('/api') ? primaryPath : `/api${primaryPath}`;
-    const currentHeaders = this.getHeaders() as Record<string, string>;
-    const existingToken = localStorage.getItem('qr_jwt_token');
+    const candidateEndpoints = ['/auth/register', '/auth/signup', '/register', '/signup'];
+    let lastError: Error | null = null;
 
-    console.log('[api.register Attempting Primary Request]', {
-      path: primaryPath,
-      url: primaryUrl,
-      payload,
-      authorizationHeader: currentHeaders['Authorization'] 
-        ? `${currentHeaders['Authorization'].slice(0, 15)}...` 
-        : 'None (Standard Public Signup)',
-      hasExistingToken: Boolean(existingToken)
-    });
-
-    try {
-      res = await this.request<{ token: string; user: UserSession }>('/auth/register', {
-        method: 'POST',
-        body: JSON.stringify({ email, password, name }),
-      });
-    } catch (err: any) {
-      console.warn('[api.register Primary Request Failed]', {
-        path: primaryPath,
-        url: primaryUrl,
-        error: err.message
-      });
-
-      if (err.message && err.message.includes('404')) {
-        const fallbackPath = '/signup';
-        const fallbackUrl = `/api${fallbackPath}`;
-        console.log('[api.register Attempting Fallback Request]', {
-          path: fallbackPath,
-          url: fallbackUrl,
-          payload
-        });
-
-        res = await this.request<{ token: string; user: UserSession }>('/signup', {
+    for (const endpoint of candidateEndpoints) {
+      try {
+        const res = await this.request<{ token: string; user: UserSession }>(endpoint, {
           method: 'POST',
           body: JSON.stringify({ email, password, name }),
         });
-      } else {
+        localStorage.setItem('qr_jwt_token', res.token);
+        return res;
+      } catch (err: any) {
+        lastError = err;
+        // If error is 404, try next endpoint in candidate list
+        if (err.message && err.message.includes('404')) {
+          console.warn(`[api.register] Endpoint ${endpoint} returned 404, trying fallback...`);
+          continue;
+        }
+        // Non-404 errors (e.g. 400 Bad Request like invalid email/password) throw immediately
         throw err;
       }
     }
-    localStorage.setItem('qr_jwt_token', res.token);
-    return res;
+
+    throw lastError || new Error('Authentication failed. None of the register endpoints responded.');
   }
 
   async login(email: string, password: string): Promise<{ token: string; user: UserSession }> {
-    let res: { token: string; user: UserSession };
-    try {
-      res = await this.request<{ token: string; user: UserSession }>('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      });
-    } catch (err: any) {
-      if (err.message && err.message.includes('404')) {
-        res = await this.request<{ token: string; user: UserSession }>('/signin', {
+    const candidateEndpoints = ['/auth/login', '/auth/signin', '/login', '/signin'];
+    let lastError: Error | null = null;
+
+    for (const endpoint of candidateEndpoints) {
+      try {
+        const res = await this.request<{ token: string; user: UserSession }>(endpoint, {
           method: 'POST',
           body: JSON.stringify({ email, password }),
         });
-      } else {
+        localStorage.setItem('qr_jwt_token', res.token);
+        return res;
+      } catch (err: any) {
+        lastError = err;
+        if (err.message && err.message.includes('404')) {
+          console.warn(`[api.login] Endpoint ${endpoint} returned 404, trying fallback...`);
+          continue;
+        }
         throw err;
       }
     }
-    localStorage.setItem('qr_jwt_token', res.token);
-    return res;
+
+    throw lastError || new Error('Login failed. None of the authentication endpoints responded.');
   }
 
   async me(): Promise<UserSession | null> {
