@@ -3292,5 +3292,6 @@
   "error.saveFailed": "Error occurred while saving configurations.",
   "error.removeFailed": "Error removing item from the database.",
   "error.updateFolderFailed": "Error occurred while updating folder category.",
-  "error.clearLogsFailed": "Error clearing logs."
+  "error.clearLogsFailed": "Error clearing logs.",
+  "nav.aiGateway": "AI Gateway"
 }

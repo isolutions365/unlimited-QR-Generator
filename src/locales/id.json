@@ -3385,5 +3385,6 @@
   "templates.title": "Pustaka Templat QR",
   "templates.subtitle": "Pilih dari templat siap pakai yang dioptimalkan untuk berbagai kategori dan sektor bisnis.",
   "templates.allTemplates": "Semua Templat",
-  "templates.previewTemplate": "Pratinjau Templat"
+  "templates.previewTemplate": "Pratinjau Templat",
+  "nav.aiGateway": "Gerbang AI"
 }

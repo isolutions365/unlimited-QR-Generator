@@ -43,19 +43,43 @@ class ApiClient {
 
   // Authentication API
   async register(email: string, password: string, name: string): Promise<{ token: string; user: UserSession }> {
-    const res = await this.request<{ token: string; user: UserSession }>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ email, password, name }),
-    });
+    let res: { token: string; user: UserSession };
+    try {
+      res = await this.request<{ token: string; user: UserSession }>('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ email, password, name }),
+      });
+    } catch (err: any) {
+      if (err.message && err.message.includes('404')) {
+        res = await this.request<{ token: string; user: UserSession }>('/signup', {
+          method: 'POST',
+          body: JSON.stringify({ email, password, name }),
+        });
+      } else {
+        throw err;
+      }
+    }
     localStorage.setItem('qr_jwt_token', res.token);
     return res;
   }
 
   async login(email: string, password: string): Promise<{ token: string; user: UserSession }> {
-    const res = await this.request<{ token: string; user: UserSession }>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+    let res: { token: string; user: UserSession };
+    try {
+      res = await this.request<{ token: string; user: UserSession }>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (err: any) {
+      if (err.message && err.message.includes('404')) {
+        res = await this.request<{ token: string; user: UserSession }>('/signin', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+        });
+      } else {
+        throw err;
+      }
+    }
     localStorage.setItem('qr_jwt_token', res.token);
     return res;
   }

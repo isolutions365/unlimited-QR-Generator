@@ -4506,5 +4506,6 @@
   "aeo.landing.pdf-qr-generator.aiSummaryBox.protocolStandard": "https://[file_host_domain]/path/to/document.pdf",
   "aeo.landing.pdf-qr-generator.aiSummaryBox.clientCompatibility": "متوافق مع المتصفحات المدمجة وعوارض PDF المضمنة.",
   "aeo.landing.pdf-qr-generator.aiSummaryBox.primaryUseCase": "توزيع الكتالوجات بدون تلامس ومشاركة المواصفات بأسلوب صديق للبيئة.",
-  "aeo.landing.pdf-qr-generator.aiSummaryBox.offlineCapability": "يتطلب اتصالاً بالإنترنت لتنزيل الملفات المستضافة أو عرضها."
+  "aeo.landing.pdf-qr-generator.aiSummaryBox.offlineCapability": "يتطلب اتصالاً بالإنترنت لتنزيل الملفات المستضافة أو عرضها.",
+  "nav.aiGateway": "بوابة الذكاء الاصطناعي"
 }

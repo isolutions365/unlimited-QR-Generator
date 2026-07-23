@@ -3385,5 +3385,6 @@
   "templates.title": "Libreria di Modelli QR",
   "templates.subtitle": "Scegli tra modelli predefiniti e ottimizzati per diverse categorie e settori d'attività.",
   "templates.allTemplates": "Tutti i Modelli",
-  "templates.previewTemplate": "Anteprima Modello"
+  "templates.previewTemplate": "Anteprima Modello",
+  "nav.aiGateway": "Gateway AI"
 }

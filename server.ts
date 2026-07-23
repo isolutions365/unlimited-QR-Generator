@@ -92,11 +92,14 @@ async function startServer() {
     const { email, password, name } = req.body;
     
     // Check missing fields for registration
-    if (req.path.endsWith('/register') && (!email || !password || !name)) {
+    const isRegisterPath = req.path.endsWith('/register') || req.path.endsWith('/signup') || req.path.includes('/register') || req.path.includes('/signup');
+    const isLoginPath = req.path.endsWith('/login') || req.path.endsWith('/signin') || req.path.includes('/login') || req.path.includes('/signin');
+
+    if (isRegisterPath && (!email || !password || !name)) {
       return res.status(400).json({ error: 'Please fill in all fields' });
     }
     // Check missing fields for login
-    if (req.path.endsWith('/login') && (!email || !password)) {
+    if (isLoginPath && (!email || !password)) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
@@ -213,8 +216,8 @@ English text: "${text}"`;
 
   // --- AUTHENTICATION ENDPOINTS ---
 
-  // User Registration
-  app.post('/api/auth/register', validateAuthPayload, async (req, res) => {
+  // User Registration (support multiple route aliases for compatibility)
+  app.post(['/api/auth/register', '/api/auth/signup', '/api/register', '/api/signup'], validateAuthPayload, async (req, res) => {
     const { email, password, name } = req.body;
 
     try {
@@ -248,8 +251,8 @@ English text: "${text}"`;
     }
   });
 
-  // User Login
-  app.post('/api/auth/login', validateAuthPayload, async (req, res) => {
+  // User Login (support multiple route aliases)
+  app.post(['/api/auth/login', '/api/auth/signin', '/api/login', '/api/signin'], validateAuthPayload, async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -277,7 +280,7 @@ English text: "${text}"`;
   });
 
   // Fetch Session User Info
-  app.get('/api/auth/me', authenticateToken, async (req: any, res) => {
+  app.get(['/api/auth/me', '/api/me'], authenticateToken, async (req: any, res) => {
     try {
       const user = await dbInstance.findUserById(req.user.id);
       if (!user) {
