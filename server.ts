@@ -17,28 +17,33 @@ function checkFallback() {
 // Map of userId to active WebSocket connections
 const wsClients = new Map<string, Set<WebSocket>>();
 
-// Initialize standard active WebSocket Server
-const wss = new WebSocketServer({ noServer: true });
-
-wss.on('connection', (ws: WebSocket, request, userId: string) => {
-  if (!wsClients.has(userId)) {
-    wsClients.set(userId, new Set());
-  }
-  wsClients.get(userId)!.add(ws);
-
-  console.log(`[WS] Client successfully connected for user session: ${userId}`);
-
-  ws.on('close', () => {
-    const userSet = wsClients.get(userId);
-    if (userSet) {
-      userSet.delete(ws);
-      if (userSet.size === 0) {
-        wsClients.delete(userId);
+// Lazy initialize WebSocket Server
+let wssInstance: WebSocketServer | null = null;
+function getWss(): WebSocketServer {
+  if (!wssInstance) {
+    wssInstance = new WebSocketServer({ noServer: true });
+    wssInstance.on('connection', (ws: WebSocket, request, userId: string) => {
+      if (!wsClients.has(userId)) {
+        wsClients.set(userId, new Set());
       }
-    }
-    console.log(`[WS] Client disconnected. Session: ${userId}`);
-  });
-});
+      wsClients.get(userId)!.add(ws);
+
+      console.log(`[WS] Client successfully connected for user session: ${userId}`);
+
+      ws.on('close', () => {
+        const userSet = wsClients.get(userId);
+        if (userSet) {
+          userSet.delete(ws);
+          if (userSet.size === 0) {
+            wsClients.delete(userId);
+          }
+        }
+        console.log(`[WS] Client disconnected. Session: ${userId}`);
+      });
+    });
+  }
+  return wssInstance;
+}
 
 // Function to notify and send realtime payload when a scan occurs
 function notifyUserOfScan(userId: string, scan: any, projectName: string) {
@@ -2031,6 +2036,7 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
             return;
           }
 
+          const wss = getWss();
           wss.handleUpgrade(request, socket, head, (ws) => {
             wss.emit('connection', ws, request, decoded.id);
           });
@@ -2045,6 +2051,7 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
 
 export default app;
 
-if (!process.env.VERCEL) {
+const isVercelEnv = !!(process.env.VERCEL || process.env.VERCEL_ENV || process.env.NOW_BUILD || process.env.AWS_LAMBDA_FUNCTION_NAME);
+if (!isVercelEnv && process.env.NODE_ENV !== 'production') {
   startServer();
 }

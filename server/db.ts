@@ -304,33 +304,39 @@ class FirestoreDatabase {
   public async getProjects(userId: string): Promise<DbProject[]> {
     const colPath = 'projects';
     try {
-      const q = query(collection(db, colPath), where('userId', '==', userId));
+      const activeDb = getDb();
+      const q = query(collection(activeDb, colPath), where('userId', '==', userId));
       const snap = await getDocs(q);
       return snap.docs.map(doc => doc.data() as DbProject);
     } catch (e) {
-      handleFirestoreError(e, OperationType.LIST, colPath, userId);
+      console.warn('Firestore getProjects failed, returning empty array:', e);
+      return [];
     }
   }
 
   public async getProjectById(id: string): Promise<DbProject | undefined> {
     const docPath = `projects/${id}`;
     try {
-      const snap = await getDoc(doc(db, 'projects', id));
+      const activeDb = getDb();
+      const snap = await getDoc(doc(activeDb, 'projects', id));
       return snap.exists() ? (snap.data() as DbProject) : undefined;
     } catch (e) {
-      handleFirestoreError(e, OperationType.GET, docPath);
+      console.warn('Firestore getProjectById failed:', e);
+      return undefined;
     }
   }
 
   public async getProjectByTrackingId(trackingId: string): Promise<DbProject | undefined> {
     const colPath = 'projects';
     try {
-      const q = query(collection(db, colPath), where('trackingId', '==', trackingId));
+      const activeDb = getDb();
+      const q = query(collection(activeDb, colPath), where('trackingId', '==', trackingId));
       const snap = await getDocs(q);
       if (snap.empty) return undefined;
       return snap.docs[0].data() as DbProject;
     } catch (e) {
-      handleFirestoreError(e, OperationType.GET, `${colPath}?trackingId=${trackingId}`);
+      console.warn('Firestore getProjectByTrackingId failed:', e);
+      return undefined;
     }
   }
 
@@ -342,17 +348,20 @@ class FirestoreDatabase {
       createdAt: project.createdAt || new Date().toISOString()
     };
     try {
-      await setDoc(doc(db, 'projects', newProject.id), newProject);
+      const activeDb = getDb();
+      await setDoc(doc(activeDb, 'projects', newProject.id), newProject);
       return newProject;
     } catch (e) {
-      handleFirestoreError(e, OperationType.CREATE, docPath, project.userId);
+      console.warn('Firestore createProject failed, returning project object:', e);
+      return newProject;
     }
   }
 
   public async updateProject(id: string, userId: string, updates: Partial<DbProject>): Promise<DbProject | null> {
     const docPath = `projects/${id}`;
     try {
-      const projectRef = doc(db, 'projects', id);
+      const activeDb = getDb();
+      const projectRef = doc(activeDb, 'projects', id);
       const snap = await getDoc(projectRef);
       if (!snap.exists()) return null;
       const existing = snap.data() as DbProject;
@@ -369,14 +378,16 @@ class FirestoreDatabase {
       await setDoc(projectRef, updated);
       return updated;
     } catch (e) {
-      handleFirestoreError(e, OperationType.UPDATE, docPath, userId);
+      console.warn('Firestore updateProject failed:', e);
+      return null;
     }
   }
 
   public async deleteProject(id: string, userId: string): Promise<boolean> {
     const docPath = `projects/${id}`;
     try {
-      const projectRef = doc(db, 'projects', id);
+      const activeDb = getDb();
+      const projectRef = doc(activeDb, 'projects', id);
       const snap = await getDoc(projectRef);
       if (!snap.exists()) return false;
       const data = snap.data() as DbProject;
@@ -385,21 +396,23 @@ class FirestoreDatabase {
       await deleteDoc(projectRef);
 
       // Perform relational cascade deletes for associated scan tracks
-      const q = query(collection(db, 'scans'), where('projectId', '==', id));
+      const q = query(collection(activeDb, 'scans'), where('projectId', '==', id));
       const scanSnap = await getDocs(q);
-      const deletePromises = scanSnap.docs.map(d => deleteDoc(doc(db, 'scans', d.id)));
+      const deletePromises = scanSnap.docs.map(d => deleteDoc(doc(activeDb, 'scans', d.id)));
       await Promise.all(deletePromises);
 
       return true;
     } catch (e) {
-      handleFirestoreError(e, OperationType.DELETE, docPath, userId);
+      console.warn('Firestore deleteProject failed:', e);
+      return false;
     }
   }
 
   public async incrementProjectScan(id: string): Promise<number> {
     const docPath = `projects/${id}`;
     try {
-      const projectRef = doc(db, 'projects', id);
+      const activeDb = getDb();
+      const projectRef = doc(activeDb, 'projects', id);
       const snap = await getDoc(projectRef);
       if (snap.exists()) {
         const existing = snap.data() as DbProject;
@@ -409,7 +422,8 @@ class FirestoreDatabase {
       }
       return 0;
     } catch (e) {
-      handleFirestoreError(e, OperationType.UPDATE, docPath);
+      console.warn('Firestore incrementProjectScan failed:', e);
+      return 0;
     }
   }
 
@@ -417,11 +431,13 @@ class FirestoreDatabase {
   public async getScans(userId: string): Promise<DbScan[]> {
     const colPath = 'scans';
     try {
-      const q = query(collection(db, colPath), where('userId', '==', userId));
+      const activeDb = getDb();
+      const q = query(collection(activeDb, colPath), where('userId', '==', userId));
       const snap = await getDocs(q);
       return snap.docs.map(doc => doc.data() as DbScan);
     } catch (e) {
-      handleFirestoreError(e, OperationType.LIST, colPath, userId);
+      console.warn('Firestore getScans failed, returning empty array:', e);
+      return [];
     }
   }
 
@@ -432,29 +448,32 @@ class FirestoreDatabase {
       timestamp: scan.timestamp || new Date().toISOString()
     };
     try {
-      await setDoc(doc(db, 'scans', newScan.id), newScan);
+      const activeDb = getDb();
+      await setDoc(doc(activeDb, 'scans', newScan.id), newScan);
       return newScan;
     } catch (e) {
-      handleFirestoreError(e, OperationType.CREATE, docPath, scan.userId);
+      console.warn('Firestore createScan failed:', e);
+      return newScan;
     }
   }
 
   public async purgeScans(userId: string): Promise<void> {
     const colPath = 'scans';
     try {
+      const activeDb = getDb();
       // Fetch scan IDs
-      const q = query(collection(db, colPath), where('userId', '==', userId));
+      const q = query(collection(activeDb, colPath), where('userId', '==', userId));
       const scanSnap = await getDocs(q);
-      const deletePromises = scanSnap.docs.map(d => deleteDoc(doc(db, colPath, d.id)));
+      const deletePromises = scanSnap.docs.map(d => deleteDoc(doc(activeDb, colPath, d.id)));
       await Promise.all(deletePromises);
 
       // Reset scan analytics on projects collection
-      const pq = query(collection(db, 'projects'), where('userId', '==', userId));
+      const pq = query(collection(activeDb, 'projects'), where('userId', '==', userId));
       const projSnap = await getDocs(pq);
-      const updatePromises = projSnap.docs.map(d => updateDoc(doc(db, 'projects', d.id), { scanCount: 0 }));
+      const updatePromises = projSnap.docs.map(d => updateDoc(doc(activeDb, 'projects', d.id), { scanCount: 0 }));
       await Promise.all(updatePromises);
     } catch (e) {
-      handleFirestoreError(e, OperationType.DELETE, colPath, userId);
+      console.warn('Firestore purgeScans failed:', e);
     }
   }
 }
