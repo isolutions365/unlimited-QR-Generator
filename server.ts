@@ -178,9 +178,104 @@ app.use(express.json());
     });
   }
 
-  // API Check Status
-  app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', database: 'ready', auth: 'jwt' });
+  // Explicit /api/health endpoint with dependency ping checks and environment auditing
+  app.get('/api/health', async (req, res) => {
+    const startTime = Date.now();
+    const envAudit = {
+      node_env: process.env.NODE_ENV || 'development',
+      has_gemini_key: !!process.env.GEMINI_API_KEY,
+      has_firebase_config: !!(process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID),
+      has_jwt_secret: !!process.env.JWT_SECRET,
+    };
+
+    let firebaseStatus: { status: string; isFallbackMode: boolean; latencyMs?: number; message?: string; error?: string } = {
+      status: 'unknown',
+      isFallbackMode: false,
+    };
+
+    let geminiStatus: { status: string; configured: boolean; latencyMs?: number; message?: string; error?: string } = {
+      status: 'unknown',
+      configured: envAudit.has_gemini_key,
+    };
+
+    // 1. Firebase Firestore ping test
+    try {
+      const fbStartTime = Date.now();
+      const activeDb = getDb();
+      if (isFallbackMode || !activeDb) {
+        firebaseStatus = {
+          status: 'fallback_mode',
+          isFallbackMode: true,
+          message: 'Firestore operating in localized memory fallback mode',
+        };
+      } else {
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Firebase health ping timeout')), 1500)
+        );
+        await Promise.race([
+          getDoc(doc(activeDb, 'test', 'health_ping')),
+          timeoutPromise
+        ]);
+        firebaseStatus = {
+          status: 'ok',
+          isFallbackMode: false,
+          latencyMs: Date.now() - fbStartTime,
+          message: 'Firebase connection verified',
+        };
+      }
+    } catch (fbErr: any) {
+      firebaseStatus = {
+        status: isFallbackMode ? 'fallback_mode' : 'degraded',
+        isFallbackMode: isFallbackMode,
+        message: fbErr?.message || 'Firebase ping encountered non-fatal error',
+        error: String(fbErr?.message || fbErr),
+      };
+    }
+
+    // 2. Gemini AI ping test
+    if (!envAudit.has_gemini_key) {
+      geminiStatus = {
+        status: 'not_configured',
+        configured: false,
+        message: 'GEMINI_API_KEY is missing from environment variables',
+      };
+    } else {
+      try {
+        const geminiStartTime = Date.now();
+        const client = getGoogleAiClient();
+        if (client) {
+          geminiStatus = {
+            status: 'ok',
+            configured: true,
+            latencyMs: Date.now() - geminiStartTime,
+            message: 'GoogleGenAI client initialized and ready',
+          };
+        }
+      } catch (geminiErr: any) {
+        geminiStatus = {
+          status: 'error',
+          configured: true,
+          message: 'Gemini client initialization failed',
+          error: String(geminiErr?.message || geminiErr),
+        };
+      }
+    }
+
+    const overallStatus = (firebaseStatus.status === 'ok' && (geminiStatus.status === 'ok' || geminiStatus.status === 'not_configured'))
+      ? 'ok'
+      : 'degraded';
+
+    res.status(200).json({
+      status: overallStatus,
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      responseTimeMs: Date.now() - startTime,
+      environment: envAudit,
+      dependencies: {
+        firebase: firebaseStatus,
+        gemini: geminiStatus,
+      },
+    });
   });
 
   // Dynamic Translation Proxy Endpoint powered by Gemini AI
