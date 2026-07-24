@@ -2007,6 +2007,26 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
   });
 
 
+  app.use('/api/*', (req, res) => {
+    res.status(404).json({
+      error: 'API endpoint not found',
+      path: req.originalUrl || req.url,
+      timestamp: new Date().toISOString()
+    });
+  });
+
+  // Global Express Error Handling Middleware to prevent unhandled exceptions from crashing Vercel Serverless Function invocations
+  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('[Express Global Error Handler]:', err);
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: err?.message || 'An unexpected server error occurred',
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
   // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---
   async function startServer() {
     console.log("Starting Express...");

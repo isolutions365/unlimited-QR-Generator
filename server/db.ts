@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { pbkdf2Sync, randomBytes } from 'crypto';
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { 
   initializeFirestore, 
   doc, 
@@ -184,7 +184,7 @@ export function getDb() {
 
     try {
       console.log("Loading Firebase...");
-      const firebaseApp = initializeApp(firebaseConfig);
+      const firebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
       console.log("Loading Firestore...");
       db = initializeFirestore(firebaseApp, {
         experimentalForceLongPolling: true,
