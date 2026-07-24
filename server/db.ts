@@ -182,10 +182,17 @@ export function getDb() {
       };
     }
 
-    const firebaseApp = initializeApp(firebaseConfig);
-    db = initializeFirestore(firebaseApp, {
-      experimentalForceLongPolling: true,
-    }, firebaseConfig?.firestoreDatabaseId || '(default)');
+    try {
+      console.log("Loading Firebase...");
+      const firebaseApp = initializeApp(firebaseConfig);
+      console.log("Loading Firestore...");
+      db = initializeFirestore(firebaseApp, {
+        experimentalForceLongPolling: true,
+      }, firebaseConfig?.firestoreDatabaseId || '(default)');
+    } catch (err) {
+      console.warn('Firestore initialization failed, enabling memory fallback mode:', err);
+      isFallbackMode = true;
+    }
   }
   return db;
 }
@@ -198,11 +205,13 @@ async function testConnection() {
 
   try {
     const activeDb = getDb();
-    await Promise.race([
-      getDocFromServer(doc(activeDb, 'test', 'connection')),
-      timeoutPromise
-    ]);
-    console.log("Firebase connection verified and fully operational.");
+    if (activeDb) {
+      await Promise.race([
+        getDocFromServer(doc(activeDb, 'test', 'connection')),
+        timeoutPromise
+      ]);
+      console.log("Firebase connection verified and fully operational.");
+    }
   } catch (error: any) {
     console.log("Firebase initialization completed cleanly (latency-saver mode enabled).");
     isFallbackMode = true;

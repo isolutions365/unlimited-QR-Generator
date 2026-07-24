@@ -19,28 +19,40 @@ const wsClients = new Map<string, Set<WebSocket>>();
 
 // Lazy initialize WebSocket Server
 let wssInstance: WebSocketServer | null = null;
-function getWss(): WebSocketServer {
+let isWsDisabled = false;
+
+function getWss(): WebSocketServer | null {
+  if (isWsDisabled) return null;
   if (!wssInstance) {
-    wssInstance = new WebSocketServer({ noServer: true });
-    wssInstance.on('connection', (ws: WebSocket, request, userId: string) => {
-      if (!wsClients.has(userId)) {
-        wsClients.set(userId, new Set());
-      }
-      wsClients.get(userId)!.add(ws);
-
-      console.log(`[WS] Client successfully connected for user session: ${userId}`);
-
-      ws.on('close', () => {
-        const userSet = wsClients.get(userId);
-        if (userSet) {
-          userSet.delete(ws);
-          if (userSet.size === 0) {
-            wsClients.delete(userId);
-          }
+    try {
+      wssInstance = new WebSocketServer({ noServer: true });
+      wssInstance.on('connection', (ws: WebSocket, request, userId: string) => {
+        if (!wsClients.has(userId)) {
+          wsClients.set(userId, new Set());
         }
-        console.log(`[WS] Client disconnected. Session: ${userId}`);
+        wsClients.get(userId)!.add(ws);
+
+        console.log(`[WS] Client successfully connected for user session: ${userId}`);
+
+        ws.on('close', () => {
+          const userSet = wsClients.get(userId);
+          if (userSet) {
+            userSet.delete(ws);
+            if (userSet.size === 0) {
+              wsClients.delete(userId);
+            }
+          }
+          console.log(`[WS] Client disconnected. Session: ${userId}`);
+        });
       });
-    });
+      wssInstance.on('error', (err) => {
+        console.warn('[WS Error] WebSocket server error:', err);
+      });
+    } catch (err) {
+      console.warn('WebSocket initialization failed, disabling WebSocket feature gracefully:', err);
+      isWsDisabled = true;
+      return null;
+    }
   }
   return wssInstance;
 }
@@ -1995,9 +2007,33 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
   });
 
 
-  // --- VITE MIDDLEWARE INTERFACE ---
+  // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---
   async function startServer() {
-    const PORT = 3000;
+    console.log("Starting Express...");
+    const PORT = Number(process.env.PORT) || 3000;
+
+    console.log("Loading Firebase...");
+    console.log("Loading Firestore...");
+    try {
+      getDb();
+    } catch (err) {
+      console.warn("Firestore startup check warning:", err);
+    }
+
+    console.log("Loading Gemini...");
+    if (!process.env.GEMINI_API_KEY) {
+      console.warn("GEMINI_API_KEY is missing. Gemini AI endpoints will operate in fallback mode.");
+    } else {
+      console.log("Gemini API key verified.");
+    }
+
+    console.log("Loading WebSocket...");
+    try {
+      getWss();
+    } catch (err) {
+      console.warn("WebSocket loading check warning:", err);
+    }
+
     if (process.env.NODE_ENV !== 'production') {
       const { createServer: createViteServer } = await import('vite');
       const vite = await createViteServer({
@@ -2006,52 +2042,66 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
       });
       app.use(vite.middlewares);
     } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+      const distPath = path.join(process.cwd(), 'dist');
+      app.use(express.static(distPath));
+      app.get('*', (req, res) => {
+        res.sendFile(path.join(distPath, 'index.html'));
+      });
+    }
+
+    const server = app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Express listening on PORT=${PORT}`);
     });
-  }
 
-  const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Dynamic QR work server executing seamlessly on port ${PORT}`);
-  });
-
-  // Handle WebSocket upgrades gracefully
-  server.on('upgrade', (request, socket, head) => {
-    try {
-      const urlObj = new URL(request.url || '', `http://${request.headers.host || 'localhost'}`);
-      if (urlObj.pathname === '/ws') {
-        const token = urlObj.searchParams.get('token');
-        if (!token) {
-          socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-          socket.destroy();
-          return;
-        }
-
-        jwt.verify(token, JWT_SECRET, (err: any, decoded: any) => {
-          if (err || !decoded || !decoded.id) {
-            socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
+    // Handle WebSocket upgrades gracefully
+    server.on('upgrade', (request, socket, head) => {
+      try {
+        const urlObj = new URL(request.url || '', `http://${request.headers.host || 'localhost'}`);
+        if (urlObj.pathname === '/ws') {
+          const token = urlObj.searchParams.get('token');
+          if (!token) {
+            socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
             socket.destroy();
             return;
           }
 
-          const wss = getWss();
-          wss.handleUpgrade(request, socket, head, (ws) => {
-            wss.emit('connection', ws, request, decoded.id);
+          jwt.verify(token, JWT_SECRET, (err: any, decoded: any) => {
+            if (err || !decoded || !decoded.id) {
+              socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
+              socket.destroy();
+              return;
+            }
+
+            const wss = getWss();
+            if (wss) {
+              wss.handleUpgrade(request, socket, head, (ws) => {
+                wss.emit('connection', ws, request, decoded.id);
+              });
+            } else {
+              socket.write('HTTP/1.1 503 Service Unavailable\r\n\r\n');
+              socket.destroy();
+            }
           });
-        });
+        }
+        // If pathname is not '/ws', allow Vite HMR or other upgrade handlers to manage the socket
+      } catch (error) {
+        console.warn('[WS Upgrade] Error in connection upgrading:', error);
       }
-      // If pathname is not '/ws', allow Vite HMR or other upgrade handlers to manage the socket
-    } catch (error) {
-      console.warn('[WS Upgrade] Error in connection upgrading:', error);
-    }
-  });
-}
+    });
+  }
 
 export default app;
 
-const isVercelEnv = !!(process.env.VERCEL || process.env.VERCEL_ENV || process.env.NOW_BUILD || process.env.AWS_LAMBDA_FUNCTION_NAME);
-if (!isVercelEnv && process.env.NODE_ENV !== 'production') {
-  startServer();
+const isServerlessEnv = !!(
+  process.env.VERCEL ||
+  process.env.VERCEL_ENV ||
+  process.env.NOW_BUILD ||
+  process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.env.NETLIFY
+);
+
+if (!isServerlessEnv) {
+  startServer().catch((err) => {
+    console.error("Critical failure during startServer execution:", err);
+  });
 }
