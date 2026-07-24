@@ -1,5 +1,15 @@
 import app from '../server';
 
+// Global Process Exception Handlers to prevent Vercel Serverless Function process crashes
+if (typeof process !== 'undefined') {
+  process.on('uncaughtException', (err) => {
+    console.error('[Serverless Uncaught Exception]:', err);
+  });
+  process.on('unhandledRejection', (reason) => {
+    console.error('[Serverless Unhandled Rejection]:', reason);
+  });
+}
+
 function resolveRealUrl(req: any): string {
   if (req.headers) {
     const forwardedUri = req.headers['x-forwarded-uri'];

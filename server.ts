@@ -8,6 +8,16 @@ import { doc, getDoc, getDocs, collection, query, where, setDoc, updateDoc, dele
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, Type } from '@google/genai';
 
+// Global Process Exception Handlers to prevent Vercel Serverless Function container crashes
+if (typeof process !== 'undefined') {
+  process.on('uncaughtException', (err) => {
+    console.error('[Server Uncaught Exception]:', err);
+  });
+  process.on('unhandledRejection', (reason) => {
+    console.error('[Server Unhandled Rejection]:', reason);
+  });
+}
+
 function checkFallback() {
   if (isFallbackMode) {
     throw new Error('Fallback mode is active');

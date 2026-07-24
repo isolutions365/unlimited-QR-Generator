@@ -4,6 +4,7 @@ import { pbkdf2Sync, randomBytes } from 'crypto';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { 
   initializeFirestore, 
+  getFirestore,
   doc, 
   getDoc, 
   getDocs, 
@@ -186,9 +187,13 @@ export function getDb() {
       console.log("Loading Firebase...");
       const firebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
       console.log("Loading Firestore...");
-      db = initializeFirestore(firebaseApp, {
-        experimentalForceLongPolling: true,
-      }, firebaseConfig?.firestoreDatabaseId || '(default)');
+      try {
+        db = getFirestore(firebaseApp, firebaseConfig?.firestoreDatabaseId || '(default)');
+      } catch (_initErr) {
+        db = initializeFirestore(firebaseApp, {
+          experimentalForceLongPolling: true,
+        }, firebaseConfig?.firestoreDatabaseId || '(default)');
+      }
     } catch (err) {
       console.warn('Firestore initialization failed, enabling memory fallback mode:', err);
       isFallbackMode = true;
