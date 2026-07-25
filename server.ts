@@ -4,6 +4,7 @@ import path from 'path';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { dbInstance, hashPassword, verifyPassword, getDb, isFallbackMode } from './server/db';
+import { adminDb } from './server/firebase-admin';
 import { doc, getDoc, getDocs, collection, query, where, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, Type } from '@google/genai';
@@ -211,32 +212,33 @@ app.use(express.json());
     // 1. Firebase Firestore ping test
     try {
       const fbStartTime = Date.now();
-      const activeDb = getDb();
-      if (isFallbackMode || !activeDb) {
-        firebaseStatus = {
-          status: 'fallback_mode',
-          isFallbackMode: true,
-          message: 'Firestore operating in localized memory fallback mode',
-        };
-      } else {
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Firebase health ping timeout')), 1500)
-        );
-        await Promise.race([
-          getDoc(doc(activeDb, 'test', 'health_ping')),
-          timeoutPromise
-        ]);
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Firebase health ping timeout')), 1500)
+      );
+      const docSnap = (await Promise.race([
+        adminDb.collection('system').doc('health').get(),
+        timeoutPromise
+      ])) as any;
+
+      if (docSnap && docSnap.exists) {
         firebaseStatus = {
           status: 'ok',
           isFallbackMode: false,
           latencyMs: Date.now() - fbStartTime,
           message: 'Firebase connection verified',
         };
+      } else {
+        firebaseStatus = {
+          status: 'degraded',
+          isFallbackMode: false,
+          latencyMs: Date.now() - fbStartTime,
+          message: 'System health document does not exist',
+        };
       }
     } catch (fbErr: any) {
       firebaseStatus = {
-        status: isFallbackMode ? 'fallback_mode' : 'degraded',
-        isFallbackMode: isFallbackMode,
+        status: 'degraded',
+        isFallbackMode: false,
         message: fbErr?.message || 'Firebase ping encountered non-fatal error',
         error: String(fbErr?.message || fbErr),
       };
