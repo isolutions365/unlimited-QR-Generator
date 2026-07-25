@@ -1697,64 +1697,152 @@ English text: "${text}"`;
 
   // 4. AI Design Recommendations endpoint (public to support instant landing-page scannability audit)
   app.post(['/api/ai/design-recommendations', '/ai/design-recommendations'], async (req: any, res) => {
-    const { qrContent, currentDesign, locale } = req.body;
-    const contentStr = qrContent || '';
-
-    const executeDesignAudit = (cText: string, design: any) => {
-      const tips = [];
-      if (cText.length > 90) {
-        tips.push(getLocalizedText('url_too_long', locale) || "Your destination URL contains over 90 characters. We strongly suggest enabling Dynamic Redirection (Short URL) to reduce block density and ensure instant scanning, even for older smartphones.");
-      }
-      if (design?.bgColor && design?.fgColor) {
-        // Simple hex contrast checker placeholder logic:
-        const isWhiteBg = design.bgColor.toLowerCase() === '#ffffff' || design.bgColor.toLowerCase() === '#fff';
-        if (!isWhiteBg && design.gradientType === 'none') {
-          tips.push(getLocalizedText('non_white_bg', locale) || "Your background is non-white. Please make sure the contrast between your modules and the canvas is at least 4:1 to prevent scanning issues under direct sunlight or dark ambient conditions.");
-        }
-      }
-      if (design?.logoUrl) {
-         tips.push(getLocalizedText('custom_logo', locale) || "A custom center logo is configured. We suggest selecting High (H) Error Correction redundancy to protect vital module patterns covered by the center logo.");
-      }
-      if (tips.length === 0) {
-        tips.push(getLocalizedText('perfect_contrast', locale) || "Contrast ratio is spectacular. Your design currently achieves 100% compliance with digital read standard guidelines.");
-        tips.push(getLocalizedText('good_gradient', locale) || "Gradient distribution is well-proportioned; maintains high clarity across all cameras.");
-      }
-      tips.push(getLocalizedText('svg_recommendation', locale) || "Use standard vector format (.SVG) for high-resolution physical printing on shop banners or promotional merchandise.");
-      return { recommendations: tips };
-    };
-
     try {
-      if (!isGeminiEnabled()) {
+      const { qrContent, currentDesign, locale } = req.body || {};
+      const contentStr = qrContent || '';
+
+      console.log('[AI DESIGN] Request received');
+      console.log('[AI DESIGN] Locale:', locale || 'none');
+      console.log('[AI DESIGN] Content Length:', contentStr.length);
+
+      const executeDesignAudit = (cText: string, design: any) => {
+        const tips = [];
+        if (cText.length > 90) {
+          tips.push(getLocalizedText('url_too_long', locale) || "Your destination URL contains over 90 characters. We strongly suggest enabling Dynamic Redirection (Short URL) to reduce block density and ensure instant scanning, even for older smartphones.");
+        }
+        if (design?.bgColor && design?.fgColor) {
+          // Simple hex contrast checker placeholder logic:
+          const isWhiteBg = design.bgColor.toLowerCase() === '#ffffff' || design.bgColor.toLowerCase() === '#fff';
+          if (!isWhiteBg && design.gradientType === 'none') {
+            tips.push(getLocalizedText('non_white_bg', locale) || "Your background is non-white. Please make sure the contrast between your modules and the canvas is at least 4:1 to prevent scanning issues under direct sunlight or dark ambient conditions.");
+          }
+        }
+        if (design?.logoUrl) {
+           tips.push(getLocalizedText('custom_logo', locale) || "A custom center logo is configured. We suggest selecting High (H) Error Correction redundancy to protect vital module patterns covered by the center logo.");
+        }
+        if (tips.length === 0) {
+          tips.push(getLocalizedText('perfect_contrast', locale) || "Contrast ratio is spectacular. Your design currently achieves 100% compliance with digital read standard guidelines.");
+          tips.push(getLocalizedText('good_gradient', locale) || "Gradient distribution is well-proportioned; maintains high clarity across all cameras.");
+        }
+        tips.push(getLocalizedText('svg_recommendation', locale) || "Use standard vector format (.SVG) for high-resolution physical printing on shop banners or promotional merchandise.");
+        return { recommendations: tips };
+      };
+
+      const geminiEnabled = isGeminiEnabled();
+      console.log('[AI DESIGN] Gemini Enabled:', geminiEnabled);
+
+      if (!geminiEnabled) {
+        console.log('[AI DESIGN] Returning Response...');
         return res.json(executeDesignAudit(contentStr, currentDesign));
       }
 
+      console.log('[AI DESIGN] Calling Gemini...');
       const languageInstruction = locale ? `IMPORTANT: The user is currently viewing the application in the locale/language: "${locale}". You MUST generate the text descriptions, explanations, and recommendation strings in the "${locale}" language (e.g., if locale is 'ar' write in Arabic, if 'ur' write in Urdu, if 'tr' write in Turkish, etc.). Do NOT output English if the locale is a non-English language.` : '';
 
-      const response = await generateContentWithFallback({
-        contents: `Provide 3-4 professional, actionable design audit recommendations for a QR Code with these parameters: Content Length: ${contentStr.length}, QR Content: "${contentStr}", Current Design Settings: ${JSON.stringify(currentDesign || {})}\n\n${languageInstruction}`,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              recommendations: {
-                type: Type.ARRAY,
-                items: { type: Type.STRING, description: "A high-value user suggestion." }
-              }
-            },
-            required: ["recommendations"]
+      let response: any;
+      try {
+        response = await generateContentWithFallback({
+          contents: `Provide 3-4 professional, actionable design audit recommendations for a QR Code with these parameters: Content Length: ${contentStr.length}, QR Content: "${contentStr}", Current Design Settings: ${JSON.stringify(currentDesign || {})}\n\n${languageInstruction}`,
+          config: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                recommendations: {
+                  type: Type.ARRAY,
+                  items: { type: Type.STRING, description: "A high-value user suggestion." }
+                }
+              },
+              required: ["recommendations"]
+            }
           }
-        }
-      });
+        });
+      } catch (geminiErr: any) {
+        console.error(
+          "[AI DESIGN ERROR]",
+          {
+            message: geminiErr?.message,
+            stack: geminiErr?.stack,
+            cause: geminiErr?.cause,
+            error: geminiErr
+          }
+        );
+        console.log('[AI DESIGN] Returning Response...');
+        return res.json(executeDesignAudit(contentStr, currentDesign));
+      }
+
+      console.log('[AI DESIGN] Gemini Response:', response?.text || response);
 
       if (response && response.text) {
-        const parsed = JSON.parse(response.text);
-        return res.json(parsed);
+        console.log('[AI DESIGN] Parsing JSON...');
+        let parsed: any;
+        try {
+          parsed = JSON.parse(response.text);
+        } catch (jsonErr: any) {
+          console.error(
+            "[AI DESIGN ERROR]",
+            {
+              message: jsonErr?.message,
+              stack: jsonErr?.stack,
+              cause: jsonErr?.cause,
+              error: jsonErr
+            }
+          );
+          console.log('[AI DESIGN] Returning Response...');
+          return res.json(executeDesignAudit(contentStr, currentDesign));
+        }
+
+        let recommendationsList: string[] = [];
+        if (Array.isArray(parsed)) {
+          recommendationsList = parsed.map((item: any) =>
+            typeof item === 'string'
+              ? item
+              : (item?.recommendation || item?.tip || item?.text || item?.description || item?.['error 0'] || JSON.stringify(item))
+          );
+        } else if (parsed && typeof parsed === 'object') {
+          if (Array.isArray(parsed.recommendations)) {
+            recommendationsList = parsed.recommendations.map((item: any) =>
+              typeof item === 'string'
+                ? item
+                : (item?.recommendation || item?.tip || item?.text || item?.description || item?.['error 0'] || JSON.stringify(item))
+            );
+          } else {
+            recommendationsList = Object.values(parsed).map((val: any) =>
+              typeof val === 'string'
+                ? val
+                : (val?.recommendation || val?.tip || val?.text || val?.description || JSON.stringify(val))
+            );
+          }
+        }
+
+        if (recommendationsList.length === 0) {
+          console.log('[AI DESIGN] Returning fallback audit...');
+          return res.json(executeDesignAudit(contentStr, currentDesign));
+        }
+
+        console.log('[AI DESIGN] Returning Normalized Response...');
+        return res.json({ recommendations: recommendationsList });
       }
+
+      console.log('[AI DESIGN] Returning Response...');
       return res.json(executeDesignAudit(contentStr, currentDesign));
-    } catch (err) {
-      console.warn('[AI design-recommendations Fallback triggered]', err);
-      return res.json(executeDesignAudit(contentStr, currentDesign));
+    } catch (err: any) {
+      console.error(
+        "[AI DESIGN ERROR]",
+        {
+          message: err?.message,
+          stack: err?.stack,
+          cause: err?.cause,
+          error: err
+        }
+      );
+      console.log('[AI DESIGN] Returning Response...');
+      return res.json({
+        recommendations: [
+          "Your destination URL parameters and QR contrast were audited.",
+          "Use standard vector format (.SVG) for high-resolution physical printing on shop banners or promotional merchandise."
+        ]
+      });
     }
   });
 

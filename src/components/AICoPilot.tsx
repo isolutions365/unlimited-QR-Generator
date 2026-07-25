@@ -61,7 +61,17 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
       try {
         const res = await api.getDesignRecommendations(qrContent, design, locale);
         if (active) {
-          setRecommendations(res.recommendations || []);
+          const rawList = res.recommendations || [];
+          const cleanList = Array.isArray(rawList)
+            ? rawList.map((item: any) =>
+                typeof item === 'string'
+                  ? item
+                  : (typeof item === 'object' && item !== null
+                      ? item.recommendation || item.tip || item.text || item.description || item['error 0'] || JSON.stringify(item)
+                      : String(item))
+              )
+            : [];
+          setRecommendations(cleanList);
         }
       } catch (err) {
         console.warn('Realtime design audit check skipped', err);
@@ -78,7 +88,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
       active = false;
       clearTimeout(timer);
     };
-  }, [qrContent, design.fgColor, design.bgColor, design.gradientType, design.gradientColor, design.dotStyle, design.eyeStyle, design.margin, design.logoUrl]);
+  }, [qrContent, design.fgColor, design.bgColor, design.gradientType, design.gradientColor, design.dotStyle, design.eyeStyle, design.margin, design.logoUrl, design.errorCorrectionLevel, locale]);
 
   // Apply a suggested palette to current QR code state
   const handleApplyPalette = (palette: any) => {
@@ -277,12 +287,19 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
               </div>
               
               <ul className="space-y-2">
-                {recommendations.map((tip, idx) => (
-                  <li key={idx} className="text-[11px] text-slate-350 flex items-start gap-2 leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 mt-1.5" />
-                    <span>{tip}</span>
-                  </li>
-                ))}
+                {recommendations.map((tip, idx) => {
+                  const tipText = typeof tip === 'string'
+                    ? tip
+                    : (typeof tip === 'object' && tip !== null
+                        ? (tip as any).recommendation || (tip as any).tip || (tip as any).text || (tip as any).description || (tip as any)['error 0'] || JSON.stringify(tip)
+                        : String(tip));
+                  return (
+                    <li key={idx} className="text-[11px] text-slate-350 flex items-start gap-2 leading-relaxed">
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 mt-1.5" />
+                      <span>{tipText}</span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
 
