@@ -228,12 +228,26 @@ app.use(express.json());
           message: 'Firebase connection verified',
         };
       } else {
-        firebaseStatus = {
-          status: 'degraded',
-          isFallbackMode: false,
-          latencyMs: Date.now() - fbStartTime,
-          message: 'System health document does not exist',
-        };
+        // Document does not exist. Let's auto-create it safely.
+        try {
+          await adminDb.collection('system').doc('health').set({
+            status: 'ok',
+            lastChecked: new Date().toISOString()
+          });
+          firebaseStatus = {
+            status: 'ok',
+            isFallbackMode: false,
+            latencyMs: Date.now() - fbStartTime,
+            message: 'Firebase connection verified (auto-created system/health)',
+          };
+        } catch (createErr: any) {
+          firebaseStatus = {
+            status: 'degraded',
+            isFallbackMode: false,
+            latencyMs: Date.now() - fbStartTime,
+            message: 'System health document does not exist and auto-creation failed: ' + (createErr?.message || createErr),
+          };
+        }
       }
     } catch (fbErr: any) {
       firebaseStatus = {
@@ -2228,6 +2242,23 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
       getDb();
     } catch (err) {
       console.warn("Firestore startup check warning:", err);
+    }
+
+    console.log("Initializing system health document on startup...");
+    try {
+      const healthDocRef = adminDb.collection('system').doc('health');
+      const healthSnap = await healthDocRef.get();
+      if (!healthSnap.exists) {
+        await healthDocRef.set({
+          status: 'ok',
+          lastChecked: new Date().toISOString()
+        });
+        console.log("System health document created successfully on startup.");
+      } else {
+        console.log("System health document already exists.");
+      }
+    } catch (err: any) {
+      console.warn("Could not auto-initialize system health document on startup:", err?.message || err);
     }
 
     console.log("Loading Gemini...");
