@@ -42,15 +42,17 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
 
   // Deconstruct content/design from project safely
   const qrContent = currentProject.content || 'https://freeqrgen.pro';
-  const design = currentProject.design || {
-    fgColor: '#0f172a',
-    bgColor: '#ffffff',
-    gradientType: 'none',
-    gradientColor: '#4f46e5',
-    dotStyle: 'square',
-    eyeStyle: 'square',
-    margin: 20,
-    errorCorrectionLevel: 'H'
+  const design = {
+    fgColor: currentProject.design?.fgColor || '#0f172a',
+    bgColor: currentProject.design?.bgColor || '#ffffff',
+    gradientType: currentProject.design?.gradientType || 'none',
+    gradientColor: currentProject.design?.gradientColor || '#4f46e5',
+    dotStyle: currentProject.design?.dotStyle || 'square',
+    eyeStyle: currentProject.design?.eyeStyle || 'square',
+    margin: typeof currentProject.design?.margin === 'number' ? currentProject.design.margin : 20,
+    errorCorrectionLevel: currentProject.design?.errorCorrectionLevel || 'H',
+    logoUrl: currentProject.design?.logoUrl || '',
+    logoScale: typeof currentProject.design?.logoScale === 'number' ? currentProject.design.logoScale : 0.18,
   };
 
   // Perform automatic readability audit whenever content or design updates

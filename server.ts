@@ -1771,7 +1771,7 @@ English text: "${text}"`;
         return res.json(executeDesignAudit(contentStr, currentDesign));
       }
 
-      console.log('[AI DESIGN] Gemini Response:', response?.text || response);
+      console.log('[AI DESIGN] Gemini response received successfully');
 
       if (response && response.text) {
         console.log('[AI DESIGN] Parsing JSON...');
@@ -1780,15 +1780,10 @@ English text: "${text}"`;
           parsed = JSON.parse(response.text);
         } catch (jsonErr: any) {
           console.error(
-            "[AI DESIGN ERROR]",
-            {
-              message: jsonErr?.message,
-              stack: jsonErr?.stack,
-              cause: jsonErr?.cause,
-              error: jsonErr
-            }
+            "[AI DESIGN ERROR] Failed to parse JSON",
+            jsonErr?.message
           );
-          console.log('[AI DESIGN] Returning Response...');
+          console.log('[AI DESIGN] Returning fallback...');
           return res.json(executeDesignAudit(contentStr, currentDesign));
         }
 
