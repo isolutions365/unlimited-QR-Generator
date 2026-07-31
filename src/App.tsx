@@ -51,12 +51,13 @@ import { useTranslation, useDocumentLanguage } from './utils/i18n';
 import MobileDrawer from './components/MobileDrawer';
 import Header from './components/Header';
 import Logo from './components/Logo';
+import BarcodeGenerator from './components/BarcodeGenerator';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
-  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu
+  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -597,7 +598,7 @@ export default function App() {
   ];
 
   // Active Tab
-  const [activeTab, setActiveTab ] = useState<'create' | 'templates' | 'analytics' | 'boiler' | 'animations'>('create');
+  const [activeTab, setActiveTab ] = useState<'create' | 'barcode' | 'templates' | 'analytics' | 'boiler' | 'animations'>('create');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -2079,13 +2080,21 @@ export default function App() {
           <h1 className="sr-only">Free QR Code Generator - Custom Dynamic QR Codes with Analytics</h1>
 
         {/* Tab view controller */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between bg-white border border-gray-200/80 p-1.5 rounded-2xl max-w-xl shadow-xs gap-1">
+        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between bg-white border border-gray-200/80 p-1.5 rounded-2xl max-w-2xl lg:max-w-3xl shadow-xs gap-1">
           <button
             type="button"
             className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'create' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('create')}
           >
             {t('nav.creativeStationTab', 'Creative Station')}
+          </button>
+          <button
+            type="button"
+            className={`flex-1 min-w-[105px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${ activeTab === 'barcode' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
+            onClick={() => setActiveTab('barcode')}
+          >
+            <Barcode className={`w-3.5 h-3.5 ${activeTab === 'barcode' ? 'text-white' : 'text-indigo-500'}`} />
+            {t('nav.barcodeGeneratorTab', 'Barcode Generator')}
           </button>
           <button
             type="button"
@@ -2130,6 +2139,16 @@ export default function App() {
         )}
 
         {/* tab pages routing rendering */}
+        {activeTab === 'barcode' && (
+          <div className="w-full">
+            <ErrorBoundary isInline>
+              <React.Suspense fallback={<LazyLoader />}>
+                <BarcodeGenerator locale={locale} />
+              </React.Suspense>
+            </ErrorBoundary>
+          </div>
+        )}
+
         {activeTab === 'create' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
