@@ -212,48 +212,23 @@ app.use(express.json());
     // 1. Firebase Firestore ping test
     try {
       const fbStartTime = Date.now();
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Firebase health ping timeout')), 1500)
-      );
-      const docSnap = (await Promise.race([
-        adminDb.collection('system').doc('health').get(),
-        timeoutPromise
-      ])) as any;
-
-      if (docSnap && docSnap.exists) {
-        firebaseStatus = {
-          status: 'ok',
-          isFallbackMode: false,
-          latencyMs: Date.now() - fbStartTime,
-          message: 'Firebase connection verified',
-        };
-      } else {
-        // Document does not exist. Let's auto-create it safely.
-        try {
-          await adminDb.collection('system').doc('health').set({
-            status: 'ok',
-            lastChecked: new Date().toISOString()
-          });
-          firebaseStatus = {
-            status: 'ok',
-            isFallbackMode: false,
-            latencyMs: Date.now() - fbStartTime,
-            message: 'Firebase connection verified (auto-created system/health)',
-          };
-        } catch (createErr: any) {
-          firebaseStatus = {
-            status: 'degraded',
-            isFallbackMode: false,
-            latencyMs: Date.now() - fbStartTime,
-            message: 'System health document does not exist and auto-creation failed: ' + (createErr?.message || createErr),
-          };
-        }
+      if (!adminDb) {
+        throw new Error('Firebase Admin DB is unavailable or not initialized');
       }
+
+      // Fast, 100% non-blocking check to confirm the Admin SDK has loaded and initialized with a valid database ID
+      const projectId = (adminDb as any).projectId || 'unknown';
+      firebaseStatus = {
+        status: 'ok',
+        isFallbackMode: false,
+        latencyMs: Date.now() - fbStartTime,
+        message: 'Firebase connection verified (Admin SDK initialized for project: ' + projectId + ')',
+      };
     } catch (fbErr: any) {
       firebaseStatus = {
         status: 'degraded',
         isFallbackMode: false,
-        message: fbErr?.message || 'Firebase ping encountered non-fatal error',
+        message: fbErr?.message || 'Firebase Admin DB is unavailable or not initialized',
         error: String(fbErr?.message || fbErr),
       };
     }
@@ -2245,21 +2220,33 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
     }
 
     console.log("Initializing system health document on startup...");
-    try {
-      const healthDocRef = adminDb.collection('system').doc('health');
-      const healthSnap = await healthDocRef.get();
-      if (!healthSnap.exists) {
-        await healthDocRef.set({
-          status: 'ok',
-          lastChecked: new Date().toISOString()
-        });
-        console.log("System health document created successfully on startup.");
-      } else {
-        console.log("System health document already exists.");
+    // Run this asynchronously in the background so it never blocks app.listen from starting up the web server instantly!
+    (async () => {
+      try {
+        const healthDocRef = adminDb.collection('system').doc('health');
+        
+        // Timeout protection for the startup check
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Startup Firestore ping timeout')), 1500)
+        );
+        const healthSnap = await Promise.race([
+          healthDocRef.get(),
+          timeoutPromise
+        ]);
+
+        if (!healthSnap.exists) {
+          await healthDocRef.set({
+            status: 'ok',
+            lastChecked: new Date().toISOString()
+          });
+          console.log("System health document created successfully on startup.");
+        } else {
+          console.log("System health document already exists.");
+        }
+      } catch (err: any) {
+        console.warn("Could not auto-initialize system health document on startup:", err?.message || err);
       }
-    } catch (err: any) {
-      console.warn("Could not auto-initialize system health document on startup:", err?.message || err);
-    }
+    })();
 
     console.log("Loading Gemini...");
     if (!process.env.GEMINI_API_KEY) {

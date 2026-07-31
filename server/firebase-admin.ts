@@ -41,10 +41,13 @@ try {
     });
   }
 
-  const databaseId =
+  const rawDatabaseId =
     process.env.FIREBASE_FIRESTORE_DATABASE_ID ||
     process.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID ||
     '(default)';
+  const databaseId = (rawDatabaseId && rawDatabaseId.includes('='))
+    ? rawDatabaseId.split('=').pop() || '(default)'
+    : rawDatabaseId;
 
   rawAdminDb = getFirestore(adminAppInstance, databaseId);
   rawAdminAuth = getAuth(adminAppInstance);

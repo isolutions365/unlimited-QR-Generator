@@ -5,6 +5,11 @@ import { getStorage } from 'firebase/storage';
 import appletConfig from '../../firebase-applet-config.json';
 
 // Define the firebaseConfig using import.meta.env with fallback to firebase-applet-config.json
+const rawDatabaseId = import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || appletConfig.firestoreDatabaseId;
+const cleanDatabaseId = (rawDatabaseId && rawDatabaseId.includes('=')) 
+  ? rawDatabaseId.split('=').pop() 
+  : rawDatabaseId;
+
 export const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || appletConfig.apiKey,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || appletConfig.authDomain,
@@ -13,7 +18,7 @@ export const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || appletConfig.messagingSenderId,
   appId: import.meta.env.VITE_FIREBASE_APP_ID || appletConfig.appId,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || appletConfig.measurementId,
-  firestoreDatabaseId: import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || appletConfig.firestoreDatabaseId
+  firestoreDatabaseId: cleanDatabaseId
 };
 
 // Initialize Firebase App gracefully and perform single-instance checks
