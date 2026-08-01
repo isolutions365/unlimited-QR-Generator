@@ -78,8 +78,9 @@ const PAYLOAD_PRESETS: PresetOption[] = [
   }
 ];
 
-export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProps) {
-  const { t } = useTranslation();
+export default function BarcodeGenerator({ locale: propLocale }: BarcodeGeneratorProps) {
+  const { t, locale } = useTranslation();
+  const activeLocale = locale || propLocale || 'en';
   const [value, setValue] = useState<string>('PROD-7749-W2');
   const [format, setFormat] = useState<string>('CODE128');
   const [selectedPreset, setSelectedPreset] = useState<string>('general');
@@ -124,7 +125,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
         return {
           status: 'warning' as const,
           textKey: 'barcode.valEanLen',
-          defaultText: `EAN-13 requires exactly 12 or 13 digits (Current: ${cleanVal.length}). A 12-digit input automatically gets its checksum appended.`,
+          defaultText: 'EAN-13 requires exactly 12 or 13 digits (Current: {count}). A 12-digit input automatically gets its checksum appended.',
           params: { count: cleanVal.length }
         };
       }
@@ -140,7 +141,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
         return {
           status: 'warning' as const,
           textKey: 'barcode.valUpcLen',
-          defaultText: `UPC-A requires exactly 11 or 12 digits (Current: ${cleanVal.length}). An 11-digit input automatically gets its checksum appended.`,
+          defaultText: 'UPC-A requires exactly 11 or 12 digits (Current: {count}). An 11-digit input automatically gets its checksum appended.',
           params: { count: cleanVal.length }
         };
       }
@@ -205,7 +206,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
       console.warn('Barcode rendering error:', err);
       setError(err?.message || t('barcode.unsupportedChars', 'Unsupported characters for the selected barcode format.'));
     }
-  }, [value, format, height, width, displayValue, lineColor, background, margin, locale]);
+  }, [value, format, height, width, displayValue, lineColor, background, margin, activeLocale, t]);
 
   // Handler for manual random generator
   const handleRandomize = () => {
