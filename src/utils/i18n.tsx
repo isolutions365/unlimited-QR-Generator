@@ -180,7 +180,6 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   const [dictionary, setDictionary] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [keysTracked, setKeysTracked] = useState<string[]>([]);
 
   // Sync state with popstate (e.g. browser back/forward)
   useEffect(() => {
@@ -219,13 +218,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
    * Enterprise-grade Translation Function t() with ICU Support, key tracking
    */
   const t = (key: TKey, defaultText?: string, values?: ICUValues): React.ReactNode => {
-    // Collect keys used during active session
+    // Collect keys used during active session without triggering state re-renders
     if (!runtimeKeySet.has(key)) {
       runtimeKeySet.add(key);
-      // Defer the state update using setTimeout to prevent updating state during render
-      setTimeout(() => {
-        setKeysTracked(Array.from(runtimeKeySet));
-      }, 0);
     }
     
     try {
@@ -379,7 +374,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         formatCurrency,
         formatRelativeTime,
         getRelativeTimeString,
-        requestedKeys: keysTracked,
+        requestedKeys: Array.from(runtimeKeySet),
         loadedDictionaries: dictionaryCache,
         dictionary,
         loadAllDictionariesForAnalysis,

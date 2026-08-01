@@ -2,6 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script>
+      // Automatic ServiceWorker auto-cleanup to resolve stale cache/blank screen issues on repeat visits
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (let registration of registrations) {
+            registration.unregister();
+          }
+        }).catch(function(err) {
+          console.warn('[SW Cleanup] Unregister warning:', err);
+        });
+      }
+    </script>
     <meta name="indexnow-verification" content="58b88f6bad214a2d81bb516a4541ac02" />
     <meta name="google-adsense-account" content="ca-pub-1877345878061699">
     <script>
