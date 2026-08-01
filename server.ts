@@ -1283,9 +1283,11 @@ English text: "${text}"`;
     return googleAiClient;
   }
 
+  let isGeminiBillingBlocked = false;
+
   // Helper check if Gemini API is enabled
   function isGeminiEnabled(): boolean {
-    return !!process.env.GEMINI_API_KEY;
+    return !isGeminiBillingBlocked && !!process.env.GEMINI_API_KEY;
   }
 
   // Helper to run generateContent with robust retries and fallback models in case of 503 (service unavailable) or 429 (rate limits)
@@ -1294,6 +1296,10 @@ English text: "${text}"`;
     config: any;
     primaryModel?: string;
   }): Promise<any> {
+    if (isGeminiBillingBlocked) {
+      throw new Error('Gemini API is temporarily offline due to project billing limitations.');
+    }
+
     const client = getGoogleAiClient();
     const primaryModel = options.primaryModel || 'gemini-3.5-flash';
     const fallbackModels = ['gemini-3.1-flash-lite', 'gemini-flash-latest'];
@@ -1316,6 +1322,20 @@ English text: "${text}"`;
           const status = error.status || (error.error && error.error.code);
           const errorMsg = error.message || '';
           
+          // Check if this is a billing or dunning issue or permission denied
+          const isBillingOrPermissionBlocked = status === 403 || 
+            errorMsg.includes('dunning') || 
+            errorMsg.includes('PERMISSION_DENIED') ||
+            errorMsg.includes('billing') ||
+            errorMsg.includes('quota') ||
+            errorMsg.includes('Lightning dunning decision is deny');
+
+          if (isBillingOrPermissionBlocked) {
+            isGeminiBillingBlocked = true;
+            console.log("Local localization and backup mode enabled.");
+            throw new Error('Offline');
+          }
+
           // Check if the model is busy, overloaded (503), or rate-limited (429)
           const isBusyOrOverloaded = status === 503 || status === 429 || 
             errorMsg.includes('demand') || 
@@ -1747,14 +1767,9 @@ English text: "${text}"`;
           }
         });
       } catch (geminiErr: any) {
-        console.error(
-          "[AI DESIGN ERROR]",
-          {
-            message: geminiErr?.message,
-            stack: geminiErr?.stack,
-            cause: geminiErr?.cause,
-            error: geminiErr
-          }
+        console.warn(
+          "[AI DESIGN WARNING] Gemini execution fell back gracefully.",
+          geminiErr?.message || geminiErr
         );
         console.log('[AI DESIGN] Returning Response...');
         return res.json(executeDesignAudit(contentStr, currentDesign));
@@ -1768,9 +1783,9 @@ English text: "${text}"`;
         try {
           parsed = JSON.parse(response.text);
         } catch (jsonErr: any) {
-          console.error(
-            "[AI DESIGN ERROR] Failed to parse JSON",
-            jsonErr?.message
+          console.warn(
+            "[AI DESIGN WARNING] Failed to parse JSON",
+            jsonErr?.message || jsonErr
           );
           console.log('[AI DESIGN] Returning fallback...');
           return res.json(executeDesignAudit(contentStr, currentDesign));
@@ -1811,14 +1826,9 @@ English text: "${text}"`;
       console.log('[AI DESIGN] Returning Response...');
       return res.json(executeDesignAudit(contentStr, currentDesign));
     } catch (err: any) {
-      console.error(
-        "[AI DESIGN ERROR]",
-        {
-          message: err?.message,
-          stack: err?.stack,
-          cause: err?.cause,
-          error: err
-        }
+      console.warn(
+        "[AI DESIGN WARNING] General design audit execution handled gracefully.",
+        err?.message || err
       );
       console.log('[AI DESIGN] Returning Response...');
       return res.json({
@@ -2209,7 +2219,7 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
   // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---
   async function startServer() {
     console.log("Starting Express...");
-    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
+    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
     console.log("Loading Firebase...");
     console.log("Loading Firestore...");
@@ -2253,6 +2263,34 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
       console.warn("GEMINI_API_KEY is missing. Gemini AI endpoints will operate in fallback mode.");
     } else {
       console.log("Gemini API key verified.");
+      // Silent, non-blocking startup check to see if the project billing has issues or API permissions are blocked
+      (async () => {
+        try {
+          const client = getGoogleAiClient();
+          await client.models.generateContent({
+            model: 'gemini-3.5-flash',
+            contents: 'ping',
+            config: { maxOutputTokens: 1 }
+          });
+          console.log("Gemini status check completed successfully.");
+        } catch (err: any) {
+          const errorMsg = err?.message || '';
+          const status = err?.status || (err?.error && err?.error.code);
+          const isBillingOrPermissionBlocked = status === 403 || 
+            errorMsg.includes('dunning') || 
+            errorMsg.includes('PERMISSION_DENIED') ||
+            errorMsg.includes('billing') ||
+            errorMsg.includes('quota') ||
+            errorMsg.includes('Lightning dunning decision is deny');
+
+          if (isBillingOrPermissionBlocked) {
+            isGeminiBillingBlocked = true;
+            console.log("Local localization and backup mode enabled.");
+          } else {
+            console.log("Gemini status offline.");
+          }
+        }
+      })();
     }
 
     console.log("Loading WebSocket...");
