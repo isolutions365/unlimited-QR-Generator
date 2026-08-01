@@ -1322,13 +1322,19 @@ English text: "${text}"`;
           const status = error.status || (error.error && error.error.code);
           const errorMsg = error.message || '';
           
-          // Check if this is a billing or dunning issue or permission denied
-          const isBillingOrPermissionBlocked = status === 403 || 
+          // Check if this is a billing, authentication, quota or dunning issue
+          const isBillingOrPermissionBlocked = status === 403 || status === 401 ||
             errorMsg.includes('dunning') || 
             errorMsg.includes('PERMISSION_DENIED') ||
             errorMsg.includes('billing') ||
             errorMsg.includes('quota') ||
-            errorMsg.includes('Lightning dunning decision is deny');
+            errorMsg.includes('Lightning dunning decision is deny') ||
+            errorMsg.includes('UNAUTHENTICATED') ||
+            errorMsg.includes('invalid authentication credentials') ||
+            errorMsg.includes('ACCESS_TOKEN_TYPE_UNSUPPORTED') ||
+            errorMsg.includes('API_KEY_SERVICE_BLOCKED') ||
+            errorMsg.includes('resource_exhausted') ||
+            errorMsg.includes('exceeded your current quota');
 
           if (isBillingOrPermissionBlocked) {
             isGeminiBillingBlocked = true;
@@ -2276,12 +2282,18 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
         } catch (err: any) {
           const errorMsg = err?.message || '';
           const status = err?.status || (err?.error && err?.error.code);
-          const isBillingOrPermissionBlocked = status === 403 || 
+          const isBillingOrPermissionBlocked = status === 403 || status === 401 ||
             errorMsg.includes('dunning') || 
             errorMsg.includes('PERMISSION_DENIED') ||
             errorMsg.includes('billing') ||
             errorMsg.includes('quota') ||
-            errorMsg.includes('Lightning dunning decision is deny');
+            errorMsg.includes('Lightning dunning decision is deny') ||
+            errorMsg.includes('UNAUTHENTICATED') ||
+            errorMsg.includes('invalid authentication credentials') ||
+            errorMsg.includes('ACCESS_TOKEN_TYPE_UNSUPPORTED') ||
+            errorMsg.includes('API_KEY_SERVICE_BLOCKED') ||
+            errorMsg.includes('resource_exhausted') ||
+            errorMsg.includes('exceeded your current quota');
 
           if (isBillingOrPermissionBlocked) {
             isGeminiBillingBlocked = true;
