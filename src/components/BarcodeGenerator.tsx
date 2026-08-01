@@ -13,6 +13,7 @@ import {
   Palette,
   Sliders
 } from 'lucide-react';
+import { useTranslation } from '../utils/i18n';
 
 interface BarcodeGeneratorProps {
   locale?: string;
@@ -21,8 +22,10 @@ interface BarcodeGeneratorProps {
 // Preset definitions for high utility pre-fills
 interface PresetOption {
   id: string;
-  label: string;
-  description: string;
+  labelKey: string;
+  labelDefault: string;
+  descKey: string;
+  descDefault: string;
   recommendedFormat: string;
   sampleValue: string;
 }
@@ -30,42 +33,53 @@ interface PresetOption {
 const PAYLOAD_PRESETS: PresetOption[] = [
   {
     id: 'general',
-    label: 'General Product Tag',
-    description: 'Basic alpha-numeric product code for standard labeling.',
+    labelKey: 'barcode.preset.general.label',
+    labelDefault: 'General Product Tag',
+    descKey: 'barcode.preset.general.desc',
+    descDefault: 'Basic alpha-numeric product code for standard labeling.',
     recommendedFormat: 'CODE128',
     sampleValue: 'PROD-7749-W2'
   },
   {
     id: 'retail_sku_ean',
-    label: 'Retail SKU (EAN-13)',
-    description: '12-digit global standard product identification code.',
+    labelKey: 'barcode.preset.retail_sku_ean.label',
+    labelDefault: 'Retail SKU (EAN-13)',
+    descKey: 'barcode.preset.retail_sku_ean.desc',
+    descDefault: '12-digit global standard product identification code.',
     recommendedFormat: 'EAN13',
     sampleValue: '590123412345'
   },
   {
     id: 'retail_sku_upc',
-    label: 'Retail SKU (UPC-A)',
-    description: '11-digit North American standard product identification.',
+    labelKey: 'barcode.preset.retail_sku_upc.label',
+    labelDefault: 'Retail SKU (UPC-A)',
+    descKey: 'barcode.preset.retail_sku_upc.desc',
+    descDefault: '11-digit North American standard product identification.',
     recommendedFormat: 'UPC',
     sampleValue: '01234567890'
   },
   {
     id: 'serial',
-    label: 'Device Serial Number',
-    description: 'High-density alphanumeric unique identifier.',
+    labelKey: 'barcode.preset.serial.label',
+    labelDefault: 'Device Serial Number',
+    descKey: 'barcode.preset.serial.desc',
+    descDefault: 'High-density alphanumeric unique identifier.',
     recommendedFormat: 'CODE128',
     sampleValue: 'SN-2026-99A8X'
   },
   {
     id: 'inventory',
-    label: 'Inventory Asset ID',
-    description: 'Industrial warehouse asset tracking identifier.',
+    labelKey: 'barcode.preset.inventory.label',
+    labelDefault: 'Inventory Asset ID',
+    descKey: 'barcode.preset.inventory.desc',
+    descDefault: 'Industrial warehouse asset tracking identifier.',
     recommendedFormat: 'CODE39',
     sampleValue: 'ASSET-904-XYZ'
   }
 ];
 
 export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProps) {
+  const { t } = useTranslation();
   const [value, setValue] = useState<string>('PROD-7749-W2');
   const [format, setFormat] = useState<string>('CODE128');
   const [selectedPreset, setSelectedPreset] = useState<string>('general');
@@ -80,8 +94,10 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
   const [error, setError] = useState<string | null>(null);
   const [validationMessage, setValidationMessage] = useState<{
     status: 'success' | 'warning' | 'error';
-    text: string;
-  }>({ status: 'success', text: 'Valid barcode format.' });
+    textKey: string;
+    defaultText: string;
+    params?: any;
+  }>({ status: 'success', textKey: 'barcode.validFormat', defaultText: 'Valid barcode format.' });
 
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -91,7 +107,8 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
     if (!cleanVal) {
       return {
         status: 'error' as const,
-        text: 'Please enter a value to generate a barcode.'
+        textKey: 'barcode.valEmpty',
+        defaultText: 'Please enter a value to generate a barcode.'
       };
     }
 
@@ -99,26 +116,32 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
       if (!/^\d+$/.test(cleanVal)) {
         return {
           status: 'error' as const,
-          text: 'EAN-13 requires numeric characters only (0-9).'
+          textKey: 'barcode.valEanDigits',
+          defaultText: 'EAN-13 requires numeric characters only (0-9).'
         };
       }
       if (cleanVal.length !== 12 && cleanVal.length !== 13) {
         return {
           status: 'warning' as const,
-          text: `EAN-13 requires exactly 12 or 13 digits (Current: ${cleanVal.length}). A 12-digit input automatically gets its checksum appended.`
+          textKey: 'barcode.valEanLen',
+          defaultText: `EAN-13 requires exactly 12 or 13 digits (Current: ${cleanVal.length}). A 12-digit input automatically gets its checksum appended.`,
+          params: { count: cleanVal.length }
         };
       }
     } else if (fmt === 'UPC') {
       if (!/^\d+$/.test(cleanVal)) {
         return {
           status: 'error' as const,
-          text: 'UPC-A requires numeric characters only (0-9).'
+          textKey: 'barcode.valUpcDigits',
+          defaultText: 'UPC-A requires numeric characters only (0-9).'
         };
       }
       if (cleanVal.length !== 11 && cleanVal.length !== 12) {
         return {
           status: 'warning' as const,
-          text: `UPC-A requires exactly 11 or 12 digits (Current: ${cleanVal.length}). An 11-digit input automatically gets its checksum appended.`
+          textKey: 'barcode.valUpcLen',
+          defaultText: `UPC-A requires exactly 11 or 12 digits (Current: ${cleanVal.length}). An 11-digit input automatically gets its checksum appended.`,
+          params: { count: cleanVal.length }
         };
       }
     } else if (fmt === 'CODE39') {
@@ -126,7 +149,8 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
       if (!allowed.test(cleanVal)) {
         return {
           status: 'error' as const,
-          text: 'CODE39 supports 0-9, A-Z (caps), space, and symbols: - . $ / + %'
+          textKey: 'barcode.valCode39Chars',
+          defaultText: 'CODE39 supports 0-9, A-Z (caps), space, and symbols: - . $ / + %'
         };
       }
     } else if (fmt === 'CODE128') {
@@ -134,14 +158,16 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
       if (!allowedAscii.test(cleanVal)) {
         return {
           status: 'error' as const,
-          text: 'CODE128 supports standard 128 ASCII characters only.'
+          textKey: 'barcode.valCode128Ascii',
+          defaultText: 'CODE128 supports standard 128 ASCII characters only.'
         };
       }
     }
 
     return {
       status: 'success' as const,
-      text: 'Format validation passed! High physical contrast is ready to render.'
+      textKey: 'barcode.passedValidation',
+      defaultText: 'Format validation passed! High physical contrast is ready to render.'
     };
   };
 
@@ -151,7 +177,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
     setValidationMessage(result);
 
     if (result.status === 'error') {
-      setError(result.text);
+      setError(t(result.textKey, result.defaultText, result.params));
       return;
     }
 
@@ -171,41 +197,36 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
         margin: margin,
         valid: (valid) => {
           if (!valid) {
-            setError(`The renderer failed to parse this payload for ${format}. Please verify your format characters.`);
+            setError(t('barcode.renderFailed', `The renderer failed to parse this payload for ${format}. Please verify your format characters.`, { format }));
           }
         }
       });
     } catch (err: any) {
       console.warn('Barcode rendering error:', err);
-      setError(err?.message || 'Unsupported characters for the selected barcode format.');
+      setError(err?.message || t('barcode.unsupportedChars', 'Unsupported characters for the selected barcode format.'));
     }
-  }, [value, format, height, width, displayValue, lineColor, background, margin]);
+  }, [value, format, height, width, displayValue, lineColor, background, margin, locale]);
 
   // Handler for manual random generator
   const handleRandomize = () => {
     let randVal = '';
     if (format === 'EAN13') {
-      // EAN13 standard 12-digit number (checksum is automatically added by JsBarcode)
       randVal = Array.from({ length: 12 }, () => Math.floor(Math.random() * 10)).join('');
     } else if (format === 'UPC') {
-      // UPC-A standard 11-digit number
       randVal = Array.from({ length: 11 }, () => Math.floor(Math.random() * 10)).join('');
     } else if (format === 'CODE39') {
-      // CODE39 alphanumeric string
       const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-';
       randVal = 'ID-' + Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
     } else {
-      // CODE128 random tracking sequence
       const prefix = 'TRK';
       const num = Math.floor(10000000 + Math.random() * 90000000).toString();
       const suffix = Array.from({ length: 2 }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('');
       randVal = `${prefix}-${num}-${suffix}`;
     }
     setValue(randVal);
-    setSelectedPreset('custom'); // Set to custom since user randomized it
+    setSelectedPreset('custom');
   };
 
-  // Handler for preset product type selections
   const handlePresetChange = (presetId: string) => {
     setSelectedPreset(presetId);
     if (presetId === 'custom') return;
@@ -288,13 +309,13 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
   const getFormatHelp = () => {
     switch (format) {
       case 'EAN13':
-        return 'EAN-13 requires exactly 12 numeric digits (the 13th checksum digit is computed automatically).';
+        return t('barcode.helpEan', 'EAN-13 requires exactly 12 numeric digits (the 13th checksum digit is computed automatically).');
       case 'UPC':
-        return 'UPC-A requires exactly 11 numeric digits (the 12th checksum digit is computed automatically).';
+        return t('barcode.helpUpc', 'UPC-A requires exactly 11 numeric digits (the 12th checksum digit is computed automatically).');
       case 'CODE39':
-        return 'CODE39 supports uppercase letters (A-Z), numbers (0-9), and characters: - . $ / + % space.';
+        return t('barcode.helpCode39', 'CODE39 supports uppercase letters (A-Z), numbers (0-9), and characters: - . $ / + % space.');
       default:
-        return 'CODE128 is highly flexible and encodes all ASCII characters (letters, numbers, symbols).';
+        return t('barcode.helpCode128', 'CODE128 is highly flexible and encodes all ASCII characters (letters, numbers, symbols).');
     }
   };
 
@@ -307,10 +328,12 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
             <span className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
               <Barcode className="w-5 h-5" />
             </span>
-            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Barcode Generation Station</h2>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              {t('barcode.title', 'Barcode Generation Station')}
+            </h2>
           </div>
           <p className="text-xs text-slate-500 leading-normal">
-            Generate crisp, industry-standard linear barcodes with precision rendering, physical scanner validation safeguards, and custom color presets.
+            {t('barcode.subtitle', 'Generate crisp, industry-standard linear barcodes with precision rendering, physical scanner validation safeguards, and custom color presets.')}
           </p>
         </div>
 
@@ -318,7 +341,9 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
         <div className="space-y-2 border-b border-slate-100 pb-5">
           <div className="flex items-center gap-1.5 mb-2">
             <Layers className="w-4 h-4 text-indigo-500" />
-            <label className="text-xs font-bold text-slate-800">Payload Categories & Industry Presets</label>
+            <label className="text-xs font-bold text-slate-800">
+              {t('barcode.presetsCategory', 'Payload Categories & Industry Presets')}
+            </label>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {PAYLOAD_PRESETS.map((preset) => (
@@ -326,27 +351,27 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
                 key={preset.id}
                 type="button"
                 onClick={() => handlePresetChange(preset.id)}
-                className={`text-left p-2.5 rounded-xl border text-[11px] font-medium transition-all ${
+                className={`text-left p-2.5 rounded-xl border text-[11px] font-medium transition-all cursor-pointer ${
                   selectedPreset === preset.id
                     ? 'border-indigo-600 bg-indigo-50/40 text-indigo-950 shadow-xs'
                     : 'border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-600'
                 }`}
               >
-                <div className="font-bold">{preset.label}</div>
-                <div className="text-[9px] text-slate-400 font-normal line-clamp-1 mt-0.5">{preset.description}</div>
+                <div className="font-bold">{t(preset.labelKey, preset.labelDefault)}</div>
+                <div className="text-[9px] text-slate-400 font-normal line-clamp-1 mt-0.5">{t(preset.descKey, preset.descDefault)}</div>
               </button>
             ))}
             <button
               type="button"
               onClick={() => handlePresetChange('custom')}
-              className={`text-left p-2.5 rounded-xl border text-[11px] font-medium transition-all ${
+              className={`text-left p-2.5 rounded-xl border text-[11px] font-medium transition-all cursor-pointer ${
                 selectedPreset === 'custom'
                   ? 'border-indigo-600 bg-indigo-50/40 text-indigo-950 shadow-xs'
                   : 'border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-600'
               }`}
             >
-              <div className="font-bold">Custom Values</div>
-              <div className="text-[9px] text-slate-400 font-normal line-clamp-1 mt-0.5">Freeform manual data payload inputs</div>
+              <div className="font-bold">{t('barcode.preset.custom.label', 'Custom Values')}</div>
+              <div className="text-[9px] text-slate-400 font-normal line-clamp-1 mt-0.5">{t('barcode.preset.custom.desc', 'Freeform manual data payload inputs')}</div>
             </button>
           </div>
         </div>
@@ -355,7 +380,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              Barcode Payload Content
+              {t('barcode.payloadContent', 'Barcode Payload Content')}
             </label>
             <button
               type="button"
@@ -363,7 +388,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
               className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition-all cursor-pointer bg-indigo-50 hover:bg-indigo-100/80 px-2 py-1 rounded-lg"
             >
               <RefreshCw className="w-3 h-3" />
-              Generate Random Code
+              {t('barcode.generateRandom', 'Generate Random Code')}
             </button>
           </div>
           <div className="relative">
@@ -375,7 +400,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
                 setSelectedPreset('custom');
               }}
               className="w-full text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 border border-slate-200 focus:border-indigo-500 rounded-xl py-3 px-4 outline-hidden transition-all font-mono"
-              placeholder="Enter text or number sequence"
+              placeholder={t('barcode.inputPlaceholder', 'Enter text or number sequence')}
             />
           </div>
 
@@ -390,7 +415,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
             {validationMessage.status === 'success' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />}
             {validationMessage.status === 'warning' && <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />}
             {validationMessage.status === 'error' && <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />}
-            <span className="font-medium">{validationMessage.text}</span>
+            <span className="font-medium">{t(validationMessage.textKey, validationMessage.defaultText, validationMessage.params)}</span>
           </div>
 
           <p className="text-[10px] text-slate-400 flex items-start gap-1 pt-1">
@@ -402,14 +427,13 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
         {/* Format Selection & Layout Options */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-800">Symbology Format</label>
+            <label className="text-xs font-bold text-slate-800">{t('barcode.symbologyFormat', 'Symbology Format')}</label>
             <select
               value={format}
               onChange={(e) => {
                 const newFmt = e.target.value;
                 setFormat(newFmt);
                 setSelectedPreset('custom');
-                // Adjust default inputs based on formats
                 if (newFmt === 'EAN13') {
                   setValue('123456789012');
                 } else if (newFmt === 'UPC') {
@@ -420,15 +444,15 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
               }}
               className="w-full text-xs bg-slate-50 border border-slate-200 text-slate-800 focus:border-indigo-500 rounded-xl py-3 px-3 outline-hidden transition-all cursor-pointer font-semibold"
             >
-              <option value="CODE128">CODE128 (Universal - Text & Numbers)</option>
-              <option value="EAN13">EAN-13 (Standard Retail - 12/13 digits)</option>
-              <option value="UPC">UPC-A (Standard Retail North America - 11/12 digits)</option>
-              <option value="CODE39">CODE39 (Industrial & Automotive)</option>
+              <option value="CODE128">{t('barcode.format.code128', 'CODE128 (Universal - Text & Numbers)')}</option>
+              <option value="EAN13">{t('barcode.format.ean13', 'EAN-13 (Standard Retail - 12/13 digits)')}</option>
+              <option value="UPC">{t('barcode.format.upc', 'UPC-A (Standard Retail North America - 11/12 digits)')}</option>
+              <option value="CODE39">{t('barcode.format.code39', 'CODE39 (Industrial & Automotive)')}</option>
             </select>
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-800">Margin Whitespace (px)</label>
+            <label className="text-xs font-bold text-slate-800">{t('barcode.margin', 'Margin Whitespace (px)')}</label>
             <input
               type="number"
               min="0"
@@ -446,7 +470,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
             <div className="flex justify-between items-center">
               <label className="text-xs font-bold text-slate-800 flex items-center gap-1">
                 <Sliders className="w-3.5 h-3.5 text-slate-400" />
-                Bar Height ({height}px)
+                {t('barcode.barHeight', 'Bar Height ({height}px)', { height })}
               </label>
             </div>
             <input
@@ -463,7 +487,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
             <div className="flex justify-between items-center">
               <label className="text-xs font-bold text-slate-800 flex items-center gap-1">
                 <Sliders className="w-3.5 h-3.5 text-slate-400" />
-                Line Thickness ({width}px)
+                {t('barcode.lineThickness', 'Line Thickness ({width}px)', { width })}
               </label>
             </div>
             <input
@@ -483,7 +507,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
           <div className="space-y-2">
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1">
               <Palette className="w-3.5 h-3.5 text-slate-400" />
-              Line Color
+              {t('barcode.lineColor', 'Line Color')}
             </label>
             <div className="flex gap-2">
               <input
@@ -504,7 +528,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
           <div className="space-y-2">
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1">
               <Palette className="w-3.5 h-3.5 text-slate-400" />
-              Background Color
+              {t('barcode.backgroundColor', 'Background Color')}
             </label>
             <div className="flex gap-2">
               <input
@@ -526,8 +550,8 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
         {/* Extra Display Controls */}
         <div className="flex items-center justify-between border-t border-slate-100 pt-5">
           <div className="space-y-0.5">
-            <span className="text-xs font-bold text-slate-800 block">Render Value Text</span>
-            <span className="text-[10px] text-slate-400 block">Include readable alphanumeric labels below the barcode rows</span>
+            <span className="text-xs font-bold text-slate-800 block">{t('barcode.renderValueText', 'Render Value Text')}</span>
+            <span className="text-[10px] text-slate-400 block">{t('barcode.renderValueTextDesc', 'Include readable alphanumeric labels below the barcode rows')}</span>
           </div>
           <button
             type="button"
@@ -543,7 +567,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
       <div className="lg:col-span-5 flex flex-col gap-6">
         <div className="bg-white border border-gray-200/80 rounded-3xl p-6 shadow-xs flex flex-col items-center text-center">
           <span className="text-[10px] bg-slate-100 text-slate-600 font-extrabold uppercase px-2.5 py-1 rounded-full mb-4 tracking-wide self-start">
-            Live Preview Board
+            {t('barcode.livePreviewBoard', 'Live Preview Board')}
           </span>
 
           {/* Barcode Output Window */}
@@ -553,7 +577,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
                 <div className="w-10 h-10 bg-red-50 text-red-500 rounded-full flex items-center justify-center animate-pulse">
                   <AlertTriangle className="w-5 h-5" />
                 </div>
-                <h4 className="text-xs font-bold text-red-950">Invalid Payload Structure</h4>
+                <h4 className="text-xs font-bold text-red-950">{t('barcode.invalidStructure', 'Invalid Payload Structure')}</h4>
                 <p className="text-[11px] text-red-600 font-medium leading-relaxed font-mono">{error}</p>
               </div>
             ) : (
@@ -567,10 +591,10 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
           {!error && (
             <div className="w-full mt-4 bg-slate-50/60 border border-slate-100 rounded-xl p-3 text-left">
               <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-[10px] font-mono text-slate-500">
-                <div>Symbology: <span className="text-slate-800 font-semibold">{format}</span></div>
-                <div>Characters: <span className="text-slate-800 font-semibold">{value.length}</span></div>
-                <div>Height: <span className="text-slate-800 font-semibold">{height}px</span></div>
-                <div>Lines Color: <span className="text-slate-800 font-semibold">{lineColor}</span></div>
+                <div>{t('barcode.symbologyLabel', 'Symbology:')} <span className="text-slate-800 font-semibold">{format}</span></div>
+                <div>{t('barcode.charactersLabel', 'Characters:')} <span className="text-slate-800 font-semibold">{value.length}</span></div>
+                <div>{t('barcode.heightLabel', 'Height:')} <span className="text-slate-800 font-semibold">{height}px</span></div>
+                <div>{t('barcode.linesColorLabel', 'Lines Color:')} <span className="text-slate-800 font-semibold">{lineColor}</span></div>
               </div>
             </div>
           )}
@@ -584,7 +608,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
               className="py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md cursor-pointer"
             >
               <Download className="w-4 h-4" />
-              Download PNG
+              {t('barcode.downloadPng', 'Download PNG')}
             </button>
             <button
               type="button"
@@ -593,7 +617,7 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
               className="py-3 px-4 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-800 border border-slate-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
             >
               <Download className="w-4 h-4 text-slate-500" />
-              Download SVG
+              {t('barcode.downloadSvg', 'Download SVG')}
             </button>
           </div>
         </div>
@@ -602,13 +626,14 @@ export default function BarcodeGenerator({ locale = 'en' }: BarcodeGeneratorProp
         <div className="bg-slate-50 border border-slate-150 rounded-2xl p-4">
           <h4 className="text-[11px] font-bold text-slate-800 mb-1 flex items-center gap-1">
             <Info className="w-3.5 h-3.5 text-indigo-500" />
-            Developer & POS Integration Tip
+            {t('barcode.tipTitle', 'Developer & POS Integration Tip')}
           </h4>
           <p className="text-[10px] text-slate-500 leading-relaxed">
-            Linear barcodes require high physical print contrast to guarantee fast scans by legacy red-laser POS devices. Maintain high-contrast colors (like black on white) and select high-fidelity vector SVG format for corporate product packaging print works.
+            {t('barcode.tipDesc', 'Linear barcodes require high physical print contrast to guarantee fast scans by legacy red-laser POS devices. Maintain high-contrast colors (like black on white) and select high-fidelity vector SVG format for corporate product packaging print works.')}
           </p>
         </div>
       </div>
     </div>
   );
 }
+
