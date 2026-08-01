@@ -2209,7 +2209,7 @@ Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
   // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---
   async function startServer() {
     console.log("Starting Express...");
-    const PORT = Number(process.env.PORT) || 3000;
+    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
 
     console.log("Loading Firebase...");
     console.log("Loading Firestore...");
