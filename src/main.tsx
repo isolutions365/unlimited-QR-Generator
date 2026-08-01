@@ -27,6 +27,81 @@ try {
   }
 }
 
+// Ensure state consistency across revisits by sanitizing corrupt or legacy JSON in storage
+(function validateAppStateIntegrity() {
+  if (typeof window === 'undefined') return;
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key) continue;
+      // If a key looks like a JSON storage payload, test if it parses cleanly
+      if (key.startsWith('qr_') || key.startsWith('app_') || key.startsWith('user_') || key.includes('state') || key.includes('project')) {
+        const val = localStorage.getItem(key);
+        if (val && (val.startsWith('{') || val.startsWith('['))) {
+          try {
+            JSON.parse(val);
+          } catch (err) {
+            console.warn(`[State Guard] Corrupted JSON detected for key "${key}", purging to maintain app consistency:`, err);
+            localStorage.removeItem(key);
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('[State Guard] Error validating application state integrity:', e);
+  }
+})();
+
+// Service Worker auto-cleanup & Chunk Loading Error Interceptor
+(function setupCacheBustingAndSWCleanup() {
+  if (typeof window === 'undefined') return;
+
+  // Unregister service workers & purge caches to avoid stale main bundle issues
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((reg) => reg.unregister());
+    }).catch((err) => console.warn('[SW Guard] Unregister error:', err));
+  }
+
+  if ('caches' in window) {
+    caches.keys().then((keys) => {
+      keys.forEach((key) => caches.delete(key));
+    }).catch((err) => console.warn('[Cache Guard] Clear error:', err));
+  }
+
+  // Intercept chunk loading errors (stale dynamic imports or bundle hash mismatches)
+  const handleChunkError = (message: string) => {
+    const isChunkError =
+      message.includes('Failed to fetch dynamically imported module') ||
+      message.includes('Loading chunk') ||
+      message.includes('importing a module script failed') ||
+      message.includes('error loading dynamically imported module');
+
+    if (isChunkError) {
+      console.warn('[Cache Buster] Dynamic chunk loading error detected, attempting clean reload:', message);
+      const reloadKey = 'app_chunk_reload_timestamp';
+      const lastReload = sessionStorage.getItem(reloadKey);
+      const now = Date.now();
+      // Throttle reload to prevent infinite loops (max once per 10 seconds)
+      if (!lastReload || (now - parseInt(lastReload, 10)) > 10000) {
+        sessionStorage.setItem(reloadKey, now.toString());
+        window.location.reload();
+      }
+    }
+  };
+
+  window.addEventListener('unhandledrejection', (event) => {
+    const reason = event.reason;
+    const msg = reason?.message || String(reason || '');
+    handleChunkError(msg);
+  });
+
+  window.addEventListener('error', (event) => {
+    const msg = event.message || '';
+    handleChunkError(msg);
+  });
+})();
+
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';

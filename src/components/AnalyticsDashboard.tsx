@@ -110,13 +110,13 @@ export default function AnalyticsDashboard({
 
   // Aggregate top browser
   const getTopBrowser = (filteredScans: ScanLog[]) => {
-    if (filteredScans.length === 0) return 'None';
+    if (filteredScans.length === 0) return String(t('common.none', 'None'));
     const browsers: { [key: string]: number } = {};
     filteredScans.forEach(s => {
       const b = s.browser || 'Chrome';
       browsers[b] = (browsers[b] || 0) + 1;
     });
-    return Object.keys(browsers).reduce((a, b) => browsers[a] > browsers[b] ? a : b, 'Unknown');
+    return Object.keys(browsers).reduce((a, b) => browsers[a] > browsers[b] ? a : b, String(t('common.unknown', 'Unknown')));
   };
   const topBrowserA = React.useMemo(() => getTopBrowser(scansA), [scansA]);
   const topBrowserB = React.useMemo(() => getTopBrowser(scansB), [scansB]);
@@ -376,9 +376,9 @@ export default function AnalyticsDashboard({
         <div>
           <h2 className="text-lg font-semibold tracking-tight text-gray-900 flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-indigo-600" />
-            Real-Time QR Scan Analytics
+            {t('analytics.title', 'Real-Time QR Scan Analytics')}
           </h2>
-          <p className="text-xs text-gray-500 mt-1">Live tracking telemetry, browser client data, and location logs.</p>
+          <p className="text-xs text-gray-500 mt-1">{t('analytics.desc', 'Live tracking telemetry, browser client data, and location logs.')}</p>
         </div>
         {onPurgeAll && scans.length > 0 && (
           <button
@@ -386,7 +386,7 @@ export default function AnalyticsDashboard({
             onClick={onPurgeAll}
             className="text-xs font-semibold text-red-600 hover:text-red-700 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 border border-red-200 transition-colors"
           >
-            Clear Analytics Log
+            {t('analytics.clearLog', 'Clear Analytics Log')}
           </button>
         )}
       </div>
@@ -402,7 +402,7 @@ export default function AnalyticsDashboard({
           <div>
             <div className="flex items-center gap-1.5 text-gray-500 mb-1">
               <Users className="w-4 h-4 text-indigo-500" />
-              <span className="text-[10px] sm:text-xs font-medium">Total Scan Counts</span>
+              <span className="text-[10px] sm:text-xs font-medium">{t('analytics.statScans', 'Total Scan Counts')}</span>
             </div>
             <span className="text-lg sm:text-2xl font-bold font-mono text-gray-900">{totalScans}</span>
           </div>
@@ -435,13 +435,13 @@ export default function AnalyticsDashboard({
           <div>
             <div className="flex items-center gap-1.5 text-gray-500 mb-1">
               <Grid className="w-4 h-4 text-emerald-500" />
-              <span className="text-[10px] sm:text-xs font-medium">Tracked QR Codes</span>
+              <span className="text-[10px] sm:text-xs font-medium">{t('analytics.statDistinct', 'Tracked QR Codes')}</span>
             </div>
             <span className="text-lg sm:text-2xl font-bold font-mono text-gray-900">{activeTrackedQRs}</span>
           </div>
           <div className="text-[10px] text-gray-400 mt-2 font-medium flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Real-time tracking enabled</span>
+            <span>{t('analytics.trackingEnabled', 'Real-time tracking enabled')}</span>
           </div>
         </motion.div>
 
@@ -454,12 +454,12 @@ export default function AnalyticsDashboard({
           <div>
             <div className="flex items-center gap-1.5 text-gray-500 mb-1">
               <Globe className="w-4 h-4 text-amber-500" />
-              <span className="text-[10px] sm:text-xs font-medium">Approx Countries</span>
+              <span className="text-[10px] sm:text-xs font-medium">{t('analytics.approxCountries', 'Approx Countries')}</span>
             </div>
             <span className="text-lg sm:text-2xl font-bold font-mono text-gray-900">{uniqueLocations || 0}</span>
           </div>
           <div className="text-[10px] text-gray-400 mt-2 font-medium">
-            <span>Locations resolved via client telemetry</span>
+            <span>{t('analytics.telemetryResolved', 'Locations resolved via client telemetry')}</span>
           </div>
         </motion.div>
       </div>
@@ -468,9 +468,9 @@ export default function AnalyticsDashboard({
       {totalScans === 0 ? (
         <div className="py-12 text-center border border-dashed border-gray-100 rounded-xl bg-slate-50/20">
           <Tablet className="w-8 h-8 text-indigo-300 mx-auto mb-2" />
-          <h3 className="text-xs font-semibold text-gray-700">No Analytics Telemetry Yet</h3>
+          <h3 className="text-xs font-semibold text-gray-700">{t('analytics.noLogs', 'No Analytics Telemetry Yet')}</h3>
           <p className="text-[11px] text-gray-400 mt-1 max-w-[240px] mx-auto">
-            Scan your active codes or use the "+ Seed clicks" fallback buttons to inspect dashboards.
+            {t('analytics.noLogsDesc', 'Scan your active codes or use the "+ Seed clicks" fallback buttons to inspect dashboards.')}
           </p>
         </div>
       ) : (
@@ -478,7 +478,7 @@ export default function AnalyticsDashboard({
           {/* Timeline Chart Card */}
           <div className="p-4 rounded-xl border border-gray-100 bg-white">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">Click Scan Metrics</h3>
+              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">{t('analytics.clickScanMetrics', 'Click Scan Metrics')}</h3>
               <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200/40 shrink-0">
                 <button
                   type="button"
@@ -486,7 +486,7 @@ export default function AnalyticsDashboard({
                   onClick={() => setTimelineDays(7)}
                   className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ timelineDays === 7 ? 'bg-white text-indigo-600 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-700' }`}
                 >
-                  Last 7 Days
+                  {t('analytics.last7Days', 'Last 7 Days')}
                 </button>
                 <button
                   type="button"
@@ -494,7 +494,7 @@ export default function AnalyticsDashboard({
                   onClick={() => setTimelineDays(30)}
                   className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ timelineDays === 30 ? 'bg-white text-indigo-600 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-700' }`}
                 >
-                  Last 30 Days
+                  {t('analytics.last30Days', 'Last 30 Days')}
                 </button>
               </div>
             </div>
@@ -534,8 +534,8 @@ export default function AnalyticsDashboard({
                   <TrendingUp className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">Daily Scan Trends</h3>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Toggle projects to compare active trends and daily trajectories over the last {trendsDays} days.</p>
+                  <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">{t('analytics.dailyScanTrends', 'Daily Scan Trends')}</h3>
+                  <p className="text-[11px] text-gray-400 mt-0.5">{t('analytics.dailyTrendsDesc', 'Toggle projects to compare active trends and daily trajectories over the last {days} days.', { days: trendsDays })}</p>
                 </div>
               </div>
               <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200/40 shrink-0">
@@ -545,7 +545,7 @@ export default function AnalyticsDashboard({
                   onClick={() => setTrendsDays(7)}
                   className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ trendsDays === 7 ? 'bg-white text-indigo-600 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-700' }`}
                 >
-                  Last 7 Days
+                  {t('analytics.last7Days', 'Last 7 Days')}
                 </button>
                 <button
                   type="button"
@@ -553,7 +553,7 @@ export default function AnalyticsDashboard({
                   onClick={() => setTrendsDays(30)}
                   className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ trendsDays === 30 ? 'bg-white text-indigo-600 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-700' }`}
                 >
-                  Last 30 Days
+                  {t('analytics.last30Days', 'Last 30 Days')}
                 </button>
               </div>
             </div>
@@ -594,7 +594,7 @@ export default function AnalyticsDashboard({
                     } : undefined}
                   >
                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-                    <span>{proj.name || 'Untitled'}</span>
+                    <span>{proj.name || t('common.untitled', 'Untitled')}</span>
                   </motion.button>
                 );
               })}
@@ -623,7 +623,7 @@ export default function AnalyticsDashboard({
                       <Line
                         key={projectId}
                         type="monotone"
-                        name={proj.name || 'Untitled'}
+                        name={proj.name || t('common.untitled', 'Untitled')}
                         dataKey={projectId}
                         stroke={getProjectColor(idx)}
                         strokeWidth={2.5}
@@ -647,8 +647,8 @@ export default function AnalyticsDashboard({
                   <GitCompare className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">Side-by-Side Project Performance</h3>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Select and overlay two different QR projects to cross-examine telemetry trends.</p>
+                  <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">{t('analytics.sideBySideTitle', 'Side-by-Side Project Performance')}</h3>
+                  <p className="text-[11px] text-gray-400 mt-0.5">{t('analytics.sideBySideDesc', 'Select and overlay two different QR projects to cross-examine telemetry trends.')}</p>
                 </div>
               </div>
 
@@ -662,11 +662,11 @@ export default function AnalyticsDashboard({
                     className="bg-slate-50 border border-slate-200 text-gray-700 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium cursor-pointer"
                   >
                     {projects.map(p => (
-                      <option key={p.id} value={p.id} className="">{p.name || 'Untitled'}</option>
+                      <option key={p.id} value={p.id} className="">{p.name || t('common.untitled', 'Untitled')}</option>
                     ))}
                   </select>
 
-                  <span className="text-[10px] font-bold text-slate-400 uppercase px-1">VS</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase px-1">{t('analytics.vs', 'VS')}</span>
 
                   {/* Selector B */}
                   <select
@@ -676,7 +676,7 @@ export default function AnalyticsDashboard({
                     className="bg-slate-50 border border-slate-200 text-gray-700 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium cursor-pointer"
                   >
                     {projects.map(p => (
-                      <option key={p.id} value={p.id} className="">{p.name || 'Untitled'}</option>
+                      <option key={p.id} value={p.id} className="">{p.name || t('common.untitled', 'Untitled')}</option>
                     ))}
                   </select>
                 </div>
@@ -689,7 +689,7 @@ export default function AnalyticsDashboard({
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1.5 flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    Timeframe:
+                    {t('analytics.timeframe', 'Timeframe:')}
                   </span>
                   
                   {/* Presets */}
@@ -700,7 +700,7 @@ export default function AnalyticsDashboard({
                       onClick={() => setCompareRangeType('7days')}
                       className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ compareRangeType === '7days' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 ' }`}
                     >
-                      7 Days
+                      {t('analytics.range7Days', '7 Days')}
                     </button>
                     <button
                       type="button"
@@ -708,7 +708,7 @@ export default function AnalyticsDashboard({
                       onClick={() => setCompareRangeType('30days')}
                       className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ compareRangeType === '30days' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 ' }`}
                     >
-                      30 Days
+                      {t('analytics.range30Days', '30 Days')}
                     </button>
                     <button
                       type="button"
@@ -716,7 +716,7 @@ export default function AnalyticsDashboard({
                       onClick={() => setCompareRangeType('custom')}
                       className={`px-2.5 py-1 text-[10px] sm:text-[11px] font-medium rounded-md transition-all cursor-pointer ${ compareRangeType === 'custom' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 ' }`}
                     >
-                      Custom Range
+                      {t('analytics.customRange', 'Custom Range')}
                     </button>
                   </div>
                 </div>
@@ -725,7 +725,7 @@ export default function AnalyticsDashboard({
                 {compareRangeType === 'custom' && (
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2 py-1 shadow-sm">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase">Start</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase">{t('analytics.start', 'Start')}</span>
                       <input
                         type="date"
                         id="compare-start-date"
@@ -735,9 +735,9 @@ export default function AnalyticsDashboard({
                         className="text-xs text-slate-700 font-medium focus:outline-none bg-transparent cursor-pointer"
                       />
                     </div>
-                    <span className="text-slate-400 text-xs font-semibold">to</span>
+                    <span className="text-slate-400 text-xs font-semibold">{t('analytics.to', 'to')}</span>
                     <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2 py-1 shadow-sm">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase">End</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase">{t('analytics.end', 'End')}</span>
                       <input
                         type="date"
                         id="compare-end-date"
@@ -757,10 +757,9 @@ export default function AnalyticsDashboard({
               <div className="py-6 px-4 bg-amber-50/50 border border-amber-100/80 rounded-xl flex items-start gap-3">
                 <div className="w-2 h-2 rounded-full bg-amber-400 mt-1.5 animate-pulse shrink-0" />
                 <div className="text-xs">
-                  <h4 className="font-semibold text-amber-800">Overlay Comparison Requires 2+ Projects</h4>
+                  <h4 className="font-semibold text-amber-800">{t('analytics.overlayRequires2', 'Overlay Comparison Requires 2+ Projects')}</h4>
                   <p className="text-amber-700/85 mt-1 leading-relaxed">
-                    This module allows you to view multi-project trends on a single interactive chart. 
-                    Please create at least <strong>two different QR projects</strong> to unlock this live cross-analysis tool.
+                    {t('analytics.overlayRequires2Desc', 'This module allows you to view multi-project trends on a single interactive chart. Please create at least two different QR projects to unlock this live cross-analysis tool.')}
                   </p>
                 </div>
               </div>
@@ -778,18 +777,18 @@ export default function AnalyticsDashboard({
                   <div className="lg:col-span-7 flex flex-col gap-3">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                        {compareRangeType === '7days' && '7-Day Scan Volume Overlay'}
-                        {compareRangeType === '30days' && '30-Day Scan Volume Overlay'}
-                        {compareRangeType === 'custom' && 'Custom Scan Volume Overlay'}
+                        {compareRangeType === '7days' && t('analytics.overlay7Day', '7-Day Scan Volume Overlay')}
+                        {compareRangeType === '30days' && t('analytics.overlay30Day', '30-Day Scan Volume Overlay')}
+                        {compareRangeType === 'custom' && t('analytics.overlayCustom', 'Custom Scan Volume Overlay')}
                       </span>
                       <div className="flex items-center gap-3 text-[10px] font-medium font-mono">
                         <span className="flex items-center gap-1.5 text-indigo-600">
                           <span className="w-2 h-2 rounded-full bg-indigo-600" />
-                          {projectA?.name || 'Project A'}
+                          {projectA?.name || t('analytics.projectA', 'Project A')}
                         </span>
                         <span className="flex items-center gap-1.5 text-emerald-500">
                           <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                          {projectB?.name || 'Project B'}
+                          {projectB?.name || t('analytics.projectB', 'Project B')}
                         </span>
                       </div>
                     </div>
@@ -813,8 +812,8 @@ export default function AnalyticsDashboard({
                             wrapperStyle={{ outline: 'none' }} 
                             contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0', backgroundColor: '#1e293b', color: '#f8fafc', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} 
                           />
-                          <Area type="monotone" name={projectA?.name || 'Project A'} dataKey="scansA" stroke="#4f46e5" strokeWidth={2.5} fillOpacity={1} fill="url(#colorScansA)" />
-                          <Area type="monotone" name={projectB?.name || 'Project B'} dataKey="scansB" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorScansB)" />
+                          <Area type="monotone" name={projectA?.name || t('analytics.projectA', 'Project A')} dataKey="scansA" stroke="#4f46e5" strokeWidth={2.5} fillOpacity={1} fill="url(#colorScansA)" />
+                          <Area type="monotone" name={projectB?.name || t('analytics.projectB', 'Project B')} dataKey="scansB" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorScansB)" />
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
@@ -822,13 +821,13 @@ export default function AnalyticsDashboard({
 
                   {/* KPI Side-by-side Table / Progress Breakdown (5 columns) */}
                   <div className="lg:col-span-5 flex flex-col justify-between gap-4">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Metric Breakdown Comparison</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('analytics.metricBreakdown', 'Metric Breakdown Comparison')}</span>
                     
                     <div className="flex flex-col gap-4 flex-1">
                       {/* KPI 1: Total Scans */}
                       <div className="flex flex-col gap-1.5 p-3 rounded-xl border border-slate-100 bg-slate-50/40">
                         <div className="flex justify-between text-xs font-semibold text-slate-700">
-                          <span>Total Scans</span>
+                          <span>{t('analytics.totalScans', 'Total Scans')}</span>
                           <div className="flex gap-4 font-mono">
                             <span className="text-indigo-600">{scansA.length}</span>
                             <span className="text-slate-300">/</span>
@@ -861,7 +860,7 @@ export default function AnalyticsDashboard({
                       {/* KPI 2: Geographical Reach */}
                       <div className="flex flex-col gap-1.5 p-3 rounded-xl border border-slate-100 bg-slate-50/40">
                         <div className="flex justify-between text-xs font-semibold text-slate-700">
-                          <span>Approx Locations Reach</span>
+                          <span>{t('analytics.approxLocationsReach', 'Approx Locations Reach')}</span>
                           <div className="flex gap-4 font-mono">
                             <span className="text-indigo-600">{locsA}</span>
                             <span className="text-slate-300">/</span>
@@ -898,7 +897,7 @@ export default function AnalyticsDashboard({
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ delay: 0.1, duration: 0.3 }}
                         >
-                          <span className="text-[10px] font-semibold text-indigo-500 uppercase tracking-wider">Top Browser A</span>
+                          <span className="text-[10px] font-semibold text-indigo-500 uppercase tracking-wider">{t('analytics.topBrowserA', 'Top Browser A')}</span>
                           <span className="text-xs font-bold text-slate-800 truncate">{topBrowserA}</span>
                         </motion.div>
                         <motion.div 
@@ -907,14 +906,14 @@ export default function AnalyticsDashboard({
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ delay: 0.15, duration: 0.3 }}
                         >
-                          <span className="text-[10px] font-semibold text-emerald-500 uppercase tracking-wider">Top Browser B</span>
+                          <span className="text-[10px] font-semibold text-emerald-500 uppercase tracking-wider">{t('analytics.topBrowserB', 'Top Browser B')}</span>
                           <span className="text-xs font-bold text-slate-800 truncate">{topBrowserB}</span>
                         </motion.div>
                       </div>
                     </div>
 
                     <div className="text-[10px] text-slate-400 italic">
-                      * Selected: {projectA?.name || 'None'} vs {projectB?.name || 'None'}.
+                      * {t('analytics.selectedVs', 'Selected: {projA} vs {projB}.', { projA: projectA?.name || t('common.none', 'None'), projB: projectB?.name || t('common.none', 'None') })}
                     </div>
                   </div>
                 </motion.div>
@@ -929,13 +928,13 @@ export default function AnalyticsDashboard({
                 <div>
                   <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase flex items-center gap-1.5">
                     <Globe className="w-4 h-4 text-indigo-600 animate-pulse" />
-                    Geographical Scan Heatmap
+                    {t('analytics.heatmapTitle', 'Geographical Scan Heatmap')}
                   </h3>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Interactive visual distribution of scan concentrations globally.</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">{t('analytics.heatmapDesc', 'Interactive visual distribution of scan concentrations globally.')}</p>
                 </div>
                 {hoveredCountry && (
                   <div className="px-3 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-xs text-indigo-700 font-medium font-mono">
-                    {hoveredCountry.name} ({hoveredCountry.code}): {hoveredCountry.count} scans
+                    {hoveredCountry.name} ({hoveredCountry.code}): {t('analytics.scansCount', '{count} scans', { count: hoveredCountry.count })}
                   </div>
                 )}
               </div>
@@ -956,7 +955,7 @@ export default function AnalyticsDashboard({
             {/* Heatmap Leaderboard List */}
             <div className="w-full lg:w-72 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-gray-100 pt-4 lg:pt-0 lg:pl-6">
               <div>
-                <h4 className="text-xs font-semibold text-gray-700 tracking-wide uppercase mb-3">Concentration Index</h4>
+                <h4 className="text-xs font-semibold text-gray-700 tracking-wide uppercase mb-3">{t('analytics.leaderboardTitle', 'Concentration Index')}</h4>
                 <div className="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1">
                   {geoData.map((g, index) => {
                     const percent = totalScans > 0 ? Math.round((g.count / totalScans) * 100) : 0;
@@ -1000,15 +999,15 @@ export default function AnalyticsDashboard({
               <div className="border-t border-gray-50 pt-3 mt-4 text-[10px] text-gray-400 flex flex-wrap gap-x-4 gap-y-1">
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-red-500" />
-                  High (&gt;70%)
+                  {t('analytics.highHeat', 'High (>70%)')}
                 </span>
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-orange-500" />
-                  Moderate (40-70%)
+                  {t('analytics.moderateHeat', 'Moderate (40-70%)')}
                 </span>
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-indigo-600" />
-                  Low (&lt;40%)
+                  {t('analytics.lowHeat', 'Low (<40%)')}
                 </span>
               </div>
             </div>
@@ -1017,7 +1016,7 @@ export default function AnalyticsDashboard({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Device types Distribution */}
             <div className="p-4 rounded-xl border border-gray-100 bg-white flex flex-col items-center justify-center">
-              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase mb-4 self-start">Active Client Devices</h3>
+              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase mb-4 self-start">{t('analytics.platformsTitle', 'Active Client Devices')}</h3>
               <div className="h-44 w-full flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -1035,7 +1034,7 @@ export default function AnalyticsDashboard({
 
             {/* Browser Types Bar */}
             <div className="p-4 rounded-xl border border-gray-100 bg-white">
-              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase mb-4">Leading Mobile Browsers</h3>
+              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase mb-4">{t('analytics.browsersTitle', 'Leading Mobile Browsers')}</h3>
               <div className="h-44 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={browserData} layout="vertical" margin={{ left: -10, right: 10 }}>
@@ -1052,26 +1051,26 @@ export default function AnalyticsDashboard({
           {/* Interactive Logs Ledger Table */}
           <div className="border border-gray-100 rounded-xl overflow-hidden bg-white">
             <div className="bg-gray-50/50 px-4 py-3 border-b border-gray-100">
-              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">Click Logs Record History</h3>
+              <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">{t('analytics.streamTitle', 'Click Logs Record History')}</h3>
             </div>
             <div className="max-h-[180px] overflow-y-auto">
               <table className="w-full text-center text-xs">
                 <thead>
                   <tr className="border-b border-gray-100 text-gray-500 font-medium">
-                    <th className="py-2.5 px-3">Date</th>
-                    <th className="py-2.5 px-3">Country</th>
-                    <th className="py-2.5 px-3">Hardware</th>
-                    <th className="py-2.5 px-3">Browser</th>
-                    <th className="py-2.5 px-3 text-right pr-6">IP Address</th>
+                    <th className="py-2.5 px-3">{t('analytics.colDatetime', 'Date')}</th>
+                    <th className="py-2.5 px-3">{t('analytics.colLocation', 'Country')}</th>
+                    <th className="py-2.5 px-3">{t('analytics.colPlatform', 'Hardware')}</th>
+                    <th className="py-2.5 px-3">{t('analytics.colBrowser', 'Browser')}</th>
+                    <th className="py-2.5 px-3 text-right pr-6">{t('analytics.colIp', 'IP Address')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50 font-mono text-gray-600 text-[11px]">
                   {scans.slice().reverse().map(s => {
-                    const dateStr = s.timestamp ? new Date(s.timestamp).toLocaleTimeString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Unknown';
+                    const dateStr = s.timestamp ? new Date(s.timestamp).toLocaleTimeString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : String(t('common.unknown', 'Unknown'));
                     return (
                       <tr key={s.id} className="hover:bg-gray-50/50">
                         <td className="py-2 px-3 text-slate-400">{dateStr}</td>
-                        <td className="py-2 px-3 font-sans text-gray-800 font-semibold">{s.approxLocation || 'Global'}</td>
+                        <td className="py-2 px-3 font-sans text-gray-800 font-semibold">{s.approxLocation || t('common.global', 'Global')}</td>
                         <td className="py-2 px-3 font-sans text-indigo-600">{s.deviceType || 'Desktop'}</td>
                         <td className="py-2 px-3 text-slate-500">{s.browser || 'Chrome'}</td>
                         <td className="py-2 px-3 text-right pr-6 uppercase tracking-wider">{s.ip || '127.0.0.1'}</td>

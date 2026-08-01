@@ -2,20 +2,49 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, s-maxage=0" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      // Automatic ServiceWorker auto-cleanup to resolve stale cache/blank screen issues on repeat visits
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (let registration of registrations) {
-            registration.unregister();
+      // Enhanced ServiceWorker & Cache Auto-Cleanup to resolve stale bundle and intermittent blank-screen issues
+      (function() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (var i = 0; i < registrations.length; i++) {
+              registrations[i].unregister();
+            }
+          }).catch(function(err) {
+            console.warn('[SW Cleanup] Unregister warning:', err);
+          });
+        }
+
+        if ('caches' in window) {
+          caches.keys().then(function(names) {
+            for (var i = 0; i < names.length; i++) {
+              caches.delete(names[i]);
+            }
+          }).catch(function(err) {
+            console.warn('[Cache Cleanup] Warning:', err);
+          });
+        }
+
+        // Early script load failure detection to bust stale browser cache
+        window.addEventListener('error', function(e) {
+          if (e && e.target && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
+            var src = e.target.src || e.target.href || '';
+            if (src.indexOf('/src/') !== -1 || src.indexOf('/assets/') !== -1) {
+              console.warn('[Cache Buster] Detected asset loading error:', src);
+              var reloadAttemptKey = 'app_chunk_reload_timestamp';
+              var lastReload = sessionStorage.getItem(reloadAttemptKey);
+              var now = Date.now();
+              if (!lastReload || (now - parseInt(lastReload, 10)) > 10000) {
+                sessionStorage.setItem(reloadAttemptKey, now.toString());
+                window.location.reload(true);
+              }
+            }
           }
-        }).catch(function(err) {
-          console.warn('[SW Cleanup] Unregister warning:', err);
-        });
-      }
+        }, true);
+      })();
     </script>
     <meta name="indexnow-verification" content="58b88f6bad214a2d81bb516a4541ac02" />
     <meta name="google-adsense-account" content="ca-pub-1877345878061699">
