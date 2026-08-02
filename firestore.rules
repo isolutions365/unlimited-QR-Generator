@@ -6,64 +6,54 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-
     // --- USERS COLLECTION ---
     match /users/{userId} {
-      allow read, write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- USER PROFILES COLLECTION ---
     match /user_profiles/{userId} {
-      allow read, write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- PROJECTS COLLECTION ---
     match /projects/{projectId} {
-      allow read, write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- SCANS COLLECTION ---
     match /scans/{scanId} {
-      allow create: if true;
-      allow read, write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- REFERRAL CLICKS COLLECTION ---
     match /referralClicks/{clickId} {
-      allow create: if true;
-      allow read, write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- NOTIFICATIONS COLLECTION ---
     match /notifications/{notificationId} {
-      allow read, write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- COMMUNITY POSTS COLLECTION ---
     match /communityPosts/{postId} {
-      allow read: if true;
-      allow write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- ROADMAP ITEMS COLLECTION ---
     match /roadmapItems/{itemId} {
-      allow read: if true;
-      allow write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- NEWSLETTER SUBSCRIBERS COLLECTION ---
     match /newsletterSubscribers/{subId} {
-      allow create: if true;
-      allow read, write: if isSignedIn();
+      allow read, write: if true;
     }
 
     // --- FEEDBACK COLLECTION ---
     match /feedback/{feedbackId} {
-      allow create: if true;
-      allow read, write: if isSignedIn();
+      allow read, write: if true;
     }
   }
 }

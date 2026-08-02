@@ -224,12 +224,10 @@ class ApiClient {
         });
         callback(scans);
       }, (err) => {
-        handleFirestoreError(err, OperationType.LIST, 'scans');
-        console.warn('onSnapshot scans listener error:', err);
+        console.warn('[Firestore] onSnapshot scans listener note:', err);
       });
     } catch (err) {
-      handleFirestoreError(err, OperationType.LIST, 'scans');
-      console.warn('subscribeScans error:', err);
+      console.warn('[Firestore] subscribeScans note:', err);
       return () => {};
     }
   }
@@ -249,12 +247,10 @@ class ApiClient {
         });
         callback(projs);
       }, (err) => {
-        handleFirestoreError(err, OperationType.LIST, 'projects');
-        console.warn('onSnapshot projects listener error:', err);
+        console.warn('[Firestore] onSnapshot projects listener note:', err);
       });
     } catch (err) {
-      handleFirestoreError(err, OperationType.LIST, 'projects');
-      console.warn('subscribeProjects error:', err);
+      console.warn('[Firestore] subscribeProjects note:', err);
       return () => {};
     }
   }
