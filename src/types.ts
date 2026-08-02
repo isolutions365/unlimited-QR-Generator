@@ -2,7 +2,7 @@ export interface QRProject {
   id: string;
   userId: string;
   name: string;
-  type: 'url' | 'text' | 'wifi' | 'card' | 'email' | 'phone' | 'sms' | 'social' | 'crypto' | 'geo' | 'app';
+  type: 'url' | 'text' | 'wifi' | 'card' | 'email' | 'phone' | 'sms' | 'social' | 'crypto' | 'geo' | 'app' | 'payment';
   content: string;
   design: {
     fgColor: string;
@@ -23,7 +23,7 @@ export interface QRProject {
     logoAutoCenter?: boolean; // toggle automatic centering or offset
     logoOffsetX?: number; // logo offset adjustment X (-100 to 100)
     logoOffsetY?: number; // logo offset adjustment Y (-100 to 100)
-    frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'custom';
+    frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'order-now' | 'pay-here' | 'custom';
     frameText?: string;
     frameColor?: string;
     frameTextColor?: string;
@@ -56,4 +56,4 @@ export interface ScanLog {
   userId: string;
 }
 
-export type AppTab = 'create' | 'templates' | 'analytics' | 'boiler' | 'animations';
+export type AppTab = 'create' | 'barcode' | 'templates' | 'analytics' | 'animations';

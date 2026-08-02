@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
 import { useFirebaseAuth } from './context/FirebaseAuthContext';
-import { QRProject, ScanLog } from './types';
+import { QRProject, ScanLog, AppTab } from './types';
 import { landingPages } from './pages/landing/SEODatabase';
 import { getBlogArticles } from './data/blogData';
 import ControlPanel from './components/ControlPanel';
@@ -17,7 +17,6 @@ import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/
 
 // Code-splitting via React.lazy for secondary landing & hub pages
 const SEOPage = React.lazy(() => import('./pages/landing/SEOPage'));
-const MobileAppMockup = React.lazy(() => import('./components/MobileAppMockup'));
 const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowcase'));
 const CompanyPages = React.lazy(() => import('./pages/CompanyPages'));
 const TrustCenterHub = React.lazy(() => import('./pages/TrustCenterHub'));
@@ -607,7 +606,7 @@ export default function App() {
   ];
 
   // Active Tab
-  const [activeTab, setActiveTab ] = useState<'create' | 'barcode' | 'templates' | 'analytics' | 'boiler' | 'animations'>('create');
+  const [activeTab, setActiveTab ] = useState<AppTab>('create');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -1657,7 +1656,13 @@ export default function App() {
                                 if (logoSec) logoSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
                               }, 250);
                             },
-                            () => { setActiveTab('boiler'); navigateTo('/'); }
+                            () => {
+                              setActiveTab('create'); navigateTo('/');
+                              setTimeout(() => {
+                                const previewSec = document.getElementById('tour-qr-preview');
+                                if (previewSec) previewSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                              }, 250);
+                            }
                           ];
                           const subAction = subActions[idx] || (() => {});
 
@@ -2138,13 +2143,6 @@ export default function App() {
           </button>
           <button
             type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'boiler' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
-            onClick={() => setActiveTab('boiler')}
-          >
-            {t('nav.mobilePackagesTab', 'Mobile Packages')}
-          </button>
-          <button
-            type="button"
             className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 ${ activeTab === 'animations' ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white shadow-xs font-bold' : 'text-gray-600 hover:bg-gray-50' }`}
             onClick={() => setActiveTab('animations')}
           >
@@ -2275,16 +2273,6 @@ export default function App() {
                 </button>
               </div>
             )}
-          </div>
-        )}
-
-        {activeTab === 'boiler' && (
-          <div className="max-w-4xl mx-auto w-full">
-            <ErrorBoundary isInline>
-              <React.Suspense fallback={<LazyLoader />}>
-                <MobileAppMockup />
-              </React.Suspense>
-            </ErrorBoundary>
           </div>
         )}
 

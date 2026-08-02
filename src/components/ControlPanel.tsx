@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag } from 'lucide-react';
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
+import PaymentWalletPanel from './PaymentWalletPanel';
 import { getEmblemFontSize } from '../utils/qrRenderer';
 import qrcode from 'qrcode';
 
@@ -465,7 +466,7 @@ export default function ControlPanel({ currentProject,
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
         <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-3">{t('control.qrCodeType', 'QR Code Type')}</label>
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
           {(
             [
               { id: 'url', icon: Link2, label: 'URL', color: 'text-blue-500' },
@@ -477,6 +478,7 @@ export default function ControlPanel({ currentProject,
               { id: 'sms', icon: MessageSquare, label: 'SMS', color: 'text-indigo-500' },
               { id: 'social', icon: Share2, label: 'Social', color: 'text-orange-500' },
               { id: 'app', icon: Smartphone, label: 'App Store', color: 'text-rose-500' },
+              { id: 'payment', icon: Wallet, label: 'Payment / Wallet', color: 'text-emerald-600' },
               { id: 'crypto', icon: Coins, label: 'Crypto', color: 'text-amber-500' },
               { id: 'geo', icon: MapPin, label: 'Location', color: 'text-cyan-500' }
             ] as const
@@ -497,6 +499,10 @@ export default function ControlPanel({ currentProject,
                       fallback: 'https://apps.apple.com'
                     });
                     onChange({ ...localProject, type: 'app', content: initialContent, trackingEnabled: true });
+                  } else if (type.id === 'payment') {
+                    const currentContent = localProject.content || '';
+                    const initialContent = currentContent && (currentContent.startsWith('http') || currentContent.startsWith('upi') || currentContent.startsWith('venmo') || currentContent.startsWith('cash') || currentContent.startsWith('wxp') || currentContent.startsWith('pix') || currentContent.startsWith('mpesa') || currentContent.startsWith('jazz') || currentContent.startsWith('easy') || currentContent.startsWith('stc') || currentContent.startsWith('iban') || currentContent.startsWith('sadad')) ? currentContent : 'https://paypal.me/';
+                    onChange({ ...localProject, type: 'payment', content: initialContent });
                   } else {
                     onChange({ ...localProject, type: type.id });
                   }
@@ -1115,6 +1121,13 @@ export default function ControlPanel({ currentProject,
             </div>
           </div>
         )}
+
+        {localProject.type === 'payment' && (
+          <PaymentWalletPanel
+            content={localProject.content || ''}
+            onChangeContent={(newContent) => onChange({ ...localProject, content: newContent }, true)}
+          />
+        )}
       </motion.div>
 
       {/* Integrated Color Palette and Gradient Manager */}
@@ -1243,8 +1256,9 @@ export default function ControlPanel({ currentProject,
         </div>
       </motion.div>
 
-      {/* Outer Edge Label Frame Section */}
+      {/* Frame & Call-To-Action (CTA) Badge Templates Section */}
       <motion.div
+        id="tour-frame-selection"
         variants={itemVariants}
         whileHover={{
           scale: 1.015,
@@ -1257,10 +1271,12 @@ export default function ControlPanel({ currentProject,
         <div className="flex justify-between items-center">
           <div>
             <h3 className="text-xs font-semibold text-gray-900 tracking-wider uppercase flex items-center gap-1.5">
-              <SquareDot className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
-              {t('control.outerEdgeLabelFrame', 'Outer Edge Label Frame')}
+              <LayoutTemplate className="w-4 h-4 text-indigo-500 shrink-0" />
+              {t('control.frameSelectionTitle', 'Frame & Call-To-Action Templates')}
             </h3>
-            <span className="text-[10px] text-gray-600 block">{t('control.frameDesc', 'Add a beautiful, styled badge-frame around your QR.')}</span>
+            <span className="text-[10px] text-gray-600 block mt-0.5">
+              {t('control.frameSelectionDesc', 'Wrap your QR code in pre-designed templates with call-to-action text like "Scan Me" or "Visit Website".')}
+            </span>
           </div>
           {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' ? (
             <button
@@ -1268,26 +1284,29 @@ export default function ControlPanel({ currentProject,
               onClick={() => {
                 setDesignField('frameStyle', 'none');
               }}
-              className="text-[10px] text-red-500 hover:text-red-700 font-semibold cursor-pointer"
+              className="text-[10px] text-red-500 hover:text-red-700 font-semibold cursor-pointer shrink-0 transition-colors"
             >
-              {t('control.removeOuterFrame', 'Remove Outer Frame')}
+              {t('control.removeOuterFrame', 'Remove Frame')}
             </button>
           ) : null}
         </div>
 
-        {/* Preset Selector Grid */}
+        {/* Frame Template Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {[
-            { id: 'none', label: 'No Frame', desc: 'Sleek & clean' },
-            { id: 'scan-me', label: 'Scan Me', desc: 'Default action' },
-            { id: 'visit-website', label: 'Visit Website', desc: 'Great for URLs' },
-            { id: 'wifi-password', label: 'WiFi Password', desc: 'For network setups' },
-            { id: 'download-app', label: 'Download App', desc: 'App store links' },
-            { id: 'follow-us', label: 'Follow Us', desc: 'Stay connected' },
-            { id: 'join-wifi', label: 'Join WiFi', desc: 'Direct network scan' },
-            { id: 'custom', label: 'Custom Text', desc: 'Fully custom label' },
+            { id: 'none', label: 'No Frame', desc: 'Sleek & clean matrix', icon: SquareDot },
+            { id: 'scan-me', label: 'Scan Me', desc: 'Universal CTA badge', icon: QrCode },
+            { id: 'visit-website', label: 'Visit Website', desc: 'Ideal for web links', icon: Globe },
+            { id: 'wifi-password', label: 'WiFi Password', desc: 'Network credentials', icon: Wifi },
+            { id: 'download-app', label: 'Download App', desc: 'App store links', icon: Download },
+            { id: 'follow-us', label: 'Follow Us', desc: 'Social media profiles', icon: Share2 },
+            { id: 'join-wifi', label: 'Join WiFi', desc: 'Instant guest connection', icon: Wifi },
+            { id: 'order-now', label: 'Order Now', desc: 'Menus & storefronts', icon: ShoppingBag },
+            { id: 'pay-here', label: 'Pay Here', desc: 'Mobile wallets & payments', icon: CreditCard },
+            { id: 'custom', label: 'Custom Text', desc: 'Fully personalized wording', icon: Sparkles },
           ].map(preset => {
             const isSelected = (localProject.design?.frameStyle || 'none') === preset.id;
+            const IconComp = preset.icon;
             return (
               <button
                 key={preset.id}
@@ -1295,7 +1314,6 @@ export default function ControlPanel({ currentProject,
                 onClick={() => {
                   setDesignField('frameStyle', preset.id);
                   if (preset.id !== 'none') {
-                    // Set sensible default frame colors and text to make it instantly look amazing
                     if (!localProject.design?.frameColor) {
                       setDesignField('frameColor', localProject.design?.fgColor || '#4f46e5');
                     }
@@ -1304,113 +1322,173 @@ export default function ControlPanel({ currentProject,
                     }
                   }
                 }}
-                className={`p-2 rounded-lg border text-left transition-all flex flex-col justify-between h-[54px] cursor-pointer ${ isSelected ? 'border-indigo-600 bg-indigo-50/25 ring-1 ring-indigo-500/25' : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/50' }`}
+                className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-[62px] cursor-pointer relative group ${
+                  isSelected
+                    ? 'border-indigo-600 bg-indigo-50/30 ring-2 ring-indigo-500/20 shadow-xs'
+                    : 'border-slate-200/70 bg-white hover:border-slate-300 hover:bg-slate-50/60'
+                }`}
               >
-                <div className="text-[10.5px] font-bold text-gray-900 flex items-center justify-between w-full">
-                  <span>{t('control.framePreset.' + preset.id, preset.label)}</span>
-                  {isSelected && <Check className="w-3 h-3 text-indigo-600 stroke-[3]" />}
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <IconComp className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                    <span className="text-[10.5px] font-bold text-gray-900 truncate">
+                      {t('control.framePreset.' + preset.id, preset.label)}
+                    </span>
+                  </div>
+                  {isSelected && <Check className="w-3.5 h-3.5 text-indigo-600 stroke-[3] shrink-0" />}
                 </div>
-                <div className="text-[9px] text-gray-600 truncate w-full">{t('control.framePresetDesc.' + preset.id, preset.desc)}</div>
+                <div className="text-[9px] text-gray-500 truncate w-full pl-5">
+                  {t('control.framePresetDesc.' + preset.id, preset.desc)}
+                </div>
               </button>
             );
           })}
         </div>
 
-        {/* Configurable Frame Text input (Visible if any frame is active) */}
+        {/* Configurable Frame Text & Quick Suggestions */}
         {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' && (
-          <div className="space-y-1.5 pt-1">
-            <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block animate-fade-in">
-              {localProject.design?.frameStyle === 'custom' ? t('control.customFrameLabelText', 'Custom Frame Label Text') : t('control.overridePresetLabelText', 'Override Preset Label Text')}
-            </label>
-            <input
-              id="custom-frame-text"
-              type="text"
-              maxLength={20}
-              className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder={(() => {
-                const style = localProject.design?.frameStyle;
-                if (style === 'scan-me') return t('control.framePlaceholder.scanMe', 'e.g. SCAN ME');
-                if (style === 'visit-website') return t('control.framePlaceholder.visitWebsite', 'e.g. VISIT WEBSITE');
-                if (style === 'wifi-password') return t('control.framePlaceholder.wifiPassword', 'e.g. WIFI PASSWORD');
-                if (style === 'download-app') return t('control.framePlaceholder.downloadApp', 'e.g. DOWNLOAD APP');
-                if (style === 'follow-us') return t('control.framePlaceholder.followUs', 'e.g. FOLLOW US');
-                if (style === 'join-wifi') return t('control.framePlaceholder.joinWifi', 'e.g. JOIN WIFI');
-                return t('control.framePlaceholder.custom', 'e.g. SCAN TO REGISTER');
-              })()}
-              value={localProject.design?.frameText || ''}
-              onChange={e => setDesignField('frameText', e.target.value, true)}
-            />
-            <span className="text-[9.5px] text-gray-600 block leading-tight">
-              {t('control.typeCustomWording', 'Type custom wording to override or personalize the selected banner layout. Max 20 chars.')}
-            </span>
-          </div>
-        )}
-
-        {/* Only display color pickers if a frame is active */}
-        {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' && (
-          <div className="space-y-3 pt-2 border-t border-gray-100/60">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">{t('control.frameShapeColor', 'Frame Shape Color')}</span>
-                <div className="flex items-center gap-2">
-                  <input
-                    id="frame-color-picker"
-                    type="color"
-                    aria-label="Frame Shape Color"
-                    className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
-                    value={localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}
-                    onChange={e => setDesignField('frameColor', e.target.value)}
-                  />
-                  <span className="text-[10px] font-mono text-slate-500 uppercase">{localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}</span>
-                </div>
+          <div className="space-y-2.5 pt-2 border-t border-gray-100/70">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block">
+                  {localProject.design?.frameStyle === 'custom'
+                    ? t('control.customFrameLabelText', 'Call-To-Action (CTA) Text')
+                    : t('control.overridePresetLabelText', 'Customize Call-To-Action (CTA) Text')}
+                </label>
+                <span className="text-[9px] font-mono text-slate-400">
+                  {(localProject.design?.frameText || '').length}/20 {t('control.chars', 'chars')}
+                </span>
               </div>
 
-              <div>
-                <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">{t('control.labelTextColor', 'Label Text Color')}</span>
-                <div className="flex items-center gap-2">
-                  <input
-                    id="frame-text-color-picker"
-                    type="color"
-                    aria-label="Label Text Color"
-                    className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
-                    value={localProject.design?.frameTextColor || '#ffffff'}
-                    onChange={e => setDesignField('frameTextColor', e.target.value)}
-                  />
-                  <span className="text-[10px] font-mono text-slate-500 uppercase">{localProject.design?.frameTextColor || '#ffffff'}</span>
-                </div>
+              <input
+                id="custom-frame-text"
+                type="text"
+                maxLength={20}
+                className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                placeholder={(() => {
+                  const style = localProject.design?.frameStyle;
+                  if (style === 'scan-me') return 'SCAN ME';
+                  if (style === 'visit-website') return 'VISIT WEBSITE';
+                  if (style === 'wifi-password') return 'WIFI PASSWORD';
+                  if (style === 'download-app') return 'DOWNLOAD APP';
+                  if (style === 'follow-us') return 'FOLLOW US';
+                  if (style === 'join-wifi') return 'JOIN WIFI';
+                  if (style === 'order-now') return 'ORDER NOW';
+                  if (style === 'pay-here') return 'PAY HERE';
+                  return 'e.g. SCAN TO REGISTER';
+                })()}
+                value={localProject.design?.frameText || ''}
+                onChange={e => setDesignField('frameText', e.target.value, true)}
+              />
+            </div>
+
+            {/* Quick CTA Suggestion Chips */}
+            <div>
+              <span className="text-[9.5px] text-gray-500 block mb-1 font-medium">
+                {t('control.quickCtaSuggestions', 'Quick CTA Suggestions:')}
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  'SCAN ME',
+                  'VISIT WEBSITE',
+                  'DOWNLOAD APP',
+                  'ORDER NOW',
+                  'PAY HERE',
+                  'CONNECT WIFI',
+                  'FOLLOW US',
+                  'GET DEAL'
+                ].map(suggestion => (
+                  <button
+                    key={suggestion}
+                    type="button"
+                    onClick={() => setDesignField('frameText', suggestion, true)}
+                    className="text-[9.5px] px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 font-semibold transition-colors border border-slate-200/60 cursor-pointer"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Font Size & Position adjustments */}
-            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100/40">
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label htmlFor="frame-font-size-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">{t('control.fontSize', 'Font Size')}</label>
-                  <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.frameFontSize ?? 20}px</span>
+            {/* Appearance Customization (Colors, Font Size, Position) */}
+            <div className="space-y-3 pt-2.5 border-t border-gray-100/60">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">
+                    {t('control.frameShapeColor', 'Frame Color')}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="frame-color-picker"
+                      type="color"
+                      aria-label="Frame Color"
+                      className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
+                      value={localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}
+                      onChange={e => setDesignField('frameColor', e.target.value)}
+                    />
+                    <span className="text-[10px] font-mono text-slate-500 uppercase">
+                      {localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}
+                    </span>
+                  </div>
                 </div>
-                <input
-                  id="frame-font-size-range"
-                  type="range"
-                  min="12"
-                  max="32"
-                  step="1"
-                  className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                  value={localProject.design?.frameFontSize ?? 20}
-                  onChange={e => setDesignField('frameFontSize', parseInt(e.target.value), true)}
-                />
+
+                <div>
+                  <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">
+                    {t('control.labelTextColor', 'CTA Text Color')}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="frame-text-color-picker"
+                      type="color"
+                      aria-label="CTA Text Color"
+                      className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
+                      value={localProject.design?.frameTextColor || '#ffffff'}
+                      onChange={e => setDesignField('frameTextColor', e.target.value)}
+                    />
+                    <span className="text-[10px] font-mono text-slate-500 uppercase">
+                      {localProject.design?.frameTextColor || '#ffffff'}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label htmlFor="frame-text-position-select" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block mb-1.5">{t('control.textPosition', 'Text Position')}</label>
-                <select
-                  id="frame-text-position-select"
-                  className="w-full text-xs px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
-                  value={localProject.design?.frameTextPosition || 'bottom'}
-                  onChange={e => setDesignField('frameTextPosition', e.target.value)}
-                >
-                  <option value="bottom">{t('control.bottomBanner', 'Bottom Banner')}</option>
-                  <option value="top">{t('control.topBanner', 'Top Banner')}</option>
-                </select>
+              {/* Font Size & Position */}
+              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100/40">
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label htmlFor="frame-font-size-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">
+                      {t('control.fontSize', 'Text Font Size')}
+                    </label>
+                    <span className="text-[11px] text-indigo-600 font-mono font-bold">
+                      {localProject.design?.frameFontSize ?? 20}px
+                    </span>
+                  </div>
+                  <input
+                    id="frame-font-size-range"
+                    type="range"
+                    min="12"
+                    max="32"
+                    step="1"
+                    className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                    value={localProject.design?.frameFontSize ?? 20}
+                    onChange={e => setDesignField('frameFontSize', parseInt(e.target.value), true)}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="frame-text-position-select" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block mb-1.5">
+                    {t('control.textPosition', 'Banner Position')}
+                  </label>
+                  <select
+                    id="frame-text-position-select"
+                    className="w-full text-xs px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                    value={localProject.design?.frameTextPosition || 'bottom'}
+                    onChange={e => setDesignField('frameTextPosition', e.target.value)}
+                  >
+                    <option value="bottom">{t('control.bottomBanner', 'Bottom Banner')}</option>
+                    <option value="top">{t('control.topBanner', 'Top Banner')}</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
