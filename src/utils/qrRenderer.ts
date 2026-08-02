@@ -19,7 +19,7 @@ interface DrawOptions {
   logoOffsetX?: number;
   logoOffsetY?: number;
   skipLogoImage?: boolean;
-  frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'custom';
+  frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'order-now' | 'pay-here' | 'custom';
   frameText?: string;
   frameColor?: string;
   frameTextColor?: string;
@@ -75,6 +75,8 @@ export async function renderStyledQR(
     if (options.frameStyle === 'download-app') label = 'DOWNLOAD APP';
     if (options.frameStyle === 'follow-us') label = 'FOLLOW US';
     if (options.frameStyle === 'join-wifi') label = 'JOIN WIFI';
+    if (options.frameStyle === 'order-now') label = 'ORDER NOW';
+    if (options.frameStyle === 'pay-here') label = 'PAY HERE';
     if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
 
     if (options.frameText && ((val) => (val || '').trim())(options.frameText) !== '') {
@@ -469,6 +471,8 @@ export function generateStyledSVG(
     if (options.frameStyle === 'download-app') label = 'DOWNLOAD APP';
     if (options.frameStyle === 'follow-us') label = 'FOLLOW US';
     if (options.frameStyle === 'join-wifi') label = 'JOIN WIFI';
+    if (options.frameStyle === 'order-now') label = 'ORDER NOW';
+    if (options.frameStyle === 'pay-here') label = 'PAY HERE';
     if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
 
     if (options.frameText && ((val) => (val || '').trim())(options.frameText) !== '') {
