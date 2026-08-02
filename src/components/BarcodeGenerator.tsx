@@ -13,7 +13,7 @@ import {
   Palette,
   Sliders
 } from 'lucide-react';
-import { useTranslation } from '../utils/i18n';
+import { useTranslation, TKey } from '../utils/i18n';
 
 interface BarcodeGeneratorProps {
   locale?: string;
@@ -92,7 +92,11 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
   const [margin, setMargin] = useState<number>(10);
   
   // Validation and Status states
-  const [error, setError] = useState<string | null>(null);
+  const [errorDetails, setErrorDetails] = useState<{
+    key: TKey;
+    defaultText: string;
+    params?: any;
+  } | null>(null);
   const [validationMessage, setValidationMessage] = useState<{
     status: 'success' | 'warning' | 'error';
     textKey: string;
@@ -178,14 +182,18 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
     setValidationMessage(result);
 
     if (result.status === 'error') {
-      setError(t(result.textKey, result.defaultText, result.params));
+      setErrorDetails({
+        key: result.textKey as TKey,
+        defaultText: result.defaultText,
+        params: result.params
+      });
       return;
     }
 
     if (!svgRef.current) return;
 
     try {
-      setError(null);
+      setErrorDetails(null);
       
       // Render using JsBarcode
       JsBarcode(svgRef.current, value.trim(), {
@@ -198,13 +206,20 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
         margin: margin,
         valid: (valid) => {
           if (!valid) {
-            setError(t('barcode.renderFailed', `The renderer failed to parse this payload for ${format}. Please verify your format characters.`, { format }));
+            setErrorDetails({
+              key: 'barcode.renderFailed',
+              defaultText: `The renderer failed to parse this payload for ${format}. Please verify your format characters.`,
+              params: { format }
+            });
           }
         }
       });
     } catch (err: any) {
       console.warn('Barcode rendering error:', err);
-      setError(err?.message || t('barcode.unsupportedChars', 'Unsupported characters for the selected barcode format.'));
+      setErrorDetails({
+        key: 'barcode.unsupportedChars',
+        defaultText: err?.message || 'Unsupported characters for the selected barcode format.'
+      });
     }
   }, [value, format, height, width, displayValue, lineColor, background, margin, activeLocale, t]);
 
@@ -240,7 +255,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
   };
 
   const downloadSVG = () => {
-    if (!svgRef.current || error) return;
+    if (!svgRef.current || errorDetails) return;
     try {
       const svgEl = svgRef.current;
       const serializer = new XMLSerializer();
@@ -268,7 +283,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
   };
 
   const downloadPNG = () => {
-    if (!svgRef.current || error) return;
+    if (!svgRef.current || errorDetails) return;
     try {
       const svgEl = svgRef.current;
       const serializer = new XMLSerializer();
@@ -352,19 +367,21 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
                 key={preset.id}
                 type="button"
                 onClick={() => handlePresetChange(preset.id)}
+                aria-label={t(preset.labelKey as TKey, preset.labelDefault)}
                 className={`text-left p-2.5 rounded-xl border text-[11px] font-medium transition-all cursor-pointer ${
                   selectedPreset === preset.id
                     ? 'border-indigo-600 bg-indigo-50/40 text-indigo-950 shadow-xs'
                     : 'border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-600'
                 }`}
               >
-                <div className="font-bold">{t(preset.labelKey, preset.labelDefault)}</div>
-                <div className="text-[9px] text-slate-400 font-normal line-clamp-1 mt-0.5">{t(preset.descKey, preset.descDefault)}</div>
+                <div className="font-bold">{t(preset.labelKey as TKey, preset.labelDefault)}</div>
+                <div className="text-[9px] text-slate-400 font-normal line-clamp-1 mt-0.5">{t(preset.descKey as TKey, preset.descDefault)}</div>
               </button>
             ))}
             <button
               type="button"
               onClick={() => handlePresetChange('custom')}
+              aria-label={t('barcode.preset.custom.label', 'Custom Values')}
               className={`text-left p-2.5 rounded-xl border text-[11px] font-medium transition-all cursor-pointer ${
                 selectedPreset === 'custom'
                   ? 'border-indigo-600 bg-indigo-50/40 text-indigo-950 shadow-xs'
@@ -386,6 +403,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
             <button
               type="button"
               onClick={handleRandomize}
+              aria-label={t('barcode.generateRandom', 'Generate Random Code')}
               className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition-all cursor-pointer bg-indigo-50 hover:bg-indigo-100/80 px-2 py-1 rounded-lg"
             >
               <RefreshCw className="w-3 h-3" />
@@ -400,6 +418,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
                 setValue(e.target.value);
                 setSelectedPreset('custom');
               }}
+              aria-label={t('barcode.payloadContent', 'Barcode Payload Content')}
               className="w-full text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-slate-900 border border-slate-200 focus:border-indigo-500 rounded-xl py-3 px-4 outline-hidden transition-all font-mono"
               placeholder={t('barcode.inputPlaceholder', 'Enter text or number sequence')}
             />
@@ -416,7 +435,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
             {validationMessage.status === 'success' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />}
             {validationMessage.status === 'warning' && <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />}
             {validationMessage.status === 'error' && <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />}
-            <span className="font-medium">{t(validationMessage.textKey, validationMessage.defaultText, validationMessage.params)}</span>
+            <span className="font-medium">{t(validationMessage.textKey as TKey, validationMessage.defaultText, validationMessage.params)}</span>
           </div>
 
           <p className="text-[10px] text-slate-400 flex items-start gap-1 pt-1">
@@ -443,6 +462,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
                   setValue('PROD-7749-W2');
                 }
               }}
+              aria-label={t('barcode.symbologyFormat', 'Symbology Format')}
               className="w-full text-xs bg-slate-50 border border-slate-200 text-slate-800 focus:border-indigo-500 rounded-xl py-3 px-3 outline-hidden transition-all cursor-pointer font-semibold"
             >
               <option value="CODE128">{t('barcode.format.code128', 'CODE128 (Universal - Text & Numbers)')}</option>
@@ -460,6 +480,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
               max="50"
               value={margin}
               onChange={(e) => setMargin(Number(e.target.value))}
+              aria-label={t('barcode.margin', 'Margin Whitespace (px)')}
               className="w-full text-xs bg-slate-50 border border-slate-200 text-slate-800 focus:border-indigo-500 rounded-xl py-3 px-3 outline-hidden transition-all font-mono font-semibold"
             />
           </div>
@@ -480,6 +501,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
               max="200"
               value={height}
               onChange={(e) => setHeight(Number(e.target.value))}
+              aria-label={t('barcode.barHeight', 'Bar Height ({height}px)', { height })}
               className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
           </div>
@@ -498,6 +520,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
               step="1"
               value={width}
               onChange={(e) => setWidth(Number(e.target.value))}
+              aria-label={t('barcode.lineThickness', 'Line Thickness ({width}px)', { width })}
               className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
           </div>
@@ -515,12 +538,14 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
                 type="color"
                 value={lineColor}
                 onChange={(e) => setLineColor(e.target.value)}
+                aria-label={t('barcode.lineColor', 'Line Color')}
                 className="w-10 h-10 border border-slate-200 rounded-xl cursor-pointer p-0.5 bg-transparent shrink-0"
               />
               <input
                 type="text"
                 value={lineColor}
                 onChange={(e) => setLineColor(e.target.value)}
+                aria-label={t('barcode.lineColor', 'Line Color')}
                 className="flex-1 text-xs bg-slate-50 border border-slate-200 focus:border-indigo-500 rounded-xl py-2 px-3 outline-hidden transition-all font-mono text-slate-700"
               />
             </div>
@@ -536,12 +561,14 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
                 type="color"
                 value={background}
                 onChange={(e) => setBackground(e.target.value)}
+                aria-label={t('barcode.backgroundColor', 'Background Color')}
                 className="w-10 h-10 border border-slate-200 rounded-xl cursor-pointer p-0.5 bg-transparent shrink-0"
               />
               <input
                 type="text"
                 value={background}
                 onChange={(e) => setBackground(e.target.value)}
+                aria-label={t('barcode.backgroundColor', 'Background Color')}
                 className="flex-1 text-xs bg-slate-50 border border-slate-200 focus:border-indigo-500 rounded-xl py-2 px-3 outline-hidden transition-all font-mono text-slate-700"
               />
             </div>
@@ -557,6 +584,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
           <button
             type="button"
             onClick={() => setDisplayValue(!displayValue)}
+            aria-label={t('barcode.renderValueText', 'Render Value Text')}
             className={`w-11 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer shrink-0 ${displayValue ? 'bg-indigo-600' : 'bg-slate-200'}`}
           >
             <div className={`w-4 h-4 bg-white rounded-full shadow-xs transform transition-transform duration-200 ease-in-out ${displayValue ? 'translate-x-5' : 'translate-x-0'}`} />
@@ -573,13 +601,15 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
 
           {/* Barcode Output Window */}
           <div className="w-full bg-slate-50 border border-slate-200/60 rounded-2xl p-6 min-h-[220px] flex flex-col items-center justify-center transition-all">
-            {error ? (
+            {errorDetails ? (
               <div className="flex flex-col items-center text-center max-w-xs space-y-2 p-4">
                 <div className="w-10 h-10 bg-red-50 text-red-500 rounded-full flex items-center justify-center animate-pulse">
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <h4 className="text-xs font-bold text-red-950">{t('barcode.invalidStructure', 'Invalid Payload Structure')}</h4>
-                <p className="text-[11px] text-red-600 font-medium leading-relaxed font-mono">{error}</p>
+                <p className="text-[11px] text-red-600 font-medium leading-relaxed font-mono">
+                  {t(errorDetails.key, errorDetails.defaultText, errorDetails.params)}
+                </p>
               </div>
             ) : (
               <div className="overflow-x-auto max-w-full flex justify-center items-center py-4 bg-white rounded-xl shadow-xs border border-slate-150 px-6">
@@ -589,7 +619,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
           </div>
 
           {/* Code Spec & Stats */}
-          {!error && (
+          {!errorDetails && (
             <div className="w-full mt-4 bg-slate-50/60 border border-slate-100 rounded-xl p-3 text-left">
               <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-[10px] font-mono text-slate-500">
                 <div>{t('barcode.symbologyLabel', 'Symbology:')} <span className="text-slate-800 font-semibold">{format}</span></div>
@@ -604,8 +634,9 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
           <div className="w-full grid grid-cols-2 gap-3 mt-6">
             <button
               type="button"
-              disabled={!!error}
+              disabled={!!errorDetails}
               onClick={downloadPNG}
+              aria-label={t('barcode.downloadPng', 'Download PNG')}
               className="py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md cursor-pointer"
             >
               <Download className="w-4 h-4" />
@@ -613,8 +644,9 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
             </button>
             <button
               type="button"
-              disabled={!!error}
+              disabled={!!errorDetails}
               onClick={downloadSVG}
+              aria-label={t('barcode.downloadSvg', 'Download SVG')}
               className="py-3 px-4 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-800 border border-slate-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
             >
               <Download className="w-4 h-4 text-slate-500" />
@@ -637,4 +669,5 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
     </div>
   );
 }
+
 

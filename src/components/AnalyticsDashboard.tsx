@@ -22,6 +22,164 @@ interface AnalyticsDashboardProps {
   onPurgeAll?: () => void;
 }
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+  type?: 'mini' | 'timeline' | 'trends' | 'compare' | 'pie' | 'bar';
+}
+
+const CustomChartTooltip = ({ active, payload, label, type }: CustomTooltipProps) => {
+  if (!active || !payload || !payload.length) return null;
+
+  const dataPoint = payload[0]?.payload;
+  const fullTimestamp = dataPoint?.fullTimestamp || label || '';
+
+  if (type === 'mini') {
+    const scanVal = payload[0]?.value || 0;
+    return (
+      <div className="bg-slate-900/95 text-white px-2.5 py-1.5 rounded-lg shadow-lg border border-slate-700/60 text-[11px] backdrop-blur-xs font-sans">
+        <div className="text-slate-400 text-[10px]">{fullTimestamp}</div>
+        <div className="font-semibold text-indigo-300 font-mono">
+          {scanVal} {scanVal === 1 ? 'scan' : 'scans'}
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'timeline') {
+    const scanVal = payload[0]?.value || 0;
+    return (
+      <div className="bg-slate-900/95 text-white p-3 rounded-xl shadow-xl border border-slate-700/70 text-xs backdrop-blur-md min-w-[180px] font-sans">
+        <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-1.5 mb-2">
+          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Timestamp / Date</span>
+          <span className="font-mono text-indigo-300 text-[11px] font-medium">{fullTimestamp}</span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-1.5 text-slate-200">
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 ring-2 ring-indigo-500/30" />
+            <span className="font-medium">Total Scans:</span>
+          </div>
+          <span className="font-mono font-bold text-white text-sm">{scanVal} {scanVal === 1 ? 'scan' : 'scans'}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'trends') {
+    const totalForDate = payload.reduce((acc: number, item: any) => acc + (typeof item.value === 'number' ? item.value : 0), 0);
+    return (
+      <div className="bg-slate-900/95 text-white p-3 rounded-xl shadow-xl border border-slate-700/70 text-xs backdrop-blur-md min-w-[220px] font-sans">
+        <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-1.5 mb-2">
+          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Timestamp / Date</span>
+          <span className="font-mono text-indigo-300 text-[11px] font-medium">{fullTimestamp}</span>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          {payload.map((entry: any, idx: number) => {
+            const count = typeof entry.value === 'number' ? entry.value : 0;
+            const pct = totalForDate > 0 ? Math.round((count / totalForDate) * 100) : 0;
+            return (
+              <div key={entry.dataKey || idx} className="flex items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-1.5 truncate max-w-[140px]">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color || entry.stroke }} />
+                  <span className="text-slate-200 truncate font-medium">{entry.name}</span>
+                </div>
+                <div className="flex items-center gap-1.5 font-mono shrink-0">
+                  <span className="font-bold text-white">{count} {count === 1 ? 'scan' : 'scans'}</span>
+                  <span className="text-[10px] text-slate-400">({pct}%)</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {payload.length > 1 && (
+          <div className="border-t border-slate-800/80 mt-2 pt-1.5 flex justify-between text-[11px] font-medium text-slate-400">
+            <span>Daily Total:</span>
+            <span className="font-mono font-bold text-indigo-300">{totalForDate} {totalForDate === 1 ? 'scan' : 'scans'}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (type === 'compare') {
+    const itemA = payload.find((p: any) => p.dataKey === 'scansA');
+    const itemB = payload.find((p: any) => p.dataKey === 'scansB');
+    const scansA = itemA?.value || 0;
+    const scansB = itemB?.value || 0;
+    const projAName = itemA?.name || 'Project A';
+    const projBName = itemB?.name || 'Project B';
+    const diff = scansA - scansB;
+
+    return (
+      <div className="bg-slate-900/95 text-white p-3 rounded-xl shadow-xl border border-slate-700/70 text-xs backdrop-blur-md min-w-[220px] font-sans">
+        <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-1.5 mb-2">
+          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Timestamp / Date</span>
+          <span className="font-mono text-indigo-300 text-[11px] font-medium">{fullTimestamp}</span>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5 truncate">
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 shrink-0" />
+              <span className="text-slate-200 font-medium truncate">{projAName}:</span>
+            </div>
+            <span className="font-mono font-bold text-indigo-300">{scansA} {scansA === 1 ? 'scan' : 'scans'}</span>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5 truncate">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
+              <span className="text-slate-200 font-medium truncate">{projBName}:</span>
+            </div>
+            <span className="font-mono font-bold text-emerald-300">{scansB} {scansB === 1 ? 'scan' : 'scans'}</span>
+          </div>
+        </div>
+        <div className="border-t border-slate-800/80 mt-2 pt-1.5 flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>Difference:</span>
+          <span className={diff > 0 ? 'text-indigo-400 font-semibold' : diff < 0 ? 'text-emerald-400 font-semibold' : 'text-slate-400'}>
+            {diff > 0 ? `+${diff} for A` : diff < 0 ? `+${Math.abs(diff)} for B` : 'Equal'}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'pie') {
+    const item = payload[0];
+    const val = item?.value || 0;
+    const name = item?.name || '';
+    const color = item?.payload?.color || item?.fill || '#4f46e5';
+    return (
+      <div className="bg-slate-900/95 text-white px-3 py-2 rounded-xl shadow-xl border border-slate-700/70 text-xs backdrop-blur-md font-sans min-w-[140px]">
+        <div className="flex items-center gap-1.5 mb-1">
+          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
+          <span className="font-semibold text-slate-200">{name}</span>
+        </div>
+        <div className="font-mono text-slate-300 text-[11px] flex justify-between gap-3">
+          <span>Scan Count:</span>
+          <span className="font-bold text-white">{val} {val === 1 ? 'scan' : 'scans'}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'bar') {
+    const item = payload[0];
+    const val = item?.value || 0;
+    const name = item?.payload?.name || item?.name || '';
+    return (
+      <div className="bg-slate-900/95 text-white px-3 py-2 rounded-xl shadow-xl border border-slate-700/70 text-xs backdrop-blur-md font-sans min-w-[140px]">
+        <div className="font-semibold text-emerald-400 mb-0.5">{name}</div>
+        <div className="font-mono text-slate-300 text-[11px] flex justify-between gap-3">
+          <span>Scan Count:</span>
+          <span className="font-bold text-white">{val} {val === 1 ? 'scan' : 'scans'}</span>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 export default function AnalyticsDashboard({
    scans, projects, onPurgeAll }: AnalyticsDashboardProps) {
   const { t } = useTranslation();
@@ -123,7 +281,7 @@ export default function AnalyticsDashboard({
 
   // Combine daily timeline data for overlay
   const getCompareTimelineData = () => {
-    const dates: { [key: string]: { date: string; scansA: number; scansB: number } } = {};
+    const dates: { [key: string]: { date: string; fullTimestamp: string; scansA: number; scansB: number } } = {};
     const daysList: string[] = [];
 
     let numDays = 7;
@@ -149,8 +307,9 @@ export default function AnalyticsDashboard({
       const d = new Date(startDateObj);
       d.setDate(startDateObj.getDate() + i);
       const dayString = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      const fullTimestamp = d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
       if (!dates[dayString]) {
-        dates[dayString] = { date: dayString, scansA: 0, scansB: 0 };
+        dates[dayString] = { date: dayString, fullTimestamp, scansA: 0, scansB: 0 };
         daysList.push(dayString);
       }
     }
@@ -242,13 +401,14 @@ export default function AnalyticsDashboard({
 
   // 1. Daily Scan Timeline aggregation
   const getTimelineData = () => {
-    const dates: { [key: string]: number } = {};
+    const dates: { [key: string]: { date: string; fullTimestamp: string; scans: number } } = {};
     // Populate last timelineDays of dates initialized to 0
     for (let i = timelineDays - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
       const dayString = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-      dates[dayString] = 0;
+      const fullTimestamp = d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      dates[dayString] = { date: dayString, fullTimestamp, scans: 0 };
     }
 
     scans.forEach(s => {
@@ -256,15 +416,12 @@ export default function AnalyticsDashboard({
         const d = new Date(s.timestamp);
         const dayString = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
         if (dates[dayString] !== undefined) {
-          dates[dayString]++;
+          dates[dayString].scans++;
         }
       } catch {}
     });
 
-    return Object.keys(dates).map(date => ({
-      date,
-      scans: dates[date]
-    }));
+    return Object.values(dates);
   };
 
   // 2. Device Breakdown aggregation
@@ -326,7 +483,7 @@ export default function AnalyticsDashboard({
   }, [selectedTrendProjectIds, projects]);
 
   const trendsData = React.useMemo(() => {
-    const dates: { [key: string]: { dateLabel: string; [projectId: string]: number | string } } = {};
+    const dates: { [key: string]: { dateLabel: string; fullTimestamp: string; [projectId: string]: number | string } } = {};
     const daysList: string[] = [];
 
     // Populate last trendsDays of dates initialized to 0
@@ -334,9 +491,11 @@ export default function AnalyticsDashboard({
       const d = new Date();
       d.setDate(d.getDate() - i);
       const dayLabel = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      const fullTimestamp = d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
       
       dates[dayLabel] = {
         dateLabel: dayLabel,
+        fullTimestamp,
       };
       
       // Initialize counts to 0 for all projects
@@ -417,8 +576,7 @@ export default function AnalyticsDashboard({
                 </defs>
                 <Tooltip
                   wrapperStyle={{ outline: 'none' }}
-                  contentStyle={{ fontSize: '10px', padding: '2px 6px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
-                  labelStyle={{ display: 'none' }}
+                  content={(props: any) => <CustomChartTooltip {...props} type="mini" />}
                 />
                 <Area type="monotone" dataKey="scans" stroke="#4f46e5" strokeWidth={1.5} fillOpacity={1} fill="url(#miniColorScans)" dot={false} />
               </AreaChart>
@@ -470,7 +628,7 @@ export default function AnalyticsDashboard({
           <Tablet className="w-8 h-8 text-indigo-300 mx-auto mb-2" />
           <h3 className="text-xs font-semibold text-gray-700">{t('analytics.noLogs', 'No Analytics Telemetry Yet')}</h3>
           <p className="text-[11px] text-gray-400 mt-1 max-w-[240px] mx-auto">
-            {t('analytics.noLogsDesc', 'Scan your active codes or use the "+ Seed clicks" fallback buttons to inspect dashboards.')}
+            {t('analytics.noLogsDesc', 'Scan your active QR codes to start receiving live tracking telemetry and analytics.')}
           </p>
         </div>
       ) : (
@@ -514,7 +672,7 @@ export default function AnalyticsDashboard({
                   </defs>
                   <XAxis dataKey="date" tickLine={false} style={{ fontSize: 10, fill: '#64748b' }} />
                   <YAxis tickLine={false} width={20} style={{ fontSize: 10, fill: '#64748b' }} allowDecimals={false} />
-                  <Tooltip wrapperStyle={{ outline: 'none' }} contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0', backgroundColor: '#1e293b', color: '#f8fafc' }} />
+                  <Tooltip wrapperStyle={{ outline: 'none' }} content={(props: any) => <CustomChartTooltip {...props} type="timeline" />} />
                   <Area type="monotone" dataKey="scans" stroke="#4f46e5" strokeWidth={2} fillOpacity={1} fill="url(#colorScans)" />
                 </AreaChart>
               </ResponsiveContainer>
@@ -613,7 +771,7 @@ export default function AnalyticsDashboard({
                   <YAxis tickLine={false} style={{ fontSize: 10, fill: '#64748b' }} allowDecimals={false} />
                   <Tooltip 
                     wrapperStyle={{ outline: 'none' }} 
-                    contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0', backgroundColor: '#1e293b', color: '#f8fafc', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} 
+                    content={(props: any) => <CustomChartTooltip {...props} type="trends" />} 
                   />
                   <Legend wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
                   {activeTrendProjectIds.map((projectId, idx) => {
@@ -810,7 +968,7 @@ export default function AnalyticsDashboard({
                           <YAxis tickLine={false} style={{ fontSize: 9, fill: '#64748b' }} allowDecimals={false} />
                           <Tooltip 
                             wrapperStyle={{ outline: 'none' }} 
-                            contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0', backgroundColor: '#1e293b', color: '#f8fafc', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} 
+                            content={(props: any) => <CustomChartTooltip {...props} type="compare" />} 
                           />
                           <Area type="monotone" name={projectA?.name || t('analytics.projectA', 'Project A')} dataKey="scansA" stroke="#4f46e5" strokeWidth={2.5} fillOpacity={1} fill="url(#colorScansA)" />
                           <Area type="monotone" name={projectB?.name || t('analytics.projectB', 'Project B')} dataKey="scansB" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorScansB)" />
@@ -1025,7 +1183,7 @@ export default function AnalyticsDashboard({
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ fontSize: 11, backgroundColor: '#1e293b', color: '#f8fafc', border: 'none', borderRadius: 8 }} />
+                    <Tooltip content={(props: any) => <CustomChartTooltip {...props} type="pie" />} />
                     <Legend wrapperStyle={{ fontSize: 10 }} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -1040,7 +1198,7 @@ export default function AnalyticsDashboard({
                   <BarChart data={browserData} layout="vertical" margin={{ left: -10, right: 10 }}>
                     <XAxis type="number" hide />
                     <YAxis type="category" dataKey="name" tickLine={false} style={{ fontSize: 10, fill: '#94a3b8' }} />
-                    <Tooltip contentStyle={{ fontSize: 11, backgroundColor: '#1e293b', color: '#f8fafc', border: 'none', borderRadius: 8 }} />
+                    <Tooltip content={(props: any) => <CustomChartTooltip {...props} type="bar" />} />
                     <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]} barSize={12} />
                   </BarChart>
                 </ResponsiveContainer>

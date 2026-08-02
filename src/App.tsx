@@ -6,16 +6,19 @@ import { landingPages } from './pages/landing/SEODatabase';
 import { getBlogArticles } from './data/blogData';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
+import TemplatesTab from './components/TemplatesTab';
+import SavedProjects from './components/SavedProjects';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
+import AuthModal from './components/AuthModal';
+import ShortcutsHelpModal from './components/ShortcutsHelpModal';
+import TourWelcomeModal from './components/TourWelcomeModal';
+import SettingsModal from './components/SettingsModal';
+import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/audioFeedback';
 
-// Code-splitting via React.lazy for non-critical elements (improves LCP, FCP, Speed Index)
+// Code-splitting via React.lazy for secondary landing & hub pages
 const SEOPage = React.lazy(() => import('./pages/landing/SEOPage'));
-const TemplatesTab = React.lazy(() => import('./components/TemplatesTab'));
-const SavedProjects = React.lazy(() => import('./components/SavedProjects'));
-const AnalyticsDashboard = React.lazy(() => import('./components/AnalyticsDashboard'));
 const MobileAppMockup = React.lazy(() => import('./components/MobileAppMockup'));
 const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowcase'));
-const AuthModal = React.lazy(() => import('./components/AuthModal'));
-const ShortcutsHelpModal = React.lazy(() => import('./components/ShortcutsHelpModal'));
 const CompanyPages = React.lazy(() => import('./pages/CompanyPages'));
 const TrustCenterHub = React.lazy(() => import('./pages/TrustCenterHub'));
 const FaqSection = React.lazy(() => import('./pages/FaqSection'));
@@ -25,7 +28,6 @@ import { knowledgeArticles } from './data/knowledgeData';
 const TemplatesHub = React.lazy(() => import('./pages/TemplatesHub'));
 import { templatePages } from './data/templatePagesData';
 const EmbedPage = React.lazy(() => import('./pages/EmbedPage'));
-const TourWelcomeModal = React.lazy(() => import('./components/TourWelcomeModal'));
 const CompareHub = React.lazy(() => import('./pages/CompareHub'));
 import { comparisons } from './data/compareData';
 const ProgrammaticHub = React.lazy(() => import('./pages/ProgrammaticHub'));
@@ -85,7 +87,7 @@ const INITIAL_DESIGN: Partial<QRProject> = {
   },
   scanCount: 0,
   trackingEnabled: true,
-  trackingId: ''
+  trackingId: Math.random().toString(36).substring(2, 8)
 };
 
 function RollingNumber({ value, duration = 1200 }: { value: number; duration?: number }) {
@@ -284,6 +286,10 @@ export default function App() {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Sound settings state
+  const [soundSettings, setSoundSettings] = useState<SoundSettings>(() => getDefaultSoundSettings());
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
   // Real-time scan alerts toasts lists
   interface LiveToast {
     id: string;
@@ -358,6 +364,9 @@ export default function App() {
             if (parsed.type === 'NEW_SCAN') {
               console.log('[WS Socket] Incoming real-time scan metrics:', parsed.data);
               const data = parsed.data;
+
+              // Immediately refresh analytics data on real-time scan event
+              fetchUserData();
 
               // Append toast safely
               const uid = `toast-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -1141,6 +1150,7 @@ export default function App() {
       content: preset.content,
       name: preset.name
     });
+    playAudioSound('generate', soundSettings);
     setActiveTab('create');
     navigateTo('/');
   };
@@ -1200,6 +1210,19 @@ export default function App() {
   useEffect(() => {
     if (user) {
       fetchUserData();
+      
+      const unsubscribeScans = api.subscribeScans((newScans) => {
+        setScans(newScans);
+      });
+
+      const unsubscribeProjects = api.subscribeProjects((newProjects) => {
+        setProjects(newProjects);
+      });
+
+      return () => {
+        if (unsubscribeScans) unsubscribeScans();
+        if (unsubscribeProjects) unsubscribeProjects();
+      };
     } else {
       setProjects([]);
       setScans([]);
@@ -1286,6 +1309,7 @@ export default function App() {
       
       // Select newly saved project
       setCurrentProject(saved);
+      playAudioSound('generate', soundSettings);
       
       // Refetch user data
       await fetchUserData();
@@ -1538,6 +1562,8 @@ export default function App() {
             onSignInClick={handleSignInClick}
             onSignUpClick={handleSignUpClick}
             onSignOut={handleSignOut}
+            onOpenSettings={() => setIsSettingsModalOpen(true)}
+            soundEnabled={soundSettings.soundEnabled}
         />
 
 
@@ -2184,6 +2210,8 @@ export default function App() {
                 onDownloadTrigger={handleDownloadTrigger} 
                 onChange={setCurrentProject}
                 isSaving={isSaving}
+                soundSettings={soundSettings}
+                onOpenSettings={() => setIsSettingsModalOpen(true)}
               />
             </div>
           </div>
@@ -2213,6 +2241,8 @@ export default function App() {
                 onDownloadTrigger={handleDownloadTrigger} 
                 onChange={setCurrentProject}
                 isSaving={isSaving}
+                soundSettings={soundSettings}
+                onOpenSettings={() => setIsSettingsModalOpen(true)}
               />
             </div>
           </div>
@@ -3016,6 +3046,14 @@ export default function App() {
           ))}
         </AnimatePresence>
       </div>
+
+      {/* Global Sound & Preferences Modal */}
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        soundSettings={soundSettings}
+        onUpdateSoundSettings={setSoundSettings}
+      />
     </div>
   );
 }

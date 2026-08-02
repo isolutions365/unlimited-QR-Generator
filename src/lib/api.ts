@@ -10,13 +10,61 @@ import {
   deleteDoc, 
   query, 
   where, 
-  addDoc 
+  addDoc,
+  onSnapshot
 } from 'firebase/firestore';
 
 export interface UserSession {
   id: string;
   email: string;
   name: string;
+}
+
+export enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+export interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+    tenantId?: string | null;
+    providerInfo?: {
+      providerId?: string | null;
+      email?: string | null;
+    }[];
+  };
+}
+
+export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData?.map(provider => ({
+        providerId: provider.providerId,
+        email: provider.email,
+      })) || []
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  return errInfo;
 }
 
 class ApiClient {
@@ -85,7 +133,7 @@ class ApiClient {
       });
       return projects;
     } catch (err) {
-      console.error('[Firestore getProjects Error]', err);
+      handleFirestoreError(err, OperationType.LIST, 'projects');
       return [];
     }
   }
@@ -123,14 +171,24 @@ class ApiClient {
       category: project.category || 'General'
     };
 
-    await setDoc(doc(db, 'projects', projectId), projectData, { merge: true });
-    return projectData;
+    try {
+      await setDoc(doc(db, 'projects', projectId), projectData, { merge: true });
+      return projectData;
+    } catch (err) {
+      handleFirestoreError(err, OperationType.WRITE, `projects/${projectId}`);
+      throw err;
+    }
   }
 
   async deleteProject(id: string): Promise<void> {
     const userId = auth.currentUser?.uid;
     if (!userId) throw new Error("Authentication required to delete project.");
-    await deleteDoc(doc(db, 'projects', id));
+    try {
+      await deleteDoc(doc(db, 'projects', id));
+    } catch (err) {
+      handleFirestoreError(err, OperationType.DELETE, `projects/${id}`);
+      throw err;
+    }
   }
 
   // --- SCANS API (FIRESTORE) ---
@@ -146,8 +204,54 @@ class ApiClient {
       });
       return scans;
     } catch (err) {
-      console.error('[Firestore getScans Error]', err);
+      handleFirestoreError(err, OperationType.LIST, 'scans');
       return [];
+    }
+  }
+
+  subscribeScans(callback: (scans: ScanLog[]) => void): () => void {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      callback([]);
+      return () => {};
+    }
+    try {
+      const q = query(collection(db, 'scans'), where('userId', '==', userId));
+      return onSnapshot(q, (snap) => {
+        const scans: ScanLog[] = [];
+        snap.forEach((docSnap) => {
+          scans.push({ id: docSnap.id, ...docSnap.data() } as ScanLog);
+        });
+        callback(scans);
+      }, (err) => {
+        console.warn('onSnapshot scans listener error:', err);
+      });
+    } catch (err) {
+      console.warn('subscribeScans error:', err);
+      return () => {};
+    }
+  }
+
+  subscribeProjects(callback: (projects: QRProject[]) => void): () => void {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      callback([]);
+      return () => {};
+    }
+    try {
+      const q = query(collection(db, 'projects'), where('userId', '==', userId));
+      return onSnapshot(q, (snap) => {
+        const projs: QRProject[] = [];
+        snap.forEach((docSnap) => {
+          projs.push({ id: docSnap.id, ...docSnap.data() } as QRProject);
+        });
+        callback(projs);
+      }, (err) => {
+        console.warn('onSnapshot projects listener error:', err);
+      });
+    } catch (err) {
+      console.warn('subscribeProjects error:', err);
+      return () => {};
     }
   }
 
@@ -169,8 +273,13 @@ class ApiClient {
       userId
     };
 
-    await setDoc(doc(db, 'scans', scanId), scanData);
-    return scanData;
+    try {
+      await setDoc(doc(db, 'scans', scanId), scanData);
+      return scanData;
+    } catch (err) {
+      handleFirestoreError(err, OperationType.WRITE, `scans/${scanId}`);
+      throw err;
+    }
   }
 
   async purgeScans(): Promise<void> {
@@ -185,7 +294,7 @@ class ApiClient {
       });
       await Promise.all(deletePromises);
     } catch (err) {
-      console.error('[Firestore purgeScans Error]', err);
+      handleFirestoreError(err, OperationType.DELETE, 'scans');
     }
   }
 

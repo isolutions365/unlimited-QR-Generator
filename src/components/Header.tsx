@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { QrCode, Sparkles, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot } from 'lucide-react';
+import { QrCode, Sparkles, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX } from 'lucide-react';
 import Navigation from './Navigation';
 import LanguageSelector from './LanguageSelector';
 import { Locale } from '../utils/translations';
@@ -26,13 +26,16 @@ interface HeaderProps {
   onSignInClick?: () => void;
   onSignUpClick?: () => void;
   onSignOut?: () => void;
+  onOpenSettings?: () => void;
+  soundEnabled?: boolean;
 }
 
 export default function Header({ 
   isScrolled, t, locale, currentPath, navigateTo, changeLocale,
   creativeSubItems, presetToolsTranslations, handleInitiateGenerator,
   getPresetIcon, setActiveTab, navTranslations,
-  user, onSignInClick, onSignUpClick, onSignOut
+  user, onSignInClick, onSignUpClick, onSignOut,
+  onOpenSettings, soundEnabled = true
 }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isRtl = ['ar', 'ur'].includes(locale);
@@ -86,6 +89,22 @@ export default function Header({
       {/* RIGHT: Buttons */}
       <div className="flex items-center gap-2 shrink-0">
          <LanguageSelector currentLocale={locale} onSelect={handleLanguageSelect} />
+         
+         {/* Audio & Settings Modal Trigger Button */}
+         {onOpenSettings && (
+           <button
+             onClick={onOpenSettings}
+             className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer relative"
+             title={t('settings.headerBtnTooltip', 'Sound & Audio Settings')}
+             aria-label="Sound Settings"
+           >
+             {soundEnabled ? (
+               <Volume2 className="w-5 h-5 text-indigo-600" />
+             ) : (
+               <VolumeX className="w-5 h-5 text-slate-400" />
+             )}
+           </button>
+         )}
          
          {/* Desktop/Tablet Auth */}
          <div className="hidden sm:flex items-center gap-2">

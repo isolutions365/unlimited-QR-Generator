@@ -3,10 +3,11 @@ import { useTranslation } from '../utils/i18n';
 
 import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG, getEmblemFontSize } from '../utils/qrRenderer';
-import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle, Share2, Twitter, Linkedin, Facebook, ChevronDown, FileText, Scale, Sliders, Contrast, Eye, Layers, Maximize } from 'lucide-react';
+import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle, Share2, Twitter, Linkedin, Facebook, ChevronDown, FileText, Scale, Sliders, Contrast, Eye, Layers, Maximize, Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import qrcode from 'qrcode';
 import { MemoizedQRCanvas } from './MemoizedQRCanvas';
+import { SoundSettings, playAudioSound } from '../utils/audioFeedback';
 
 interface PreviewPanelProps {
   currentProject: Partial<QRProject>;
@@ -14,9 +15,11 @@ interface PreviewPanelProps {
   onDownloadTrigger?: () => void;
   onChange?: (project: Partial<QRProject>) => void;
   isSaving?: boolean;
+  soundSettings?: SoundSettings;
+  onOpenSettings?: () => void;
 }
 
-export default function PreviewPanel({ currentProject, onTestScan, onDownloadTrigger, onChange, isSaving = false }: PreviewPanelProps) {
+export default function PreviewPanel({ currentProject, onTestScan, onDownloadTrigger, onChange, isSaving = false, soundSettings, onOpenSettings }: PreviewPanelProps) {
   const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isCopied, setIsCopied] = useState(false);
@@ -1080,24 +1083,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   }, [handleExport, handlePrintTemplate, isPrintModalOpen]);
 
   const playPingSound = () => {
-    try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, ctx.currentTime);
-      gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.4);
-    } catch (e) {
-      console.warn("Audio feedback omitted due to security restriction", e);
-    }
+    playAudioSound('test_scan', soundSettings);
   };
 
   const simulateScan = () => {
@@ -1606,15 +1592,32 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             <span>{t('preview.printReadyPage', 'Print-Ready A4/Letter Page')}</span>
           </button>
 
-          <button
-            type="button"
-            onClick={simulateScan}
-            className="w-full py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-1.5 active:scale-95 border border-indigo-100 cursor-pointer"
-            aria-label="Simulate Live QR Code Scanner Viewfinder Test"
-          >
-            <Smartphone className="w-3.5 h-3.5" />
-            {t('preview.liveScanTest', 'Live Viewfinder Scan Test')}
-          </button>
+          <div className="flex items-center gap-2 w-full">
+            <button
+              type="button"
+              onClick={simulateScan}
+              className="flex-1 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-1.5 active:scale-95 border border-indigo-100 cursor-pointer"
+              aria-label="Simulate Live QR Code Scanner Viewfinder Test"
+            >
+              <Smartphone className="w-3.5 h-3.5" />
+              {t('preview.liveScanTest', 'Live Viewfinder Scan Test')}
+            </button>
+            {onOpenSettings && (
+              <button
+                type="button"
+                onClick={onOpenSettings}
+                className={`p-2.5 border rounded-xl transition-all cursor-pointer ${
+                  soundSettings?.soundEnabled
+                    ? 'bg-indigo-50/80 border-indigo-200 text-indigo-600 hover:bg-indigo-100'
+                    : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-600'
+                }`}
+                title={t('settings.soundButtonTooltip', 'Configure Scan & Generation Sound Effects')}
+                aria-label="Sound Preferences"
+              >
+                {soundSettings?.soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Social Media Sharing Button Group */}

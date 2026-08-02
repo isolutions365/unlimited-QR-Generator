@@ -1966,21 +1966,26 @@ English text: "${text}"`;
 
       // Record logs if tracking is enabled
       if (project.trackingEnabled) {
-        const userAgent = (req.headers['user-agent'] || '').toLowerCase();
+        const rawUserAgent = (req.headers['user-agent'] || '');
+        const userAgent = rawUserAgent.toLowerCase();
         let deviceType = 'Desktop';
-        if (userAgent.includes('mobi')) {
+        if (userAgent.includes('iphone') || userAgent.includes('android') || userAgent.includes('mobi') || userAgent.includes('phone')) {
           deviceType = 'Mobile';
-        } else if (userAgent.includes('ipad') || userAgent.includes('tablet')) {
+        } else if (userAgent.includes('ipad') || userAgent.includes('tablet') || userAgent.includes('kindle')) {
           deviceType = 'Tablet';
         }
 
         let browser = 'Chrome';
-        if (userAgent.includes('firefox')) {
+        if (userAgent.includes('firefox') || userAgent.includes('fxios')) {
           browser = 'Firefox';
-        } else if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+        } else if (userAgent.includes('safari') && !userAgent.includes('chrome') && !userAgent.includes('android')) {
           browser = 'Safari';
-        } else if (userAgent.includes('edge')) {
+        } else if (userAgent.includes('edg')) {
           browser = 'Edge';
+        } else if (userAgent.includes('opera') || userAgent.includes('opr')) {
+          browser = 'Opera';
+        } else if (userAgent.includes('samsungbrowser')) {
+          browser = 'Samsung Internet';
         }
 
         const ip = (req.headers['x-forwarded-for'] as string || req.ip || '127.0.0.1').split(',')[0].trim();
@@ -1994,21 +1999,33 @@ English text: "${text}"`;
           approxLocation = 'Germany';
         } else if (lang.includes('ja') || lang.includes('jp')) {
           approxLocation = 'Japan';
-        } else if (lang.includes('us')) {
+        } else if (lang.includes('us') || lang.includes('en-us')) {
           approxLocation = 'United States';
+        } else if (lang.includes('pk') || lang.includes('ur')) {
+          approxLocation = 'Pakistan';
+        } else if (lang.includes('in') || lang.includes('hi')) {
+          approxLocation = 'India';
+        } else if (lang.includes('ca')) {
+          approxLocation = 'Canada';
+        } else if (lang.includes('au')) {
+          approxLocation = 'Australia';
         }
 
+        const referrer = (req.headers['referer'] || req.headers['referrer'] || 'Direct / Scan') as string;
         const scanId = `scan-${Math.random().toString(36).substring(2, 11)}`;
 
         const newScan = {
           id: scanId,
           projectId: project.id,
           trackingId: trackingId,
+          timestamp: new Date().toISOString(),
           deviceType,
           browser,
           approxLocation,
           ip,
-          userId: project.userId
+          userId: project.userId,
+          referrer,
+          userAgent: rawUserAgent
         };
 
         await dbInstance.createScan(newScan);

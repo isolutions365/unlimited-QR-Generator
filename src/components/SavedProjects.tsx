@@ -424,10 +424,10 @@ export default function SavedProjects({ projects,
 
                       {proj.trackingEnabled && (
                         <div className="flex items-center gap-1 ltr-lock">
-                          {onSeedData && (
+                          {import.meta.env.DEV && onSeedData && (
                             <button
                               type="button"
-                              title="Generate fake analytics clicks"
+                              title="Generate fake analytics clicks (Internal Testing Only)"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 onSeedData(proj.id, proj.trackingId);
