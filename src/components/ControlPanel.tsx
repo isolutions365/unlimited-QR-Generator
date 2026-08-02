@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode } from 'lucide-react';
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
+import PaymentWalletPanel from './PaymentWalletPanel';
 import { getEmblemFontSize } from '../utils/qrRenderer';
 import qrcode from 'qrcode';
 
@@ -465,7 +466,7 @@ export default function ControlPanel({ currentProject,
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm"
       >
         <label className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-3">{t('control.qrCodeType', 'QR Code Type')}</label>
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
           {(
             [
               { id: 'url', icon: Link2, label: 'URL', color: 'text-blue-500' },
@@ -477,6 +478,7 @@ export default function ControlPanel({ currentProject,
               { id: 'sms', icon: MessageSquare, label: 'SMS', color: 'text-indigo-500' },
               { id: 'social', icon: Share2, label: 'Social', color: 'text-orange-500' },
               { id: 'app', icon: Smartphone, label: 'App Store', color: 'text-rose-500' },
+              { id: 'payment', icon: Wallet, label: 'Payment / Wallet', color: 'text-emerald-600' },
               { id: 'crypto', icon: Coins, label: 'Crypto', color: 'text-amber-500' },
               { id: 'geo', icon: MapPin, label: 'Location', color: 'text-cyan-500' }
             ] as const
@@ -497,6 +499,10 @@ export default function ControlPanel({ currentProject,
                       fallback: 'https://apps.apple.com'
                     });
                     onChange({ ...localProject, type: 'app', content: initialContent, trackingEnabled: true });
+                  } else if (type.id === 'payment') {
+                    const currentContent = localProject.content || '';
+                    const initialContent = currentContent && (currentContent.startsWith('http') || currentContent.startsWith('upi') || currentContent.startsWith('venmo') || currentContent.startsWith('cash') || currentContent.startsWith('wxp') || currentContent.startsWith('pix') || currentContent.startsWith('mpesa') || currentContent.startsWith('jazz') || currentContent.startsWith('easy') || currentContent.startsWith('stc') || currentContent.startsWith('iban') || currentContent.startsWith('sadad')) ? currentContent : 'https://paypal.me/';
+                    onChange({ ...localProject, type: 'payment', content: initialContent });
                   } else {
                     onChange({ ...localProject, type: type.id });
                   }
@@ -1114,6 +1120,13 @@ export default function ControlPanel({ currentProject,
               />
             </div>
           </div>
+        )}
+
+        {localProject.type === 'payment' && (
+          <PaymentWalletPanel
+            content={localProject.content || ''}
+            onChangeContent={(newContent) => onChange({ ...localProject, content: newContent }, true)}
+          />
         )}
       </motion.div>
 
