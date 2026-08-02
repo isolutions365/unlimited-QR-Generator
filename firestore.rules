@@ -2,58 +2,95 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // --- HELPER FUNCTIONS ---
     function isSignedIn() {
       return request.auth != null;
     }
 
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
     // --- USERS COLLECTION ---
     match /users/{userId} {
-      allow read, write: if true;
+      allow get: if isSignedIn() && request.auth.uid == userId;
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
+      allow delete: if false;
     }
 
     // --- USER PROFILES COLLECTION ---
     match /user_profiles/{userId} {
-      allow read, write: if true;
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
     // --- PROJECTS COLLECTION ---
     match /projects/{projectId} {
-      allow read, write: if true;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
     }
 
     // --- SCANS COLLECTION ---
     match /scans/{scanId} {
-      allow read, write: if true;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+      allow update: if false;
     }
 
     // --- REFERRAL CLICKS COLLECTION ---
     match /referralClicks/{clickId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if false;
     }
 
     // --- NOTIFICATIONS COLLECTION ---
     match /notifications/{notificationId} {
-      allow read, write: if true;
+      allow list, get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['read']);
+      allow create, delete: if false;
     }
 
     // --- COMMUNITY POSTS COLLECTION ---
     match /communityPosts/{postId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow create: if incoming().authorId == 'guest' || (isSignedIn() && incoming().authorId == request.auth.uid);
+      allow update: if incoming().diff(existing()).affectedKeys().hasOnly(['upvotes', 'commentsCount']);
+      allow delete: if false;
     }
 
     // --- ROADMAP ITEMS COLLECTION ---
     match /roadmapItems/{itemId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if false;
     }
 
     // --- NEWSLETTER SUBSCRIBERS COLLECTION ---
     match /newsletterSubscribers/{subId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if false;
     }
 
     // --- FEEDBACK COLLECTION ---
     match /feedback/{feedbackId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if false;
     }
   }
 }
