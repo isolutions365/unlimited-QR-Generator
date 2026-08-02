@@ -6,59 +6,65 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Global document rule for all collections and documents
-    match /{document=**} {
-      allow read, write: if true;
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
     }
 
     // --- USERS COLLECTION ---
     match /users/{userId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow read, write: if isOwner(userId);
     }
 
     // --- USER PROFILES COLLECTION ---
     match /user_profiles/{userId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow read, write: if isOwner(userId);
     }
 
     // --- PROJECTS COLLECTION ---
     match /projects/{projectId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
     }
 
     // --- SCANS COLLECTION ---
     match /scans/{scanId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow create: if true;
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
     }
 
     // --- REFERRAL CLICKS COLLECTION ---
     match /referralClicks/{clickId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow create: if true;
+      allow read, write: if isSignedIn();
     }
 
     // --- NOTIFICATIONS COLLECTION ---
     match /notifications/{notificationId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow read, write: if isSignedIn();
     }
 
     // --- COMMUNITY POSTS COLLECTION ---
     match /communityPosts/{postId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow read: if true;
+      allow write: if isSignedIn();
     }
 
     // --- ROADMAP ITEMS COLLECTION ---
     match /roadmapItems/{itemId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow read: if true;
+      allow write: if isSignedIn();
     }
 
     // --- NEWSLETTER SUBSCRIBERS COLLECTION ---
     match /newsletterSubscribers/{subId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow create: if true;
+      allow read, write: if isSignedIn();
     }
 
     // --- FEEDBACK COLLECTION ---
     match /feedback/{feedbackId} {
-      allow get, list, read, write, create, update, delete: if true;
+      allow create: if true;
+      allow read, write: if isSignedIn();
     }
   }
 }
