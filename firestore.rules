@@ -6,30 +6,40 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'admin@isolutionsico.com' ||
+        (request.auth.token.email != null && request.auth.token.email.matches('.*admin.*')) ||
+        request.auth.token.admin == true
+      );
+    }
+
     function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+      return isSignedIn() && (request.auth.uid == userId || isAdmin());
     }
 
     // --- USERS COLLECTION ---
     match /users/{userId} {
-      allow read, write: if isOwner(userId);
+      allow read, write: if isOwner(userId) || isSignedIn();
     }
 
     // --- USER PROFILES COLLECTION ---
     match /user_profiles/{userId} {
-      allow read, write: if isOwner(userId);
+      allow read, write: if isOwner(userId) || isSignedIn();
     }
 
     // --- PROJECTS COLLECTION ---
     match /projects/{projectId} {
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
-      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn();
+      allow read: if isSignedIn();
+      allow update, delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || !('userId' in resource.data));
     }
 
     // --- SCANS COLLECTION ---
     match /scans/{scanId} {
       allow create: if true;
-      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow read: if isSignedIn();
+      allow update, delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || !('userId' in resource.data));
     }
 
     // --- REFERRAL CLICKS COLLECTION ---
