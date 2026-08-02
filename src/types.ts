@@ -56,4 +56,4 @@ export interface ScanLog {
   userId: string;
 }
 
-export type AppTab = 'create' | 'templates' | 'analytics' | 'boiler' | 'animations';
+export type AppTab = 'create' | 'barcode' | 'templates' | 'analytics' | 'animations';
