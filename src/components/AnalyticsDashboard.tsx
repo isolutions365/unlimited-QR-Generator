@@ -180,6 +180,53 @@ const CustomChartTooltip = ({ active, payload, label, type }: CustomTooltipProps
   return null;
 };
 
+function CountUpCounter({ value, duration = 1000 }: { value: number; duration?: number }) {
+  const [displayValue, setDisplayValue] = React.useState(0);
+  const previousValueRef = React.useRef(0);
+
+  React.useEffect(() => {
+    const startValue = previousValueRef.current;
+    const endValue = value;
+    const startTime = performance.now();
+    let animationFrameId: number;
+
+    const updateNumber = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const currentValue = Math.round(startValue + (endValue - startValue) * easeProgress);
+
+      setDisplayValue(currentValue);
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(updateNumber);
+      } else {
+        previousValueRef.current = endValue;
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(updateNumber);
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [value, duration]);
+
+  return (
+    <motion.span
+      key={value}
+      initial={{ opacity: 0.5, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="inline-block"
+    >
+      {displayValue.toLocaleString()}
+    </motion.span>
+  );
+}
+
 export default function AnalyticsDashboard({
    scans, projects, onPurgeAll }: AnalyticsDashboardProps) {
   const { t } = useTranslation();
@@ -561,9 +608,11 @@ export default function AnalyticsDashboard({
           <div>
             <div className="flex items-center gap-1.5 text-gray-500 mb-1">
               <Users className="w-4 h-4 text-indigo-500" />
-              <span className="text-[10px] sm:text-xs font-medium">{t('analytics.statScans', 'Total Scan Counts')}</span>
+              <span className="text-[10px] sm:text-xs font-medium">{t('analytics.statScans', 'Total Campaign Scan Clicks')}</span>
             </div>
-            <span className="text-lg sm:text-2xl font-bold font-mono text-gray-900">{totalScans}</span>
+            <span className="text-lg sm:text-2xl font-bold font-mono text-gray-900">
+              <CountUpCounter value={totalScans} />
+            </span>
           </div>
           <div className="h-7 w-full mt-2">
             <ResponsiveContainer width="100%" height="100%">
