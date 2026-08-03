@@ -35,7 +35,7 @@ service cloud.firestore {
 
     // --- PROJECTS COLLECTION ---
     match /projects/{projectId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow create: if isSignedIn() && incoming().userId == request.auth.uid;
       allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
@@ -44,9 +44,9 @@ service cloud.firestore {
 
     // --- SCANS COLLECTION ---
     match /scans/{scanId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow create: if true;
       allow delete: if isSignedIn() && existing().userId == request.auth.uid;
       allow update: if false;
     }
@@ -59,7 +59,7 @@ service cloud.firestore {
 
     // --- NOTIFICATIONS COLLECTION ---
     match /notifications/{notificationId} {
-      allow list, get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list, get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['read']);
       allow create, delete: if false;
     }
@@ -92,7 +92,7 @@ service cloud.firestore {
 
     // --- DYNAMIC QRS COLLECTION ---
     match /dynamicQRs/{qrId} {
-      allow list: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.ownerId == request.auth.uid);
       allow get: if true; // Publicly readable for redirect routing
       allow create: if isSignedIn() 
                     && incoming().ownerId == request.auth.uid 
@@ -133,7 +133,7 @@ service cloud.firestore {
 
     // --- LANDING PAGES COLLECTION ---
     match /landingPages/{pageId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow get: if true; // Publicly readable for visitors
       allow create: if isSignedIn() && incoming().userId == request.auth.uid;
       allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
@@ -142,7 +142,7 @@ service cloud.firestore {
 
     // --- BUSINESS CARDS COLLECTION ---
     match /business_cards/{cardId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow get: if true; // Publicly readable for visitors/scanners
       allow create: if isSignedIn() && incoming().userId == request.auth.uid;
       allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
@@ -151,7 +151,7 @@ service cloud.firestore {
 
     // --- RESTAURANT MENUS COLLECTION ---
     match /restaurant_menus/{menuId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow get: if true; // Publicly readable for QR scans / mobile views
       allow create: if isSignedIn() && incoming().userId == request.auth.uid;
       allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
@@ -160,7 +160,7 @@ service cloud.firestore {
 
     // --- PDF SHARES COLLECTION ---
     match /pdf_shares/{shareId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow get: if true; // Publicly readable for QR scanner redirect or download page
       allow create: if isSignedIn() && incoming().userId == request.auth.uid;
       allow update: if true; // Let anonymous users increment download/view counts
@@ -169,7 +169,7 @@ service cloud.firestore {
 
     // --- CUSTOM FORMS COLLECTION ---
     match /custom_forms/{formId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow get: if true; // Publicly readable so visitors can load form schema
       allow create: if isSignedIn() && incoming().userId == request.auth.uid;
       allow update: if (isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid)
@@ -186,8 +186,8 @@ service cloud.firestore {
 
     // --- TOP LEVEL SUBMISSIONS COLLECTION ---
     match /submissions/{submissionId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
-      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
       allow create: if true; // Publicly writable for landing page visitors
       allow update, delete: if isSignedIn() && existing().userId == request.auth.uid;
     }
