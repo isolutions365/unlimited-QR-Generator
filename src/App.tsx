@@ -2529,11 +2529,11 @@ export default function App() {
                         </span>
                         
                         {/* Tooltip Card */}
-                        <div className="absolute right-0 bottom-full mb-2 w-64 p-3 bg-slate-950 text-white rounded-xl shadow-xl border border-slate-800 hidden group-hover/tooltip:block group-focus-within/tooltip:block animate-in fade-in slide-in-from-bottom-1 duration-150 z-50 text-left pointer-events-none">
+                        <div className="absolute right-0 bottom-full mb-2 w-64 max-w-[calc(100vw-3rem)] p-3 bg-slate-950 text-white rounded-xl shadow-xl border border-slate-800 hidden group-hover/tooltip:block group-focus-within/tooltip:block animate-in fade-in slide-in-from-bottom-1 duration-150 z-50 text-left pointer-events-none">
                           <div className="text-[10px] font-bold text-emerald-400 mb-1">
                             {t('tools.payment.tooltip.supported', 'Supported Global Methods')}
                           </div>
-                          <p className="text-[9.5px] text-slate-300 leading-normal mb-2">
+                          <p className="text-[9.5px] text-slate-300 leading-normal mb-2 break-words">
                             {t('tools.payment.tooltip.text', 'Receive money directly with secure QR codes supporting major networks.')}
                           </p>
                           <div className="flex flex-wrap gap-1">
@@ -2546,7 +2546,7 @@ export default function App() {
                       </div>
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t('tools.payment.title', 'Payment & Wallet QR')}</h3>
-                    <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                    <p className="text-[11px] text-slate-500 mt-2 leading-relaxed break-words">
                       {t('tools.payment.desc', 'Generate payment requests, custom digital wallet links, UPI, and invoice QR codes. Supports global methods like PayPal, Venmo, and more.')}
                     </p>
                   </div>
