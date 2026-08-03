@@ -1373,6 +1373,44 @@ export default function App() {
     }
   };
 
+  // Batch delete projects from database ledger
+  const handleBatchDeleteProjects = async (ids: string[]) => {
+    if (!ids || ids.length === 0) return;
+    if (!confirm(t('confirm.batchDeletePresets', 'Are you sure you want to delete {count} selected QR presets?', { count: ids.length }))) return;
+    try {
+      setErrorMessage(null);
+      await Promise.all(ids.map(id => api.deleteProject(id)));
+      if (currentProject.id && ids.includes(currentProject.id)) {
+        setCurrentProject(INITIAL_DESIGN);
+      }
+      await fetchUserData();
+    } catch (err: any) {
+      setErrorMessage(err.message || t('error.removeFailed', 'Error removing items from the database.'));
+    }
+  };
+
+  // Batch update project categories in database ledger
+  const handleBatchUpdateCategory = async (ids: string[], category: string) => {
+    if (!ids || ids.length === 0) return;
+    try {
+      setErrorMessage(null);
+      await Promise.all(
+        ids.map(id => {
+          const project = projects.find(p => p.id === id);
+          if (!project) return Promise.resolve();
+          return api.saveProject({ ...project, category });
+        })
+      );
+      if (currentProject.id && ids.includes(currentProject.id)) {
+        setCurrentProject(prev => ({ ...prev, category }));
+      }
+      await fetchUserData();
+    } catch (err: any) {
+      console.error(err);
+      setErrorMessage(err.message || t('error.updateFolderFailed', 'Error occurred while updating folder categories.'));
+    }
+  };
+
   // In-app test scan click handler
   const handleSimTestScan = async (text: string) => {
     // If it's a tracking URL, trigger a redirect click or trigger local record logging
@@ -2222,8 +2260,10 @@ export default function App() {
                   projects={projects}
                   onSelect={handleSelectProject}
                   onDelete={handleDeleteProject}
+                  onBatchDelete={handleBatchDeleteProjects}
                   onSeedData={handleSeedScanClick}
                   onUpdateCategory={handleUpdateProjectCategory}
+                  onBatchUpdateCategory={handleBatchUpdateCategory}
                   isLoading={isLoadingData}
                 />
               </React.Suspense>

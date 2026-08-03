@@ -13,23 +13,29 @@ import {
   Folder, 
   FolderPlus, 
   Plus, 
-  X 
+  X,
+  CheckSquare
 } from 'lucide-react';
 
 interface SavedProjectsProps {
   projects: QRProject[];
   onSelect: (project: QRProject) => void;
   onDelete: (id: string) => void;
+  onBatchDelete?: (ids: string[]) => Promise<void> | void;
   onSeedData?: (projectId: string, trackingId: string) => void;
   onUpdateCategory?: (projectId: string, category: string) => Promise<void>;
+  onBatchUpdateCategory?: (ids: string[], category: string) => Promise<void>;
   isLoading: boolean;
 }
 
-export default function SavedProjects({ projects,
+export default function SavedProjects({ 
+  projects,
   onSelect,
   onDelete,
+  onBatchDelete,
   onSeedData,
   onUpdateCategory,
+  onBatchUpdateCategory,
   isLoading
 }: SavedProjectsProps) {
   const { t, locale } = useTranslation();
@@ -38,6 +44,10 @@ export default function SavedProjects({ projects,
   const [newFolderName, setNewFolderName] = React.useState('');
   const [isCreatingFolder, setIsCreatingFolder] = React.useState(false);
   const [movingProjectId, setMovingProjectId] = React.useState<string | null>(null);
+  
+  // Batch selection state
+  const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
+  const [isBatchMoving, setIsBatchMoving] = React.useState(false);
 
   // Custom empty folders loaded from/stored in localStorage
   const [customFolders, setCustomFolders] = React.useState<string[]>(() => {
@@ -53,6 +63,7 @@ export default function SavedProjects({ projects,
   React.useEffect(() => {
     const handleGlobalClick = () => {
       setMovingProjectId(null);
+      setIsBatchMoving(false);
     };
     window.addEventListener('click', handleGlobalClick);
     return () => window.removeEventListener('click', handleGlobalClick);
@@ -124,6 +135,52 @@ export default function SavedProjects({ projects,
     return (projects || []).filter(p => (((val) => (val || '').trim())(p.category ?? "")).toLowerCase() === (((val) => (val || '').trim())(activeCategory ?? "")).toLowerCase());
   }, [projects, activeCategory]);
 
+  // Batch selection handlers
+  const handleToggleSelect = (id: string, e?: React.MouseEvent | React.ChangeEvent) => {
+    if (e) e.stopPropagation();
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const allFilteredSelected = React.useMemo(() => {
+    if (filteredProjects.length === 0) return false;
+    return filteredProjects.every(p => selectedIds.includes(p.id));
+  }, [filteredProjects, selectedIds]);
+
+  const handleToggleSelectAll = () => {
+    if (allFilteredSelected) {
+      const filteredIdSet = new Set(filteredProjects.map(p => p.id));
+      setSelectedIds(prev => prev.filter(id => !filteredIdSet.has(id)));
+    } else {
+      const existingSet = new Set(selectedIds);
+      filteredProjects.forEach(p => existingSet.add(p.id));
+      setSelectedIds(Array.from(existingSet));
+    }
+  };
+
+  const handleExecuteBatchDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (onBatchDelete) {
+      await onBatchDelete(selectedIds);
+    } else {
+      if (!confirm(t('confirm.batchDeletePresets', 'Are you sure you want to delete {count} selected QR presets?', { count: selectedIds.length }))) return;
+      await Promise.all(selectedIds.map(id => onDelete(id)));
+    }
+    setSelectedIds([]);
+  };
+
+  const handleExecuteBatchMove = async (category: string) => {
+    if (selectedIds.length === 0) return;
+    if (onBatchUpdateCategory) {
+      await onBatchUpdateCategory(selectedIds, category);
+    } else if (onUpdateCategory) {
+      await Promise.all(selectedIds.map(id => onUpdateCategory(id, category)));
+    }
+    setSelectedIds([]);
+    setIsBatchMoving(false);
+  };
+
   return (
     <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col gap-4">
       {/* Title & Folder Creation Controls */}
@@ -136,7 +193,18 @@ export default function SavedProjects({ projects,
           <p className="text-xs text-gray-500 mt-1 flex-wrap">{t('saved.desc', 'Manage saved QR codes, view tracking status, and filter designs by custom folder categories.')}</p>
         </div>
 
-        <div className="shrink-0 flex items-center">
+        <div className="shrink-0 flex items-center gap-2">
+          {filteredProjects.length > 0 && (
+            <button
+              type="button"
+              onClick={handleToggleSelectAll}
+              className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-indigo-600 font-semibold px-2.5 py-1.5 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer border border-slate-200/80 bg-white"
+            >
+              <CheckSquare className="w-3.5 h-3.5 text-indigo-600" />
+              {allFilteredSelected ? t('saved.deselectAll', 'Deselect All') : t('saved.selectAll', 'Select All')}
+            </button>
+          )}
+
           {!isCreatingFolder ? (
             <button
               type="button"
@@ -262,6 +330,107 @@ export default function SavedProjects({ projects,
             </div>
           )}
 
+          {/* Batch Action Toolbar */}
+          {selectedIds.length > 0 && (
+            <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-xl p-3 shadow-md flex flex-wrap items-center justify-between gap-3 border border-indigo-500/20">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-indigo-500/30 border border-indigo-400/30 flex items-center justify-center text-xs font-bold text-indigo-200">
+                  {selectedIds.length}
+                </span>
+                <span className="text-xs font-semibold text-indigo-100">
+                  {t('saved.batchSelectedCount', '{count} selected', { count: selectedIds.length })}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 relative flex-wrap">
+                {/* Batch Move Dropdown */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsBatchMoving(!isBatchMoving);
+                    }}
+                    className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer border border-white/10"
+                  >
+                    <Folder className="w-3.5 h-3.5 text-indigo-300" />
+                    {t('saved.batchMoveBtn', 'Move to Folder')}
+                  </button>
+
+                  {isBatchMoving && (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute right-0 top-9 z-50 w-52 bg-white text-slate-900 rounded-xl border border-slate-200 shadow-xl py-1.5 text-xs animate-in fade-in duration-100"
+                    >
+                      <div className="px-3 py-1 text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 mb-1">
+                        {t('saved.moveSelectedTo', 'Move Selected To')}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleExecuteBatchMove('')}
+                        className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 flex items-center gap-2 cursor-pointer font-medium text-slate-700"
+                      >
+                        <Folder className="w-3.5 h-3.5 text-slate-400" />
+                        {t('saved.uncategorizedLabel', 'Uncategorized')}
+                      </button>
+
+                      {allCategories.map(cat => (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => handleExecuteBatchMove(cat)}
+                          className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 flex items-center gap-2 cursor-pointer font-medium text-slate-700 truncate"
+                        >
+                          <Folder className="w-3.5 h-3.5 text-indigo-500" />
+                          {cat}
+                        </button>
+                      ))}
+
+                      <div className="border-t border-slate-100 my-1"></div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newFolder = prompt('Enter a name for the new folder:');
+                          if (newFolder && ((val) => (val || '').trim())(newFolder)) {
+                            const trimmed = ((val) => (val || '').trim())(newFolder);
+                            handleCreateFolder(trimmed);
+                            handleExecuteBatchMove(trimmed);
+                          }
+                        }}
+                        className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 text-indigo-600 font-bold flex items-center gap-2 cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5 text-indigo-600" />
+                        {t('saved.newFolderBtn', 'New Folder')}...
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Batch Delete Button */}
+                <button
+                  type="button"
+                  onClick={handleExecuteBatchDelete}
+                  className="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer shadow-3xs"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  {t('saved.batchDeleteBtn', 'Delete Selected')}
+                </button>
+
+                {/* Clear Selection */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedIds([])}
+                  className="p-1.5 hover:bg-white/10 text-indigo-200 hover:text-white rounded-lg transition-colors cursor-pointer"
+                  title={t('saved.clearSelection', 'Clear selection')}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {filteredProjects.length === 0 ? (
             <div className="py-8 text-center border-2 border-dashed border-gray-150 rounded-xl bg-slate-50/20">
               <Folder className="w-6 h-6 text-indigo-300 mx-auto mb-1.5" />
@@ -271,32 +440,48 @@ export default function SavedProjects({ projects,
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[480px] overflow-y-auto pr-1">
               {filteredProjects.map(proj => {
-                const appUrl = ((import.meta as any).env?.VITE_APP_URL || window.location.origin);
+                const isSelected = selectedIds.includes(proj.id);
                 return (
                   <div
                     key={proj.id}
                     onClick={() => onSelect(proj)}
-                    className={`bg-white hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-xl p-4 cursor-pointer transition-all flex flex-col gap-3 group relative shadow-sm ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
+                    className={`bg-white hover:bg-gray-50 border rounded-xl p-4 cursor-pointer transition-all flex flex-col gap-3 group relative shadow-xs ${
+                      isSelected ? 'border-indigo-400 bg-indigo-50/25 ring-2 ring-indigo-500/20 shadow-sm' : 'border-gray-100 hover:border-gray-200'
+                    } ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
                   >
                     {/* Header info */}
                     <div className="flex items-start justify-between gap-2">
-                      <div className="overflow-hidden">
-                        <span className="text-xs font-semibold text-gray-800 block truncate group-hover:text-indigo-600 rtl-content">
-                          {proj.name}
-                        </span>
-                        <span className="text-[10px] text-gray-500 font-mono block truncate max-w-[200px] ltr-lock">
-                          {proj.content}
-                        </span>
-                        {proj.category && (
-                          <span className="inline-flex items-center gap-1 text-[9px] bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded-full mt-1.5 ltr-lock">
-                            <Folder className="w-2.5 h-2.5 text-indigo-500 ltr-lock" />
-                            {proj.category}
+                      <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="shrink-0 pt-0.5 flex items-center ltr-lock"
+                        >
+                          <input
+                            type="checkbox"
+                            aria-label={`Select project ${proj.name}`}
+                            checked={isSelected}
+                            onChange={(e) => handleToggleSelect(proj.id, e)}
+                            className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer transition-transform hover:scale-105"
+                          />
+                        </div>
+                        <div className="overflow-hidden min-w-0 flex-1">
+                          <span className="text-xs font-semibold text-gray-800 block truncate group-hover:text-indigo-600 rtl-content">
+                            {proj.name}
                           </span>
-                        )}
+                          <span className="text-[10px] text-gray-500 font-mono block truncate max-w-[200px] ltr-lock">
+                            {proj.content}
+                          </span>
+                          {proj.category && (
+                            <span className="inline-flex items-center gap-1 text-[9px] bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded-full mt-1.5 ltr-lock">
+                              <Folder className="w-2.5 h-2.5 text-indigo-500 ltr-lock" />
+                              {proj.category}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       
                       {/* Controls (Move Folder, Restore Config, Delete) */}
-                      <div className="flex items-center gap-1 relative ltr-lock">
+                      <div className="flex items-center gap-1 relative ltr-lock shrink-0">
                         <button
                           type="button"
                           title="Move project to folder"
