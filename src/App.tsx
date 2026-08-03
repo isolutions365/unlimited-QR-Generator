@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
 import { useFirebaseAuth } from './context/FirebaseAuthContext';
+import { auth } from './lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { QRProject, ScanLog, AppTab } from './types';
 import { landingPages } from './pages/landing/SEODatabase';
 import { getBlogArticles } from './data/blogData';
@@ -1265,10 +1267,27 @@ export default function App() {
 
   // Create or Update QR Design project
   const handleSaveProject = async () => {
-    if (!user) {
-      setErrorMessage(t('error.signInToSave', 'Please sign in or create an account to save QR designs to your library.'));
-      setIsAuthModalOpen(true);
-      return;
+    let activeUser = user;
+    if (!activeUser) {
+      console.log('[App handleSaveProject] No user logged in. Checking auth.currentUser or performing anonymous sign-in...');
+      let uid = auth.currentUser?.uid;
+      if (!uid) {
+        try {
+          const anon = await signInAnonymously(auth);
+          uid = anon.user.uid;
+          console.log('[App handleSaveProject] Signed in anonymously with UID:', uid);
+        } catch (anonErr) {
+          console.error('[App handleSaveProject] Anonymous sign-in failed:', anonErr);
+        }
+      }
+      if (uid) {
+        activeUser = {
+          id: uid,
+          email: auth.currentUser?.email || '',
+          name: auth.currentUser?.displayName || 'Guest User'
+        };
+        setUser(activeUser);
+      }
     }
 
     try {
@@ -1311,7 +1330,9 @@ export default function App() {
         trackingId: trackingId
       };
 
+      console.log('[App handleSaveProject BEFORE] Calling api.saveProject with projectData:', projectData);
       const saved = await api.saveProject(projectData);
+      console.log('[App handleSaveProject AFTER SUCCESS] Saved project:', saved);
       
       // Select newly saved project
       setCurrentProject(saved);
@@ -1320,8 +1341,12 @@ export default function App() {
       // Refetch user data
       await fetchUserData();
     } catch (err: any) {
-      console.error(err);
-      setErrorMessage(err.message || t('error.saveFailed', 'Error occurred while saving configurations.'));
+      console.error('[App handleSaveProject ERROR]', err);
+      const errorMsg = err?.message || t('error.saveFailed', 'Error occurred while saving configurations.');
+      setErrorMessage(errorMsg);
+      if (typeof window !== 'undefined') {
+        alert(`Cloud Save Failed: ${errorMsg}`);
+      }
     } finally {
       setIsSaving(false);
     }

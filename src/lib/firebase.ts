@@ -24,6 +24,9 @@ export const firebaseConfig = {
 // Initialize Firebase App gracefully and perform single-instance checks
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
+// Log active Firebase config project ID for verification
+console.log('[Firebase Init] Active Firebase projectId:', firebaseConfig.projectId, '| Database ID:', firebaseConfig.firestoreDatabaseId);
+
 // Export initialized services
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,

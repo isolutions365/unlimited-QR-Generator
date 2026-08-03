@@ -2104,8 +2104,17 @@ Generate the 'payload' matching the precise data schema for the selected categor
   // Real-Time public tracking short URL parser
   app.get('/qr/:trackingId', async (req, res) => {
     const { trackingId } = req.params;
+    console.log(`[Short-Link Redirect] Request received for shortCode/trackingId: "${trackingId}"`);
     try {
       const project = await dbInstance.getProjectByTrackingId(trackingId);
+      console.log(`[Short-Link Redirect] Firestore Lookup for "${trackingId}":`, project ? {
+        id: project.id,
+        name: project.name,
+        type: project.type,
+        content: project.content,
+        trackingEnabled: project.trackingEnabled
+      } : 'NOT FOUND IN FIRESTORE');
+
       if (!project) {
         return res.status(404).send('Dynamic short link not found.');
       }

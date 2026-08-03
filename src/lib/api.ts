@@ -143,13 +143,20 @@ class ApiClient {
     let userId = auth.currentUser?.uid || project.userId;
     if (!userId) {
       try {
+        console.log('[Firebase Auth] No authenticated UID found. Attempting anonymous sign in...');
         const anonRes = await signInAnonymously(auth);
         userId = anonRes.user.uid;
+        console.log('[Firebase Auth] Anonymous sign-in successful. UID:', userId);
       } catch (anonErr) {
         console.warn('[Firebase Auth] Anonymous sign-in attempt notice:', anonErr);
       }
     }
-    if (!userId) throw new Error("Authentication required to save project.");
+    if (!userId) {
+      const err = new Error("Authentication required to save project.");
+      console.error('[Firestore WRITE ABORTED] Missing userId:', err);
+      if (typeof window !== 'undefined') alert("Authentication required to save project.");
+      throw err;
+    }
     
     const projectId = project.id || doc(collection(db, 'projects')).id;
     const now = new Date().toISOString();
@@ -180,10 +187,16 @@ class ApiClient {
       category: project.category || 'General'
     };
 
+    console.log('[Firestore WRITE BEFORE] Collection: "projects" | Doc ID:', projectId, '| Data:', projectData);
     try {
       await setDoc(doc(db, 'projects', projectId), projectData, { merge: true });
+      console.log('[Firestore WRITE AFTER] SUCCESS! Collection: "projects" | Doc ID:', projectId);
       return projectData;
-    } catch (err) {
+    } catch (err: any) {
+      console.error('[Firestore WRITE ERROR] Collection: "projects" | Doc ID:', projectId, '| Full Error:', err);
+      if (typeof window !== 'undefined') {
+        alert(`Firestore Write Error [projects/${projectId}]: ${err?.message || err}`);
+      }
       handleFirestoreError(err, OperationType.WRITE, `projects/${projectId}`);
       throw err;
     }
@@ -191,10 +204,22 @@ class ApiClient {
 
   async deleteProject(id: string): Promise<void> {
     const userId = auth.currentUser?.uid;
-    if (!userId) throw new Error("Authentication required to delete project.");
+    if (!userId) {
+      const err = new Error("Authentication required to delete project.");
+      console.error('[Firestore DELETE ABORTED] Missing userId:', err);
+      if (typeof window !== 'undefined') alert("Authentication required to delete project.");
+      throw err;
+    }
+
+    console.log('[Firestore DELETE BEFORE] Collection: "projects" | Doc ID:', id);
     try {
       await deleteDoc(doc(db, 'projects', id));
-    } catch (err) {
+      console.log('[Firestore DELETE AFTER] SUCCESS! Collection: "projects" | Doc ID:', id);
+    } catch (err: any) {
+      console.error('[Firestore DELETE ERROR] Collection: "projects" | Doc ID:', id, '| Full Error:', err);
+      if (typeof window !== 'undefined') {
+        alert(`Firestore Delete Error [projects/${id}]: ${err?.message || err}`);
+      }
       handleFirestoreError(err, OperationType.DELETE, `projects/${id}`);
       throw err;
     }
@@ -282,10 +307,16 @@ class ApiClient {
       userId
     };
 
+    console.log('[Firestore WRITE BEFORE] Collection: "scans" | Doc ID:', scanId, '| Data:', scanData);
     try {
       await setDoc(doc(db, 'scans', scanId), scanData);
+      console.log('[Firestore WRITE AFTER] SUCCESS! Collection: "scans" | Doc ID:', scanId);
       return scanData;
-    } catch (err) {
+    } catch (err: any) {
+      console.error('[Firestore WRITE ERROR] Collection: "scans" | Doc ID:', scanId, '| Full Error:', err);
+      if (typeof window !== 'undefined') {
+        alert(`Firestore Write Error [scans/${scanId}]: ${err?.message || err}`);
+      }
       handleFirestoreError(err, OperationType.WRITE, `scans/${scanId}`);
       throw err;
     }
