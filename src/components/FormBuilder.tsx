@@ -7,7 +7,9 @@ import {
   Share2, HelpCircle, Lock, Calendar, ChevronDown, ChevronUp, AlertCircle, Info
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { collection, doc, setDoc, getDocs, query, where, deleteDoc, updateDoc } from 'firebase/firestore';
+import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -223,7 +225,15 @@ export default function FormBuilder() {
   }, [selectedForm]);
 
   const loadForms = async () => {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {
+        console.warn('Anon auth notice:', e);
+      }
+    }
     if (userId) {
       try {
         const q = query(collection(db, 'custom_forms'), where('userId', '==', userId));
@@ -239,51 +249,21 @@ export default function FormBuilder() {
       } catch (err) {
         console.error('Error listing custom forms:', err);
       }
-    } else {
-      const local = localStorage.getItem('guest_custom_forms');
-      if (local) {
-        try {
-          const list = JSON.parse(local) as CustomFormConfig[];
-          setForms(list);
-          if (list.length > 0 && !selectedForm) {
-            setSelectedForm(list[0]);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }
     }
   };
 
   const loadSubmissions = async (formId: string) => {
-    const userId = auth.currentUser?.uid;
-    if (userId) {
-      try {
-        const subSnap = await getDocs(collection(db, 'custom_forms', formId, 'submissions'));
-        const list: FormSubmission[] = [];
-        subSnap.forEach(d => {
-          list.push({ id: d.id, ...d.data() } as FormSubmission);
-        });
-        // Sort by submission date desc
-        list.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
-        setSubmissions(list);
-      } catch (err) {
-        console.error('Error fetching submissions:', err);
-      }
-    } else {
-      const localKey = `guest_submissions_${formId}`;
-      const local = localStorage.getItem(localKey);
-      if (local) {
-        try {
-          const list = JSON.parse(local) as FormSubmission[];
-          list.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
-          setSubmissions(list);
-        } catch (e) {
-          console.error(e);
-        }
-      } else {
-        setSubmissions([]);
-      }
+    try {
+      const subSnap = await getDocs(collection(db, 'custom_forms', formId, 'submissions'));
+      const list: FormSubmission[] = [];
+      subSnap.forEach(d => {
+        list.push({ id: d.id, ...d.data() } as FormSubmission);
+      });
+      // Sort by submission date desc
+      list.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+      setSubmissions(list);
+    } catch (err) {
+      console.error('Error fetching submissions:', err);
     }
   };
 
@@ -327,11 +307,19 @@ export default function FormBuilder() {
     if (!formTitle.trim()) return;
 
     setIsSaving(true);
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (err) {}
+    }
+
     const formId = `form-${Math.random().toString(36).substring(2, 9)}`;
 
     const newForm: CustomFormConfig = {
       id: formId,
-      userId: auth.currentUser?.uid || 'guest',
+      userId: userId || 'anonymous',
       title: formTitle,
       description: formDesc || 'Scan the QR code to fill out this dynamic digital form.',
       type: formType,
@@ -343,17 +331,21 @@ export default function FormBuilder() {
       themeColor: formTheme
     };
 
-    if (auth.currentUser?.uid) {
+    if (userId) {
       try {
         await setDoc(doc(db, 'custom_forms', formId), newForm);
+        await api.saveProject({
+          id: formId,
+          name: formTitle,
+          type: 'form',
+          content: `${window.location.origin}/share-preview?type=form&id=${formId}`,
+          userId: userId,
+          trackingId: formId
+        }).catch(() => {});
         playAudioSound('generate');
       } catch (err) {
         console.error('Firestore form save failed:', err);
       }
-    } else {
-      const updated = [newForm, ...forms];
-      localStorage.setItem('guest_custom_forms', JSON.stringify(updated));
-      playAudioSound('generate');
     }
 
     // Reset Form Building Screen
@@ -369,17 +361,22 @@ export default function FormBuilder() {
   };
 
   const handleDeleteForm = async (id: string) => {
-    if (auth.currentUser?.uid) {
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {}
+    }
+
+    if (userId) {
       try {
         await deleteDoc(doc(db, 'custom_forms', id));
+        await api.deleteProject(id).catch(() => {});
         playAudioSound('preview');
       } catch (err) {
         console.error('Delete form failed:', err);
       }
-    } else {
-      const updated = forms.filter(f => f.id !== id);
-      localStorage.setItem('guest_custom_forms', JSON.stringify(updated));
-      playAudioSound('preview');
     }
 
     const remaining = forms.filter(f => f.id !== id);
@@ -396,15 +393,10 @@ export default function FormBuilder() {
     const nextStatus: 'active' | 'closed' = form.status === 'active' ? 'closed' : 'active';
     const updated: CustomFormConfig = { ...form, status: nextStatus };
 
-    if (auth.currentUser?.uid) {
-      try {
-        await updateDoc(doc(db, 'custom_forms', form.id), { status: nextStatus });
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      const updatedList = forms.map(f => f.id === form.id ? updated : f);
-      localStorage.setItem('guest_custom_forms', JSON.stringify(updatedList));
+    try {
+      await updateDoc(doc(db, 'custom_forms', form.id), { status: nextStatus });
+    } catch (err) {
+      console.error(err);
     }
 
     setSelectedForm(updated);
@@ -424,15 +416,10 @@ export default function FormBuilder() {
     const nextViewCount = form.viewCount + 1;
     const updated = { ...form, viewCount: nextViewCount };
 
-    if (auth.currentUser?.uid) {
-      try {
-        await updateDoc(doc(db, 'custom_forms', form.id), { viewCount: nextViewCount });
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      const updatedList = forms.map(f => f.id === form.id ? updated : f);
-      localStorage.setItem('guest_custom_forms', JSON.stringify(updatedList));
+    try {
+      await updateDoc(doc(db, 'custom_forms', form.id), { viewCount: nextViewCount });
+    } catch (e) {
+      console.error(e);
     }
     
     setSelectedForm(updated);
@@ -490,25 +477,13 @@ export default function FormBuilder() {
     const nextSubCount = simulatingForm.submissionCount + 1;
     const updatedForm = { ...simulatingForm, submissionCount: nextSubCount };
 
-    if (auth.currentUser?.uid) {
-      try {
-        // Save submission to collection
-        await setDoc(doc(db, 'custom_forms', simulatingForm.id, 'submissions', subId), newSub);
-        // Update custom form count
-        await updateDoc(doc(db, 'custom_forms', simulatingForm.id), { submissionCount: nextSubCount });
-      } catch (err) {
-        console.error('Submission failed:', err);
-      }
-    } else {
-      // Local sub save
-      const subKey = `guest_submissions_${simulatingForm.id}`;
-      const existingSubsLocal = localStorage.getItem(subKey);
-      const subList = existingSubsLocal ? JSON.parse(existingSubsLocal) : [];
-      localStorage.setItem(subKey, JSON.stringify([newSub, ...subList]));
-
-      // Update Form stats locally
-      const updatedList = forms.map(f => f.id === simulatingForm.id ? updatedForm : f);
-      localStorage.setItem('guest_custom_forms', JSON.stringify(updatedList));
+    try {
+      // Save submission to collection
+      await setDoc(doc(db, 'custom_forms', simulatingForm.id, 'submissions', subId), newSub);
+      // Update custom form count
+      await updateDoc(doc(db, 'custom_forms', simulatingForm.id), { submissionCount: nextSubCount });
+    } catch (err) {
+      console.error('Submission failed:', err);
     }
 
     setSimulatorSubmitted(true);
@@ -522,31 +497,14 @@ export default function FormBuilder() {
   const handleDeleteSubmission = async (subId: string) => {
     if (!selectedForm) return;
 
-    if (auth.currentUser?.uid) {
-      try {
-        await deleteDoc(doc(db, 'custom_forms', selectedForm.id, 'submissions', subId));
-        // Decrement count
-        const nextSubCount = Math.max(0, selectedForm.submissionCount - 1);
-        await updateDoc(doc(db, 'custom_forms', selectedForm.id), { submissionCount: nextSubCount });
-        setSelectedForm({ ...selectedForm, submissionCount: nextSubCount });
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      const subKey = `guest_submissions_${selectedForm.id}`;
-      const existing = localStorage.getItem(subKey);
-      if (existing) {
-        const parsed = JSON.parse(existing) as FormSubmission[];
-        const filtered = parsed.filter(s => s.id !== subId);
-        localStorage.setItem(subKey, JSON.stringify(filtered));
-
-        const nextSubCount = Math.max(0, selectedForm.submissionCount - 1);
-        const updated = { ...selectedForm, submissionCount: nextSubCount };
-        setSelectedForm(updated);
-
-        const updatedList = forms.map(f => f.id === selectedForm.id ? updated : f);
-        localStorage.setItem('guest_custom_forms', JSON.stringify(updatedList));
-      }
+    try {
+      await deleteDoc(doc(db, 'custom_forms', selectedForm.id, 'submissions', subId));
+      // Decrement count
+      const nextSubCount = Math.max(0, selectedForm.submissionCount - 1);
+      await updateDoc(doc(db, 'custom_forms', selectedForm.id), { submissionCount: nextSubCount });
+      setSelectedForm({ ...selectedForm, submissionCount: nextSubCount });
+    } catch (err) {
+      console.error(err);
     }
 
     await loadForms();

@@ -7,7 +7,9 @@ import {
   Briefcase, Landmark, Info
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
+import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 
 // Interfaces
@@ -83,7 +85,15 @@ export default function DigitalBusinessCard() {
   }, []);
 
   const loadSavedCards = async () => {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {
+        console.warn('Anon auth notice:', e);
+      }
+    }
     if (userId) {
       try {
         const q = query(collection(db, 'business_cards'), where('userId', '==', userId));
@@ -95,16 +105,6 @@ export default function DigitalBusinessCard() {
         setSavedCards(list);
       } catch (err) {
         console.error('Error fetching business cards from Firestore:', err);
-      }
-    } else {
-      // LocalStorage fallback for guests
-      const cached = localStorage.getItem('guest_business_cards');
-      if (cached) {
-        try {
-          setSavedCards(JSON.parse(cached));
-        } catch (e) {
-          console.warn('Error reading local business cards', e);
-        }
       }
     }
   };
@@ -198,7 +198,15 @@ export default function DigitalBusinessCard() {
   // Save Card to Firestore
   const handleSaveCard = async () => {
     setIsSaving(true);
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {
+        console.warn('Anon auth notice:', e);
+      }
+    }
     const currentCard = { ...cardData, updatedAt: new Date().toISOString() };
 
     if (userId) {
@@ -207,18 +215,18 @@ export default function DigitalBusinessCard() {
           ...currentCard,
           userId
         });
+        await api.saveProject({
+          id: currentCard.id,
+          name: currentCard.name || 'Digital Business Card',
+          type: 'vcard',
+          content: `${window.location.origin}/#card-${currentCard.id}`,
+          userId: userId,
+          trackingId: currentCard.id
+        }).catch(() => {});
         playAudioSound('generate');
       } catch (err) {
         console.error('Firestore save failed', err);
       }
-    } else {
-      // LocalStorage backup for guests
-      const updatedList = [
-        currentCard,
-        ...savedCards.filter(c => c.id !== currentCard.id)
-      ];
-      localStorage.setItem('guest_business_cards', JSON.stringify(updatedList));
-      playAudioSound('generate');
     }
 
     await loadSavedCards();
@@ -226,18 +234,21 @@ export default function DigitalBusinessCard() {
   };
 
   const handleDeleteCard = async (id: string) => {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {}
+    }
     if (userId) {
       try {
         await deleteDoc(doc(db, 'business_cards', id));
+        await api.deleteProject(id).catch(() => {});
         playAudioSound('preview');
       } catch (err) {
         console.error('Firestore delete failed', err);
       }
-    } else {
-      const updatedList = savedCards.filter(c => c.id !== id);
-      localStorage.setItem('guest_business_cards', JSON.stringify(updatedList));
-      playAudioSound('preview');
     }
     await loadSavedCards();
   };

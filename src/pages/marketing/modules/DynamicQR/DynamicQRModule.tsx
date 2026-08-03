@@ -6,6 +6,7 @@ import {
   ChevronDown, RefreshCw, Sparkles, HelpCircle, Layers, CheckCircle2, MoreVertical
 } from 'lucide-react';
 import { auth } from '../../../../lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { 
   createDynamicQR, 
   getDynamicQR, 
@@ -147,28 +148,23 @@ export default function DynamicQRModule() {
   const fetchQRs = async (uid?: string) => {
     setLoading(true);
     try {
-      if (uid) {
-        const userQrs = await listUserDynamicQRs(uid);
-        // If user has no custom dynamic QRs yet, pre-populate with DEMO rules for testing or start empty
-        if (userQrs.length === 0) {
-          // Initialize first time with clean local store or empty
-          setQrs([]);
-        } else {
-          setQrs(userQrs);
+      let activeUid = uid || auth.currentUser?.uid;
+      if (!activeUid) {
+        try {
+          const anon = await signInAnonymously(auth);
+          activeUid = anon.user.uid;
+        } catch (e) {
+          console.warn('Anon auth notice:', e);
         }
+      }
+      if (activeUid) {
+        const userQrs = await listUserDynamicQRs(activeUid);
+        setQrs(userQrs);
       } else {
-        // Retrieve local storage demo QRs or fallback to predefined DEMO
-        const local = localStorage.getItem('demo_dynamic_qrs');
-        if (local) {
-          setQrs(JSON.parse(local));
-        } else {
-          setQrs(DEMO_QRS);
-          localStorage.setItem('demo_dynamic_qrs', JSON.stringify(DEMO_QRS));
-        }
+        setQrs(DEMO_QRS);
       }
     } catch (err) {
       console.error('Failed to list QRs:', err);
-      // Fallback
       setQrs(DEMO_QRS);
     } finally {
       setLoading(false);
@@ -211,14 +207,8 @@ export default function DynamicQRModule() {
   const handleToggleStatus = async (qr: DynamicQR) => {
     const newStatus: 'active' | 'paused' = qr.status === 'active' ? 'paused' : 'active';
     try {
-      if (user) {
-        await updateDynamicQR(qr.id, { status: newStatus });
-        setQrs(prev => prev.map(item => item.id === qr.id ? { ...item, status: newStatus } : item));
-      } else {
-        const updated: DynamicQR[] = qrs.map(item => item.id === qr.id ? { ...item, status: newStatus } : item);
-        setQrs(updated);
-        localStorage.setItem('demo_dynamic_qrs', JSON.stringify(updated));
-      }
+      await updateDynamicQR(qr.id, { status: newStatus });
+      setQrs(prev => prev.map(item => item.id === qr.id ? { ...item, status: newStatus } : item));
     } catch (err) {
       alert('Error updating status: ' + err);
     }
@@ -226,14 +216,8 @@ export default function DynamicQRModule() {
 
   const handleArchive = async (qr: DynamicQR) => {
     try {
-      if (user) {
-        await updateDynamicQR(qr.id, { status: 'archived' });
-        setQrs(prev => prev.map(item => item.id === qr.id ? { ...item, status: 'archived' } : item));
-      } else {
-        const updated: DynamicQR[] = qrs.map(item => item.id === qr.id ? { ...item, status: 'archived' as const } : item);
-        setQrs(updated);
-        localStorage.setItem('demo_dynamic_qrs', JSON.stringify(updated));
-      }
+      await updateDynamicQR(qr.id, { status: 'archived' });
+      setQrs(prev => prev.map(item => item.id === qr.id ? { ...item, status: 'archived' } : item));
     } catch (err) {
       alert('Error archiving link: ' + err);
     }
@@ -244,14 +228,8 @@ export default function DynamicQRModule() {
       return;
     }
     try {
-      if (user) {
-        await deleteDynamicQR(id);
-        setQrs(prev => prev.filter(item => item.id !== id));
-      } else {
-        const updated = qrs.filter(item => item.id !== id);
-        setQrs(updated);
-        localStorage.setItem('demo_dynamic_qrs', JSON.stringify(updated));
-      }
+      await deleteDynamicQR(id);
+      setQrs(prev => prev.filter(item => item.id !== id));
       setSelectedIds(prev => prev.filter(item => item !== id));
     } catch (err) {
       alert('Error deleting link: ' + err);
@@ -264,6 +242,7 @@ export default function DynamicQRModule() {
       ...qr,
       id: newId,
       name: `Copy of ${qr.name}`,
+      ownerId: auth.currentUser?.uid || qr.ownerId,
       createdAt: new Date().toISOString(),
       analytics: {
         scanCount: 0,
@@ -275,14 +254,8 @@ export default function DynamicQRModule() {
     };
 
     try {
-      if (user) {
-        await createDynamicQR(duplicatedQr);
-        setQrs(prev => [duplicatedQr, ...prev]);
-      } else {
-        const updated = [duplicatedQr, ...qrs];
-        setQrs(updated);
-        localStorage.setItem('demo_dynamic_qrs', JSON.stringify(updated));
-      }
+      await createDynamicQR(duplicatedQr);
+      setQrs(prev => [duplicatedQr, ...prev]);
     } catch (err) {
       alert('Error duplicating link: ' + err);
     }
@@ -305,7 +278,7 @@ export default function DynamicQRModule() {
         if (!match) continue;
 
         if (action === 'delete') {
-          if (user) await deleteDynamicQR(id);
+          await deleteDynamicQR(id);
           const idx = updatedList.findIndex(q => q.id === id);
           if (idx !== -1) updatedList.splice(idx, 1);
         } else {
@@ -313,17 +286,12 @@ export default function DynamicQRModule() {
           if (action === 'pause') nextStatus = 'paused';
           if (action === 'archive') nextStatus = 'archived';
 
-          if (user) {
-            await updateDynamicQR(id, { status: nextStatus });
-          }
+          await updateDynamicQR(id, { status: nextStatus });
           match.status = nextStatus;
         }
       }
 
       setQrs(action === 'delete' ? updatedList : [...updatedList]);
-      if (!user) {
-        localStorage.setItem('demo_dynamic_qrs', JSON.stringify(updatedList));
-      }
       setSelectedIds([]);
     } catch (err) {
       alert('Failed to execute bulk operations: ' + err);
@@ -510,16 +478,10 @@ export default function DynamicQRModule() {
           return;
         }
 
-        if (user) {
-          await createDynamicQR(finalQr);
-          setQrs([finalQr, ...qrs]);
-        } else {
-          const updated = [finalQr, ...qrs];
-          setQrs(updated);
-          localStorage.setItem('demo_dynamic_qrs', JSON.stringify(updated));
-        }
+        await createDynamicQR(finalQr);
+        setQrs([finalQr, ...qrs]);
       } else {
-        if (user && editingQrId) {
+        if (editingQrId) {
           await updateDynamicQR(editingQrId, {
             name: finalQr.name,
             destinationUrl: finalQr.destinationUrl,
@@ -532,10 +494,6 @@ export default function DynamicQRModule() {
             timeRules: finalQr.timeRules
           });
           setQrs(prev => prev.map(item => item.id === editingQrId ? { ...item, ...finalQr } : item));
-        } else if (editingQrId) {
-          const updated = qrs.map(item => item.id === editingQrId ? { ...item, ...finalQr } : item);
-          setQrs(updated);
-          localStorage.setItem('demo_dynamic_qrs', JSON.stringify(updated));
         }
       }
       setIsModalOpen(false);

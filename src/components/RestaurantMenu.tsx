@@ -8,7 +8,9 @@ import {
   Layers, Star, RefreshCw, MessageSquare
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
+import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 
 // Interfaces
@@ -146,7 +148,15 @@ export default function RestaurantMenu() {
   }, []);
 
   const loadSavedMenus = async () => {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {
+        console.warn('Anon auth notice:', e);
+      }
+    }
     if (userId) {
       try {
         const q = query(collection(db, 'restaurant_menus'), where('userId', '==', userId));
@@ -159,22 +169,21 @@ export default function RestaurantMenu() {
       } catch (err) {
         console.error('Error fetching restaurant menus from Firestore:', err);
       }
-    } else {
-      const cached = localStorage.getItem('guest_restaurant_menus');
-      if (cached) {
-        try {
-          setSavedMenus(JSON.parse(cached));
-        } catch (e) {
-          console.warn('Error reading local menus', e);
-        }
-      }
     }
   };
 
   // Save Menu
   const handleSaveMenu = async () => {
     setIsSaving(true);
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {
+        console.warn('Anon auth notice:', e);
+      }
+    }
     const currentMenu = { ...menu, updatedAt: new Date().toISOString() };
 
     if (userId) {
@@ -183,17 +192,18 @@ export default function RestaurantMenu() {
           ...currentMenu,
           userId
         });
+        await api.saveProject({
+          id: currentMenu.id,
+          name: currentMenu.restaurantName || 'Restaurant Menu',
+          type: 'menu',
+          content: `${window.location.origin}/#menu-${currentMenu.id}`,
+          userId: userId,
+          trackingId: currentMenu.id
+        }).catch(() => {});
         playAudioSound('generate');
       } catch (err) {
         console.error('Firestore save failed', err);
       }
-    } else {
-      const updatedList = [
-        currentMenu,
-        ...savedMenus.filter(m => m.id !== currentMenu.id)
-      ];
-      localStorage.setItem('guest_restaurant_menus', JSON.stringify(updatedList));
-      playAudioSound('generate');
     }
 
     await loadSavedMenus();
@@ -201,18 +211,21 @@ export default function RestaurantMenu() {
   };
 
   const handleDeleteMenu = async (id: string) => {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {}
+    }
     if (userId) {
       try {
         await deleteDoc(doc(db, 'restaurant_menus', id));
+        await api.deleteProject(id).catch(() => {});
         playAudioSound('preview');
       } catch (err) {
         console.error('Firestore delete failed', err);
       }
-    } else {
-      const updatedList = savedMenus.filter(m => m.id !== id);
-      localStorage.setItem('guest_restaurant_menus', JSON.stringify(updatedList));
-      playAudioSound('preview');
     }
     await loadSavedMenus();
   };

@@ -8,7 +8,9 @@ import {
   Search, ShieldAlert, ArrowRight, Share2, Plus, Sliders, Smartphone
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
+import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 
 // Interfaces
@@ -80,7 +82,15 @@ export default function PdfSharing() {
   }, []);
 
   const loadSavedShares = async () => {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {
+        console.warn('Anon auth notice:', e);
+      }
+    }
     if (userId) {
       try {
         const q = query(collection(db, 'pdf_shares'), where('userId', '==', userId));
@@ -95,19 +105,6 @@ export default function PdfSharing() {
         }
       } catch (err) {
         console.error('Error fetching PDF shares from Firestore:', err);
-      }
-    } else {
-      const cached = localStorage.getItem('guest_pdf_shares');
-      if (cached) {
-        try {
-          const parsed = JSON.parse(cached) as PdfShareConfig[];
-          setShares(parsed);
-          if (parsed.length > 0 && !selectedShare) {
-            setSelectedShare(parsed[0]);
-          }
-        } catch (e) {
-          console.warn('Error reading local pdf shares', e);
-        }
       }
     }
   };
@@ -193,21 +190,33 @@ export default function PdfSharing() {
       themeColor: pdfThemeColor
     };
 
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {
+        console.warn('Anon auth notice:', e);
+      }
+    }
     if (userId) {
       try {
         await setDoc(doc(db, 'pdf_shares', shareId), {
           ...newShare,
           userId
         });
+        await api.saveProject({
+          id: newShare.id,
+          name: newShare.title || 'PDF Share',
+          type: 'pdf',
+          content: `${window.location.origin}/#pdf-${newShare.id}`,
+          userId: userId,
+          trackingId: newShare.id
+        }).catch(() => {});
         playAudioSound('generate');
       } catch (err) {
         console.error('Firestore PDF save failed', err);
       }
-    } else {
-      const updatedList = [newShare, ...shares];
-      localStorage.setItem('guest_pdf_shares', JSON.stringify(updatedList));
-      playAudioSound('generate');
     }
 
     // Update Simulated Storage Limit
@@ -284,7 +293,13 @@ export default function PdfSharing() {
   };
 
   const updateShareInDb = async (updated: PdfShareConfig) => {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {}
+    }
     if (userId) {
       try {
         await setDoc(doc(db, 'pdf_shares', updated.id), {
@@ -294,9 +309,6 @@ export default function PdfSharing() {
       } catch (err) {
         console.error('Error updating Firestore PDF config:', err);
       }
-    } else {
-      const updatedList = shares.map(s => s.id === updated.id ? updated : s);
-      localStorage.setItem('guest_pdf_shares', JSON.stringify(updatedList));
     }
     
     setSelectedShare(updated);
@@ -305,21 +317,24 @@ export default function PdfSharing() {
   };
 
   const handleDeleteShare = async (id: string) => {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {}
+    }
     const shareToDelete = shares.find(s => s.id === id);
     const deletedSize = shareToDelete ? parseFloat(shareToDelete.activeFileSize) || 1.5 : 1.5;
 
     if (userId) {
       try {
         await deleteDoc(doc(db, 'pdf_shares', id));
+        await api.deleteProject(id).catch(() => {});
         playAudioSound('preview');
       } catch (err) {
         console.error('Firestore PDF delete failed', err);
       }
-    } else {
-      const updatedList = shares.filter(s => s.id !== id);
-      localStorage.setItem('guest_pdf_shares', JSON.stringify(updatedList));
-      playAudioSound('preview');
     }
 
     setTotalStorageUsedMB(prev => Math.max(0, prev - deletedSize));
@@ -363,12 +378,15 @@ export default function PdfSharing() {
       viewCount: simulatedShare.viewCount + 1
     };
 
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {}
+    }
     if (userId) {
       await setDoc(doc(db, 'pdf_shares', updated.id), { ...updated, userId });
-    } else {
-      const updatedList = shares.map(s => s.id === updated.id ? updated : s);
-      localStorage.setItem('guest_pdf_shares', JSON.stringify(updatedList));
     }
 
     setSimulatedShare(updated);
@@ -394,12 +412,15 @@ export default function PdfSharing() {
       downloadCount: simulatedShare.downloadCount + 1
     };
 
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {}
+    }
     if (userId) {
       await setDoc(doc(db, 'pdf_shares', updated.id), { ...updated, userId });
-    } else {
-      const updatedList = shares.map(s => s.id === updated.id ? updated : s);
-      localStorage.setItem('guest_pdf_shares', JSON.stringify(updatedList));
     }
 
     setSimulatedShare(updated);

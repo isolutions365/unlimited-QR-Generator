@@ -1,5 +1,6 @@
 import { QRProject, ScanLog } from '../types';
 import { db, auth } from './firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { 
   collection, 
   doc, 
@@ -139,7 +140,15 @@ class ApiClient {
   }
 
   async saveProject(project: Partial<QRProject>): Promise<QRProject> {
-    const userId = auth.currentUser?.uid;
+    let userId = auth.currentUser?.uid || project.userId;
+    if (!userId) {
+      try {
+        const anonRes = await signInAnonymously(auth);
+        userId = anonRes.user.uid;
+      } catch (anonErr) {
+        console.warn('[Firebase Auth] Anonymous sign-in attempt notice:', anonErr);
+      }
+    }
     if (!userId) throw new Error("Authentication required to save project.");
     
     const projectId = project.id || doc(collection(db, 'projects')).id;

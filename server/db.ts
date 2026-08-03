@@ -341,13 +341,117 @@ class FirestoreDatabase {
   }
 
   public async getProjectByTrackingId(trackingId: string): Promise<DbProject | undefined> {
-    const colPath = 'projects';
     try {
       const activeDb = getDb();
-      const q = query(collection(activeDb, colPath), where('trackingId', '==', trackingId));
-      const snap = await getDocs(q);
-      if (snap.empty) return undefined;
-      return snap.docs[0].data() as DbProject;
+      // 1. Search projects collection by trackingId
+      const qProjects = query(collection(activeDb, 'projects'), where('trackingId', '==', trackingId));
+      const snapProjects = await getDocs(qProjects);
+      if (!snapProjects.empty) {
+        return snapProjects.docs[0].data() as DbProject;
+      }
+
+      // 2. Search projects collection by doc ID
+      const docProj = await getDoc(doc(activeDb, 'projects', trackingId));
+      if (docProj.exists()) {
+        return docProj.data() as DbProject;
+      }
+
+      // 3. Search dynamicQRs collection by shortCode
+      const qDyn = query(collection(activeDb, 'dynamicQRs'), where('shortCode', '==', trackingId));
+      const snapDyn = await getDocs(qDyn);
+      if (!snapDyn.empty) {
+        const d = snapDyn.docs[0].data() as any;
+        return {
+          id: d.id,
+          userId: d.ownerId || d.userId || 'anonymous',
+          name: d.title || d.name || 'Dynamic QR',
+          type: d.type || 'url',
+          content: d.targetUrl || d.content || '',
+          design: d.design || {},
+          createdAt: d.createdAt,
+          scanCount: d.analytics?.scanCount || 0,
+          trackingEnabled: d.status !== 'paused',
+          trackingId: d.shortCode || d.id,
+          expiryDate: d.expiryDate,
+          expiryRedirectUrl: d.expiryUrl
+        } as DbProject;
+      }
+
+      // 4. Search dynamicQRs collection by doc ID
+      const docDyn = await getDoc(doc(activeDb, 'dynamicQRs', trackingId));
+      if (docDyn.exists()) {
+        const d = docDyn.data() as any;
+        return {
+          id: d.id,
+          userId: d.ownerId || d.userId || 'anonymous',
+          name: d.title || d.name || 'Dynamic QR',
+          type: d.type || 'url',
+          content: d.targetUrl || d.content || '',
+          design: d.design || {},
+          createdAt: d.createdAt,
+          scanCount: d.analytics?.scanCount || 0,
+          trackingEnabled: d.status !== 'paused',
+          trackingId: d.shortCode || d.id,
+          expiryDate: d.expiryDate,
+          expiryRedirectUrl: d.expiryUrl
+        } as DbProject;
+      }
+
+      // 5. Search pdf_shares collection
+      const docPdf = await getDoc(doc(activeDb, 'pdf_shares', trackingId));
+      if (docPdf.exists()) {
+        const d = docPdf.data() as any;
+        return {
+          id: d.id,
+          userId: d.userId || 'anonymous',
+          name: d.title || 'PDF Share',
+          type: 'pdf',
+          content: `${process.env.VITE_APP_URL || ''}/#pdf-${d.id}`,
+          design: {},
+          createdAt: d.createdAt || new Date().toISOString(),
+          scanCount: d.downloads || 0,
+          trackingEnabled: true,
+          trackingId: d.id
+        } as DbProject;
+      }
+
+      // 6. Search business_cards collection
+      const docCard = await getDoc(doc(activeDb, 'business_cards', trackingId));
+      if (docCard.exists()) {
+        const d = docCard.data() as any;
+        return {
+          id: d.id,
+          userId: d.userId || 'anonymous',
+          name: d.name || 'Business Card',
+          type: 'vcard',
+          content: `${process.env.VITE_APP_URL || ''}/#card-${d.id}`,
+          design: {},
+          createdAt: d.updatedAt || new Date().toISOString(),
+          scanCount: 0,
+          trackingEnabled: true,
+          trackingId: d.id
+        } as DbProject;
+      }
+
+      // 7. Search restaurant_menus collection
+      const docMenu = await getDoc(doc(activeDb, 'restaurant_menus', trackingId));
+      if (docMenu.exists()) {
+        const d = docMenu.data() as any;
+        return {
+          id: d.id,
+          userId: d.userId || 'anonymous',
+          name: d.restaurantName || 'Restaurant Menu',
+          type: 'menu',
+          content: `${process.env.VITE_APP_URL || ''}/#menu-${d.id}`,
+          design: {},
+          createdAt: d.updatedAt || new Date().toISOString(),
+          scanCount: 0,
+          trackingEnabled: true,
+          trackingId: d.id
+        } as DbProject;
+      }
+
+      return undefined;
     } catch (e) {
       console.warn('Firestore getProjectByTrackingId failed:', e);
       return undefined;

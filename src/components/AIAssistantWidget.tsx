@@ -5,6 +5,7 @@ import {
   Utensils, Contact, Smartphone, Megaphone, FileText, CheckCircle2
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { playAudioSound } from '../utils/audioFeedback';
 
@@ -51,8 +52,15 @@ export default function AIAssistantWidget({ activeTab, setActiveTab, onNavigate 
   }, [messages, isLoading]);
 
   const saveGeneratedPayload = async (category: string, payload: any) => {
-    const userId = auth.currentUser?.uid;
-    const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    let userId = auth.currentUser?.uid;
+    if (!userId) {
+      try {
+        const anon = await signInAnonymously(auth);
+        userId = anon.user.uid;
+      } catch (e) {
+        console.warn('Anon auth notice:', e);
+      }
+    }
 
     if (userId) {
       try {
@@ -63,13 +71,12 @@ export default function AIAssistantWidget({ activeTab, setActiveTab, onNavigate 
         } else if (category === 'pdf-sharing') {
           await setDoc(doc(db, 'pdf_shares', payload.id), { ...payload, userId });
         } else if (category === 'campaigns') {
-          // Check if user has campaigns or save as a dynamic QR project
           await setDoc(doc(db, 'projects', payload.id), {
             id: payload.id,
             name: payload.name,
             type: 'url',
-            destinationUrl: 'https://freeqrgen.pro',
-            status: 'active',
+            content: 'https://freeqrgen.pro',
+            trackingEnabled: true,
             createdAt: new Date().toISOString(),
             userId
           });
@@ -78,29 +85,6 @@ export default function AIAssistantWidget({ activeTab, setActiveTab, onNavigate 
         }
       } catch (err) {
         console.error('Error saving AI generated payload to Firestore:', err);
-      }
-    } else {
-      // LocalStorage for Guest Users
-      if (category === 'restaurant-menus') {
-        const current = localStorage.getItem('guest_restaurant_menus');
-        const parsed = current ? JSON.parse(current) : [];
-        localStorage.setItem('guest_restaurant_menus', JSON.stringify([payload, ...parsed]));
-      } else if (category === 'business-cards') {
-        const current = localStorage.getItem('guest_business_cards');
-        const parsed = current ? JSON.parse(current) : [];
-        localStorage.setItem('guest_business_cards', JSON.stringify([payload, ...parsed]));
-      } else if (category === 'pdf-sharing') {
-        const current = localStorage.getItem('guest_pdf_shares');
-        const parsed = current ? JSON.parse(current) : [];
-        localStorage.setItem('guest_pdf_shares', JSON.stringify([payload, ...parsed]));
-      } else if (category === 'campaigns') {
-        const current = localStorage.getItem('qr-marketing-campaigns');
-        const parsed = current ? JSON.parse(current) : [];
-        localStorage.setItem('qr-marketing-campaigns', JSON.stringify([payload, ...parsed]));
-      } else if (category === 'landing-pages') {
-        const current = localStorage.getItem('guest_landing_pages');
-        const parsed = current ? JSON.parse(current) : [];
-        localStorage.setItem('guest_landing_pages', JSON.stringify([payload, ...parsed]));
       }
     }
 

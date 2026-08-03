@@ -73,8 +73,10 @@ export async function createDynamicQR(
 ): Promise<DynamicQR> {
   const path = `dynamicQRs/${qrData.id}`;
   try {
+    const userId = auth.currentUser?.uid || qrData.ownerId;
     const fullQR: DynamicQR = {
       ...qrData,
+      ownerId: userId || qrData.ownerId,
       createdAt: new Date().toISOString(),
       analytics: {
         scanCount: 0,
@@ -85,6 +87,27 @@ export async function createDynamicQR(
       }
     };
     await setDoc(doc(db, 'dynamicQRs', qrData.id), fullQR);
+
+    // Sync to projects collection in Firestore so short-link redirects (/qr/:trackingId) work from any device
+    if (userId) {
+      const trackingId = qrData.id;
+      await setDoc(doc(db, 'projects', qrData.id), {
+        id: qrData.id,
+        userId: userId,
+        name: qrData.name || 'Dynamic QR',
+        type: 'url',
+        content: qrData.destinationUrl || '',
+        design: { fgColor: '#0f172a', bgColor: '#ffffff' },
+        createdAt: fullQR.createdAt,
+        updatedAt: fullQR.createdAt,
+        scanCount: 0,
+        trackingEnabled: qrData.status !== 'paused',
+        trackingId: trackingId,
+        expiryDate: qrData.expiryAt || '',
+        category: 'Dynamic'
+      }, { merge: true });
+    }
+
     return fullQR;
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, path);
@@ -119,6 +142,19 @@ export async function updateDynamicQR(
   try {
     const docRef = doc(db, 'dynamicQRs', qrId);
     await updateDoc(docRef, updates);
+
+    // Sync updates to projects collection in Firestore
+    const userId = auth.currentUser?.uid;
+    const projUpdate: any = { updatedAt: new Date().toISOString() };
+    if (updates.destinationUrl !== undefined) projUpdate.content = updates.destinationUrl;
+    if (updates.name !== undefined) projUpdate.name = updates.name;
+    if (updates.status !== undefined) projUpdate.trackingEnabled = updates.status !== 'paused';
+    if (updates.expiryAt !== undefined) projUpdate.expiryDate = updates.expiryAt;
+    if (userId) projUpdate.userId = userId;
+
+    await setDoc(doc(db, 'projects', qrId), projUpdate, { merge: true }).catch((e) => {
+      console.warn('Failed to sync project doc in Firestore:', e);
+    });
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, path);
   }
