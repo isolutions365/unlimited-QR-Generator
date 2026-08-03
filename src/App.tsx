@@ -2547,7 +2547,7 @@ export default function App() {
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t('tools.payment.title', 'Payment & Wallet QR')}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
-                      {t('tools.payment.desc', 'Generate secure QR codes with full support for global payment methods like UPI, PayPal, Venmo, and custom digital wallet or invoice links.')}
+                      {t('tools.payment.desc', 'Generate payment requests, custom digital wallet links, UPI, and invoice QR codes. Supports global methods like PayPal, Venmo, and more.')}
                     </p>
                   </div>
                   <a

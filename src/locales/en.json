@@ -3018,7 +3018,7 @@
   "tools.vcards.rich": "Interactive Content-Rich vCards",
   "tools.menus.pdf": "Restaurant Menus & PDF Hosters",
   "tools.payment.btn": "Create Payment QR",
-  "tools.payment.desc": "Generate secure QR codes with full support for global payment methods like UPI, PayPal, Venmo, and custom digital wallet or invoice links.",
+  "tools.payment.desc": "Generate payment requests, custom digital wallet links, UPI, and invoice QR codes. Supports global methods like PayPal, Venmo, and more.",
   "tools.payment.title": "Payment & Wallet QR",
   "tools.social.hubs": "Social Multi-Link Hubs",
   "tools.scan.activityRate": "Scan Activity Rate",
