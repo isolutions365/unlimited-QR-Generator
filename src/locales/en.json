@@ -3019,6 +3019,7 @@
   "tools.menus.pdf": "Restaurant Menus & PDF Hosters",
   "tools.payment.btn": "Create Payment QR",
   "tools.payment.desc": "Generate payment requests, custom digital wallet links, UPI, and invoice QR codes. Supports global methods like PayPal, Venmo, and more.",
+  "tools.payment.pro": "PRO",
   "tools.payment.title": "Payment & Wallet QR",
   "tools.social.hubs": "Social Multi-Link Hubs",
   "tools.scan.activityRate": "Scan Activity Rate",

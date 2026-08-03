@@ -2522,11 +2522,17 @@ export default function App() {
                         <Wallet className="w-5 h-5 text-emerald-600 ltr-lock" />
                       </div>
                       
-                      {/* Premium Global Pay Tooltip Badge */}
-                      <div className="relative group/tooltip">
-                        <span className="cursor-help px-2 py-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-full transition-colors">
-                          {t('tools.payment.badge', 'Global Pay')}
+                      <div className="flex items-center gap-1.5">
+                        {/* Pro Label Badge */}
+                        <span className="px-1.5 py-0.5 text-[9px] font-black tracking-wide text-white bg-gradient-to-r from-emerald-600 to-teal-600 rounded-md shadow-2xs uppercase">
+                          {t('tools.payment.pro', 'PRO')}
                         </span>
+
+                        {/* Premium Global Pay Tooltip Badge */}
+                        <div className="relative group/tooltip">
+                          <span className="cursor-help px-2 py-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-full transition-colors">
+                            {t('tools.payment.badge', 'Global Pay')}
+                          </span>
                         
                         {/* Tooltip Card */}
                         <div className="absolute right-0 bottom-full mb-2 w-64 max-w-[calc(100vw-3rem)] p-3 bg-slate-950 text-white rounded-xl shadow-xl border border-slate-800 hidden group-hover/tooltip:block group-focus-within/tooltip:block animate-in fade-in slide-in-from-bottom-1 duration-150 z-50 text-left pointer-events-none">
@@ -2545,6 +2551,7 @@ export default function App() {
                         </div>
                       </div>
                     </div>
+                  </div>
                     <h3 className="text-sm font-extrabold text-slate-900">{t('tools.payment.title', 'Payment & Wallet QR')}</h3>
                     <p className="text-[11px] text-slate-500 mt-2 leading-relaxed break-words">
                       {t('tools.payment.desc', 'Generate payment requests, custom digital wallet links, UPI, and invoice QR codes. Supports global methods like PayPal, Venmo, and more.')}
