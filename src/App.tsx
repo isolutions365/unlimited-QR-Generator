@@ -2515,7 +2515,7 @@ export default function App() {
                 </div>
 
                 {/* 7. Payment & Wallet QR */}
-                <div id="tool-payment-card" className={`relative bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-emerald-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
+                <div id="tool-payment-card" className={`relative bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-emerald-500/50 hover:shadow-md hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
                   <div>
                     <div className="flex justify-between items-start mb-4">
                       <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center ltr-lock">
