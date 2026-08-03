@@ -18,7 +18,7 @@ export const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || appletConfig.messagingSenderId,
   appId: import.meta.env.VITE_FIREBASE_APP_ID || appletConfig.appId,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || appletConfig.measurementId,
-  firestoreDatabaseId: cleanDatabaseId
+  firestoreDatabaseId: cleanDatabaseId || '(default)'
 };
 
 // Initialize Firebase App gracefully and perform single-instance checks
