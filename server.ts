@@ -1912,6 +1912,193 @@ English text: "${text}"`;
     }
   });
 
+  // 6. AI Co-Pilot Assistant router endpoint
+  app.post('/api/ai/assistant', async (req: any, res) => {
+    const { prompt, userId, locale } = req.body;
+    const userPrompt = (prompt || '').trim();
+    const searchPrompt = userPrompt.toLowerCase();
+
+    // High fidelity, intelligent fallback parser for offline/no-billing states
+    const generateLocalAssistantFallback = (pStr: string) => {
+      const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      
+      if (pStr.includes('restaurant') || pStr.includes('menu') || pStr.includes('food') || pStr.includes('dine')) {
+        return {
+          category: "restaurant-menus",
+          assistantMessage: "I've designed a bespoke QR digital menu tailored for your dining experience. Feel free to customize its pricing models, visual elements, and item list in the Restaurant Menus module.",
+          payload: {
+            id: `menu-ai-${Math.random().toString(36).substring(2, 7)}`,
+            name: "The Artisan Bistro Gourmet Menu",
+            itemsCount: 15,
+            status: "active",
+            scans: 0,
+            currency: "USD"
+          }
+        };
+      }
+      
+      if (pStr.includes('card') || pStr.includes('business') || pStr.includes('vcard') || pStr.includes('profile')) {
+        return {
+          category: "business-cards",
+          assistantMessage: "I have prepared an elegant, high-contrast digital vCard profile with your contact parameters. Your clients can scan this and instantly download your contact information.",
+          payload: {
+            id: `card-ai-${Math.random().toString(36).substring(2, 7)}`,
+            name: "Alex Rivera",
+            role: "Principal Product Consultant",
+            company: "Apex Strategy Group",
+            email: "alex.rivera@apexgroup.com",
+            phone: "+1 (555) 014-9382",
+            views: 0
+          }
+        };
+      }
+
+      if (pStr.includes('pdf') || pStr.includes('document') || pStr.includes('share') || pStr.includes('brochure')) {
+        return {
+          category: "pdf-sharing",
+          assistantMessage: "I have structured a new hosted PDF sharing configuration for your document distribution. It includes a tracking URL and visual download selectors.",
+          payload: {
+            id: `pdf-ai-${Math.random().toString(36).substring(2, 7)}`,
+            title: "Premium Services Brochure & Portfolio",
+            fileName: "services_portfolio_premium.pdf",
+            fileSize: "3.2 MB",
+            downloads: 0,
+            uploadedAt: today
+          }
+        };
+      }
+
+      if (pStr.includes('event') || pStr.includes('campaign') || pStr.includes('coupon') || pStr.includes('discount')) {
+        return {
+          category: "campaigns",
+          assistantMessage: "I have set up a customized marketing campaign and event dashboard tracker for you, allowing you to easily track scans, set limits, and monitor your visual assets.",
+          payload: {
+            id: `camp-ai-${Math.random().toString(36).substring(2, 7)}`,
+            name: "Grand Seasonal Launch & Event QR",
+            status: "active",
+            type: "RSVP Event",
+            scans: 0,
+            startDate: today,
+            budget: "$1,200"
+          }
+        };
+      }
+
+      // Default: beautiful, rich landing page configuration
+      return {
+        category: "landing-pages",
+        assistantMessage: "I've created a custom, mobile-optimized landing page layout for your brand. It comes loaded with a header, elegant text columns, an active reservation contact form, and premium color gradients.",
+        payload: {
+          id: `lp-ai-${Math.random().toString(36).substring(2, 7)}`,
+          title: "Custom Brand Launchpad",
+          slug: "custom-brand-launch",
+          userId: userId || "",
+          theme: {
+            name: "luxury",
+            bgColor: "#f8fafc",
+            bgGradient: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+            primaryColor: "#4f46e5",
+            fontFamily: "Plus Jakarta Sans",
+            textColor: "#ffffff"
+          },
+          seo: {
+            metaTitle: "Welcome to our Brand Page",
+            metaDescription: "Explore our dynamic customer services and brand offerings.",
+            keywords: "brand, services, premium",
+            shareImage: ""
+          },
+          components: [
+            {
+              id: "hero-1",
+              type: "hero",
+              title: "Experience the Future of Brand Connections",
+              subtitle: "Scan, discover, and interact with our curated digital experience instantly.",
+              ctaText: "Get Started Now",
+              ctaLink: "#",
+              bgType: "gradient",
+              bgColor: "#1e293b",
+              bgGradient: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+              textColor: "#ffffff",
+              align: "center"
+            },
+            {
+              id: "social-1",
+              type: "social",
+              links: [
+                { platform: "instagram", url: "https://instagram.com", active: true },
+                { platform: "linkedin", url: "https://linkedin.com", active: true }
+              ],
+              style: "circle",
+              color: "#4f46e5"
+            }
+          ],
+          visits: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+      };
+    };
+
+    try {
+      if (!isGeminiEnabled()) {
+        return res.json(generateLocalAssistantFallback(searchPrompt));
+      }
+
+      const languageInstruction = locale ? `IMPORTANT: The user is currently viewing the application in the locale/language: "${locale}". You MUST generate the assistantMessage response and all text details in the "${locale}" language (e.g. if locale is 'ar' write in Arabic, etc.). Do NOT output English if the locale is a non-English language.` : '';
+
+      const response = await generateContentWithFallback({
+        primaryModel: "gemini-3.6-flash",
+        contents: `You are an expert full-stack AI Design Assistant embedded in a premium QR Marketing Platform.
+Analyze the user's natural language request to create a marketing resource: "${userPrompt}".
+
+Your job is to classify the request into one of the 5 categories and generate the optimal JSON payload schema to pre-populate that module.
+
+Determine the 'category':
+- "restaurant-menus" (if they ask for "Create Restaurant Campaign", "create food menu", "restaurant list", etc.)
+- "business-cards" (if they ask for "Create Business Card", "create vcard", etc.)
+- "pdf-sharing" (if they ask for "Create PDF Share", "upload pdf", etc.)
+- "campaigns" (if they ask for "Create Event", "marketing campaign", "rsvp tracker", etc.)
+- "landing-pages" (if they ask for "Create Landing Page", "custom web page", etc.)
+
+Generate a personalized 'assistantMessage' explaining what you've generated, why you chose these color tones or layout components, and guiding them to use it. Make it premium and tailored to the requested theme.
+
+Generate the 'payload' matching the precise data schema for the selected category:
+- For "restaurant-menus": { name, itemsCount, currency (e.g. "USD"), status ("active" or "draft") }
+- For "business-cards": { name, role, company, email, phone }
+- For "pdf-sharing": { title, fileName, fileSize (e.g. "4.2 MB") }
+- For "campaigns": { name, status ("active" or "scheduled"), type (e.g. "RSVP Event", "Coupon Promo"), budget (e.g. "$1,200") }
+- For "landing-pages": { title, slug, theme: { name: "minimal"|"sunset"|"luxury"|"neon"|"forest", bgColor, bgGradient, primaryColor, fontFamily, textColor }, seo: { metaTitle, metaDescription, keywords }, components: Array of PageComponents }
+  *IMPORTANT FOR "landing-pages"*: Create a beautiful, fully functional rich landing page configuration! Include a 'hero' component, a 'social' component, and optionally a 'button' or 'contactForm'! Do not skip fields. All component IDs must be unique strings.
+
+\n\n${languageInstruction}`,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              category: { type: Type.STRING, description: "MUST be one of: 'restaurant-menus', 'business-cards', 'pdf-sharing', 'campaigns', 'landing-pages'" },
+              assistantMessage: { type: Type.STRING, description: "Elegant, conversational briefing explaining the design choices and encouraging them to proceed." },
+              payload: { 
+                type: Type.OBJECT, 
+                description: "The complete, rich structured schema representing the generated module instance."
+              }
+            },
+            required: ["category", "assistantMessage", "payload"]
+          }
+        }
+      });
+
+      if (response && response.text) {
+        const parsed = JSON.parse(response.text);
+        return res.json(parsed);
+      }
+      return res.json(generateLocalAssistantFallback(searchPrompt));
+    } catch (err) {
+      console.warn('[AI Assistant Endpoint Fallback triggered]', err);
+      return res.json(generateLocalAssistantFallback(searchPrompt));
+    }
+  });
+
 
   // --- REDIRECTIONAL ACCESS GATE ---
   // Real-Time public tracking short URL parser

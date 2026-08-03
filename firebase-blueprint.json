@@ -53,6 +53,74 @@
         "userId": { "type": "string" }
       },
       "required": ["id", "projectId", "trackingId", "timestamp", "deviceType", "browser", "approxLocation", "ip", "userId"]
+    },
+    "DynamicQR": {
+      "title": "DynamicQR",
+      "description": "Dynamic redirect QR with redirection rules, access protection, and campaign tags",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "destinationUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "paused", "expired", "archived"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "expiryAt": { "type": "string", "format": "date-time" },
+        "password": { "type": "string" },
+        "countryRules": { "type": "object" },
+        "deviceRules": { "type": "object" },
+        "timeRules": { "type": "object" },
+        "campaign": { "type": "string" },
+        "analytics": { "type": "object" }
+      },
+      "required": ["id", "ownerId", "destinationUrl", "status", "createdAt"]
+    },
+    "DynamicQRScanLog": {
+      "title": "DynamicQRScanLog",
+      "description": "Granular scan events for a specific Dynamic QR redirection",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "qrId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "device": { "type": "string" },
+        "browser": { "type": "string" },
+        "country": { "type": "string" },
+        "ipHash": { "type": "string" },
+        "referrer": { "type": "string" }
+      },
+      "required": ["id", "qrId", "timestamp", "device", "browser", "country"]
+    },
+    "CustomForm": {
+      "title": "CustomForm",
+      "description": "User-designed custom forms linked to QR codes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "type": { "type": "string", "enum": ["contact", "survey", "lead", "registration", "appointment", "rsvp", "feedback"] },
+        "fields": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "viewCount": { "type": "integer" },
+        "submissionCount": { "type": "integer" },
+        "status": { "type": "string", "enum": ["active", "closed"] },
+        "themeColor": { "type": "string", "enum": ["indigo", "emerald", "rose", "amber", "purple", "cyan"] }
+      },
+      "required": ["id", "userId", "title", "type", "fields", "createdAt"]
+    },
+    "FormSubmission": {
+      "title": "FormSubmission",
+      "description": "Form submissions by users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "formId": { "type": "string" },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "answers": { "type": "object" },
+        "attachments": { "type": "array" }
+      },
+      "required": ["id", "formId", "submittedAt", "answers"]
     }
   },
   "firestore": {
@@ -67,6 +135,26 @@
     "scans/{scanId}": {
       "schema": "ScanLog",
       "description": "Global log of scanned click interactions"
+    },
+    "dynamicQRs/{qrId}": {
+      "schema": "DynamicQR",
+      "description": "Redirection and dynamic rule configuration for QR codes"
+    },
+    "dynamicQRs/{qrId}/scans/{scanId}": {
+      "schema": "DynamicQRScanLog",
+      "description": "Granular telemetry logs for specific dynamic redirects"
+    },
+    "custom_forms/{formId}": {
+      "schema": "CustomForm",
+      "description": "Forms created by QR-code owners"
+    },
+    "custom_forms/{formId}/submissions/{submissionId}": {
+      "schema": "FormSubmission",
+      "description": "Submissions for a custom form"
+    },
+    "submissions/{submissionId}": {
+      "schema": "FormSubmission",
+      "description": "Top-level submissions for landing pages"
     }
   }
 }

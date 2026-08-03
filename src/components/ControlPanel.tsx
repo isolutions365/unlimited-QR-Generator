@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
@@ -167,6 +167,7 @@ export default function ControlPanel({ currentProject,
   const { t } = useTranslation();
   const [localProject, setLocalProject] = useState<Partial<QRProject>>(currentProject);
   const [showEccTooltip, setShowEccTooltip] = useState(false);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const lastPropagatedProjectRef = useRef<Partial<QRProject>>(currentProject);
   const isDebouncingRef = useRef<boolean>(false);
 
@@ -1586,342 +1587,352 @@ export default function ControlPanel({ currentProject,
         </div>
       </motion.div>
 
-      {/* Smart Optimization Engine */}
+      {/* Advanced Settings Collapsible Accordion */}
       <motion.div
         variants={itemVariants}
-        whileHover={{
-          scale: 1.015,
-          y: -2,
-          boxShadow: '0 8px 20px -8px rgba(79, 70, 229, 0.08), 0 2px 6px -4px rgba(79, 70, 229, 0.04)'
-        }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 bg-gradient-to-br from-indigo-50/20 to-purple-50/10 rounded-xl border border-indigo-100/40 hover:bg-white hover:border-indigo-200/50 transition-all duration-300 shadow-sm space-y-3.5"
+        className="rounded-2xl border border-gray-200/80 bg-white shadow-xs overflow-hidden"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
+        <button
+          type="button"
+          onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+          className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50/50 transition-colors focus:outline-none cursor-pointer"
+        >
+          <div className="flex items-center gap-2.5">
+            <Settings className="w-4.5 h-4.5 text-indigo-600 animate-spin-slow" />
             <div>
-              <span className="text-xs font-semibold text-slate-900 block">{t('control.smartOptimization', 'Smart Optimization')}</span>
-              <span className="text-[10px] text-slate-500 block">{t('control.smartOptDesc', 'Auto-balances error correction & module spacing.')}</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-label="Toggle Smart Optimization"
-            aria-checked={localProject.design?.smartOptimize ? "true" : "false"}
-            onClick={() => {
-              const isEnabling = !localProject.design?.smartOptimize;
-              onChange({
-                ...localProject,
-                design: {
-                  ...(localProject.design || {
-                    fgColor: '#0f172a',
-                    bgColor: '#ffffff',
-                    gradientType: 'none',
-                    gradientColor: '#4f46e5',
-                    dotStyle: 'square',
-                    eyeStyle: 'square',
-                    margin: 20
-                  }),
-                  smartOptimize: isEnabling,
-                  ...(isEnabling ? {
-                    margin: Math.max(20, localProject.design?.margin ?? 20),
-                  } : {})
-                }
-              });
-            }}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.design?.smartOptimize ? 'bg-indigo-600' : 'bg-gray-200' }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.design?.smartOptimize ? 'translate-x-6' : 'translate-x-1' }`}
-            />
-          </button>
-        </div>
-
-        {localProject.design?.smartOptimize ? (
-          <div className="bg-white/60 p-3 rounded-lg border border-indigo-100/50 space-y-2.5 text-slate-700 text-xs animate-in fade-in duration-200">
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-indigo-600 uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
-              <span>{t('control.readabilityActive', 'Readability Engine Active')}</span>
-            </div>
-            
-            <div className="space-y-2 text-[11px] leading-relaxed">
-              <div className="flex items-start gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
-                <div>
-                  <strong className="text-slate-800">{t('control.errorCorrectionLabel', 'Error Correction:')} </strong>
-                  <span className="text-slate-600">
-                    {t('control.errorCorrectionLevelDescStart', 'Set to ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.errorCorrectionLevel || 'H')}</span>{t('control.errorCorrectionLevelDescEnd', ' based on centerpiece logo scale & URL complexity.')}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
-                <div>
-                  <strong className="text-slate-800">{t('control.moduleSpacingLabel', 'Module Spacing:')} </strong>
-                  <span className="text-slate-600">
-                    {t('control.moduleSpacingDescStart', 'Optimized to ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.modulePadding ?? 0)}% padding</span>{t('control.moduleSpacingDescEnd', ' to guarantee camera scanning readability.')}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
-                <div>
-                  <strong className="text-slate-800">{t('control.quietZoneMarginLabel', 'Quiet Zone Margin:')} </strong>
-                  <span className="text-slate-600">
-                    {t('control.quietZoneMarginDescStart', 'Locked at a safe minimum of ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.margin ?? 20)}px</span>{t('control.quietZoneMarginDescEnd', ' to prevent edge-crop issues.')}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-[9px] text-slate-400 font-medium">
-              {t('control.designParamsNotice', '* Design parameter sliders below are auto-managed. Disable Smart Optimization to adjust them manually.')}
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-3.5 pt-1.5 border-t border-slate-100 animate-in fade-in duration-200">
-            {/* Manual QR Module Spacing slider (visible when smartOptimize is false) */}
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label htmlFor="manual-padding-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">{t('control.moduleSpacingPadding', 'Module Spacing (Padding)')}</label>
-                <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.modulePadding ?? 0}%</span>
-              </div>
-              <input
-                id="manual-padding-range"
-                type="range"
-                min="0"
-                max="40"
-                step="2"
-                className="w-full h-1 bg-gray-250 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                value={localProject.design?.modulePadding ?? 0}
-                onChange={e => setDesignField('modulePadding', parseInt(e.target.value, 10), true)}
-              />
-              <span className="text-[9.5px] text-gray-600 block mt-1">
-                {t('control.adjustPhysicalSpace', 'Adjusts the physical space between individual modules to customize dot density.')}
+              <span className="text-xs font-bold text-slate-900 tracking-wider uppercase block">
+                {t('control.advancedSettings', 'Advanced QR Engine Settings')}
+              </span>
+              <span className="text-[10px] text-slate-500 block leading-tight mt-0.5">
+                {t('control.advancedSettingsDesc', 'Configure error correction level, quiet zone, and density spacing.')}
               </span>
             </div>
           </div>
-        )}
-      </motion.div>
+          {isAdvancedOpen ? (
+            <ChevronUp className="w-4 h-4 text-slate-400 shrink-0" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+          )}
+        </button>
 
-      {/* Margin / Quiet Zone Slider */}
-      <motion.div
-        variants={itemVariants}
-        whileHover={{
-          scale: 1.015,
-          y: -2,
-          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
-        }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 rounded-xl border transition-all duration-300 shadow-sm bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80"
-      >
-        <div className="flex justify-between items-center mb-1.5">
-          <div className="flex items-center gap-1.5">
-            <Maximize className="w-3.5 h-3.5 text-indigo-500" />
-            <label htmlFor="quiet-zone-range" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.quietZoneMargin', 'Quiet Zone (Margin)')}</label>
-          </div>
-          <span className="text-xs text-indigo-600 font-mono font-bold bg-indigo-50 px-1.5 py-0.5 rounded">
-            {localProject.design?.margin ?? 20}px
-          </span>
-        </div>
-        <input
-          id="quiet-zone-range"
-          type="range"
-          min="0"
-          max="80"
-          step="5"
-          className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-          value={localProject.design?.margin ?? 20}
-          onChange={e => setDesignField('margin', parseInt(e.target.value, 10), true)}
-        />
-
-        {/* Material Presets Selector */}
-        <div className="mt-3.5">
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2 flex items-center gap-1">
-            <Layers className="w-3 h-3 text-slate-400" /> {t('control.recommendedMarginByPrint', 'Recommended Margin by Print Material')}
-          </span>
-          <div className="grid grid-cols-2 gap-1.5">
-            {[
-              { id: 'paperScreens', name: 'Paper & Screens', size: 20, desc: 'Digital or smooth paper' },
-              { id: 'texturedPaper', name: 'Textured Paper', size: 35, desc: 'Kraft, cardboard, textured' },
-              { id: 'glossyMetal', name: 'Glossy & Metal', size: 30, desc: 'Reflective, metallic prints' },
-              { id: 'fabricApparel', name: 'Fabric & Apparel', size: 50, desc: 'Folds, stretchable surfaces' }
-            ].map(preset => {
-              const isActive = (localProject.design?.margin ?? 20) === preset.size;
-              return (
-                <button
-                  key={preset.name}
-                  type="button"
-                  id={`quiet-zone-preset-${preset.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
-                  onClick={() => setDesignField('margin', preset.size, true)}
-                  className={`p-1.5 rounded-lg border text-left transition-all duration-150 cursor-pointer ${
-                    isActive
-                      ? 'border-indigo-500 bg-indigo-50/40 text-indigo-900 shadow-3xs'
-                      : 'border-slate-200/60 bg-white/50 text-slate-700 hover:bg-white hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-bold truncate pr-1">{t('control.material.' + preset.id, preset.name)}</span>
-                    <span className="text-[9px] font-mono font-semibold text-indigo-600 bg-indigo-50 px-1 rounded shrink-0">{preset.size}px</span>
+        {isAdvancedOpen && (
+          <div className="p-4 border-t border-slate-100 bg-slate-50/15 space-y-5 animate-in slide-in-from-top-2 duration-200">
+            {/* Smart Optimization Engine */}
+            <div className="space-y-3.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
+                  <div>
+                    <span className="text-xs font-semibold text-slate-900 block">{t('control.smartOptimization', 'Smart Optimization')}</span>
+                    <span className="text-[10px] text-slate-500 block">{t('control.smartOptDesc', 'Auto-balances error correction & module spacing.')}</span>
                   </div>
-                  <span className="text-[8px] text-slate-400 block truncate leading-tight mt-0.5">{t('control.materialDesc.' + preset.id, preset.desc)}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <p className="text-[10px] text-gray-500 mt-3 leading-relaxed">
-          {t('control.quietZoneDescLong', 'The quiet zone surrounds your code with clean breathing room so scanners can instantly identify pattern edges, especially on textured, glossy, or stretchable physical materials.')}
-        </p>
-      </motion.div>
-
-      {/* Error Correction Level Slider */}
-      <motion.div
-        variants={itemVariants}
-        whileHover={!localProject.design?.smartOptimize ? {
-          scale: 1.015,
-          y: -2,
-          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
-        } : undefined}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className={`p-4 rounded-xl border transition-all duration-300 shadow-sm ${ localProject.design?.smartOptimize ? 'bg-gray-100/40 border-gray-200/30 opacity-60' : 'bg-gray-50/40 border-gray-200/40 hover:bg-white hover:border-gray-200/80' }`}
-      >
-        <div className="flex justify-between items-center mb-2 relative">
-          <div className="flex items-center gap-1.5">
-            <label htmlFor="error-correction-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.errorCorrectionLevel', 'Error Correction Level')}</label>
-            <div className="relative inline-block">
-              <button
-                type="button"
-                onMouseEnter={() => setShowEccTooltip(true)}
-                onMouseLeave={() => setShowEccTooltip(false)}
-                onClick={() => setShowEccTooltip(!showEccTooltip)}
-                onFocus={() => setShowEccTooltip(true)}
-                onBlur={() => setShowEccTooltip(false)}
-                className="text-slate-400 hover:text-indigo-600 transition-colors p-0.5 rounded-full focus:outline-none focus:ring-1 focus:ring-indigo-500/50 flex items-center justify-center cursor-pointer"
-                aria-label="Error Correction Level Tradeoffs Info"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </button>
-              
-              {showEccTooltip && (
-                <div 
-                  className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mb-2 w-72 bg-slate-900 text-white text-xs rounded-xl p-4 shadow-xl border border-slate-800 transition-all duration-200"
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-label="Toggle Smart Optimization"
+                  aria-checked={localProject.design?.smartOptimize ? "true" : "false"}
+                  onClick={() => {
+                    const isEnabling = !localProject.design?.smartOptimize;
+                    onChange({
+                      ...localProject,
+                      design: {
+                        ...(localProject.design || {
+                          fgColor: '#0f172a',
+                          bgColor: '#ffffff',
+                          gradientType: 'none',
+                          gradientColor: '#4f46e5',
+                          dotStyle: 'square',
+                          eyeStyle: 'square',
+                          margin: 20
+                        }),
+                        smartOptimize: isEnabling,
+                        ...(isEnabling ? {
+                          margin: Math.max(20, localProject.design?.margin ?? 20),
+                        } : {})
+                      }
+                    });
+                  }}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.design?.smartOptimize ? 'bg-indigo-600' : 'bg-gray-200' }`}
                 >
-                  {(() => {
-                    const ec = (localProject.design?.errorCorrectionLevel || 'H') as 'L' | 'M' | 'Q' | 'H';
-                    const detail = eccDetails[ec] || eccDetails.H;
-                    return (
-                      <div className="space-y-3 pointer-events-none">
-                        <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
-                          <span className="font-bold text-[11px] text-indigo-400 uppercase tracking-wider">
-                            Level {ec}: {detail.title}
-                          </span>
-                          {localProject.design?.smartOptimize && (
-                            <span className="text-[9px] bg-indigo-950 text-indigo-300 border border-indigo-800/80 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
-                              Auto
-                            </span>
-                          )}
-                        </div>
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.design?.smartOptimize ? 'translate-x-6' : 'translate-x-1' }`}
+                  />
+                </button>
+              </div>
 
-                        {/* Tradeoff Gauges */}
-                        <div className="space-y-2.5">
-                          <div>
-                            <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
-                              <span>Scan Reliability</span>
-                              <span className="font-semibold text-slate-255">{detail.damageLabel}</span>
-                            </div>
-                            <div className="flex gap-1">
-                              {[1, 2, 3, 4].map((step) => (
-                                <div
-                                  key={step}
-                                  className={`h-1.5 flex-1 rounded-sm ${
-                                    step <= detail.reliability
-                                      ? 'bg-emerald-500'
-                                      : 'bg-slate-800'
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          <div>
-                            <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
-                              <span>Data Capacity</span>
-                              <span className="font-semibold text-slate-205">{detail.capacityLabel}</span>
-                            </div>
-                            <div className="flex gap-1">
-                              {[1, 2, 3, 4].map((step) => (
-                                <div
-                                  key={step}
-                                  className={`h-1.5 flex-1 rounded-sm ${
-                                    step <= detail.capacity
-                                      ? 'bg-indigo-500'
-                                      : 'bg-slate-800'
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-[10px] text-slate-300 leading-relaxed font-normal">
-                          {detail.desc}
-                        </p>
-
-                        {/* Practical recommendation */}
-                        <div className="border-t border-slate-800/80 pt-2 text-[9px] text-slate-450 leading-relaxed">
-                          <strong className="text-indigo-300">Recommendation:</strong> {detail.recommendation}
-                        </div>
+              {localProject.design?.smartOptimize ? (
+                <div className="bg-white/60 p-3 rounded-lg border border-indigo-100/50 space-y-2.5 text-slate-700 text-xs">
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-indigo-600 uppercase tracking-wider">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
+                    <span>{t('control.readabilityActive', 'Readability Engine Active')}</span>
+                  </div>
+                  
+                  <div className="space-y-2 text-[11px] leading-relaxed">
+                    <div className="flex items-start gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
+                      <div>
+                        <strong className="text-slate-800">{t('control.errorCorrectionLabel', 'Error Correction:')} </strong>
+                        <span className="text-slate-600">
+                          {t('control.errorCorrectionLevelDescStart', 'Set to ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.errorCorrectionLevel || 'H')}</span>{t('control.errorCorrectionLevelDescEnd', ' based on centerpiece logo scale & URL complexity.')}
+                        </span>
                       </div>
-                    );
-                  })()}
-                  {/* Arrow */}
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 md:left-3 md:translate-x-0 -mt-1 border-4 border-transparent border-t-slate-900" />
+                    </div>
+
+                    <div className="flex items-start gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
+                      <div>
+                        <strong className="text-slate-800">{t('control.moduleSpacingLabel', 'Module Spacing:')} </strong>
+                        <span className="text-slate-600">
+                          {t('control.moduleSpacingDescStart', 'Optimized to ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.modulePadding ?? 0)}% padding</span>{t('control.moduleSpacingDescEnd', ' to guarantee camera scanning readability.')}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[3]" />
+                      <div>
+                        <strong className="text-slate-800">{t('control.quietZoneMarginLabel', 'Quiet Zone Margin:')} </strong>
+                        <span className="text-slate-600">
+                          {t('control.quietZoneMarginDescStart', 'Locked at a safe minimum of ')}<span className="font-mono font-bold text-indigo-600 bg-indigo-50/50 px-1 rounded">{(localProject.design?.margin ?? 20)}px</span>{t('control.quietZoneMarginDescEnd', ' to prevent edge-crop issues.')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-[9px] text-slate-400 font-medium">
+                    {t('control.designParamsNotice', '* Design parameter sliders below are auto-managed. Disable Smart Optimization to adjust them manually.')}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3.5 pt-1.5 border-t border-slate-100/50">
+                  {/* Manual QR Module Spacing slider (visible when smartOptimize is false) */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label htmlFor="manual-padding-range" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">{t('control.moduleSpacingPadding', 'Module Spacing (Padding)')}</label>
+                      <span className="text-[11px] text-indigo-600 font-mono font-bold">{localProject.design?.modulePadding ?? 0}%</span>
+                    </div>
+                    <input
+                      id="manual-padding-range"
+                      type="range"
+                      min="0"
+                      max="40"
+                      step="2"
+                      className="w-full h-1 bg-gray-250 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                      value={localProject.design?.modulePadding ?? 0}
+                      onChange={e => setDesignField('modulePadding', parseInt(e.target.value, 10), true)}
+                    />
+                    <span className="text-[9.5px] text-gray-600 block mt-1">
+                      {t('control.adjustPhysicalSpace', 'Adjusts the physical space between individual modules to customize dot density.')}
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
+
+            <div className="border-t border-slate-200/65 pt-4" />
+
+            {/* Margin / Quiet Zone Slider */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-center mb-1.5">
+                <div className="flex items-center gap-1.5">
+                  <Maximize className="w-3.5 h-3.5 text-indigo-500" />
+                  <label htmlFor="quiet-zone-range" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.quietZoneMargin', 'Quiet Zone (Margin)')}</label>
+                </div>
+                <span className="text-xs text-indigo-600 font-mono font-bold bg-indigo-50 px-1.5 py-0.5 rounded">
+                  {localProject.design?.margin ?? 20}px
+                </span>
+              </div>
+              <input
+                id="quiet-zone-range"
+                type="range"
+                min="0"
+                max="80"
+                step="5"
+                className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                value={localProject.design?.margin ?? 20}
+                onChange={e => setDesignField('margin', parseInt(e.target.value, 10), true)}
+              />
+
+              {/* Material Presets Selector */}
+              <div className="mt-3.5">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2 flex items-center gap-1">
+                  <Layers className="w-3.5 h-3.5 text-slate-400" /> {t('control.recommendedMarginByPrint', 'Recommended Margin by Print Material')}
+                </span>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {[
+                    { id: 'paperScreens', name: 'Paper & Screens', size: 20, desc: 'Digital or smooth paper' },
+                    { id: 'texturedPaper', name: 'Textured Paper', size: 35, desc: 'Kraft, cardboard, textured' },
+                    { id: 'glossyMetal', name: 'Glossy & Metal', size: 30, desc: 'Reflective, metallic prints' },
+                    { id: 'fabricApparel', name: 'Fabric & Apparel', size: 50, desc: 'Folds, stretchable surfaces' }
+                  ].map(preset => {
+                    const isActive = (localProject.design?.margin ?? 20) === preset.size;
+                    return (
+                      <button
+                        key={preset.name}
+                        type="button"
+                        id={`quiet-zone-preset-${preset.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+                        onClick={() => setDesignField('margin', preset.size, true)}
+                        className={`p-1.5 rounded-lg border text-left transition-all duration-150 cursor-pointer ${
+                          isActive
+                            ? 'border-indigo-500 bg-indigo-50/40 text-indigo-900 shadow-3xs'
+                            : 'border-slate-200/60 bg-white/50 text-slate-700 hover:bg-white hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex justify-between items-center">
+                          <span className="text-[10px] font-bold truncate pr-1">{t('control.material.' + preset.id, preset.name)}</span>
+                          <span className="text-[9px] font-mono font-semibold text-indigo-600 bg-indigo-50 px-1 rounded shrink-0">{preset.size}px</span>
+                        </div>
+                        <span className="text-[8px] text-slate-400 block truncate leading-tight mt-0.5">{t('control.materialDesc.' + preset.id, preset.desc)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <p className="text-[10px] text-gray-500 mt-3 leading-relaxed">
+                {t('control.quietZoneDescLong', 'The quiet zone surrounds your code with clean breathing room so scanners can instantly identify pattern edges, especially on textured, glossy, or stretchable physical materials.')}
+              </p>
+            </div>
+
+            <div className="border-t border-slate-200/65 pt-4" />
+
+            {/* Error Correction Level Dropdown */}
+            <div className={`space-y-3 ${ localProject.design?.smartOptimize ? 'opacity-60' : '' }`}>
+              <div className="flex justify-between items-center mb-2 relative">
+                <div className="flex items-center gap-1.5">
+                  <label htmlFor="error-correction-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.errorCorrectionLevel', 'Error Correction Level')}</label>
+                  <div className="relative inline-block">
+                    <button
+                      type="button"
+                      onMouseEnter={() => setShowEccTooltip(true)}
+                      onMouseLeave={() => setShowEccTooltip(false)}
+                      onClick={() => setShowEccTooltip(!showEccTooltip)}
+                      onFocus={() => setShowEccTooltip(true)}
+                      onBlur={() => setShowEccTooltip(false)}
+                      className="text-slate-400 hover:text-indigo-600 transition-colors p-0.5 rounded-full focus:outline-none focus:ring-1 focus:ring-indigo-500/50 flex items-center justify-center cursor-pointer"
+                      aria-label="Error Correction Level Tradeoffs Info"
+                    >
+                      <Info className="w-3.5 h-3.5" />
+                    </button>
+                    
+                    {showEccTooltip && (
+                      <div 
+                        className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mb-2 w-72 bg-slate-900 text-white text-xs rounded-xl p-4 shadow-xl border border-slate-800 transition-all duration-200"
+                      >
+                        {(() => {
+                          const ec = (localProject.design?.errorCorrectionLevel || 'H') as 'L' | 'M' | 'Q' | 'H';
+                          const detail = eccDetails[ec] || eccDetails.H;
+                          return (
+                            <div className="space-y-3 pointer-events-none">
+                              <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                                <span className="font-bold text-[11px] text-indigo-400 uppercase tracking-wider">
+                                  Level {ec}: {detail.title}
+                                </span>
+                                {localProject.design?.smartOptimize && (
+                                  <span className="text-[9px] bg-indigo-950 text-indigo-300 border border-indigo-800/80 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                                    Auto
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Tradeoff Gauges */}
+                              <div className="space-y-2.5">
+                                <div>
+                                  <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
+                                    <span>Scan Reliability</span>
+                                    <span className="font-semibold text-slate-200">{detail.damageLabel}</span>
+                                  </div>
+                                  <div className="flex gap-1">
+                                    {[1, 2, 3, 4].map((step) => (
+                                      <div
+                                        key={step}
+                                        className={`h-1.5 flex-1 rounded-sm ${
+                                          step <= detail.reliability
+                                            ? 'bg-emerald-500'
+                                            : 'bg-slate-800'
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
+                                    <span>Data Capacity</span>
+                                    <span className="font-semibold text-slate-205">{detail.capacityLabel}</span>
+                                  </div>
+                                  <div className="flex gap-1">
+                                    {[1, 2, 3, 4].map((step) => (
+                                      <div
+                                        key={step}
+                                        className={`h-1.5 flex-1 rounded-sm ${
+                                          step <= detail.capacity
+                                            ? 'bg-indigo-500'
+                                            : 'bg-slate-800'
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Description */}
+                              <p className="text-[10px] text-slate-300 leading-relaxed font-normal">
+                                {detail.desc}
+                              </p>
+
+                              {/* Practical recommendation */}
+                              <div className="border-t border-slate-800/80 pt-2 text-[9px] text-slate-400 leading-relaxed">
+                                <strong className="text-indigo-300">Recommendation:</strong> {detail.recommendation}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                        {/* Arrow */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 md:left-3 md:translate-x-0 -mt-1 border-4 border-transparent border-t-slate-900" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <span className="text-xs text-indigo-600 font-mono font-bold">
+                  {localProject.design?.errorCorrectionLevel || 'H'}
+                  {localProject.design?.smartOptimize && " (Auto)"}
+                </span>
+              </div>
+              
+              <div className="space-y-3">
+                <select
+                  id="error-correction-select"
+                  disabled={localProject.design?.smartOptimize}
+                  className="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-2xs font-semibold transition-all duration-200 disabled:bg-gray-100 disabled:text-slate-400"
+                  value={localProject.design?.errorCorrectionLevel || 'H'}
+                  onChange={e => {
+                    const val = e.target.value as 'L' | 'M' | 'Q' | 'H';
+                    setDesignField('errorCorrectionLevel', val);
+                  }}
+                >
+                  <option value="L">{t('control.eccLDesc', 'L (7% Recovery) — Low density, simple pattern')}</option>
+                  <option value="M">{t('control.eccMDesc', 'M (15% Recovery) — Medium density, standard balance')}</option>
+                  <option value="Q">{t('control.eccQDesc', 'Q (25% Recovery) — Quartile density, high reliability')}</option>
+                  <option value="H">{t('control.eccHDesc', 'H (30% Recovery) — High density, best for logos & complexity')}</option>
+                </select>
+                
+                <p className="text-[10px] text-gray-600 leading-relaxed">
+                  {localProject.design?.smartOptimize 
+                    ? t('control.smartOptimizeEccDesc', 'Managed automatically by Smart Optimization to secure optimal recovery budget based on content depth and brand logo.')
+                    : (() => {
+                        const ec = localProject.design?.errorCorrectionLevel || 'H';
+                        if (ec === 'L') return t('control.eccLBudget', 'Low recovery budget. Simplest rendering, but vulnerable to slight scratches/smudges.');
+                        if (ec === 'M') return t('control.eccMBudget', 'Medium recovery budget. Standard balanced configuration used across normal scanners.');
+                        if (ec === 'Q') return t('control.eccQBudget', 'Quartile recovery budget. Retains scannability even when up to 25% of the print surface is dirty or torn.');
+                        return t('control.eccHBudget', 'High recovery budget (Highly Recommended). Perfect for complex, custom QR patterns and centerpiece custom brand logo overlays.');
+                      })()}
+                </p>
+              </div>
+            </div>
           </div>
-          <span className="text-xs text-indigo-600 font-mono font-bold">
-            {localProject.design?.errorCorrectionLevel || 'H'}
-            {localProject.design?.smartOptimize && " (Auto)"}
-          </span>
-        </div>
-        
-        <div className="space-y-3">
-          <select
-            id="error-correction-select"
-            disabled={localProject.design?.smartOptimize}
-            className="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-2xs font-semibold transition-all duration-200 disabled:bg-gray-100 disabled:text-slate-450"
-            value={localProject.design?.errorCorrectionLevel || 'H'}
-            onChange={e => {
-              const val = e.target.value as 'L' | 'M' | 'Q' | 'H';
-              setDesignField('errorCorrectionLevel', val);
-            }}
-          >
-            <option value="L">{t('control.eccLDesc', 'L (7% Recovery) — Low density, simple pattern')}</option>
-            <option value="M">{t('control.eccMDesc', 'M (15% Recovery) — Medium density, standard balance')}</option>
-            <option value="Q">{t('control.eccQDesc', 'Q (25% Recovery) — Quartile density, high reliability')}</option>
-            <option value="H">{t('control.eccHDesc', 'H (30% Recovery) — High density, best for logos & complexity')}</option>
-          </select>
-          
-          <p className="text-[10px] text-gray-600 leading-relaxed">
-            {localProject.design?.smartOptimize 
-              ? t('control.smartOptimizeEccDesc', 'Managed automatically by Smart Optimization to secure optimal recovery budget based on content depth and brand logo.')
-              : (() => {
-                  const ec = localProject.design?.errorCorrectionLevel || 'H';
-                  if (ec === 'L') return t('control.eccLBudget', 'Low recovery budget. Simplest rendering, but vulnerable to slight scratches/smudges.');
-                  if (ec === 'M') return t('control.eccMBudget', 'Medium recovery budget. Standard balanced configuration used across normal scanners.');
-                  if (ec === 'Q') return t('control.eccQBudget', 'Quartile recovery budget. Retains scannability even when up to 25% of the print surface is dirty or torn.');
-                  return t('control.eccHBudget', 'High recovery budget (Highly Recommended). Perfect for complex, custom QR patterns and centerpiece custom brand logo overlays.');
-                })()}
-          </p>
-        </div>
+        )}
       </motion.div>
 
       {/* Brand Logos Custom center overlay */}

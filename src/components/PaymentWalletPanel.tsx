@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from '../utils/i18n';
-import { Wallet, QrCode } from 'lucide-react';
+import { Wallet, QrCode, Info, HelpCircle, CheckCircle2, ShieldCheck, CreditCard, Sparkles } from 'lucide-react';
 
 export function computePaymentContent(method: string, fields: Record<string, string>): string {
   const h = (fields.handle || '').trim();
@@ -157,16 +157,191 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
     customUrl: ''
   });
 
+  const lastParsedContent = useRef<string>('');
+
+  useEffect(() => {
+    if (!content || content === lastParsedContent.current) return;
+    lastParsedContent.current = content;
+
+    let detectedMethod = 'paypal';
+    const fields: Record<string, string> = {
+      handle: '',
+      upiId: '',
+      payeeName: '',
+      amount: '',
+      currency: 'USD',
+      note: '',
+      account: '',
+      phone: '',
+      pixKey: '',
+      city: '',
+      till: '',
+      paybill: '',
+      accountTitle: '',
+      iban: '',
+      billerId: '',
+      customUrl: ''
+    };
+
+    if (content.startsWith('upi://pay')) {
+      detectedMethod = 'upi';
+      try {
+        const url = new URL(content.replace('upi://pay', 'http://upi-dummy'));
+        fields.upiId = url.searchParams.get('pa') || '';
+        fields.payeeName = url.searchParams.get('pn') || '';
+        fields.amount = url.searchParams.get('am') || '';
+        fields.note = url.searchParams.get('tn') || '';
+      } catch (e) {
+        const query = content.split('?')[1] || '';
+        const params = new URLSearchParams(query);
+        fields.upiId = params.get('pa') || '';
+        fields.payeeName = params.get('pn') || '';
+        fields.amount = params.get('am') || '';
+        fields.note = params.get('tn') || '';
+      }
+    } else if (content.startsWith('https://paypal.me/')) {
+      detectedMethod = 'paypal';
+      const clean = content.replace('https://paypal.me/', '');
+      const parts = clean.split('/');
+      fields.handle = parts[0] || '';
+      if (parts[1]) {
+        const amtMatch = parts[1].match(/^([\d.]+)([A-Z]{3})?$/i);
+        if (amtMatch) {
+          fields.amount = amtMatch[1];
+          if (amtMatch[2]) fields.currency = amtMatch[2].toUpperCase();
+        } else {
+          fields.amount = parts[1];
+        }
+      }
+    } else if (content.startsWith('https://venmo.com/')) {
+      detectedMethod = 'venmo';
+      const clean = content.replace('https://venmo.com/', '');
+      if (clean.includes('?')) {
+        const [pathPart, queryPart] = clean.split('?');
+        fields.handle = pathPart.replace(/^u\//, '').replace(/\/$/, '');
+        const params = new URLSearchParams(queryPart);
+        fields.amount = params.get('amount') || '';
+        fields.note = params.get('note') || '';
+      } else {
+        fields.handle = clean.replace(/^u\//, '').replace(/\/$/, '');
+      }
+    } else if (content.startsWith('https://cash.app/')) {
+      detectedMethod = 'cashapp';
+      const clean = content.replace('https://cash.app/', '');
+      const parts = clean.split('/');
+      fields.handle = parts[0] || '';
+      if (parts[1]) {
+        fields.amount = parts[1];
+      }
+    } else if (content.startsWith('https://pix.bcb.gov.br/qr/')) {
+      detectedMethod = 'pix';
+      const clean = content.replace('https://pix.bcb.gov.br/qr/', '');
+      if (clean.includes('?')) {
+        const [keyPart, queryPart] = clean.split('?');
+        fields.pixKey = decodeURIComponent(keyPart);
+        const params = new URLSearchParams(queryPart);
+        fields.payeeName = params.get('name') || '';
+        fields.city = params.get('city') || '';
+        fields.amount = params.get('amount') || '';
+      } else {
+        fields.pixKey = decodeURIComponent(clean);
+      }
+    } else if (content.startsWith('https://grab.com/pay/')) {
+      detectedMethod = 'grabpay';
+      fields.phone = content.replace('https://grab.com/pay/', '');
+    } else if (content.startsWith('M-PESA Paybill:')) {
+      detectedMethod = 'mpesa';
+      const match = content.match(/M-PESA Paybill:\s*(\S+)(?:\s+Account:\s*(.+))?/i);
+      if (match) {
+        fields.paybill = match[1];
+        fields.account = match[2] || '';
+      }
+    } else if (content.startsWith('mpesa://pay?till=')) {
+      detectedMethod = 'mpesa';
+      fields.till = content.replace('mpesa://pay?till=', '');
+    } else if (content.startsWith('tel:') && content.includes('mpesa')) {
+      detectedMethod = 'mpesa';
+      fields.phone = content.replace('tel:', '');
+    } else if (content.startsWith('https://jazzcash.com.pk/pay')) {
+      detectedMethod = 'jazzcash';
+      try {
+        const url = new URL(content);
+        fields.account = url.searchParams.get('account') || '';
+        fields.amount = url.searchParams.get('amount') || '';
+      } catch (e) {
+        const query = content.split('?')[1] || '';
+        const params = new URLSearchParams(query);
+        fields.account = params.get('account') || '';
+        fields.amount = params.get('amount') || '';
+      }
+    } else if (content.startsWith('https://easypaisa.com.pk/pay')) {
+      detectedMethod = 'easypaisa';
+      try {
+        const url = new URL(content);
+        fields.account = url.searchParams.get('account') || '';
+        fields.amount = url.searchParams.get('amount') || '';
+      } catch (e) {
+        const query = content.split('?')[1] || '';
+        const params = new URLSearchParams(query);
+        fields.account = params.get('account') || '';
+        fields.amount = params.get('amount') || '';
+      }
+    } else if (content.startsWith('https://stcpay.com.sa/pay')) {
+      detectedMethod = 'stcpay';
+      try {
+        const url = new URL(content);
+        fields.phone = url.searchParams.get('phone') || '';
+        fields.amount = url.searchParams.get('amount') || '';
+      } catch (e) {
+        const query = content.split('?')[1] || '';
+        const params = new URLSearchParams(query);
+        fields.phone = params.get('phone') || '';
+        fields.amount = params.get('amount') || '';
+      }
+    } else if (content.startsWith('iban:')) {
+      detectedMethod = 'mada';
+      fields.iban = content.replace('iban:', '');
+    } else if (content.startsWith('https://mada.com.sa/pay')) {
+      detectedMethod = 'mada';
+      try {
+        const url = new URL(content);
+        fields.iban = url.searchParams.get('iban') || '';
+      } catch (e) {
+        const query = content.split('?')[1] || '';
+        const params = new URLSearchParams(query);
+        fields.iban = params.get('iban') || '';
+      }
+    } else if (content.startsWith('sadad://pay')) {
+      detectedMethod = 'sadad';
+      try {
+        const url = new URL(content);
+        fields.billerId = url.searchParams.get('biller') || '';
+      } catch (e) {
+        const query = content.split('?')[1] || '';
+        const params = new URLSearchParams(query);
+        fields.billerId = params.get('biller') || '';
+      }
+    } else if (content.startsWith('https://') || content.startsWith('http://')) {
+      detectedMethod = 'custom';
+      fields.customUrl = content;
+    }
+
+    setPaymentMethod(detectedMethod);
+    setPaymentFields(fields);
+  }, [content]);
+
   const handleFieldChange = (field: string, value: string) => {
     const updatedFields = { ...paymentFields, [field]: value };
     setPaymentFields(updatedFields);
     const newPayload = computePaymentContent(paymentMethod, updatedFields);
+    lastParsedContent.current = newPayload;
     onChangeContent(newPayload);
   };
 
   const handleMethodChange = (newMethod: string) => {
     setPaymentMethod(newMethod);
     const newPayload = computePaymentContent(newMethod, paymentFields);
+    lastParsedContent.current = newPayload;
     onChangeContent(newPayload);
   };
 
@@ -181,6 +356,60 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           <p className="text-[11px] text-slate-500 mt-0.5">
             {t('control.paymentWalletDesc', 'Create instant payment QR codes for popular global and regional mobile wallets.')}
           </p>
+        </div>
+      </div>
+
+      {/* Educational & Helpful Info Section / معلومات اور استعمال */}
+      <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3 text-xs text-slate-700 space-y-2.5">
+        <div className="flex items-start gap-2">
+          <Sparkles className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+          <div>
+            <h5 className="font-bold text-slate-950 text-[11px] uppercase tracking-wider flex items-center gap-1">
+              Payment & Wallet QR Guide | ادائیگی اور والٹ گائیڈ
+            </h5>
+            <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+              Generate payment QRs for instant mobile transfers. Scan and pay instantly without manually typing phone numbers or account IDs.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10.5px]">
+          {/* Column 1: Uses / استعمالات */}
+          <div className="bg-white/80 p-2.5 rounded-lg border border-emerald-50 space-y-1.5">
+            <span className="font-bold text-slate-800 flex items-center gap-1">
+              <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
+              Primary Uses / عام استعمالات:
+            </span>
+            <ul className="list-disc pl-4 space-y-1 text-slate-600">
+              <li><strong>Shop Checkouts:</strong> Place on counters for fast contactless sales.</li>
+              <li><strong>Freelance & Billing:</strong> Add to digital invoices for instant client payout.</li>
+              <li><strong>Tips & Donations:</strong> Accept customer tips or charity donations seamlessly.</li>
+              <li><strong>P2P Transfers:</strong> Share with friends/family to split dinner bills easily.</li>
+            </ul>
+          </div>
+
+          {/* Column 2: How to Create / کیسے بنائیں */}
+          <div className="bg-white/80 p-2.5 rounded-lg border border-emerald-50 space-y-1.5">
+            <span className="font-bold text-slate-800 flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              How to Create / بنانے کا طریقہ:
+            </span>
+            <ul className="list-decimal pl-4 space-y-1 text-slate-600">
+              <li>Select your wallet/network (e.g. UPI, PayPal, JazzCash).</li>
+              <li>Input your account ID, handle, or mobile number.</li>
+              <li>Optional: Set a preset request amount & note.</li>
+              <li>Customize colors/logos, then download the QR!</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Localized note for Pakistan/India/Gulf */}
+        <div className="bg-emerald-600/5 text-emerald-800 rounded-lg p-2 text-[10px] leading-relaxed border border-emerald-600/10 flex items-start gap-1.5">
+          <Info className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-semibold block">🇵🇰 Pakistan, 🇮🇳 India & 🇸🇦 Gulf Wallets:</span>
+            India supports any UPI app (GPay, Paytm, PhonePe). Pakistan supports direct scanning via JazzCash & EasyPaisa. Saudi Arabia integrates Mada IBAN & STC Pay.
+          </div>
         </div>
       </div>
 

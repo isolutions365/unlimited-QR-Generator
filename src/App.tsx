@@ -13,10 +13,12 @@ import AuthModal from './components/AuthModal';
 import ShortcutsHelpModal from './components/ShortcutsHelpModal';
 import TourWelcomeModal from './components/TourWelcomeModal';
 import SettingsModal from './components/SettingsModal';
+import AIAssistantWidget from './components/AIAssistantWidget';
 import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/audioFeedback';
 
 // Code-splitting via React.lazy for secondary landing & hub pages
 const SEOPage = React.lazy(() => import('./pages/landing/SEOPage'));
+const BulkQRGenerator = React.lazy(() => import('./components/BulkQRGenerator'));
 const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowcase'));
 const CompanyPages = React.lazy(() => import('./pages/CompanyPages'));
 const TrustCenterHub = React.lazy(() => import('./pages/TrustCenterHub'));
@@ -35,6 +37,7 @@ const PlatformHub = React.lazy(() => import('./pages/PlatformHub'));
 const I18nDashboard = React.lazy(() => import('./pages/I18nDashboard'));
 const GrowthSuite = React.lazy(() => import('./pages/GrowthSuite'));
 const EnterpriseAIGateway = React.lazy(() => import('./pages/EnterpriseAIGateway'));
+const QRMarketingPlatform = React.lazy(() => import('./pages/marketing/QRMarketingPlatform'));
 import ErrorBoundary from './components/ErrorBoundary';
 
 
@@ -53,12 +56,16 @@ import MobileDrawer from './components/MobileDrawer';
 import Header from './components/Header';
 import Logo from './components/Logo';
 import BarcodeGenerator from './components/BarcodeGenerator';
+import DigitalBusinessCard from './components/DigitalBusinessCard';
+import RestaurantMenu from './components/RestaurantMenu';
+import PdfSharing from './components/PdfSharing';
+import FormBuilder from './components/FormBuilder';
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
-  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode
+  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode, FileSpreadsheet, Wallet, FormInput
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -1464,6 +1471,7 @@ export default function App() {
   const isSubpage = ['/profile', '/community', '/roadmap', '/testimonials', '/case-studies', '/success-stories', '/release-notes', '/feedback'].includes(cleanPath) ||
     cleanPath === '/i18n-dashboard' ||
     cleanPath === '/ai-gateway' ||
+    cleanPath === '/marketing-platform' ||
     isLandingPage ||
     cleanPath === '/faq' ||
     cleanPath === '/blog' ||
@@ -1556,6 +1564,7 @@ export default function App() {
             handleInitiateGenerator={handleInitiateGenerator}
             getPresetIcon={getPresetIcon}
             setActiveTab={setActiveTab}
+            activeTab={activeTab}
             navTranslations={navTranslations}
             user={user}
             onSignInClick={handleSignInClick}
@@ -1994,6 +2003,10 @@ export default function App() {
             <React.Suspense fallback={<LazyLoader />}>
               <EnterpriseAIGateway onBack={() => navigateTo('/')} user={user} onSignInClick={handleSignInClick} />
             </React.Suspense>
+          ) : cleanPath === '/marketing-platform' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <QRMarketingPlatform onBack={() => navigateTo('/')} />
+            </React.Suspense>
           ) : isLandingPage ? (
             <React.Suspense fallback={<LazyLoader />}>
               <SEOPage 
@@ -2110,46 +2123,62 @@ export default function App() {
         <main className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6">
           <h1 className="sr-only">Free QR Code Generator - Custom Dynamic QR Codes with Analytics</h1>
 
-        {/* Tab view controller */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between bg-white border border-gray-200/80 p-1.5 rounded-2xl max-w-2xl lg:max-w-3xl shadow-xs gap-1">
-          <button
-            type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'create' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
-            onClick={() => setActiveTab('create')}
-          >
-            {t('nav.creativeStationTab', 'Creative Station')}
-          </button>
-          <button
-            type="button"
-            className={`flex-1 min-w-[105px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${ activeTab === 'barcode' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
-            onClick={() => setActiveTab('barcode')}
-          >
-            <Barcode className={`w-3.5 h-3.5 ${activeTab === 'barcode' ? 'text-white' : 'text-indigo-500'}`} />
-            {t('nav.barcodeGeneratorTab', 'Barcode Generator')}
-          </button>
-          <button
-            type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'templates' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
-            onClick={() => setActiveTab('templates')}
-          >
-            {t('nav.templatesTab', 'Templates')}
-          </button>
-          <button
-            type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer ${ activeTab === 'analytics' ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50' }`}
-            onClick={() => setActiveTab('analytics')}
-          >
-            {t('nav.analyticsTab', 'Scan Analytics')}
-          </button>
-          <button
-            type="button"
-            className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 ${ activeTab === 'animations' ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white shadow-xs font-bold' : 'text-gray-600 hover:bg-gray-50' }`}
-            onClick={() => setActiveTab('animations')}
-          >
-            <Sparkles className={`w-3.5 h-3.5 ${activeTab === 'animations' ? 'text-yellow-300 animate-spin-slow' : 'text-purple-500'}`} />
-            {t('nav.animationsTab', 'Animations')}
-          </button>
-        </div>
+          {/* Dynamic Sub-Navigation Bar with Responsive Horizontal Scroll & No Clipping */}
+          <div className="w-full bg-slate-50 border border-slate-200/80 p-1.5 rounded-2xl shadow-2xs select-none relative overflow-hidden">
+            <div 
+              className="flex flex-row flex-nowrap items-center gap-1.5 overflow-x-auto py-0.5 px-0.5 scrollbar-none" 
+              style={{ 
+                scrollbarWidth: 'none', 
+                msOverflowStyle: 'none',
+                WebkitOverflowScrolling: 'touch' 
+              }}
+            >
+              {[
+                { id: 'create', name: t('nav.creativeStationTab', 'Creative Station'), icon: Sparkles, iconColor: 'text-indigo-500' },
+                { id: 'form', name: t('nav.formTab', 'Form Builder'), icon: FormInput, iconColor: 'text-indigo-500' },
+                { id: 'menu', name: t('nav.restaurantMenuTab', 'Restaurant Menus'), icon: Utensils, iconColor: 'text-amber-500' },
+                { id: 'card', name: t('nav.digitalCardTab', 'Digital Cards'), icon: Contact, iconColor: 'text-indigo-500' },
+                { id: 'pdf', name: t('nav.pdfTab', 'PDF Sharing'), icon: FileText, iconColor: 'text-indigo-500' },
+                { id: 'barcode', name: t('nav.barcodeGeneratorTab', 'Barcode Generator'), icon: Barcode, iconColor: 'text-indigo-500' },
+                { id: 'bulk', name: t('nav.bulkGeneratorTab', 'Bulk Generator'), icon: FileSpreadsheet, iconColor: 'text-indigo-500' },
+                { id: 'animations', name: t('nav.animationsTab', 'Animations'), icon: Play, iconColor: 'text-purple-500', isSpecial: true },
+                { id: 'analytics', name: t('nav.analyticsTab', 'Scan Analytics'), icon: BarChart3, iconColor: 'text-indigo-500' },
+                { id: 'templates', name: t('nav.templatesTab', 'Templates'), icon: LayoutTemplate, iconColor: 'text-indigo-500' },
+              ].map((tab) => {
+                const isActive = activeTab === tab.id;
+                const IconComponent = tab.icon;
+                
+                let activeClass = 'bg-indigo-600 text-white shadow-sm font-bold';
+                if (tab.isSpecial) {
+                  activeClass = 'bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white font-bold shadow-xs';
+                }
+
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id as AppTab)}
+                    className={`flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer shrink-0 select-none ${
+                      isActive 
+                        ? activeClass 
+                        : 'text-slate-600 hover:text-indigo-600 hover:bg-white bg-transparent'
+                    }`}
+                  >
+                    <IconComponent 
+                      className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                        isActive 
+                          ? 'text-white' 
+                          : tab.id === 'animations' 
+                            ? 'text-purple-500 animate-pulse' 
+                            : tab.iconColor
+                      }`} 
+                    />
+                    <span>{tab.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
         {/* Interactive errors alerting banner */}
         {errorMessage && (
@@ -2286,6 +2315,48 @@ export default function App() {
                   onDownloadTrigger={handleDownloadTrigger}
                 />
               </React.Suspense>
+            </ErrorBoundary>
+          </div>
+        )}
+
+        {activeTab === 'bulk' && (
+          <div className="w-full">
+            <ErrorBoundary isInline>
+              <React.Suspense fallback={<LazyLoader />}>
+                <BulkQRGenerator />
+              </React.Suspense>
+            </ErrorBoundary>
+          </div>
+        )}
+
+        {activeTab === 'card' && (
+          <div className="w-full">
+            <ErrorBoundary isInline>
+              <DigitalBusinessCard />
+            </ErrorBoundary>
+          </div>
+        )}
+
+        {activeTab === 'menu' && (
+          <div className="w-full">
+            <ErrorBoundary isInline>
+              <RestaurantMenu />
+            </ErrorBoundary>
+          </div>
+        )}
+
+        {activeTab === 'pdf' && (
+          <div className="w-full">
+            <ErrorBoundary isInline>
+              <PdfSharing />
+            </ErrorBoundary>
+          </div>
+        )}
+
+        {activeTab === 'form' && (
+          <div className="w-full">
+            <ErrorBoundary isInline>
+              <FormBuilder />
             </ErrorBoundary>
           </div>
         )}
@@ -2439,6 +2510,60 @@ export default function App() {
                     className="mt-4 text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.instagram.btn')}
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
+                  </a>
+                </div>
+
+                {/* 7. Payment & Wallet QR */}
+                <div id="tool-payment-card" className={`relative bg-white rounded-2xl border border-slate-150 p-6 shadow-3xs hover:border-emerald-500/50 hover:shadow-md transition-all group flex flex-col justify-between ${isRtlLocale(locale) ? 'rtl-active' : ''}`}>
+                  <div>
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center ltr-lock">
+                        <Wallet className="w-5 h-5 text-emerald-600 ltr-lock" />
+                      </div>
+                      
+                      {/* Premium Global Pay Tooltip Badge */}
+                      <div className="relative group/tooltip">
+                        <span className="cursor-help px-2 py-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-full transition-colors">
+                          {t('tools.payment.badge', 'Global Pay')}
+                        </span>
+                        
+                        {/* Tooltip Card */}
+                        <div className="absolute right-0 bottom-full mb-2 w-64 p-3 bg-slate-950 text-white rounded-xl shadow-xl border border-slate-800 hidden group-hover/tooltip:block group-focus-within/tooltip:block animate-in fade-in slide-in-from-bottom-1 duration-150 z-50 text-left pointer-events-none">
+                          <div className="text-[10px] font-bold text-emerald-400 mb-1">
+                            {t('tools.payment.tooltip.supported', 'Supported Global Methods')}
+                          </div>
+                          <p className="text-[9.5px] text-slate-300 leading-normal mb-2">
+                            {t('tools.payment.tooltip.text', 'Receive money directly with secure QR codes supporting major networks.')}
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            <span className="px-1.5 py-0.5 bg-slate-800 text-[9px] rounded font-semibold text-emerald-400">UPI</span>
+                            <span className="px-1.5 py-0.5 bg-slate-800 text-[9px] rounded font-semibold text-sky-400">PayPal</span>
+                            <span className="px-1.5 py-0.5 bg-slate-800 text-[9px] rounded font-semibold text-indigo-400">Venmo</span>
+                            <span className="px-1.5 py-0.5 bg-slate-800 text-[9px] rounded font-semibold text-slate-300">Cards</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 className="text-sm font-extrabold text-slate-900">{t('tools.payment.title', 'Payment & Wallet QR')}</h3>
+                    <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                      {t('tools.payment.desc', 'Generate secure QR codes with full support for global payment methods like UPI, PayPal, Venmo, and custom digital wallet or invoice links.')}
+                    </p>
+                  </div>
+                  <a
+                    id="tool-payment-link"
+                    href="/"
+                    onClick={(e) => { 
+                      e.preventDefault(); 
+                      handleInitiateGenerator({ 
+                        type: 'payment', 
+                        content: 'upi://pay?pa=merchant@upi&pn=Store&am=10.00&cu=INR', 
+                        name: 'Payment/Wallet QR' 
+                      }); 
+                    }}
+                    className="mt-4 text-xs font-bold text-emerald-600 hover:text-emerald-800 flex items-center gap-1.5 ltr-lock"
+                  >
+                    {t('tools.payment.btn', 'Create Payment QR')}
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
                   </a>
                 </div>
@@ -3041,6 +3166,13 @@ export default function App() {
         onClose={() => setIsSettingsModalOpen(false)}
         soundSettings={soundSettings}
         onUpdateSoundSettings={setSoundSettings}
+      />
+
+      {/* Campaign AI Assistant Widget */}
+      <AIAssistantWidget
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onNavigate={navigateTo}
       />
     </div>
   );

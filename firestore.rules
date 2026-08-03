@@ -2,58 +2,194 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // --- HELPER FUNCTIONS ---
     function isSignedIn() {
       return request.auth != null;
     }
 
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+
+
     // --- USERS COLLECTION ---
     match /users/{userId} {
-      allow read, write: if true;
+      allow get: if isSignedIn() && request.auth.uid == userId;
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
+      allow delete: if false;
     }
 
     // --- USER PROFILES COLLECTION ---
     match /user_profiles/{userId} {
-      allow read, write: if true;
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
     // --- PROJECTS COLLECTION ---
     match /projects/{projectId} {
-      allow read, write: if true;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
     }
 
     // --- SCANS COLLECTION ---
     match /scans/{scanId} {
-      allow read, write: if true;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+      allow update: if false;
     }
 
     // --- REFERRAL CLICKS COLLECTION ---
     match /referralClicks/{clickId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if false;
     }
 
     // --- NOTIFICATIONS COLLECTION ---
     match /notifications/{notificationId} {
-      allow read, write: if true;
+      allow list, get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['read']);
+      allow create, delete: if false;
     }
 
     // --- COMMUNITY POSTS COLLECTION ---
     match /communityPosts/{postId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow create: if incoming().authorId == 'guest' || (isSignedIn() && incoming().authorId == request.auth.uid);
+      allow update: if incoming().diff(existing()).affectedKeys().hasOnly(['upvotes', 'commentsCount']);
+      allow delete: if false;
     }
 
     // --- ROADMAP ITEMS COLLECTION ---
     match /roadmapItems/{itemId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if false;
     }
 
     // --- NEWSLETTER SUBSCRIBERS COLLECTION ---
     match /newsletterSubscribers/{subId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if false;
     }
 
     // --- FEEDBACK COLLECTION ---
     match /feedback/{feedbackId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    // --- DYNAMIC QRS COLLECTION ---
+    match /dynamicQRs/{qrId} {
+      allow list: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow get: if true; // Publicly readable for redirect routing
+      allow create: if isSignedIn() 
+                    && incoming().ownerId == request.auth.uid 
+                    && incoming().id == qrId
+                    && incoming().destinationUrl is string && incoming().destinationUrl.size() <= 2048
+                    && (incoming().status == "active" || incoming().status == "paused" || incoming().status == "expired" || incoming().status == "archived")
+                    && incoming().createdAt is string
+                    && (!incoming().keys().hasAny(['countryRules']) || incoming().countryRules is map)
+                    && (!incoming().keys().hasAny(['deviceRules']) || incoming().deviceRules is map)
+                    && (!incoming().keys().hasAny(['timeRules']) || incoming().timeRules is map)
+                    && (!incoming().keys().hasAny(['analytics']) || incoming().analytics is map)
+                    && (!incoming().keys().hasAny(['password']) || (incoming().password is string && incoming().password.size() <= 128))
+                    && (!incoming().keys().hasAny(['campaign']) || (incoming().campaign is string && incoming().campaign.size() <= 128))
+                    && (!incoming().keys().hasAny(['expiryAt']) || (incoming().expiryAt is string && incoming().expiryAt.size() <= 128));
+      allow update: if isSignedIn() 
+                    && existing().ownerId == request.auth.uid 
+                    && incoming().ownerId == request.auth.uid
+                    && incoming().id == qrId
+                    && incoming().destinationUrl is string && incoming().destinationUrl.size() <= 2048
+                    && (incoming().status == "active" || incoming().status == "paused" || incoming().status == "expired" || incoming().status == "archived")
+                    && incoming().createdAt == existing().createdAt
+                    && (!incoming().keys().hasAny(['countryRules']) || incoming().countryRules is map)
+                    && (!incoming().keys().hasAny(['deviceRules']) || incoming().deviceRules is map)
+                    && (!incoming().keys().hasAny(['timeRules']) || incoming().timeRules is map)
+                    && (!incoming().keys().hasAny(['analytics']) || incoming().analytics is map)
+                    && (!incoming().keys().hasAny(['password']) || (incoming().password is string && incoming().password.size() <= 128))
+                    && (!incoming().keys().hasAny(['campaign']) || (incoming().campaign is string && incoming().campaign.size() <= 128))
+                    && (!incoming().keys().hasAny(['expiryAt']) || (incoming().expiryAt is string && incoming().expiryAt.size() <= 128));
+      allow delete: if isSignedIn() && existing().ownerId == request.auth.uid;
+
+      // --- DYNAMIC QR SCANS SUB-COLLECTION (Master Gate / Relational Sync) ---
+      match /scans/{scanId} {
+        allow list, get: if isSignedIn() && get(/databases/$(database)/documents/dynamicQRs/$(qrId)).data.ownerId == request.auth.uid;
+        allow create: if true; // Telemetry logging can be public
+        allow update, delete: if false;
+      }
+    }
+
+    // --- LANDING PAGES COLLECTION ---
+    match /landingPages/{pageId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if true; // Publicly readable for visitors
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // --- BUSINESS CARDS COLLECTION ---
+    match /business_cards/{cardId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if true; // Publicly readable for visitors/scanners
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // --- RESTAURANT MENUS COLLECTION ---
+    match /restaurant_menus/{menuId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if true; // Publicly readable for QR scans / mobile views
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // --- PDF SHARES COLLECTION ---
+    match /pdf_shares/{shareId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if true; // Publicly readable for QR scanner redirect or download page
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if true; // Let anonymous users increment download/view counts
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // --- CUSTOM FORMS COLLECTION ---
+    match /custom_forms/{formId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if true; // Publicly readable so visitors can load form schema
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if (isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid)
+                    || incoming().diff(existing()).affectedKeys().hasOnly(['viewCount', 'submissionCount']);
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+
+      // --- SUBMISSIONS COLLECTION ---
+      match /submissions/{submissionId} {
+        allow list, get: if isSignedIn() && get(/databases/$(database)/documents/custom_forms/$(formId)).data.userId == request.auth.uid;
+        allow create: if true; // Publicly writable for any user completing a form
+        allow update, delete: if isSignedIn() && get(/databases/$(database)/documents/custom_forms/$(formId)).data.userId == request.auth.uid;
+      }
+    }
+
+    // --- TOP LEVEL SUBMISSIONS COLLECTION ---
+    match /submissions/{submissionId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if true; // Publicly writable for landing page visitors
+      allow update, delete: if isSignedIn() && existing().userId == request.auth.uid;
     }
   }
 }

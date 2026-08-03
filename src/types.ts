@@ -56,4 +56,47 @@ export interface ScanLog {
   userId: string;
 }
 
-export type AppTab = 'create' | 'barcode' | 'templates' | 'analytics' | 'animations';
+export interface DynamicQR {
+  id: string;
+  name: string;
+  ownerId: string;
+  destinationUrl: string;
+  status: 'active' | 'paused' | 'expired' | 'archived';
+  createdAt: string;
+  expiryAt?: string | null;
+  password?: string | null;
+  countryRules?: Record<string, string> | null;
+  deviceRules?: Record<string, string> | null;
+  timeRules?: {
+    timezone: string;
+    rules: Array<{
+      daysOfWeek?: number[];
+      startTime?: string;
+      endTime?: string;
+      destinationUrl: string;
+    }>;
+  } | null;
+  campaign?: string | null;
+  analytics?: {
+    scanCount: number;
+    uniqueScans: number;
+    lastScannedAt?: string | null;
+    deviceBreakdown?: Record<string, number>;
+    countryBreakdown?: Record<string, number>;
+  } | null;
+}
+
+export interface DynamicQRScanLog {
+  id: string;
+  qrId: string;
+  timestamp: string;
+  device: string;
+  browser: string;
+  country: string;
+  city?: string;
+  os?: string;
+  ipHash?: string;
+  referrer?: string;
+}
+
+export type AppTab = 'create' | 'barcode' | 'templates' | 'analytics' | 'animations' | 'bulk' | 'card' | 'menu' | 'pdf' | 'form';

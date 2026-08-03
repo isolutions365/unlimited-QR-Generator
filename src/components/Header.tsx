@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { QrCode, Sparkles, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX } from 'lucide-react';
+import { QrCode, Sparkles, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, Barcode, FileSpreadsheet, BarChart3 } from 'lucide-react';
 import Navigation from './Navigation';
 import LanguageSelector from './LanguageSelector';
 import { Locale } from '../utils/translations';
@@ -21,6 +21,7 @@ interface HeaderProps {
   handleInitiateGenerator: any;
   getPresetIcon: (slug: string) => any;
   setActiveTab: (tab: AppTab) => void;
+  activeTab?: AppTab;
   navTranslations: any;
   user?: UserSession | null;
   onSignInClick?: () => void;
@@ -33,7 +34,7 @@ interface HeaderProps {
 export default function Header({ 
   isScrolled, t, locale, currentPath, navigateTo, changeLocale,
   creativeSubItems, presetToolsTranslations, handleInitiateGenerator,
-  getPresetIcon, setActiveTab, navTranslations,
+  getPresetIcon, setActiveTab, activeTab, navTranslations,
   user, onSignInClick, onSignUpClick, onSignOut,
   onOpenSettings, soundEnabled = true
 }: HeaderProps) {
@@ -62,6 +63,16 @@ export default function Header({
     changeLocale(newLocale);
   };
 
+  const handleLinkClick = (link: any) => {
+    if (link.action) {
+      const tabName = link.action.replace('tab_', '') as AppTab;
+      navigateTo('/');
+      setActiveTab?.(tabName);
+    } else if (link.path) {
+      navigateTo(link.path);
+    }
+  };
+
   return (
     <>
     <header
@@ -83,7 +94,7 @@ export default function Header({
 
       {/* CENTER: Navigation */}
       <div className="hidden xl:flex flex-1 justify-center min-w-0 px-4">
-         <Navigation links={navLinks} currentPath={currentPath} navigateTo={navigateTo} isRtl={isRtl} />
+         <Navigation links={navLinks} currentPath={currentPath} activeTab={activeTab} onLinkClick={handleLinkClick} isRtl={isRtl} />
       </div>
 
       {/* RIGHT: Buttons */}
@@ -155,20 +166,27 @@ export default function Header({
           className="fixed inset-0 z-50 bg-white p-6 pt-20 xl:hidden"
           dir={isRtl ? 'rtl' : 'ltr'}
         >
-          <div className="flex flex-col gap-4">
-             {navLinks.map((link) => (
-                <button
-                  key={link.path}
-                  onClick={() => {
-                    navigateTo(link.path);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="flex items-center gap-3 p-3 text-lg font-bold text-slate-700 hover:text-indigo-600"
-                >
-                  <link.icon className="w-6 h-6" />
-                  {link.name}
-                </button>
-             ))}
+          <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-2">
+             {navLinks.map((link: any) => {
+                const active = link.action 
+                  ? (currentPath === '/' && activeTab === link.action.replace('tab_', ''))
+                  : (currentPath === link.path);
+                return (
+                  <button
+                    key={link.name}
+                    onClick={() => {
+                      handleLinkClick(link);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center gap-3 p-3 text-base font-bold rounded-xl transition-all ${
+                      active ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <link.icon className="w-5 h-5 shrink-0" />
+                    <span>{link.name}</span>
+                  </button>
+                );
+             })}
              {/* Mobile Auth */}
              <div className="border-t pt-4 mt-4 flex flex-col gap-3">
                  {user ? (
