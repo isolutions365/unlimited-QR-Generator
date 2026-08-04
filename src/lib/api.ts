@@ -1,5 +1,5 @@
 import { QRProject, ScanLog } from '../types';
-import { db, auth, ensureAppCheckReady } from './firebase';
+import { db, auth, ensureAppCheckReady, triggerReCaptchaExecution } from './firebase';
 import { signInAnonymously } from 'firebase/auth';
 import { 
   collection, 
@@ -191,6 +191,10 @@ class ApiClient {
     console.log('[Firestore WRITE BEFORE] Collection: "projects" | Doc ID:', projectId, '| Data:', projectData);
     try {
       await ensureAppCheckReady();
+      // Non-blocking explicit reCAPTCHA Enterprise execution trigger
+      triggerReCaptchaExecution('save_project').catch((e) => {
+        console.warn('[saveProject] Non-blocking reCAPTCHA trigger notice:', e);
+      });
       await setDoc(doc(db, 'projects', projectId), projectData, { merge: true });
       console.log('[Firestore WRITE AFTER] SUCCESS! Collection: "projects" | Doc ID:', projectId);
 

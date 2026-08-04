@@ -25,18 +25,37 @@ export const firebaseConfig = {
 // Initialize Firebase App gracefully and perform single-instance checks
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Enable debug token for App Check ONLY on localhost
+// Enable debug token for App Check with strict production disabling
 if (typeof window !== 'undefined') {
-  const isLocalhost = window.location.hostname === 'localhost';
-  if (isLocalhost) {
-    (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-    console.log('[Firebase App Check] Debug token enabled on localhost.');
-  } else {
-    // Ensure it's not set on production (freeqrgen.pro) so reCAPTCHA runs naturally
+  const hostname = window.location.hostname;
+  const isProd = hostname === 'freeqrgen.pro' || hostname === 'www.freeqrgen.pro';
+
+  if (isProd) {
+    // COMPLETELY DISABLE/REMOVE debug token on production domains
+    (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = false;
     if ('FIREBASE_APPCHECK_DEBUG_TOKEN' in self) {
       delete (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN;
     }
-    console.log('[Firebase App Check] Debug token disabled for production environment.');
+    console.log('[Firebase App Check] Debug token strictly DISABLED for production domain:', hostname);
+  } else {
+    // Enable debug token for local development / preview testing
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('ais-dev') || hostname.includes('ais-pre');
+    if (isLocalhost) {
+      (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+      console.log('[Firebase App Check] Debug token enabled for local/development testing:', hostname);
+    }
+  }
+
+  // Ensure the reCAPTCHA Enterprise script loads properly on client app mount
+  const scriptId = 'recaptcha-enterprise-script';
+  if (!document.getElementById(scriptId)) {
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.src = "https://www.google.com/recaptcha/enterprise.js?render=6LeQA3QtAAAAAJ-vfZZIUea07Iel3MS2UFvL5ozs";
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+    console.log('[Firebase App Check] reCAPTCHA Enterprise script tag injected dynamically.');
   }
 }
 
@@ -49,6 +68,11 @@ if (typeof window !== 'undefined') {
       isTokenAutoRefreshEnabled: true
     });
     console.log('[Firebase App Check] Initialized successfully using reCAPTCHA Enterprise.');
+    
+    // Trigger an initial background token execution/warmup once initialized
+    setTimeout(() => {
+      triggerReCaptchaExecution('initialization').catch(() => {});
+    }, 1500);
   } catch (err) {
     console.warn('[Firebase App Check] Initialization notice:', err);
   }
@@ -92,4 +116,48 @@ export async function ensureAppCheckReady(): Promise<void> {
     });
   }
 }
+
+/**
+ * Safely triggers an explicit reCAPTCHA Enterprise token execution or fetches a fresh App Check token in the background.
+ */
+export async function triggerReCaptchaExecution(action: string = 'homepage'): Promise<string | null> {
+  if (typeof window === 'undefined') return null;
+
+  // 1. First, attempt standard App Check token fetching (this warms up the App Check layer)
+  if (appCheck) {
+    try {
+      console.log(`[Firebase App Check] Fetching App Check token for action: "${action}"...`);
+      const tokenResult = await getToken(appCheck, true); // forceRefresh
+      console.log('[Firebase App Check] Successfully retrieved/refreshed App Check token.');
+      return tokenResult.token;
+    } catch (appCheckErr) {
+      console.warn('[Firebase App Check] Token pre-fetch notice (continuing non-blockingly):', appCheckErr);
+    }
+  }
+
+  // 2. Also execute grecaptcha.enterprise.execute if available to register active enterprise requests in Google Cloud Console
+  try {
+    const grecaptcha = (window as any).grecaptcha;
+    if (grecaptcha && grecaptcha.enterprise && typeof grecaptcha.enterprise.ready === 'function') {
+      return new Promise<string | null>((resolve) => {
+        grecaptcha.enterprise.ready(() => {
+          grecaptcha.enterprise.execute('6LeQA3QtAAAAAJ-vfZZIUea07Iel3MS2UFvL5ozs', { action: action })
+            .then((token: string) => {
+              console.log(`[ReCaptcha Enterprise] Successfully executed enterprise token for action "${action}"`);
+              resolve(token);
+            })
+            .catch((err: any) => {
+              console.warn('[ReCaptcha Enterprise] Execution notice:', err);
+              resolve(null);
+            });
+        });
+      });
+    }
+  } catch (err) {
+    console.warn('[ReCaptcha Enterprise] Direct execution not available yet:', err);
+  }
+
+  return null;
+}
+
 

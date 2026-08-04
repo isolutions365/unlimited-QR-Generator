@@ -12,7 +12,7 @@ import {
   increment, 
   serverTimestamp 
 } from 'firebase/firestore';
-import { db, auth, ensureAppCheckReady } from './firebase';
+import { db, auth, ensureAppCheckReady, triggerReCaptchaExecution } from './firebase';
 import { DynamicQR, DynamicQRScanLog } from '../types';
 
 enum OperationType {
@@ -75,6 +75,10 @@ export async function createDynamicQR(
   try {
     console.log(`[createDynamicQR] Ensuring App Check is warmed up...`);
     await ensureAppCheckReady();
+    // Non-blocking explicit reCAPTCHA Enterprise execution trigger
+    triggerReCaptchaExecution('create_dynamic_qr').catch((e) => {
+      console.warn('[createDynamicQR] Non-blocking reCAPTCHA trigger notice:', e);
+    });
     const userId = auth.currentUser?.uid || qrData.ownerId;
     const fullQR: DynamicQR = {
       ...qrData,

@@ -22,8 +22,12 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
         setLoading(true);
         setError(null);
 
-        // Ensure App Check is ready
-        await ensureAppCheckReady();
+        // Ensure App Check is ready in a non-blocking, safe way
+        try {
+          await ensureAppCheckReady();
+        } catch (appCheckErr) {
+          console.warn('[QRRedirector] Non-blocking App Check warmup notice:', appCheckErr);
+        }
 
         // Step 1: Query qr_codes collection directly by doc ID (trackingId)
         const qrCodeDocRef = doc(db, 'qr_codes', trackingId);
