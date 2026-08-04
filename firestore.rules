@@ -35,7 +35,7 @@ service cloud.firestore {
 
     // --- PROJECTS COLLECTION ---
     match /projects/{projectId} {
-      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow read: if true; // Publicly readable for short-link redirect routing and scan tracking
       allow create: if isSignedIn() && incoming().userId == request.auth.uid;
       allow update: if isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid;
       allow delete: if isSignedIn() && existing().userId == request.auth.uid;
