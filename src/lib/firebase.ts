@@ -78,17 +78,39 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// Initialize Firebase App Check using reCAPTCHA Enterprise
+// Initialize Firebase App Check using reCAPTCHA Enterprise (will be lazily deferred)
 export let appCheck: AppCheck | undefined;
-if (typeof window !== 'undefined') {
+
+/**
+ * Lazily and safely initializes Firebase App Check only after reCAPTCHA Enterprise is fully loaded in the window.
+ * This completely avoids the "Invalid site key or not loaded in api.js" race condition during early page load.
+ */
+export function initializeDeferredAppCheck(): AppCheck | undefined {
+  if (typeof window === 'undefined') return undefined;
+  if (appCheck) return appCheck;
+
+  const grecaptcha = (window as any).grecaptcha;
+  const isGrecaptchaReady = !!(
+    grecaptcha &&
+    grecaptcha.enterprise &&
+    typeof grecaptcha.enterprise.ready === 'function'
+  );
+
+  if (!isGrecaptchaReady) {
+    console.log('[Firebase App Check] Deferring initialization: window.grecaptcha.enterprise is not fully loaded yet.');
+    return undefined;
+  }
+
   try {
     appCheck = initializeAppCheck(app, {
       provider: new ReCaptchaEnterpriseProvider("6LeQA3QtAAAAAJ-vfZZIUea07Iel3MS2UFvL5ozs"),
       isTokenAutoRefreshEnabled: true
     });
-    console.log('[Firebase App Check] Initialized successfully using reCAPTCHA Enterprise.');
+    console.log('[Firebase App Check] Lazily initialized successfully with ReCaptchaEnterpriseProvider.');
+    return appCheck;
   } catch (err) {
-    console.warn('[Firebase App Check] Initialization notice:', err);
+    console.warn('[Firebase App Check] Safe initialization caught error (continuing gracefully):', err);
+    return undefined;
   }
 }
 
@@ -120,14 +142,21 @@ googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 /**
  * Ensures App Check token is active and warmed up in the background before performing Firestore operations.
- * This is non-blocking to prevent UI/network latency from delaying or failing reads and writes.
+ * This is completely non-blocking to ensure Firestore reads/writes can continue smoothly even if App Check has warnings or errors.
  */
 export async function ensureAppCheckReady(): Promise<void> {
-  if (typeof window !== 'undefined' && appCheck) {
-    // Fire-and-forget background pre-fetch: does NOT await the promise
-    getToken(appCheck, false).catch((err) => {
-      console.warn('[Firebase App Check] Background token fetch notice:', err);
-    });
+  if (typeof window === 'undefined') return;
+
+  try {
+    const activeAppCheck = appCheck || initializeDeferredAppCheck();
+    if (activeAppCheck) {
+      // Fire-and-forget background pre-fetch: caught internally so it never blocks or fails Firestore
+      getToken(activeAppCheck, false).catch((err) => {
+        console.warn('[Firebase App Check] Non-blocking background token pre-fetch notice:', err);
+      });
+    }
+  } catch (err) {
+    console.warn('[Firebase App Check] ensureAppCheckReady caught error gracefully:', err);
   }
 }
 
@@ -137,11 +166,14 @@ export async function ensureAppCheckReady(): Promise<void> {
 export async function triggerReCaptchaExecution(action: string = 'homepage'): Promise<string | null> {
   if (typeof window === 'undefined') return null;
 
+  // Lazily initialize App Check if possible
+  const activeAppCheck = appCheck || initializeDeferredAppCheck();
+
   // 1. First, attempt standard App Check token fetching (this warms up the App Check layer)
-  if (appCheck) {
+  if (activeAppCheck) {
     try {
       console.log(`[Firebase App Check] Fetching App Check token for action: "${action}"...`);
-      const tokenResult = await getToken(appCheck, true); // forceRefresh
+      const tokenResult = await getToken(activeAppCheck, true); // forceRefresh
       console.log('[Firebase App Check] Successfully retrieved/refreshed App Check token.');
       return tokenResult.token;
     } catch (appCheckErr) {

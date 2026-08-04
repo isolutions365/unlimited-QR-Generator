@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { appCheck, triggerReCaptchaExecution } from '../lib/firebase';
+import { appCheck, triggerReCaptchaExecution, initializeDeferredAppCheck } from '../lib/firebase';
 import { getToken } from 'firebase/app-check';
 
 /**
@@ -28,11 +28,12 @@ export function useReCaptchaEnterprise() {
     async (action: string = 'user_action'): Promise<string | null> => {
       if (typeof window === 'undefined') return null;
 
-      // 1. Attempt App Check token fetching in parallel if appCheck exists
-      if (appCheck) {
+      // 1. Attempt App Check token fetching in parallel if appCheck exists (or can be initialized)
+      const activeAppCheck = appCheck || initializeDeferredAppCheck();
+      if (activeAppCheck) {
         try {
           console.log(`[useReCaptchaEnterprise] Fetching App Check token for "${action}"...`);
-          const tokenResult = await getToken(appCheck, false); // use cached or refresh naturally
+          const tokenResult = await getToken(activeAppCheck, false); // use cached or refresh naturally
           console.log('[useReCaptchaEnterprise] Successfully fetched/verified App Check token.');
         } catch (appCheckErr) {
           console.warn('[useReCaptchaEnterprise] App Check token fetch notice (continuing non-blockingly):', appCheckErr);
@@ -99,6 +100,9 @@ export function useReCaptchaEnterprise() {
           checkIntervalRef.current = null;
         }
 
+        // Initialize App Check lazily now that we are ready
+        initializeDeferredAppCheck();
+
         // Trigger background initial warmup token request to ensure Google Cloud registers active requests
         executeToken('mount').catch(() => {});
       } else if (attemptsRef.current >= 30) {
@@ -114,6 +118,7 @@ export function useReCaptchaEnterprise() {
     // Run first check immediately or bind to script onload
     if (isGrecaptchaReady()) {
       setIsReady(true);
+      initializeDeferredAppCheck();
       executeToken('mount').catch(() => {});
     } else {
       script.addEventListener('load', checkAvailability);
