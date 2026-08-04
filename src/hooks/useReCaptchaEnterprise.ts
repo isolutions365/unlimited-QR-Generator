@@ -74,7 +74,7 @@ export function useReCaptchaEnterprise() {
 
     // A. Ensure the reCAPTCHA Enterprise script tag is injected and loading
     const scriptId = 'recaptcha-enterprise-script';
-    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+    let script = (document.getElementById(scriptId) || document.querySelector('script[src*="recaptcha/enterprise.js"]')) as HTMLScriptElement | null;
 
     if (!script) {
       script = document.createElement('script');
@@ -84,6 +84,8 @@ export function useReCaptchaEnterprise() {
       script.defer = true;
       document.head.appendChild(script);
       console.log('[useReCaptchaEnterprise] Dynamically injected reCAPTCHA Enterprise script tag.');
+    } else {
+      console.log('[useReCaptchaEnterprise] Found existing reCAPTCHA Enterprise script tag on the page.');
     }
 
     // B. Setup poller to check when the script finishes loading and window.grecaptcha becomes fully operational
