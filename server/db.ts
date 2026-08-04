@@ -353,7 +353,11 @@ class FirestoreDatabase {
       // 2. Search projects collection by doc ID
       const docProj = await getDoc(doc(activeDb, 'projects', trackingId));
       if (docProj.exists()) {
-        return docProj.data() as DbProject;
+        const d = docProj.data() as any;
+        return {
+          ...d,
+          trackingId: d.trackingId || docProj.id
+        } as DbProject;
       }
 
       // 3. Search dynamicQRs collection by shortCode

@@ -1354,7 +1354,10 @@ export default function App() {
 
   // Restore saved config
   const handleSelectProject = (proj: QRProject) => {
-    setCurrentProject(proj);
+    setCurrentProject({
+      ...proj,
+      trackingId: proj.trackingId || proj.id || Math.random().toString(36).substring(2, 8)
+    });
     setErrorMessage(null);
   };
 

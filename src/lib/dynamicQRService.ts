@@ -145,7 +145,10 @@ export async function updateDynamicQR(
 
     // Sync updates to projects collection in Firestore
     const userId = auth.currentUser?.uid;
-    const projUpdate: any = { updatedAt: new Date().toISOString() };
+    const projUpdate: any = { 
+      updatedAt: new Date().toISOString(),
+      trackingId: qrId
+    };
     if (updates.destinationUrl !== undefined) projUpdate.content = updates.destinationUrl;
     if (updates.name !== undefined) projUpdate.name = updates.name;
     if (updates.status !== undefined) projUpdate.trackingEnabled = updates.status !== 'paused';

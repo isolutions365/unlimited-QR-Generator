@@ -448,6 +448,7 @@ English text: "${text}"`;
           content,
           design,
           trackingEnabled,
+          trackingId: trackingId || undefined,
           expiryDate: expiryDate || null,
           expiryRedirectType: expiryRedirectType || 'message',
           expiryRedirectUrl: expiryRedirectUrl || '',
