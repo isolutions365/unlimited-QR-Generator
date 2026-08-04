@@ -6,6 +6,45 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
+      // Global Interceptor to prevent reCAPTCHA / App Check key-validation domain restrictions from crashing the App in development/testing environments
+      (function() {
+        var hostname = window.location.hostname;
+        var isProd = hostname === 'freeqrgen.pro' || hostname === 'www.freeqrgen.pro';
+        if (!isProd) {
+          window.addEventListener('error', function(e) {
+            var msg = (e && e.message) ? String(e.message) : '';
+            if (msg.indexOf('Invalid site key') !== -1 || msg.indexOf('6LeQA3Qt') !== -1 || msg.indexOf('recaptcha') !== -1 || msg.indexOf('api.js') !== -1) {
+              console.warn('[Firebase App Check] Intercepted and bypassed reCAPTCHA domain/key verification error in non-production:', msg);
+              if (e.preventDefault) e.preventDefault();
+              if (e.stopPropagation) e.stopPropagation();
+            }
+          }, true);
+
+          var originalOnError = window.onerror;
+          window.onerror = function(message, source, lineno, colno, error) {
+            var msg = String(message || '');
+            if (msg.indexOf('Invalid site key') !== -1 || msg.indexOf('6LeQA3Qt') !== -1 || msg.indexOf('recaptcha') !== -1 || msg.indexOf('api.js') !== -1) {
+              console.warn('[Firebase App Check] Intercepted and bypassed reCAPTCHA domain/key verification error via onerror:', message);
+              return true; // prevent default error handling (stops crash reports)
+            }
+            if (originalOnError) {
+              return originalOnError.apply(this, arguments);
+            }
+            return false;
+          };
+
+          window.addEventListener('unhandledrejection', function(e) {
+            var reason = (e && e.reason) ? String(e.reason) : '';
+            if (reason.indexOf('Invalid site key') !== -1 || reason.indexOf('6LeQA3Qt') !== -1 || reason.indexOf('recaptcha') !== -1 || reason.indexOf('api.js') !== -1) {
+              console.warn('[Firebase App Check] Intercepted unhandled reCAPTCHA rejection:', reason);
+              if (e.preventDefault) e.preventDefault();
+              if (e.stopPropagation) e.stopPropagation();
+            }
+          });
+        }
+      })();
+    </script>
+    <script>
       // Enhanced ServiceWorker & Cache Auto-Cleanup to resolve stale bundle and intermittent blank-screen issues
       (function() {
         if ('serviceWorker' in navigator) {

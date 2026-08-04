@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api, UserSession } from './lib/api';
 import { useFirebaseAuth } from './context/FirebaseAuthContext';
+import { useReCaptchaEnterprise } from './hooks/useReCaptchaEnterprise';
 import { auth } from './lib/firebase';
 import { signInAnonymously } from 'firebase/auth';
 import { QRProject, ScanLog, AppTab } from './types';
@@ -288,6 +289,7 @@ const categoryCardVariants: any = {
 
 export default function App() {
   const { user: fbUser, loading: fbLoading, logout: fbLogout } = useFirebaseAuth();
+  useReCaptchaEnterprise(); // Safely initialize and execute reCAPTCHA Enterprise on mount
   const [user, setUser] = useState<UserSession | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [projects, setProjects] = useState<QRProject[]>([]);

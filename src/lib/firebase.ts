@@ -25,37 +25,56 @@ export const firebaseConfig = {
 // Initialize Firebase App gracefully and perform single-instance checks
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Enable debug token for App Check with strict production disabling
+// Enable debug token for App Check with strict localhost-only conditional logic
 if (typeof window !== 'undefined') {
   const hostname = window.location.hostname;
-  const isProd = hostname === 'freeqrgen.pro' || hostname === 'www.freeqrgen.pro';
+  const isLocalhost = hostname === 'localhost';
 
-  if (isProd) {
-    // COMPLETELY DISABLE/REMOVE debug token on production domains
+  if (isLocalhost) {
+    (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    console.log('[Firebase App Check] Debug token enabled for localhost:', hostname);
+  } else {
+    // STRICTLY DISABLE/REMOVE debug token on any domain other than localhost
     (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = false;
     if ('FIREBASE_APPCHECK_DEBUG_TOKEN' in self) {
       delete (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN;
     }
-    console.log('[Firebase App Check] Debug token strictly DISABLED for production domain:', hostname);
-  } else {
-    // Enable debug token for local development / preview testing
-    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('ais-dev') || hostname.includes('ais-pre');
-    if (isLocalhost) {
-      (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-      console.log('[Firebase App Check] Debug token enabled for local/development testing:', hostname);
-    }
+    console.log('[Firebase App Check] Debug token strictly DISABLED because window.location.hostname !== "localhost":', hostname);
   }
 
-  // Ensure the reCAPTCHA Enterprise script loads properly on client app mount
-  const scriptId = 'recaptcha-enterprise-script';
-  if (!document.getElementById(scriptId)) {
-    const script = document.createElement('script');
-    script.id = scriptId;
-    script.src = "https://www.google.com/recaptcha/enterprise.js?render=6LeQA3QtAAAAAJ-vfZZIUea07Iel3MS2UFvL5ozs";
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-    console.log('[Firebase App Check] reCAPTCHA Enterprise script tag injected dynamically.');
+  // Intercept and bypass reCAPTCHA domain restriction errors in non-production environments
+  const isProd = hostname === 'freeqrgen.pro' || hostname === 'www.freeqrgen.pro';
+  if (!isProd) {
+    window.addEventListener('error', (e) => {
+      const msg = e && e.message ? String(e.message) : '';
+      if (msg.includes('Invalid site key') || msg.includes('6LeQA3Qt') || msg.includes('recaptcha') || msg.includes('api.js')) {
+        console.warn('[Firebase App Check] Suppressed reCAPTCHA domain verification error in development:', msg);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    const originalOnError = window.onerror;
+    window.onerror = function (message, source, lineno, colno, error) {
+      const msg = String(message || '');
+      if (msg.includes('Invalid site key') || msg.includes('6LeQA3Qt') || msg.includes('recaptcha') || msg.includes('api.js')) {
+        console.warn('[Firebase App Check] Suppressed reCAPTCHA domain verification error via onerror:', message);
+        return true;
+      }
+      if (originalOnError) {
+        return originalOnError.apply(this, arguments as any);
+      }
+      return false;
+    };
+
+    window.addEventListener('unhandledrejection', (e) => {
+      const reason = e && e.reason ? String(e.reason) : '';
+      if (reason.includes('Invalid site key') || reason.includes('6LeQA3Qt') || reason.includes('recaptcha') || reason.includes('api.js')) {
+        console.warn('[Firebase App Check] Suppressed unhandled reCAPTCHA rejection:', reason);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
   }
 }
 
@@ -68,11 +87,6 @@ if (typeof window !== 'undefined') {
       isTokenAutoRefreshEnabled: true
     });
     console.log('[Firebase App Check] Initialized successfully using reCAPTCHA Enterprise.');
-    
-    // Trigger an initial background token execution/warmup once initialized
-    setTimeout(() => {
-      triggerReCaptchaExecution('initialization').catch(() => {});
-    }, 1500);
   } catch (err) {
     console.warn('[Firebase App Check] Initialization notice:', err);
   }
