@@ -2,7 +2,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider } from 'firebase/auth';
 import { initializeFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider, AppCheck } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider, AppCheck, getToken } from 'firebase/app-check';
 import appletConfig from '../../firebase-applet-config.json';
 
 // Define the firebaseConfig using import.meta.env with fallback to firebase-applet-config.json
@@ -25,9 +25,19 @@ export const firebaseConfig = {
 // Initialize Firebase App gracefully and perform single-instance checks
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Enable debug token for App Check during development & preview testing
+// Enable debug token for App Check ONLY on localhost or 127.0.0.1
 if (typeof window !== 'undefined') {
-  (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN ?? true;
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (isLocalhost) {
+    (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    console.log('[Firebase App Check] Debug token enabled on localhost/127.0.0.1.');
+  } else {
+    // Ensure it's not set on production (freeqrgen.pro) so reCAPTCHA runs naturally
+    if ('FIREBASE_APPCHECK_DEBUG_TOKEN' in self) {
+      delete (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN;
+    }
+    console.log('[Firebase App Check] Debug token disabled for production environment.');
+  }
 }
 
 // Initialize Firebase App Check using reCAPTCHA Enterprise
@@ -69,4 +79,17 @@ export const storage = getStorage(app);
 // Initialize Google Auth Provider
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+/**
+ * Ensures App Check token is active and warmed up before performing Firestore operations.
+ */
+export async function ensureAppCheckReady(): Promise<void> {
+  if (typeof window !== 'undefined' && appCheck) {
+    try {
+      await getToken(appCheck, false);
+    } catch (err) {
+      console.warn('[Firebase App Check] Async token verification notice:', err);
+    }
+  }
+}
 

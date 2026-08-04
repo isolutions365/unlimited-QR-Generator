@@ -12,7 +12,7 @@ import {
   increment, 
   serverTimestamp 
 } from 'firebase/firestore';
-import { db, auth } from './firebase';
+import { db, auth, ensureAppCheckReady } from './firebase';
 import { DynamicQR, DynamicQRScanLog } from '../types';
 
 enum OperationType {
@@ -73,6 +73,8 @@ export async function createDynamicQR(
 ): Promise<DynamicQR> {
   const path = `dynamicQRs/${qrData.id}`;
   try {
+    console.log(`[createDynamicQR] Ensuring App Check is warmed up...`);
+    await ensureAppCheckReady();
     const userId = auth.currentUser?.uid || qrData.ownerId;
     const fullQR: DynamicQR = {
       ...qrData,
@@ -120,6 +122,7 @@ export async function createDynamicQR(
 export async function getDynamicQR(qrId: string): Promise<DynamicQR | null> {
   const path = `dynamicQRs/${qrId}`;
   try {
+    await ensureAppCheckReady();
     const docRef = doc(db, 'dynamicQRs', qrId);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
@@ -140,6 +143,7 @@ export async function updateDynamicQR(
 ): Promise<void> {
   const path = `dynamicQRs/${qrId}`;
   try {
+    await ensureAppCheckReady();
     const docRef = doc(db, 'dynamicQRs', qrId);
     await updateDoc(docRef, updates);
 
@@ -169,6 +173,7 @@ export async function updateDynamicQR(
 export async function deleteDynamicQR(qrId: string): Promise<void> {
   const path = `dynamicQRs/${qrId}`;
   try {
+    await ensureAppCheckReady();
     const docRef = doc(db, 'dynamicQRs', qrId);
     await deleteDoc(docRef);
   } catch (error) {
@@ -182,6 +187,7 @@ export async function deleteDynamicQR(qrId: string): Promise<void> {
 export async function listUserDynamicQRs(userId: string): Promise<DynamicQR[]> {
   const path = 'dynamicQRs';
   try {
+    await ensureAppCheckReady();
     const q = query(collection(db, 'dynamicQRs'), where('ownerId', '==', userId));
     const querySnapshot = await getDocs(q);
     const results: DynamicQR[] = [];
@@ -229,6 +235,7 @@ export async function logDynamicQRScan(
 ): Promise<void> {
   const path = `dynamicQRs/${qrId}/scans`;
   try {
+    await ensureAppCheckReady();
     const batch = writeBatch(db);
     
     // Generate new scan log reference

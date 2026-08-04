@@ -1,5 +1,5 @@
 import { QRProject, ScanLog } from '../types';
-import { db, auth } from './firebase';
+import { db, auth, ensureAppCheckReady } from './firebase';
 import { signInAnonymously } from 'firebase/auth';
 import { 
   collection, 
@@ -126,6 +126,7 @@ class ApiClient {
     const userId = auth.currentUser?.uid;
     if (!userId) return [];
     try {
+      await ensureAppCheckReady();
       const q = query(collection(db, 'projects'), where('userId', '==', userId));
       const snap = await getDocs(q);
       const projects: QRProject[] = [];
@@ -189,6 +190,7 @@ class ApiClient {
 
     console.log('[Firestore WRITE BEFORE] Collection: "projects" | Doc ID:', projectId, '| Data:', projectData);
     try {
+      await ensureAppCheckReady();
       await setDoc(doc(db, 'projects', projectId), projectData, { merge: true });
       console.log('[Firestore WRITE AFTER] SUCCESS! Collection: "projects" | Doc ID:', projectId);
       return projectData;
@@ -213,6 +215,7 @@ class ApiClient {
 
     console.log('[Firestore DELETE BEFORE] Collection: "projects" | Doc ID:', id);
     try {
+      await ensureAppCheckReady();
       await deleteDoc(doc(db, 'projects', id));
       console.log('[Firestore DELETE AFTER] SUCCESS! Collection: "projects" | Doc ID:', id);
     } catch (err: any) {
@@ -230,6 +233,7 @@ class ApiClient {
     const userId = auth.currentUser?.uid;
     if (!userId) return [];
     try {
+      await ensureAppCheckReady();
       const q = query(collection(db, 'scans'), where('userId', '==', userId));
       const snap = await getDocs(q);
       const scans: ScanLog[] = [];
@@ -309,6 +313,7 @@ class ApiClient {
 
     console.log('[Firestore WRITE BEFORE] Collection: "scans" | Doc ID:', scanId, '| Data:', scanData);
     try {
+      await ensureAppCheckReady();
       await setDoc(doc(db, 'scans', scanId), scanData);
       console.log('[Firestore WRITE AFTER] SUCCESS! Collection: "scans" | Doc ID:', scanId);
       return scanData;
@@ -326,6 +331,7 @@ class ApiClient {
     const userId = auth.currentUser?.uid;
     if (!userId) return;
     try {
+      await ensureAppCheckReady();
       const q = query(collection(db, 'scans'), where('userId', '==', userId));
       const snap = await getDocs(q);
       const deletePromises: Promise<void>[] = [];
@@ -447,6 +453,7 @@ class ApiClient {
       };
     }
     try {
+      await ensureAppCheckReady();
       const snap = await getDoc(doc(db, 'users', userId));
       if (snap.exists()) {
         return snap.data();
@@ -479,6 +486,7 @@ class ApiClient {
   async updateUserProfile(profile: any): Promise<any> {
     const userId = auth.currentUser?.uid;
     if (!userId) throw new Error("Authentication required to update profile.");
+    await ensureAppCheckReady();
     await setDoc(doc(db, 'users', userId), profile, { merge: true });
     const snap = await getDoc(doc(db, 'users', userId));
     return snap.exists() ? snap.data() : profile;
@@ -505,6 +513,7 @@ class ApiClient {
   async trackReferralClick(code: string): Promise<any> {
     if (!code) return { status: 'ignored' };
     try {
+      await ensureAppCheckReady();
       await addDoc(collection(db, 'referralClicks'), {
         code,
         timestamp: new Date().toISOString()
@@ -517,6 +526,7 @@ class ApiClient {
 
   async getCommunityPosts(): Promise<any[]> {
     try {
+      await ensureAppCheckReady();
       const snap = await getDocs(collection(db, 'communityPosts'));
       if (!snap.empty) {
         const posts: any[] = [];
@@ -564,12 +574,14 @@ class ApiClient {
       createdAt: 'Just now',
       timestamp: new Date().toISOString()
     };
+    await ensureAppCheckReady();
     const docRef = await addDoc(collection(db, 'communityPosts'), newPost);
     return { id: docRef.id, ...newPost };
   }
 
   async upvoteCommunityPost(id: string): Promise<any> {
     try {
+      await ensureAppCheckReady();
       const postRef = doc(db, 'communityPosts', id);
       const snap = await getDoc(postRef);
       if (snap.exists()) {
@@ -584,6 +596,7 @@ class ApiClient {
 
   async commentCommunityPost(id: string, content: string): Promise<any> {
     try {
+      await ensureAppCheckReady();
       const postRef = doc(db, 'communityPosts', id);
       const snap = await getDoc(postRef);
       if (snap.exists()) {
@@ -598,6 +611,7 @@ class ApiClient {
 
   async getRoadmapItems(): Promise<any[]> {
     try {
+      await ensureAppCheckReady();
       const snap = await getDocs(collection(db, 'roadmapItems'));
       if (!snap.empty) {
         const items: any[] = [];
@@ -627,6 +641,7 @@ class ApiClient {
 
   async subscribeNewsletter(email: string, preferences?: string[]): Promise<any> {
     try {
+      await ensureAppCheckReady();
       await addDoc(collection(db, 'newsletterSubscribers'), {
         email,
         preferences: preferences || ['product_updates'],
@@ -640,6 +655,7 @@ class ApiClient {
 
   async submitFeedback(feedback: { type: 'bug' | 'compliment' | 'suggestion'; satisfaction: number; text: string; email?: string; userId?: string }): Promise<any> {
     try {
+      await ensureAppCheckReady();
       await addDoc(collection(db, 'feedback'), {
         ...feedback,
         userId: auth.currentUser?.uid || feedback.userId || 'guest',
@@ -655,6 +671,7 @@ class ApiClient {
     const userId = auth.currentUser?.uid;
     if (!userId) return [];
     try {
+      await ensureAppCheckReady();
       const q = query(collection(db, 'notifications'), where('userId', '==', userId));
       const snap = await getDocs(q);
       if (!snap.empty) {
@@ -679,6 +696,7 @@ class ApiClient {
 
   async markNotificationAsRead(id: string): Promise<any> {
     try {
+      await ensureAppCheckReady();
       await updateDoc(doc(db, 'notifications', id), { read: true });
     } catch (err) {
       // Ignored
