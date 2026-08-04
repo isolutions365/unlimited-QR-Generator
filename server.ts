@@ -2106,19 +2106,135 @@ Generate the 'payload' matching the precise data schema for the selected categor
   app.get('/qr/:trackingId', async (req, res) => {
     const { trackingId } = req.params;
     console.log(`[Short-Link Redirect] Request received for shortCode/trackingId: "${trackingId}"`);
+
+    const escapeHtml = (str: string) => {
+      return (str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    };
+
     try {
+      console.log(`[Short-Link Redirect] Querying database for trackingId/shortCode: "${trackingId}"...`);
       const project = await dbInstance.getProjectByTrackingId(trackingId);
-      console.log(`[Short-Link Redirect] Firestore Lookup for "${trackingId}":`, project ? {
+
+      if (!project) {
+        console.warn(`[Short-Link Redirect] Database query returned empty results (null/undefined) for ID: "${trackingId}"`);
+        return res.status(404).send(`
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Link Not Found - FreeQRGen</title>
+            <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+              body {
+                font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+                background-color: #fafafa;
+                color: #171717;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                padding: 16px;
+                box-sizing: border-box;
+              }
+              .card {
+                background-color: white;
+                padding: 40px 32px;
+                border-radius: 16px;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+                border: 1px solid #f0f0f0;
+                max-width: 460px;
+                width: 100%;
+                text-align: center;
+              }
+              .icon-container {
+                background-color: #fffbeb;
+                color: #d97706;
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 24px;
+              }
+              .icon {
+                width: 32px;
+                height: 32px;
+              }
+              h1 {
+                font-size: 24px;
+                font-weight: 700;
+                margin: 0 0 12px;
+                color: #171717;
+                letter-spacing: -0.02em;
+              }
+              p {
+                font-size: 15px;
+                color: #6b7280;
+                line-height: 1.6;
+                margin: 0 0 28px;
+              }
+              .button {
+                display: inline-block;
+                background-color: #4f46e5;
+                color: white;
+                text-decoration: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 14px;
+                transition: all 0.2s;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.1), 0 2px 4px -1px rgba(79, 70, 229, 0.06);
+              }
+              .button:hover {
+                background-color: #4338ca;
+                transform: translateY(-1px);
+                box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.15);
+              }
+              .button:active {
+                transform: translateY(0);
+              }
+              .code-hint {
+                margin-top: 24px;
+                font-size: 12px;
+                color: #9ca3af;
+                font-family: monospace;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="card">
+              <div class="icon-container">
+                <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h1>Link Not Found</h1>
+              <p>We couldn't find the destination URL or project associated with this short link. It may have been deleted, or the address might be incorrect.</p>
+              <a href="/" class="button">Go Back to Homepage</a>
+              <div class="code-hint">ID: ${escapeHtml(trackingId)}</div>
+            </div>
+          </body>
+          </html>
+        `);
+      }
+
+      console.log(`[Short-Link Redirect] Firestore Lookup Success for "${trackingId}":`, {
         id: project.id,
         name: project.name,
         type: project.type,
         content: project.content,
         trackingEnabled: project.trackingEnabled
-      } : 'NOT FOUND IN FIRESTORE');
-
-      if (!project) {
-        return res.status(404).send('Dynamic short link not found.');
-      }
+      });
 
       let destination = project.content || 'https://google.com';
       let showExpiredMessage = false;
@@ -2235,15 +2351,6 @@ Generate the 'payload' matching the precise data schema for the selected categor
       }
 
       if (showExpiredMessage) {
-        const escapeHtml = (str: string) => {
-          return str
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-        };
-
         return res.send(`
           <!DOCTYPE html>
           <html lang="en">
