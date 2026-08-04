@@ -193,6 +193,21 @@ class ApiClient {
       await ensureAppCheckReady();
       await setDoc(doc(db, 'projects', projectId), projectData, { merge: true });
       console.log('[Firestore WRITE AFTER] SUCCESS! Collection: "projects" | Doc ID:', projectId);
+
+      // Also explicitly create/update a new Firestore document in the `qr_codes` collection
+      const trackingId = projectData.trackingId || projectId;
+      try {
+        console.log('[Firestore WRITE BEFORE] Collection: "qr_codes" | Doc ID:', trackingId);
+        await setDoc(doc(db, 'qr_codes', trackingId), {
+          trackingId: trackingId,
+          originalUrl: projectData.content || '',
+          createdAt: new Date()
+        }, { merge: true });
+        console.log('[Firestore WRITE AFTER] SUCCESS! Collection: "qr_codes" | Doc ID:', trackingId);
+      } catch (qrErr: any) {
+        console.error('[Firestore WRITE ERROR] Collection: "qr_codes" | Doc ID:', trackingId, '| Full Error:', qrErr);
+      }
+
       return projectData;
     } catch (err: any) {
       console.error('[Firestore WRITE ERROR] Collection: "projects" | Doc ID:', projectId, '| Full Error:', err);

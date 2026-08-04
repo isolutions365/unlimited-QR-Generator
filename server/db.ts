@@ -344,6 +344,57 @@ class FirestoreDatabase {
     console.log(`[getProjectByTrackingId] Starting lookup for trackingId/shortCode: "${trackingId}"`);
     try {
       const activeDb = getDb();
+
+      // Step 0a: Search qr_codes collection directly by document ID (which matches trackingId/shortCode)
+      console.log(`[getProjectByTrackingId] [Step 0a] Fetching from qr_codes collection by ID "${trackingId}"...`);
+      try {
+        const docQrCode = await getDoc(doc(activeDb, 'qr_codes', trackingId));
+        if (docQrCode.exists()) {
+          const d = docQrCode.data() as any;
+          console.log(`[getProjectByTrackingId] [Step 0a SUCCESS] Found matching document in qr_codes collection for ID: "${trackingId}"`);
+          return {
+            id: d.trackingId || docQrCode.id,
+            userId: d.userId || 'anonymous',
+            name: d.name || 'Dynamic QR Link',
+            type: 'url',
+            content: d.originalUrl || d.content || '',
+            design: {},
+            createdAt: d.createdAt || new Date().toISOString(),
+            scanCount: d.scanCount || 0,
+            trackingEnabled: d.trackingEnabled !== false,
+            trackingId: d.trackingId || docQrCode.id
+          } as DbProject;
+        }
+        console.log(`[getProjectByTrackingId] [Step 0a] No document exists in qr_codes collection with ID "${trackingId}"`);
+      } catch (err: any) {
+        console.error(`[getProjectByTrackingId] [Step 0a ERROR] Fetching from qr_codes collection failed:`, err);
+      }
+
+      // Step 0b: Search qr_codes collection by trackingId field
+      console.log(`[getProjectByTrackingId] [Step 0b] Querying qr_codes collection where trackingId == "${trackingId}"...`);
+      try {
+        const qQrCodes = query(collection(activeDb, 'qr_codes'), where('trackingId', '==', trackingId));
+        const snapQrCodes = await getDocs(qQrCodes);
+        if (!snapQrCodes.empty) {
+          const d = snapQrCodes.docs[0].data() as any;
+          console.log(`[getProjectByTrackingId] [Step 0b SUCCESS] Found matching document in qr_codes collection with trackingId: "${trackingId}"`);
+          return {
+            id: d.trackingId || snapQrCodes.docs[0].id,
+            userId: d.userId || 'anonymous',
+            name: d.name || 'Dynamic QR Link',
+            type: 'url',
+            content: d.originalUrl || d.content || '',
+            design: {},
+            createdAt: d.createdAt || new Date().toISOString(),
+            scanCount: d.scanCount || 0,
+            trackingEnabled: d.trackingEnabled !== false,
+            trackingId: d.trackingId || snapQrCodes.docs[0].id
+          } as DbProject;
+        }
+        console.log(`[getProjectByTrackingId] [Step 0b] No qr_codes found with trackingId field == "${trackingId}"`);
+      } catch (err: any) {
+        console.error(`[getProjectByTrackingId] [Step 0b ERROR] Querying qr_codes by trackingId failed:`, err);
+      }
       
       // 1. Search projects collection by trackingId field
       console.log(`[getProjectByTrackingId] [Step 1] Querying projects collection where trackingId == "${trackingId}"...`);

@@ -90,6 +90,19 @@ export async function createDynamicQR(
     };
     await setDoc(doc(db, 'dynamicQRs', qrData.id), fullQR);
 
+    // Explicitly create a new Firestore document in the `qr_codes` collection as requested
+    try {
+      console.log(`[createDynamicQR] Explicitly saving to qr_codes collection | Doc ID: "${qrData.id}"`);
+      await setDoc(doc(db, 'qr_codes', qrData.id), {
+        trackingId: qrData.id,
+        originalUrl: qrData.destinationUrl || '',
+        createdAt: new Date()
+      });
+      console.log(`[createDynamicQR] Successfully wrote to qr_codes collection | Doc ID: "${qrData.id}"`);
+    } catch (qrErr: any) {
+      console.error(`[createDynamicQR ERROR] Failed writing to qr_codes collection for ID "${qrData.id}":`, qrErr);
+    }
+
     // Sync to projects collection in Firestore so short-link redirects (/qr/:trackingId) work from any device
     if (userId) {
       const trackingId = qrData.id;
@@ -162,6 +175,19 @@ export async function updateDynamicQR(
     await setDoc(doc(db, 'projects', qrId), projUpdate, { merge: true }).catch((e) => {
       console.warn('Failed to sync project doc in Firestore:', e);
     });
+
+    // Also sync destinationUrl updates to qr_codes collection
+    if (updates.destinationUrl !== undefined) {
+      try {
+        console.log(`[updateDynamicQR] Syncing originalUrl to qr_codes collection | Doc ID: "${qrId}"`);
+        await setDoc(doc(db, 'qr_codes', qrId), {
+          originalUrl: updates.destinationUrl
+        }, { merge: true });
+        console.log(`[updateDynamicQR] Successfully updated qr_codes collection | Doc ID: "${qrId}"`);
+      } catch (qrErr: any) {
+        console.error(`[updateDynamicQR ERROR] Failed syncing qr_codes collection for ID "${qrId}":`, qrErr);
+      }
+    }
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, path);
   }

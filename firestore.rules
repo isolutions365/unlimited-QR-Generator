@@ -41,6 +41,13 @@ service cloud.firestore {
       allow delete: if isSignedIn() && existing().userId == request.auth.uid;
     }
 
+    // --- QR CODES COLLECTION ---
+    match /qr_codes/{qrCodeId} {
+      allow read: if true; // Publicly readable for short-link redirect routing
+      allow create, update: if true; // Anyone can create/update dynamic QR links (including anonymous/guest)
+      allow delete: if isSignedIn();
+    }
+
     // --- SCANS COLLECTION ---
     match /scans/{scanId} {
       allow read: if isSignedIn() && resource.data.userId == request.auth.uid;

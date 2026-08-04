@@ -16,6 +16,7 @@ import ShortcutsHelpModal from './components/ShortcutsHelpModal';
 import TourWelcomeModal from './components/TourWelcomeModal';
 import SettingsModal from './components/SettingsModal';
 import AIAssistantWidget from './components/AIAssistantWidget';
+import QRRedirector from './components/QRRedirector';
 import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/audioFeedback';
 
 // Code-splitting via React.lazy for secondary landing & hub pages
@@ -1551,7 +1552,8 @@ export default function App() {
     cleanPath === '/embed' ||
     isPlatformSection ||
     isTrustCenterSection ||
-    cleanPath === '/terms';
+    cleanPath === '/terms' ||
+    cleanPath.startsWith('/qr/');
 
   return (
     <div className="min-h-screen bg-slate-50/80 text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased">
@@ -2183,6 +2185,11 @@ export default function App() {
                 onNavigate={navigateTo} 
               />
             </React.Suspense>
+          ) : cleanPath.startsWith('/qr/') ? (
+            <QRRedirector 
+              trackingId={cleanPath.substring(4)} 
+              onNavigate={navigateTo} 
+            />
           ) : null}
         </ErrorBoundary>
       ) : (
