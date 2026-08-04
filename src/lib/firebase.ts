@@ -25,12 +25,12 @@ export const firebaseConfig = {
 // Initialize Firebase App gracefully and perform single-instance checks
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Enable debug token for App Check ONLY on localhost or 127.0.0.1
+// Enable debug token for App Check ONLY on localhost
 if (typeof window !== 'undefined') {
-  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const isLocalhost = window.location.hostname === 'localhost';
   if (isLocalhost) {
     (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-    console.log('[Firebase App Check] Debug token enabled on localhost/127.0.0.1.');
+    console.log('[Firebase App Check] Debug token enabled on localhost.');
   } else {
     // Ensure it's not set on production (freeqrgen.pro) so reCAPTCHA runs naturally
     if ('FIREBASE_APPCHECK_DEBUG_TOKEN' in self) {
@@ -81,15 +81,15 @@ export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 /**
- * Ensures App Check token is active and warmed up before performing Firestore operations.
+ * Ensures App Check token is active and warmed up in the background before performing Firestore operations.
+ * This is non-blocking to prevent UI/network latency from delaying or failing reads and writes.
  */
 export async function ensureAppCheckReady(): Promise<void> {
   if (typeof window !== 'undefined' && appCheck) {
-    try {
-      await getToken(appCheck, false);
-    } catch (err) {
-      console.warn('[Firebase App Check] Async token verification notice:', err);
-    }
+    // Fire-and-forget background pre-fetch: does NOT await the promise
+    getToken(appCheck, false).catch((err) => {
+      console.warn('[Firebase App Check] Background token fetch notice:', err);
+    });
   }
 }
 
