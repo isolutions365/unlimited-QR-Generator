@@ -103,7 +103,7 @@ export function initializeDeferredAppCheck(): AppCheck | undefined {
 
   try {
     appCheck = initializeAppCheck(app, {
-      provider: new ReCaptchaEnterpriseProvider("6LeQA3QtAAAAAJ-vfZZIUea07Iel3MS2UFvL5ozs"),
+      provider: new ReCaptchaEnterpriseProvider("6LeQA3QtAAAAAJ-vfZZIUeaO7IeI3MS2UFvL5ozs"),
       isTokenAutoRefreshEnabled: true
     });
     console.log('[Firebase App Check] Lazily initialized successfully with ReCaptchaEnterpriseProvider.');
@@ -187,7 +187,7 @@ export async function triggerReCaptchaExecution(action: string = 'homepage'): Pr
     if (grecaptcha && grecaptcha.enterprise && typeof grecaptcha.enterprise.ready === 'function') {
       return new Promise<string | null>((resolve) => {
         grecaptcha.enterprise.ready(() => {
-          grecaptcha.enterprise.execute('6LeQA3QtAAAAAJ-vfZZIUea07Iel3MS2UFvL5ozs', { action: action })
+          grecaptcha.enterprise.execute('6LeQA3QtAAAAAJ-vfZZIUeaO7IeI3MS2UFvL5ozs', { action: action })
             .then((token: string) => {
               console.log(`[ReCaptcha Enterprise] Successfully executed enterprise token for action "${action}"`);
               resolve(token);
