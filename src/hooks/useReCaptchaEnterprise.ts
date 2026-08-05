@@ -51,7 +51,7 @@ export function useReCaptchaEnterprise() {
         return new Promise<string | null>((resolve) => {
           grecaptcha.enterprise.ready(() => {
             grecaptcha.enterprise
-              .execute('6LeQA3QtAAAAAJ-vfZZIUea07Iel3MS2UFvL5ozs', { action })
+              .execute('6LeQA3QtAAAAAJ-vfZZIUeaO7IeI3MS2UFvL5ozs', { action })
               .then((token: string) => {
                 console.log(`[useReCaptchaEnterprise] Successfully executed token for "${action}":`, token ? 'Success' : 'Empty');
                 resolve(token);
@@ -80,7 +80,7 @@ export function useReCaptchaEnterprise() {
     if (!script) {
       script = document.createElement('script');
       script.id = scriptId;
-      script.src = 'https://www.google.com/recaptcha/enterprise.js?render=6LeQA3QtAAAAAJ-vfZZIUea07Iel3MS2UFvL5ozs';
+      script.src = 'https://www.google.com/recaptcha/enterprise.js?render=6LeQA3QtAAAAAJ-vfZZIUeaO7IeI3MS2UFvL5ozs';
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
