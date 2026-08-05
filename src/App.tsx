@@ -9,9 +9,6 @@ import { landingPages } from './pages/landing/SEODatabase';
 import { getBlogArticles } from './data/blogData';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
-import TemplatesTab from './components/TemplatesTab';
-import SavedProjects from './components/SavedProjects';
-import AnalyticsDashboard from './components/AnalyticsDashboard';
 import AuthModal from './components/AuthModal';
 import ShortcutsHelpModal from './components/ShortcutsHelpModal';
 import TourWelcomeModal from './components/TourWelcomeModal';
@@ -59,11 +56,16 @@ import { useTranslation, useDocumentLanguage } from './utils/i18n';
 import MobileDrawer from './components/MobileDrawer';
 import Header from './components/Header';
 import Logo from './components/Logo';
-import BarcodeGenerator from './components/BarcodeGenerator';
-import DigitalBusinessCard from './components/DigitalBusinessCard';
-import RestaurantMenu from './components/RestaurantMenu';
-import PdfSharing from './components/PdfSharing';
-import FormBuilder from './components/FormBuilder';
+
+// Additional dynamic code splitting for secondary tabs and widgets
+const TemplatesTab = React.lazy(() => import('./components/TemplatesTab'));
+const SavedProjects = React.lazy(() => import('./components/SavedProjects'));
+const AnalyticsDashboard = React.lazy(() => import('./components/AnalyticsDashboard'));
+const BarcodeGenerator = React.lazy(() => import('./components/BarcodeGenerator'));
+const DigitalBusinessCard = React.lazy(() => import('./components/DigitalBusinessCard'));
+const RestaurantMenu = React.lazy(() => import('./components/RestaurantMenu'));
+const PdfSharing = React.lazy(() => import('./components/PdfSharing'));
+const FormBuilder = React.lazy(() => import('./components/FormBuilder'));
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
@@ -2409,7 +2411,9 @@ export default function App() {
         {activeTab === 'card' && (
           <div className="w-full">
             <ErrorBoundary isInline>
-              <DigitalBusinessCard />
+              <React.Suspense fallback={<LazyLoader />}>
+                <DigitalBusinessCard />
+              </React.Suspense>
             </ErrorBoundary>
           </div>
         )}
@@ -2417,7 +2421,9 @@ export default function App() {
         {activeTab === 'menu' && (
           <div className="w-full">
             <ErrorBoundary isInline>
-              <RestaurantMenu />
+              <React.Suspense fallback={<LazyLoader />}>
+                <RestaurantMenu />
+              </React.Suspense>
             </ErrorBoundary>
           </div>
         )}
@@ -2425,7 +2431,9 @@ export default function App() {
         {activeTab === 'pdf' && (
           <div className="w-full">
             <ErrorBoundary isInline>
-              <PdfSharing />
+              <React.Suspense fallback={<LazyLoader />}>
+                <PdfSharing />
+              </React.Suspense>
             </ErrorBoundary>
           </div>
         )}
@@ -2433,7 +2441,9 @@ export default function App() {
         {activeTab === 'form' && (
           <div className="w-full">
             <ErrorBoundary isInline>
-              <FormBuilder />
+              <React.Suspense fallback={<LazyLoader />}>
+                <FormBuilder />
+              </React.Suspense>
             </ErrorBoundary>
           </div>
         )}
