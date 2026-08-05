@@ -1,11 +1,14 @@
 {
-  "name": "Free QR Generator Premium",
+  "name": "FreeQRGen",
   "short_name": "FreeQR",
-  "description": "A production-ready QR code generator with options to customize colors, inner dots, shapes, add custom brand logos, save projects to history with real-time analytics dashboards.",
+  "description": "Free unlimited QR code generator with custom colors, logos, gradients. No signup required.",
+  "id": "/",
+  "scope": "/",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "theme_color": "#FF0080",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
