@@ -52,13 +52,13 @@ export default function CompareHub({
         "@graph": [
           {
             "@type": "CollectionPage",
-            "@id": "https://freeqrgen.pro/compare#webpage",
-            "url": "https://freeqrgen.pro/compare",
+            "@id": "https://www.freeqrgen.pro/compare#webpage",
+            "url": "https://www.freeqrgen.pro/compare",
             "name": "QR Code Technology Comparison Directory | FreeQRGen.pro",
             "description": "High-fidelity, professional analytical comparisons between diverse 2D barcode schemas, formats, error levels, and marketing strategies.",
             "isPartOf": {
               "@type": "WebSite",
-              "@id": "https://freeqrgen.pro/#website"
+              "@id": "https://www.freeqrgen.pro/#website"
             }
           },
           {
@@ -68,13 +68,13 @@ export default function CompareHub({
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://freeqrgen.pro/"
+                "item": "https://www.freeqrgen.pro/"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Comparisons",
-                "item": "https://freeqrgen.pro/compare"
+                "item": "https://www.freeqrgen.pro/compare"
               }
             ]
           }
@@ -98,7 +98,7 @@ export default function CompareHub({
     }
 
     // Detail schemas: Article, FAQPage, HowTo, WebPage, and Breadcrumb
-    const canonicalUrl = `https://freeqrgen.pro/compare/${activeCompare.slug}`;
+    const canonicalUrl = `https://www.freeqrgen.pro/compare/${activeCompare.slug}`;
     
     const breadcrumbSchema = {
       "@context": "https://schema.org",
@@ -108,13 +108,13 @@ export default function CompareHub({
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://freeqrgen.pro/"
+          "item": "https://www.freeqrgen.pro/"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "Comparisons",
-          "item": "https://freeqrgen.pro/compare"
+          "item": "https://www.freeqrgen.pro/compare"
         },
         {
           "@type": "ListItem",
@@ -143,7 +143,7 @@ export default function CompareHub({
       "@type": "Article",
       "headline": activeCompare.heading,
       "description": activeCompare.metaDescription,
-      "image": "https://freeqrgen.pro/og-image.jpg",
+      "image": "https://www.freeqrgen.pro/og-image.jpg",
       "author": {
         "@type": "Organization",
         "name": "iSolutions Technical Team"
@@ -153,7 +153,7 @@ export default function CompareHub({
         "name": "Free QR Code Generator Inc.",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://freeqrgen.pro/favicon-32x32.png"
+          "url": "https://www.freeqrgen.pro/favicon-32x32.png"
         }
       },
       "mainEntityOfPage": canonicalUrl

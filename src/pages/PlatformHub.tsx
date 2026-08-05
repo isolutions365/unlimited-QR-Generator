@@ -956,7 +956,7 @@ export default function PlatformHub({
           canonicalLink.setAttribute('rel', 'canonical');
           document.head.appendChild(canonicalLink);
         }
-        canonicalLink.setAttribute('href', `https://freeqrgen.pro/platform/${activeModule.slug}`);
+        canonicalLink.setAttribute('href', `https://www.freeqrgen.pro/platform/${activeModule.slug}`);
 
         // Inject JSON-LD structured schema for rich indexing
         let schemaScript = document.getElementById('platform-schema-ld');
@@ -972,35 +972,35 @@ export default function PlatformHub({
           "@graph": [
             {
               "@type": "WebPage",
-              "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#webpage`,
-              "url": `https://freeqrgen.pro/platform/${activeModule.slug}`,
+              "@id": `https://www.freeqrgen.pro/platform/${activeModule.slug}#webpage`,
+              "url": `https://www.freeqrgen.pro/platform/${activeModule.slug}`,
               "name": t(`platform.module${moduleKey}SeoTitle`, activeModule.seoTitle),
               "description": t(`platform.module${moduleKey}MetaDesc`, activeModule.metaDesc),
               "breadcrumb": {
-                "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`
+                "@id": `https://www.freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`
               }
             },
             {
               "@type": "BreadcrumbList",
-              "@id": `https://freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`,
+              "@id": `https://www.freeqrgen.pro/platform/${activeModule.slug}#breadcrumb`,
               "itemListElement": [
                 {
                   "@type": "ListItem",
                   "position": 1,
                   "name": t('platform.schemaHome', 'Home'),
-                  "item": "https://freeqrgen.pro"
+                  "item": "https://www.freeqrgen.pro"
                 },
                 {
                   "@type": "ListItem",
                   "position": 2,
                   "name": t('platform.schemaPlatform', 'Platform'),
-                  "item": "https://freeqrgen.pro/platform/qr-analytics"
+                  "item": "https://www.freeqrgen.pro/platform/qr-analytics"
                 },
                 {
                   "@type": "ListItem",
                   "position": 3,
                   "name": t(`platform.module${moduleKey}Name`, activeModule.name),
-                  "item": `https://freeqrgen.pro/platform/${activeModule.slug}`
+                  "item": `https://www.freeqrgen.pro/platform/${activeModule.slug}`
                 }
               ]
             },
@@ -1014,11 +1014,11 @@ export default function PlatformHub({
                 "price": "0.00",
                 "priceCurrency": "USD"
               },
-              "releaseNotes": "https://freeqrgen.pro/release-notes",
+              "releaseNotes": "https://www.freeqrgen.pro/release-notes",
               "author": {
                 "@type": "Organization",
                 "name": "iSolutions ICo",
-                "url": "https://freeqrgen.pro"
+                "url": "https://www.freeqrgen.pro"
               }
             }
           ]

@@ -70,13 +70,13 @@ export default function TemplatesHub({
             "@type": "ListItem",
             "position": 1,
             "name": t('templates.breadcrumbHome', 'Home'),
-            "item": "https://freeqrgen.pro/"
+            "item": "https://www.freeqrgen.pro/"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": t('templates.breadcrumbTemplates', 'Templates'),
-            "item": "https://freeqrgen.pro/templates"
+            "item": "https://www.freeqrgen.pro/templates"
           }
         ]
       };
@@ -98,7 +98,7 @@ export default function TemplatesHub({
     }
 
     // Detail schemas: FAQ and HowTo
-    const canonicalUrl = `https://freeqrgen.pro/templates/${activeTemplate.slug}`;
+    const canonicalUrl = `https://www.freeqrgen.pro/templates/${activeTemplate.slug}`;
     
     const breadcrumbSchema = {
       "@context": "https://schema.org",
@@ -108,13 +108,13 @@ export default function TemplatesHub({
           "@type": "ListItem",
           "position": 1,
           "name": t('templates.breadcrumbHome', 'Home'),
-          "item": "https://freeqrgen.pro/"
+          "item": "https://www.freeqrgen.pro/"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": t('templates.breadcrumbTemplates', 'Templates'),
-          "item": "https://freeqrgen.pro/templates"
+          "item": "https://www.freeqrgen.pro/templates"
         },
         {
           "@type": "ListItem",

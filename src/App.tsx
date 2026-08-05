@@ -80,7 +80,7 @@ const INITIAL_DESIGN: Partial<QRProject> = {
   id: '',
   name: 'My Custom QR Code',
   type: 'url',
-  content: 'https://freeqrgen.pro',
+  content: 'https://www.freeqrgen.pro',
   design: {
     fgColor: '#0f172a',
     bgColor: '#ffffff',
@@ -1313,7 +1313,7 @@ export default function App() {
         id: targetId,
         name: currentProject.name || 'My Styled QR',
         type: currentProject.type || 'url',
-        content: contentVal || 'https://freeqrgen.pro',
+        content: contentVal || 'https://www.freeqrgen.pro',
         design: {
           fgColor: currentProject.design?.fgColor || '#0f172a',
           bgColor: currentProject.design?.bgColor || '#ffffff',

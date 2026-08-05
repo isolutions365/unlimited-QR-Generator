@@ -75,7 +75,7 @@ export default function AIAssistantWidget({ activeTab, setActiveTab, onNavigate 
             id: payload.id,
             name: payload.name,
             type: 'url',
-            content: 'https://freeqrgen.pro',
+            content: 'https://www.freeqrgen.pro',
             trackingEnabled: true,
             createdAt: new Date().toISOString(),
             userId

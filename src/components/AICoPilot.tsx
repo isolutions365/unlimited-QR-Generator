@@ -41,7 +41,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
   const [optimizationLog, setOptimizationLog] = useState<string | null>(null);
 
   // Deconstruct content/design from project safely
-  const qrContent = currentProject.content || 'https://freeqrgen.pro';
+  const qrContent = currentProject.content || 'https://www.freeqrgen.pro';
   const design = {
     fgColor: currentProject.design?.fgColor || '#0f172a',
     bgColor: currentProject.design?.bgColor || '#ffffff',

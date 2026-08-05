@@ -331,7 +331,7 @@ export default function ControlPanel({ currentProject,
   const calculateAutoCenterOffsets = () => {
     const errorCorrectionLevel = localProject.design?.errorCorrectionLevel || 'H';
     const margin = typeof localProject.design?.margin === 'number' ? localProject.design?.margin : 20;
-    const qrContent = localProject.content || 'https://freeqrgen.pro';
+    const qrContent = localProject.content || 'https://www.freeqrgen.pro';
     const trackingEnabled = localProject.trackingEnabled || false;
     const trackingId = localProject.trackingId || '';
     const appUrl = (window as any).location?.origin || '';
