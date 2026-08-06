@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { db, ensureAppCheckReady } from '../lib/firebase';
 import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -29,48 +29,177 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
           console.warn('[QRRedirector] Non-blocking App Check warmup notice:', appCheckErr);
         }
 
-        // Step 1: Query qr_codes collection directly by doc ID (trackingId)
-        const qrCodeDocRef = doc(db, 'qr_codes', trackingId);
-        const qrCodeSnap = await getDoc(qrCodeDocRef);
-
-        if (qrCodeSnap.exists() && active) {
-          const data = qrCodeSnap.data();
-          console.log(`[QRRedirector] Found match in qr_codes:`, data);
-          if (data?.originalUrl) {
-            console.log(`[QRRedirector] Executing redirect to originalUrl: "${data.originalUrl}"`);
-            window.location.href = data.originalUrl;
-            return;
+        // Step 0a: Query qr_codes collection directly by document ID (trackingId)
+        console.log(`[QRRedirector] [Step 0a] Fetching from qr_codes collection by ID "${trackingId}"...`);
+        try {
+          const qrCodeDocRef = doc(db, 'qr_codes', trackingId);
+          const qrCodeSnap = await getDoc(qrCodeDocRef);
+          if (qrCodeSnap.exists() && active) {
+            const data = qrCodeSnap.data();
+            console.log(`[QRRedirector] [Step 0a SUCCESS] Found match in qr_codes:`, data);
+            const destination = data?.originalUrl || data?.content;
+            if (destination) {
+              console.log(`[QRRedirector] Executing redirect to originalUrl: "${destination}"`);
+              window.location.href = destination;
+              return;
+            }
           }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 0a error:', stepErr);
         }
 
-        // Step 2: Fallback to dynamicQRs collection directly by doc ID (trackingId)
-        console.log(`[QRRedirector] [Fallback 1] Checking dynamicQRs for ID: "${trackingId}"`);
-        const dynamicQrDocRef = doc(db, 'dynamicQRs', trackingId);
-        const dynamicQrSnap = await getDoc(dynamicQrDocRef);
-
-        if (dynamicQrSnap.exists() && active) {
-          const data = dynamicQrSnap.data();
-          console.log(`[QRRedirector] Found match in dynamicQRs:`, data);
-          if (data?.destinationUrl) {
-            console.log(`[QRRedirector] Executing redirect to destinationUrl: "${data.destinationUrl}"`);
-            window.location.href = data.destinationUrl;
-            return;
+        // Step 0b: Search qr_codes collection by trackingId field
+        console.log(`[QRRedirector] [Step 0b] Querying qr_codes collection where trackingId == "${trackingId}"...`);
+        try {
+          const qQrCodes = query(collection(db, 'qr_codes'), where('trackingId', '==', trackingId), limit(1));
+          const snapQrCodes = await getDocs(qQrCodes);
+          if (!snapQrCodes.empty && active) {
+            const data = snapQrCodes.docs[0].data();
+            console.log(`[QRRedirector] [Step 0b SUCCESS] Found match in qr_codes:`, data);
+            const destination = data?.originalUrl || data?.content;
+            if (destination) {
+              console.log(`[QRRedirector] Executing redirect to: "${destination}"`);
+              window.location.href = destination;
+              return;
+            }
           }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 0b error:', stepErr);
         }
 
-        // Step 3: Fallback to projects collection directly by doc ID (trackingId)
-        console.log(`[QRRedirector] [Fallback 2] Checking projects for ID: "${trackingId}"`);
-        const projectDocRef = doc(db, 'projects', trackingId);
-        const projectSnap = await getDoc(projectDocRef);
+        // Step 1: Search projects collection by trackingId field
+        console.log(`[QRRedirector] [Step 1] Querying projects collection where trackingId == "${trackingId}"...`);
+        try {
+          const qProjects = query(collection(db, 'projects'), where('trackingId', '==', trackingId), limit(1));
+          const snapProjects = await getDocs(qProjects);
+          if (!snapProjects.empty && active) {
+            const data = snapProjects.docs[0].data();
+            console.log(`[QRRedirector] [Step 1 SUCCESS] Found match in projects:`, data);
+            if (data?.content) {
+              console.log(`[QRRedirector] Executing redirect to: "${data.content}"`);
+              window.location.href = data.content;
+              return;
+            }
+          }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 1 error:', stepErr);
+        }
 
-        if (projectSnap.exists() && active) {
-          const data = projectSnap.data();
-          console.log(`[QRRedirector] Found match in projects:`, data);
-          if (data?.content) {
-            console.log(`[QRRedirector] Executing redirect to content URL: "${data.content}"`);
-            window.location.href = data.content;
+        // Step 2: Search projects collection by document ID
+        console.log(`[QRRedirector] [Step 2] Fetching project doc directly by ID "${trackingId}"...`);
+        try {
+          const projectDocRef = doc(db, 'projects', trackingId);
+          const projectSnap = await getDoc(projectDocRef);
+          if (projectSnap.exists() && active) {
+            const data = projectSnap.data();
+            console.log(`[QRRedirector] [Step 2 SUCCESS] Found match in projects:`, data);
+            if (data?.content) {
+              console.log(`[QRRedirector] Executing redirect to content URL: "${data.content}"`);
+              window.location.href = data.content;
+              return;
+            }
+          }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 2 error:', stepErr);
+        }
+
+        // Step 3a: Search dynamicQRs collection by id field
+        console.log(`[QRRedirector] [Step 3a] Querying dynamicQRs collection where id == "${trackingId}"...`);
+        try {
+          const qDynId = query(collection(db, 'dynamicQRs'), where('id', '==', trackingId), limit(1));
+          const snapDynId = await getDocs(qDynId);
+          if (!snapDynId.empty && active) {
+            const data = snapDynId.docs[0].data();
+            console.log(`[QRRedirector] [Step 3a SUCCESS] Found match in dynamicQRs by id:`, data);
+            const destination = data?.destinationUrl || data?.targetUrl || data?.content;
+            if (destination) {
+              console.log(`[QRRedirector] Executing redirect to: "${destination}"`);
+              window.location.href = destination;
+              return;
+            }
+          }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 3a error:', stepErr);
+        }
+
+        // Step 3b: Search dynamicQRs collection by shortCode field
+        console.log(`[QRRedirector] [Step 3b] Querying dynamicQRs collection where shortCode == "${trackingId}"...`);
+        try {
+          const qDynShort = query(collection(db, 'dynamicQRs'), where('shortCode', '==', trackingId), limit(1));
+          const snapDynShort = await getDocs(qDynShort);
+          if (!snapDynShort.empty && active) {
+            const data = snapDynShort.docs[0].data();
+            console.log(`[QRRedirector] [Step 3b SUCCESS] Found match in dynamicQRs by shortCode:`, data);
+            const destination = data?.destinationUrl || data?.targetUrl || data?.content;
+            if (destination) {
+              console.log(`[QRRedirector] Executing redirect to: "${destination}"`);
+              window.location.href = destination;
+              return;
+            }
+          }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 3b error:', stepErr);
+        }
+
+        // Step 4: Fallback to dynamicQRs collection directly by doc ID (trackingId)
+        console.log(`[QRRedirector] [Step 4] Checking dynamicQRs for ID: "${trackingId}"`);
+        try {
+          const dynamicQrDocRef = doc(db, 'dynamicQRs', trackingId);
+          const dynamicQrSnap = await getDoc(dynamicQrDocRef);
+          if (dynamicQrSnap.exists() && active) {
+            const data = dynamicQrSnap.data();
+            console.log(`[QRRedirector] Found match in dynamicQRs:`, data);
+            const destination = data?.destinationUrl || data?.targetUrl || data?.content;
+            if (destination) {
+              console.log(`[QRRedirector] Executing redirect to destinationUrl: "${destination}"`);
+              window.location.href = destination;
+              return;
+            }
+          }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 4 error:', stepErr);
+        }
+
+        // Step 5: Search pdf_shares collection directly by ID
+        console.log(`[QRRedirector] [Step 5] Checking pdf_shares for ID: "${trackingId}"`);
+        try {
+          const docPdfRef = doc(db, 'pdf_shares', trackingId);
+          const docPdfSnap = await getDoc(docPdfRef);
+          if (docPdfSnap.exists() && active) {
+            console.log(`[QRRedirector] [Step 5 SUCCESS] Found match in pdf_shares:`, docPdfSnap.data());
+            window.location.href = `/#pdf-${trackingId}`;
             return;
           }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 5 error:', stepErr);
+        }
+
+        // Step 6: Search business_cards collection directly by ID
+        console.log(`[QRRedirector] [Step 6] Checking business_cards for ID: "${trackingId}"`);
+        try {
+          const docCardRef = doc(db, 'business_cards', trackingId);
+          const docCardSnap = await getDoc(docCardRef);
+          if (docCardSnap.exists() && active) {
+            console.log(`[QRRedirector] [Step 6 SUCCESS] Found match in business_cards:`, docCardSnap.data());
+            window.location.href = `/#card-${trackingId}`;
+            return;
+          }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 6 error:', stepErr);
+        }
+
+        // Step 7: Search restaurant_menus collection directly by ID
+        console.log(`[QRRedirector] [Step 7] Checking restaurant_menus for ID: "${trackingId}"`);
+        try {
+          const docMenuRef = doc(db, 'restaurant_menus', trackingId);
+          const docMenuSnap = await getDoc(docMenuRef);
+          if (docMenuSnap.exists() && active) {
+            console.log(`[QRRedirector] [Step 7 SUCCESS] Found match in restaurant_menus:`, docMenuSnap.data());
+            window.location.href = `/#menu-${trackingId}`;
+            return;
+          }
+        } catch (stepErr) {
+          console.error('[QRRedirector] Step 7 error:', stepErr);
         }
 
         // If we reach here, the short link is not found
