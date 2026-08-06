@@ -1309,11 +1309,18 @@ export default function App() {
         setCurrentProject(prev => ({ ...prev, content: contentVal }));
       }
 
+      let originalUrlVal = currentProject.originalUrl || contentVal || '';
+      if (typeof originalUrlVal === 'string') {
+        originalUrlVal = originalUrlVal.trim().replace(/\/+$/, '');
+        setCurrentProject(prev => ({ ...prev, originalUrl: originalUrlVal }));
+      }
+
       const projectData: Partial<QRProject> = {
         id: targetId,
         name: currentProject.name || 'My Styled QR',
         type: currentProject.type || 'url',
         content: contentVal || 'https://www.freeqrgen.pro',
+        originalUrl: originalUrlVal || 'https://www.freeqrgen.pro',
         design: {
           fgColor: currentProject.design?.fgColor || '#0f172a',
           bgColor: currentProject.design?.bgColor || '#ffffff',

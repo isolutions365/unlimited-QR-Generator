@@ -204,7 +204,7 @@ class ApiClient {
         console.log('[Firestore WRITE BEFORE] Collection: "qr_codes" | Doc ID:', trackingId);
         await setDoc(doc(db, 'qr_codes', trackingId), {
           trackingId: trackingId,
-          originalUrl: projectData.content || '',
+          originalUrl: projectData.originalUrl || projectData.content || '',
           createdAt: new Date()
         }, { merge: true });
         console.log('[Firestore WRITE AFTER] SUCCESS! Collection: "qr_codes" | Doc ID:', trackingId);

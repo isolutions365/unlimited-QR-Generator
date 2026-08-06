@@ -4,6 +4,7 @@ export interface QRProject {
   name: string;
   type: 'url' | 'text' | 'wifi' | 'card' | 'email' | 'phone' | 'sms' | 'social' | 'crypto' | 'geo' | 'app' | 'payment' | 'vcard' | 'form' | 'pdf' | 'menu';
   content: string;
+  originalUrl?: string;
   design: {
     fgColor: string;
     bgColor: string;
