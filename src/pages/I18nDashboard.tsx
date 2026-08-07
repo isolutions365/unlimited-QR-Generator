@@ -12,6 +12,7 @@ import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, 
   Cell, RadialBarChart, RadialBar, Legend
 } from 'recharts';
+import SEOAuditTab from '../components/SEOAuditTab';
 
 interface I18nDashboardProps {
   onBack: () => void;
@@ -33,7 +34,7 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
 
   const [validationReport, setValidationReport] = useState<ValidationReport | null>(null);
   const [selectedLocale, setSelectedLocale] = useState<Locale>('ar');
-  const [activeTab, setActiveTab] = useState<'overview' | 'validator' | 'rtl-sandbox' | 'performance' | 'exporter'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'validator' | 'seo-audit' | 'rtl-sandbox' | 'performance' | 'exporter'>('overview');
   const [isValidating, setIsValidating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [severityFilter, setSeverityFilter] = useState<'all' | 'error' | 'warning' | 'info'>('all');
@@ -239,6 +240,7 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
               {[
                 { id: 'overview', label: t('i18n.coverageOverview', 'Coverage Overview'), icon: Layout },
                 { id: 'validator', label: t('i18n.translationValidator', 'Translation Validator'), icon: ShieldAlert },
+                { id: 'seo-audit', label: t('i18n.seoHealthAudit', 'SEO Health & Route Audit'), icon: Search },
                 { id: 'rtl-sandbox', label: t('i18n.rtlSandbox', 'RTL Animation Sandbox'), icon: Layers },
                 { id: 'performance', label: t('i18n.performanceAudit', 'Performance Audit'), icon: Cpu },
                 { id: 'exporter', label: t('i18n.developerExporter', 'Developer Exporter'), icon: FileText },
@@ -627,7 +629,22 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
               </motion.div>
             )}
 
-            {/* Tab 3: RTL Layout & Animation Sandbox */}
+            {/* Tab 3: SEO Health & Route Audit */}
+            {activeTab === 'seo-audit' && (
+              <motion.div
+                key="seo-audit"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <SEOAuditTab 
+                  currentLocale={selectedLocale} 
+                  onLocaleChange={(loc) => setSelectedLocale(loc)} 
+                />
+              </motion.div>
+            )}
+
+            {/* Tab 4: RTL Layout & Animation Sandbox */}
             {activeTab === 'rtl-sandbox' && (
               <motion.div
                 key="rtl-sandbox"
