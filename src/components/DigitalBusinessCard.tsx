@@ -493,6 +493,18 @@ export default function DigitalBusinessCard() {
     playAudioSound('generate');
   };
 
+  const downloadQRCode = (format: 'png' | 'svg' = 'png') => {
+    const content = encodeURIComponent(getQRContent());
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${content}&color=0f172a&bgcolor=ffffff&margin=10${format === 'svg' ? '&format=svg' : ''}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${cardData.name.replace(/\s+/g, '_')}_qr.${format}`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    playAudioSound('preview');
+  };
+
   // Color mappings for themes
   const themeStyles = {
     executive: {
@@ -1062,29 +1074,43 @@ export default function DigitalBusinessCard() {
                     className="py-1.5 px-3 bg-indigo-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-indigo-700 cursor-pointer shadow-xs transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    Download .VCF Card
+                    Save Contact (.vcf)
+                  </button>
+                  <button
+                    onClick={() => downloadQRCode('png')}
+                    className="py-1.5 px-3 bg-slate-900 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-slate-800 cursor-pointer shadow-xs transition-colors"
+                  >
+                    <QrCode className="w-3.5 h-3.5 text-indigo-400" />
+                    Download QR (PNG)
+                  </button>
+                  <button
+                    onClick={() => downloadQRCode('svg')}
+                    className="py-1.5 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                  >
+                    <Download className="w-3.5 h-3.5 text-indigo-500" />
+                    Download QR (SVG)
                   </button>
                   <button
                     onClick={handleShare}
                     className="py-1.5 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors"
                   >
                     <Share2 className="w-3.5 h-3.5 text-indigo-500" />
-                    {copiedField === 'Share Link' ? 'Copied!' : 'Share Link'}
+                    {copiedField === 'Share Link' ? 'Copied!' : 'Share Card Link'}
                   </button>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section 3: Apple & Google Wallet Ready Architectures */}
+          {/* Section 3: Mobile Wallet Pass Integration */}
           <div className="bg-white rounded-3xl p-6 border border-slate-200/60 shadow-xs space-y-5">
             <div>
               <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
                 <Smartphone className="w-4 h-4 text-indigo-600" />
-                Wallet Ready Distribution Engines
+                Mobile Wallet Pass Export
               </h4>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Inspect architecture scripts and generate fully formatted JSON payloads required to register passes for Apple and Google devices.
+                Save your contact card directly to smartphone wallets for quick tap-and-share access.
               </p>
             </div>
 
@@ -1097,7 +1123,7 @@ export default function DigitalBusinessCard() {
                 }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${selectedWalletTab === 'apple' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:bg-white/50'}`}
               >
-                 Apple Wallet Ready
+                 Apple Wallet
               </button>
               <button
                 onClick={() => {
@@ -1106,7 +1132,7 @@ export default function DigitalBusinessCard() {
                 }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${selectedWalletTab === 'google' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:bg-white/50'}`}
               >
-                🤖 Google Wallet Ready
+                🤖 Google Wallet
               </button>
             </div>
 
@@ -1127,7 +1153,7 @@ export default function DigitalBusinessCard() {
                     <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                       <div className="flex items-center gap-2">
                         <span className="text-xl"></span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Apple Wallet Pass</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Apple Wallet Card</span>
                       </div>
                       <span className="text-[9px] font-bold text-slate-400 uppercase">{cardData.company || 'MEMBER'}</span>
                     </div>
@@ -1145,8 +1171,8 @@ export default function DigitalBusinessCard() {
 
                     <div className="flex items-center justify-between bg-slate-900/40 p-3 rounded-xl border border-slate-800">
                       <div className="space-y-1 text-left">
-                        <span className="text-[8px] text-slate-500 font-bold block">WALLET ATTACHMENT</span>
-                        <span className="text-[10px] text-slate-300 font-mono block">pass.json compiled</span>
+                        <span className="text-[8px] text-slate-500 font-bold block">SMARTPASS INTEGRATION</span>
+                        <span className="text-[10px] text-emerald-400 font-semibold block">✓ Ready to Install</span>
                       </div>
                       <div className="w-12 h-12 bg-white p-0.5 rounded-sm">
                         <img src={getQRImageSrc()} alt="Pass QR" className="w-full h-full" />
@@ -1154,34 +1180,32 @@ export default function DigitalBusinessCard() {
                     </div>
                   </div>
 
-                  {/* Architecture spec */}
-                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/50 space-y-2.5">
+                  {/* Clean export card */}
+                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/50 space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] text-indigo-600 font-extrabold uppercase tracking-wider">Architecture spec (pass.json)</span>
+                      <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                        Apple Wallet Digital Pass
+                      </span>
                       <button
-                        onClick={() => copyToClipboard(getAppleWalletPassJSON(), 'Apple JSON')}
+                        onClick={() => copyToClipboard(getAppleWalletPassJSON(), 'Apple Pass Data')}
                         className="text-[10px] text-slate-500 hover:text-indigo-600 font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Copy className="w-3 h-3" />
-                        {copiedField === 'Apple JSON' ? 'Copied' : 'Copy JSON'}
+                        {copiedField === 'Apple Pass Data' ? 'Copied' : 'Copy Pass Payload'}
                       </button>
                     </div>
-                    <pre className="text-[9px] text-slate-600 font-mono bg-white border border-slate-100 p-2.5 rounded-lg overflow-x-auto max-h-36">
-                      {getAppleWalletPassJSON()}
-                    </pre>
-                    <div className="flex items-start gap-1.5 pt-1.5">
-                      <Info className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
-                      <p className="text-[9.5px] text-slate-400 leading-normal">
-                        Ready to be bundled into a <code className="bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-semibold font-mono">.pkpass</code> archive signed with your Apple Developer Certificate and distributed via email or Safari.
-                      </p>
-                    </div>
+
+                    <p className="text-[11px] text-slate-500 leading-normal">
+                      Export your formatted wallet card to save or distribute directly to iOS devices.
+                    </p>
 
                     <button
                       onClick={() => downloadWalletJSON('apple')}
-                      className="w-full mt-2 py-2 bg-slate-900 hover:bg-slate-850 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-all"
+                      className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-all"
                     >
-                      <Download className="w-4 h-4 text-slate-400" />
-                      Download pass.json Blueprint
+                      <Download className="w-4 h-4 text-indigo-400" />
+                      Download Apple Wallet Pass File
                     </button>
                   </div>
                 </motion.div>
@@ -1221,34 +1245,32 @@ export default function DigitalBusinessCard() {
                     </div>
                   </div>
 
-                  {/* Architecture spec */}
-                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/50 space-y-2.5">
+                  {/* Clean export card */}
+                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/50 space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] text-indigo-600 font-extrabold uppercase tracking-wider">REST API Class & Object Structure</span>
+                      <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <ShieldCheck className="w-4 h-4 text-blue-600" />
+                        Google Wallet Digital Pass
+                      </span>
                       <button
-                        onClick={() => copyToClipboard(getGoogleWalletJSON(), 'Google JSON')}
+                        onClick={() => copyToClipboard(getGoogleWalletJSON(), 'Google Pass Data')}
                         className="text-[10px] text-slate-500 hover:text-indigo-600 font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Copy className="w-3 h-3" />
-                        {copiedField === 'Google JSON' ? 'Copied' : 'Copy JSON'}
+                        {copiedField === 'Google Pass Data' ? 'Copied' : 'Copy Pass Payload'}
                       </button>
                     </div>
-                    <pre className="text-[9px] text-slate-600 font-mono bg-white border border-slate-100 p-2.5 rounded-lg overflow-x-auto max-h-36">
-                      {getGoogleWalletJSON()}
-                    </pre>
-                    <div className="flex items-start gap-1.5 pt-1.5">
-                      <Info className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
-                      <p className="text-[9.5px] text-slate-400 leading-normal">
-                        Ready to be serialized into a signed JWT and transmitted via standard Google Pay API button <code className="bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-semibold font-mono">saveToAndroid</code> redirects.
-                      </p>
-                    </div>
+
+                    <p className="text-[11px] text-slate-500 leading-normal">
+                      Export your formatted wallet card payload for instant Android Google Wallet sync.
+                    </p>
 
                     <button
                       onClick={() => downloadWalletJSON('google')}
-                      className="w-full mt-2 py-2 bg-slate-900 hover:bg-slate-850 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-all"
+                      className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-all"
                     >
-                      <Download className="w-4 h-4 text-slate-400" />
-                      Download Google Wallet JSON
+                      <Download className="w-4 h-4 text-blue-400" />
+                      Download Google Wallet File
                     </button>
                   </div>
                 </motion.div>

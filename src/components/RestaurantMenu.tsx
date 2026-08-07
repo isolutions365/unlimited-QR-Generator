@@ -528,6 +528,139 @@ export default function RestaurantMenu() {
     }, null, 2);
   };
 
+  // Inject JSON-LD SEO Schema into document.head invisibly
+  useEffect(() => {
+    let scriptTag = document.getElementById('restaurant-menu-jsonld') as HTMLScriptElement | null;
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'restaurant-menu-jsonld';
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.textContent = getMenuJSONLD();
+
+    return () => {
+      const el = document.getElementById('restaurant-menu-jsonld');
+      if (el) {
+        el.remove();
+      }
+    };
+  }, [menu]);
+
+  const downloadMenuQR = (format: 'png' | 'svg' = 'png') => {
+    const content = encodeURIComponent(getQRContent());
+    const qrColor = menu.themeColor === 'emerald' ? '065f46' : menu.themeColor === 'rose' ? '9f1239' : menu.themeColor === 'amber' ? '9a3412' : '1e293b';
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${content}&color=${qrColor}&bgcolor=ffffff&margin=15${format === 'svg' ? '&format=svg' : ''}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${menu.restaurantName.replace(/\s+/g, '_')}_menu_qr.${format}`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    playAudioSound('preview');
+  };
+
+  const handleDownloadTableStandPDF = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    const content = encodeURIComponent(getQRContent());
+    const qrColor = menu.themeColor === 'emerald' ? '065f46' : menu.themeColor === 'rose' ? '9f1239' : menu.themeColor === 'amber' ? '9a3412' : '1e293b';
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${content}&color=${qrColor}&bgcolor=ffffff&margin=15`;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${menu.restaurantName} - Table Stand QR</title>
+          <style>
+            @page { size: A4 portrait; margin: 0; }
+            body {
+              font-family: system-ui, -apple-system, sans-serif;
+              margin: 0;
+              padding: 40px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              min-height: 100vh;
+              background: #f8fafc;
+              color: #0f172a;
+            }
+            .card {
+              background: white;
+              border: 2px solid #e2e8f0;
+              border-radius: 28px;
+              padding: 48px 36px;
+              text-align: center;
+              max-width: 440px;
+              width: 100%;
+              box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            }
+            .badge {
+              display: inline-block;
+              background: #f1f5f9;
+              color: #475569;
+              font-size: 11px;
+              font-weight: 800;
+              letter-spacing: 0.1em;
+              text-transform: uppercase;
+              padding: 4px 12px;
+              border-radius: 9999px;
+              margin-bottom: 20px;
+            }
+            .title { font-size: 28px; font-weight: 900; margin: 0 0 8px 0; color: #0f172a; }
+            .desc { font-size: 14px; color: #64748b; margin: 0 0 28px 0; line-height: 1.5; }
+            .qr-box {
+              background: #ffffff;
+              border: 2px solid #0f172a;
+              border-radius: 20px;
+              padding: 16px;
+              display: inline-block;
+              margin-bottom: 24px;
+              box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            }
+            .qr-box img { width: 220px; height: 220px; display: block; }
+            .scan-text { font-size: 15px; font-weight: 800; color: #0f172a; letter-spacing: 0.05em; text-transform: uppercase; }
+            .footer-text { font-size: 12px; color: #94a3b8; margin-top: 24px; }
+            @media print {
+              body { background: white; padding: 0; }
+              .card { border: 1px solid #cbd5e1; box-shadow: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="badge">Digital Menu Access</div>
+            <h1 class="title">${menu.restaurantName}</h1>
+            <p class="desc">${menu.description || 'Scan the QR code below to view our full digital food & beverage menu.'}</p>
+            <div class="qr-box">
+              <img src="${qrUrl}" alt="Menu QR Code" />
+            </div>
+            <div class="scan-text">📱 Scan to View Touchless Menu</div>
+            <div class="footer-text">Powered by FreeQRGen Platform</div>
+          </div>
+          <script>
+            window.onload = function() {
+              setTimeout(function() {
+                window.print();
+              }, 400);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    playAudioSound('preview');
+  };
+
+  const handlePreviewDigitalMenu = () => {
+    const el = document.getElementById('mobile-menu-simulator-container');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+    playAudioSound('preview');
+  };
+
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
     setCopiedField(label);
@@ -1104,7 +1237,7 @@ export default function RestaurantMenu() {
         <div className="lg:col-span-5 space-y-8 sticky top-24">
           
           {/* Section 1: Simulated Mobile Device Menu Preview */}
-          <div className="space-y-3">
+          <div id="mobile-menu-simulator-container" className="space-y-3">
             <div className="flex items-center justify-between px-2">
               <span className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-1">
                 <Smartphone className="w-4 h-4 text-indigo-600" />
@@ -1352,7 +1485,7 @@ export default function RestaurantMenu() {
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
                 <QrCode className="w-4 h-4 text-indigo-600" />
-                Live QR Code Integration
+                Table-Stand QR Export
               </h4>
               <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase border ${selectedTheme.badge}`}>
                 Table Ready QR
@@ -1372,62 +1505,94 @@ export default function RestaurantMenu() {
                 <div>
                   <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Table-top Tent Card URL</p>
                   <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                    Print this high-resolution color-coded QR code on table tents or wine cards to grant guests instant touchless smartphone access.
+                    Print or download high-resolution QR codes for table tents or wine cards to grant guests touchless smartphone access.
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 justify-center sm:justify-start pt-1">
                   <button
-                    onClick={() => {
-                      const link = document.createElement('a');
-                      link.href = getQRImageSrc();
-                      link.setAttribute('download', `${menu.restaurantName.replace(/\s+/g, '_')}_qr_code.png`);
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                      playAudioSound('preview');
-                    }}
+                    onClick={() => downloadMenuQR('png')}
                     className="py-1 px-3 bg-slate-900 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-slate-800 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
                     Download PNG
                   </button>
                   <button
-                    onClick={() => copyToClipboard(getQRContent(), 'QR URL')}
-                    className="py-1 px-3 border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg text-[10px] font-bold transition-all cursor-pointer"
+                    onClick={() => downloadMenuQR('svg')}
+                    className="py-1 px-3 bg-slate-800 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-slate-700 transition-colors cursor-pointer"
                   >
-                    {copiedField === 'QR URL' ? 'Link Copied!' : 'Copy Direct Link'}
+                    <Download className="w-3.5 h-3.5" />
+                    Download SVG
+                  </button>
+                  <button
+                    onClick={handleDownloadTableStandPDF}
+                    className="py-1 px-3 bg-indigo-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-indigo-700 transition-colors cursor-pointer shadow-xs"
+                  >
+                    <Download className="w-3.5 h-3.5 text-indigo-300" />
+                    Download Table-Stand (PDF)
+                  </button>
+                  <button
+                    onClick={handlePreviewDigitalMenu}
+                    className="py-1 px-3 border border-indigo-200 text-indigo-700 hover:bg-indigo-50 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    Preview Digital Menu
                   </button>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section 3: Google SEO Search Friendly JSON-LD */}
-          <div className="bg-slate-900 text-slate-100 rounded-3xl p-6 border border-slate-800 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-1.5">
-                <FileCode className="w-4 h-4 text-emerald-400" />
-                <h4 className="text-xs font-black tracking-widest uppercase text-slate-300">
-                  Google SEO Rich Snippet Schema
+          {/* Section 3: Digital Menu Link & PDF Menu Builder */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200/60 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4 text-emerald-600" />
+                <h4 className="text-xs font-black tracking-widest uppercase text-slate-800">
+                  Digital Menu & Quick PDF Builder
                 </h4>
               </div>
 
-              <button
-                onClick={() => copyToClipboard(getMenuJSONLD(), 'JSON-LD')}
-                className="text-[9px] bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-2 py-1 rounded transition-colors flex items-center gap-1 cursor-pointer"
-              >
-                <Copy className="w-3 h-3" />
-                {copiedField === 'JSON-LD' ? 'Copied' : 'Copy LD+JSON Schema'}
-              </button>
+              <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                SEO Schema Active
+              </span>
             </div>
 
-            <p className="text-[10px] text-slate-400 leading-normal">
-              Inject this fully populated <code className="text-emerald-400 font-mono">application/ld+json</code> structure into your restaurant’s site header to trigger Google’s Interactive Food Menus inside organic search result layouts.
+            <p className="text-[11px] text-slate-500 leading-normal">
+              Your digital menu is published with live search optimization. Connect a PDF menu link or use the Quick Food Item Builder to update your live offerings.
             </p>
 
-            <div className="max-h-36 overflow-y-auto bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-[8px] text-slate-300 scrollbar-thin">
-              <pre>{getMenuJSONLD()}</pre>
+            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/60 space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
+                <span className="flex items-center gap-1.5 text-slate-600">
+                  <UploadCloud className="w-4 h-4 text-indigo-600" />
+                  PDF Upload / Direct Menu Link
+                </span>
+                <button
+                  onClick={() => copyToClipboard(getQRContent(), 'Direct Menu Link')}
+                  className="text-[10px] text-indigo-600 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Copy className="w-3 h-3" />
+                  {copiedField === 'Direct Menu Link' ? 'Copied Link!' : 'Copy Link'}
+                </button>
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={getQRContent()}
+                  className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-[10px] font-mono text-slate-600 truncate"
+                />
+                <button
+                  onClick={handlePreviewDigitalMenu}
+                  className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-bold rounded-xl shrink-0 cursor-pointer flex items-center gap-1"
+                >
+                  <Eye className="w-3.5 h-3.5 text-indigo-400" />
+                  Open Preview
+                </button>
+              </div>
             </div>
           </div>
 
