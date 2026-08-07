@@ -1423,7 +1423,7 @@ export default function ControlPanel({ currentProject,
                       id="frame-color-picker"
                       type="color"
                       aria-label="Frame Color"
-                      className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
+                      className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border border-gray-200 p-0.5"
                       value={localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}
                       onChange={e => setDesignField('frameColor', e.target.value)}
                     />
@@ -1442,7 +1442,7 @@ export default function ControlPanel({ currentProject,
                       id="frame-text-color-picker"
                       type="color"
                       aria-label="CTA Text Color"
-                      className="w-7 h-7 rounded-md cursor-pointer border border-gray-200 p-0.5"
+                      className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border border-gray-200 p-0.5"
                       value={localProject.design?.frameTextColor || '#ffffff'}
                       onChange={e => setDesignField('frameTextColor', e.target.value)}
                     />
@@ -1470,7 +1470,7 @@ export default function ControlPanel({ currentProject,
                     min="12"
                     max="32"
                     step="1"
-                    className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                    className="w-full min-h-[44px] h-11 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 touch-manipulation"
                     value={localProject.design?.frameFontSize ?? 20}
                     onChange={e => setDesignField('frameFontSize', parseInt(e.target.value), true)}
                   />
@@ -1535,7 +1535,7 @@ export default function ControlPanel({ currentProject,
               <input
                 id="eye-color-tl"
                 type="color"
-                className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
                 value={localProject.design?.eyeColorTopLeft || localProject.design?.fgColor || '#0f172a'}
                 onChange={e => {
                   setDesignField('eyeColorTopLeft', e.target.value);
@@ -1554,7 +1554,7 @@ export default function ControlPanel({ currentProject,
               <input
                 id="eye-color-tr"
                 type="color"
-                className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
                 value={localProject.design?.eyeColorTopRight || localProject.design?.fgColor || '#0f172a'}
                 onChange={e => {
                   setDesignField('eyeColorTopRight', e.target.value);
@@ -1573,7 +1573,7 @@ export default function ControlPanel({ currentProject,
               <input
                 id="eye-color-bl"
                 type="color"
-                className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border border-gray-200 p-0.5 bg-slate-50 overflow-hidden"
                 value={localProject.design?.eyeColorBottomLeft || localProject.design?.fgColor || '#0f172a'}
                 onChange={e => {
                   setDesignField('eyeColorBottomLeft', e.target.value);
@@ -1718,7 +1718,7 @@ export default function ControlPanel({ currentProject,
                       min="0"
                       max="40"
                       step="2"
-                      className="w-full h-1 bg-gray-250 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                      className="w-full min-h-[44px] h-11 bg-gray-250 rounded-lg appearance-none cursor-pointer accent-indigo-600 touch-manipulation"
                       value={localProject.design?.modulePadding ?? 0}
                       onChange={e => setDesignField('modulePadding', parseInt(e.target.value, 10), true)}
                     />
@@ -1749,7 +1749,7 @@ export default function ControlPanel({ currentProject,
                 min="0"
                 max="80"
                 step="5"
-                className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                className="w-full min-h-[44px] h-11 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 touch-manipulation"
                 value={localProject.design?.margin ?? 20}
                 onChange={e => setDesignField('margin', parseInt(e.target.value, 10), true)}
               />
@@ -2054,7 +2054,7 @@ export default function ControlPanel({ currentProject,
                 min="0"
                 max="360"
                 step="5"
-                className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                className="w-full min-h-[44px] h-11 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 touch-manipulation"
                 value={localProject.design?.logoRotation ?? 0}
                 onChange={e => setDesignField('logoRotation', parseInt(e.target.value, 10), true)}
               />
@@ -2072,7 +2072,7 @@ export default function ControlPanel({ currentProject,
                 min="0.05"
                 max="0.30"
                 step="0.01"
-                className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                className="w-full min-h-[44px] h-11 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 touch-manipulation"
                 value={localProject.design?.logoScale ?? 0.18}
                 onChange={e => setDesignField('logoScale', parseFloat(e.target.value), true)}
               />
@@ -2248,7 +2248,7 @@ export default function ControlPanel({ currentProject,
                       min="-100"
                       max="100"
                       step="1"
-                      className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
+                      className="w-full min-h-[44px] h-11 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700 touch-manipulation"
                       value={localProject.design?.logoOffsetX ?? 0}
                       onChange={e => setDesignField('logoOffsetX', parseInt(e.target.value, 10), true)}
                     />
@@ -2268,7 +2268,7 @@ export default function ControlPanel({ currentProject,
                       min="-100"
                       max="100"
                       step="1"
-                      className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
+                      className="w-full min-h-[44px] h-11 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700 touch-manipulation"
                       value={localProject.design?.logoOffsetY ?? 0}
                       onChange={e => setDesignField('logoOffsetY', parseInt(e.target.value, 10), true)}
                     />

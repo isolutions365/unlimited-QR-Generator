@@ -69,6 +69,19 @@ try {
     }).catch((err) => console.warn('[Cache Guard] Clear error:', err));
   }
 
+  const isDatabaseClosingError = (msg: string) => {
+    if (!msg) return false;
+    const lower = String(msg).toLowerCase();
+    return (
+      lower.includes('database is closing') ||
+      lower.includes('database is closing/hidden') ||
+      lower.includes('database connection is closing') ||
+      lower.includes('the database connection is closing') ||
+      lower.includes('closing/hidden') ||
+      (lower.includes('indexeddb') && lower.includes('closing'))
+    );
+  };
+
   // Intercept chunk loading errors (stale dynamic imports or bundle hash mismatches)
   const handleChunkError = (message: string) => {
     const isChunkError =
@@ -93,13 +106,25 @@ try {
   window.addEventListener('unhandledrejection', (event) => {
     const reason = event.reason;
     const msg = reason?.message || String(reason || '');
+    if (isDatabaseClosingError(msg)) {
+      console.warn('[Database Guard] Suppressed background database closing/hidden promise rejection:', msg);
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     handleChunkError(msg);
   });
 
   window.addEventListener('error', (event) => {
-    const msg = event.message || '';
+    const msg = event.message || String(event.error?.message || '');
+    if (isDatabaseClosingError(msg)) {
+      console.warn('[Database Guard] Suppressed database closing/hidden event error:', msg);
+      event.preventDefault();
+      event.stopPropagation();
+      return true as any;
+    }
     handleChunkError(msg);
-  });
+  }, true);
 })();
 
 import {StrictMode} from 'react';

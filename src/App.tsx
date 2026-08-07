@@ -659,6 +659,28 @@ export default function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Sync AI Assistant applied configurations to current generator state
+  useEffect(() => {
+    const handleApplyAIConfig = (e: CustomEvent) => {
+      if (e.detail) {
+        setCurrentProject(prev => {
+          const incoming = e.detail;
+          const merged = {
+            ...prev,
+            ...incoming,
+            design: {
+              ...(prev.design || {}),
+              ...(incoming.design || {})
+            }
+          };
+          return merged;
+        });
+      }
+    };
+    window.addEventListener('apply-qr-ai-config' as any, handleApplyAIConfig);
+    return () => window.removeEventListener('apply-qr-ai-config' as any, handleApplyAIConfig);
+  }, []);
+
   // Guided Tour State
   const [tourOpen, setTourOpen] = useState(false);
   const [tourRunning, setTourRunning] = useState(false);
@@ -3607,6 +3629,8 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onNavigate={navigateTo}
+        currentProject={currentProject}
+        onUpdateProject={setCurrentProject}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import { auth } from '../lib/firebase';
 import { api } from '../lib/api';
 
 import { QRProject } from '../types';
+import { renderStyledQR, generateStyledSVG } from '../utils/qrRenderer';
 import { 
   RefreshCw, 
   Trash2, 
@@ -25,7 +26,15 @@ import {
   Globe,
   FolderOpen,
   Edit,
-  ExternalLink
+  ExternalLink,
+  Eye,
+  Download,
+  Calendar,
+  Clock,
+  Palette,
+  Layers,
+  Link as LinkIcon,
+  QrCode
 } from 'lucide-react';
 
 interface SavedProjectsProps {
@@ -63,11 +72,49 @@ export default function SavedProjects({
   const [movingProjectId, setMovingProjectId] = React.useState<string | null>(null);
   const [loadedNotification, setLoadedNotification] = React.useState<string | null>(null);
   const [analyticsProject, setAnalyticsProject] = React.useState<QRProject | null>(null);
+  const [selectedDetailProject, setSelectedDetailProject] = React.useState<QRProject | null>(null);
   const [isDuplicatingId, setIsDuplicatingId] = React.useState<string | null>(null);
+  const detailCanvasRef = React.useRef<HTMLCanvasElement | null>(null);
   
   // Batch selection state
   const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
   const [isBatchMoving, setIsBatchMoving] = React.useState(false);
+
+  // Render QR Canvas inside Project Details Modal
+  React.useEffect(() => {
+    if (!selectedDetailProject || !detailCanvasRef.current) return;
+    const proj = selectedDetailProject;
+    const appUrl = ((import.meta as any).env?.VITE_APP_URL || window.location.origin);
+    const content = (proj.trackingEnabled && proj.trackingId)
+      ? `${appUrl}/qr/${proj.trackingId}`
+      : (proj.content || 'https://example.com');
+
+    renderStyledQR(detailCanvasRef.current, content, {
+      fgColor: proj.design?.fgColor || '#000000',
+      bgColor: proj.design?.bgColor || '#ffffff',
+      gradientType: proj.design?.gradientType || 'none',
+      gradientColor: proj.design?.gradientColor || '#4f46e5',
+      dotStyle: proj.design?.dotStyle || 'square',
+      eyeStyle: proj.design?.eyeStyle || 'square',
+      logoUrl: proj.design?.logoUrl,
+      logoScale: proj.design?.logoScale || 0.18,
+      margin: proj.design?.margin || 15,
+      logoRotation: proj.design?.logoRotation || 0,
+      logoAutoCenter: proj.design?.logoAutoCenter,
+      logoOffsetX: proj.design?.logoOffsetX,
+      logoOffsetY: proj.design?.logoOffsetY,
+      eyeColorTopLeft: proj.design?.eyeColorTopLeft,
+      eyeColorTopRight: proj.design?.eyeColorTopRight,
+      eyeColorBottomLeft: proj.design?.eyeColorBottomLeft,
+      errorCorrectionLevel: proj.design?.errorCorrectionLevel || 'M',
+      frameStyle: proj.design?.frameStyle || 'none',
+      frameText: proj.design?.frameText,
+      frameColor: proj.design?.frameColor,
+      frameTextColor: proj.design?.frameTextColor,
+      frameFontSize: proj.design?.frameFontSize,
+      frameTextPosition: proj.design?.frameTextPosition,
+    }).catch((err) => console.warn('Details modal QR Render error:', err));
+  }, [selectedDetailProject]);
 
   // Custom empty folders loaded from/stored in localStorage
   const [customFolders, setCustomFolders] = React.useState<string[]>(() => {
@@ -89,7 +136,8 @@ export default function SavedProjects({
     return () => window.removeEventListener('click', handleGlobalClick);
   }, []);
 
-  const handleCardSelect = (proj: QRProject, e?: React.MouseEvent) => {
+  // Card click handler: OPENS PROJECT DETAILS MODAL (Does NOT redirect/load into generator workspace)
+  const handleCardClick = (proj: QRProject, e?: React.MouseEvent) => {
     if (e) {
       const target = e.target as HTMLElement;
       if (
@@ -102,7 +150,20 @@ export default function SavedProjects({
       }
     }
     
-    // Primary action: Load saved design into parent QR Generator state
+    // Open Project Details Modal cleanly
+    setSelectedDetailProject(proj);
+  };
+
+  // Explicit Edit Action: Loads project into generator state and scrolls to workspace
+  const handleLoadAndEdit = (proj: QRProject, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    
+    // Close details modal if open
+    setSelectedDetailProject(null);
+
+    // Load saved design into parent QR Generator state
     onSelect(proj);
     setLoadedNotification(`Loaded "${proj.name}" into QR Generator`);
     setTimeout(() => setLoadedNotification(null), 3500);
@@ -117,6 +178,62 @@ export default function SavedProjects({
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  };
+
+  // Download PNG from Details Modal
+  const handleDownloadPNGFromModal = (proj: QRProject) => {
+    if (!detailCanvasRef.current) return;
+    const dataUrl = detailCanvasRef.current.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = `${(proj.name || 'qr_code').replace(/[^a-z0-9]/gi, '_').toLowerCase()}_qr.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  // Download SVG from Details Modal
+  const handleDownloadSVGFromModal = (proj: QRProject) => {
+    const appUrl = ((import.meta as any).env?.VITE_APP_URL || window.location.origin);
+    const content = (proj.trackingEnabled && proj.trackingId)
+      ? `${appUrl}/qr/${proj.trackingId}`
+      : (proj.content || 'https://example.com');
+
+    const svgString = generateStyledSVG(content, {
+      fgColor: proj.design?.fgColor || '#000000',
+      bgColor: proj.design?.bgColor || '#ffffff',
+      gradientType: proj.design?.gradientType || 'none',
+      gradientColor: proj.design?.gradientColor || '#4f46e5',
+      dotStyle: proj.design?.dotStyle || 'square',
+      eyeStyle: proj.design?.eyeStyle || 'square',
+      logoUrl: proj.design?.logoUrl,
+      logoScale: proj.design?.logoScale || 0.18,
+      margin: proj.design?.margin || 15,
+      logoRotation: proj.design?.logoRotation || 0,
+      logoAutoCenter: proj.design?.logoAutoCenter,
+      logoOffsetX: proj.design?.logoOffsetX,
+      logoOffsetY: proj.design?.logoOffsetY,
+      eyeColorTopLeft: proj.design?.eyeColorTopLeft,
+      eyeColorTopRight: proj.design?.eyeColorTopRight,
+      eyeColorBottomLeft: proj.design?.eyeColorBottomLeft,
+      errorCorrectionLevel: proj.design?.errorCorrectionLevel || 'M',
+      frameStyle: proj.design?.frameStyle || 'none',
+      frameText: proj.design?.frameText,
+      frameColor: proj.design?.frameColor,
+      frameTextColor: proj.design?.frameTextColor,
+      frameFontSize: proj.design?.frameFontSize,
+      frameTextPosition: proj.design?.frameTextPosition,
+    });
+
+    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${(proj.name || 'qr_code').replace(/[^a-z0-9]/gi, '_').toLowerCase()}_qr.svg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const handleCopyLink = (e: React.MouseEvent, trackingId: string, id: string) => {
@@ -766,7 +883,7 @@ export default function SavedProjects({
                   <div
                     key={proj.id}
                     data-index={index}
-                    onClick={(e) => handleCardSelect(proj, e)}
+                    onClick={(e) => handleCardClick(proj, e)}
                     onMouseEnter={() => {
                       if (draggedIndex !== null) {
                         handleDragOver(index);
@@ -821,17 +938,27 @@ export default function SavedProjects({
                         </div>
                       </div>
                       
-                      {/* Controls (Edit/Open, Duplicate, Move Folder, Delete) */}
+                      {/* Controls (View Details, Edit/Open, Duplicate, Move Folder, Delete) */}
                       <div className="flex items-center gap-1 relative ltr-lock shrink-0">
-                        {/* Open & Edit in Generator Button */}
+                        {/* View Details Modal Button */}
                         <button
                           type="button"
-                          title="Open & Edit in Generator"
+                          title="View Specs & Details"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleCardSelect(proj);
+                            setSelectedDetailProject(proj);
                           }}
-                          className="p-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white transition-all cursor-pointer font-bold text-[10px] flex items-center gap-1 shadow-2xs active:scale-95"
+                          className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
+
+                        {/* Open & Edit in Generator Workspace Button */}
+                        <button
+                          type="button"
+                          title="Open & Edit in Generator Workspace"
+                          onClick={(e) => handleLoadAndEdit(proj, e)}
+                          className="p-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white transition-all cursor-pointer font-bold text-[10px] flex items-center gap-1 shadow-2xs active:scale-95 shrink-0"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                           <span className="hidden sm:inline">Edit</span>
@@ -1121,13 +1248,273 @@ export default function SavedProjects({
                 onClick={() => {
                   const proj = analyticsProject;
                   setAnalyticsProject(null);
-                  handleCardSelect(proj);
+                  handleLoadAndEdit(proj);
                 }}
                 className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-3xs"
               >
                 <Edit3 className="w-3.5 h-3.5 text-indigo-200" />
                 Edit Design
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Comprehensive Project Details Modal */}
+      {selectedDetailProject && (
+        <div 
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 animate-in fade-in duration-150"
+          onClick={() => setSelectedDetailProject(null)}
+        >
+          <div 
+            className="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100 flex flex-col gap-5 animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between border-b border-slate-100 pb-3.5 gap-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100/80">
+                  <QrCode className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-base sm:text-lg font-black text-slate-900">{selectedDetailProject.name}</h3>
+                    {selectedDetailProject.category && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200/60">
+                        {selectedDetailProject.category}
+                      </span>
+                    )}
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-slate-100 text-slate-700 font-mono">
+                      {selectedDetailProject.type}
+                    </span>
+                  </div>
+                  <span className="text-xs text-slate-400 font-mono">ID: {selectedDetailProject.id}</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedDetailProject(null)}
+                className="p-1.5 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-full transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+              {/* Left Column: Visual QR Preview & Design Specs */}
+              <div className="md:col-span-5 flex flex-col gap-3">
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col items-center justify-center relative">
+                  <canvas 
+                    ref={detailCanvasRef}
+                    className="w-full h-auto max-w-[200px] rounded-xl shadow-xs bg-white p-2 border border-slate-200"
+                  />
+                  <span className="text-[10px] text-slate-400 font-medium mt-2">Live QR Preview</span>
+                </div>
+
+                {/* Design Specifications Swatches */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 space-y-2.5">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <Palette className="w-3.5 h-3.5 text-indigo-600" />
+                    Design Specifications
+                  </h4>
+                  
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-100">
+                      <span 
+                        className="w-4 h-4 rounded-full border border-slate-300 shadow-3xs shrink-0" 
+                        style={{ backgroundColor: selectedDetailProject.design?.fgColor || '#000000' }}
+                      />
+                      <div className="min-w-0">
+                        <span className="text-[9px] text-slate-400 font-bold block uppercase">Foreground</span>
+                        <span className="font-mono font-bold text-[10px] text-slate-800 truncate block">{selectedDetailProject.design?.fgColor || '#000000'}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-100">
+                      <span 
+                        className="w-4 h-4 rounded-full border border-slate-300 shadow-3xs shrink-0" 
+                        style={{ backgroundColor: selectedDetailProject.design?.bgColor || '#ffffff' }}
+                      />
+                      <div className="min-w-0">
+                        <span className="text-[9px] text-slate-400 font-bold block uppercase">Background</span>
+                        <span className="font-mono font-bold text-[10px] text-slate-800 truncate block">{selectedDetailProject.design?.bgColor || '#ffffff'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs pt-1 border-t border-slate-200/60">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 font-medium">Dot Style:</span>
+                      <span className="font-bold text-slate-800 capitalize">{selectedDetailProject.design?.dotStyle || 'square'}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 font-medium">Eye Style:</span>
+                      <span className="font-bold text-slate-800 capitalize">{selectedDetailProject.design?.eyeStyle || 'square'}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 font-medium">Center Logo:</span>
+                      <span className="font-bold text-slate-800">{selectedDetailProject.design?.logoUrl ? 'Attached Badge' : 'None'}</span>
+                    </div>
+                    {selectedDetailProject.design?.frameStyle && selectedDetailProject.design.frameStyle !== 'none' && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">Callout Frame:</span>
+                        <span className="font-bold text-indigo-600 capitalize">{selectedDetailProject.design.frameStyle}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: General Info, Link & Analytics Specs */}
+              <div className="md:col-span-7 flex flex-col gap-3">
+                {/* GENERAL INFO CARD */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 space-y-2">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-indigo-600" />
+                    General Info
+                  </h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-bold block uppercase">Created Date</span>
+                      <span className="font-bold text-slate-700">
+                        {selectedDetailProject.createdAt ? new Date(selectedDetailProject.createdAt).toLocaleDateString() : 'N/A'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-bold block uppercase">Last Modified</span>
+                      <span className="font-bold text-slate-700">
+                        {selectedDetailProject.updatedAt ? new Date(selectedDetailProject.updatedAt).toLocaleDateString() : (selectedDetailProject.createdAt ? new Date(selectedDetailProject.createdAt).toLocaleDateString() : 'N/A')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* LINK & TRACKING SPECS */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 space-y-2.5">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <LinkIcon className="w-3.5 h-3.5 text-indigo-600" />
+                    Link & Tracking Specs
+                  </h4>
+
+                  {/* Target URL / Content */}
+                  <div className="bg-white p-2.5 rounded-xl border border-slate-200/80 space-y-1">
+                    <span className="text-[9px] text-slate-400 font-bold uppercase block">Target Payload / URL</span>
+                    <p className="text-xs font-mono font-medium text-slate-800 break-all max-h-20 overflow-y-auto">{selectedDetailProject.content}</p>
+                  </div>
+
+                  {/* Redirect Short Link */}
+                  {selectedDetailProject.trackingEnabled && selectedDetailProject.trackingId && (
+                    <div className="bg-indigo-50/70 p-2.5 rounded-xl border border-indigo-200/80 space-y-1.5">
+                      <span className="text-[9px] text-indigo-600 font-bold uppercase block">Generated Redirect Short Link</span>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-mono font-bold text-indigo-950 break-all truncate">
+                          {`${((import.meta as any).env?.VITE_APP_URL || window.location.origin)}/qr/${selectedDetailProject.trackingId}`}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => handleCopyLink(e, selectedDetailProject.trackingId, selectedDetailProject.id)}
+                          className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0 flex items-center gap-1 shadow-2xs"
+                        >
+                          {copiedId === selectedDetailProject.id ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : <Copy className="w-3.5 h-3.5" />}
+                          <span>{copiedId === selectedDetailProject.id ? 'Copied!' : 'Copy'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tracking Status Badges */}
+                  <div className="flex items-center gap-2 flex-wrap pt-0.5">
+                    <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase ${
+                      selectedDetailProject.trackingEnabled 
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' 
+                        : 'bg-slate-200 text-slate-700'
+                    }`}>
+                      {selectedDetailProject.trackingEnabled ? '● Active Dynamic Link' : '○ Static QR'}
+                    </span>
+
+                    {selectedDetailProject.expiryDate && (() => {
+                      const isExpired = new Date() > new Date(selectedDetailProject.expiryDate);
+                      return (
+                        <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase ${
+                          isExpired ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-amber-100 text-amber-800 border border-amber-200'
+                        }`}>
+                          {isExpired ? 'Expired ⚠️' : `Expires: ${new Date(selectedDetailProject.expiryDate).toLocaleDateString()}`}
+                        </span>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* SCAN ANALYTICS SUMMARY */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 flex items-center justify-between gap-3">
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Total Scan Count</span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-black text-slate-900">{selectedDetailProject.scanCount || 0}</span>
+                      <span className="text-xs font-bold text-emerald-600 flex items-center">
+                        <TrendingUp className="w-3.5 h-3.5 mr-0.5" /> Scans
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const proj = selectedDetailProject;
+                      setSelectedDetailProject(null);
+                      setAnalyticsProject(proj);
+                    }}
+                    className="px-3 py-2 bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold text-xs rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                  >
+                    <BarChart2 className="w-3.5 h-3.5 text-indigo-600" />
+                    Full Analytics
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* MODAL ACTIONS FOOTER */}
+            <div className="border-t border-slate-100 pt-3.5 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleDownloadPNGFromModal(selectedDetailProject)}
+                  className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <Download className="w-3.5 h-3.5 text-slate-600" />
+                  PNG
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDownloadSVGFromModal(selectedDetailProject)}
+                  className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <Download className="w-3.5 h-3.5 text-slate-600" />
+                  SVG
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedDetailProject(null)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleLoadAndEdit(selectedDetailProject)}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl transition-all shadow-md shadow-indigo-950/20 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                >
+                  <Edit3 className="w-4 h-4" />
+                  Edit in Generator Workspace
+                </button>
+              </div>
             </div>
           </div>
         </div>

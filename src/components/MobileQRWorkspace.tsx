@@ -63,6 +63,65 @@ export default function MobileQRWorkspace({
 
   return (
     <div dir="ltr" id="mobile-qr-workspace" className="flex flex-col gap-4">
+      {/* Mobile Accessibility Touch Target Styles (44x44px minimum touch targets) */}
+      <style>{`
+        #mobile-qr-workspace input[type="range"] {
+          appearance: none;
+          -webkit-appearance: none;
+          width: 100%;
+          min-height: 44px !important;
+          height: 44px !important;
+          background: transparent;
+          cursor: pointer;
+          touch-action: manipulation;
+        }
+        #mobile-qr-workspace input[type="range"]::-webkit-slider-runnable-track {
+          width: 100%;
+          height: 8px;
+          background-color: #e2e8f0;
+          border-radius: 9999px;
+        }
+        #mobile-qr-workspace input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          -webkit-appearance: none;
+          height: 26px;
+          width: 26px;
+          border-radius: 50%;
+          background-color: #4f46e5;
+          border: 2.5px solid #ffffff;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+          margin-top: -9px;
+          transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+        #mobile-qr-workspace input[type="range"]::-webkit-slider-thumb:active {
+          transform: scale(1.2);
+          background-color: #4338ca;
+        }
+        #mobile-qr-workspace input[type="range"]::-moz-range-track {
+          width: 100%;
+          height: 8px;
+          background-color: #e2e8f0;
+          border-radius: 9999px;
+        }
+        #mobile-qr-workspace input[type="range"]::-moz-range-thumb {
+          height: 26px;
+          width: 26px;
+          border-radius: 50%;
+          background-color: #4f46e5;
+          border: 2.5px solid #ffffff;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        #mobile-qr-workspace input[type="color"] {
+          min-width: 44px !important;
+          min-height: 44px !important;
+          width: 44px !important;
+          height: 44px !important;
+          padding: 2px !important;
+          border-radius: 12px !important;
+          touch-action: manipulation;
+          cursor: pointer;
+        }
+      `}</style>
       {/* Mobile Workspace Mode Switcher (Editor vs Preview vs Saved) */}
       <div className="bg-slate-900 border border-slate-800 p-1 rounded-2xl flex items-center justify-between text-xs font-bold text-slate-300 shadow-lg">
         <button

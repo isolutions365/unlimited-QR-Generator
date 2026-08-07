@@ -253,7 +253,7 @@ export default function ColorPalette({
                   type="color"
                   id="fg-color-picker"
                   aria-label="Foreground Color"
-                  className="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent shrink-0 focus:ring-0 focus:outline-none transition-transform active:scale-95"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border-0 bg-transparent shrink-0 focus:ring-0 focus:outline-none transition-transform active:scale-95"
                   value={localFgColor}
                   onChange={e => {
                     const val = e.target.value;
@@ -274,7 +274,7 @@ export default function ColorPalette({
                   type="color"
                   id="bg-color-picker"
                   aria-label="Background Color"
-                  className="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent shrink-0 focus:ring-0 focus:outline-none transition-transform active:scale-95"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border-0 bg-transparent shrink-0 focus:ring-0 focus:outline-none transition-transform active:scale-95"
                   value={localBgColor}
                   onChange={e => {
                     const val = e.target.value;
@@ -334,7 +334,7 @@ export default function ColorPalette({
                   <input
                     type="color"
                     id="gradient-color-picker"
-                    className="w-5 h-5 rounded-md cursor-pointer border-0 bg-transparent select-none focus:outline-none focus:ring-0 transition-transform active:scale-90"
+                    className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border-0 bg-transparent select-none focus:outline-none focus:ring-0 transition-transform active:scale-90"
                     value={localGradientColor}
                     onChange={e => {
                       const val = e.target.value;

@@ -96,6 +96,8 @@ export default function LandingPagesModule() {
           fetchedSubs.push({ id: doc.id, ...doc.data() } as FormSubmission);
         });
         setSubmissions(fetchedSubs.sort((a,b) => b.timestamp.localeCompare(a.timestamp)));
+      }, (err) => {
+        console.warn('Firestore submissions subscription note:', err);
       });
 
       return () => {

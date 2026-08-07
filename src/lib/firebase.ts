@@ -42,40 +42,68 @@ if (typeof window !== 'undefined') {
     console.log('[Firebase App Check] Debug token strictly DISABLED because window.location.hostname !== "localhost":', hostname);
   }
 
-  // Intercept and bypass reCAPTCHA domain restriction errors in non-production environments
-  const isProd = hostname === 'freeqrgen.pro' || hostname === 'www.freeqrgen.pro';
-  if (!isProd) {
-    window.addEventListener('error', (e) => {
-      const msg = e && e.message ? String(e.message) : '';
-      if (msg.includes('Invalid site key') || msg.includes('6LeQA3Qt') || msg.includes('recaptcha') || msg.includes('api.js')) {
-        console.warn('[Firebase App Check] Suppressed reCAPTCHA domain verification error in development:', msg);
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }, true);
+// Intercept and bypass reCAPTCHA domain restriction errors & database closing/hidden errors
+if (typeof window !== 'undefined') {
+  const isDatabaseClosingError = (msg: string) => {
+    if (!msg) return false;
+    const lower = String(msg).toLowerCase();
+    return (
+      lower.includes('database is closing') ||
+      lower.includes('database is closing/hidden') ||
+      lower.includes('database connection is closing') ||
+      lower.includes('the database connection is closing') ||
+      lower.includes('closing/hidden') ||
+      (lower.includes('indexeddb') && lower.includes('closing'))
+    );
+  };
 
-    const originalOnError = window.onerror;
-    window.onerror = function (message, source, lineno, colno, error) {
-      const msg = String(message || '');
-      if (msg.includes('Invalid site key') || msg.includes('6LeQA3Qt') || msg.includes('recaptcha') || msg.includes('api.js')) {
-        console.warn('[Firebase App Check] Suppressed reCAPTCHA domain verification error via onerror:', message);
-        return true;
-      }
-      if (originalOnError) {
-        return originalOnError.apply(this, arguments as any);
-      }
-      return false;
-    };
+  window.addEventListener('error', (e) => {
+    const msg = e && e.message ? String(e.message) : '';
+    if (isDatabaseClosingError(msg)) {
+      console.warn('[Firebase Guard] Suppressed database closing/hidden event error:', msg);
+      e.preventDefault();
+      e.stopPropagation();
+      return true as any;
+    }
+    if (msg.includes('Invalid site key') || msg.includes('6LeQA3Qt') || msg.includes('recaptcha') || msg.includes('api.js')) {
+      console.warn('[Firebase App Check] Suppressed reCAPTCHA domain verification error in development:', msg);
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
 
-    window.addEventListener('unhandledrejection', (e) => {
-      const reason = e && e.reason ? String(e.reason) : '';
-      if (reason.includes('Invalid site key') || reason.includes('6LeQA3Qt') || reason.includes('recaptcha') || reason.includes('api.js')) {
-        console.warn('[Firebase App Check] Suppressed unhandled reCAPTCHA rejection:', reason);
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    });
-  }
+  const originalOnError = window.onerror;
+  window.onerror = function (message, source, lineno, colno, error) {
+    const msg = String(message || '');
+    if (isDatabaseClosingError(msg)) {
+      console.warn('[Firebase Guard] Suppressed database closing/hidden error via onerror:', msg);
+      return true;
+    }
+    if (msg.includes('Invalid site key') || msg.includes('6LeQA3Qt') || msg.includes('recaptcha') || msg.includes('api.js')) {
+      console.warn('[Firebase App Check] Suppressed reCAPTCHA domain verification error via onerror:', message);
+      return true;
+    }
+    if (originalOnError) {
+      return originalOnError.apply(this, arguments as any);
+    }
+    return false;
+  };
+
+  window.addEventListener('unhandledrejection', (e) => {
+    const reason = e && e.reason ? (e.reason.message || String(e.reason)) : '';
+    if (isDatabaseClosingError(reason)) {
+      console.warn('[Firebase Guard] Suppressed unhandled database closing/hidden rejection:', reason);
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    if (reason.includes('Invalid site key') || reason.includes('6LeQA3Qt') || reason.includes('recaptcha') || reason.includes('api.js')) {
+      console.warn('[Firebase App Check] Suppressed unhandled reCAPTCHA rejection:', reason);
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
+}
 }
 
 // Initialize Firebase App Check using reCAPTCHA Enterprise (will be lazily deferred)

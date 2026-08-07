@@ -43,12 +43,44 @@ interface RestaurantMenuConfig {
   id: string;
   restaurantName: string;
   description: string;
-  currency: string;      // e.g., "USD", "EUR", "GBP"
+  currency: string;      // e.g., "USD", "EUR", "GBP", "SAR", etc.
   selectedLanguage: 'en' | 'es' | 'fr' | 'it' | 'ar'; // Current builder language
   categories: MenuCategory[];
   items: MenuItem[];
   themeColor: 'emerald' | 'rose' | 'amber' | 'neutral';
 }
+
+// Currency definition map for supported languages
+export const CURRENCY_MAP: Record<string, { symbol: string; label: string; name: string }> = {
+  USD: { symbol: '$', label: 'USD ($) - US Dollar', name: 'US Dollar' },
+  EUR: { symbol: '€', label: 'EUR (€) - Euro', name: 'Euro' },
+  GBP: { symbol: '£', label: 'GBP (£) - British Pound', name: 'British Pound' },
+  SAR: { symbol: 'ر.س', label: 'SAR (ر.س) - Saudi Riyal', name: 'Saudi Riyal' },
+  PKR: { symbol: 'Rs', label: 'PKR (Rs) - Pakistani Rupee', name: 'Pakistani Rupee' },
+  INR: { symbol: '₹', label: 'INR (₹) - Indian Rupee', name: 'Indian Rupee' },
+  IDR: { symbol: 'Rp', label: 'IDR (Rp) - Indonesian Rupiah', name: 'Indonesian Rupiah' },
+  TRY: { symbol: '₺', label: 'TRY (₺) - Turkish Lira', name: 'Turkish Lira' },
+  JPY: { symbol: '¥', label: 'JPY (¥) - Japanese Yen', name: 'Japanese Yen' },
+  KRW: { symbol: '₩', label: 'KRW (₩) - South Korean Won', name: 'South Korean Won' },
+  CNY: { symbol: '¥', label: 'CNY (¥) - Chinese Yuan', name: 'Chinese Yuan' },
+  AED: { symbol: 'د.إ', label: 'AED (د.إ) - UAE Dirham', name: 'UAE Dirham' }
+};
+
+// Default currency map per language tab
+export const LANGUAGE_DEFAULT_CURRENCY: Record<string, string> = {
+  en: 'USD',
+  es: 'EUR',
+  fr: 'EUR',
+  it: 'EUR',
+  ar: 'SAR',
+  ur: 'PKR',
+  hi: 'INR',
+  id: 'IDR',
+  tr: 'TRY',
+  ja: 'JPY',
+  ko: 'KRW',
+  zh: 'CNY'
+};
 
 // Preset Premium Culinary Images from Unsplash
 const PRESET_CULINARY_IMAGES = [
@@ -669,8 +701,8 @@ export default function RestaurantMenu() {
   };
 
   // Format price
-  const formatPrice = (amount: number, currency: string) => {
-    const symbol = currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : '$';
+  const formatPrice = (amount: number, currencyCode: string) => {
+    const symbol = CURRENCY_MAP[currencyCode]?.symbol || '$';
     return `${symbol}${amount.toFixed(2)}`;
   };
 
@@ -826,7 +858,12 @@ export default function RestaurantMenu() {
                   <button
                     key={l.code}
                     onClick={() => {
-                      setMenu(prev => ({ ...prev, selectedLanguage: l.code as any }));
+                      const autoCurrency = LANGUAGE_DEFAULT_CURRENCY[l.code] || 'USD';
+                      setMenu(prev => ({
+                        ...prev,
+                        selectedLanguage: l.code as any,
+                        currency: autoCurrency
+                      }));
                       playAudioSound('preview');
                     }}
                     className={`px-2.5 py-1 text-[10px] font-black rounded-lg transition-all cursor-pointer ${menu.selectedLanguage === l.code ? 'bg-white text-slate-900 shadow-xs font-black' : 'text-slate-500 hover:text-slate-800'}`}
@@ -854,11 +891,13 @@ export default function RestaurantMenu() {
                 <select
                   value={menu.currency}
                   onChange={e => setMenu(prev => ({ ...prev, currency: e.target.value }))}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-white transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-white transition-all font-medium cursor-pointer"
                 >
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="GBP">GBP (£)</option>
+                  {Object.entries(CURRENCY_MAP).map(([code, item]) => (
+                    <option key={code} value={code}>
+                      {item.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -1021,16 +1060,18 @@ export default function RestaurantMenu() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Base Price</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Base Price")}</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2 text-slate-400 text-xs font-bold">$</span>
+                  <span className="absolute left-2.5 top-2 text-slate-500 text-xs font-extrabold select-none pointer-events-none">
+                    {CURRENCY_MAP[menu.currency]?.symbol || '$'}
+                  </span>
                   <input
                     type="number"
                     step="0.01"
                     value={newItemPrice}
                     onChange={e => setNewItemPrice(e.target.value)}
                     placeholder="15.00"
-                    className="w-full pl-6 pr-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none font-semibold"
+                    className={`w-full ${(CURRENCY_MAP[menu.currency]?.symbol || '$').length > 2 ? 'pl-11' : (CURRENCY_MAP[menu.currency]?.symbol || '$').length > 1 ? 'pl-8' : 'pl-6'} pr-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none font-semibold`}
                   />
                 </div>
               </div>
