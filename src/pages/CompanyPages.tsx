@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 
 import { ShieldCheck, Mail, MapPin, Users, Award, Briefcase, Heart, Send, CheckCircle2, Globe, ArrowLeft, MessageSquare, Phone, Info } from 'lucide-react';
@@ -20,6 +20,70 @@ export default function CompanyPages({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    let title = 'Terms & Conditions | FreeQRGen.pro Service Agreement';
+    let description = 'Review the Terms & Conditions of FreeQRGen.pro. Understand the user guidelines, fair use policy, and local data persistence rules of our free QR platform.';
+    
+    if (view === 'terms') {
+      title = 'Terms & Conditions | FreeQRGen.pro Service Agreement';
+      description = 'Review the Terms & Conditions of FreeQRGen.pro. Understand the user guidelines, fair use policy, and local data persistence rules of our free QR platform.';
+    } else if (view === 'about') {
+      title = 'About FreeQRGen.pro | Leaders in Dynamic QR Code Technology';
+      description = 'Learn about FreeQRGen.pro (freeqrgen.pro), our mission, technology stack, security architectures, and core team behind the advanced QR code design platform.';
+    } else if (view === 'contact') {
+      title = 'Contact Us | FreeQRGen.pro Support & Compliance Hub';
+      description = 'Get in touch with the FreeQRGen.pro technical team or our compliance officers for questions, enterprise integration inquiries, or support.';
+    } else if (view === 'privacy') {
+      title = 'Privacy Policy | FreeQRGen.pro - Secure, Offline-First QR Generation';
+      description = 'Read the FreeQRGen.pro privacy policy. Learn how we utilize offline-first browser rendering to protect your network passwords, URLs, and vCards.';
+    }
+
+    document.title = title;
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', description);
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', `https://www.freeqrgen.pro/${view}`);
+  }, [view]);
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.freeqrgen.pro"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": view === 'terms' ? 'Terms & Conditions' : view === 'about' ? 'About Us' : view === 'contact' ? 'Contact Us' : 'Privacy Policy',
+        "item": `https://www.freeqrgen.pro/${view}`
+      }
+    ]
+  };
+
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": view === 'terms' ? 'Terms & Conditions - FreeQRGen.pro' : view === 'about' ? 'About Us - FreeQRGen.pro' : view === 'contact' ? 'Contact Us - FreeQRGen.pro' : 'Privacy Policy - FreeQRGen.pro',
+    "description": view === 'terms' ? 'Review the Terms & Conditions of FreeQRGen.pro. Understand the user guidelines, fair use policy, and local data persistence rules.' : 'Corporate policy and structural content.',
+    "url": `https://www.freeqrgen.pro/${view}`
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -33,6 +97,12 @@ export default function CompanyPages({
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 animate-fade-in">
+      <script type="application/ld+json">
+        {JSON.stringify(breadcrumbSchema)}
+      </script>
+      <script type="application/ld+json">
+        {JSON.stringify(webPageSchema)}
+      </script>
       {/* Back button */}
       <button
         onClick={() => onNavigate('/')}

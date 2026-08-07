@@ -708,14 +708,14 @@ export default function App() {
   
   const trustCenterPaths = [
     '/about', '/why-freeqrgen', '/editorial-policy', '/research-methodology', 
-    '/privacy', '/security', '/data-processing', '/accessibility', 
+    '/privacy', '/privacy-policy', '/security', '/data-processing', '/accessibility', 
     '/contact', '/changelog', '/release-notes', '/system-status', 
     '/careers', '/media-kit', '/brand-assets', '/press'
   ];
   const isTrustCenterSection = trustCenterPaths.some(p => cleanPath === p || cleanPath.startsWith(p + '/'));
 
   const isFreeQrToolsActive = cleanPath !== '/' && cleanPath !== '' && 
-    !['/faq', '/about', '/privacy', '/contact', '/terms', '/solutions', '/industries', '/use-cases', '/signup', '/signin', '/login', '/register', '/auth'].some(p => cleanPath === p || cleanPath.startsWith(p + '/')) && 
+    !['/faq', '/about', '/privacy', '/privacy-policy', '/contact', '/terms', '/solutions', '/industries', '/use-cases', '/signup', '/signin', '/login', '/register', '/auth'].some(p => cleanPath === p || cleanPath.startsWith(p + '/')) && 
     !cleanPath.startsWith('/blog') &&
     !cleanPath.startsWith('/platform') &&
     !isKnowledgeSection &&
@@ -894,9 +894,9 @@ export default function App() {
     } else if (currentPath === '/about') {
       title = 'About Us | Free QR Code Generator Team';
       description = 'Learn about FreeQRGen.pro and the iSolutions team dedicated to building secure, beautiful, high-performance QR code creator utilities.';
-    } else if (currentPath === '/privacy') {
-      title = 'Privacy Policy | Secure Databox QR Generator';
-      description = 'Our privacy commitment: zero tracking, complete databox security, offline compatibility, and secure transient memory models.';
+    } else if (currentPath === '/privacy' || currentPath === '/privacy-policy') {
+      title = 'Privacy Policy | FreeQRGen.pro - Secure, Offline-First QR Generation';
+      description = 'Read the FreeQRGen.pro privacy commitment. Learn how we utilize offline-first browser rendering to protect your network passwords, URLs, and vCards.';
     } else if (currentPath === '/contact') {
       title = 'Contact Support & Corporate Inquiry | FreeQRGen.pro';
       description = 'Get in touch with the iSolutions technical team for enterprise licenses, custom templates, or support requests.';
@@ -2184,7 +2184,7 @@ export default function App() {
           ) : isTrustCenterSection ? (
             <React.Suspense fallback={<LazyLoader />}>
               <TrustCenterHub 
-                initialSlug={cleanPath.substring(1)} 
+                initialSlug={cleanPath === '/privacy-policy' ? 'privacy' : cleanPath.substring(1)} 
                 onNavigate={navigateTo} 
                 locale={locale}
               />

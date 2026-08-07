@@ -3,7 +3,7 @@
   <!-- Core Main Page -->
   <url>
     <loc>https://www.freeqrgen.pro/</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -11,73 +11,73 @@
   <!-- Tools Pages -->
   <url>
     <loc>https://www.freeqrgen.pro/url-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/pdf-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/wifi-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/vcard-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/email-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/sms-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/whatsapp-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/instagram-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/business-card-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/restaurant-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/facebook-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/youtube-qr-generator</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -85,37 +85,43 @@
   <!-- Info Pages -->
   <url>
     <loc>https://www.freeqrgen.pro/faq</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/about</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/privacy</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrgen.pro/privacy-policy</loc>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/contact</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/terms</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -123,67 +129,67 @@
   <!-- Blog Articles -->
   <url>
     <loc>https://www.freeqrgen.pro/blog/what-is-qr-code-how-it-works</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/10-ways-businesses-use-qr-codes-increase-sales</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/how-to-create-wifi-qr-code</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/qr-codes-restaurants-digital-menus</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/best-qr-code-marketing-strategies</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/qr-codes-events-conferences</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/qr-codes-in-education</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/common-qr-code-mistakes-avoid</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/how-qr-codes-improve-customer-experience</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/future-of-qr-code-technology</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.freeqrgen.pro/blog/qr-codes-inventory-management-asset-tracking</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
