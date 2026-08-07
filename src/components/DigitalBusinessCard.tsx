@@ -11,6 +11,7 @@ import { signInAnonymously } from 'firebase/auth';
 import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
+import { useTranslation } from '../utils/i18n';
 
 // Interfaces
 interface SocialLink {
@@ -51,17 +52,76 @@ const PRESET_LOGOS = [
 ];
 
 export default function DigitalBusinessCard() {
+  const { locale } = useTranslation();
+  const isArabic = locale === 'ar';
+
+  const tCard = (enText: string): string => {
+    if (!isArabic) return enText;
+    const dict: Record<string, string> = {
+      "Creative Contact Station": "محطة الاتصال الإبداعية",
+      "Digital Business Cards": "بطاقات العمل الرقمية",
+      "Design professional, contact-rich digital business cards (vCards) with customizable layouts, active preset logos, instant WhatsApp or social media links, Apple/Google Wallet simulations, and elegant dynamic QR codes.": "صمّم بطاقات عمل رقمية (vCard) احترافية وغنية ببيانات الاتصال مع تخطيطات قابلة للتخصيص، وشعارات مسبقة الضبط نشطة، وروابط WhatsApp أو وسائل التواصل الاجتماعي الفورية، ومحاكاة Apple/Google Wallet، ورموز QR ديناميكية أنيقة.",
+      "1. Personal Information & Bio": "1. المعلومات الشخصية والنبذة",
+      "Choose name, position title, and primary workplace context.": "اختر الاسم، والمسمى الوظيفي، وبيئة العمل الأساسية.",
+      "Full Name": "الاسم الكامل",
+      "Job Title": "المسمى الوظيفي",
+      "Company": "الشركة",
+      "2. High-Converting Contact Coordinates": "2. إحداثيات الاتصال عالية التحويل",
+      "Fill details for live clickable buttons on the digital card.": "املأ التفاصيل للأزرار القابلة للنقر عليها مباشرة على البطاقة الرقمية.",
+      "Email Address": "البريد الإلكتروني",
+      "Phone Number": "رقم الهاتف",
+      "WhatsApp Number (International)": "رقم الواتساب (دولي)",
+      "Office Address": "عنوان المكتب",
+      "Personal/Company Website": "موقع الشركة أو الموقع الشخصي",
+      "3. Social Links & Custom Networks": "3. روابط التواصل الاجتماعي والشبكات المخصصة",
+      "Add responsive redirection channels with direct brand icons.": "أضف قنوات إعادة توجيه سريعة الاستجابة مع أيقونات العلامات التجارية المباشرة.",
+      "4. Visual Aesthetic & Theme Customizer": "4. الجمالية البصرية ومخصص المظهر",
+      "Choose premium typography palettes, custom avatars, logos, and responsive card templates.": "اختر لوحات الخطوط الفاخرة، والصور الرمزية المخصصة، والشعارات، وقوالب البطاقات سريعة الاستجابة.",
+      "Select Layout Template": "اختر قالب التخطيط",
+      "Choose Styling Theme": "اختر مظهر التنسيق",
+      "Save & Publish Card": "حفظ ونشر البطاقة",
+      "Publishing...": "جاري النشر...",
+      "Load Creative Sample": "تحميل عينة إبداعية",
+      "Live Smartphone Simulator": "محاكي الهاتف الذكي المباشر",
+      "Flip Card": "قلب البطاقة",
+      "Save Contact (.vcf)": "حفظ جهة الاتصال (.vcf)",
+      "Add to Apple Wallet": "إضافة إلى Apple Wallet",
+      "Add to Google Wallet": "إضافة إلى Google Wallet",
+      "Active Live Preview & QR Scan": "المعاينة المباشرة ومسح QR النشط",
+      "Scan this dynamic high-fidelity QR code with a phone to access this digital business card on any mobile device instantly.": "امسح رمز QR الديناميكي عالي الدقة هذا بهاتفك للوصول إلى بطاقة العمل الرقمية هذه على أي جهاز محمول على الفور.",
+      "Publish card to activate live dynamic links!": "انشر البطاقة لتنشيط الروابط الديناميكية المباشرة!",
+      "Bio / Brief Description": "النبذة / وصف قصير",
+      "Profile Photo URL": "رابط صورة الملف الشخصي",
+      "Or choose premium preset avatar": "أو اختر صورة رمزية مميزة مسبقة الضبط",
+      "Corporate Logo text": "نص شعار الشركة",
+      "Or choose preset tech symbol": "أو اختر رمزًا تقنيًا جاهزًا",
+      "Card Theme Style": "نمط مظهر البطاقة",
+      "Layout Orientation": "توجيه التخطيط",
+      "Standard Portrait": "عمودي قياسي",
+      "Minimal Centered": "بسيط ممركز",
+      "Executive Split": "تنفيذي منقسم",
+      "Add Social / Digital Channel": "إضافة قناة اجتماعية / رقمية",
+      "Select Platform": "اختر المنصة",
+      "Redirection URL": "رابط إعادة التوجيه",
+      "Add Link Channel": "إضافة قناة الرابط",
+      "Active Social & Web Channels": "القنوات الاجتماعية وقنوات الويب النشطة",
+      "Trash Channel": "حذف القناة",
+      "Card details saved successfully!": "تم حفظ تفاصيل البطاقة بنجاح!"
+    };
+    return dict[enText] || enText;
+  };
+
   const [cardData, setCardData] = useState<DigitalCardData>({
     id: 'card-' + Math.random().toString(36).substring(2, 9),
-    name: 'Sarah Jenkins',
+    name: isArabic ? 'سارة جينكينز' : 'Sarah Jenkins',
     photoUrl: PRESET_AVATARS[0],
     logoUrl: '',
-    company: 'Apex Digital Solutions',
-    title: 'Chief Design Officer',
+    company: isArabic ? 'أبيكس للحلول الرقمية' : 'Apex Digital Solutions',
+    title: isArabic ? 'رئيس قسم التصميم' : 'Chief Design Officer',
     email: 'sarah.jenkins@apexcorp.io',
     phone: '+1 (555) 234-5678',
     whatsApp: '+15552345678',
-    address: '100 Pine Street, San Francisco, CA 94111',
+    address: isArabic ? '100 شارع الصنوبر، سان فرانسيسكو، كاليفورنيا 94111' : '100 Pine Street, San Francisco, CA 94111',
     website: 'https://apexcorp.io',
     socialLinks: [
       { id: '1', platform: 'LinkedIn', url: 'https://linkedin.com/in/sarah-jenkins-design' },
@@ -470,10 +530,10 @@ export default function DigitalBusinessCard() {
         <div>
           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
             <Contact className="w-8 h-8 text-indigo-600 animate-pulse" />
-            Digital Business Cards
+            {tCard("Digital Business Cards")}
           </h2>
           <p className="text-slate-500 text-sm mt-1 max-w-xl">
-            Create, custom-style, and persistent-store luxury contact sheets. Fully compatible with Apple Wallet and Google Wallet distribution channels.
+            {tCard("Design professional, contact-rich digital business cards (vCards) with customizable layouts, active preset logos, instant WhatsApp or social media links, Apple/Google Wallet simulations, and elegant dynamic QR codes.")}
           </p>
         </div>
 

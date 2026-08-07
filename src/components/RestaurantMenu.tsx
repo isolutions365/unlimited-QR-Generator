@@ -12,6 +12,7 @@ import { signInAnonymously } from 'firebase/auth';
 import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
+import { useTranslation } from '../utils/i18n';
 
 // Interfaces
 interface MenuVariant {
@@ -43,7 +44,7 @@ interface RestaurantMenuConfig {
   restaurantName: string;
   description: string;
   currency: string;      // e.g., "USD", "EUR", "GBP"
-  selectedLanguage: 'en' | 'es' | 'fr' | 'it'; // Current builder language
+  selectedLanguage: 'en' | 'es' | 'fr' | 'it' | 'ar'; // Current builder language
   categories: MenuCategory[];
   items: MenuItem[];
   themeColor: 'emerald' | 'rose' | 'amber' | 'neutral';
@@ -62,28 +63,85 @@ const PRESET_CULINARY_IMAGES = [
 const PRESET_ICONS = ['🍕', '🍔', '🥗', '🍹', '🍰', '🥩', '🍝', '☕', '🍣', '🥞', '🍷', '🌮'];
 
 export default function RestaurantMenu() {
+  const { locale } = useTranslation();
+  const isArabic = locale === 'ar';
+
+  const tMenu = (enText: string): string => {
+    if (!isArabic) return enText;
+    const dict: Record<string, string> = {
+      "Interactive Menu Hub": "مركز القوائم التفاعلية",
+      "Gourmet QR Restaurant Menu": "قائمة مطعم QR الفاخرة",
+      "Design beautiful, high-converting digital restaurant menus with variants, active promotion tags, multi-language translation selectors, and interactive simulated smartphone menu previews.": "صمّم قوائم طعام رقمية جميلة وعالية التحويل للمطاعم مع المتغيرات، وشارات الترويج النشطة، ومحددات الترجمة متعددة اللغات، ومعاينات تفاعلية لمحاكاة قائمة الهاتف الذكي.",
+      "Load Italian Theme": "تحميل السمة الإيطالية",
+      "Publish & Sync Menu": "نشر ومزامنة القائمة",
+      "Syncing...": "جاري المزامنة...",
+      "1. Brand Identity & Global Locales": "1. هوية العلامة التجارية والمواقع العالمية",
+      "Configure core descriptors and choose active language to enter data.": "تكوين الأوصاف الأساسية واختيار اللغة النشطة لإدخال البيانات.",
+      "Restaurant Name": "اسم المطعم",
+      "Menu Currency": "عملة القائمة",
+      "Short Restaurant Slogan": "شعار المطعم القصير",
+      "Brand Palette & Styling Vibe": "لوحة الألوان ونمط التصميم",
+      "2. Menu Categories": "2. فئات القائمة",
+      "Add or rename major food/drink sections. Drag down & remove categories.": "أضف أو أعد تسمية أقسام الطعام/الشراب الرئيسية. اسحب لأسفل وأزل الفئات.",
+      "Add Category": "إضافة فئة",
+      "3. Create New Dish / Beverage": "3. إنشاء طبق / مشروب جديد",
+      "Configure core product details, pricing, tags, and variants to append them below.": "تكوين تفاصيل المنتج الأساسية، والتسعير، والشارات، والمتغيرات لإضافتها أدناه.",
+      "Target Category": "الفئة المستهدفة",
+      "Item Title (English)": "اسم الصنف (بالإنجليزي)",
+      "Base Price ($)": "السعر الأساسي ($)",
+      "Active Special Tag": "شارة خاصة نشطة",
+      "Item Description (English)": "وصف الصنف (بالإنجليزي)",
+      "Select an active special tag to highlight this dish": "اختر شارة خاصة نشطة لإبراز هذا الطبق",
+      "Special dietary attributes": "سمات غذائية خاصة",
+      "Vegetarian": "نباتي",
+      "Spicy": "حار",
+      "Gluten-Free": "خالي من الغلوتين",
+      "Create custom size/type variants with price modifiers": "أنشئ متغيرات مخصصة للحجم/النوع مع معدلات الأسعار",
+      "Add Price Variant Option": "إضافة خيار متغير السعر",
+      "Image URL (Optional)": "رابط الصورة (اختياري)",
+      "Add Item to Menu Catalog": "إضافة الصنف إلى كتالوج القائمة",
+      "4. Published Menu & Digital Catalog": "4. القائمة المنشورة والكتالوج الرقمي",
+      "Review items organized by category. Click edit to adjust or trash to remove.": "راجع الأصناف المنظمة حسب الفئة. انقر فوق تحرير للضبط أو سلة المهملات للإزالة.",
+      "No dishes created in this category. Click above to add some!": "لم يتم إنشاء أي أطباق في هذه الفئة. انقر أعلاه لإضافة بعضها!",
+      "Live Preview Simulator": "محاكي المعاينة المباشرة",
+      "Gourmet Live Previews": "معاينات حية فاخرة",
+      "Scan QR Code to Open on Phone": "امسح رمز QR لفتحه على الهاتف",
+      "Scan this high-fidelity QR design with your phone to view the active published menu layout instantly on your mobile device.": "امسح تصميم QR عالي الدقة هذا بهاتفك لعرض تخطيط القائمة النشط المنشور على الفور على جهازك المحمول.",
+      "Publish menu to activate QR live link!": "انشر القائمة لتنشيط رابط QR المباشر!",
+      "Options": "خيارات",
+      "Edit Item": "تعديل الصنف",
+      "Option Label": "تسمية الخيار",
+      "Price modifier": "معدل السعر",
+      "Delete variant": "حذف المتغير",
+      "Update Item": "تحديث الصنف",
+      "Cancel": "إلغاء",
+      "Save Changes": "حفظ التغييرات"
+    };
+    return dict[enText] || enText;
+  };
+
   const [menu, setMenu] = useState<RestaurantMenuConfig>({
     id: 'menu-' + Math.random().toString(36).substring(2, 9),
-    restaurantName: 'Gusto Bistro & Bar',
-    description: 'Artisanal modern dining with locally sourced, organic ingredients.',
+    restaurantName: isArabic ? 'جاستو بيسترو أند بار' : 'Gusto Bistro & Bar',
+    description: isArabic ? 'تناول طعام عصري وحرفي بمكونات عضوية مصادرها محلية.' : 'Artisanal modern dining with locally sourced, organic ingredients.',
     currency: 'USD',
-    selectedLanguage: 'en',
+    selectedLanguage: isArabic ? 'ar' : 'en',
     themeColor: 'emerald',
     categories: [
-      { id: 'cat-1', name: { en: 'Starters & Salads', es: 'Entrantes y Ensaladas', fr: 'Entrées et Salades', it: 'Antipasti e Insalate' }, icon: '🥗' },
-      { id: 'cat-2', name: { en: 'Main Courses', es: 'Platos Principales', fr: 'Plats Principaux', it: 'Piatti Principali' }, icon: '🥩' },
-      { id: 'cat-3', name: { en: 'Desserts & Sweets', es: 'Postres y Dulces', fr: 'Desserts et Douceurs', it: 'Dolci e Dessert' }, icon: '🍰' }
+      { id: 'cat-1', name: { en: 'Starters & Salads', es: 'Entrantes y Ensaladas', fr: 'Entrées et Salades', it: 'Antipasti e Insalate', ar: 'المقبلات والسلطات' }, icon: '🥗' },
+      { id: 'cat-2', name: { en: 'Main Courses', es: 'Platos Principales', fr: 'Plats Principaux', it: 'Piatti Principali', ar: 'الأطباق الرئيسية' }, icon: '🥩' },
+      { id: 'cat-3', name: { en: 'Desserts & Sweets', es: 'Postres y Dulces', fr: 'Desserts et Douceurs', it: 'Dolci e Dessert', ar: 'الحلويات والسكريات' }, icon: '🍰' }
     ],
     items: [
       {
         id: 'item-1',
         categoryId: 'cat-1',
-        name: { en: 'Truffle Burrata Salad', es: 'Ensalada de Burrata con Trufa', fr: 'Salade de Burrata à la Truffe', it: 'Insalata di Burrata al Tartufo' },
-        description: { en: 'Wild arugula, heirloom cherry tomatoes, creamy burrata injected with white truffle oil & aged balsamic glaze.', es: 'Rúcula silvestre, tomates cherry, burrata cremosa con aceite de trufa blanca y vinagre balsámico envejecido.', fr: 'Roquette sauvage, tomates cerises, burrata crémeuse injectée d’huile de truffe blanche et glaçage balsamique vieilli.', it: 'Rucola selvatica, pomodorini ciliegini, burrata cremosa iniettata con olio al tartufo bianco e glassa di balsamico invecchiato.' },
+        name: { en: 'Truffle Burrata Salad', es: 'Ensalada de Burrata con Trufa', fr: 'Salade de Burrata à la Truffe', it: 'Insalata di Burrata al Tartufo', ar: 'سلطة بوراتا بالتروفل' },
+        description: { en: 'Wild arugula, heirloom cherry tomatoes, creamy burrata injected with white truffle oil & aged balsamic glaze.', es: 'Rúcula silvestre, tomates cherry, burrata cremosa con aceite de trufa blanca y vinagre balsámico envejecido.', fr: 'Roquette sauvage, tomates cerises, burrata crémeuse injectée d’huile de truffe blanche et glaçage balsamique vieilli.', it: 'Rucola selvatica, pomodorini ciliegini, burrata cremosa iniettata con olio al tartufo bianco e glassa di balsamico invecchiato.', ar: 'الجرجير البري، الطماطم الكرزية، البوراتا الكريمية المحقونة بزيت التروفل الأبيض ومزيج البلسميك المعتق.' },
         price: 18.00,
         imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&auto=format&fit=crop&q=80',
         variants: [
-          { name: 'Standard Porton', priceModifier: 0 },
+          { name: 'Standard Portion', priceModifier: 0 },
           { name: 'Double Cheese Infusion', priceModifier: 4.50 }
         ],
         offerTag: 'Chef\'s Special',
@@ -92,8 +150,8 @@ export default function RestaurantMenu() {
       {
         id: 'item-2',
         categoryId: 'cat-2',
-        name: { en: 'Prime Ribeye Steak', es: 'Filete de Ribeye de Primera', fr: 'Ribeye de Boeuf Prime', it: 'Costata di Manzo Prime' },
-        description: { en: '400g prime grass-fed black angus ribeye served with fresh herb butter and triple-cooked rosemary fries.', es: '400g de ribeye premium de black angus alimentado con pasto, servido con mantequilla de hierbas finas y patatas fritas al romero.', fr: '400g d’entrecôte de boeuf black angus nourri à l’herbe, servie avec beurre d’herbes fraîches et frites au romarin.', it: '400g di costata di manzo black angus da pascolo, servito con burro alle erbe aromatiche e patatine fritte al rosmarino.' },
+        name: { en: 'Prime Ribeye Steak', es: 'Filete de Ribeye de Primera', fr: 'Ribeye de Boeuf Prime', it: 'Costata di Manzo Prime', ar: 'ستيك ريب آي فاخر' },
+        description: { en: '400g prime grass-fed black angus ribeye served with fresh herb butter and triple-cooked rosemary fries.', es: '400g de ribeye premium de black angus alimentado con pasto, servido con mantequilla de hierbas finas y patatar fritas al romero.', fr: '400g d’entrecôte de boeuf black angus nouri à l’herbe, servie avec beurre d’herbes fraîches et frites au romarin.', it: '400g di costata di manzo black angus da pascolo, servito con burro alle erbe aromatiche e patatine fritte al rosmarino.', ar: 'ستيك ريب آي بلاك أنجوس فاخر مغذى على العشب 400 جرام يقدم مع زبدة الأعشاب الطازجة وبطاطا مقلية بالروزماري.' },
         price: 42.00,
         imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80',
         variants: [
@@ -107,8 +165,8 @@ export default function RestaurantMenu() {
       {
         id: 'item-3',
         categoryId: 'cat-3',
-        name: { en: 'Warm Lava Chocolate Cake', es: 'Volcán de Chocolate Caliente', fr: 'Fondant au Chocolat Chaud', it: 'Tortino al Cioccolato Caldo' },
-        description: { en: 'Molten Belgian dark chocolate middle, served with a scoop of Tahitian vanilla bean ice cream & raspberry coulis.', es: 'Centro fundido de chocolate amargo belga, servido con helado de vainilla de Tahití y coulis de frambuesa.', fr: 'Cœur coulant au chocolat noir belge, servi avec une boule de glace à la vanille de Tahiti et coulis de framboise.', it: 'Cuore di cioccolato fondente belga fuso, servito con gelato alla vaniglia di Tahiti e coulis di lamponi.' },
+        name: { en: 'Warm Lava Chocolate Cake', es: 'Volcán de Chocolate Caliente', fr: 'Fondant au Chocolat Chaud', it: 'Tortino al Cioccolato Caldo', ar: 'كيكة الشوكولاتة لافا الدافئة' },
+        description: { en: 'Molten Belgian dark chocolate middle, served with a scoop of Tahitian vanilla bean ice cream & raspberry coulis.', es: 'Centro fundido de chocolate amargo belga, servido con helado de vainilla de Tahití y coulis de frambuesa.', fr: 'Cœur coulant au chocolat noir belge, servi avec une boule de glace à la vanille de Tahiti et coulis de framboise.', it: 'Cuore di cioccolato fondente belga fuso, servito con gelato alla vaniglia di Tahiti e coulis di lamponi.', ar: 'وسط شوكولاتة بلجيكية داكنة سائلة، يقدم مع مغرفة من آيس كريم فانيليا تاهيتي وكوليس التوت.' },
         price: 12.50,
         imageUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&auto=format&fit=crop&q=80',
         variants: [
@@ -552,14 +610,14 @@ export default function RestaurantMenu() {
               <Utensils className="w-5 h-5 text-amber-400" />
             </div>
             <span className="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-500/20">
-              Interactive Menu Hub
+              {tMenu("Interactive Menu Hub")}
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">
-            Gourmet QR Restaurant Menu
+            {tMenu("Gourmet QR Restaurant Menu")}
           </h2>
           <p className="text-slate-400 text-sm max-w-xl">
-            Design beautiful, high-converting digital restaurant menus with variants, active promotion tags, multi-language translation selectors, and interactive simulated smartphone menu previews.
+            {tMenu("Design beautiful, high-converting digital restaurant menus with variants, active promotion tags, multi-language translation selectors, and interactive simulated smartphone menu previews.")}
           </p>
         </div>
 
@@ -574,15 +632,15 @@ export default function RestaurantMenu() {
                 selectedLanguage: 'en',
                 themeColor: 'rose',
                 categories: [
-                  { id: 'cat-1', name: { en: 'Handmade Pasta', es: 'Pasta Artesana', fr: 'Pâtes Artisanales', it: 'Pasta Fatta a Mano' }, icon: '🍝' },
-                  { id: 'cat-2', name: { en: 'Specialty Drinks', es: 'Bebidas de Especialidad', fr: 'Boissons Spéciales', it: 'Bevande Speciali' }, icon: '🍷' }
+                  { id: 'cat-1', name: { en: 'Handmade Pasta', es: 'Pasta Artesana', fr: 'Pâtes Artisanales', it: 'Pasta Fatta a Mano', ar: 'الباستا الإيطالية' }, icon: '🍝' },
+                  { id: 'cat-2', name: { en: 'Specialty Drinks', es: 'Bebidas de Especialidad', fr: 'Boissons Spéciales', it: 'Bevande Speciali', ar: 'مشروبات مميزة' }, icon: '🍷' }
                 ],
                 items: [
                   {
                     id: 'itm-italian-1',
                     categoryId: 'cat-1',
-                    name: { en: 'Truffle Pappardelle', es: 'Pappardelle de Trufa', fr: 'Pappardelle aux Truffes', it: 'Pappardelle al Tartufo' },
-                    description: { en: 'Rich egg pasta tossed in wild porcini mushroom sauce and shaved fresh black winter truffle.', es: 'Pasta fresca con salsa de boletus y trufa negra fresca rallada.', fr: 'Pâtes fraîches nappées de sauce aux cèpes et truffe noire fraîche râpée.', it: 'Pasta all uovo fresca condita con salsa ai funghi porcini e scaglie di tartufo nero fresco.' },
+                    name: { en: 'Truffle Pappardelle', es: 'Pappardelle de Trufa', fr: 'Pappardelle aux Truffes', it: 'Pappardelle al Tartufo', ar: 'بابارديل بالتروفل' },
+                    description: { en: 'Rich egg pasta tossed in wild porcini mushroom sauce and shaved fresh black winter truffle.', es: 'Pasta fresca con salsa de boletus y trufa negra fresca rallada.', fr: 'Pâtes fraîches nappées de sauce aux cèpes et truffe noire fraîche râpée.', it: 'Pasta all uovo fresca condita con salsa ai funghi porcini e scaglie di tartufo nero fresco.', ar: 'باستا البيض الغنية بالصلصة مع فطر البورشيني والتروفل الشتوي الأسود الطازج.' },
                     price: 24.50,
                     imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80',
                     variants: [{ name: 'Half portion', priceModifier: -5 }, { name: 'Full portion', priceModifier: 0 }],
@@ -594,7 +652,7 @@ export default function RestaurantMenu() {
             }}
             className="px-4 py-2 bg-slate-800 text-slate-300 hover:text-white border border-slate-700 rounded-xl text-xs font-bold transition-all hover:bg-slate-750 cursor-pointer"
           >
-            Load Italian Theme
+            {tMenu("Load Italian Theme")}
           </button>
           <button
             onClick={handleSaveMenu}
@@ -602,7 +660,7 @@ export default function RestaurantMenu() {
             className={`px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-lg shadow-emerald-950/40 transition-all cursor-pointer ${selectedTheme.accent}`}
           >
             <CheckCircle2 className="w-4 h-4" />
-            {isSaving ? 'Syncing...' : 'Publish & Sync Menu'}
+            {isSaving ? tMenu('Syncing...') : tMenu('Publish & Sync Menu')}
           </button>
         </div>
       </div>
@@ -618,9 +676,9 @@ export default function RestaurantMenu() {
               <div>
                 <h3 className="text-base font-black text-slate-800 flex items-center gap-1.5">
                   <Globe className="w-5 h-5 text-indigo-500" />
-                  1. Brand Identity & Global Locales
+                  {tMenu("1. Brand Identity & Global Locales")}
                 </h3>
-                <p className="text-[11px] text-slate-400">Configure core descriptors and choose active language to enter data.</p>
+                <p className="text-[11px] text-slate-400">{tMenu("Configure core descriptors and choose active language to enter data.")}</p>
               </div>
 
               {/* Active Localization Language for input fields */}
@@ -629,7 +687,8 @@ export default function RestaurantMenu() {
                   { code: 'en', label: '🇬🇧 EN' },
                   { code: 'es', label: '🇪🇸 ES' },
                   { code: 'fr', label: '🇫🇷 FR' },
-                  { code: 'it', label: '🇮🇹 IT' }
+                  { code: 'it', label: '🇮🇹 IT' },
+                  { code: 'ar', label: '🇸🇦 AR' }
                 ].map(l => (
                   <button
                     key={l.code}
@@ -647,7 +706,7 @@ export default function RestaurantMenu() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Restaurant Name</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{tMenu("Restaurant Name")}</label>
                 <input
                   type="text"
                   value={menu.restaurantName}
@@ -658,7 +717,7 @@ export default function RestaurantMenu() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Menu Currency</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{tMenu("Menu Currency")}</label>
                 <select
                   value={menu.currency}
                   onChange={e => setMenu(prev => ({ ...prev, currency: e.target.value }))}
@@ -671,7 +730,7 @@ export default function RestaurantMenu() {
               </div>
 
               <div className="sm:col-span-3">
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Short Restaurant Slogan</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{tMenu("Short Restaurant Slogan")}</label>
                 <input
                   type="text"
                   value={menu.description}
@@ -684,7 +743,7 @@ export default function RestaurantMenu() {
 
             {/* Menu Theme selector */}
             <div className="border-t border-slate-100 pt-5 space-y-3">
-              <label className="block text-xs font-bold text-slate-700">Brand Palette & Styling Vibe</label>
+              <label className="block text-xs font-bold text-slate-700">{tMenu("Brand Palette & Styling Vibe")}</label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
                   { id: 'emerald', label: 'Forest Greenery', style: 'bg-emerald-600 text-emerald-100', desc: 'Organic, wholesome' },
@@ -701,8 +760,8 @@ export default function RestaurantMenu() {
                     className={`p-3 rounded-xl border text-left transition-all relative cursor-pointer ${menu.themeColor === item.id ? 'ring-2 ring-indigo-500 border-transparent shadow-sm scale-[1.02]' : 'hover:bg-slate-50 border-slate-200'}`}
                   >
                     <div className={`w-5 h-5 rounded-full ${item.style} flex items-center justify-center text-[10px] font-bold border border-white/20 mb-2`}>✓</div>
-                    <p className="text-[11px] font-bold leading-none">{item.label}</p>
-                    <p className="text-[8px] text-slate-400 mt-1">{item.desc}</p>
+                    <p className="text-[11px] font-bold leading-none">{isArabic ? (item.id === 'emerald' ? 'خضار الغابة' : item.id === 'rose' ? 'نبيذ بورغندي' : item.id === 'amber' ? 'زعفران ذهبي' : 'فحم رمادي') : item.label}</p>
+                    <p className="text-[8px] text-slate-400 mt-1">{isArabic ? (item.id === 'emerald' ? 'عضوي وصحي' : item.id === 'rose' ? 'فاخر، راقي' : item.id === 'amber' ? 'حيوي، بهارات دافئة' : 'بسيط وحديث') : item.desc}</p>
                   </button>
                 ))}
               </div>
@@ -715,9 +774,9 @@ export default function RestaurantMenu() {
               <div>
                 <h3 className="text-base font-black text-slate-800 flex items-center gap-1.5">
                   <Layers className="w-5 h-5 text-amber-500" />
-                  2. Menu Categories
+                  {tMenu("2. Menu Categories")}
                 </h3>
-                <p className="text-[11px] text-slate-400">Add or rename major food/drink sections. Drag down & remove categories.</p>
+                <p className="text-[11px] text-slate-400">{tMenu("Add or rename major food/drink sections. Drag down & remove categories.")}</p>
               </div>
 
               <button
@@ -726,7 +785,7 @@ export default function RestaurantMenu() {
                 className={`py-1.5 px-3 border border-indigo-100 text-indigo-600 hover:bg-indigo-50 text-xs font-bold rounded-lg flex items-center gap-1 transition-colors cursor-pointer`}
               >
                 <Plus className="w-4 h-4" />
-                Add Category
+                {tMenu("Add Category")}
               </button>
             </div>
 
@@ -747,7 +806,7 @@ export default function RestaurantMenu() {
 
                   <div className="flex-1 min-w-0">
                     <label className="text-[8px] text-slate-400 font-bold block uppercase tracking-wider mb-0.5">
-                      Name ({menu.selectedLanguage.toUpperCase()})
+                      {isArabic ? 'الاسم' : 'Name'} ({menu.selectedLanguage.toUpperCase()})
                     </label>
                     <input
                       type="text"
@@ -775,15 +834,15 @@ export default function RestaurantMenu() {
             <div>
               <h3 className="text-base font-black text-slate-800 flex items-center gap-1.5">
                 <PlusCircle className="w-5 h-5 text-emerald-500" />
-                3. Create New Dish / Beverage
+                {tMenu("3. Create New Dish / Beverage")}
               </h3>
-              <p className="text-[11px] text-slate-400">Configure core product details, pricing, tags, and variants to append them below.</p>
+              <p className="text-[11px] text-slate-400">{tMenu("Configure core product details, pricing, tags, and variants to append them below.")}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50/50 p-4 sm:p-5 rounded-2xl border border-slate-200/40">
               
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Target Category</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Target Category")}</label>
                 <select
                   value={newItemCategory}
                   onChange={e => setNewItemCategory(e.target.value)}
@@ -796,7 +855,7 @@ export default function RestaurantMenu() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Item Title (English)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Item Title (English)")}</label>
                 <input
                   type="text"
                   value={newItemNameEn}

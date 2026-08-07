@@ -12,6 +12,7 @@ import { signInAnonymously } from 'firebase/auth';
 import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
+import { useTranslation } from '../utils/i18n';
 
 // Interfaces
 interface PdfVersion {
@@ -48,6 +49,50 @@ const PRESET_PDF_TEMPLATES = [
 ];
 
 export default function PdfSharing() {
+  const { locale } = useTranslation();
+  const isArabic = locale === 'ar';
+
+  const tPdf = (enText: string): string => {
+    if (!isArabic) return enText;
+    const dict: Record<string, string> = {
+      "Instant PDF & File Sharing": "مشاركة ملفات PDF والمستندات الفورية",
+      "PDF Dynamic Sharing Core": "نواة مشاركة الـ PDF الديناميكية",
+      "PDF Sharing & Hosting": "مشاركة واستضافة ملفات PDF",
+      "Dynamic QR PDF Sharing Hub": "مركز مشاركة ملفات PDF عبر رمز QR الديناميكي",
+      "Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.": "حمّل الكتيبات والملفات أو قوائم الطعام بصيغة PDF. أنشئ على الفور رموز QR، واستبدل الملف الأساسي في أي وقت دون تغيير رمز QR، وقم بتكوين كلمات المرور، وتتبع تنزيلات المستخدمين.",
+      "Cloud Space Used": "مساحة السحاب المستخدمة",
+      "Guests get 100MB free persistent sandbox storage.": "يحصل الضيوف على مساحة تخزين رملية مستمرة ومجانية سعتها 100 ميجابايت.",
+      "Upload product catalogs, menus, user guides, or books. Instantly generate highly customizable QR codes, secure files with download quotas/passwords, and preview and manage complete download analytics dashboards.": "حمّل كتالوجات المنتجات، أو قوائم الطعام، أو أدلة المستخدم، أو الكتب. أنشئ على الفور رموز QR قابلة للتخصيص بدرجة كبيرة، واحفظ الملفات بكلمات مرور وحصص تنزيل محددة، وعاين لوحة معلومات تحليل التنزيل وأدرها بشكل كامل.",
+      "1. Core Document Upload": "1. رفع المستند الأساسي",
+      "2. Security & Download Rules": "2. قواعد الحماية والتنزيل",
+      "3. Visual Palette Theme": "3. مظهر لوحة الألوان المرئية",
+      "Drag and Drop your PDF document here": "اسحب وأسقط مستند الـ PDF هنا",
+      "or click to browse local storage": "أو انقر لتصفح التخزين المحلي",
+      "Document Title": "عنوان المستند",
+      "Brief Slogan / Description": "وصف قصير / شعار",
+      "Save & Publish Sharing QR": "حفظ ونشر رمز QR للمشاركة",
+      "Publishing...": "جاري النشر...",
+      "Active Live Preview & QR": "المعاينة المباشرة ورمز QR النشط",
+      "Scan this secure high-contrast QR design with a phone to view or download the attached PDF document instantly.": "امسح تصميم رمز QR عالي التباين هذا باستخدام الهاتف لعرض أو تنزيل مستند PDF المرفق على الفور.",
+      "Publish sharing config to activate live dynamic QR code!": "انشر إعدادات المشاركة لتنشيط رمز QR الديناميكي المباشر!",
+      "PDF Dynamic Sharing Core Preview": "معاينة نواة مشاركة PDF الديناميكية",
+      "PDF Details": "تفاصيل الـ PDF",
+      "Version History": "سجل الإصدارات",
+      "No shares available yet.": "لا توجد مشاركات متاحة بعد.",
+      "Total Shared PDFs": "إجمالي ملفات PDF المشاركة",
+      "Gated with dynamic parameters": "محمي بمعايير ديناميكية",
+      "Password Protection": "حماية بكلمة مرور",
+      "Enter password (optional)": "أدخل كلمة المرور (اختياري)",
+      "Set Expiry Date": "تعيين تاريخ انتهاء الصلاحية",
+      "Maximum Downloads Allowed": "أقصى عدد تنزيلات مسموح به",
+      "Unlimited if empty": "غير محدود إذا كان فارغًا",
+      "Choose Color Accent": "اختر تباين الألوان",
+      "Live Smartphone Simulator": "محاكي الهاتف الذكي المباشر",
+      "Active Document PDF Shares": "مشاركات مستندات PDF النشطة"
+    };
+    return dict[enText] || enText;
+  };
+
   const [shares, setShares] = useState<PdfShareConfig[]>([]);
   const [selectedShare, setSelectedShare] = useState<PdfShareConfig | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -526,14 +571,14 @@ export default function PdfSharing() {
               <FileText className="w-5 h-5 text-indigo-400" />
             </div>
             <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-950/40 px-2.5 py-1 rounded-full border border-indigo-500/20">
-              PDF Sharing & Hosting
+              {tPdf("PDF Sharing & Hosting")}
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">
-            Dynamic QR PDF Sharing Hub
+            {tPdf("Dynamic QR PDF Sharing Hub")}
           </h2>
           <p className="text-slate-400 text-sm max-w-xl">
-            Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.
+            {tPdf("Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.")}
           </p>
         </div>
 
@@ -542,7 +587,7 @@ export default function PdfSharing() {
           <div className="flex justify-between text-xs font-bold mb-1.5">
             <span className="text-slate-300 flex items-center gap-1">
               <HardDrive className="w-3.5 h-3.5 text-indigo-400" />
-              Cloud Space Used
+              {tPdf("Cloud Space Used")}
             </span>
             <span className="text-indigo-400">{totalStorageUsedMB.toFixed(1)} / {storageLimitMB} MB</span>
           </div>
@@ -552,7 +597,7 @@ export default function PdfSharing() {
               style={{ width: `${(totalStorageUsedMB / storageLimitMB) * 100}%` }}
             />
           </div>
-          <p className="text-[10px] text-slate-400 mt-1.5">Guests get 100MB free persistent sandbox storage.</p>
+          <p className="text-[10px] text-slate-400 mt-1.5">{tPdf("Guests get 100MB free persistent sandbox storage.")}</p>
         </div>
       </div>
 
@@ -566,7 +611,7 @@ export default function PdfSharing() {
             <div>
               <h3 className="text-base font-black text-slate-800 flex items-center gap-1.5">
                 <FileUp className="w-5 h-5 text-indigo-600" />
-                1. Upload PDF Document
+                {tPdf("1. Core Document Upload")}
               </h3>
               <p className="text-[11px] text-slate-400">Drag & drop your PDF file or try out one of our pre-configured documents.</p>
             </div>

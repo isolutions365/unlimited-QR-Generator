@@ -1,5 +1,10 @@
 {
   "nav.barcodeGeneratorTab": "Barcode Generator",
+  "nav.formTab": "Form Builder",
+  "nav.restaurantMenuTab": "Restaurant Menus",
+  "nav.digitalCardTab": "Digital Cards",
+  "nav.pdfTab": "PDF Sharing",
+  "nav.bulkGeneratorTab": "Bulk Generator",
   "barcode.title": "Barcode Generation Station",
   "barcode.subtitle": "Generate crisp, industry-standard linear barcodes with precision rendering, physical scanner validation safeguards, and custom color presets.",
   "barcode.presetsCategory": "Payload Categories & Industry Presets",

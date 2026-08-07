@@ -1,5 +1,10 @@
 {
   "nav.barcodeGeneratorTab": "مولد الباروكود",
+  "nav.formTab": "منشئ النماذج",
+  "nav.restaurantMenuTab": "قوائم المطاعم",
+  "nav.digitalCardTab": "البطاقات الرقمية",
+  "nav.pdfTab": "مشاركة PDF",
+  "nav.bulkGeneratorTab": "التوليد الجماعي",
   "barcode.title": "محطة إنشاء الرمز الشريطي (الباروكود)",
   "barcode.subtitle": "أنشئ رموزًا شريطية خطية قياسية وعالية الدقة مع ضمانات التحقق للماسحات الضوئية وتخصيص الألوان.",
   "barcode.presetsCategory": "فئات الحمولة والإعدادات المسبقة للصناعة",

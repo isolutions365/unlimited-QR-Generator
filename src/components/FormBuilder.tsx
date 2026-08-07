@@ -12,6 +12,7 @@ import { collection, doc, setDoc, getDocs, query, where, deleteDoc, updateDoc } 
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { useTranslation } from '../utils/i18n';
 
 // Interfaces
 interface FormField {
@@ -189,6 +190,76 @@ const PALETTES = {
 };
 
 export default function FormBuilder() {
+  const { locale } = useTranslation();
+  const isArabic = locale === 'ar';
+
+  const tForm = (enText: string): string => {
+    if (!isArabic) return enText;
+    const dict: Record<string, string> = {
+      "Custom Form & Survey Engine": "منشئ النماذج والاستبيانات المخصصة",
+      "Interactive Form Builder": "منشئ النماذج التفاعلي",
+      "Create responsive, secure web forms and customer surveys with real-time drag-and-drop field order customisation, custom themes, and full submission data analytics charts.": "أنشئ نماذج ويب واستبيانات عملاء سريعة الاستجابة وآمنة مع إمكانية تخصيص ترتيب الحقول في الوقت الفعلي ومظاهر مخصصة ومخططات تحليلية كاملة لبيانات الإرسال.",
+      "Preset Core Use Case Templates": "قوالب حالات الاستخدام الأساسية الجاهزة",
+      "Select a robust template to boot structural fields instantly, or build from blank.": "اختر قالبًا قويًا لبدء الحقول الهيكلية على الفور، أو ابدأ من الصفر.",
+      "1. Structural Info & Choice": "1. المعلومات الهيكلية والاختيارات",
+      "1. Structural Info & Template Choice": "1. المعلومات الهيكلية واختيار القالب",
+      "Configure initial identity metadata, theme branding, and baseline data-model archetype.": "تكوين بيانات التعريف الأولية للهوية، والمظهر المخصص، وقالب نموذج البيانات الأساسي.",
+      "Form Display Title": "عنوان عرض النموذج",
+      "Brief Slogan / Description": "شعار قصير / وصف",
+      "Choose Theme Palette": "اختر لوحة المظهر",
+      "2. Fields & Payload Schema Editor": "2. محرر الحقول ومخطط الحمولة",
+      "Add, customize, delete, or re-order fields. Mark required fields for secure validation.": "إضافة الحقول أو تخصيصها أو حذفها أو إعادة ترتيبها. حدد الحقول المطلوبة لضمان صحة التحقق الآمن.",
+      "3. Dynamic Live Form Preview": "3. معاينة حية تفاعلية للنموذج",
+      "Interactive Simulated Smartphone Form": "نموذج هاتف ذكي محاكٍ تفاعلي",
+      "4. Your Active Forms & Analytics": "4. نماذجك النشطة والتحليلات",
+      "Manage published forms, read entries, and check structural performance graphics.": "إدارة النماذج المنشورة وقراءة البيانات المدخلة والتحقق من رسومات الأداء الهيكلي.",
+      "Save & Publish Form": "حفظ ونشر النموذج",
+      "Publishing...": "جاري النشر...",
+      "Standard Contact Form": "نموذج الاتصال القياسي",
+      "Customer Satisfaction Survey": "استبيان رضا العملاء",
+      "B2B Lead Generation Form": "نموذج توليد العملاء المحتملين B2B",
+      "Event Registration Ticket": "تذكرة تسجيل الفعالية",
+      "Calendar Appointment Booking": "حجز موعد التقويم",
+      "Celebration RSVP Handler": "معالج دعوة RSVP للاحتفالات",
+      "Continuous Product Feedback": "ملاحظات المنتج المستمرة",
+      "Dynamic Form Builder & QR Core": "منشئ النماذج الديناميكي ونواة QR",
+      "Design contact lists, customer surveys, RSVPs, or feedback boards. Generate instant scannable QR codes, collect secure entries directly in your Submission Dashboard, and track complete metrics.": "صمّم قوائم اتصال، أو استطلاعات رأي العملاء، أو بطاقات RSVP، أو لوحات الملاحظات. أنشئ رموز QR فورية قابلة للمسح الضوئي، واجمع المدخلات بشكل آمن مباشرةً في لوحة معلومات الإرسال الخاصة بك، وتتبّع المقاييس الكاملة.",
+      "TOTAL ACTIVE FORMS": "إجمالي النماذج النشطة",
+      "Gated & authenticated with Firebase Firestore": "محمي وموثق بواسطة قاعدة بيانات فاخرة",
+      "Configure & Build Form": "تكوين وبناء النموذج",
+      "Submission Dashboard": "لوحة معلومات الإرسال",
+      "Create New Form": "إنشاء نموذج جديد",
+      "Submission Analytics": "تحليلات البيانات المرسلة",
+      "1. Configure Identity & Slogan": "1. تكوين الهوية والشعار",
+      "Choose Theme & Palettes": "اختر السمة واللوحة",
+      "Select Template Preset": "اختر إعدادًا مسبقًا للقالب",
+      "Form Template Category": "فئة قالب النموذج",
+      "Add New Custom Field": "إضافة حقل مخصص جديد",
+      "Field Title / Label": "عنوان الحقل / التسمية",
+      "Field Placeholder text": "نص تلميح الحقل (النائب)",
+      "Required Field": "حقل مطلوب",
+      "Add Field": "إضافة حقل",
+      "Form Fields Schema": "مخطط حقول النموذج",
+      "Required": "مطلوب",
+      "Optional": "اختياري",
+      "Type": "النوع",
+      "Edit Field": "تعديل الحقل",
+      "Save": "حفظ",
+      "Cancel": "إلغاء",
+      "Live QR Scan Preview": "معاينة مسح رمز QR المباشر",
+      "Scan this secure dynamic QR design with your phone to access and submit the form live instantly!": "امسح تصميم رمز QR الديناميكي الآمن هذا بهاتفك للوصول إلى النموذج وإرساله على الفور وبشكل مباشر!",
+      "Form Submissions": "بيانات النماذج المرسلة",
+      "View Entries": "عرض الإدخالات",
+      "Close": "إغلاق",
+      "Form Submissions & Entry Records": "سجلات إدخال بيانات النماذج المرسلة",
+      "No submissions received yet.": "لم يتم استلام أي إدخالات بعد.",
+      "Submit Entry": "إرسال البيانات",
+      "Submission success! Your responses have been saved securely.": "تم الإرسال بنجاح! تم حفظ ردودك بشكل آمن.",
+      "Thank you for taking the time to fill out this form!": "شكرًا لك على تخصيص بعض الوقت لملء هذا النموذج!"
+    };
+    return dict[enText] || enText;
+  };
+
   const [forms, setForms] = useState<CustomFormConfig[]>([]);
   const [selectedForm, setSelectedForm] = useState<CustomFormConfig | null>(null);
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
@@ -618,22 +689,22 @@ export default function FormBuilder() {
               <ClipboardList className="w-5 h-5 text-indigo-400" />
             </div>
             <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-950/40 px-2.5 py-1 rounded-full border border-indigo-500/20">
-              Interactive Form Builder
+              {tForm("Interactive Form Builder")}
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">
-            Dynamic Form Builder & QR Core
+            {tForm("Dynamic Form Builder & QR Core")}
           </h2>
           <p className="text-slate-400 text-sm max-w-xl">
-            Design contact lists, customer surveys, RSVPs, or feedback boards. Generate instant scannable QR codes, collect secure entries directly in your Submission Dashboard, and track complete metrics.
+            {tForm("Design contact lists, customer surveys, RSVPs, or feedback boards. Generate instant scannable QR codes, collect secure entries directly in your Submission Dashboard, and track complete metrics.")}
           </p>
         </div>
 
         {/* Global summary count */}
         <div className="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl w-full md:w-56 shrink-0 z-10 flex flex-col justify-center">
-          <div className="text-xs text-slate-400 font-bold mb-1">TOTAL ACTIVE FORMS</div>
+          <div className="text-xs text-slate-400 font-bold mb-1">{tForm("TOTAL ACTIVE FORMS")}</div>
           <div className="text-3xl font-black text-indigo-400">{forms.length}</div>
-          <div className="text-[10px] text-slate-500 mt-1">Gated & authenticated with Firebase Firestore</div>
+          <div className="text-[10px] text-slate-500 mt-1">{tForm("Gated & authenticated with Firebase Firestore")}</div>
         </div>
       </div>
 
@@ -650,7 +721,7 @@ export default function FormBuilder() {
               className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 ${!viewingSubmissions ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
             >
               <FormInput className="w-4 h-4" />
-              Configure & Build Form
+              {tForm("Configure & Build Form")}
             </button>
             <button
               disabled={!selectedForm}
@@ -658,7 +729,7 @@ export default function FormBuilder() {
               className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 ${viewingSubmissions ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800 disabled:opacity-50'}`}
             >
               <ClipboardList className="w-4 h-4" />
-              Submission Dashboard ({submissions.length})
+              {tForm("Submission Dashboard")} ({submissions.length})
             </button>
           </div>
 
