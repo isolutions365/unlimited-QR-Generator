@@ -77,7 +77,7 @@ export const platformModules: PlatformModule[] = [
     ],
     references: [
       { title: 'ISO/IEC 18004 Automatic Identification Telemetry Framework Specification', year: '2025' },
-      { title: 'Privacy-by-Design in Contactless Tracking Infrastructures', author: 'Dr. Sarah Chen', year: '2026' }
+      { title: 'Privacy-by-Design in Contactless Tracking Infrastructures', author: 'Muhammad Mubeen', year: '2026' }
     ],
     aiSummary: {
       gemini: 'The proposed FreeQRGen.pro QR Analytics Engine uses serverless edge computing to track scans securely. By discarding PII and relying on localized aggregations, it delivers compliant data metrics with minimal redirection latency.',
@@ -1408,19 +1408,19 @@ func main() {
                   <div className="flex flex-col md:flex-row gap-6 text-xs text-slate-600 leading-relaxed">
                     <div className="flex-1 space-y-2">
                       <div className="font-semibold text-slate-700">
-                        {t('platform.authorProfileTitle', 'Author Profile: Dr. Sarah Chen')}
+                        {t('platform.authorProfileTitle', 'Author Profile: Dr. Sarah Chen').replace(/Dr\.\s*Sarah\s*Chen|Sarah\s*Chen/gi, 'Muhammad Mubeen (Founder & Lead Developer)')}
                       </div>
                       <p className="text-slate-500 text-[11px]">
-                        {t('platform.authorProfileDesc', 'Senior Technical SEO & Optical Data Architect. Dr. Sarah Chen oversees optical verification, matrix density calibrations, and compatibility mappings to ensure search optimization integrity across our platforms.')}
+                        {t('platform.authorProfileDesc', 'Senior Technical SEO & Optical Data Architect. Dr. Sarah Chen oversees optical verification, matrix density calibrations, and compatibility mappings to ensure search optimization integrity across our platforms.').replace(/Dr\.\s*Sarah\s*Chen|Sarah\s*Chen/gi, 'Muhammad Mubeen')}
                       </p>
                     </div>
                     <div className="w-px bg-slate-100 hidden md:block"></div>
                     <div className="flex-1 space-y-2">
                       <div className="font-semibold text-slate-700">
-                        {t('platform.reviewerProfileTitle', 'Reviewer Profile: Marcus Vance, CISSP')}
+                        {t('platform.reviewerProfileTitle', 'Reviewer Profile: Marcus Vance, CISSP').replace(/Marcus\s*Vance,\s*CISSP|Marcus\s*Vance/gi, 'FreeQRGen Engineering Team')}
                       </div>
                       <p className="text-slate-500 text-[11px]">
-                        {t('platform.reviewerProfileDesc', 'Chief Security Officer & Trust Engineer. Marcus audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.')}
+                        {t('platform.reviewerProfileDesc', 'Chief Security Officer & Trust Engineer. Marcus audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.').replace(/Marcus/gi, 'The FreeQRGen Engineering Team')}
                       </p>
                     </div>
                   </div>

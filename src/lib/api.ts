@@ -571,7 +571,7 @@ class ApiClient {
         title: 'Dynamic Redirection for Event Tickets: Case Study',
         content: 'Switched our gate passes to dynamic redirection landing pages. Reduced door scanning timeouts by 40%.',
         category: 'Case Studies',
-        authorName: 'Sarah Chen',
+        authorName: 'Muhammad Mubeen',
         upvotes: 42,
         commentsCount: 12,
         createdAt: '1 day ago'

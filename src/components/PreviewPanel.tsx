@@ -1132,11 +1132,11 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const { offsetX: onScreenOffsetX, offsetY: onScreenOffsetY } = getScaleFactorAndOffsets();
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       {/* QR Board Canvas */}
       <div 
         id="tour-qr-preview" 
-        className={`rounded-2xl border p-6 shadow-xs flex flex-col items-center justify-center gap-4 relative overflow-hidden transition-all duration-1000 ${
+        className={`rounded-2xl border p-4 sm:p-6 shadow-xs flex flex-col items-center justify-center gap-3 sm:gap-4 relative overflow-hidden transition-all duration-1000 ${
           showSaveGlow 
             ? 'border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.15)] bg-emerald-50/5' 
             : 'border-gray-200/80 bg-white'
@@ -1216,7 +1216,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           )}
         </AnimatePresence>
 
-        <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center relative z-5">
+        <div className="p-3 sm:p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center relative z-5">
           <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden animate-fade-in" style={{ width: '280px', height: '280px' }}>
             <MemoizedQRCanvas
               ref={canvasRef}

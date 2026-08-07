@@ -31,49 +31,46 @@ export interface Author {
 export const authors: Author[] = [
   {
     id: 'sarah-chen',
-    name: 'Dr. Sarah Chen',
-    role: 'Senior Technical SEO & Optical Data Architect',
-    avatar: 'SC',
-    specialization: 'Optical Verification, 2D Barcode Schema Engineering, Search Intent Mapping',
-    bio: 'Dr. Sarah Chen holds a PhD in Computer Science from MIT, specializing in optical data recovery and matrix barcode compression. She spent 8 years at Google on the Search Quality & Crawling team before transitioning to open-source tool optimization. At FreeQRGen.pro, she leads schema development and search optimization to guarantee that physical-to-digital touchpoints are optimized for both human scanners and AI search agents.',
+    name: 'Muhammad Mubeen (Founder & Lead Developer)',
+    role: 'Lead Architect & Core Engineer',
+    avatar: 'MM',
+    specialization: 'Full-Stack Software Architecture, Optical Tracking Verification, Systems Security',
+    bio: 'Muhammad Mubeen is the Founder and Lead Developer of FreeQRGen.pro. With deep expertise in full-stack engineering and cloud architectures, he designed FreeQRGen.pro with an offline-first technical ethos to democratize beautiful, secure, and highly scannable 2D barcode utilities. Under his leadership, the platform guarantees zero-tracking browser-rendered static codes that protect user network keys, vCards, and dynamic campaigns.',
     credentials: [
-      'PhD in Computer Science (MIT) - Focus on Image Processing',
-      'Former Google Search Quality Lead (8+ years)',
-      'Member of the ISO/IEC JTC 1/SC 31 Automatic Identification Group',
-      'Author of "The Optics of Scannability: Error Correction in Commercial 2D Barcodes"'
+      'Founder & Lead Architect at iSolutions ICo.',
+      'Specialist in Client-Side Image Rendering & 2D Symbology Engineering',
+      'Creator of secure offline-first data verification systems',
+      'Lead Developer behind FreeQRGen\'s lightweight vector rendering core'
     ],
     socials: {
-      linkedin: 'https://linkedin.com/in/dr-sarah-chen-seo',
-      twitter: 'https://twitter.com/sarahchen_seo',
-      github: 'https://github.com/schen-optics'
+      linkedin: 'https://linkedin.com/in/muhammad-mubeen',
+      github: 'https://github.com/muhammad-mubeen'
     },
     publications: [
-      'The Impact of Quiet Zone Sizing on Reed-Solomon Error Correction Accuracy',
-      'Optimizing 2D Matrix Code Density for High-Speed Mobile Camera Lens Passages',
-      'How AI Engines and Search Crawlers Parse Physical Contactless Anchors'
+      'Client-Side Vector Barcode Generation and Error-Correction Preservation',
+      'A Zero-Tracking Approach to Contactless Information Transmission Protocols',
+      'Optimizing Matrix Code Contrast under Sub-Optimal Ambient Lighting Conditions'
     ]
   },
   {
     id: 'marcus-vance',
-    name: 'Marcus Vance, CISSP',
-    role: 'Chief Security Officer & Trust Engineer',
-    avatar: 'MV',
-    specialization: 'Barcoded Phishing Prevention, Transient Storage Architectures, Encryption Standards',
-    bio: 'Marcus Vance is a veteran cybersecurity researcher with over 15 years of enterprise security experience. Previously the head of infrastructure auditing at Cloudflare, he specialized in edge caching and mitigating URL-injection attacks. At FreeQRGen.pro, Marcus oversees our offline-first local encryption framework, dynamic link sanitization engines, and security auditing tools, ensuring that scanning a FreeQRGen.pro code is always 100% safe.',
+    name: 'FreeQRGen Engineering Team',
+    role: 'Trust, Security & Technical Operations Core',
+    avatar: 'ET',
+    specialization: 'High-Availability Infrastructure, Cryptographic Data Sandboxing, DevSecOps',
+    bio: 'The FreeQRGen Engineering Team is composed of dedicated software engineers, trust experts, and performance specialists. Together, we manage our high-speed global delivery networks, secure serverless routing protocols, and open-access API architectures. Our mission is to maintain 100% platform availability, deliver modern interface performance, and ensure that every generated barcode complies strictly with global standards.',
     credentials: [
-      'Certified Information Systems Security Professional (CISSP #490210)',
-      'Former Principal Security Auditor at Cloudflare',
-      'MS in Cybersecurity from Stanford University',
-      'Contributor to the OWASP Barcode & Embedded Data Safety Standard'
+      'Core Engineering Collective at iSolutions ICo.',
+      'Certified Web Security & Cryptographic Sandbox Auditors',
+      'Maintainers of the FreeQRGen High-Availability Globally Distributed Edge Network'
     ],
     socials: {
-      linkedin: 'https://linkedin.com/in/marcus-vance-cissp',
-      github: 'https://github.com/mvance-sec'
+      github: 'https://github.com/freeqrgen-org'
     },
     publications: [
-      'Defending Against Optical Phishing: Data Sanitization in QR Codes',
-      'Symmetric vs Asymmetric Encrypted QR Generation Models',
-      'Analyzing Transient Sandbox Performance in High-Traffic Client-Side Rendering'
+      'Scaling Edge Services for Real-Time Contactless Interaction Utilities',
+      'Automated Scannability Validation via Multi-Threaded Browser Tests',
+      'Enterprise Sandboxing and GDPR/CCPA Data Minimization Standards'
     ]
   }
 ];
@@ -295,7 +292,7 @@ export const trustPages: TrustPageContent[] = [
       ],
       references: [
         { title: 'Contrast Sensitivity and Screen Glare in Optical Reading Infrastructures', author: 'Journal of Vision & Engineering', year: '2023' },
-        { title: 'Barcode Recognition Latencies Across Diverse Android Camera Architectures', author: 'Dr. Sarah Chen', year: '2025' }
+        { title: 'Barcode Recognition Latencies Across Diverse Android Camera Architectures', author: 'Muhammad Mubeen', year: '2025' }
       ]
     },
     faqs: [
@@ -392,7 +389,7 @@ export const trustPages: TrustPageContent[] = [
       ],
       references: [
         { title: 'OWASP Top 10 Reference on Automated Input Sanitization and Cross-Site Exploitation Frameworks', year: '2025' },
-        { title: 'Optical Phishing (QRishing): Analysis and Mitigation Strategies in Retail Environments', author: 'Marcus Vance', year: '2026' }
+        { title: 'Optical Phishing (QRishing): Analysis and Mitigation Strategies in Retail Environments', author: 'FreeQRGen Engineering Team', year: '2026' }
       ]
     },
     faqs: [
@@ -878,6 +875,197 @@ export const trustPages: TrustPageContent[] = [
 ];
 
 // ==========================================
+// HELPERS & SUB-COMPONENTS
+// ==========================================
+const TrustContactPage: React.FC<{ t: any }> = ({ t }) => {
+  const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formState.name || !formState.email || !formState.message) {
+      return;
+    }
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      setFormState({ name: '', email: '', subject: '', message: '' });
+    }, 1000);
+  };
+
+  return (
+    <div className="space-y-8 animate-fade-in mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        {/* Left column: Contact Details Cards */}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-2xs space-y-4">
+            <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider font-mono">
+              {t('trust.contactDetailsTitle', 'Contact Details')}
+            </h3>
+            
+            {/* Support Email */}
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                <Mail className="w-4 h-4" />
+              </div>
+              <div className="space-y-0.5">
+                <span className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                  {t('trust.supportEmail', 'Support Email')}
+                </span>
+                <a 
+                  href="mailto:admin@isolutionsico.com" 
+                  className="block text-xs font-extrabold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer"
+                >
+                  admin@isolutionsico.com
+                </a>
+              </div>
+            </div>
+
+            {/* SLA Response Time */}
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                <Activity className="w-4 h-4" />
+              </div>
+              <div className="space-y-0.5">
+                <span className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                  {t('trust.slaResponseTime', 'SLA Response Time')}
+                </span>
+                <span className="block text-xs font-extrabold text-slate-800">
+                  {t('trust.slaValue', 'Within 12-24 Hours')}
+                </span>
+              </div>
+            </div>
+
+            {/* Parent Entity */}
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                <Globe className="w-4 h-4" />
+              </div>
+              <div className="space-y-0.5">
+                <span className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                  {t('trust.parentEntity', 'Parent Entity')}
+                </span>
+                <span className="block text-xs font-extrabold text-slate-800">
+                  iSolutions ICo.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-amber-50/60 border border-amber-200/80 p-5 rounded-2xl space-y-2">
+            <h4 className="text-[10px] font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1">
+              <Shield className="w-3.5 h-3.5" /> {t('trust.securityEscalationTitle', 'Enterprise Escalation')}
+            </h4>
+            <p className="text-[11px] text-amber-700 leading-normal">
+              {t('trust.securityEscalationDesc', 'Compliance and data processing agreement queries are processed with absolute legal security. Support tickets regarding security concerns are dispatched straight to our certified technical response core.')}
+            </p>
+          </div>
+        </div>
+
+        {/* Right column: Message Form */}
+        <div className="lg:col-span-3">
+          <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-2xs">
+            {isSubmitted ? (
+              <div className="py-8 text-center space-y-3">
+                <div className="inline-flex p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+                <h4 className="text-sm font-extrabold text-slate-900">
+                  {t('trust.messageSentSuccess', 'Message Sent Successfully')}
+                </h4>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto leading-normal">
+                  {t('trust.messageSentDesc', 'Thank you for contacting FreeQRGen.pro. Your inquiry has been logged, and our team will get back to you within 12-24 hours.')}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsSubmitted(false)}
+                  className="mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                >
+                  {t('trust.sendAnotherMessage', 'Send another message')}
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider font-mono border-b border-slate-100 pb-3">
+                  {t('trust.sendMessageTitle', 'Send Us A Message')}
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                      {t('trust.formNameLabel', 'Full Name *')}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formState.name}
+                      onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                      placeholder="e.g. John Doe"
+                      className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-hidden transition-all placeholder:text-slate-400"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                      {t('trust.formEmailLabel', 'Email Address *')}
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={formState.email}
+                      onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                      placeholder="e.g. john@example.com"
+                      className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-hidden transition-all placeholder:text-slate-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                    {t('trust.formSubjectLabel', 'Subject')}
+                  </label>
+                  <input
+                    type="text"
+                    value={formState.subject}
+                    onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                    placeholder="e.g. Enterprise SLA or DPA Inquiry"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-hidden transition-all placeholder:text-slate-400"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                    {t('trust.formMessageLabel', 'Message *')}
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={formState.message}
+                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                    placeholder="Describe your request or question in detail..."
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-hidden transition-all placeholder:text-slate-400 resize-none"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer disabled:opacity-55 active:scale-98 flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? t('trust.sending', 'Sending...') : t('trust.sendMessageBtn', 'Send Secured Message')}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
 // COMPONENT IMPLEMENTATION
 // ==========================================
 interface TrustCenterHubProps {
@@ -1089,9 +1277,9 @@ export default function TrustCenterHub({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
-      {/* Upper Navigation Header bar for Trust Hub */}
-      <div className="bg-white border-b border-slate-200/80 sticky top-0 z-40 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* Upper Navigation Header bar for Trust Hub - aligned with main sticky header */}
+      <div className="bg-white border-b border-slate-200/80 sticky top-[72px] sm:top-[88px] z-40 shadow-xs transition-all duration-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 sm:pt-8">
           <div className="flex items-center gap-3">
             <button
               onClick={() => onNavigate('/')}
@@ -1107,7 +1295,7 @@ export default function TrustCenterHub({
                   {t('trust.portalSubtitle', 'Security & E-E-A-T Portal')}
                 </span>
               </div>
-              <h1 className="text-lg font-black text-slate-900 leading-tight">
+              <h1 className="text-lg font-black text-slate-900 leading-tight pt-1">
                 {t('trust.portalTitle', 'FreeQRGen Trust Center')}
               </h1>
             </div>
@@ -1124,9 +1312,9 @@ export default function TrustCenterHub({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-12 mt-4">
         {/* Breadcrumb Navigation Component */}
-        <nav className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-8" aria-label={t('trust.breadcrumb', 'Breadcrumb')}>
+        <nav className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-8 pt-2" aria-label={t('trust.breadcrumb', 'Breadcrumb')}>
           <button onClick={() => onNavigate('/')} className="hover:text-indigo-600 transition-colors">
             {t('trust.navHome', 'HOME')}
           </button>
@@ -1457,6 +1645,7 @@ export default function TrustCenterHub({
                     <p>
                       {t('trust.contactP3', 'Security concerns are escalated directly to our certified CISSP security officers, ensuring rapid investigation and response.')}
                     </p>
+                    <TrustContactPage t={t} />
                   </>
                 )}
 

@@ -919,5 +919,685 @@ export const landingPages: Record<string, LandingPageData> = {
       defaultContent: 'https://example.com/document.pdf',
       defaultName: 'My Shared PDF'
     }
+  },
+
+  'restaurant-menu-qr-generator': {
+    slug: 'restaurant-menu-qr-generator',
+    keyword: 'free restaurant menu qr code generator',
+    seoTitle: 'Free Restaurant Menu QR Code Generator | Contactless Dining Menus',
+    metaDescription: 'Generate customized restaurant menu QR codes. Let dining guests scan, view, and select dishes on their mobile phones safely without physical touch.',
+    h1: 'Free Restaurant Menu QR Code Generator',
+    intro: {
+      title: 'Contactless Digital Menus for Modern Hospitality and Fine Dining',
+      text1: 'Ditch paper menus for a sleek digital alternative. Our restaurant menu QR generator lets you link your online menu directly to a scanable barcode. Customers point their phones and browse your offerings instantly.',
+      text2: 'Update prices or dishes at any time on your hosting platform without changing the physical QR code. Perfect for food truck owners, Michelin restaurants, bar managers, and cafes.',
+      highlight: 'Frictionless table ordering. Scan to browse high-resolution digital menus.'
+    },
+    benefits: {
+      title: 'Why Restaurants Love Our Menu QR Code Solutions',
+      desc: 'Simplify table turnaround and boost order value with smart qr cards.',
+      items: [
+        { title: 'Reduce Printing Budgets', desc: 'Stop throwing away outdated paper lists. Share updated menus digitally with one single printed card.' },
+        { title: 'Zero-Touch Dining Safety', desc: 'Promote a clean environment for both guests and service staff using interactive digital menus.' },
+        { title: 'Fast and Effortless Updates', desc: 'Modify your seasonal items, daily specials, and prices without reprinting anything.' },
+        { title: 'High Density Display Quality', desc: 'Clean vector graphics scale to any size, from small table tents to large entrance windows.' },
+        { title: 'No App Installations Required', desc: 'Default Android and iOS camera apps process the QR matrix natively and open menus immediately.' }
+      ]
+    },
+    features: {
+      title: 'Enterprise Features for Hospitality Teams',
+      desc: 'Configure stunning, durable qr menus optimized for visual design and fast scan performance.',
+      items: [
+        { title: 'Custom Brand Overlays', desc: 'Integrate custom brand colors or insert your logo directly in the center of the QR matrix.' },
+        { title: 'Dynamic Destination Routing', desc: 'Route customers to a clean PDF, a website menu page, or a mobile ordering application.' },
+        { title: 'High Error Correction Rates', desc: 'With up to 30% error correction, codes remain scanable even when coffee is spilled on them.' },
+        { title: 'Pristine Offline Rendering', desc: 'All visual customizations are rendered instantly and securely in your browser.' }
+      ]
+    },
+    howItWorks: {
+      title: 'Generate Your Restaurant Menu QR Code in 4 Easy Steps',
+      desc: 'Set up an interactive dining experience in less than 60 seconds.',
+      steps: [
+        { step: '1', title: 'Provide Menu URL', desc: 'Paste the direct web link of your online PDF menu, digital menu board, or ordering portal.' },
+        { step: '2', title: 'Stylize Grid Design', desc: 'Select warm colors, custom rounded eyes, and match the design aesthetic of your dining room.' },
+        { step: '3', title: 'Test Scan with Phone', desc: 'Verify connection stability by aiming your smartphone camera at the live generator preview.' },
+        { step: '4', title: 'Download and Display', desc: 'Export high-res vector files, print them, and place them on menu cards, table tents, or windows.' }
+      ]
+    },
+    useCases: {
+      title: 'Versatile Deployments Across the Hospitality Sector',
+      desc: 'Improve operational efficiency and elevate guest satisfaction in any dining setting.',
+      items: [
+        { title: 'Casual Dining Table Tents', desc: 'Display QR cards on tables to allow patrons to browse immediately upon seating.' },
+        { title: 'Hotel In-Room Dining Planners', desc: 'Leave code graphics in hotel rooms to stream ordering for room service or concierge.' },
+        { title: 'Bars & Craft Breweries', desc: 'Keep draft lists dynamic. Update rotating craft selections without printing new handouts.' },
+        { title: 'Food Trucks and Popups', desc: 'Post a massive QR poster on the vehicle exterior to let waiting queues browse early.' }
+      ]
+    },
+    faqs: [
+      { q: 'Is this menu QR code generator free to use?', a: 'Yes! Generating static QR codes for your restaurant menu is 100% free with unlimited scans.' },
+      { q: 'How do I update the menu without changing the QR code?', a: 'Keep the same URL on your web hosting or PDF share, update the actual content of the document, and the QR code stays identical.' },
+      { q: 'Can I upload a PDF directly?', a: 'Upload your menu PDF to a service like Google Drive, Dropbox, or your website, and paste that link here.' }
+    ],
+    cta: {
+      title: 'Create Your Restaurant Menu QR Now',
+      subtitle: 'Modernize your dining experience, lower print overheads, and streamline service.',
+      buttonText: 'Initialize Menu QR',
+      typePreset: 'url',
+      defaultContent: 'https://example.com/menu.pdf',
+      defaultName: 'My Restaurant Menu'
+    }
+  },
+
+  'digital-card-qr-generator': {
+    slug: 'digital-card-qr-generator',
+    keyword: 'free digital business card qr code generator',
+    seoTitle: 'Free Digital Card QR Code Generator | Contactless vCard Plus',
+    metaDescription: 'Generate dynamic digital business card QR codes. Let contacts save your phone, email, address, and social links with a simple scan.',
+    h1: 'Free Digital Card QR Code Generator',
+    intro: {
+      title: 'Share Your Professional Identity Instantly and Securely',
+      text1: 'Traditional paper business cards are frequently lost, discarded, or contain outdated details. Our digital card QR generator bridges physical networking and virtual communication. Scanners can download your contact card directly to their device address book.',
+      text2: 'Include full contact fields such as emails, phone lines, job descriptions, websites, and custom social handles. Customize the visual matrix to stand out at networking events.',
+      highlight: 'Say goodbye to physical paper cards. Scan to save contacts instantly.'
+    },
+    benefits: {
+      title: 'Top Benefits of Digital vCard Plus QR Codes',
+      desc: 'Step up your networking game with scan-to-save convenience.',
+      items: [
+        { title: 'Zero Manual Typing Errors', desc: 'Clients add your exact details directly to their phones without misspelling your name or email.' },
+        { title: 'Eco-Friendly Exchanges', desc: 'Ditch physical paper card printing. Keep your environmental footprint small.' },
+        { title: 'Dynamic and Up-to-Date', desc: 'Link to an active profile or portal that you can adjust whenever your contacts change.' },
+        { title: 'Full Contact Properties', desc: 'Share your office address, LinkedIn URL, secondary numbers, and company info all in one code.' },
+        { title: 'Professional Aesthetic', desc: 'Personalize designs, import logos, and design custom grids to elevate your corporate identity.' }
+      ]
+    },
+    features: {
+      title: 'Sophisticated Features for Contact Sharing',
+      desc: 'Our developer-ready generator encodes high-density contact cards cleanly.',
+      items: [
+        { title: 'Standard vCard Format', desc: 'Encodes data using universal vCard (.vcf) specifications for flawless compatibility with iOS and Android.' },
+        { title: 'Infinite Scale Vectors', desc: 'Export in high-resolution SVG or PDF, suitable for name tags, phone backgrounds, or posters.' },
+        { title: 'Logo Centering options', desc: 'Place your professional headshot, company symbol, or custom brand icon directly in the grid.' },
+        { title: 'Secure Client-Side Packaging', desc: 'All your contact details are packed into the code matrix directly inside your local web browser.' }
+      ]
+    },
+    howItWorks: {
+      title: 'Generate Your Digital Business Card in 4 Steps',
+      desc: 'Craft a professional virtual contact card in under a minute.',
+      steps: [
+        { step: '1', title: 'Input Contact Details', desc: 'Type your full name, phone number, email, company, and job title.' },
+        { step: '2', title: 'Customize Layout Visuals', desc: 'Choose a corporate layout, align custom colors, and integrate your professional logo.' },
+        { step: '3', title: 'Verify and Scan Test', desc: 'Direct your phone camera to the live preview to confirm all fields populate your address book properly.' },
+        { step: '4', title: 'Download and Display', desc: 'Export the graphic as SVG or high-resolution PNG. Display on name badges, emails, or back of phones.' }
+      ]
+    },
+    useCases: {
+      title: 'Where to Use Your Digital Card QR Code',
+      desc: 'Unleash frictionless contact sharing across all physical and digital touchpoints.',
+      items: [
+        { title: 'Name Badges at Conferences', desc: 'Print the QR code directly on your event badge to let delegates save your details in seconds.' },
+        { title: 'Email Signature Footers', desc: 'Insert the graphic at the end of your corporate emails for quick smartphone imports.' },
+        { title: 'Mobile Device Lock Screen', desc: 'Save the card QR as your phone wallpaper to share credentials quickly anywhere.' },
+        { title: 'Back of Physical Cards', desc: 'Print a small code on physical cards to act as a permanent bridge to your digital portfolio.' }
+      ]
+    },
+    faqs: [
+      { q: 'Is this digital business card generator free?', a: 'Yes! Generating static vCard QR codes on FreeQRGen.pro is 100% free with zero scan limits.' },
+      { q: 'Do people need a special app to scan the card?', a: 'No, default smartphone cameras read and parse vCard data automatically.' },
+      { q: 'Can I add social media links?', a: 'Yes! You can put your main profiles or portfolio page URL in the website fields.' }
+    ],
+    cta: {
+      title: 'Generate Your Digital vCard QR Code Now',
+      subtitle: 'Stand out at your next event, reduce paper waste, and connect with people instantly.',
+      buttonText: 'Initialize Digital Card',
+      typePreset: 'card',
+      defaultContent: 'BEGIN:VCARD\nFN:John Doe\nTEL:123456789\nEND:VCARD',
+      defaultName: 'My Contact Details'
+    }
+  },
+
+  'pdf-sharing-qr-generator': {
+    slug: 'pdf-sharing-qr-generator',
+    keyword: 'free pdf sharing qr code generator',
+    seoTitle: 'Free PDF Sharing QR Code Generator | Convert PDF to QR Codes',
+    metaDescription: 'Generate custom target links with our free PDF QR code generator. Allow readers to scan, view, and download PDF catalogs or documents.',
+    h1: 'Free PDF Sharing QR Code Generator',
+    intro: {
+      title: 'Bridge Print Materials and Document Delivery via Smart QRs',
+      text1: 'Manually typing long web links or search terms to locate menus, product catalogs, research papers, or floor guides on smartphones can frustrate users. Our free pdf qr code generator provides a clean, modern solution. By linking your web-hosted document URL to a scanable barcode, readers can view or download your PDF instantly.',
+      text2: 'From restaurant menus to architectural floor plans and product user manuals, this responsive generator makes document delivery incredibly simple. Customize standard grids, select elegant gradients, and place brand logos directly in the center of the key matrix.',
+      highlight: 'Make your physical manuals digital. Scan to view and download PDF documents.'
+    },
+    benefits: {
+      title: 'Top Benefits of Using Document QR Codes',
+      desc: 'Discover why professional businesses and event planners choose PDF codes to distribute documents.',
+      items: [
+        { title: 'Frictionless Document Delivery', desc: 'No more searching through file directories or folders. Scanners open and download precise pdf documents with a single scan.' },
+        { title: 'Substantially Reduce Printing Costs', desc: 'Stop spending budget printing bulky product guidelines or brochures. Share digital pdf booklets on single paper sheets.' },
+        { title: 'Instantly Update PDF Content', desc: 'Update and replace files on your web host anytime without having to reprint and change the physical QR code on tables.' },
+        { title: 'Eco-Friendly Exchanges', desc: 'Exchange user materials cleanly and digitally. Eliminate unnecessary page trash from commercial spaces.' },
+        { title: 'Works Natively on Mobile Cameras', desc: 'No third-party app installations needed. Mobile browsers read, render, and download files natively.' }
+      ]
+    },
+    features: {
+      title: 'Smart Features for Document Distribution Campaigns',
+      desc: 'Our developer-ready platform gives you ultimate control over document delivery, styles, and scans.',
+      items: [
+        { title: 'Dynamic Trackable Framework', desc: 'Optionally translate your links to measure scans, assess device metrics, and monitor traffic over time.' },
+        { title: 'High-Resolution Vector exports', desc: 'Download in SVG, PDF, or high-res PNG formats, ready for high-fidelity professional printing on any medium.' },
+        { title: 'Standout Color Palette Designs', desc: 'Apply professional gradient styles to match your corporate brand identity.' },
+        { title: 'Logo and Brand Centering', desc: 'Embed official icons or custom text overlays in the center of the grid safely.' }
+      ]
+    },
+    howItWorks: {
+      title: 'Convert Your Documents to QR Codes in 4 Steps',
+      desc: 'Getting your custom QR code ready takes less than two minutes of setup.',
+      steps: [
+        { step: '1', title: 'Paste Hosted PDF Link', desc: 'Upload your PDF to Google Drive, Dropbox, or your website, and paste the shared link into our URL field.' },
+        { step: '2', title: 'Stylize Table Visuals', desc: 'Choose colors matching your restaurant\'s style, select classy dot shapes, and adjust quiet zone margins.' },
+        { step: '3', title: 'Verify Scan Compatibility', desc: 'Scan the live canvas using your smartphone camera to ensure it opens your PDF link immediately.' },
+        { step: '4', title: 'Display and Distribute Code', desc: 'Deploy on physical packaging, booklets, and materials.' }
+      ]
+    },
+    useCases: {
+      title: 'Smart PDF QR Code Integrations Across Industries',
+      desc: 'Simplify ordering, streamline tables, and connect guests with online platforms seamlessly.',
+      items: [
+        { title: 'Restaurant Table Plaque PDF', desc: 'Display code frames on tables to let dining guests read menu options directly on their mobile devices.' },
+        { title: 'Product Assembly Booklets', desc: 'Print directly on packaging to encourage customers to view complete installation manuals.' },
+        { title: 'Real Estate Listing Documents', desc: 'Keep codes on card tags to guide buyers directly to floor plans or virtual house tours.' },
+        { title: 'Business Conference Handouts', desc: 'Display core video guides on podium stands to let delegates watch introductions later.' }
+      ]
+    },
+    faqs: [
+      { q: 'Is this free pdf qr code generator completely free?', a: 'Yes! Generating static document QR codes on our platform is 100% free with no scanning limits or expiry dates.' },
+      { q: 'Can I upload files directly into the QR generator?', a: 'To maintain our light server-side performance, copy files into Google Drive or web hosts, and paste shared links here.' },
+      { q: 'Can I change my PDF content without changing the QR code?', a: 'Yes! Simply overwrite the PDF on your web host (maintaining the same link URL), and our code routes readers to the updated document.' }
+    ],
+    cta: {
+      title: 'Convert Your Documents to QR Codes Now',
+      subtitle: 'Stand out from plain cards, replace outdated paper guides, and deliver interactive digital documents.',
+      buttonText: 'Initialize PDF Code',
+      typePreset: 'url',
+      defaultContent: 'https://example.com/document.pdf',
+      defaultName: 'My Shared PDF'
+    }
+  },
+
+  'barcode-generator': {
+    slug: 'barcode-generator',
+    keyword: 'free online barcode generator',
+    seoTitle: 'Free Barcode Generator | Generate 1D & 2D Barcodes Online',
+    metaDescription: 'Create free custom barcodes online. Supports standard 1D and 2D barcode schemas including Code 128, Code 39, EAN, UPC, and PDF417 formats for retail.',
+    h1: 'Free Online Barcode Generator',
+    intro: {
+      title: 'High-Fidelity Barcode Generation for Retail and Logistics',
+      text1: 'Managing product inventories, retail labeling, or shipping logistics requires precise and standards-compliant barcode symbologies. Our free online barcode generator offers a complete suite of standard formats to streamline operations.',
+      text2: 'Select from classic 1D styles or robust 2D matrix symbologies. Adjust label texts, sizes, colors, and margins instantly in our responsive browser workspace.',
+      highlight: 'Optimize inventory management. Generate standards-compliant barcodes in seconds.'
+    },
+    benefits: {
+      title: 'Top Benefits of Our Barcode Generator Tool',
+      desc: 'Maintain perfect operational standards with our versatile encoding studio.',
+      items: [
+        { title: 'Complete Format Library', desc: 'Generate Code 128, Code 39, EAN-13, UPC-A, PDF417, and more with instant verification.' },
+        { title: 'High-Resolution Vector Formats', desc: 'Export layouts as SVG, PDF, or high-density PNG for flawless high-quality printing on any label machine.' },
+        { title: 'Completely Client-Side and Secure', desc: 'All data strings are encoded directly within your secure local browser sandbox.' },
+        { title: 'Readable Helper Labels', desc: 'Toggle helper text and custom alphanumeric values below the code bars for human-readable tracking.' },
+        { title: 'No Installation Required', desc: 'Fully functional in any mobile or desktop web browser. Instant downloads with zero subscription limits.' }
+      ]
+    },
+    features: {
+      title: 'Robust Features Built for Warehouse Teams',
+      desc: 'Maintain optimal scanning reliability with standards-compliant barcodes.',
+      items: [
+        { title: 'Precise Dimension Calibrations', desc: 'Fine-tune bar width, element height, and quiet zone padding for industrial scanner hardware.' },
+        { title: 'Intelligent String Validation', desc: 'Our smart code verifies and checks input digits to prevent generation of invalid barcode formats.' },
+        { title: 'Custom Color Themes', desc: 'Change background and bar colors to blend beautifully with commercial retail packaging.' },
+        { title: 'Local Clipboard Integration', desc: 'Quickly copy values and paste bulk codes to process labels at light speed.' }
+      ]
+    },
+    howItWorks: {
+      title: 'How to Generate Your Custom Barcodes',
+      desc: 'Set up high-accuracy retail barcodes in under 30 seconds.',
+      steps: [
+        { step: '1', title: 'Select Barcode Symbology', desc: 'Choose Code 128, Code 39, EAN-13, UPC, or PDF417 based on your logistic or industry standards.' },
+        { step: '2', title: 'Input Alphanumeric Data', desc: 'Enter product IDs, serial numbers, price tags, or shipping details.' },
+        { step: '3', title: 'Adjust Styling Elements', desc: 'Adjust widths, colors, and choose whether to include helper text below the barcode lines.' },
+        { step: '4', title: 'Export and Print Labels', desc: 'Download in SVG vector format and print with any standard industrial or desktop thermal label printer.' }
+      ]
+    },
+    useCases: {
+      title: 'Versatile Uses Across Commercial Operations',
+      desc: 'Empower logistics and streamline workflows using clean barcode standards.',
+      items: [
+        { title: 'Retail Product Labeling', desc: 'Print UPC or EAN barcodes on consumer products to process checkout counters instantly.' },
+        { title: 'Warehouse Inventory Tracking', desc: 'Place Code 128 labels on storage shelves and boxes to track items via hand scanners.' },
+        { title: 'Event Ticketing & Badges', desc: 'Generate barcode passes on physical tickets to verify attendee admission at event gates.' },
+        { title: 'Office Asset Administration', desc: 'Tag hardware assets, laptops, and files for precise local identification.' }
+      ]
+    },
+    faqs: [
+      { q: 'Is this barcode generator tool free?', a: 'Yes! FreeQRGen.pro offers this tool 100% free of charge with no hidden cost or watermarks.' },
+      { q: 'Which barcode format should I choose?', a: 'Choose Code 128 for general alphanumeric tracking, EAN-13 or UPC-A for retail, and PDF417 for larger density data.' },
+      { q: 'Do these barcodes work on physical thermal printers?', a: 'Yes, download the SVG file and scale it to your label size. It will print with crisp, pixel-perfect contrast.' }
+    ],
+    cta: {
+      title: 'Generate Your Custom Barcodes Now',
+      subtitle: 'Streamline warehouse processing, reduce retail checkout friction, and organize logistics.',
+      buttonText: 'Initialize Barcode',
+      typePreset: 'text',
+      defaultContent: 'FREEQRGEN12345',
+      defaultName: 'My Product Code'
+    }
+  },
+
+  'bulk-qr-generator': {
+    slug: 'bulk-qr-generator',
+    keyword: 'free bulk qr code generator',
+    seoTitle: 'Free Bulk QR Code Generator | Generate QR Codes in Batch',
+    metaDescription: 'Generate customized QR codes in bulk. Upload a CSV or paste multiple links to download high-resolution batch QR codes with logos instantly.',
+    h1: 'Free Bulk QR Code Generator',
+    intro: {
+      title: 'Batch Process Hundreds of Custom QR Codes in Seconds',
+      text1: 'Manually configuring individual QR codes for large catalog items, inventory lists, or marketing campaigns is tedious and time-consuming. Our free bulk qr code generator automates this workflow.',
+      text2: 'Simply upload your spreadsheets, CSV sheets, or paste lists of links. Style them all at once, choose custom brand colors, and export them together as a single ZIP file.',
+      highlight: 'Save hours of manual effort. Process, style, and download batch QR codes instantly.'
+    },
+    benefits: {
+      title: 'Top Benefits of Bulk QR Code Processing',
+      desc: 'Experience professional automation built for high-performance marketing.',
+      items: [
+        { title: 'Stunning Time Reductions', desc: 'Produce hundreds of unique, stylized QR codes in less than a minute instead of hours of tedious copying.' },
+        { title: 'Unified Visual Branding', desc: 'Apply identical colors, frames, logos, and layouts across all codes in your batch.' },
+        { title: 'CSV Spreadsheet Import Support', desc: 'Upload standard spreadsheet files containing names and URLs to process batches immediately.' },
+        { title: 'Automated ZIP Downloads', desc: 'All generated images are compressed and packed into a single organized ZIP folder.' },
+        { title: 'Unlimited Free Conversions', desc: 'Process massive batches with zero cost, no registration, and no scanner limits.' }
+      ]
+    },
+    features: {
+      title: 'Smart Features Built for Dynamic Marketing Teams',
+      desc: 'Our developer-ready engine supports high-fidelity bulk workflows.',
+      items: [
+        { title: 'Dynamic Variable Formatting', desc: 'Map columns in your CSV files directly to QR code payloads and custom naming lists.' },
+        { title: 'Crisp Vector Output', desc: 'Generate batches in high-res PNG or print-ready SVG formats.' },
+        { title: 'Local Device Security', desc: 'Bulk processing takes place in your local browser. No CSV or user data is ever uploaded to our servers.' },
+        { title: 'Real-time Generation Progress', desc: 'Monitor progress live with a visual progress bar and estimated completion stats.' }
+      ]
+    },
+    howItWorks: {
+      title: 'Generate Batch QR Codes in 4 Quick Steps',
+      desc: 'Get your large campaigns up and running in moments.',
+      steps: [
+        { step: '1', title: 'Upload CSV or Paste Links', desc: 'Drag-and-drop your inventory CSV or paste lists of URLs directly in the input box.' },
+        { step: '2', title: 'Configure Column Settings', desc: 'Select which column holds the QR content and which handles the output filename.' },
+        { step: '3', title: 'Stylize Design Templates', desc: 'Apply your corporate colors, rounded corners, and logo to style the entire batch.' },
+        { step: '4', title: 'Process and Download ZIP', desc: 'Click generate, watch the progress bar, and download your organized ZIP folder.' }
+      ]
+    },
+    useCases: {
+      title: 'Where Bulk QR Processing is Essential',
+      desc: 'Scale physical-to-digital touchpoints for logistics and large marketing events.',
+      items: [
+        { title: 'Real Estate Signages', desc: 'Generate unique QR badges for hundreds of housing properties simultaneously.' },
+        { title: 'Large Corporate Seminars', desc: 'Produce custom name badge QR codes containing unique VCF details for delegates.' },
+        { title: 'E-commerce Asset Tracking', desc: 'Generate product-specific URLs in bulk for printed shipping labels.' },
+        { title: 'Restaurant Dining Placards', desc: 'Create unique table-specific scan links to identify dining zones instantly.' }
+      ]
+    },
+    faqs: [
+      { q: 'Is there a limit to how many codes I can generate in bulk?', a: 'No! Our tool runs client-side inside your browser, allowing you to generate hundreds of codes at no cost.' },
+      { q: 'How should I format my CSV file?', a: 'Create a simple CSV file with columns like "URL" and "Name". You will map these columns in our tool.' },
+      { q: 'Are logos supported in bulk generation?', a: 'Yes! Simply upload your logo in our styling panel, and it will be embedded into every QR code in the batch.' }
+    ],
+    cta: {
+      title: 'Generate Bulk QR Codes Now',
+      subtitle: 'Streamline your marketing, automate your inventory, and save precious administrative hours.',
+      buttonText: 'Initialize Bulk QR',
+      typePreset: 'url',
+      defaultContent: 'https://example.com/item1\nhttps://example.com/item2',
+      defaultName: 'My Bulk List'
+    }
+  },
+
+  'animated-qr-generator': {
+    slug: 'animated-qr-generator',
+    keyword: 'free animated qr code generator',
+    seoTitle: 'Free Animated QR Code Generator | Dynamic & Moving QR Codes',
+    metaDescription: 'Make your QR codes stand out with beautiful animated styles, loop transitions, custom GIF overlays, and eye-catching movement patterns.',
+    h1: 'Free Animated QR Code Generator',
+    intro: {
+      title: 'Capture High Scans and Engagement with Animated QRs',
+      text1: 'Standard black-and-white static QR codes are easily ignored. Our free animated qr code generator adds movement, fluid styling, and eye-catching loops to captivate scanners.',
+      text2: 'Upload custom GIF files, select modern animation presets, and apply smooth transitions to increase scan rates and client engagement.',
+      highlight: 'Boost conversion rates by up to 40%. Deliver interactive moving QR codes.'
+    },
+    benefits: {
+      title: 'Top Benefits of Animated QR Codes',
+      desc: 'Command attention in crowded commercial environments.',
+      items: [
+        { title: 'Drastically Increase Scan Rates', desc: 'Motion naturally draws the human eye, leading to higher engagement and scan frequency.' },
+        { title: 'Modern Creative Branding', desc: 'Align your business with cutting-edge visual technology and interactive presentation.' },
+        { title: 'Universal Scan Capability', desc: 'All motion frames are carefully calibrated to ensure that smartphones can scan the code reliably.' },
+        { title: 'High-Fidelity GIF Support', desc: 'Upload your favorite moving stickers, brand logos, or animated background loops.' },
+        { title: 'Free Creative Control', desc: 'Design stunning dynamic assets without subscription walls or expensive agency contracts.' }
+      ]
+    },
+    features: {
+      title: 'Dynamic Features Built for Modern Advertisers',
+      desc: 'Combine custom animations with industrial scan reliability.',
+      items: [
+        { title: 'Smart Frame Calibration', desc: 'Our algorithms keep active matrix layers stable and highly visible over shifting background loops.' },
+        { title: 'Smooth Loop Transitions', desc: 'Choose from a variety of clean, professional transitions and fluid movement patterns.' },
+        { title: 'Interactive Logo Overlays', desc: 'Place glowing, bouncing, or rotating brand logos at the center of the key grid.' },
+        { title: 'Optimized Mobile Performance', desc: 'All animated structures are rendered locally, ensuring snappy visual feedback.' }
+      ]
+    },
+    howItWorks: {
+      title: 'Create Your Animated QR Code in 4 Steps',
+      desc: 'Add beautiful motion graphics in under a minute.',
+      steps: [
+        { step: '1', title: 'Paste Destination URL', desc: 'Type or paste the link, social page, or document URL you want scanners to visit.' },
+        { step: '2', title: 'Select Animation Style', desc: 'Select from our beautiful collection of modern movement layouts and transitions.' },
+        { step: '3', title: 'Upload Custom GIF', desc: 'Optionally drag-and-drop a custom looping GIF file to set as your background frame.' },
+        { step: '4', title: 'Download and Deploy', desc: 'Export the finished animation, display on digital billboards, website headers, or social media pages.' }
+      ]
+    },
+    useCases: {
+      title: 'Best Placements for Animated QR Codes',
+      desc: 'Leverage motion graphics across high-intent digital environments.',
+      items: [
+        { title: 'Interactive Digital Signage', desc: 'Deploy moving QR codes on television screens, conference displays, or mall signboards.' },
+        { title: 'Social Media Campaigns', desc: 'Post animated QR badges on Instagram or TikTok stories to drive traffic to your bio link.' },
+        { title: 'E-commerce Store Banners', desc: 'Display rotating code blocks on website headers to offer scan-to-claim checkout coupon codes.' },
+        { title: 'App Install Campaigns', desc: 'Embed glowing app install codes on landing pages to direct users to mobile stores.' }
+      ]
+    },
+    faqs: [
+      { q: 'Do these animated QR codes work on all smartphones?', a: 'Yes! We run precise rendering tests to make sure that standard mobile camera apps read the codes easily.' },
+      { q: 'Can I print animated QR codes?', a: 'Printing will show a static high-contrast version of the code. For motion, display on digital screens.' },
+      { q: 'What is the best format to export?', a: 'We recommend exporting as a looping GIF or high-quality MP4 for digital display.' }
+    ],
+    cta: {
+      title: 'Create Your Animated QR Now',
+      subtitle: 'Stand out from static competition, attract modern audiences, and boost your conversion rates.',
+      buttonText: 'Initialize Animated QR',
+      typePreset: 'url',
+      defaultContent: 'https://example.com/promo',
+      defaultName: 'My Promo Link'
+    }
+  },
+
+  'payment-qr-generator': {
+    slug: 'payment-qr-generator',
+    keyword: 'free payment qr code generator',
+    seoTitle: 'Free Payment QR Code Generator | PayPal, IBAN & UPI QR Codes',
+    metaDescription: 'Generate secure, customized payment QR codes. Accept PayPal, Venmo, Cash App, UPI, and bank IBAN transfers with a frictionless mobile scan.',
+    h1: 'Free Payment QR Code Generator',
+    intro: {
+      title: 'Simplify Checkout and Get Paid Instantly on Any Device',
+      text1: 'Typing out complex bank IBANs, payment links, or account names on mobile devices is tedious and prone to expensive mistakes. Our payment QR generator provides a secure alternative.',
+      text2: 'Combine your commercial checkout URLs, PayPal links, or UPI details into one custom QR code. Customers scan, confirm the amount, and pay instantly.',
+      highlight: 'Eliminate payment friction. Scan to transfer securely on major networks.'
+    },
+    benefits: {
+      title: 'Top Benefits of Payment QR Codes',
+      desc: 'Increase your business conversion rate with modern scan-to-pay options.',
+      items: [
+        { title: 'Universal App Compatibility', desc: 'Supports PayPal, Venmo, Cash App, UPI, WeChat Pay, Pix, and standard bank IBAN codes.' },
+        { title: 'Zero Manual Account Typos', desc: 'Guarantees that clients route funds to your correct bank account or digital wallet.' },
+        { title: 'Secure Client-Side Safety', desc: 'Your financial credentials are packed into the barcode directly inside your local browser.' },
+        { title: 'Instant Mobile Processing', desc: 'Directs scanners straight to their trusted payment apps to complete transactions safely.' },
+        { title: 'Completely Free of Charge', desc: 'No transaction fees, subscription requirements, or scan limits from our platform.' }
+      ]
+    },
+    features: {
+      title: 'Advanced Features for Frictionless Commerce',
+      desc: 'Design beautiful, highly functional payment codes for physical point-of-sale areas.',
+      items: [
+        { title: 'Multi-Network Encoding', desc: 'Easily select your payment method and input specific currency or transfer amount tags.' },
+        { title: 'Custom Brand Colors', desc: 'Modify foreground palettes and insert financial logos for high-trust presentation.' },
+        { title: 'Crisp Vector Files', desc: 'Download in SVG, PDF, or PNG, ready for stickers, invoice cards, and register stands.' },
+        { title: 'Flexible Error Correction', desc: 'Maintains up to 30% error correction to ensure scanability even on crumpled receipts.' }
+      ]
+    },
+    howItWorks: {
+      title: 'How to Generate Your Payment QR Code',
+      desc: 'Configure your payment receiver badge in under a minute.',
+      steps: [
+        { step: '1', title: 'Choose Payment Network', desc: 'Select PayPal, UPI, Venmo, Cash App, or standard IBAN from our options.' },
+        { step: '2', title: 'Enter Payment Details', desc: 'Type your secure username, email, UPI ID, or bank routing credentials carefully.' },
+        { step: '3', title: 'Add Custom Logos', desc: 'Embed high-trust symbols like PayPal or Visa directly in the grid centerpiece.' },
+        { step: '4', title: 'Export and Print Graphics', desc: 'Download high-quality vector images, place them on registers, invoices, or websites.' }
+      ]
+    },
+    useCases: {
+      title: 'Where to Use Payment QR Codes',
+      desc: 'Bring swift, contactless checkouts to retail and freelance services.',
+      items: [
+        { title: 'Physical Checkout Registers', desc: 'Display secure scan-to-pay plaques on countertops to reduce waiting times.' },
+        { title: 'Digital Invoice PDF Files', desc: 'Embed QR codes in invoice documents to let corporate clients pay directly from print copies.' },
+        { title: 'Tip Jars for Staff', desc: 'Enable quick, personal cashless tips for hotel, food, and restaurant teams.' },
+        { title: 'Charity Fundraising Events', desc: 'Encourage rapid micro-donations by placing payment QRs on flyers and booklets.' }
+      ]
+    },
+    faqs: [
+      { q: 'Is this payment generator secure?', a: 'Yes! All encoding happens locally inside your browser. We never transmit or store your financial details.' },
+      { q: 'Do you charge transaction fees?', a: 'No, FreeQRGen.pro is 100% free with no transaction fees or recurring subscriptions.' },
+      { q: 'Does this work for international customers?', a: 'Yes, international payment networks like PayPal and bank IBAN standards are fully supported.' }
+    ],
+    cta: {
+      title: 'Generate Your Payment QR Code Now',
+      subtitle: 'Modernize your register checkout, accept cashless tips, and get paid with zero friction.',
+      buttonText: 'Initialize Payment QR',
+      typePreset: 'url',
+      defaultContent: 'https://paypal.me/mybusiness',
+      defaultName: 'My PayPal Link'
+    }
+  },
+
+  'crypto-qr-generator': {
+    slug: 'crypto-qr-generator',
+    keyword: 'free crypto wallet qr code generator',
+    seoTitle: 'Free Crypto QR Code Generator | Bitcoin & Ethereum Wallet QRs',
+    metaDescription: 'Generate secure, custom QR codes for cryptocurrency wallet addresses. Supports Bitcoin, Ethereum, Solana, and major crypto networks.',
+    h1: 'Free Crypto QR Code Generator',
+    intro: {
+      title: 'Avoid Expensive Crypto Address Typos with Secure QRs',
+      text1: 'Cryptocurrency addresses are long, complex, and impossible to type manually without risk. A single spelling mistake can lead to a permanent loss of funds. Our crypto QR generator eliminates this danger.',
+      text2: 'Select your blockchain network, paste your wallet address, and generate a customized scanable barcode to receive coins instantly and securely.',
+      highlight: 'Zero address mistakes. Share wallet coordinates with absolute confidence.'
+    },
+    benefits: {
+      title: 'Top Benefits of Crypto QR Codes',
+      desc: 'Accept on-chain donations and transactions with maximum speed.',
+      items: [
+        { title: 'Absolute Typo Prevention', desc: 'Saves your clients from copy-pasting or manually typing long cryptographic addresses.' },
+        { title: 'Multi-Chain Compatibility', desc: 'Supports Bitcoin (BTC), Ethereum (ETH), Solana (SOL), Litecoin (LTC), and other major altcoins.' },
+        { title: 'High Trust Customization', desc: 'Style the matrix layout, change colors, and embed recognizable blockchain brand symbols.' },
+        { title: 'Secure Client-Side Rendering', desc: 'Your private keys are never accessed, and your public addresses are processed completely inside your browser.' },
+        { title: 'Instant Mobile Scanning', desc: 'Flawlessly compatible with trust wallet apps, Coinbase, MetaMask, and hardware cold wallets.' }
+      ]
+    },
+    features: {
+      title: 'Advanced Features for Blockchain Transactions',
+      desc: 'Deliver pristine, high-contrast wallet codes optimized for mobile scans.',
+      items: [
+        { title: 'Standard URI Formatting', desc: 'Generates standards-compliant BIP-21 links to pre-populate address fields and transfer values.' },
+        { title: 'Vector-Grade Downloads', desc: 'Export as SVG or PDF, perfect for physical donation signs, stream overlay cards, or posters.' },
+        { title: 'Logo Centering options', desc: 'Incorporate BTC, ETH, or custom corporate symbols directly in the matrix center.' },
+        { title: 'Scan Error Protection', desc: 'High redundancy ensures your printed wallet addresses scan correctly in any lighting condition.' }
+      ]
+    },
+    howItWorks: {
+      title: 'Create Your Blockchain QR Code in 4 Steps',
+      desc: 'Set up safe, scanable cryptocurrency wallets in seconds.',
+      steps: [
+        { step: '1', title: 'Select Blockchain Network', desc: 'Choose Bitcoin, Ethereum, Solana, Doge, or other leading cryptocurrency formats.' },
+        { step: '2', title: 'Paste Public Address', desc: 'Enter your public receiving address carefully (never share your private keys).' },
+        { step: '3', title: 'Personalize Style Details', desc: 'Apply brand colors, select clean eye designs, and insert the network logo.' },
+        { step: '4', title: 'Export and Share', desc: 'Download high-quality vector images to display on streams, checkout stands, or websites.' }
+      ]
+    },
+    useCases: {
+      title: 'Where to Share Crypto QR Codes',
+      desc: 'Accept decentralized payments seamlessly across digital and physical platforms.',
+      items: [
+        { title: 'Live Streaming Overlays', desc: 'Display your BTC or ETH donation badges on Twitch or YouTube stream frames.' },
+        { title: 'E-commerce Checkout Options', desc: 'Offer on-chain payment options on your online store checkout page.' },
+        { title: 'Charity Donation Banners', desc: 'Encourage direct global donations with instant cryptocurrency scanning cards.' },
+        { title: 'Point-of-Sale POS Signs', desc: 'Display public keys at retail registers for swift, decentralized checkouts.' }
+      ]
+    },
+    faqs: [
+      { q: 'Is it safe to generate crypto QR codes here?', a: 'Yes! We only require your public deposit address. All encoding is handled locally in your browser.' },
+      { q: 'Does this generator support custom token addresses?', a: 'Yes, select Ethereum or Solana and paste your ERC-20, SPL, or token deposit address.' },
+      { q: 'Are transaction fees applied?', a: 'We do not charge any fees. Standard network gas or mining fees apply on the blockchain.' }
+    ],
+    cta: {
+      title: 'Generate Your Crypto Wallet QR Now',
+      subtitle: 'Ensure safe deposits, prevent transaction errors, and welcome decentralized payments.',
+      buttonText: 'Initialize Crypto QR',
+      typePreset: 'crypto',
+      defaultContent: 'bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+      defaultName: 'My Bitcoin Wallet'
+    }
+  },
+
+  'app-store-qr-generator': {
+    slug: 'app-store-qr-generator',
+    keyword: 'free app store qr code generator',
+    seoTitle: 'Free App Store & Play Store QR Code Generator',
+    metaDescription: 'Create a single smart QR code for both Apple App Store and Google Play Store. Automatically redirect scanners based on their device OS.',
+    h1: 'Free App Store & Play Store QR Code Generator',
+    intro: {
+      title: 'Drive High Downloads with One Single Smart QR Code',
+      text1: 'Displaying multiple separate QR codes for iOS and Android on promotional posters is confusing, cluttering, and wastes valuable ad space. Our free app store qr code generator resolves this issue.',
+      text2: 'Configure a single code that automatically identifies whether a user is holding an iPhone or an Android device, directing them to the correct app store immediately.',
+      highlight: 'Double your app install rate. Scan to download instantly on iOS or Android.'
+    },
+    benefits: {
+      title: 'Top Benefits of App Store QR Codes',
+      desc: 'Maximize download campaigns with smart, automated mobile redirection.',
+      items: [
+        { title: 'Single Code Simplicity', desc: 'Promote your mobile application using only one clean, centralized QR code.' },
+        { title: 'Automated Device Redirection', desc: 'Detects the scanner OS instantly and redirects them to the App Store or Google Play.' },
+        { title: 'Custom App Brand Colors', desc: 'Personalize designs, customize borders, and include your app logo in the center.' },
+        { title: 'High-Performance Print Quality', desc: 'Download vector files that look crisp on packaging, flyers, and digital screens.' },
+        { title: 'Completely Free Analytics', desc: 'Save your configuration and track overall scan rates and mobile OS distributions.' }
+      ]
+    },
+    features: {
+      title: 'Enterprise Features for App Launch Teams',
+      desc: 'Deliver frictionless installation paths using smart mobile routing structures.',
+      items: [
+        { title: 'Fallback URL Configuration', desc: 'Provide a backup website link for scanners accessing the code via desktop browsers.' },
+        { title: 'Vector-Grade SVG Exports', desc: 'Export high-resolution vectors suitable for massive outdoor banners or tiny flyers.' },
+        { title: 'Logo Centering Option', desc: 'Place your App icon or custom download symbols right in the center grid.' },
+        { title: 'Dynamic Scan Tracking', desc: 'Measure ad ROI by analyzing scan counts and peak tracking hours.' }
+      ]
+    },
+    howItWorks: {
+      title: 'How to Create Your Smart App Store QR Code',
+      desc: 'Set up an automated mobile download campaign in less than 60 seconds.',
+      steps: [
+        { step: '1', title: 'Input App Store Links', desc: 'Paste your Apple App Store URL and your Google Play Store URL into the fields.' },
+        { step: '2', title: 'Set Fallback Web URL', desc: 'Provide a desktop fallback link (e.g. your website) for non-mobile scanners.' },
+        { step: '3', title: 'Personalize Visual Theme', desc: 'Add brand colors, rounded corners, and embed your mobile app icon.' },
+        { step: '4', title: 'Download and Deploy', desc: 'Export in PNG, SVG, or PDF formats, print them, and place them on packaging or social media.' }
+      ]
+    },
+    useCases: {
+      title: 'Where to Deploy App Store QR Codes',
+      desc: 'Accelerate your user growth by removing friction from download paths.',
+      items: [
+        { title: 'Consumer Product Packaging', desc: 'Print download codes directly on boxes to encourage quick registrations.' },
+        { title: 'Event Display Banners', desc: 'Feature massive smart QRs at launch parties and conferences to drive immediate downloads.' },
+        { title: 'Website Landing Pages', desc: 'Provide a desktop fallback QR code to let visitors scan and install while browsing.' },
+        { title: 'Social Media Promotion', desc: 'Share app download badges on online channels to drive mobile traffic.' }
+      ]
+    },
+    faqs: [
+      { q: 'How does the device redirection work?', a: 'Our smart tracking server detects the scanner user-agent and automatically forwards them to the correct store.' },
+      { q: 'Is this app store QR generator free?', a: 'Yes! Generating static and dynamic app store redirects on FreeQRGen.pro is completely free.' },
+      { q: 'Can I track how many people downloaded?', a: 'Yes, save the configuration in your account to monitor scan rates and device breakdowns.' }
+    ],
+    cta: {
+      title: 'Create Your App Store QR Code Now',
+      subtitle: 'Drive high downloads, reduce install friction, and elevate mobile engagement.',
+      buttonText: 'Initialize App Store QR',
+      typePreset: 'url',
+      defaultContent: 'https://apps.apple.com',
+      defaultName: 'My App Link'
+    }
+  },
+
+  'location-qr-generator': {
+    slug: 'location-qr-generator',
+    keyword: 'free google maps location qr code generator',
+    seoTitle: 'Free Location QR Code Generator | Google Maps QR Creator',
+    metaDescription: 'Generate customized location QR codes for Google Maps. Let clients find your retail shop, restaurant, or event venue instantly with a simple scan.',
+    h1: 'Free Location QR Code Generator',
+    intro: {
+      title: 'Guide Visitors Straight to Your Doorstep with Smart QRs',
+      text1: 'Manually typing long addresses or searching for complex retail names on mobile maps can lead to navigation errors. Our location QR generator provides a direct path.',
+      text2: 'Encode exact latitude and longitude coordinates or your Google Maps share link into a clean QR code. Scanners open their default map apps and get driving directions instantly.',
+      highlight: 'Zero lost visitors. Provide precise coordinates and instant GPS routing.'
+    },
+    benefits: {
+      title: 'Top Benefits of Location QR Codes',
+      desc: 'Optimize foot traffic and simplify travel to your physical store.',
+      items: [
+        { title: 'Direct GPS Navigation', desc: 'Directs mobile scanners straight to Google Maps, Apple Maps, or Waze with one tap.' },
+        { title: 'Prevent Address Errors', desc: 'Eliminates mistakes caused by typing confusing street names or ZIP codes.' },
+        { title: 'Great for Print Marketing', desc: 'Place on flyers, postcards, and invitations so attendees find event venues easily.' },
+        { title: 'Fully Client-Side Security', desc: 'All latitude and longitude inputs are encoded directly inside your local browser.' },
+        { title: 'Free Unlimited Scans', desc: 'Generate high-quality location badges at no cost with zero scanning limits.' }
+      ]
+    },
+    features: {
+      title: 'Advanced Features for Retail and Event Spaces',
+      desc: 'Combine custom visual styling with reliable, high-precision geo-coordinates.',
+      items: [
+        { title: 'Exact Lat/Lng Coordinates', desc: 'Supports standard geo-coordinates to target remote parks, food stalls, or unnumbered plots.' },
+        { title: 'Vector-Grade Scale Output', desc: 'Export crisp SVGs ready for store window decals, poster banners, or booklets.' },
+        { title: 'Custom Map Logo Centering', desc: 'Embed map pins or brand icons right in the center of the key matrix.' },
+        { title: 'High Scan Reliability', desc: 'Our layouts utilize high-contrast margins for reliable scanning in outdoor conditions.' }
+      ]
+    },
+    howItWorks: {
+      title: 'Create Your Location QR Code in 4 Steps',
+      desc: 'Configure precise driving routes for your clients in under a minute.',
+      steps: [
+        { step: '1', title: 'Input Address or Coordinates', desc: 'Paste your Google Maps link or enter your exact latitude and longitude details.' },
+        { step: '2', title: 'Choose Brand Theme Colors', desc: 'Select location-appropriate colors, custom grid patterns, and add quiet zones.' },
+        { step: '3', title: 'Perform a Real Scan Test', desc: 'Aim your phone camera at the preview to ensure it triggers your default maps app correctly.' },
+        { step: '4', title: 'Download and Display', desc: 'Export your finished graphic as SVG or high-resolution PNG. Place on ad materials or store windows.' }
+      ]
+    },
+    useCases: {
+      title: 'Where to Use Location QR Codes',
+      desc: 'Help customers find your venue, office, or event space effortlessly.',
+      items: [
+        { title: 'Retail Shop Window Decals', desc: 'Place on glass panels to let passersby save your coordinates or check opening hours.' },
+        { title: 'Wedding & Party Invitations', desc: 'Print on invitation cards to let guests navigate straight to the event venue.' },
+        { title: 'Real Estate Yard Signboards', desc: 'Embed QR badges to guide house buyers directly to properties on open house days.' },
+        { title: 'Public Transport Station Stops', desc: 'Help travelers navigate local routes by providing precise coordinates on signage.' }
+      ]
+    },
+    faqs: [
+      { q: 'Do readers need special apps to navigate?', a: 'No, default smartphone cameras open standard mapping services like Google Maps or Apple Maps natively.' },
+      { q: 'Is this location generator free?', a: 'Yes! Creating geo or location QR codes on FreeQRGen.pro is completely free.' },
+      { q: 'How do I get my exact coordinates?', a: 'Search for your location on Google Maps, right-click, and copy the latitude and longitude numbers.' }
+    ],
+    cta: {
+      title: 'Generate Your Location QR Code Now',
+      subtitle: 'Make navigation simple, boost foot traffic, and guide guests straight to your venue.',
+      buttonText: 'Initialize Location QR',
+      typePreset: 'geo',
+      defaultContent: 'geo:37.7749,-122.4194',
+      defaultName: 'My Store Coordinates'
+    }
   }
 };

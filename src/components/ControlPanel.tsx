@@ -443,7 +443,7 @@ export default function ControlPanel({ currentProject,
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col gap-6"
+      className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-4 sm:p-6 shadow-sm flex flex-col gap-4 sm:gap-6"
     >
       {/* Scope Title */}
       <motion.div variants={itemVariants}>

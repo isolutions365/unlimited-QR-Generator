@@ -95,7 +95,17 @@ export const SITEMAP_ROUTES = [
   { path: '/compare', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 },
   { path: '/solutions', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 },
   { path: '/industries', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 },
-  { path: '/use-cases', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 }
+  { path: '/use-cases', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 },
+  { path: '/restaurant-menu-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/digital-card-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/pdf-sharing-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/barcode-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/bulk-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/animated-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/payment-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/crypto-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/app-store-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/location-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 }
 ];
 
 /**
@@ -1265,6 +1275,77 @@ export default function App() {
     }
   }, [cleanPath]);
 
+  // Synchronize state from direct URLs on mount/navigation
+  useEffect(() => {
+    const currentSlug = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
+    if (currentSlug === 'restaurant-menu-qr-generator') {
+      setActiveTab('menu');
+    } else if (currentSlug === 'digital-card-qr-generator') {
+      setActiveTab('card');
+    } else if (currentSlug === 'pdf-sharing-qr-generator') {
+      setActiveTab('pdf');
+    } else if (currentSlug === 'barcode-generator') {
+      setActiveTab('barcode');
+    } else if (currentSlug === 'bulk-qr-generator') {
+      setActiveTab('bulk');
+    } else if (currentSlug === 'animated-qr-generator') {
+      setActiveTab('animations');
+    } else if (currentSlug === 'payment-qr-generator') {
+      setActiveTab('create');
+      setCurrentProject(prev => {
+        if (prev.type !== 'payment') {
+          return {
+            ...prev,
+            type: 'payment',
+            content: prev.content && prev.content.startsWith('http') ? prev.content : 'https://paypal.me/',
+            name: prev.name || 'My Payment QR'
+          };
+        }
+        return prev;
+      });
+    } else if (currentSlug === 'crypto-qr-generator') {
+      setActiveTab('create');
+      setCurrentProject(prev => {
+        if (prev.type !== 'crypto') {
+          return {
+            ...prev,
+            type: 'crypto',
+            content: prev.content && prev.content.startsWith('bitcoin:') ? prev.content : 'bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+            name: prev.name || 'My Crypto QR'
+          };
+        }
+        return prev;
+      });
+    } else if (currentSlug === 'app-store-qr-generator') {
+      setActiveTab('create');
+      setCurrentProject(prev => {
+        if (prev.type !== 'app') {
+          return {
+            ...prev,
+            type: 'app',
+            content: prev.content && prev.content.startsWith('{') ? prev.content : JSON.stringify({ ios: 'https://apps.apple.com', android: 'https://play.google.com', fallback: 'https://apps.apple.com' }),
+            name: prev.name || 'My App QR',
+            trackingEnabled: true
+          };
+        }
+        return prev;
+      });
+    } else if (currentSlug === 'location-qr-generator') {
+      setActiveTab('create');
+      setCurrentProject(prev => {
+        if (prev.type !== 'geo') {
+          return {
+            ...prev,
+            type: 'geo',
+            content: prev.content && prev.content.startsWith('geo:') ? prev.content : 'geo:37.7749,-122.4194',
+            name: prev.name || 'My Location QR'
+          };
+        }
+        return prev;
+      });
+    }
+  }, [cleanPath]);
+
   const navigateTo = (path: string) => {
     const { cleanPath: targetClean } = extractLocaleAndPath(path);
     if (['/signup', '/register'].includes(targetClean)) {
@@ -1296,6 +1377,31 @@ export default function App() {
     content: string;
     name: string;
   }) => {
+    const currentSlug = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
+    let targetTab: AppTab = 'create';
+    
+    if (currentSlug === 'restaurant-menu-qr-generator' || currentSlug === 'restaurant-qr-generator') {
+      targetTab = 'menu';
+    } else if (currentSlug === 'digital-card-qr-generator' || currentSlug === 'vcard-qr-generator') {
+      targetTab = 'card';
+    } else if (currentSlug === 'pdf-sharing-qr-generator' || currentSlug === 'pdf-qr-generator') {
+      targetTab = 'pdf';
+    } else if (currentSlug === 'barcode-generator') {
+      targetTab = 'barcode';
+    } else if (currentSlug === 'bulk-qr-generator') {
+      targetTab = 'bulk';
+    } else if (currentSlug === 'animated-qr-generator') {
+      targetTab = 'animations';
+    } else if (preset.type === 'payment') {
+      targetTab = 'create';
+    } else if (preset.type === 'crypto') {
+      targetTab = 'create';
+    } else if (preset.type === 'app') {
+      targetTab = 'create';
+    } else if (preset.type === 'geo') {
+      targetTab = 'create';
+    }
+
     setCurrentProject({
       ...currentProject,
       type: preset.type,
@@ -1303,7 +1409,7 @@ export default function App() {
       name: preset.name
     });
     playAudioSound('generate', soundSettings);
-    setActiveTab('create');
+    setActiveTab(targetTab);
     navigateTo('/');
   };
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
@@ -2426,10 +2532,10 @@ export default function App() {
         )}
 
         {activeTab === 'create' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start">
             
             {/* Left side Workspace Customize controls */}
-            <div className="lg:col-span-7 flex flex-col gap-6">
+            <div className="lg:col-span-7 flex flex-col gap-4 lg:gap-6">
               <ControlPanel
                 currentProject={currentProject}
                 onChange={setCurrentProject}
@@ -2455,7 +2561,7 @@ export default function App() {
             </div>
 
             {/* Right side Live Previews boards */}
-            <div className="lg:col-span-5 flex flex-col gap-6">
+            <div className="lg:col-span-5 flex flex-col gap-4 lg:gap-6">
               <PreviewPanel 
                 currentProject={currentProject} 
                 onTestScan={handleSimTestScan} 
@@ -2694,9 +2800,9 @@ export default function App() {
                   </div>
                   <a
                     id="tool-restaurant-link"
-                    href="/restaurant-qr-generator"
-                    onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
-                    className="mt-4 text-xs font-bold text-amber-800 hover:text-amber-950 flex items-center gap-1.5 ltr-lock"
+                    href="/restaurant-menu-qr-generator"
+                    onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-menu-qr-generator'); }}
+                    className="mt-4 text-xs font-bold text-amber-800 hover:text-amber-955 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.restaurant.btn')}
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ltr-lock" />
@@ -2716,8 +2822,8 @@ export default function App() {
                   </div>
                   <a
                     id="tool-vcard-link"
-                    href="/vcard-qr-generator"
-                    onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
+                    href="/digital-card-qr-generator"
+                    onClick={(e) => { e.preventDefault(); navigateTo('/digital-card-qr-generator'); }}
                     className="mt-4 text-xs font-bold text-purple-600 hover:text-purple-800 flex items-center gap-1.5 ltr-lock"
                   >
                     {t('directory.vcard.btn')}
@@ -2973,8 +3079,8 @@ export default function App() {
 
                         <a
                           id="recent-vcard-link"
-                          href="/vcard-qr-generator"
-                          onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }}
+                          href="/digital-card-qr-generator"
+                          onClick={(e) => { e.preventDefault(); navigateTo('/digital-card-qr-generator'); }}
                           className="mt-4 text-xs font-bold text-purple-600 group-hover:text-purple-800 flex items-center gap-1 ltr-lock"
                         >
                           {t('recent.card.vcard.link')}
@@ -3016,8 +3122,8 @@ export default function App() {
 
                         <a
                           id="recent-restaurant-link"
-                          href="/restaurant-qr-generator"
-                          onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }}
+                          href="/restaurant-menu-qr-generator"
+                          onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-menu-qr-generator'); }}
                           className="mt-4 text-xs font-bold text-amber-800 group-hover:text-amber-955 flex items-center gap-1 ltr-lock"
                         >
                           {t('recent.card.restaurant.link')}
@@ -3236,7 +3342,7 @@ export default function App() {
               <a href="/sms-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/sms-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 {t('footer.solutionSms', '📱 Free SMS QR Code Generator')}
               </a>
-              <a href="/vcard-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/vcard-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/digital-card-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/digital-card-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 {t('footer.solutionVcard', '📇 Free vCard QR Code Generator')}
               </a>
               <a href="/url-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/url-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
@@ -3245,7 +3351,7 @@ export default function App() {
               <a href="/business-card-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/business-card-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 {t('footer.solutionBusinessCard', '💼 Free Business Card QR Code')}
               </a>
-              <a href="/restaurant-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/restaurant-menu-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-menu-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 {t('footer.solutionRestaurant', '🍔 Free Restaurant QR Code')}
               </a>
               <a href="/facebook-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/facebook-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
@@ -3257,7 +3363,7 @@ export default function App() {
               <a href="/youtube-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/youtube-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 {t('footer.solutionYoutube', '🎥 Free YouTube QR Code')}
               </a>
-              <a href="/pdf-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/pdf-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
+              <a href="/pdf-sharing-qr-generator" onClick={(e) => { e.preventDefault(); navigateTo('/pdf-sharing-qr-generator'); }} className="text-left text-xs text-slate-600 hover:text-indigo-600 hover:font-bold cursor-pointer transition-colors truncate">
                 {t('footer.solutionPdf', '📄 Free PDF QR Code Generator')}
               </a>
             </div>
