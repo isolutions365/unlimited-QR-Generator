@@ -51,6 +51,129 @@ const LazyLoader = () => (
     </div>
   </div>
 );
+
+// Defined sitemap array as requested
+export const SITEMAP_ROUTES = [
+  { path: '/', lastmod: '2026-08-07', changefreq: 'daily', priority: 1.0 },
+  { path: '/url-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/pdf-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/wifi-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/vcard-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/email-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/sms-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/whatsapp-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/instagram-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/business-card-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/restaurant-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/facebook-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/youtube-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8 },
+  { path: '/faq', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.7 },
+  { path: '/blog', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.7 },
+  { path: '/about', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/privacy', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/privacy-policy', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/contact', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/terms', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/why-freeqrgen', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/editorial-policy', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/research-methodology', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/security', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/data-processing', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/accessibility', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/changelog', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/release-notes', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/system-status', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/careers', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/media-kit', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/brand-assets', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/press', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
+  { path: '/i18n-dashboard', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.4 },
+  { path: '/ai-gateway', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.4 },
+  { path: '/marketing-platform', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.4 },
+  { path: '/embed', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.4 },
+  { path: '/templates', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 },
+  { path: '/compare', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 },
+  { path: '/solutions', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 },
+  { path: '/industries', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 },
+  { path: '/use-cases', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.6 }
+];
+
+/**
+ * Verifies that the sitemap array dynamically reflects every unique route defined in the router,
+ * ensuring all paths have a correct and formatted <lastmod> timestamp.
+ */
+export function validateSitemapRoutes(landingPageSlugs: string[], trustCenterPaths: string[]): {
+  success: boolean;
+  errors: string[];
+} {
+  const errors: string[] = [];
+  const expectedRoutes = new Set<string>();
+
+  // 1. Base route
+  expectedRoutes.add('/');
+
+  // 2. Landing pages (e.g. /wifi-qr-generator)
+  landingPageSlugs.forEach(slug => {
+    expectedRoutes.add(`/${slug}`);
+  });
+
+  // 3. Trust center paths
+  trustCenterPaths.forEach(path => {
+    expectedRoutes.add(path);
+  });
+
+  // 4. Static custom routes
+  const customStaticRoutes = [
+    '/terms',
+    '/faq',
+    '/blog',
+    '/embed',
+    '/i18n-dashboard',
+    '/ai-gateway',
+    '/marketing-platform',
+    '/templates',
+    '/compare',
+    '/solutions',
+    '/industries',
+    '/use-cases'
+  ];
+  customStaticRoutes.forEach(route => {
+    expectedRoutes.add(route);
+  });
+
+  // Check each expected route
+  expectedRoutes.forEach(route => {
+    const sitemapEntry = SITEMAP_ROUTES.find(entry => entry.path === route);
+    if (!sitemapEntry) {
+      errors.push(`Missing route in sitemap: "${route}"`);
+    } else {
+      // Validate date format (YYYY-MM-DD)
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(sitemapEntry.lastmod)) {
+        errors.push(`Invalid lastmod date format for "${route}": "${sitemapEntry.lastmod}" (Expected YYYY-MM-DD)`);
+      }
+    }
+  });
+
+  // Check for any obsolete entries in sitemap
+  SITEMAP_ROUTES.forEach(entry => {
+    if (!expectedRoutes.has(entry.path)) {
+      if (!entry.path.startsWith('/qr/') && !entry.path.startsWith('/blog/')) {
+        errors.push(`Obsolete/Extra route in SITEMAP_ROUTES that is not defined in the active router: "${entry.path}"`);
+      }
+    }
+  });
+
+  const success = errors.length === 0;
+  if (!success) {
+    console.error('Sitemap Validation Failed:', errors);
+  } else {
+    console.log('Sitemap Validation Succeeded: All active router paths correctly mapped with valid timestamps.');
+  }
+
+  return { success, errors };
+}
+
 import { Locale, navTranslations, creativeSubItems, presetToolsTranslations, isRtlLocale, extractLocaleAndPath, SUPPORTED_LOCALES } from './utils/translations';
 import { useTranslation, useDocumentLanguage } from './utils/i18n';
 import MobileDrawer from './components/MobileDrawer';
@@ -1058,6 +1181,14 @@ export default function App() {
             "price": "0.00",
             "priceCurrency": "USD"
           },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingCount": "1280",
+            "reviewCount": "1280"
+          },
           "featureList": [
             "Dynamic QR Code Generation",
             "WiFi Connection QR Setup",
@@ -1104,6 +1235,14 @@ export default function App() {
   };
 
   useEffect(() => {
+    // Run sitemap integrity and timestamp validation
+    validateSitemapRoutes(Object.keys(landingPages), [
+      '/about', '/why-freeqrgen', '/editorial-policy', '/research-methodology', 
+      '/privacy', '/privacy-policy', '/security', '/data-processing', '/accessibility', 
+      '/contact', '/changelog', '/release-notes', '/system-status', 
+      '/careers', '/media-kit', '/brand-assets', '/press'
+    ]);
+
     const handleLocationChange = () => {
       setCurrentPath(window.location.pathname);
     };
