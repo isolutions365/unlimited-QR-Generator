@@ -123,6 +123,7 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
 // Read Firebase configurations and initialize lazily to prevent blocking startup / render latency
 export let db: any;
 export let isFallbackMode = false;
+let connectionTested = false;
 
 export function getDb() {
   if (!db) {
@@ -193,6 +194,11 @@ export function getDb() {
         db = initializeFirestore(firebaseApp, {
           experimentalForceLongPolling: true,
         }, firebaseConfig?.firestoreDatabaseId || '(default)');
+      }
+
+      if (!connectionTested) {
+        connectionTested = true;
+        testConnection();
       }
     } catch (err) {
       console.warn('Firestore initialization failed, enabling memory fallback mode:', err);
@@ -342,6 +348,10 @@ class FirestoreDatabase {
 
   public async getProjectByTrackingId(trackingId: string): Promise<DbProject | undefined> {
     console.log(`[getProjectByTrackingId] Starting lookup for trackingId/shortCode: "${trackingId}"`);
+    if (isFallbackMode) {
+      console.log(`[getProjectByTrackingId] Firebase is in fallback/offline mode. Skipping lookups.`);
+      return undefined;
+    }
     try {
       const activeDb = getDb();
 
@@ -367,7 +377,7 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 0a] No document exists in qr_codes collection with ID "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 0a ERROR] Fetching from qr_codes collection failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 0a NOTICE] Fetching from qr_codes collection failed:`, err?.message || err);
       }
 
       // Step 0b: Search qr_codes collection by trackingId field
@@ -393,7 +403,7 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 0b] No qr_codes found with trackingId field == "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 0b ERROR] Querying qr_codes by trackingId failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 0b NOTICE] Querying qr_codes by trackingId failed:`, err?.message || err);
       }
       
       // 1. Search projects collection by trackingId field
@@ -408,7 +418,7 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 1] No projects found with trackingId field == "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 1 ERROR] Querying projects by trackingId failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 1 NOTICE] Querying projects by trackingId failed:`, err?.message || err);
       }
 
       // 2. Search projects collection by document ID
@@ -425,7 +435,7 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 2] No project document exists with ID "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 2 ERROR] getDoc on projects by ID failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 2 NOTICE] getDoc on projects by ID failed:`, err?.message || err);
       }
 
       // 3. Search dynamicQRs collection by id field or shortCode field
@@ -474,7 +484,7 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 3] No dynamicQRs found with id or shortCode == "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 3 ERROR] Querying dynamicQRs failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 3 NOTICE] Querying dynamicQRs failed:`, err?.message || err);
       }
 
       // 4. Search dynamicQRs collection by document ID
@@ -501,7 +511,7 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 4] No dynamicQR document exists with ID "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 4 ERROR] getDoc on dynamicQRs failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 4 NOTICE] getDoc on dynamicQRs failed:`, err?.message || err);
       }
 
       // 5. Search pdf_shares collection
@@ -526,7 +536,7 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 5] No pdf_share document exists with ID "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 5 ERROR] getDoc on pdf_shares failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 5 NOTICE] getDoc on pdf_shares failed:`, err?.message || err);
       }
 
       // 6. Search business_cards collection
@@ -551,7 +561,7 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 6] No business_card document exists with ID "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 6 ERROR] getDoc on business_cards failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 6 NOTICE] getDoc on business_cards failed:`, err?.message || err);
       }
 
       // 7. Search restaurant_menus collection
@@ -576,13 +586,13 @@ class FirestoreDatabase {
         }
         console.log(`[getProjectByTrackingId] [Step 7] No restaurant_menu document exists with ID "${trackingId}"`);
       } catch (err: any) {
-        console.error(`[getProjectByTrackingId] [Step 7 ERROR] getDoc on restaurant_menus failed:`, err);
+        console.warn(`[getProjectByTrackingId] [Step 7 NOTICE] getDoc on restaurant_menus failed:`, err?.message || err);
       }
 
-      console.warn(`[getProjectByTrackingId] ALL lookup steps completed. Document not found across all collections for trackingId: "${trackingId}"`);
+      console.log(`[getProjectByTrackingId] ALL lookup steps completed. Document not found across all collections for trackingId: "${trackingId}"`);
       return undefined;
     } catch (e: any) {
-      console.error(`[getProjectByTrackingId FATAL ERROR] Outer catch block caught:`, e);
+      console.warn(`[getProjectByTrackingId FATAL NOTICE] Outer catch block caught:`, e?.message || e);
       return undefined;
     }
   }

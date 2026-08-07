@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from '../utils/i18n';
 import { isRtlLocale } from '../utils/translations';
+import { auth } from '../lib/firebase';
 
 import { QRProject } from '../types';
 import { 
@@ -14,7 +15,8 @@ import {
   FolderPlus, 
   Plus, 
   X,
-  CheckSquare
+  CheckSquare,
+  GripVertical
 } from 'lucide-react';
 
 interface SavedProjectsProps {
@@ -26,6 +28,7 @@ interface SavedProjectsProps {
   onUpdateCategory?: (projectId: string, category: string) => Promise<void>;
   onBatchUpdateCategory?: (ids: string[], category: string) => Promise<void>;
   isLoading: boolean;
+  onReorderProjects?: (orderedIds: string[]) => void;
 }
 
 export default function SavedProjects({ 
@@ -36,7 +39,8 @@ export default function SavedProjects({
   onSeedData,
   onUpdateCategory,
   onBatchUpdateCategory,
-  isLoading
+  isLoading,
+  onReorderProjects
 }: SavedProjectsProps) {
   const { t, locale } = useTranslation();
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
@@ -134,6 +138,111 @@ export default function SavedProjects({
     }
     return (projects || []).filter(p => (((val) => (val || '').trim())(p.category ?? "")).toLowerCase() === (((val) => (val || '').trim())(activeCategory ?? "")).toLowerCase());
   }, [projects, activeCategory]);
+
+  // Drag and drop states
+  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = React.useState<number | null>(null);
+  const [orderedProjects, setOrderedProjects] = React.useState<QRProject[]>([]);
+
+  React.useEffect(() => {
+    if (draggedIndex === null) {
+      setOrderedProjects(filteredProjects);
+    }
+  }, [filteredProjects, draggedIndex]);
+
+  const handleDragStart = (index: number, e: React.MouseEvent | React.TouchEvent) => {
+    if (e.type === 'touchstart') {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+    }
+    setDraggedIndex(index);
+    setDragOverIndex(index);
+  };
+
+  const handleDragOver = (index: number) => {
+    if (draggedIndex === null || draggedIndex === index) return;
+    setDragOverIndex(index);
+    setOrderedProjects(prev => {
+      const next = [...prev];
+      const draggedItem = next[draggedIndex];
+      next.splice(draggedIndex, 1);
+      next.splice(index, 0, draggedItem);
+      return next;
+    });
+    setDraggedIndex(index);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (draggedIndex === null) return;
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!element) return;
+    
+    let current: HTMLElement | null = element as HTMLElement;
+    while (current && current !== document.body) {
+      const indexAttr = current.getAttribute('data-index');
+      if (indexAttr !== null) {
+        const overIndex = parseInt(indexAttr, 10);
+        if (!isNaN(overIndex) && overIndex !== draggedIndex) {
+          handleDragOver(overIndex);
+        }
+        break;
+      }
+      current = current.parentElement;
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (draggedIndex !== null) {
+      const orderedIdsInView = orderedProjects.map(p => p.id);
+      try {
+        const savedOrderJson = localStorage.getItem(`qr_projects_sort_order_${auth.currentUser?.uid || 'all'}`);
+        let currentGlobalOrder: string[] = [];
+        if (savedOrderJson) {
+          try {
+            currentGlobalOrder = JSON.parse(savedOrderJson);
+          } catch {
+            currentGlobalOrder = [];
+          }
+        }
+        if (currentGlobalOrder.length === 0) {
+          currentGlobalOrder = projects.map(p => p.id);
+        }
+        const filteredIdSet = new Set(orderedIdsInView);
+        const remainingIds = currentGlobalOrder.filter(id => !filteredIdSet.has(id));
+        let insertIndex = currentGlobalOrder.findIndex(id => filteredIdSet.has(id));
+        if (insertIndex === -1) insertIndex = 0;
+        
+        const nextGlobalOrder = [...remainingIds];
+        nextGlobalOrder.splice(insertIndex, 0, ...orderedIdsInView);
+        
+        localStorage.setItem(`qr_projects_sort_order_${auth.currentUser?.uid || 'all'}`, JSON.stringify(nextGlobalOrder));
+        
+        if (onReorderProjects) {
+          onReorderProjects(nextGlobalOrder);
+        }
+      } catch (err) {
+        console.error('Error persisting sort order:', err);
+      }
+    }
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  React.useEffect(() => {
+    if (draggedIndex !== null) {
+      const handleGlobalMouseUp = () => {
+        handleDragEnd();
+      };
+      window.addEventListener('mouseup', handleGlobalMouseUp);
+      window.addEventListener('touchend', handleGlobalMouseUp);
+      return () => {
+        window.removeEventListener('mouseup', handleGlobalMouseUp);
+        window.removeEventListener('touchend', handleGlobalMouseUp);
+      };
+    }
+  }, [draggedIndex, orderedProjects]);
 
   // Batch selection handlers
   const handleToggleSelect = (id: string, e?: React.MouseEvent | React.ChangeEvent) => {
@@ -439,23 +548,42 @@ export default function SavedProjects({
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[480px] overflow-y-auto pr-1">
-              {filteredProjects.map(proj => {
+              {orderedProjects.map((proj, index) => {
                 const isSelected = selectedIds.includes(proj.id);
                 return (
                   <div
                     key={proj.id}
+                    data-index={index}
                     onClick={() => onSelect(proj)}
-                    className={`bg-white hover:bg-gray-50 border rounded-xl p-4 cursor-pointer transition-all flex flex-col gap-3 group relative shadow-xs ${
+                    onMouseEnter={() => {
+                      if (draggedIndex !== null) {
+                        handleDragOver(index);
+                      }
+                    }}
+                    className={`bg-white hover:bg-gray-50 border rounded-xl p-4 cursor-pointer transition-all flex flex-col gap-3 group relative shadow-xs select-none ${
                       isSelected ? 'border-indigo-400 bg-indigo-50/25 ring-2 ring-indigo-500/20 shadow-sm' : 'border-gray-100 hover:border-gray-200'
-                    } ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
+                    } ${isRtlLocale(locale) ? 'rtl-active' : ''} ${
+                      draggedIndex === index ? 'opacity-40 border-dashed border-indigo-400 scale-98 shadow-inner ring-1 ring-indigo-300/50' : ''
+                    }`}
                   >
                     {/* Header info */}
                     <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                      <div className="flex items-start gap-2 min-w-0 flex-1">
                         <div 
                           onClick={(e) => e.stopPropagation()} 
-                          className="shrink-0 pt-0.5 flex items-center ltr-lock"
+                          className="shrink-0 pt-0.5 flex items-center gap-1.5 ltr-lock"
                         >
+                          <div
+                            title="Drag to sort"
+                            onMouseDown={(e) => handleDragStart(index, e)}
+                            onTouchStart={(e) => handleDragStart(index, e)}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleDragEnd}
+                            className="p-1 hover:bg-slate-100 rounded text-slate-400 cursor-grab active:cursor-grabbing transition-colors"
+                          >
+                            <GripVertical className="w-3.5 h-3.5" />
+                          </div>
+
                           <input
                             type="checkbox"
                             aria-label={`Select project ${proj.name}`}

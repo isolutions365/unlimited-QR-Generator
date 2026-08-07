@@ -1446,6 +1446,32 @@ export default function App() {
     }
   }, [fbUser, fbLoading]);
 
+  // Helper to sort projects based on local storage saved order
+  const getSortedProjects = (projectsList: QRProject[], userId: string | undefined): QRProject[] => {
+    const savedOrderJson = localStorage.getItem(`qr_projects_sort_order_${userId || 'all'}`);
+    if (!savedOrderJson) return projectsList;
+    try {
+      const savedOrder: string[] = JSON.parse(savedOrderJson);
+      const orderMap = new Map<string, number>();
+      savedOrder.forEach((id, idx) => orderMap.set(id, idx));
+      
+      return [...projectsList].sort((a, b) => {
+        const indexA = orderMap.has(a.id) ? orderMap.get(a.id)! : Infinity;
+        const indexB = orderMap.has(b.id) ? orderMap.get(b.id)! : Infinity;
+        if (indexA !== indexB) return indexA - indexB;
+        const timeA = new Date(a.updatedAt || a.createdAt).getTime();
+        const timeB = new Date(b.updatedAt || b.createdAt).getTime();
+        return timeB - timeA;
+      });
+    } catch {
+      return projectsList;
+    }
+  };
+
+  const handleReorderProjects = (orderedIds: string[]) => {
+    setProjects(prev => getSortedProjects(prev, user?.id));
+  };
+
   // Fetch projects & scans when logged in
   const fetchUserData = async () => {
     if (!user) return;
@@ -1455,7 +1481,7 @@ export default function App() {
         api.getProjects(),
         api.getScans()
       ]);
-      setProjects(projs);
+      setProjects(getSortedProjects(projs, user.id));
       setScans(scanLogs);
     } catch (err: any) {
       console.error('Error fetching user data dashboard:', err);
@@ -1474,7 +1500,7 @@ export default function App() {
       });
 
       const unsubscribeProjects = api.subscribeProjects((newProjects) => {
-        setProjects(newProjects);
+        setProjects(getSortedProjects(newProjects, user.id));
       });
 
       return () => {
@@ -2556,6 +2582,7 @@ export default function App() {
                   onUpdateCategory={handleUpdateProjectCategory}
                   onBatchUpdateCategory={handleBatchUpdateCategory}
                   isLoading={isLoadingData}
+                  onReorderProjects={handleReorderProjects}
                 />
               </React.Suspense>
             </div>
