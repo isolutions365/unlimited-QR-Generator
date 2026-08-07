@@ -47,6 +47,46 @@
     <script>
       // Enhanced ServiceWorker & Cache Auto-Cleanup to resolve stale bundle and intermittent blank-screen issues
       (function() {
+        window.clearAppCacheAndSW = function() {
+          return new Promise(function(resolve) {
+            var promises = [];
+            if ('serviceWorker' in navigator) {
+              promises.push(
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                  var unregs = [];
+                  for (var i = 0; i < registrations.length; i++) {
+                    unregs.push(registrations[i].unregister());
+                  }
+                  return Promise.all(unregs);
+                }).catch(function(err) {
+                  console.warn('[SW Cleanup] Unregister warning:', err);
+                })
+              );
+            }
+
+            if ('caches' in window) {
+              promises.push(
+                caches.keys().then(function(names) {
+                  var dels = [];
+                  for (var i = 0; i < names.length; i++) {
+                    dels.push(caches.delete(names[i]));
+                  }
+                  return Promise.all(dels);
+                }).catch(function(err) {
+                  console.warn('[Cache Cleanup] Warning:', err);
+                })
+              );
+            }
+
+            Promise.all(promises).then(function() {
+              console.log('[Cache Cleanup] Successfully unregistered ServiceWorkers and purged Cache Storage.');
+              resolve(true);
+            }).catch(function() {
+              resolve(false);
+            });
+          });
+        };
+
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.getRegistrations().then(function(registrations) {
             for (var i = 0; i < registrations.length; i++) {

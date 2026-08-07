@@ -17,7 +17,37 @@ export default defineConfig(() => {
       minify: 'esbuild' as const,
       cssMinify: true,
       sourcemap: 'hidden' as const,
-      chunkSizeWarningLimit: 2000,
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react') || id.includes('react-dom')) {
+                return 'vendor-react';
+              }
+              if (id.includes('lucide-react')) {
+                return 'vendor-icons';
+              }
+              if (id.includes('motion')) {
+                return 'vendor-motion';
+              }
+              if (id.includes('recharts') || id.includes('d3')) {
+                return 'vendor-charts';
+              }
+              if (id.includes('jspdf') || id.includes('pdfkit') || id.includes('jszip')) {
+                return 'vendor-documents';
+              }
+              if (id.includes('firebase')) {
+                return 'vendor-firebase';
+              }
+              if (id.includes('qrcode') || id.includes('jsbarcode') || id.includes('react-barcode')) {
+                return 'vendor-qr';
+              }
+              return 'vendor-others';
+            }
+          },
+        },
+      },
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

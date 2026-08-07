@@ -15,6 +15,10 @@ import TourWelcomeModal from './components/TourWelcomeModal';
 import SettingsModal from './components/SettingsModal';
 import AIAssistantWidget from './components/AIAssistantWidget';
 import QRRedirector from './components/QRRedirector';
+import AppLayoutShell from './components/AppLayoutShell';
+import MobileQRWorkspace from './components/MobileQRWorkspace';
+import { usePlatformLayout } from './hooks/usePlatformLayout';
+import { MobileTabType } from './components/MobileBottomNav';
 import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/audioFeedback';
 
 // Code-splitting via React.lazy for secondary landing & hub pages
@@ -425,6 +429,8 @@ const categoryCardVariants: any = {
 export default function App() {
   const { user: fbUser, loading: fbLoading, logout: fbLogout } = useFirebaseAuth();
   useReCaptchaEnterprise(); // Safely initialize and execute reCAPTCHA Enterprise on mount
+  const platform = usePlatformLayout();
+  const [activeMobileTab, setActiveMobileTab] = useState<MobileTabType>('generator');
   const [user, setUser] = useState<UserSession | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [projects, setProjects] = useState<QRProject[]>([]);
@@ -1901,28 +1907,81 @@ export default function App() {
           }
         } as any)}
       />
-        {/* Dynamic Upper Banner */}
-        <Header 
-            isScrolled={isScrolled} 
-            t={t}
-            locale={locale}
-            currentPath={currentPath}
-            navigateTo={navigateTo}
-            changeLocale={changeLocale}
-            creativeSubItems={creativeSubItems}
-            presetToolsTranslations={presetToolsTranslations}
-            handleInitiateGenerator={handleInitiateGenerator}
-            getPresetIcon={getPresetIcon}
-            setActiveTab={setActiveTab}
-            activeTab={activeTab}
-            navTranslations={navTranslations}
-            user={user}
-            onSignInClick={handleSignInClick}
-            onSignUpClick={handleSignUpClick}
-            onSignOut={handleSignOut}
-            onOpenSettings={() => setIsSettingsModalOpen(true)}
-            soundEnabled={soundSettings.soundEnabled}
+      {/* CONDITIONAL PLATFORM RENDER: Mobile App / Native View vs Desktop Web */}
+      {platform.isMobileView ? (
+        <AppLayoutShell
+          desktopHeader={null}
+          activeMobileTab={activeMobileTab}
+          onMobileTabChange={setActiveMobileTab}
+          savedProjectsCount={projects.length}
+          user={user}
+          onSignInClick={handleSignInClick}
+          onSignOut={handleSignOut}
+          onOpenSettings={() => setIsSettingsModalOpen(true)}
+          navigateTo={navigateTo}
+          mobileGeneratorWorkspace={
+            <MobileQRWorkspace
+              currentProject={currentProject}
+              onChange={setCurrentProject}
+              onSave={handleSaveProject}
+              isSaving={isSaving}
+              userEmail={user?.email}
+              projects={projects}
+              onSelectProject={handleSelectProject}
+              onDeleteProject={handleDeleteProject}
+              onBatchDeleteProjects={handleBatchDeleteProjects}
+              onSeedScanClick={handleSeedScanClick}
+              onUpdateProjectCategory={handleUpdateProjectCategory}
+              onBatchUpdateCategory={handleBatchUpdateCategory}
+              isLoadingData={isLoadingData}
+              onReorderProjects={handleReorderProjects}
+              handleSimTestScan={handleSimTestScan}
+              handleDownloadTrigger={handleDownloadTrigger}
+              soundSettings={soundSettings}
+              onOpenSettings={() => setIsSettingsModalOpen(true)}
+            />
+          }
+          mobileSavedProjectsWorkspace={
+            <React.Suspense fallback={<div className="text-xs text-slate-400 p-4">Loading saved collection...</div>}>
+              <SavedProjects
+                projects={projects}
+                onSelect={handleSelectProject}
+                onDelete={handleDeleteProject}
+                onBatchDelete={handleBatchDeleteProjects}
+                onSeedData={handleSeedScanClick}
+                onUpdateCategory={handleUpdateProjectCategory}
+                onBatchUpdateCategory={handleBatchUpdateCategory}
+                isLoading={isLoadingData}
+                onReorderProjects={handleReorderProjects}
+              />
+            </React.Suspense>
+          }
+          desktopMainContent={null}
         />
+      ) : (
+        <>
+          {/* Dynamic Upper Banner */}
+          <Header 
+              isScrolled={isScrolled} 
+              t={t}
+              locale={locale}
+              currentPath={currentPath}
+              navigateTo={navigateTo}
+              changeLocale={changeLocale}
+              creativeSubItems={creativeSubItems}
+              presetToolsTranslations={presetToolsTranslations}
+              handleInitiateGenerator={handleInitiateGenerator}
+              getPresetIcon={getPresetIcon}
+              setActiveTab={setActiveTab}
+              activeTab={activeTab}
+              navTranslations={navTranslations}
+              user={user}
+              onSignInClick={handleSignInClick}
+              onSignUpClick={handleSignUpClick}
+              onSignOut={handleSignOut}
+              onOpenSettings={() => setIsSettingsModalOpen(true)}
+              soundEnabled={soundSettings.soundEnabled}
+          />
 
 
 
@@ -2561,7 +2620,7 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start">
             
             {/* Left side Workspace Customize controls */}
-            <div className="lg:col-span-7 flex flex-col gap-4 lg:gap-6">
+            <div id="control-panel-container" className="lg:col-span-7 flex flex-col gap-4 lg:gap-6">
               <ControlPanel
                 currentProject={currentProject}
                 onChange={setCurrentProject}
@@ -3467,6 +3526,8 @@ export default function App() {
           </div>
         </div>
       </footer>
+      </>
+      )}
 
       {/* Floating Real-Time Scan Alerts Toaster Panel (Bottom Right) */}
       <div className="fixed bottom-6 right-6 z-100 w-full max-w-sm flex flex-col gap-3 pointer-events-none p-4" id="floating-notification-toaster-container">
