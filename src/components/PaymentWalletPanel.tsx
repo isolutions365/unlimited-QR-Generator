@@ -541,7 +541,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-paypal-handle" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              PayPal Username, Email, or PayPal.me Handle <span className="text-red-500">*</span>
+              {t('control.payPaypalHandleLabel', 'PayPal Username, Email, or PayPal.me Handle')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-paypal-handle"
@@ -555,7 +555,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label htmlFor="pay-paypal-amount" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Requested Amount (Optional)
+                {t('control.payRequestedAmount', 'Requested Amount (Optional)')}
               </label>
               <input
                 id="pay-paypal-amount"
@@ -569,7 +569,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
             </div>
             <div>
               <label htmlFor="pay-paypal-currency" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Currency Code
+                {t('control.payCurrencyCode', 'Currency Code')}
               </label>
               <select
                 id="pay-paypal-currency"
@@ -594,7 +594,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-venmo-handle" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Venmo @username <span className="text-red-500">*</span>
+              {t('control.payVenmoHandleLabel', 'Venmo @username')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-venmo-handle"
@@ -608,7 +608,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label htmlFor="pay-venmo-amount" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Amount ($) (Optional)
+                {t('control.payRequestedAmount', 'Requested Amount (Optional)')}
               </label>
               <input
                 id="pay-venmo-amount"
@@ -622,7 +622,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
             </div>
             <div>
               <label htmlFor="pay-venmo-note" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Payment Note / Memo (Optional)
+                {t('control.payVenmoNoteLabel', 'Payment Note / Memo (Optional)')}
               </label>
               <input
                 id="pay-venmo-note"
@@ -641,7 +641,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-cashapp-tag" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Cash App $Cashtag <span className="text-red-500">*</span>
+              {t('control.payCashappHandleLabel', 'Cash App $Cashtag')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-cashapp-tag"
@@ -654,7 +654,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           </div>
           <div>
             <label htmlFor="pay-cashapp-amount" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Requested Amount ($) (Optional)
+              {t('control.payRequestedAmount', 'Requested Amount (Optional)')}
             </label>
             <input
               id="pay-cashapp-amount"
@@ -673,7 +673,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-upi-id" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              UPI VPA ID (Virtual Payment Address) <span className="text-red-500">*</span>
+              {t('control.payUpiIdLabel', 'UPI VPA ID (Virtual Payment Address)')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-upi-id"
@@ -687,7 +687,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label htmlFor="pay-upi-name" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Payee Name (Optional)
+                {t('control.payPayeeNameLabel', 'Payee Name (Optional)')}
               </label>
               <input
                 id="pay-upi-name"
@@ -700,7 +700,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
             </div>
             <div>
               <label htmlFor="pay-upi-amount" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Amount (₹ INR) (Optional)
+                {t('control.payUpiAmountLabel', 'Amount (₹ INR) (Optional)')}
               </label>
               <input
                 id="pay-upi-amount"
@@ -715,7 +715,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           </div>
           <div>
             <label htmlFor="pay-upi-note" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Transaction Note (Optional)
+              {t('control.payTxnNoteLabel', 'Transaction Note (Optional)')}
             </label>
             <input
               id="pay-upi-note"
@@ -733,7 +733,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-alipay-account" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Alipay Account ID / Payee QR Link <span className="text-red-500">*</span>
+              {t('control.payAlipayLabel', 'Alipay Account ID / Payee QR Link')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-alipay-account"
@@ -751,7 +751,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-wechat-url" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              WeChat Pay Payload Code or Link (wxp://) <span className="text-red-500">*</span>
+              {t('control.payWechatLabel', 'WeChat Pay Payload Code or Link (wxp://)')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-wechat-url"
@@ -769,7 +769,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-pix-key" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              PIX Key (CPF / CNPJ / Email / Phone / Random Key) <span className="text-red-500">*</span>
+              {t('control.payPixKeyLabel', 'PIX Key (CPF / CNPJ / Email / Phone / Random Key)')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-pix-key"
@@ -783,7 +783,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           <div className="grid grid-cols-3 gap-2">
             <div>
               <label htmlFor="pay-pix-name" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Receiver Name
+                {t('control.payReceiverNameLabel', 'Receiver Name')}
               </label>
               <input
                 id="pay-pix-name"
@@ -796,7 +796,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
             </div>
             <div>
               <label htmlFor="pay-pix-city" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                City
+                {t('control.payCityLabel', 'City')}
               </label>
               <input
                 id="pay-pix-city"
@@ -809,7 +809,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
             </div>
             <div>
               <label htmlFor="pay-pix-amount" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Amount (BRL R$)
+                {t('control.payPixAmountLabel', 'Amount (BRL R$)')}
               </label>
               <input
                 id="pay-pix-amount"
@@ -829,7 +829,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-grab-link" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              GrabPay Payment Link or Phone Number <span className="text-red-500">*</span>
+              {t('control.payGrabLinkLabel', 'GrabPay Payment Link or Phone Number')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-grab-link"
@@ -848,7 +848,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label htmlFor="pay-mpesa-till" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Till Number
+                {t('control.payTillLabel', 'Till Number')}
               </label>
               <input
                 id="pay-mpesa-till"
@@ -861,7 +861,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
             </div>
             <div>
               <label htmlFor="pay-mpesa-paybill" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Paybill Number (Optional)
+                {t('control.payPaybillLabel', 'Paybill Number (Optional)')}
               </label>
               <input
                 id="pay-mpesa-paybill"
@@ -876,7 +876,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           {paymentFields.paybill && (
             <div>
               <label htmlFor="pay-mpesa-account" className="block text-[10px] font-semibold text-slate-700 mb-1">
-                Paybill Account Number
+                {t('control.payMpesaAccountLabel', 'Paybill Account Number')}
               </label>
               <input
                 id="pay-mpesa-account"
@@ -895,7 +895,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-jazz-acc" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              JazzCash Account / Mobile Number <span className="text-red-500">*</span>
+              {t('control.payJazzAccountLabel', 'JazzCash Account / Mobile Number')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-jazz-acc"
@@ -908,7 +908,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           </div>
           <div>
             <label htmlFor="pay-jazz-amount" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Amount (PKR) (Optional)
+              {t('control.payJazzAmountLabel', 'Amount (PKR) (Optional)')}
             </label>
             <input
               id="pay-jazz-amount"
@@ -927,7 +927,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-easy-acc" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              EasyPaisa Account / Mobile Number <span className="text-red-500">*</span>
+              {t('control.payEasyAccountLabel', 'EasyPaisa Account / Mobile Number')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-easy-acc"
@@ -940,7 +940,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           </div>
           <div>
             <label htmlFor="pay-easy-amount" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Amount (PKR) (Optional)
+              {t('control.payJazzAmountLabel', 'Amount (PKR) (Optional)')}
             </label>
             <input
               id="pay-easy-amount"
@@ -959,7 +959,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-stc-phone" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              STC Pay Mobile Number <span className="text-red-500">*</span>
+              {t('control.payStcPhoneLabel', 'STC Pay Mobile Number')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-stc-phone"
@@ -972,7 +972,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           </div>
           <div>
             <label htmlFor="pay-stc-amount" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Amount (SAR ر.س) (Optional)
+              {t('control.payStcAmountLabel', 'Amount (SAR ر.س) (Optional)')}
             </label>
             <input
               id="pay-stc-amount"
@@ -991,7 +991,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-mada-iban" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Mada IBAN or Payment Link <span className="text-red-500">*</span>
+              {t('control.payMadaIbanLabel', 'Mada IBAN or Payment Link')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-mada-iban"
@@ -1009,7 +1009,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-sadad-biller" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Sadad Biller / Account ID <span className="text-red-500">*</span>
+              {t('control.paySadadBillerLabel', 'Sadad Biller / Account ID')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-sadad-biller"
@@ -1027,7 +1027,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="space-y-2 bg-white p-3 rounded-lg border border-gray-200/80">
           <div>
             <label htmlFor="pay-custom-url" className="block text-[10px] font-semibold text-slate-700 mb-1">
-              Payment Link / Wallet URL <span className="text-red-500">*</span>
+              {t('control.payCustomUrlLabel', 'Payment Link / Wallet URL')} <span className="text-red-500">*</span>
             </label>
             <input
               id="pay-custom-url"

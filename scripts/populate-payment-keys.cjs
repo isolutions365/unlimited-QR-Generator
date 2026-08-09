@@ -1,103 +1,10 @@
-{
-  "en": {
-    "language": "English",
-    "totalKeys": 3281,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 1,
-    "coveragePercent": "99.97%"
-  },
-  "ar": {
-    "language": "Arabic",
-    "totalKeys": 3281,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 1,
-    "coveragePercent": "99.97%"
-  },
-  "ur": {
-    "language": "Urdu",
-    "totalKeys": 3281,
-    "missingKeysCount": 0,
-    "emptyKeysCount": 1,
-    "coveragePercent": "99.97%"
-  },
-  "de": {
-    "language": "German",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "fr": {
-    "language": "French",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "es": {
-    "language": "Spanish",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "pt": {
-    "language": "Portuguese",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "it": {
-    "language": "Italian",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "tr": {
-    "language": "Turkish",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "id": {
-    "language": "Indonesian",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "hi": {
-    "language": "Hindi",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "zh": {
-    "language": "Chinese",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "ja": {
-    "language": "Japanese",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 1,
-    "coveragePercent": "92.81%"
-  },
-  "ko": {
-    "language": "Korean",
-    "totalKeys": 3281,
-    "missingKeysCount": 235,
-    "emptyKeysCount": 2,
-    "coveragePercent": "92.78%"
-  },
-  "control.type.payment": "Payment / Wallet",
+const fs = require('fs');
+const path = require('path');
+
+const localesDir = path.join(__dirname, '../src/locales');
+const files = fs.readdirSync(localesDir);
+
+const defaultEnPaymentKeys = {
   "control.paymentWalletSetup": "Mobile Wallet & Payment Setup",
   "control.paymentWalletDesc": "Create instant payment QR codes for popular global and regional mobile wallets.",
   "control.paymentWalletGuideTitle": "Payment & Wallet QR Guide",
@@ -143,6 +50,7 @@
   "control.payOptionGrabpay": "GrabPay (Singapore, Malaysia, Philippines)",
   "control.optAfrica": "🌍 Africa",
   "control.payOptionMpesa": "M-Pesa (Kenya, Tanzania) — Till / Paybill / Phone",
+
   "control.payPaypalHandleLabel": "PayPal Username, Email, or PayPal.me Handle",
   "control.payRequestedAmount": "Requested Amount (Optional)",
   "control.payCurrencyCode": "Currency Code",
@@ -171,28 +79,27 @@
   "control.payMadaIbanLabel": "Mada IBAN or Payment Link",
   "control.paySadadBillerLabel": "Sadad Biller / Account ID",
   "control.payCustomUrlLabel": "Payment Link / Wallet URL",
-  "control.generatedQrPayload": "Encoded Payment Payload:",
-  "control.framePreset.none": "No Frame",
-  "control.framePresetDesc.none": "Sleek & clean matrix",
-  "control.framePreset.scan-me": "Scan Me",
-  "control.framePresetDesc.scan-me": "Universal CTA badge",
-  "control.framePreset.visit-website": "Visit Website",
-  "control.framePresetDesc.visit-website": "Ideal for web links",
-  "control.framePreset.wifi-password": "WiFi Password",
-  "control.framePresetDesc.wifi-password": "Network credentials",
-  "control.framePreset.download-app": "Download App",
-  "control.framePresetDesc.download-app": "App store links",
-  "control.framePreset.follow-us": "Follow Us",
-  "control.framePresetDesc.follow-us": "Social media profiles",
-  "control.framePreset.join-wifi": "Join WiFi",
-  "control.framePresetDesc.join-wifi": "Instant guest connection",
-  "control.framePreset.order-now": "Order Now",
-  "control.framePresetDesc.order-now": "Menus & storefronts",
-  "control.framePreset.pay-here": "Pay Here",
-  "control.framePresetDesc.pay-here": "Mobile wallets & payments",
-  "control.framePreset.custom": "Custom Text",
-  "control.framePresetDesc.custom": "Fully personalized wording",
-  "control.frameSelectionTitle": "FRAME & CALL-TO-ACTION TEMPLATES",
-  "control.frameSelectionDesc": "Wrap your QR code in pre-designed templates with call-to-action text like 'Scan Me' or 'Visit Website'.",
-  "control.removeOuterFrame": "Remove Frame"
-}
+  "control.generatedQrPayload": "Encoded Payment Payload:"
+};
+
+files.forEach(file => {
+  if (file.endsWith('.json')) {
+    const filePath = path.join(localesDir, file);
+    try {
+      const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      let modified = false;
+      for (const [k, v] of Object.entries(defaultEnPaymentKeys)) {
+        if (!content[k]) {
+          content[k] = v;
+          modified = true;
+        }
+      }
+      if (modified) {
+        fs.writeFileSync(filePath, JSON.stringify(content, null, 2), 'utf8');
+        console.log(`Updated missing payment i18n keys in ${file}`);
+      }
+    } catch (err) {
+      console.error(`Error processing ${file}:`, err);
+    }
+  }
+});
