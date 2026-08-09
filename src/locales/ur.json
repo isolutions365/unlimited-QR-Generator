@@ -6563,5 +6563,6 @@
   "saved.deselectAll": "سب غیر منتخب کریں",
   "saved.moveSelectedTo": "منتخب کردہ کو منتقل کریں",
   "saved.selectAll": "سب منتخب کریں",
-  "tools.payment.pro": "پرو"
+  "tools.payment.pro": "پرو",
+  "control.type.payment": "ادائیگی / والیٹ"
 }

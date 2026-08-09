@@ -3543,5 +3543,6 @@
   "control.payMadaIbanLabel": "Mada IBAN o enlace de pago",
   "control.paySadadBillerLabel": "Facturador Sadad / ID de cuenta",
   "control.payCustomUrlLabel": "Enlace de pago/URL de billetera",
-  "control.generatedQrPayload": "Carga útil de pago codificada:"
+  "control.generatedQrPayload": "Carga útil de pago codificada:",
+  "control.type.payment": "Pago / Monedero"
 }

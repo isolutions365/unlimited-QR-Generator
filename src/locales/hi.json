@@ -3543,5 +3543,6 @@
   "control.payMadaIbanLabel": "माडा आईबीएएन या भुगतान लिंक",
   "control.paySadadBillerLabel": "सदाद बिलर / खाता आईडी",
   "control.payCustomUrlLabel": "भुगतान लिंक/वॉलेट यूआरएल",
-  "control.generatedQrPayload": "एन्कोडेड भुगतान पेलोड:"
+  "control.generatedQrPayload": "एन्कोडेड भुगतान पेलोड:",
+  "control.type.payment": "भुगतान / वॉलेट"
 }

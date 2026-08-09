@@ -3636,5 +3636,6 @@
   "control.payMadaIbanLabel": "Mada IBAN atau Tautan Pembayaran",
   "control.paySadadBillerLabel": "Sadad Biller / ID Akun",
   "control.payCustomUrlLabel": "Tautan Pembayaran / URL Dompet",
-  "control.generatedQrPayload": "Muatan Pembayaran yang Dikodekan:"
+  "control.generatedQrPayload": "Muatan Pembayaran yang Dikodekan:",
+  "control.type.payment": "Pembayaran / Dompet"
 }

@@ -3636,5 +3636,6 @@
   "control.payMadaIbanLabel": "まだ IBAN または支払いリンク",
   "control.paySadadBillerLabel": "サダッド請求者 / アカウント ID",
   "control.payCustomUrlLabel": "支払いリンク/ウォレット URL",
-  "control.generatedQrPayload": "エンコードされた支払いペイロード:"
+  "control.generatedQrPayload": "エンコードされた支払いペイロード:",
+  "control.type.payment": "支払い / ウォレット"
 }

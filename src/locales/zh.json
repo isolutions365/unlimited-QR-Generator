@@ -3636,5 +3636,6 @@
   "control.payMadaIbanLabel": "Mada IBAN 或付款链接",
   "control.paySadadBillerLabel": "Sadad Biller / 帐户 ID",
   "control.payCustomUrlLabel": "付款链接/钱包网址",
-  "control.generatedQrPayload": "编码支付负载："
+  "control.generatedQrPayload": "编码支付负载：",
+  "control.type.payment": "支付 / 钱包"
 }

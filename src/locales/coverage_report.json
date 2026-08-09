@@ -96,5 +96,6 @@
     "missingKeysCount": 235,
     "emptyKeysCount": 2,
     "coveragePercent": "92.78%"
-  }
+  },
+  "control.type.payment": "Payment / Wallet"
 }

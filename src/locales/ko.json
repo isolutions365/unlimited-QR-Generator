@@ -3635,5 +3635,6 @@
   "control.payMadaIbanLabel": "Mada IBAN 또는 결제 링크",
   "control.paySadadBillerLabel": "Sadad Biller / 계정 ID",
   "control.payCustomUrlLabel": "결제 링크 / 지갑 URL",
-  "control.generatedQrPayload": "인코딩된 결제 페이로드:"
+  "control.generatedQrPayload": "인코딩된 결제 페이로드:",
+  "control.type.payment": "결제 / 지갑"
 }

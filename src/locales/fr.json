@@ -3543,5 +3543,6 @@
   "control.payMadaIbanLabel": "Mada IBAN ou lien de paiement",
   "control.paySadadBillerLabel": "Sadad Biller / Numéro de compte",
   "control.payCustomUrlLabel": "Lien de paiement/URL du portefeuille",
-  "control.generatedQrPayload": "Charge utile de paiement codée :"
+  "control.generatedQrPayload": "Charge utile de paiement codée :",
+  "control.type.payment": "Paiement / Portefeuille"
 }

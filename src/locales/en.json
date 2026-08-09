@@ -3543,5 +3543,6 @@
   "control.payMadaIbanLabel": "Mada IBAN or Payment Link",
   "control.paySadadBillerLabel": "Sadad Biller / Account ID",
   "control.payCustomUrlLabel": "Payment Link / Wallet URL",
-  "control.generatedQrPayload": "Encoded Payment Payload:"
+  "control.generatedQrPayload": "Encoded Payment Payload:",
+  "control.type.payment": "Payment / Wallet"
 }

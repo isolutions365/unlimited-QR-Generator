@@ -2798,5 +2798,6 @@
   "trust.whyP2": true,
   "trust.whyP3": true,
   "ui.back": true,
-  "ui.cancel": true
+  "ui.cancel": true,
+  "control.type.payment": "Pagamento / Portafoglio"
 }

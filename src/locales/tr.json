@@ -3636,5 +3636,6 @@
   "control.payMadaIbanLabel": "Mada IBAN veya Ödeme Bağlantısı",
   "control.paySadadBillerLabel": "Sadad Faturalandıran / Hesap Kimliği",
   "control.payCustomUrlLabel": "Ödeme Bağlantısı / Cüzdan URL'si",
-  "control.generatedQrPayload": "Kodlanmış Ödeme Yükü:"
+  "control.generatedQrPayload": "Kodlanmış Ödeme Yükü:",
+  "control.type.payment": "Ödeme / Cüzdan"
 }
