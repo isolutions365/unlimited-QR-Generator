@@ -164,7 +164,7 @@ export default function ControlPanel({ currentProject,
   userEmail,
   projects = []
 }: ControlPanelProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [localProject, setLocalProject] = useState<Partial<QRProject>>(currentProject);
   const [showEccTooltip, setShowEccTooltip] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
@@ -502,7 +502,11 @@ export default function ControlPanel({ currentProject,
                     onChange({ ...localProject, type: 'app', content: initialContent, trackingEnabled: true });
                   } else if (type.id === 'payment') {
                     const currentContent = localProject.content || '';
-                    const initialContent = currentContent && (currentContent.startsWith('http') || currentContent.startsWith('upi') || currentContent.startsWith('venmo') || currentContent.startsWith('cash') || currentContent.startsWith('wxp') || currentContent.startsWith('pix') || currentContent.startsWith('mpesa') || currentContent.startsWith('jazz') || currentContent.startsWith('easy') || currentContent.startsWith('stc') || currentContent.startsWith('iban') || currentContent.startsWith('sadad')) ? currentContent : 'https://paypal.me/';
+                    const isExistingPayment = currentContent && (currentContent.startsWith('http') || currentContent.startsWith('upi') || currentContent.startsWith('venmo') || currentContent.startsWith('cash') || currentContent.startsWith('wxp') || currentContent.startsWith('pix') || currentContent.startsWith('mpesa') || currentContent.startsWith('jazz') || currentContent.startsWith('easy') || currentContent.startsWith('stc') || currentContent.startsWith('iban') || currentContent.startsWith('sadad'));
+                    const defaultPaymentUrl = locale === 'ur'
+                      ? 'https://jazzcash.com.pk/pay?account=03001234567'
+                      : 'https://stcpay.com.sa/pay?phone=0501234567';
+                    const initialContent = isExistingPayment ? currentContent : defaultPaymentUrl;
                     onChange({ ...localProject, type: 'payment', content: initialContent });
                   } else {
                     onChange({ ...localProject, type: type.id });

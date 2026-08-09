@@ -22,27 +22,46 @@ import { MobileTabType } from './components/MobileBottomNav';
 import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/audioFeedback';
 
 // Code-splitting via React.lazy for secondary landing & hub pages
-const SEOPage = React.lazy(() => import('./pages/landing/SEOPage'));
-const BulkQRGenerator = React.lazy(() => import('./components/BulkQRGenerator'));
-const AnimationsShowcase = React.lazy(() => import('./components/AnimationsShowcase'));
-const CompanyPages = React.lazy(() => import('./pages/CompanyPages'));
-const TrustCenterHub = React.lazy(() => import('./pages/TrustCenterHub'));
-const FaqSection = React.lazy(() => import('./pages/FaqSection'));
-const BlogSection = React.lazy(() => import('./pages/BlogSection'));
-const KnowledgeHub = React.lazy(() => import('./pages/KnowledgeHub'));
+// Resilient lazy loader helper for dynamic imports
+function lazyWithRetry<T extends React.ComponentType<any>>(
+  factory: () => Promise<{ default: T }>
+) {
+  return React.lazy(async () => {
+    try {
+      return await factory();
+    } catch (error) {
+      // Retry once by reloading window session if module fetch failed
+      const hasRefreshed = sessionStorage.getItem('lazy_retry_refreshed');
+      if (!hasRefreshed) {
+        sessionStorage.setItem('lazy_retry_refreshed', 'true');
+        window.location.reload();
+      }
+      throw error;
+    }
+  });
+}
+
+const SEOPage = lazyWithRetry(() => import('./pages/landing/SEOPage'));
+const BulkQRGenerator = lazyWithRetry(() => import('./components/BulkQRGenerator'));
+const AnimationsShowcase = lazyWithRetry(() => import('./components/AnimationsShowcase'));
+const CompanyPages = lazyWithRetry(() => import('./pages/CompanyPages'));
+const TrustCenterHub = lazyWithRetry(() => import('./pages/TrustCenterHub'));
+const FaqSection = lazyWithRetry(() => import('./pages/FaqSection'));
+const BlogSection = lazyWithRetry(() => import('./pages/BlogSection'));
+const KnowledgeHub = lazyWithRetry(() => import('./pages/KnowledgeHub'));
 import { knowledgeArticles } from './data/knowledgeData';
-const TemplatesHub = React.lazy(() => import('./pages/TemplatesHub'));
+const TemplatesHub = lazyWithRetry(() => import('./pages/TemplatesHub'));
 import { templatePages } from './data/templatePagesData';
-const EmbedPage = React.lazy(() => import('./pages/EmbedPage'));
-const CompareHub = React.lazy(() => import('./pages/CompareHub'));
+const EmbedPage = lazyWithRetry(() => import('./pages/EmbedPage'));
+const CompareHub = lazyWithRetry(() => import('./pages/CompareHub'));
 import { comparisons } from './data/compareData';
-const ProgrammaticHub = React.lazy(() => import('./pages/ProgrammaticHub'));
+const ProgrammaticHub = lazyWithRetry(() => import('./pages/ProgrammaticHub'));
 import { solutionsData, useCasesData, getBespokeProfile } from './data/programmaticSEOData';
-const PlatformHub = React.lazy(() => import('./pages/PlatformHub'));
-const I18nDashboard = React.lazy(() => import('./pages/I18nDashboard'));
-const GrowthSuite = React.lazy(() => import('./pages/GrowthSuite'));
-const EnterpriseAIGateway = React.lazy(() => import('./pages/EnterpriseAIGateway'));
-const QRMarketingPlatform = React.lazy(() => import('./pages/marketing/QRMarketingPlatform'));
+const PlatformHub = lazyWithRetry(() => import('./pages/PlatformHub'));
+const I18nDashboard = lazyWithRetry(() => import('./pages/I18nDashboard'));
+const GrowthSuite = lazyWithRetry(() => import('./pages/GrowthSuite'));
+const EnterpriseAIGateway = lazyWithRetry(() => import('./pages/EnterpriseAIGateway'));
+const QRMarketingPlatform = lazyWithRetry(() => import('./pages/marketing/QRMarketingPlatform'));
 import ErrorBoundary from './components/ErrorBoundary';
 
 
@@ -1322,11 +1341,14 @@ export default function App() {
       setActiveTab('create');
       setCurrentProject(prev => {
         if (prev.type !== 'payment') {
+          const defaultPaymentContent = locale === 'ur'
+            ? 'https://jazzcash.com.pk/pay?account=03001234567'
+            : 'https://stcpay.com.sa/pay?phone=0501234567';
           return {
             ...prev,
             type: 'payment',
-            content: prev.content && prev.content.startsWith('http') ? prev.content : 'https://paypal.me/',
-            name: prev.name || 'My Payment QR'
+            content: prev.content && (prev.content.startsWith('http') || prev.content.startsWith('upi') || prev.content.startsWith('jazz') || prev.content.startsWith('stc')) ? prev.content : defaultPaymentContent,
+            name: prev.name || (locale === 'ur' ? 'جاز کیش / والٹ کیو آر' : locale === 'ar' ? 'رمز الدفع STC Pay / المحفظة' : 'Payment QR')
           };
         }
         return prev;
@@ -1430,10 +1452,19 @@ export default function App() {
       targetTab = 'create';
     }
 
+    let initialPaymentContent = preset.content;
+    if (preset.type === 'payment') {
+      if (!initialPaymentContent || initialPaymentContent === 'upi://pay?pa=merchant@upi&pn=Store&am=10.00&cu=INR' || initialPaymentContent === 'https://paypal.me/') {
+        initialPaymentContent = locale === 'ur'
+          ? 'https://jazzcash.com.pk/pay?account=03001234567'
+          : 'https://stcpay.com.sa/pay?phone=0501234567';
+      }
+    }
+
     setCurrentProject({
       ...currentProject,
       type: preset.type,
-      content: preset.content,
+      content: initialPaymentContent,
       name: preset.name
     });
     playAudioSound('generate', soundSettings);
@@ -3009,10 +3040,13 @@ export default function App() {
                     href="/"
                     onClick={(e) => { 
                       e.preventDefault(); 
+                      const defaultPaymentUrl = locale === 'ur'
+                        ? 'https://jazzcash.com.pk/pay?account=03001234567'
+                        : 'https://stcpay.com.sa/pay?phone=0501234567';
                       handleInitiateGenerator({ 
                         type: 'payment', 
-                        content: 'upi://pay?pa=merchant@upi&pn=Store&am=10.00&cu=INR', 
-                        name: 'Payment/Wallet QR' 
+                        content: defaultPaymentUrl, 
+                        name: locale === 'ur' ? 'جاز کیش / والٹ کیو آر' : locale === 'ar' ? 'رمز الدفع STC Pay / المحفظة' : 'Payment/Wallet QR' 
                       }); 
                     }}
                     className="mt-4 text-xs font-bold text-emerald-600 hover:text-emerald-800 flex items-center gap-1.5 ltr-lock"

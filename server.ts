@@ -279,6 +279,29 @@ app.use(express.json());
     });
   });
 
+  // Client-side error monitoring endpoint
+  app.post('/api/monitoring/errors', (req, res) => {
+    try {
+      const { message, stack, source, lineno, colno, type, url, timestamp, userAgent, componentStack } = req.body || {};
+      console.error('[Client Error Monitor Report]:', {
+        type: type || 'client_error',
+        message: message || 'No message provided',
+        stack: stack || 'No stack trace available',
+        source,
+        lineno,
+        colno,
+        componentStack,
+        url: url || req.headers.referer,
+        timestamp: timestamp || new Date().toISOString(),
+        userAgent: userAgent || req.headers['user-agent'],
+      });
+      res.status(200).json({ status: 'ok', logged: true });
+    } catch (err) {
+      console.error('[Error Monitoring Endpoint Failure]:', err);
+      res.status(500).json({ error: 'Failed to record log' });
+    }
+  });
+
   // Dynamic Translation Proxy Endpoint powered by Gemini AI
   app.post('/api/translate', async (req, res) => {
     const { text, lang } = req.body;

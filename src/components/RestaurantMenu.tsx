@@ -76,35 +76,350 @@ export const LANGUAGE_DEFAULT_CURRENCY: Record<string, string> = {
   ur: 'PKR',
   hi: 'INR',
   id: 'IDR',
-  tr: 'TRY',
-  ja: 'JPY',
-  ko: 'KRW',
-  zh: 'CNY'
+  tr: 'TRY'
 };
 
 // Preset Premium Culinary Images from Unsplash
 const PRESET_CULINARY_IMAGES = [
+  { name: 'كبسة لحم فاخرة (Lamb Kabsa)', url: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=500&auto=format&fit=crop&q=80' },
+  { name: 'مندي دجاج (Chicken Mandi)', url: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=500&auto=format&fit=crop&q=80' },
+  { name: 'مشويات مشكلة (Mixed Grill)', url: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&auto=format&fit=crop&q=80' },
+  { name: 'حمص شرقي (Hummus)', url: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?w=500&auto=format&fit=crop&q=80' },
+  { name: 'كنافة بالجبنة (Kunafa Dessert)', url: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=500&auto=format&fit=crop&q=80' },
+  { name: 'قهوة عربية وتمر (Arabic Coffee & Dates)', url: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=80' },
+  { name: 'شاي كرك (Karak Tea)', url: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&auto=format&fit=crop&q=80' },
   { name: 'Neapolitan Pizza', url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop&q=80' },
   { name: 'Gourmet Burger', url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format&fit=crop&q=80' },
   { name: 'Fresh Salad', url: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&auto=format&fit=crop&q=80' },
   { name: 'Signature Steak', url: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80' },
-  { name: 'Craft Cocktail', url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=500&auto=format&fit=crop&q=80' },
   { name: 'Chocolate Fondant', url: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&auto=format&fit=crop&q=80' }
 ];
 
 const PRESET_ICONS = ['🍕', '🍔', '🥗', '🍹', '🍰', '🥩', '🍝', '☕', '🍣', '🥞', '🍷', '🌮'];
 
+export const GULF_ARABIC_MENU_PRESET: RestaurantMenuConfig = {
+  id: 'menu-default-ar',
+  restaurantName: 'مطعم المجلس الخليجي الفاخر',
+  description: 'أفخر المأكولات الخليجية والولائم العربية الأصيلة، كبسة، مندي، ومشويات فاخرة.',
+  currency: 'SAR',
+  selectedLanguage: 'ar',
+  themeColor: 'emerald',
+  categories: [
+    {
+      id: 'cat-ar-1',
+      name: {
+        ar: 'المقبلات والسلطات الشرقية',
+        en: 'Middle Eastern Starters & Salads',
+        es: 'Entrantes Orientales',
+        fr: 'Entrées Orientales',
+        it: 'Antipasti Orientali'
+      },
+      icon: '🥗'
+    },
+    {
+      id: 'cat-ar-2',
+      name: {
+        ar: 'الأطباق الرئيسية والولائم الخليجية',
+        en: 'Gulf Main Courses & Feasts',
+        es: 'Platos Principales del Golfo',
+        fr: 'Plats Principaux du Golfe',
+        it: 'Piatti Principali del Golfo'
+      },
+      icon: '🥩'
+    },
+    {
+      id: 'cat-ar-3',
+      name: {
+        ar: 'الحلويات والمشروبات العربية',
+        en: 'Arabic Desserts & Drinks',
+        es: 'Postres y Bebidas Árabes',
+        fr: 'Desserts et Boissons Arabes',
+        it: 'Dolci e Bevande Arabe'
+      },
+      icon: '☕'
+    }
+  ],
+  items: [
+    {
+      id: 'item-ar-1',
+      categoryId: 'cat-ar-1',
+      name: {
+        ar: 'حمص ملكي باللحم والصنوبر',
+        en: 'Royal Lamb Hummus',
+        es: 'Hummus Real con Carne',
+        fr: 'Hummus Royal à l\'Agneau',
+        it: 'Hummus Reale con Agnello'
+      },
+      description: {
+        ar: 'حمص ناعم بصلصة الطحينة ومغطى بقطع لحم الضأن المتبلة والصنوبر المحمص مع زيت الزيتون البكر.',
+        en: 'Creamy chickpea hummus topped with spiced sautéed lamb, toasted pine nuts, and virgin olive oil.',
+        es: 'Hummus cremoso con carne de cordero salteada con especias y piñones tostados.',
+        fr: 'Hummus crémeux garni d\'agneau sauté aux épices et pignons de pin grillés.',
+        it: 'Hummus cremoso con agnello saltato e pinoli tostati.'
+      },
+      price: 28.00,
+      imageUrl: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'طبق شخصي', priceModifier: 0 },
+        { name: 'طبق عائلي كبير', priceModifier: 14.00 }
+      ],
+      offerTag: 'توصية الشيف',
+      isVegetarian: false
+    },
+    {
+      id: 'item-ar-2',
+      categoryId: 'cat-ar-1',
+      name: {
+        ar: 'تبولة لبنانية بالرمان',
+        en: 'Lebanese Tabbouleh with Pomegranate',
+        es: 'Tabulé Libanés',
+        fr: 'Taboulé Libanais',
+        it: 'Tabbouleh Libanese'
+      },
+      description: {
+        ar: 'بقدونس طازج مفروم مع نعناع، طماطم، برغل، حبات الرمان الطازجة، وتتبيلة الليمون وزيت الزيتون.',
+        en: 'Freshly chopped parsley, mint, tomatoes, bulgur, pomegranate seeds with lemon & olive oil dressing.',
+        es: 'Perejil fresco picado, menta, tomate, burgul y granada.',
+        fr: 'Persil frais haché, menthe, tomates, bulgur et grenades.',
+        it: 'Prezzemolo fresco, menta, pomodoro e melograno.'
+      },
+      price: 22.00,
+      imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'الحجم العادي', priceModifier: 0 },
+        { name: 'إضافة جبنة حلوم مشوية', priceModifier: 6.00 }
+      ],
+      isVegetarian: true
+    },
+    {
+      id: 'item-ar-3',
+      categoryId: 'cat-ar-2',
+      name: {
+        ar: 'كبسة لحم نعيمي فاخرة',
+        en: 'Royal Lamb Kabsa',
+        es: 'Kabsa de Cordero Real',
+        fr: 'Kabsa d\'Agneau Royal',
+        it: 'Kabsa di Agnello Reale'
+      },
+      description: {
+        ar: 'أرز بسمتي فاخر مطبوخ بالبهارات الخليجية العطرية مع موزة لحم نعيمي طازجة ومكسرات محمصة.',
+        en: 'Aromatic basmati rice cooked with authentic Gulf spices, tender fresh lamb shank, and toasted nuts.',
+        es: 'Arroz basmati aromático cocinado con especias del Golfo y cordero tierno.',
+        fr: 'Riz basmati parfumé mijoté aux épices du Golfe et agneau tendre.',
+        it: 'Riso basmati aromatico alle spezie del Golfo con agnello tenero.'
+      },
+      price: 68.00,
+      imageUrl: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'وجبة فردية', priceModifier: 0 },
+        { name: 'وليمة شخصين', priceModifier: 55.00 },
+        { name: 'وليمة عائلية (4 أشخاص)', priceModifier: 130.00 }
+      ],
+      offerTag: 'الأكثر طلباً',
+      isSpicy: false
+    },
+    {
+      id: 'item-ar-4',
+      categoryId: 'cat-ar-2',
+      name: {
+        ar: 'مندي دجاج حضرمي أصيل',
+        en: 'Authentic Chicken Mandi',
+        es: 'Mandi de Pollo Auténtico',
+        fr: 'Mandi au Poulet Authentique',
+        it: 'Mandi di Pollo Autentico'
+      },
+      description: {
+        ar: 'دجاج محمر بالفرن بالطريقة الحضرمية يقدم على أرز المندي المدخن مع صلصة الدقوس الحارة.',
+        en: 'Oven-roasted tender chicken served over smoked mandi basmati rice with spicy daqoos tomato sauce.',
+        es: 'Pollo asado servido sobre arroz mandi ahumado con salsa picante.',
+        fr: 'Poulet rôti servi sur riz mandi fumé avec sauce piquante.',
+        it: 'Pollo arrosto con riso mandi affumicato e salsa piccante.'
+      },
+      price: 45.00,
+      imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'نصف دجاجة مع أرز', priceModifier: 0 },
+        { name: 'دجاجة كاملة مع أرز', priceModifier: 22.00 }
+      ],
+      offerTag: 'طبق يومي',
+      isSpicy: true
+    },
+    {
+      id: 'item-ar-5',
+      categoryId: 'cat-ar-2',
+      name: {
+        ar: 'مشويات مشكلة على الفحم',
+        en: 'Charcoal Mixed Grill Platter',
+        es: 'Parrillada Mixta al Carbón',
+        fr: 'Grillades Mixtes au Charbon',
+        it: 'Grigliata Mista al Carbone'
+      },
+      description: {
+        ar: 'تشكيلة من كباب اللحم، شيش طاووق، وريش الغنم المشوية على الفحم مع الثومية والخبز الطازج.',
+        en: 'Assortment of lamb kebab, shish tabook, and lamb chops grilled over charcoal with garlic paste.',
+        es: 'Surtido de kebab de cordero, shish taook y chuletas a la parrilla.',
+        fr: 'Assortiment de kebabs d\'agneau, shish taouk et côtelettes grillées.',
+        it: 'Assortimento di kebab di agnello, shish taouk e costolette.'
+      },
+      price: 75.00,
+      imageUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'طبق لشخص واحد', priceModifier: 0 },
+        { name: 'مشكل لشخصين (1 كجم)', priceModifier: 65.00 }
+      ],
+      offerTag: 'مشويات طازجة'
+    },
+    {
+      id: 'item-ar-6',
+      categoryId: 'cat-ar-3',
+      name: {
+        ar: 'كنافة نابلسية فاخرة بالجبنة',
+        en: 'Nabulsi Cheese Kunafa',
+        es: 'Kunafa de Queso Nabulsi',
+        fr: 'Kounafa au Fromage Nabulsi',
+        it: 'Kunafa al Formaggio Nabulsi'
+      },
+      description: {
+        ar: 'كنافة ذهبية مقرمشة محشوة بالجبن النابلسي المذاب ومسقية بقطر ماء الزهر ومزينة بالفستق الحلبي.',
+        en: 'Crispy golden pastry dough layered with melted Nabulsi cheese, orange blossom syrup & pistachios.',
+        es: 'Postre crujiente dorado con queso derretido y pistachos.',
+        fr: 'Pâtisserie dorée au fromage fondu et pistaches.',
+        it: 'Pasticceria dorata con formaggio fuso e pistacchi.'
+      },
+      price: 25.00,
+      imageUrl: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'طبق شخصي دافئ', priceModifier: 0 },
+        { name: 'صينية عائلية وسط', priceModifier: 20.00 }
+      ],
+      isVegetarian: true,
+      offerTag: 'حلو اليوم'
+    },
+    {
+      id: 'item-ar-7',
+      categoryId: 'cat-ar-3',
+      name: {
+        ar: 'قهوة عربية بالهيل مع تمر مديني',
+        en: 'Arabic Qahwa with Cardamom & Dates',
+        es: 'Café Árabe con Cardamomo y Dátiles',
+        fr: 'Café Arabe à la Cardamome et Dattes',
+        it: 'Caffè Arabo al Cardamomo e Datteri'
+      },
+      description: {
+        ar: 'دلة قهوة عربية أصيلة محضرة بالهيل والزعفران تقدم مع تمر صفاوي مديني فاخر وطحينة.',
+        en: 'Traditional cardamom & saffron-infused golden Arabic coffee served with Madina dates and tahini.',
+        es: 'Café árabe tradicional infusionado con cardamomo servido con dátiles.',
+        fr: 'Café arabe traditionnel à la cardamome servi avec dattes.',
+        it: 'Caffè arabo tradizionale al cardamomo con datteri.'
+      },
+      price: 18.00,
+      imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'دلة صغيرة مع تمر', priceModifier: 0 },
+        { name: 'دلة مجلس كبيرة مع تمر ومكسرات', priceModifier: 12.00 }
+      ],
+      isVegetarian: true
+    },
+    {
+      id: 'item-ar-8',
+      categoryId: 'cat-ar-3',
+      name: {
+        ar: 'شاي كرك خليجي بالهيل',
+        en: 'Gulf Karak Tea with Cardamom',
+        es: 'Té Karak del Golfo',
+        fr: 'Thé Karak du Golfe',
+        it: 'Tè Karak del Golfo'
+      },
+      description: {
+        ar: 'شاي مخمور بالحليب المبخر والبهارات الخليجية والهيل الفاخر مع السكر البني.',
+        en: 'Rich brewed tea cooked with evaporated milk, fragrant cardamom pods, and spices.',
+        es: 'Té cocido con leche evaporada y cardamomo.',
+        fr: 'Thé infusé au lait concentré et cardamome.',
+        it: 'Tè concentrato con latte e cardamomo.'
+      },
+      price: 12.00,
+      imageUrl: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'كوب كرك دافئ', priceModifier: 0 },
+        { name: 'إبريق كرك للمجلس', priceModifier: 10.00 }
+      ],
+      isVegetarian: true
+    }
+  ]
+};
+
+export const DEFAULT_ENGLISH_MENU: RestaurantMenuConfig = {
+  id: 'menu-default-en',
+  restaurantName: 'Gusto Bistro & Bar',
+  description: 'Artisanal modern dining with locally sourced, organic ingredients.',
+  currency: 'USD',
+  selectedLanguage: 'en',
+  themeColor: 'emerald',
+  categories: [
+    { id: 'cat-1', name: { en: 'Starters & Salads', es: 'Entrantes y Ensaladas', fr: 'Entrées et Salades', it: 'Antipasti e Insalate', ar: 'المقبلات والسلطات' }, icon: '🥗' },
+    { id: 'cat-2', name: { en: 'Main Courses', es: 'Platos Principales', fr: 'Plats Principaux', it: 'Piatti Principali', ar: 'الأطباق الرئيسية' }, icon: '🥩' },
+    { id: 'cat-3', name: { en: 'Desserts & Sweets', es: 'Postres y Dulces', fr: 'Desserts et Douceurs', it: 'Dolci e Dessert', ar: 'الحلويات والسكريات' }, icon: '🍰' }
+  ],
+  items: [
+    {
+      id: 'item-1',
+      categoryId: 'cat-1',
+      name: { en: 'Truffle Burrata Salad', es: 'Ensalada de Burrata con Trufa', fr: 'Salade de Burrata à la Truffe', it: 'Insalata di Burrata al Tartufo', ar: 'سلطة بوراتا بالتروفل' },
+      description: { en: 'Wild arugula, heirloom cherry tomatoes, creamy burrata injected with white truffle oil & aged balsamic glaze.', es: 'Rúcula silvestre, tomates cherry, burrata cremosa con aceite de trufa blanca y vinagre balsámico envejecido.', fr: 'Roquette sauvage, tomates cerises, burrata crémeuse injectée d’huile de truffe blanche et glaçage balsamique vieilli.', it: 'Rucola selvatica, pomodorini ciliegini, burrata cremosa iniettata con olio al tartufo bianco e glassa di balsamico invecchiato.', ar: 'الجرجير البري، الطماطم الكرزية، البوراتا الكريمية المحقونة بزيت التروفل الأبيض ومزيج البلسميك المعتق.' },
+      price: 18.00,
+      imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'Standard Portion', priceModifier: 0 },
+        { name: 'Double Cheese Infusion', priceModifier: 4.50 }
+      ],
+      offerTag: 'Chef\'s Special',
+      isVegetarian: true
+    },
+    {
+      id: 'item-2',
+      categoryId: 'cat-2',
+      name: { en: 'Prime Ribeye Steak', es: 'Filete de Ribeye de Primera', fr: 'Ribeye de Boeuf Prime', it: 'Costata di Manzo Prime', ar: 'ستيك ريب آي فاخر' },
+      description: { en: '400g prime grass-fed black angus ribeye served with fresh herb butter and triple-cooked rosemary fries.', es: '400g de ribeye premium de black angus alimentado con pasto, servido con mantequilla de hierbas finas y patatar fritas al romero.', fr: '400g d’entrecôte de boeuf black angus nouri à l’herbe, servie avec beurre d’herbes fraîches et frites au romarin.', it: '400g di costata di manzo black angus da pascolo, servito con burro alle erbe aromatiche e patatine fritte al rosmarino.', ar: 'ستيك ريب آي بلاك أنجوس فاخر مغذى على العشب يُقدّم مع زبدة الأعشاب الطازجة وبطاطس إكليل الجبل المطهوة ثلاث مرات.' },
+      price: 34.99,
+      imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+      variants: [
+        { name: 'Medium Rare', priceModifier: 0 },
+        { name: 'Medium', priceModifier: 0 },
+        { name: 'Truffle Butter Twist', priceModifier: 4.50 }
+      ],
+      offerTag: 'Premium Selection'
+    },
+    {
+      id: 'item-3',
+      categoryId: 'cat-3',
+      name: { en: 'Warm Chocolate Lava Cake', es: 'Pastel de Lava de Chocolate Caliente', fr: 'Fondant au Chocolat Chaud', it: 'Tortino al Cioccolato Caldo', ar: 'كيك الشوكولاتة الذائبة الدافئ' },
+      description: { en: 'Rich dark chocolate cake with a molten center, served with Madagascan vanilla bean gelato.', es: 'Pastel de chocolate negro con centro líquido, servido con helado de vainilla.', fr: 'Gâteau au chocolat noir riche avec un cœur coulant, servi avec glace à la vanille.', it: 'Tortino al cioccolato fondente con cuore fuso, servito con gelato alla vaniglia.', ar: 'كيك الشوكولاتة الداكنة الغنية بقلب ذائب، يُقدّم مع جيلاتو الفانيليا من مدغشقر.' },
+      price: 12.50,
+      imageUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&auto=format&fit=crop&q=80',
+      variants: [
+        { name: 'Single Scoop Ice Cream', priceModifier: 0 },
+        { name: 'Double Scoop Ice Cream', priceModifier: 2.50 }
+      ],
+      isVegetarian: true
+    }
+  ]
+};
+
 export default function RestaurantMenu() {
-  const { locale } = useTranslation();
+  const { t, locale } = useTranslation();
   const isArabic = locale === 'ar';
 
+  const filteredCulinaryImages = isArabic
+    ? PRESET_CULINARY_IMAGES.slice(0, 7)
+    : PRESET_CULINARY_IMAGES;
+
   const tMenu = (enText: string): string => {
-    if (!isArabic) return enText;
-    const dict: Record<string, string> = {
-      "Interactive Menu Hub": "مركز القوائم التفاعلية",
+    const dicts: Record<string, Record<string, string>> = {
+      ar: {
       "Gourmet QR Restaurant Menu": "قائمة مطعم QR الفاخرة",
       "Design beautiful, high-converting digital restaurant menus with variants, active promotion tags, multi-language translation selectors, and interactive simulated smartphone menu previews.": "صمّم قوائم طعام رقمية جميلة وعالية التحويل للمطاعم مع المتغيرات، وشارات الترويج النشطة، ومحددات الترجمة متعددة اللغات، ومعاينات تفاعلية لمحاكاة قائمة الهاتف الذكي.",
       "Load Italian Theme": "تحميل السمة الإيطالية",
+      "Load Gulf Menu": "تحميل القائمة الخليجية",
       "Publish & Sync Menu": "نشر ومزامنة القائمة",
       "Syncing...": "جاري المزامنة...",
       "1. Brand Identity & Global Locales": "1. هوية العلامة التجارية والمواقع العالمية",
@@ -115,122 +430,246 @@ export default function RestaurantMenu() {
       "Brand Palette & Styling Vibe": "لوحة الألوان ونمط التصميم",
       "2. Menu Categories": "2. فئات القائمة",
       "Add or rename major food/drink sections. Drag down & remove categories.": "أضف أو أعد تسمية أقسام الطعام/الشراب الرئيسية. اسحب لأسفل وأزل الفئات.",
-      "Add Category": "إضافة فئة",
       "3. Create New Dish / Beverage": "3. إنشاء طبق / مشروب جديد",
       "Configure core product details, pricing, tags, and variants to append them below.": "تكوين تفاصيل المنتج الأساسية، والتسعير، والشارات، والمتغيرات لإضافتها أدناه.",
       "Target Category": "الفئة المستهدفة",
       "Item Title (English)": "اسم الصنف (بالإنجليزي)",
-      "Base Price ($)": "السعر الأساسي ($)",
+      "Item Title (Arabic)": "اسم الصنف (بالعربية)",
+      "Base Price ($)": "السعر الأساسي",
       "Active Special Tag": "شارة خاصة نشطة",
       "Item Description (English)": "وصف الصنف (بالإنجليزي)",
-      "Select an active special tag to highlight this dish": "اختر شارة خاصة نشطة لإبراز هذا الطبق",
-      "Special dietary attributes": "سمات غذائية خاصة",
-      "Vegetarian": "نباتي",
-      "Spicy": "حار",
-      "Gluten-Free": "خالي من الغلوتين",
-      "Create custom size/type variants with price modifiers": "أنشئ متغيرات مخصصة للحجم/النوع مع معدلات الأسعار",
-      "Add Price Variant Option": "إضافة خيار متغير السعر",
-      "Image URL (Optional)": "رابط الصورة (اختياري)",
-      "Add Item to Menu Catalog": "إضافة الصنف إلى كتالوج القائمة",
-      "4. Published Menu & Digital Catalog": "4. القائمة المنشورة والكتالوج الرقمي",
-      "Review items organized by category. Click edit to adjust or trash to remove.": "راجع الأصناف المنظمة حسب الفئة. انقر فوق تحرير للضبط أو سلة المهملات للإزالة.",
-      "No dishes created in this category. Click above to add some!": "لم يتم إنشاء أي أطباق في هذه الفئة. انقر أعلاه لإضافة بعضها!",
-      "Live Preview Simulator": "محاكي المعاينة المباشرة",
-      "Gourmet Live Previews": "معاينات حية فاخرة",
-      "Scan QR Code to Open on Phone": "امسح رمز QR لفتحه على الهاتف",
+      "Scan QR to open on phone": "امسح رمز QR لفتحه على الهاتف",
       "Scan this high-fidelity QR design with your phone to view the active published menu layout instantly on your mobile device.": "امسح تصميم QR عالي الدقة هذا بهاتفك لعرض تخطيط القائمة النشط المنشور على الفور على جهازك المحمول.",
       "Publish menu to activate QR live link!": "انشر القائمة لتنشيط رابط QR المباشر!",
       "Options": "خيارات",
       "Edit Item": "تعديل الصنف",
       "Option Label": "تسمية الخيار",
       "Price modifier": "معدل السعر",
-      "Delete variant": "حذف المتغير",
       "Update Item": "تحديث الصنف",
       "Cancel": "إلغاء",
-      "Save Changes": "حفظ التغييرات"
+      "Save Changes": "حفظ التغييرات",
+      "Image Source": "مصدر الصورة",
+      "Option A: Select Preset Image": "الخيار أ: تحديد صورة طعام مسبقة",
+      "Option B: Upload Custom Picture": "الخيار ب: تحميل صورة خاصة مخصصة",
+      "Selected Culinary Image": "صورة الطبق المحددة",
+      "Drag & drop your dish picture here, or click to browse": "اسحب وأسقط صورة الطبق هنا، أو انقر للتصفح",
+      "Supports PNG, JPG, JPEG up to 5MB": "يدعم صيغ PNG و JPG و JPEG حتى 5 ميجابايت",
+      "Custom Image Uploaded Successfully!": "تم تحميل الصورة المخصصة بنجاح!",
+      "Remove & Use Preset": "إزالة واستخدام المعرض",
+      "Interactive Menu Hub": "مركز القائمة التفاعلية",
+      "Add Category": "إضافة فئة",
+      "Delete Category (Cascades items)": "حذف الفئة (سيتم حذف الأصناف بداخلها)",
+      "Item Title (Spanish)": "اسم الصنف (بالإسباني)",
+      "English Description": "الوصف بالإنجليزي",
+      "Arabic Description": "الوصف بالعربي",
+      "Base Price": "السعر الأساسي",
+      "Promo Label (Optional)": "شارة ترويجية (اختياري)",
+      "Vegetarian / Green Vegan": "نباتي / خضار فيجان",
+      "Spicy / Fiery Heat": "حار / حار ناري",
+      "Append Dish to Menu": "إضافة الطبق إلى القائمة",
+      "Active Dishes & Variant Pricing": "الأطباق النشطة وتسعير الخيارات",
+      "Name": "الاسم",
+      "Description": "الوصف",
+      "Portion Sizes & Custom Variants": "أحجام الوجبات والمتغيرات المخصصة",
+      "Add Variant": "إضافة متغير",
+      "Size/Option": "الحجم/الخيار",
+      "No dishes created yet. Fill out the appended form above to insert plates.": "لم يتم إنشاء أي أطباق بعد. املأ النموذج المرفق أعلاه لإدراج الأطباق.",
+      "Table-Top Smartphone Menu Preview": "معاينة قائمة الهاتف الذكي على الطاولة",
+      "All Items": "كل الأصناف",
+      "Empty menu setup": "إعداد قائمة فارغ",
+      "Mock Table Cart": "سلة طلب الطاولة الافتراضية",
+      "Total": "الإجمالي",
+      "Remove": "إزالة",
+      "Scan QR code, select dishes & click simulated variants to order.": "امسح رمز QR، واختر الأطباق وانقر على المتغيرات المحاكاة للطلب.",
+      "ADD TO BASKET": "إضافة إلى السلة",
+      "Choose portion variation:": "اختر حجم الوجبة:",
+      "Simulate Adding to Table Order": "محاكاة إضافة لطلب الطاولة",
+      "Table-Stand QR Export": "تصدير رمز QR للمستاند",
+      "Table Ready QR": "رمز جاهز للطاولة",
+      "Table-top Tent Card URL": "رابط بطاقة الطاولة",
+      "Print or download high-resolution QR codes for table tents or wine cards to grant guests touchless smartphone access.": "اطبع أو قم بتنزيل رموز QR عالية الدقة لبطاقات الطاولة أو بطاقات المشروبات لتمكين الضيوف من الوصول اللاتلامسي عبر هواتفهم الذكية.",
+      "Download PNG": "تحميل PNG",
+      "Download SVG": "تحميل SVG",
+      "Download Table-Stand (PDF)": "تحميل مستاند الطاولة (PDF)",
+      "Preview Digital Menu": "معاينة القائمة الرقمية",
+      "Digital Menu & Quick PDF Builder": "القائمة الرقمية وباني الـ PDF السريع",
+      "SEO Schema Active": "مخطط سيو نشط",
+      "Your digital menu is published with live search optimization. Connect a PDF menu link or use the Quick Food Item Builder to update your live offerings.": "قائمة طعامك الرقمية منشورة مع تحسين البحث المباشر. اربط رابط قائمة PDF أو استخدم باني الأطباق السريع لتحديث عروضك المباشرة.",
+      "PDF Upload / Direct Menu Link": "تحميل ملف PDF / رابط القائمة المباشر",
+      "Copy Link": "نسخ الرابط",
+      "Copied Link!": "تم نسخ الرابط!",
+      "Open Preview": "فتح المعاينة",
+      "Included": "مشمول",
+      "Spanish Description": "الوصف بالإسباني",
+      "e.g. Gusto Bistro": "مثال: جستو بيسترو",
+      "e.g. Handmade pasta, fresh stonebaked pizza, exquisite desserts.": "مثال: باستا مصنوعة يدويًا، بيتزا طازجة مخبوزة على الحجر، حلويات رائعة.",
+      "e.g. Avocado Toast Deluxe": "مثال: توست الأفوكادو الفاخر",
+      "e.g. Chef's Choice, 20% Off": "مثال: اختيار الطاهي، خصم %20",
+      "e.g. Main Dishes": "مثال: الأطباق الرئيسية",
+      "e.g. Tostada de Aguacate": "مثال: توست أفوكادو",
+      "e.g. Smashed organic avocados on sourdough with poached eggs.": "مثال: أفوكادو عضوي مهروس على خبز ريفي مع بيض مسلوق.",
+      
+      // Portion Sizes / Variants
+      "Standard Portion": "حجم قياسي",
+      "Double Cheese Infusion": "إضافة جبنة مضاعفة",
+      "Medium Rare": "شبه ناضج (ميديوم رير)",
+      "Medium": "متوسط النضج (ميديوم)",
+      "Truffle Butter Twist": "لمسة زبدة التيروفل",
+      "Single Scoop Ice Cream": "بولة آيس كريم واحدة",
+      "Double Scoop Ice Cream": "بولتان آيس كريم",
+      "Regular Portion": "حجم عادي",
+      "Premium Upgrade": "ترقية مميزة",
+      "Half portion": "نصف وجبة",
+      "Full portion": "وجبة كاملة",
+      "Extra Side Option": "خيار جانبي إضافي",
+      "خيار إضافي": "خيار إضافي",
+
+      // Preset Imagery / Culinary Dishes
+      "كبسة لحم فاخرة (Lamb Kabsa)": "كبسة لحم فاخرة",
+      "مندي دجاج (Chicken Mandi)": "مندي دجاج",
+      "مشويات مشكلة (Mixed Grill)": "مشويات مشكلة",
+      "حمص شرقي (Hummus)": "حمص شرقي",
+      "كنافة بالجبنة (Kunafa Dessert)": "كنافة بالجبنة",
+      "قهوة عربية وتمر (Arabic Coffee & Dates)": "قهوة عربية وتمر",
+      "شاي كرك (Karak Tea)": "شاي كرك",
+      "Neapolitan Pizza": "بيتزا نابوليتان",
+      "Gourmet Burger": "برجر فاخر",
+      "Fresh Salad": "سلطة طازجة",
+      "Signature Steak": "ستيك مميز",
+      "Chocolate Fondant": "فوندان الشوكولاتة"
+      }
     };
-    return dict[enText] || enText;
+    const activeDict = dicts[locale] || {};
+    return activeDict[enText] || enText;
   };
 
-  const [menu, setMenu] = useState<RestaurantMenuConfig>({
-    id: 'menu-' + Math.random().toString(36).substring(2, 9),
-    restaurantName: isArabic ? 'جاستو بيسترو أند بار' : 'Gusto Bistro & Bar',
-    description: isArabic ? 'تناول طعام عصري وحرفي بمكونات عضوية مصادرها محلية.' : 'Artisanal modern dining with locally sourced, organic ingredients.',
-    currency: 'USD',
-    selectedLanguage: isArabic ? 'ar' : 'en',
-    themeColor: 'emerald',
-    categories: [
-      { id: 'cat-1', name: { en: 'Starters & Salads', es: 'Entrantes y Ensaladas', fr: 'Entrées et Salades', it: 'Antipasti e Insalate', ar: 'المقبلات والسلطات' }, icon: '🥗' },
-      { id: 'cat-2', name: { en: 'Main Courses', es: 'Platos Principales', fr: 'Plats Principaux', it: 'Piatti Principali', ar: 'الأطباق الرئيسية' }, icon: '🥩' },
-      { id: 'cat-3', name: { en: 'Desserts & Sweets', es: 'Postres y Dulces', fr: 'Desserts et Douceurs', it: 'Dolci e Dessert', ar: 'الحلويات والسكريات' }, icon: '🍰' }
-    ],
-    items: [
-      {
-        id: 'item-1',
-        categoryId: 'cat-1',
-        name: { en: 'Truffle Burrata Salad', es: 'Ensalada de Burrata con Trufa', fr: 'Salade de Burrata à la Truffe', it: 'Insalata di Burrata al Tartufo', ar: 'سلطة بوراتا بالتروفل' },
-        description: { en: 'Wild arugula, heirloom cherry tomatoes, creamy burrata injected with white truffle oil & aged balsamic glaze.', es: 'Rúcula silvestre, tomates cherry, burrata cremosa con aceite de trufa blanca y vinagre balsámico envejecido.', fr: 'Roquette sauvage, tomates cerises, burrata crémeuse injectée d’huile de truffe blanche et glaçage balsamique vieilli.', it: 'Rucola selvatica, pomodorini ciliegini, burrata cremosa iniettata con olio al tartufo bianco e glassa di balsamico invecchiato.', ar: 'الجرجير البري، الطماطم الكرزية، البوراتا الكريمية المحقونة بزيت التروفل الأبيض ومزيج البلسميك المعتق.' },
-        price: 18.00,
-        imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&auto=format&fit=crop&q=80',
-        variants: [
-          { name: 'Standard Portion', priceModifier: 0 },
-          { name: 'Double Cheese Infusion', priceModifier: 4.50 }
-        ],
-        offerTag: 'Chef\'s Special',
-        isVegetarian: true
-      },
-      {
-        id: 'item-2',
-        categoryId: 'cat-2',
-        name: { en: 'Prime Ribeye Steak', es: 'Filete de Ribeye de Primera', fr: 'Ribeye de Boeuf Prime', it: 'Costata di Manzo Prime', ar: 'ستيك ريب آي فاخر' },
-        description: { en: '400g prime grass-fed black angus ribeye served with fresh herb butter and triple-cooked rosemary fries.', es: '400g de ribeye premium de black angus alimentado con pasto, servido con mantequilla de hierbas finas y patatar fritas al romero.', fr: '400g d’entrecôte de boeuf black angus nouri à l’herbe, servie avec beurre d’herbes fraîches et frites au romarin.', it: '400g di costata di manzo black angus da pascolo, servito con burro alle erbe aromatiche e patatine fritte al rosmarino.', ar: 'ستيك ريب آي بلاك أنجوس فاخر مغذى على العشب 400 جرام يقدم مع زبدة الأعشاب الطازجة وبطاطا مقلية بالروزماري.' },
-        price: 42.00,
-        imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80',
-        variants: [
-          { name: 'Medium Rare cooked', priceModifier: 0 },
-          { name: 'Well Done slow-bake', priceModifier: 0 },
-          { name: 'Topped with Seared Foie Gras', priceModifier: 12.00 }
-        ],
-        offerTag: 'Popular',
-        isSpicy: false
-      },
-      {
-        id: 'item-3',
-        categoryId: 'cat-3',
-        name: { en: 'Warm Lava Chocolate Cake', es: 'Volcán de Chocolate Caliente', fr: 'Fondant au Chocolat Chaud', it: 'Tortino al Cioccolato Caldo', ar: 'كيكة الشوكولاتة لافا الدافئة' },
-        description: { en: 'Molten Belgian dark chocolate middle, served with a scoop of Tahitian vanilla bean ice cream & raspberry coulis.', es: 'Centro fundido de chocolate amargo belga, servido con helado de vainilla de Tahití y coulis de frambuesa.', fr: 'Cœur coulant au chocolat noir belge, servi avec une boule de glace à la vanille de Tahiti et coulis de framboise.', it: 'Cuore di cioccolato fondente belga fuso, servito con gelato alla vaniglia di Tahiti e coulis di lamponi.', ar: 'وسط شوكولاتة بلجيكية داكنة سائلة، يقدم مع مغرفة من آيس كريم فانيليا تاهيتي وكوليس التوت.' },
-        price: 12.50,
-        imageUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&auto=format&fit=crop&q=80',
-        variants: [
-          { name: 'Single Scoop Ice Cream', priceModifier: 0 },
-          { name: 'Double Scoop Ice Cream', priceModifier: 2.50 }
-        ],
-        isVegetarian: true
-      }
-    ]
+  // Localized string resolver helpers
+  const getItemName = (item: MenuItem, lang: string): string => {
+    const val = item.name[lang as keyof typeof item.name];
+    if (val && val.trim()) return val;
+    return item.name['en'] || item.name['ar'] || Object.values(item.name)[0] || '';
+  };
+
+  const getItemDesc = (item: MenuItem, lang: string): string => {
+    const val = item.description[lang as keyof typeof item.description];
+    if (val && val.trim()) return val;
+    return item.description['en'] || item.description['ar'] || Object.values(item.description)[0] || '';
+  };
+
+  const getCatName = (cat: MenuCategory, lang: string): string => {
+    const val = cat.name[lang as keyof typeof cat.name];
+    if (val && val.trim()) return val;
+    return cat.name['en'] || cat.name['ar'] || Object.values(cat.name)[0] || '';
+  };
+
+  const [menu, setMenu] = useState<RestaurantMenuConfig>(() => {
+    if (isArabic) {
+      return GULF_ARABIC_MENU_PRESET;
+    }
+    return DEFAULT_ENGLISH_MENU;
   });
 
-  const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
-  const [isSaving, setIsSaving] = useState(false);
-  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('all');
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-  
+  // Keep menu and simulator language aligned when app locale changes
+  useEffect(() => {
+    if (isArabic) {
+      setSimulatedLanguage('ar');
+      setMenu(prev => {
+        if (prev.id === 'menu-default-en' || prev.id.startsWith('menu-default')) {
+          return GULF_ARABIC_MENU_PRESET;
+        }
+        return {
+          ...prev,
+          selectedLanguage: 'ar'
+        };
+      });
+    } else {
+      setSimulatedLanguage('en');
+      setMenu(prev => {
+        if (prev.id === 'menu-default-ar' || prev.id.startsWith('menu-default')) {
+          return DEFAULT_ENGLISH_MENU;
+        }
+        return {
+          ...prev,
+          selectedLanguage: 'en'
+        };
+      });
+    }
+  }, [locale, isArabic]);
+
   // Mobile simulation states
-  const [simulatedLanguage, setSimulatedLanguage] = useState<'en' | 'es' | 'fr' | 'it'>('en');
+  const [simulatedLanguage, setSimulatedLanguage] = useState<'en' | 'es' | 'fr' | 'it' | 'ar'>(isArabic ? 'ar' : 'en');
   const [simulatedCart, setSimulatedCart] = useState<{ item: MenuItem; selectedVariant: MenuVariant; quantity: number }[]>([]);
   const [activePreviewItem, setActivePreviewItem] = useState<MenuItem | null>(null);
   const [tempVariant, setTempVariant] = useState<MenuVariant | null>(null);
 
   // New item draft states
   const [newItemCategory, setNewItemCategory] = useState<string>('cat-1');
-  const [newItemNameEn, setNewItemNameEn] = useState('');
-  const [newItemNameEs, setNewItemNameEs] = useState('');
-  const [newItemDescEn, setNewItemDescEn] = useState('');
+  const [newItemNames, setNewItemNames] = useState<Record<string, string>>({
+    en: '', es: '', fr: '', it: '', ar: ''
+  });
+  const [newItemDescs, setNewItemDescs] = useState<Record<string, string>>({
+    en: '', es: '', fr: '', it: '', ar: ''
+  });
   const [newItemPrice, setNewItemPrice] = useState('15.00');
   const [newItemImage, setNewItemImage] = useState(PRESET_CULINARY_IMAGES[0].url);
   const [newItemOffer, setNewItemOffer] = useState('');
   const [newItemIsVegetarian, setNewItemIsVegetarian] = useState(false);
   const [newItemIsSpicy, setNewItemIsSpicy] = useState(false);
+
+  // Custom image upload states & event handlers
+  const [imageSourceMode, setImageSourceMode] = useState<'preset' | 'upload'>('preset');
+  const [dragActive, setDragActive] = useState(false);
+  const [customUploadedImage, setCustomUploadedImage] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processImageFile(file);
+    }
+  };
+
+  const processImageFile = (file: File) => {
+    setUploadError(null);
+    if (!file.type.startsWith('image/')) {
+      setUploadError(isArabic ? 'الرجاء تحميل ملف صورة صالح.' : 'Please upload a valid image file.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const resultStr = reader.result as string;
+      setCustomUploadedImage(resultStr);
+      setNewItemImage(resultStr);
+      playAudioSound('preview');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processImageFile(e.dataTransfer.files[0]);
+    }
+  };
+
+const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('all');
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+  
+
 
   // Load Saved Menus
   useEffect(() => {
@@ -330,7 +769,8 @@ export default function RestaurantMenu() {
         en: 'New Category',
         es: 'Nueva Categoría',
         fr: 'Nouvelle Catégorie',
-        it: 'Nuova Categoria'
+        it: 'Nuova Categoria',
+        ar: 'فئة جديدة'
       },
       icon: randomIcon
     };
@@ -376,8 +816,14 @@ export default function RestaurantMenu() {
 
   // Add Item
   const handleAddItem = () => {
-    if (!newItemNameEn.trim()) return;
+    const nameEn = newItemNames.en.trim();
+    const activeLang = menu.selectedLanguage;
+    const nameActive = newItemNames[activeLang]?.trim();
 
+    // Validate that we have at least the current active language name OR english name
+    if (!nameEn && !nameActive) return;
+
+    const finalEnName = nameEn || nameActive || 'Unnamed Dish';
     const newItemId = 'item-' + Math.random().toString(36).substring(2, 9);
     const priceNum = parseFloat(newItemPrice) || 12.00;
 
@@ -385,20 +831,25 @@ export default function RestaurantMenu() {
       id: newItemId,
       categoryId: newItemCategory,
       name: {
-        en: newItemNameEn,
-        es: newItemNameEs || newItemNameEn,
-        fr: newItemNameEn,
-        it: newItemNameEn
+        en: finalEnName,
+        es: newItemNames.es.trim() || finalEnName,
+        fr: newItemNames.fr.trim() || finalEnName,
+        it: newItemNames.it.trim() || finalEnName,
+        ar: newItemNames.ar.trim() || finalEnName
       },
       description: {
-        en: newItemDescEn || 'Delectable chef crafted culinary creation seasoned to perfection.',
-        es: newItemDescEn ? 'Creación culinaria exquisita del chef sazonada a la perfección.' : 'Delectable chef crafted culinary creation seasoned to perfection.',
-        fr: 'Création culinaire exquise préparée avec passion.',
-        it: 'Creazione culinaria artigianale preparata con passione.'
+        en: newItemDescs.en.trim() || newItemDescs[activeLang]?.trim() || 'Delectable chef crafted culinary creation seasoned to perfection.',
+        es: newItemDescs.es.trim() || newItemDescs.en.trim() || 'Creación culinaria exquisita del chef sazonada a la perfección.',
+        fr: newItemDescs.fr.trim() || newItemDescs.en.trim() || 'Création culinaire exquise préparée avec passion.',
+        it: newItemDescs.it.trim() || newItemDescs.en.trim() || 'Creazione culinaria artigianale preparata con passione.',
+        ar: newItemDescs.ar.trim() || newItemDescs.en.trim() || 'طبق شهي من إعداد الشيف متبل بشكل مثالي.'
       },
       price: priceNum,
       imageUrl: newItemImage,
-      variants: [
+      variants: (isArabic || menu.selectedLanguage === 'ar') ? [
+        { name: 'حجم عادي', priceModifier: 0 },
+        { name: 'ترقية مميزة', priceModifier: 3.50 }
+      ] : [
         { name: 'Regular Portion', priceModifier: 0 },
         { name: 'Premium Upgrade', priceModifier: 3.50 }
       ],
@@ -413,12 +864,15 @@ export default function RestaurantMenu() {
     }));
 
     // Reset fields
-    setNewItemNameEn('');
-    setNewItemNameEs('');
-    setNewItemDescEn('');
+    setNewItemNames({ en: '', es: '', fr: '', it: '', ar: '' });
+    setNewItemDescs({ en: '', es: '', fr: '', it: '', ar: '' });
     setNewItemOffer('');
     setNewItemIsVegetarian(false);
     setNewItemIsSpicy(false);
+    setCustomUploadedImage(null);
+    setUploadError(null);
+    setNewItemImage(PRESET_CULINARY_IMAGES[0].url);
+    setImageSourceMode('preset');
 
     playAudioSound('generate');
   };
@@ -439,7 +893,7 @@ export default function RestaurantMenu() {
         if (item.id === itemId) {
           return {
             ...item,
-            variants: [...item.variants, { name: 'Extra Side Option', priceModifier: 2.50 }]
+            variants: [...item.variants, { name: (isArabic || menu.selectedLanguage === 'ar') ? 'خيار إضافي' : 'Extra Side Option', priceModifier: 2.50 }]
           };
         }
         return item;
@@ -542,13 +996,13 @@ export default function RestaurantMenu() {
       },
       "hasMenuSection": menu.categories.map(cat => ({
         "@type": "MenuSection",
-        "name": cat.name[menu.selectedLanguage] || cat.name['en'],
+        "name": getCatName(cat, menu.selectedLanguage),
         "hasMenuItem": menu.items
           .filter(item => item.categoryId === cat.id)
           .map(item => ({
             "@type": "MenuItem",
-            "name": item.name[menu.selectedLanguage] || item.name['en'],
-            "description": item.description[menu.selectedLanguage] || item.description['en'],
+            "name": getItemName(item, menu.selectedLanguage),
+            "description": getItemDesc(item, menu.selectedLanguage),
             "image": item.imageUrl,
             "offers": {
               "@type": "Offer",
@@ -881,7 +1335,7 @@ export default function RestaurantMenu() {
                   type="text"
                   value={menu.restaurantName}
                   onChange={e => setMenu(prev => ({ ...prev, restaurantName: e.target.value }))}
-                  placeholder="e.g. Gusto Bistro"
+                  placeholder={tMenu("e.g. Gusto Bistro")}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 />
               </div>
@@ -907,7 +1361,7 @@ export default function RestaurantMenu() {
                   type="text"
                   value={menu.description}
                   onChange={e => setMenu(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="e.g. Handmade pasta, fresh stonebaked pizza, exquisite desserts."
+                  placeholder={tMenu("e.g. Handmade pasta, fresh stonebaked pizza, exquisite desserts.")}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 />
               </div>
@@ -978,13 +1432,13 @@ export default function RestaurantMenu() {
 
                   <div className="flex-1 min-w-0">
                     <label className="text-[8px] text-slate-400 font-bold block uppercase tracking-wider mb-0.5">
-                      {isArabic ? 'الاسم' : 'Name'} ({menu.selectedLanguage.toUpperCase()})
+                      {tMenu("Name")} ({menu.selectedLanguage.toUpperCase()})
                     </label>
                     <input
                       type="text"
                       value={cat.name[menu.selectedLanguage] || ''}
                       onChange={e => handleUpdateCategoryName(cat.id, e.target.value)}
-                      placeholder="e.g. Main Dishes"
+                      placeholder={tMenu("e.g. Main Dishes")}
                       className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs text-slate-800 outline-none focus:border-indigo-400"
                     />
                   </div>
@@ -992,7 +1446,7 @@ export default function RestaurantMenu() {
                   <button
                     onClick={() => handleRemoveCategory(cat.id)}
                     className="p-1 text-slate-300 hover:text-rose-600 rounded-lg hover:bg-slate-100 transition-all shrink-0 cursor-pointer"
-                    title="Delete Category (Cascades items)"
+                    title={tMenu("Delete Category (Cascades items)")}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -1021,7 +1475,7 @@ export default function RestaurantMenu() {
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white outline-none"
                 >
                   {menu.categories.map(c => (
-                    <option key={c.id} value={c.id}>{c.icon} {c.name[menu.selectedLanguage] || c.name['en']}</option>
+                    <option key={c.id} value={c.id}>{c.icon} {getCatName(c, menu.selectedLanguage)}</option>
                   ))}
                 </select>
               </div>
@@ -1030,34 +1484,62 @@ export default function RestaurantMenu() {
                 <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Item Title (English)")}</label>
                 <input
                   type="text"
-                  value={newItemNameEn}
-                  onChange={e => setNewItemNameEn(e.target.value)}
-                  placeholder="e.g. Avocado Toast Deluxe"
+                  value={newItemNames.en}
+                  onChange={e => setNewItemNames(prev => ({ ...prev, en: e.target.value }))}
+                  placeholder={tMenu("e.g. Avocado Toast Deluxe")}
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Item Title (Spanish Spanish)</label>
+              {(isArabic || menu.selectedLanguage === 'ar') ? (
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Item Title (Arabic)")}</label>
+                  <input
+                    type="text"
+                    value={newItemNames.ar}
+                    onChange={e => setNewItemNames(prev => ({ ...prev, ar: e.target.value }))}
+                    placeholder="مثال: لحم كبسة فاخر"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
+                    dir="rtl"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Item Title (Spanish)")}</label>
+                  <input
+                    type="text"
+                    value={newItemNames.es}
+                    onChange={e => setNewItemNames(prev => ({ ...prev, es: e.target.value }))}
+                    placeholder={tMenu("e.g. Tostada de Aguacate")}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
+                  />
+                </div>
+              )}
+
+              <div className={(isArabic || menu.selectedLanguage === 'ar') ? "sm:col-span-1" : "sm:col-span-2"}>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("English Description")}</label>
                 <input
                   type="text"
-                  value={newItemNameEs}
-                  onChange={e => setNewItemNameEs(e.target.value)}
-                  placeholder="e.g. Tostada de Aguacate"
+                  value={newItemDescs.en}
+                  onChange={e => setNewItemDescs(prev => ({ ...prev, en: e.target.value }))}
+                  placeholder={tMenu("e.g. Smashed organic avocados on sourdough with poached eggs.")}
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
                 />
               </div>
 
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-700 mb-1">English Description</label>
-                <input
-                  type="text"
-                  value={newItemDescEn}
-                  onChange={e => setNewItemDescEn(e.target.value)}
-                  placeholder="e.g. Smashed organic avocados on sourdough with poached eggs."
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
-                />
-              </div>
+              {(isArabic || menu.selectedLanguage === 'ar') && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Arabic Description")}</label>
+                  <input
+                    type="text"
+                    value={newItemDescs.ar}
+                    onChange={e => setNewItemDescs(prev => ({ ...prev, ar: e.target.value }))}
+                    placeholder="مثال: طبق أرز برياني لذيذ مع دجاج تندوري متبل."
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
+                    dir="rtl"
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Base Price")}</label>
@@ -1078,12 +1560,12 @@ export default function RestaurantMenu() {
 
               {/* Active Offer Tag / Promo labels */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Promo Label (Optional)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tMenu("Promo Label (Optional)")}</label>
                 <input
                   type="text"
                   value={newItemOffer}
                   onChange={e => setNewItemOffer(e.target.value)}
-                  placeholder="e.g. Chef's Choice, 20% Off"
+                  placeholder={tMenu("e.g. Chef's Choice, 20% Off")}
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white outline-none"
                 />
               </div>
@@ -1097,7 +1579,7 @@ export default function RestaurantMenu() {
                     onChange={e => setNewItemIsVegetarian(e.target.checked)}
                     className="w-4 h-4 text-emerald-600 rounded-md border-slate-300 focus:ring-emerald-500"
                   />
-                  🌿 Vegetarian / Green Vegan
+                  🌿 {tMenu("Vegetarian / Green Vegan")}
                 </label>
 
                 <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer select-none">
@@ -1107,31 +1589,127 @@ export default function RestaurantMenu() {
                     onChange={e => setNewItemIsSpicy(e.target.checked)}
                     className="w-4 h-4 text-rose-600 rounded-md border-slate-300 focus:ring-rose-500"
                   />
-                  🌶️ Spicy / Fiery Heat
+                  🌶️ {tMenu("Spicy / Fiery Heat")}
                 </label>
               </div>
 
               {/* Image picker */}
               <div className="sm:col-span-3 border-t border-slate-100 pt-3">
-                <label className="block text-xs font-bold text-slate-700 mb-2">Selected Culinary Image</label>
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                  {PRESET_CULINARY_IMAGES.map(pic => (
-                    <button
-                      key={pic.name}
-                      type="button"
-                      onClick={() => {
-                        setNewItemImage(pic.url);
-                        playAudioSound('preview');
-                      }}
-                      className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-transform ${newItemImage === pic.url ? 'border-indigo-600 scale-105' : 'border-transparent opacity-80 hover:opacity-100'}`}
-                    >
-                      <img src={pic.url} alt={pic.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-                      <span className="absolute bottom-0 inset-x-0 bg-slate-900/65 text-[7px] text-white py-0.5 text-center truncate px-1">
-                        {pic.name}
-                      </span>
-                    </button>
-                  ))}
+                <label className="block text-xs font-bold text-slate-700 mb-2">{tMenu("Selected Culinary Image")}</label>
+                
+                {/* Mode Select Buttons */}
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageSourceMode('preset');
+                      setNewItemImage(PRESET_CULINARY_IMAGES[0].url);
+                      playAudioSound('preview');
+                    }}
+                    className={`py-2 px-3 rounded-xl border text-[10px] font-extrabold text-center transition-all cursor-pointer ${imageSourceMode === 'preset' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-xs' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                  >
+                    🎨 {tMenu("Option A: Select Preset Image")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageSourceMode('upload');
+                      setNewItemImage(customUploadedImage || '');
+                      playAudioSound('preview');
+                    }}
+                    className={`py-2 px-3 rounded-xl border text-[10px] font-extrabold text-center transition-all cursor-pointer ${imageSourceMode === 'upload' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-xs' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                  >
+                    📤 {tMenu("Option B: Upload Custom Picture")}
+                  </button>
                 </div>
+
+                {imageSourceMode === 'preset' ? (
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {filteredCulinaryImages.map(pic => (
+                      <button
+                        key={pic.name}
+                        type="button"
+                        onClick={() => {
+                          setNewItemImage(pic.url);
+                          playAudioSound('preview');
+                        }}
+                        className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${newItemImage === pic.url ? 'border-indigo-600 scale-105 shadow-xs' : 'border-transparent opacity-80 hover:opacity-100'}`}
+                      >
+                        <img src={pic.url} alt={pic.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                        <span className="absolute bottom-0 inset-x-0 bg-slate-900/65 text-[7px] text-white py-0.5 text-center truncate px-1">
+                          {tMenu(pic.name)}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {/* Drag and Drop Container */}
+                    <div
+                      onDragEnter={handleDrag}
+                      onDragOver={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDrop={handleDrop}
+                      className={`relative border-2 border-dashed rounded-2xl p-4 transition-all flex flex-col items-center justify-center text-center cursor-pointer min-h-[110px] ${
+                        dragActive 
+                          ? "border-indigo-500 bg-indigo-50/50" 
+                          : "border-slate-300 hover:border-indigo-400 bg-white"
+                      }`}
+                    >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageFileChange}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                      
+                      {newItemImage && newItemImage.startsWith('data:') ? (
+                        <div className="flex flex-col items-center gap-2 relative z-20">
+                          <img 
+                            src={newItemImage} 
+                            alt="Uploaded preview" 
+                            className="w-16 h-16 rounded-xl object-cover border border-slate-200 shadow-xs bg-slate-50"
+                          />
+                          <p className="text-[10px] font-bold text-emerald-600">
+                            ✨ {tMenu("Custom Image Uploaded Successfully!")}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setCustomUploadedImage(null);
+                              setNewItemImage(PRESET_CULINARY_IMAGES[0].url);
+                              setImageSourceMode('preset');
+                              playAudioSound('preview');
+                            }}
+                            className="text-[9px] font-bold text-slate-500 hover:text-rose-600 transition-colors underline cursor-pointer"
+                          >
+                            {tMenu("Remove & Use Preset")}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-1.5">
+                          {uploadError ? (
+                            <p className="text-[10px] font-semibold text-rose-600 bg-rose-50/80 px-2.5 py-1.5 rounded-xl border border-rose-100 mb-1">
+                              ⚠️ {uploadError}
+                            </p>
+                          ) : (
+                            <div className="p-2 bg-indigo-50 rounded-full text-indigo-500">
+                              <UploadCloud className="w-5 h-5" />
+                            </div>
+                          )}
+                          <p className="text-[10px] font-black text-slate-700">
+                            {tMenu("Drag & drop your dish picture here, or click to browse")}
+                          </p>
+                          <p className="text-[8px] text-slate-400">
+                            {tMenu("Supports PNG, JPG, JPEG up to 5MB")}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="sm:col-span-3 flex justify-end pt-3">
@@ -1141,7 +1719,7 @@ export default function RestaurantMenu() {
                   className="px-5 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-700 transition-colors shadow-xs cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" />
-                  Append Dish to Menu
+                  {tMenu("Append Dish to Menu")}
                 </button>
               </div>
 
@@ -1149,7 +1727,7 @@ export default function RestaurantMenu() {
 
             {/* List of current items & Variants editor */}
             <div className="space-y-4 pt-3">
-              <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Active Dishes & Variant Pricing</h4>
+              <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">{tMenu("Active Dishes & Variant Pricing")}</h4>
               
               <div className="space-y-4">
                 {menu.items.map(item => {
@@ -1168,7 +1746,7 @@ export default function RestaurantMenu() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-[9px] font-bold text-slate-400 bg-white border border-slate-200 px-2 py-0.5 rounded-full uppercase">
-                              {itemCat?.icon} {itemCat?.name[menu.selectedLanguage] || 'Unassigned'}
+                              {itemCat?.icon} {itemCat ? getCatName(itemCat, menu.selectedLanguage) : 'Unassigned'}
                             </span>
                             {item.offerTag && (
                               <span className="text-[9px] font-bold text-rose-700 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-full uppercase flex items-center gap-0.5">
@@ -1182,7 +1760,7 @@ export default function RestaurantMenu() {
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
                             <div>
-                              <label className="text-[8px] font-bold text-slate-400 block uppercase">Name ({menu.selectedLanguage})</label>
+                              <label className="text-[8px] font-bold text-slate-400 block uppercase">{tMenu("Name")} ({menu.selectedLanguage.toUpperCase()})</label>
                               <input
                                 type="text"
                                 value={item.name[menu.selectedLanguage] || ''}
@@ -1191,7 +1769,7 @@ export default function RestaurantMenu() {
                               />
                             </div>
                             <div>
-                              <label className="text-[8px] font-bold text-slate-400 block uppercase">Description ({menu.selectedLanguage})</label>
+                              <label className="text-[8px] font-bold text-slate-400 block uppercase">{tMenu("Description")} ({menu.selectedLanguage.toUpperCase()})</label>
                               <input
                                 type="text"
                                 value={item.description[menu.selectedLanguage] || ''}
@@ -1215,14 +1793,14 @@ export default function RestaurantMenu() {
                       <div className="bg-white border border-slate-200/50 rounded-xl p-3 space-y-3">
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">
-                            Portion Sizes & Custom Variants
+                            {tMenu("Portion Sizes & Custom Variants")}
                           </span>
                           <button
                             type="button"
                             onClick={() => handleAddItemVariant(item.id)}
                             className="text-[10px] text-indigo-600 font-bold hover:underline cursor-pointer flex items-center gap-0.5"
                           >
-                            + Add Variant
+                            + {tMenu("Add Variant")}
                           </button>
                         </div>
 
@@ -1233,7 +1811,7 @@ export default function RestaurantMenu() {
                                 type="text"
                                 value={v.name}
                                 onChange={e => handleUpdateItemVariant(item.id, vIdx, 'name', e.target.value)}
-                                placeholder="Size/Option"
+                                placeholder={tMenu("Size/Option")}
                                 className="flex-1 bg-white border border-slate-200 rounded-md px-2 py-1 text-[10px] text-slate-800 outline-none"
                               />
                               <div className="w-20 relative">
@@ -1264,7 +1842,7 @@ export default function RestaurantMenu() {
 
                 {menu.items.length === 0 && (
                   <div className="text-center py-8 bg-slate-50 border border-slate-100 rounded-2xl">
-                    <p className="text-xs text-slate-400">No dishes created yet. Fill out the appended form above to insert plates.</p>
+                    <p className="text-xs text-slate-400">{tMenu("No dishes created yet. Fill out the appended form above to insert plates.")}</p>
                   </div>
                 )}
               </div>
@@ -1282,12 +1860,12 @@ export default function RestaurantMenu() {
             <div className="flex items-center justify-between px-2">
               <span className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-1">
                 <Smartphone className="w-4 h-4 text-indigo-600" />
-                Table-Top Smartphone Menu Preview
+                {tMenu("Table-Top Smartphone Menu Preview")}
               </span>
               
               {/* Simulated Customer Language select */}
               <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border">
-                {['en', 'es', 'fr', 'it'].map(l => (
+                {['en', 'es', 'fr', 'it', 'ar'].map(l => (
                   <button
                     key={l}
                     onClick={() => {
@@ -1343,7 +1921,7 @@ export default function RestaurantMenu() {
                     }}
                     className={`px-2.5 py-1 text-[9px] font-bold rounded-full whitespace-nowrap shrink-0 border transition-all ${activeCategoryFilter === 'all' ? 'bg-slate-900 text-white border-transparent' : 'bg-white text-slate-600 border-slate-200'}`}
                   >
-                    🍽️ All Items
+                    🍽️ {tMenu("All Items")}
                   </button>
                   {menu.categories.map(cat => (
                     <button
@@ -1354,7 +1932,7 @@ export default function RestaurantMenu() {
                       }}
                       className={`px-2.5 py-1 text-[9px] font-bold rounded-full whitespace-nowrap shrink-0 border transition-all ${activeCategoryFilter === cat.id ? 'bg-slate-900 text-white border-transparent' : 'bg-white text-slate-600 border-slate-200'}`}
                     >
-                      {cat.icon} {cat.name[simulatedLanguage] || cat.name['en']}
+                      {cat.icon} {getCatName(cat, simulatedLanguage)}
                     </button>
                   ))}
                 </div>
@@ -1375,7 +1953,7 @@ export default function RestaurantMenu() {
                       >
                         <img
                           src={item.imageUrl}
-                          alt={item.name[simulatedLanguage]}
+                          alt={getItemName(item, simulatedLanguage)}
                           referrerPolicy="no-referrer"
                           className="w-14 h-14 rounded-lg object-cover bg-white border border-slate-200 shrink-0"
                         />
@@ -1383,14 +1961,14 @@ export default function RestaurantMenu() {
                           <div>
                             <div className="flex items-center justify-between gap-1.5">
                               <h5 className="text-[11px] font-extrabold text-slate-800 truncate">
-                                {item.name[simulatedLanguage] || item.name['en']}
+                                {getItemName(item, simulatedLanguage)}
                               </h5>
                               <span className="text-[10px] font-black text-slate-900">
                                 {formatPrice(item.price, menu.currency)}
                               </span>
                             </div>
                             <p className="text-[8px] text-slate-400 line-clamp-2 leading-snug">
-                              {item.description[simulatedLanguage] || item.description['en']}
+                              {getItemDesc(item, simulatedLanguage)}
                             </p>
                           </div>
 
@@ -1411,7 +1989,7 @@ export default function RestaurantMenu() {
 
                   {menu.items.length === 0 && (
                     <div className="text-center py-12">
-                      <p className="text-[10px] text-slate-400">Empty menu setup</p>
+                      <p className="text-[10px] text-slate-400">{tMenu("Empty menu setup")}</p>
                     </div>
                   )}
                 </div>
@@ -1421,9 +1999,9 @@ export default function RestaurantMenu() {
                   <div className="flex items-center justify-between text-[10px] font-bold text-slate-600">
                     <span className="flex items-center gap-1">
                       <ShoppingBag className="w-3.5 h-3.5 text-slate-500" />
-                      Mock Table Cart ({simulatedCart.length})
+                      {tMenu("Mock Table Cart")} ({simulatedCart.length})
                     </span>
-                    <span className="text-slate-900 font-extrabold">Total: {formatPrice(getCartTotal(), menu.currency)}</span>
+                    <span className="text-slate-900 font-extrabold">{tMenu("Total")}: {formatPrice(getCartTotal(), menu.currency)}</span>
                   </div>
 
                   {simulatedCart.length > 0 ? (
@@ -1431,19 +2009,19 @@ export default function RestaurantMenu() {
                       {simulatedCart.map((cartEntry, idx) => (
                         <div key={idx} className="flex items-center justify-between text-[8px] bg-white p-1 rounded border border-slate-100">
                           <span className="text-slate-700 truncate font-semibold">
-                            {cartEntry.quantity}x {cartEntry.item.name[simulatedLanguage]} ({cartEntry.selectedVariant.name})
+                            {cartEntry.quantity}x {getItemName(cartEntry.item, simulatedLanguage)} ({tMenu(cartEntry.selectedVariant.name)})
                           </span>
                           <button
                             onClick={() => handleRemoveFromCart(idx)}
                             className="text-red-500 hover:text-red-700 font-bold"
                           >
-                            Remove
+                            {tMenu("Remove")}
                           </button>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-[8px] text-slate-400 text-center">Scan QR code, select dishes & click simulated variants to order.</p>
+                    <p className="text-[8px] text-slate-400 text-center">{tMenu("Scan QR code, select dishes & click simulated variants to order.")}</p>
                   )}
                 </div>
 
@@ -1464,8 +2042,8 @@ export default function RestaurantMenu() {
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <span className="text-[7px] text-indigo-600 font-bold uppercase tracking-wider">ADD TO BASKET</span>
-                            <h6 className="text-xs font-black text-slate-900">{activePreviewItem.name[simulatedLanguage] || activePreviewItem.name['en']}</h6>
+                            <span className="text-[7px] text-indigo-600 font-bold uppercase tracking-wider">{tMenu("ADD TO BASKET")}</span>
+                            <h6 className="text-xs font-black text-slate-900">{getItemName(activePreviewItem, simulatedLanguage)}</h6>
                           </div>
                           <button
                             onClick={() => setActivePreviewItem(null)}
@@ -1477,7 +2055,7 @@ export default function RestaurantMenu() {
 
                         {/* Variants check list inside simulation */}
                         <div className="space-y-1.5">
-                          <span className="text-[8px] font-bold text-slate-400 block uppercase">Choose portion variation:</span>
+                          <span className="text-[8px] font-bold text-slate-400 block uppercase">{tMenu("Choose portion variation:")}</span>
                           {activePreviewItem.variants.map((v, i) => (
                             <label
                               key={i}
@@ -1491,10 +2069,10 @@ export default function RestaurantMenu() {
                                   onChange={() => setTempVariant(v)}
                                   className="hidden"
                                 />
-                                <span className="font-bold">{v.name}</span>
+                                <span className="font-bold">{tMenu(v.name)}</span>
                               </div>
                               <span className="font-extrabold">
-                                {v.priceModifier > 0 ? `+${formatPrice(v.priceModifier, menu.currency)}` : 'Included'}
+                                {v.priceModifier > 0 ? `+${formatPrice(v.priceModifier, menu.currency)}` : tMenu('Included')}
                               </span>
                             </label>
                           ))}
@@ -1505,7 +2083,7 @@ export default function RestaurantMenu() {
                           className="w-full py-2 bg-slate-900 text-white text-[10px] font-black rounded-xl hover:bg-slate-800 transition-colors flex items-center justify-center gap-1"
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
-                          Simulate Adding to Table Order
+                          {tMenu("Simulate Adding to Table Order")}
                         </button>
                       </motion.div>
                     </motion.div>
@@ -1526,10 +2104,10 @@ export default function RestaurantMenu() {
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
                 <QrCode className="w-4 h-4 text-indigo-600" />
-                Table-Stand QR Export
+                {tMenu("Table-Stand QR Export")}
               </h4>
               <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase border ${selectedTheme.badge}`}>
-                Table Ready QR
+                {tMenu("Table Ready QR")}
               </span>
             </div>
 
@@ -1544,9 +2122,9 @@ export default function RestaurantMenu() {
 
               <div className="flex-1 space-y-2.5 w-full text-center sm:text-left">
                 <div>
-                  <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Table-top Tent Card URL</p>
+                  <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">{tMenu("Table-top Tent Card URL")}</p>
                   <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                    Print or download high-resolution QR codes for table tents or wine cards to grant guests touchless smartphone access.
+                    {tMenu("Print or download high-resolution QR codes for table tents or wine cards to grant guests touchless smartphone access.")}
                   </p>
                 </div>
 
@@ -1556,28 +2134,28 @@ export default function RestaurantMenu() {
                     className="py-1 px-3 bg-slate-900 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-slate-800 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    Download PNG
+                    {tMenu("Download PNG")}
                   </button>
                   <button
                     onClick={() => downloadMenuQR('svg')}
                     className="py-1 px-3 bg-slate-800 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-slate-700 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    Download SVG
+                    {tMenu("Download SVG")}
                   </button>
                   <button
                     onClick={handleDownloadTableStandPDF}
                     className="py-1 px-3 bg-indigo-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-indigo-700 transition-colors cursor-pointer shadow-xs"
                   >
                     <Download className="w-3.5 h-3.5 text-indigo-300" />
-                    Download Table-Stand (PDF)
+                    {tMenu("Download Table-Stand (PDF)")}
                   </button>
                   <button
                     onClick={handlePreviewDigitalMenu}
                     className="py-1 px-3 border border-indigo-200 text-indigo-700 hover:bg-indigo-50 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1"
                   >
                     <Eye className="w-3.5 h-3.5" />
-                    Preview Digital Menu
+                    {tMenu("Preview Digital Menu")}
                   </button>
                 </div>
               </div>
@@ -1590,32 +2168,32 @@ export default function RestaurantMenu() {
               <div className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-emerald-600" />
                 <h4 className="text-xs font-black tracking-widest uppercase text-slate-800">
-                  Digital Menu & Quick PDF Builder
+                  {tMenu("Digital Menu & Quick PDF Builder")}
                 </h4>
               </div>
 
               <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                SEO Schema Active
+                {tMenu("SEO Schema Active")}
               </span>
             </div>
 
             <p className="text-[11px] text-slate-500 leading-normal">
-              Your digital menu is published with live search optimization. Connect a PDF menu link or use the Quick Food Item Builder to update your live offerings.
+              {tMenu("Your digital menu is published with live search optimization. Connect a PDF menu link or use the Quick Food Item Builder to update your live offerings.")}
             </p>
 
             <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/60 space-y-3">
               <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
                 <span className="flex items-center gap-1.5 text-slate-600">
                   <UploadCloud className="w-4 h-4 text-indigo-600" />
-                  PDF Upload / Direct Menu Link
+                  {tMenu("PDF Upload / Direct Menu Link")}
                 </span>
                 <button
                   onClick={() => copyToClipboard(getQRContent(), 'Direct Menu Link')}
                   className="text-[10px] text-indigo-600 font-bold hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Copy className="w-3 h-3" />
-                  {copiedField === 'Direct Menu Link' ? 'Copied Link!' : 'Copy Link'}
+                  {copiedField === 'Direct Menu Link' ? tMenu('Copied Link!') : tMenu('Copy Link')}
                 </button>
               </div>
 
@@ -1631,7 +2209,7 @@ export default function RestaurantMenu() {
                   className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-bold rounded-xl shrink-0 cursor-pointer flex items-center gap-1"
                 >
                   <Eye className="w-3.5 h-3.5 text-indigo-400" />
-                  Open Preview
+                  {tMenu("Open Preview")}
                 </button>
               </div>
             </div>

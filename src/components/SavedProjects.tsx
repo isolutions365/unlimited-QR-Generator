@@ -1,6 +1,26 @@
 import React from 'react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
 import { useTranslation } from '../utils/i18n';
-import { isRtlLocale } from '../utils/translations';
+import { isRtlLocale, Locale } from '../utils/translations';
 import { auth } from '../lib/firebase';
 import { api } from '../lib/api';
 
@@ -36,6 +56,315 @@ import {
   Link as LinkIcon,
   QrCode
 } from 'lucide-react';
+
+interface SortableProjectItemProps {
+  proj: QRProject;
+  isSelected: boolean;
+  locale: Locale;
+  movingProjectId: string | null;
+  isDuplicatingId: string | null;
+  allCategories: string[];
+  copiedId: string | null;
+  t: (key: string, fallback?: string, params?: Record<string, any>) => string;
+  onCardClick: (proj: QRProject, e?: React.MouseEvent) => void;
+  onToggleSelect: (id: string, e?: React.MouseEvent | React.ChangeEvent) => void;
+  onLoadAndEdit: (proj: QRProject, e?: React.MouseEvent) => void;
+  onDuplicateProject: (proj: QRProject, e: React.MouseEvent) => void;
+  onMoveProject: (projectId: string, category: string) => void;
+  onCreateFolder: (name: string) => void;
+  onDelete: (id: string) => void;
+  setSelectedDetailProject: (proj: QRProject | null) => void;
+  setMovingProjectId: React.Dispatch<React.SetStateAction<string | null>>;
+  setAnalyticsProject: (proj: QRProject | null) => void;
+  onCopyLink: (e: React.MouseEvent, trackingId: string, id: string) => void;
+  onSeedData?: (projectId: string, trackingId: string) => void;
+}
+
+function SortableProjectItem({
+  proj,
+  isSelected,
+  locale,
+  movingProjectId,
+  isDuplicatingId,
+  allCategories,
+  copiedId,
+  t,
+  onCardClick,
+  onToggleSelect,
+  onLoadAndEdit,
+  onDuplicateProject,
+  onMoveProject,
+  onCreateFolder,
+  onDelete,
+  setSelectedDetailProject,
+  setMovingProjectId,
+  setAnalyticsProject,
+  onCopyLink,
+  onSeedData,
+}: SortableProjectItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: proj.id });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.35 : 1,
+    zIndex: isDragging ? 30 : 'auto',
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      onClick={(e) => onCardClick(proj, e)}
+      className={`bg-white hover:bg-indigo-50/20 border rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between gap-3 group relative shadow-xs hover:shadow-md ${
+        isSelected ? 'border-indigo-500 bg-indigo-50/30 ring-2 ring-indigo-500/20 shadow-sm' : 'border-slate-200 hover:border-indigo-400'
+      } ${isRtlLocale(locale) ? 'rtl-active' : ''} ${
+        isDragging ? 'border-dashed border-indigo-400 scale-98 shadow-inner' : ''
+      }`}
+    >
+      {/* Header info */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-start gap-2 min-w-0 flex-1">
+          <div 
+            onClick={(e) => e.stopPropagation()} 
+            className="shrink-0 pt-0.5 flex items-center gap-1.5 ltr-lock"
+          >
+            <div
+              {...attributes}
+              {...listeners}
+              title="Drag to reorder"
+              className="drag-handle p-1 hover:bg-slate-100 rounded text-slate-400 cursor-grab active:cursor-grabbing transition-colors"
+            >
+              <GripVertical className="w-3.5 h-3.5" />
+            </div>
+
+            <input
+              type="checkbox"
+              aria-label={`Select project ${proj.name}`}
+              checked={isSelected}
+              onChange={(e) => onToggleSelect(proj.id, e)}
+              className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer transition-transform hover:scale-105"
+            />
+          </div>
+
+          <div className="overflow-hidden min-w-0 flex-1">
+            <span className="text-xs font-extrabold text-slate-900 block truncate group-hover:text-indigo-600 transition-colors">
+              {proj.name}
+            </span>
+            <span className="text-[10px] text-slate-500 font-mono block truncate max-w-[200px] ltr-lock">
+              {proj.content}
+            </span>
+            {proj.category && (
+              <span className="inline-flex items-center gap-1 text-[9px] bg-indigo-50 text-indigo-700 font-extrabold px-2 py-0.5 rounded-full mt-1.5 border border-indigo-100 ltr-lock">
+                <Folder className="w-2.5 h-2.5 text-indigo-500" />
+                {proj.category}
+              </span>
+            )}
+          </div>
+        </div>
+        
+        {/* Controls */}
+        <div className="flex items-center gap-1 relative ltr-lock shrink-0">
+          <button
+            type="button"
+            title="View Specs & Details"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedDetailProject(proj);
+            }}
+            className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
+          >
+            <Eye className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            type="button"
+            title="Open & Edit in Generator Workspace"
+            onClick={(e) => onLoadAndEdit(proj, e)}
+            className="p-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white transition-all cursor-pointer font-bold text-[10px] flex items-center gap-1 shadow-2xs active:scale-95 shrink-0"
+          >
+            <Edit3 className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Edit</span>
+          </button>
+
+          <button
+            type="button"
+            title="Duplicate / Clone project"
+            disabled={isDuplicatingId === proj.id}
+            onClick={(e) => onDuplicateProject(proj, e)}
+            className="p-1.5 rounded-xl hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer border border-transparent hover:border-indigo-200"
+          >
+            {isDuplicatingId === proj.id ? (
+              <div className="w-3.5 h-3.5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            title="Move project to folder"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMovingProjectId(movingProjectId === proj.id ? null : proj.id);
+            }}
+            className={`p-1.5 rounded-xl transition-colors cursor-pointer border ${
+              movingProjectId === proj.id
+                ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
+                : 'hover:bg-slate-100 text-slate-500 hover:text-indigo-600 border-transparent'
+            }`}
+          >
+            <Folder className="w-3.5 h-3.5" />
+          </button>
+
+          {movingProjectId === proj.id && (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="absolute right-0 top-8 z-50 w-48 bg-white rounded-2xl border border-slate-200 shadow-xl py-1.5 text-left text-xs animate-in fade-in duration-100 ltr-lock"
+            >
+              <div className="px-2.5 py-1 text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 mb-1">
+                {t('saved.organizeTitle', 'Organize in Folder')}
+              </div>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  onMoveProject(proj.id, '');
+                  setMovingProjectId(null);
+                }}
+                className={`w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer font-medium ${!proj.category ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-600'}`}
+              >
+                <Folder className="w-3 h-3 opacity-60" />
+                {t('saved.uncategorizedLabel', 'Uncategorized')}
+              </button>
+              
+              {allCategories.map(cat => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => {
+                    onMoveProject(proj.id, cat);
+                    setMovingProjectId(null);
+                  }}
+                  className={`w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer truncate font-medium ${proj.category === cat ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-600'}`}
+                >
+                  <Folder className="w-3 h-3 text-indigo-500" />
+                  {cat}
+                </button>
+              ))}
+              
+              <div className="border-t border-slate-100 my-1"></div>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  const newFolder = prompt('Enter a name for the new folder:');
+                  if (newFolder && (newFolder || '').trim()) {
+                    const trimmed = (newFolder || '').trim();
+                    onCreateFolder(trimmed);
+                    onMoveProject(proj.id, trimmed);
+                  }
+                  setMovingProjectId(null);
+                }}
+                className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 text-indigo-600 font-bold flex items-center gap-1.5 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5 text-indigo-600" />
+                {t('saved.newFolderBtn', 'New Folder')}...
+              </button>
+            </div>
+          )}
+
+          <button
+            type="button"
+            title="Delete design"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(proj.id);
+            }}
+            className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors cursor-pointer border border-transparent hover:border-red-200"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Tracking stats preview & Clickable Scan Analytics */}
+      <div className="flex items-center justify-between border-t border-slate-100 pt-2.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider bg-slate-100 text-slate-700 font-mono">
+            {proj.type}
+          </span>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setAnalyticsProject(proj);
+            }}
+            className="text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/80 transition-colors flex items-center gap-1 cursor-pointer"
+            title="View detailed scan analytics"
+          >
+            <BarChart2 className="w-2.5 h-2.5 text-indigo-600" />
+            {t('saved.scansCount', '{count} Scans', { count: proj.scanCount || 0 })}
+          </button>
+
+          {proj.expiryDate && (() => {
+            const isExpired = new Date() > new Date(proj.expiryDate);
+            return (
+              <span 
+                title={isExpired ? `Expired on ${new Date(proj.expiryDate).toLocaleString()}` : `Expires on ${new Date(proj.expiryDate).toLocaleString()}`}
+                className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider transition ${
+                  isExpired 
+                    ? 'bg-red-50 text-red-600 border border-red-200' 
+                    : 'bg-amber-50 text-amber-700 border border-amber-200'
+                }`}
+              >
+                {isExpired ? t('saved.expiredBadge', 'Expired ⚠️') : t('saved.timedBadge', 'Timed ⏳')}
+              </span>
+            );
+          })()}
+        </div>
+
+        {proj.trackingEnabled && (
+          <div className="flex items-center gap-1">
+            {import.meta.env.DEV && onSeedData && (
+              <button
+                type="button"
+                title="Generate fake analytics clicks (Internal Testing Only)"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSeedData(proj.id, proj.trackingId);
+                }}
+                className="px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-lg transition-colors border border-emerald-200"
+              >
+                {t('saved.seedClicksBtn', '+ Seed clicks')}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={(e) => onCopyLink(e, proj.trackingId, proj.id)}
+              className="p-1 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all"
+              title="Copy tracking redirect link"
+            >
+              {copiedId === proj.id ? (
+                <Check className="w-3.5 h-3.5 text-emerald-600" />
+              ) : (
+                <Copy className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 interface SavedProjectsProps {
   projects: QRProject[];
@@ -378,63 +707,49 @@ export default function SavedProjects({
     );
   }, [projects, activeCategory]);
 
-  // Drag and drop states
-  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
-  const [, setDragOverIndex] = React.useState<number | null>(null);
+  // Dnd-kit sensors setup
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   const [orderedProjects, setOrderedProjects] = React.useState<QRProject[]>([]);
+  const [activeDragProject, setActiveDragProject] = React.useState<QRProject | null>(null);
 
   React.useEffect(() => {
-    if (draggedIndex === null) {
+    if (!activeDragProject) {
       setOrderedProjects(filteredProjects);
     }
-  }, [filteredProjects, draggedIndex]);
+  }, [filteredProjects, activeDragProject]);
 
-  const handleDragStart = (index: number, e: React.MouseEvent | React.TouchEvent) => {
-    if (e.type === 'touchstart') {
-      if (e.cancelable) {
-        e.preventDefault();
-      }
-    }
-    setDraggedIndex(index);
-    setDragOverIndex(index);
-  };
-
-  const handleDragOver = (index: number) => {
-    if (draggedIndex === null || draggedIndex === index) return;
-    setDragOverIndex(index);
-    setOrderedProjects(prev => {
-      const next = [...prev];
-      const draggedItem = next[draggedIndex];
-      next.splice(draggedIndex, 1);
-      next.splice(index, 0, draggedItem);
-      return next;
-    });
-    setDraggedIndex(index);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (draggedIndex === null) return;
-    const touch = e.touches[0];
-    const element = document.elementFromPoint(touch.clientX, touch.clientY);
-    if (!element) return;
-    
-    let current: HTMLElement | null = element as HTMLElement;
-    while (current && current !== document.body) {
-      const indexAttr = current.getAttribute('data-index');
-      if (indexAttr !== null) {
-        const overIndex = parseInt(indexAttr, 10);
-        if (!isNaN(overIndex) && overIndex !== draggedIndex) {
-          handleDragOver(overIndex);
-        }
-        break;
-      }
-      current = current.parentElement;
+  const handleDndDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const project = orderedProjects.find(p => p.id === active.id);
+    if (project) {
+      setActiveDragProject(project);
     }
   };
 
-  const handleDragEnd = () => {
-    if (draggedIndex !== null) {
-      const orderedIdsInView = orderedProjects.map(p => p.id);
+  const handleDndDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveDragProject(null);
+
+    if (!over || active.id === over.id) return;
+
+    setOrderedProjects((items) => {
+      const oldIndex = items.findIndex((item) => item.id === active.id);
+      const newIndex = items.findIndex((item) => item.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return items;
+
+      const reordered = arrayMove(items, oldIndex, newIndex);
+
+      const orderedIdsInView = reordered.map((p) => p.id);
       try {
         const savedOrderJson = localStorage.getItem(`qr_projects_sort_order_${auth.currentUser?.uid || 'all'}`);
         let currentGlobalOrder: string[] = [];
@@ -446,42 +761,31 @@ export default function SavedProjects({
           }
         }
         if (currentGlobalOrder.length === 0) {
-          currentGlobalOrder = projects.map(p => p.id);
+          currentGlobalOrder = projects.map((p) => p.id);
         }
         const filteredIdSet = new Set(orderedIdsInView);
-        const remainingIds = currentGlobalOrder.filter(id => !filteredIdSet.has(id));
-        let insertIndex = currentGlobalOrder.findIndex(id => filteredIdSet.has(id));
+        const remainingIds = currentGlobalOrder.filter((id) => !filteredIdSet.has(id));
+        let insertIndex = currentGlobalOrder.findIndex((id) => filteredIdSet.has(id));
         if (insertIndex === -1) insertIndex = 0;
-        
+
         const nextGlobalOrder = [...remainingIds];
         nextGlobalOrder.splice(insertIndex, 0, ...orderedIdsInView);
-        
-        localStorage.setItem(`qr_projects_sort_order_${auth.currentUser?.uid || 'all'}`, JSON.stringify(nextGlobalOrder));
-        
+
+        localStorage.setItem(
+          `qr_projects_sort_order_${auth.currentUser?.uid || 'all'}`,
+          JSON.stringify(nextGlobalOrder)
+        );
+
         if (onReorderProjects) {
           onReorderProjects(nextGlobalOrder);
         }
       } catch (err) {
         console.error('Error persisting sort order:', err);
       }
-    }
-    setDraggedIndex(null);
-    setDragOverIndex(null);
-  };
 
-  React.useEffect(() => {
-    if (draggedIndex !== null) {
-      const handleGlobalMouseUp = () => {
-        handleDragEnd();
-      };
-      window.addEventListener('mouseup', handleGlobalMouseUp);
-      window.addEventListener('touchend', handleGlobalMouseUp);
-      return () => {
-        window.removeEventListener('mouseup', handleGlobalMouseUp);
-        window.removeEventListener('touchend', handleGlobalMouseUp);
-      };
-    }
-  }, [draggedIndex, orderedProjects]);
+      return reordered;
+    });
+  };
 
   // Batch selection handlers
   const handleToggleSelect = (id: string, e?: React.MouseEvent | React.ChangeEvent) => {
@@ -876,271 +1180,63 @@ export default function SavedProjects({
               <p className="text-[10px] text-slate-500 max-w-xs mx-auto">{t('saved.noProjectsCategoryDesc', 'Change filters or update project categories to view.')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[520px] overflow-y-auto pr-1">
-              {orderedProjects.map((proj, index) => {
-                const isSelected = selectedIds.includes(proj.id);
-                return (
-                  <div
-                    key={proj.id}
-                    data-index={index}
-                    onClick={(e) => handleCardClick(proj, e)}
-                    onMouseEnter={() => {
-                      if (draggedIndex !== null) {
-                        handleDragOver(index);
-                      }
-                    }}
-                    className={`bg-white hover:bg-indigo-50/20 border rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between gap-3 group relative shadow-xs hover:shadow-md ${
-                      isSelected ? 'border-indigo-500 bg-indigo-50/30 ring-2 ring-indigo-500/20 shadow-sm' : 'border-slate-200 hover:border-indigo-400'
-                    } ${isRtlLocale(locale) ? 'rtl-active' : ''} ${
-                      draggedIndex === index ? 'opacity-40 border-dashed border-indigo-400 scale-98 shadow-inner' : ''
-                    }`}
-                  >
-                    {/* Header info */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2 min-w-0 flex-1">
-                        <div 
-                          onClick={(e) => e.stopPropagation()} 
-                          className="shrink-0 pt-0.5 flex items-center gap-1.5 ltr-lock"
-                        >
-                          <div
-                            title="Drag to sort"
-                            onMouseDown={(e) => handleDragStart(index, e)}
-                            onTouchStart={(e) => handleDragStart(index, e)}
-                            onTouchMove={handleTouchMove}
-                            onTouchEnd={handleDragEnd}
-                            className="drag-handle p-1 hover:bg-slate-100 rounded text-slate-400 cursor-grab active:cursor-grabbing transition-colors"
-                          >
-                            <GripVertical className="w-3.5 h-3.5" />
-                          </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDndDragStart}
+              onDragEnd={handleDndDragEnd}
+            >
+              <SortableContext items={orderedProjects.map(p => p.id)} strategy={rectSortingStrategy}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[520px] overflow-y-auto pr-1">
+                  {orderedProjects.map((proj) => {
+                    const isSelected = selectedIds.includes(proj.id);
+                    return (
+                      <SortableProjectItem
+                        key={proj.id}
+                        proj={proj}
+                        isSelected={isSelected}
+                        locale={locale}
+                        movingProjectId={movingProjectId}
+                        isDuplicatingId={isDuplicatingId}
+                        allCategories={allCategories}
+                        copiedId={copiedId}
+                        t={t}
+                        onCardClick={handleCardClick}
+                        onToggleSelect={handleToggleSelect}
+                        onLoadAndEdit={handleLoadAndEdit}
+                        onDuplicateProject={handleDuplicateProject}
+                        onMoveProject={handleMoveProject}
+                        onCreateFolder={handleCreateFolder}
+                        onDelete={onDelete}
+                        setSelectedDetailProject={setSelectedDetailProject}
+                        setMovingProjectId={setMovingProjectId}
+                        setAnalyticsProject={setAnalyticsProject}
+                        onCopyLink={handleCopyLink}
+                        onSeedData={onSeedData}
+                      />
+                    );
+                  })}
+                </div>
+              </SortableContext>
 
-                          <input
-                            type="checkbox"
-                            aria-label={`Select project ${proj.name}`}
-                            checked={isSelected}
-                            onChange={(e) => handleToggleSelect(proj.id, e)}
-                            className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer transition-transform hover:scale-105"
-                          />
-                        </div>
-
-                        <div className="overflow-hidden min-w-0 flex-1">
-                          <span className="text-xs font-extrabold text-slate-900 block truncate group-hover:text-indigo-600 transition-colors">
-                            {proj.name}
-                          </span>
-                          <span className="text-[10px] text-slate-500 font-mono block truncate max-w-[200px] ltr-lock">
-                            {proj.content}
-                          </span>
-                          {proj.category && (
-                            <span className="inline-flex items-center gap-1 text-[9px] bg-indigo-50 text-indigo-700 font-extrabold px-2 py-0.5 rounded-full mt-1.5 border border-indigo-100 ltr-lock">
-                              <Folder className="w-2.5 h-2.5 text-indigo-500" />
-                              {proj.category}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {/* Controls (View Details, Edit/Open, Duplicate, Move Folder, Delete) */}
-                      <div className="flex items-center gap-1 relative ltr-lock shrink-0">
-                        {/* View Details Modal Button */}
-                        <button
-                          type="button"
-                          title="View Specs & Details"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedDetailProject(proj);
-                          }}
-                          className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                        </button>
-
-                        {/* Open & Edit in Generator Workspace Button */}
-                        <button
-                          type="button"
-                          title="Open & Edit in Generator Workspace"
-                          onClick={(e) => handleLoadAndEdit(proj, e)}
-                          className="p-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white transition-all cursor-pointer font-bold text-[10px] flex items-center gap-1 shadow-2xs active:scale-95 shrink-0"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Edit</span>
-                        </button>
-
-                        {/* Duplicate / Clone Button */}
-                        <button
-                          type="button"
-                          title="Duplicate / Clone project"
-                          disabled={isDuplicatingId === proj.id}
-                          onClick={(e) => handleDuplicateProject(proj, e)}
-                          className="p-1.5 rounded-xl hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer border border-transparent hover:border-indigo-200"
-                        >
-                          {isDuplicatingId === proj.id ? (
-                            <div className="w-3.5 h-3.5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <Copy className="w-3.5 h-3.5" />
-                          )}
-                        </button>
-
-                        {/* Move Folder Button */}
-                        <button
-                          type="button"
-                          title="Move project to folder"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setMovingProjectId(movingProjectId === proj.id ? null : proj.id);
-                          }}
-                          className={`p-1.5 rounded-xl transition-colors cursor-pointer border ${
-                            movingProjectId === proj.id
-                              ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
-                              : 'hover:bg-slate-100 text-slate-500 hover:text-indigo-600 border-transparent'
-                          }`}
-                        >
-                          <Folder className="w-3.5 h-3.5" />
-                        </button>
-
-                        {/* Folder Move Dropdown */}
-                        {movingProjectId === proj.id && (
-                          <div
-                            onClick={(e) => e.stopPropagation()}
-                            className="absolute right-0 top-8 z-50 w-48 bg-white rounded-2xl border border-slate-200 shadow-xl py-1.5 text-left text-xs animate-in fade-in duration-100 ltr-lock"
-                          >
-                            <div className="px-2.5 py-1 text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 mb-1">
-                              {t('saved.organizeTitle', 'Organize in Folder')}
-                            </div>
-                            
-                            <button
-                              type="button"
-                              onClick={() => {
-                                handleMoveProject(proj.id, '');
-                                setMovingProjectId(null);
-                              }}
-                              className={`w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer font-medium ${!proj.category ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-600'}`}
-                            >
-                              <Folder className="w-3 h-3 opacity-60" />
-                              {t('saved.uncategorizedLabel', 'Uncategorized')}
-                            </button>
-                            
-                            {allCategories.map(cat => (
-                              <button
-                                key={cat}
-                                type="button"
-                                onClick={() => {
-                                  handleMoveProject(proj.id, cat);
-                                  setMovingProjectId(null);
-                                }}
-                                className={`w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer truncate font-medium ${proj.category === cat ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-600'}`}
-                              >
-                                <Folder className="w-3 h-3 text-indigo-500" />
-                                {cat}
-                              </button>
-                            ))}
-                            
-                            <div className="border-t border-slate-100 my-1"></div>
-                            
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newFolder = prompt('Enter a name for the new folder:');
-                                if (newFolder && (newFolder || '').trim()) {
-                                  const trimmed = (newFolder || '').trim();
-                                  handleCreateFolder(trimmed);
-                                  handleMoveProject(proj.id, trimmed);
-                                }
-                                setMovingProjectId(null);
-                              }}
-                              className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 text-indigo-600 font-bold flex items-center gap-1.5 cursor-pointer"
-                            >
-                              <Plus className="w-3.5 h-3.5 text-indigo-600" />
-                              {t('saved.newFolderBtn', 'New Folder')}...
-                            </button>
-                          </div>
-                        )}
-
-                        {/* Delete Button */}
-                        <button
-                          type="button"
-                          title="Delete design"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDelete(proj.id);
-                          }}
-                          className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors cursor-pointer border border-transparent hover:border-red-200"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Tracking stats preview & Clickable Scan Analytics */}
-                    <div className="flex items-center justify-between border-t border-slate-100 pt-2.5">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider bg-slate-100 text-slate-700 font-mono">
-                          {proj.type}
+              <DragOverlay>
+                {activeDragProject ? (
+                  <div className="bg-white border-2 border-indigo-500 rounded-2xl p-4 shadow-2xl opacity-90 scale-105 pointer-events-none">
+                    <div className="flex items-center gap-2">
+                      <GripVertical className="w-3.5 h-3.5 text-indigo-600" />
+                      <div>
+                        <span className="text-xs font-extrabold text-slate-900 block truncate">
+                          {activeDragProject.name}
                         </span>
-
-                        {/* Interactive Clickable SCANS Badge */}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAnalyticsProject(proj);
-                          }}
-                          className="text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/80 transition-colors flex items-center gap-1 cursor-pointer"
-                          title="View detailed scan analytics"
-                        >
-                          <BarChart2 className="w-2.5 h-2.5 text-indigo-600" />
-                          {t('saved.scansCount', '{count} Scans', { count: proj.scanCount || 0 })}
-                        </button>
-
-                        {proj.expiryDate && (() => {
-                          const isExpired = new Date() > new Date(proj.expiryDate);
-                          return (
-                            <span 
-                              title={isExpired ? `Expired on ${new Date(proj.expiryDate).toLocaleString()}` : `Expires on ${new Date(proj.expiryDate).toLocaleString()}`}
-                              className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider transition ${
-                                isExpired 
-                                  ? 'bg-red-50 text-red-600 border border-red-200' 
-                                  : 'bg-amber-50 text-amber-700 border border-amber-200'
-                              }`}
-                            >
-                              {isExpired ? t('saved.expiredBadge', 'Expired ⚠️') : t('saved.timedBadge', 'Timed ⏳')}
-                            </span>
-                          );
-                        })()}
+                        <span className="text-[10px] text-slate-500 font-mono block truncate">
+                          {activeDragProject.content}
+                        </span>
                       </div>
-
-                      {proj.trackingEnabled && (
-                        <div className="flex items-center gap-1">
-                          {import.meta.env.DEV && onSeedData && (
-                            <button
-                              type="button"
-                              title="Generate fake analytics clicks (Internal Testing Only)"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onSeedData(proj.id, proj.trackingId);
-                              }}
-                              className="px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-lg transition-colors border border-emerald-200"
-                            >
-                              {t('saved.seedClicksBtn', '+ Seed clicks')}
-                            </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={(e) => handleCopyLink(e, proj.trackingId, proj.id)}
-                            className="p-1 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-all"
-                            title="Copy tracking redirect link"
-                          >
-                            {copiedId === proj.id ? (
-                              <Check className="w-3.5 h-3.5 text-emerald-600" />
-                            ) : (
-                              <Copy className="w-3.5 h-3.5" />
-                            )}
-                          </button>
-                        </div>
-                      )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
           )}
         </div>
       )}

@@ -11,6 +11,7 @@ export default defineConfig(() => {
       alias: {
         '@': path.resolve(__dirname, '.'),
       },
+      dedupe: ['react', 'react-dom', 'react-dom/client', 'scheduler'],
     },
     build: {
       target: 'esnext',
@@ -22,7 +23,8 @@ export default defineConfig(() => {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              if (id.includes('react') || id.includes('react-dom')) {
+              // Strictly isolate React core runtime and scheduler to prevent circular chunk references and undefined Activity errors
+              if (/[\\/]node_modules[\\/](react|react-dom|scheduler|use-sync-external-store|react-is)[\\/]/.test(id)) {
                 return 'vendor-react';
               }
               if (id.includes('lucide-react')) {

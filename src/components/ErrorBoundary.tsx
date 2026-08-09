@@ -1,5 +1,5 @@
 import React, { ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -10,25 +10,47 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  reported: boolean;
 }
 
 export default class ErrorBoundary extends React.Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,
+    reported: false,
   };
 
-  public static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): Partial<State> {
     // Update state so the next render will show the fallback UI.
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught React boundary error:', error, errorInfo);
+
+    try {
+      fetch('/api/monitoring/errors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'react_error_boundary',
+          message: error.message || String(error),
+          stack: error.stack || '',
+          componentStack: errorInfo.componentStack || '',
+          url: typeof window !== 'undefined' ? window.location.href : '',
+          timestamp: new Date().toISOString(),
+          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+        }),
+      })
+        .then(() => this.setState({ reported: true }))
+        .catch(() => this.setState({ reported: true }));
+    } catch {
+      this.setState({ reported: true });
+    }
   }
 
   private handleReset = () => {
-    this.setState({ hasError: false, error: null });
+    this.setState({ hasError: false, error: null, reported: false });
     if (!this.props.isInline) {
       window.location.reload();
     }
@@ -78,6 +100,22 @@ export default class ErrorBoundary extends React.Component<Props, State> {
               <p className="text-xs text-slate-500 leading-relaxed">
                 An unexpected interface rendering issue occurred. Our runtime protection caught the exception gracefully.
               </p>
+            </div>
+
+            {/* Notification Banner confirming log dispatch to monitoring endpoint */}
+            <div className="bg-amber-50 border border-amber-200/70 p-3 rounded-xl flex items-center gap-2.5 text-left text-amber-900 text-xs">
+              <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+              <div className="flex-1 text-[11px] leading-snug">
+                <span className="font-semibold block text-amber-950">System Crash Notification</span>
+                {this.state.reported ? (
+                  <span className="text-amber-800 flex items-center gap-1 mt-0.5">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0 inline" />
+                    Stack trace logged to monitoring server.
+                  </span>
+                ) : (
+                  <span className="text-amber-800">Dispatching diagnostic telemetry to system monitoring...</span>
+                )}
+              </div>
             </div>
 
             {this.state.error && (

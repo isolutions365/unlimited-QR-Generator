@@ -3533,5 +3533,10 @@
   "auth.resetSuccessMsg": "Abbiamo inviato le istruzioni a {email}",
   "auth.backToSignIn": "Torna all’accesso",
   "auth.cancel": "Annulla",
-  "auth.sendResetLink": "Invia Link di Ripristino"
+  "auth.sendResetLink": "Invia Link di Ripristino",
+  "control.advancedSettings": "Impostazioni avanzate del motore QR",
+  "control.advancedSettingsDesc": "Configura il livello di correzione degli errori, la zona di quiete e la spaziatura della densità.",
+  "tools.payment.btn": "Crea QR di Pagamento",
+  "tools.payment.desc": "Genera richieste di pagamento, link a portafogli digitali personalizzati, UPI e codici QR per fatture. Supporta metodi globali come PayPal, Venmo e altri.",
+  "tools.payment.title": "QR di Pagamento e Wallet"
 }

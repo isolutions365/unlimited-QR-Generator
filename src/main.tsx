@@ -82,6 +82,23 @@ try {
     );
   };
 
+  const sendErrorToMonitoring = (payload: Record<string, any>) => {
+    try {
+      fetch('/api/monitoring/errors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: typeof window !== 'undefined' ? window.location.href : '',
+          timestamp: new Date().toISOString(),
+          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+          ...payload
+        }),
+      }).catch(() => {});
+    } catch {
+      // Ignore network errors during error reporting
+    }
+  };
+
   // Intercept chunk loading errors (stale dynamic imports or bundle hash mismatches)
   const handleChunkError = (message: string) => {
     const isChunkError =
@@ -112,6 +129,13 @@ try {
       event.stopPropagation();
       return;
     }
+    
+    sendErrorToMonitoring({
+      type: 'unhandledrejection',
+      message: msg,
+      stack: reason?.stack || String(reason || '')
+    });
+
     handleChunkError(msg);
   });
 
@@ -123,6 +147,16 @@ try {
       event.stopPropagation();
       return true as any;
     }
+
+    sendErrorToMonitoring({
+      type: 'window.onerror',
+      message: msg,
+      source: event.filename || '',
+      lineno: event.lineno,
+      colno: event.colno,
+      stack: event.error?.stack || ''
+    });
+
     handleChunkError(msg);
   }, true);
 })();

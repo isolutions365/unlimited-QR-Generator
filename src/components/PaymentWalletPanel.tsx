@@ -136,8 +136,8 @@ interface PaymentWalletPanelProps {
 }
 
 export default function PaymentWalletPanel({ content, onChangeContent }: PaymentWalletPanelProps) {
-  const { t } = useTranslation();
-  const [paymentMethod, setPaymentMethod] = useState<string>('paypal');
+  const { t, locale } = useTranslation();
+  const [paymentMethod, setPaymentMethod] = useState<string>(locale === 'ur' ? 'jazzcash' : 'stcpay');
   const [paymentFields, setPaymentFields] = useState<Record<string, string>>({
     handle: '',
     upiId: '',
@@ -163,7 +163,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
     if (!content || content === lastParsedContent.current) return;
     lastParsedContent.current = content;
 
-    let detectedMethod = 'paypal';
+    let detectedMethod = locale === 'ur' ? 'jazzcash' : 'stcpay';
     const fields: Record<string, string> = {
       handle: '',
       upiId: '',
@@ -359,46 +359,46 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         </div>
       </div>
 
-      {/* Educational & Helpful Info Section / معلومات اور استعمال */}
+      {/* Educational & Helpful Info Section */}
       <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3 text-xs text-slate-700 space-y-2.5">
         <div className="flex items-start gap-2">
           <Sparkles className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
           <div>
             <h5 className="font-bold text-slate-950 text-[11px] uppercase tracking-wider flex items-center gap-1">
-              Payment & Wallet QR Guide | ادائیگی اور والٹ گائیڈ
+              {t('control.paymentWalletGuideTitle', 'Payment & Wallet QR Guide')}
             </h5>
             <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-              Generate payment QRs for instant mobile transfers. Scan and pay instantly without manually typing phone numbers or account IDs.
+              {t('control.paymentWalletGuideDesc', 'Generate payment QRs for instant mobile transfers. Scan and pay instantly without manually typing phone numbers or account IDs.')}
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10.5px]">
-          {/* Column 1: Uses / استعمالات */}
+          {/* Column 1: Uses */}
           <div className="bg-white/80 p-2.5 rounded-lg border border-emerald-50 space-y-1.5">
             <span className="font-bold text-slate-800 flex items-center gap-1">
               <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
-              Primary Uses / عام استعمالات:
+              {t('control.paymentPrimaryUses', 'Primary Uses:')}
             </span>
             <ul className="list-disc pl-4 space-y-1 text-slate-600">
-              <li><strong>Shop Checkouts:</strong> Place on counters for fast contactless sales.</li>
-              <li><strong>Freelance & Billing:</strong> Add to digital invoices for instant client payout.</li>
-              <li><strong>Tips & Donations:</strong> Accept customer tips or charity donations seamlessly.</li>
-              <li><strong>P2P Transfers:</strong> Share with friends/family to split dinner bills easily.</li>
+              <li><strong>{t('control.shopCheckouts', 'Shop Checkouts:')}</strong> {t('control.shopCheckoutsDesc', 'Place on counters for fast contactless sales.')}</li>
+              <li><strong>{t('control.freelanceBilling', 'Freelance & Billing:')}</strong> {t('control.freelanceBillingDesc', 'Add to digital invoices for instant client payout.')}</li>
+              <li><strong>{t('control.tipsDonations', 'Tips & Donations:')}</strong> {t('control.tipsDonationsDesc', 'Accept customer tips or charity donations seamlessly.')}</li>
+              <li><strong>{t('control.p2pTransfers', 'P2P Transfers:')}</strong> {t('control.p2pTransfersDesc', 'Share with friends/family to split dinner bills easily.')}</li>
             </ul>
           </div>
 
-          {/* Column 2: How to Create / کیسے بنائیں */}
+          {/* Column 2: How to Create */}
           <div className="bg-white/80 p-2.5 rounded-lg border border-emerald-50 space-y-1.5">
             <span className="font-bold text-slate-800 flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              How to Create / بنانے کا طریقہ:
+              {t('control.paymentHowToCreate', 'How to Create:')}
             </span>
             <ul className="list-decimal pl-4 space-y-1 text-slate-600">
-              <li>Select your wallet/network (e.g. UPI, PayPal, JazzCash).</li>
-              <li>Input your account ID, handle, or mobile number.</li>
-              <li>Optional: Set a preset request amount & note.</li>
-              <li>Customize colors/logos, then download the QR!</li>
+              <li>{t('control.stepSelectWallet', 'Select your wallet/network (e.g. UPI, PayPal, JazzCash).')}</li>
+              <li>{t('control.stepInputAccount', 'Input your account ID, handle, or mobile number.')}</li>
+              <li>{t('control.stepPresetAmount', 'Optional: Set a preset request amount & note.')}</li>
+              <li>{t('control.stepDownloadQr', 'Customize colors/logos, then download the QR!')}</li>
             </ul>
           </div>
         </div>
@@ -407,8 +407,8 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
         <div className="bg-emerald-600/5 text-emerald-800 rounded-lg p-2 text-[10px] leading-relaxed border border-emerald-600/10 flex items-start gap-1.5">
           <Info className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
           <div>
-            <span className="font-semibold block">🇵🇰 Pakistan, 🇮🇳 India & 🇸🇦 Gulf Wallets:</span>
-            India supports any UPI app (GPay, Paytm, PhonePe). Pakistan supports direct scanning via JazzCash & EasyPaisa. Saudi Arabia integrates Mada IBAN & STC Pay.
+            <span className="font-semibold block">{t('control.regionalWalletsTitle', '🇵🇰 Pakistan, 🇮🇳 India & 🇸🇦 Gulf Wallets:')}</span>
+            {t('control.regionalWalletsDesc', 'India supports any UPI app (GPay, Paytm, PhonePe). Pakistan supports direct scanning via JazzCash & EasyPaisa. Saudi Arabia integrates Mada IBAN & STC Pay.')}
           </div>
         </div>
       </div>
@@ -424,39 +424,115 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
           value={paymentMethod}
           onChange={e => handleMethodChange(e.target.value)}
         >
-          <optgroup label="🌐 Global Payment Methods">
-            <option value="paypal">PayPal (Global) — PayPal.me / Handle</option>
-            <option value="custom">Custom Wallet Link (Universal Payment URI)</option>
-          </optgroup>
-          <optgroup label="🇺🇸 United States">
-            <option value="venmo">Venmo (USA) — @username & memo</option>
-            <option value="cashapp">Cash App (USA) — $cashtag & amount</option>
-          </optgroup>
-          <optgroup label="🇮🇳 India">
-            <option value="upi">UPI / GPay / PhonePe / Paytm (India) — Virtual Payment Address</option>
-          </optgroup>
-          <optgroup label="🇨🇳 China">
-            <option value="alipay">Alipay (China) — Alipay QR Link</option>
-            <option value="wechat">WeChat Pay (China) — WeChat Pay Payload (wxp://)</option>
-          </optgroup>
-          <optgroup label="🇧🇷 Brazil">
-            <option value="pix">PIX (Brazil) — Key / CPF / CNPJ / Email / Phone</option>
-          </optgroup>
-          <optgroup label="🌏 Southeast Asia">
-            <option value="grabpay">GrabPay (Singapore, Malaysia, Philippines)</option>
-          </optgroup>
-          <optgroup label="🌍 Africa">
-            <option value="mpesa">M-Pesa (Kenya, Tanzania) — Till / Paybill / Phone</option>
-          </optgroup>
-          <optgroup label="🇵🇰 Pakistan">
-            <option value="jazzcash">JazzCash (Pakistan) — Mobile Account</option>
-            <option value="easypaisa">EasyPaisa (Pakistan) — Mobile Account</option>
-          </optgroup>
-          <optgroup label="🇸🇦 Saudi Arabia">
-            <option value="stcpay">STC Pay (Saudi Arabia) — Mobile Wallet</option>
-            <option value="mada">Mada (Saudi Arabia) — IBAN / Payment Link</option>
-            <option value="sadad">Sadad (Saudi Arabia) — Biller / Account Reference</option>
-          </optgroup>
+          {locale === 'ur' ? (
+            <>
+              <optgroup label={t('control.optPakistan', '🇵🇰 Pakistan')}>
+                <option value="jazzcash">{t('control.payOptionJazzcash', 'JazzCash (Pakistan) — Mobile Account')}</option>
+                <option value="easypaisa">{t('control.payOptionEasypaisa', 'EasyPaisa (Pakistan) — Mobile Account')}</option>
+              </optgroup>
+              <optgroup label={t('control.optSaudiArabia', '🇸🇦 Saudi Arabia & Gulf')}>
+                <option value="stcpay">{t('control.payOptionStcpay', 'STC Pay (Saudi Arabia) — Mobile Wallet')}</option>
+                <option value="mada">{t('control.payOptionMada', 'Mada (Saudi Arabia) — IBAN / Payment Link')}</option>
+                <option value="sadad">{t('control.payOptionSadad', 'Sadad (Saudi Arabia) — Biller / Account Reference')}</option>
+              </optgroup>
+              <optgroup label={t('control.optGlobalPayment', '🌐 Global Payment Methods')}>
+                <option value="paypal">{t('control.payOptionPaypal', 'PayPal (Global) — PayPal.me / Handle')}</option>
+                <option value="custom">{t('control.payOptionCustom', 'Custom Wallet Link (Universal Payment URI)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optIndia', '🇮🇳 India')}>
+                <option value="upi">{t('control.payOptionUpi', 'UPI / GPay / PhonePe / Paytm (India) — Virtual Payment Address')}</option>
+              </optgroup>
+              <optgroup label={t('control.optUnitedStates', '🇺🇸 United States')}>
+                <option value="venmo">{t('control.payOptionVenmo', 'Venmo (USA) — @username & memo')}</option>
+                <option value="cashapp">{t('control.payOptionCashapp', 'Cash App (USA) — $cashtag & amount')}</option>
+              </optgroup>
+              <optgroup label={t('control.optChina', '🇨🇳 China')}>
+                <option value="alipay">{t('control.payOptionAlipay', 'Alipay (China) — Alipay QR Link')}</option>
+                <option value="wechat">{t('control.payOptionWechat', 'WeChat Pay (China) — WeChat Pay Payload (wxp://)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optBrazil', '🇧🇷 Brazil')}>
+                <option value="pix">{t('control.payOptionPix', 'PIX (Brazil) — Key / CPF / CNPJ / Email / Phone')}</option>
+              </optgroup>
+              <optgroup label={t('control.optSoutheastAsia', '🌏 Southeast Asia')}>
+                <option value="grabpay">{t('control.payOptionGrabpay', 'GrabPay (Singapore, Malaysia, Philippines)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optAfrica', '🌍 Africa')}>
+                <option value="mpesa">{t('control.payOptionMpesa', 'M-Pesa (Kenya, Tanzania) — Till / Paybill / Phone')}</option>
+              </optgroup>
+            </>
+          ) : locale === 'ar' ? (
+            <>
+              <optgroup label={t('control.optSaudiArabia', '🇸🇦 Saudi Arabia & Gulf')}>
+                <option value="stcpay">{t('control.payOptionStcpay', 'STC Pay (Saudi Arabia) — Mobile Wallet')}</option>
+                <option value="mada">{t('control.payOptionMada', 'Mada (Saudi Arabia) — IBAN / Payment Link')}</option>
+                <option value="sadad">{t('control.payOptionSadad', 'Sadad (Saudi Arabia) — Biller / Account Reference')}</option>
+              </optgroup>
+              <optgroup label={t('control.optGlobalPayment', '🌐 Global Payment Methods')}>
+                <option value="paypal">{t('control.payOptionPaypal', 'PayPal (Global) — PayPal.me / Handle')}</option>
+                <option value="custom">{t('control.payOptionCustom', 'Custom Wallet Link (Universal Payment URI)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optPakistan', '🇵🇰 Pakistan')}>
+                <option value="jazzcash">{t('control.payOptionJazzcash', 'JazzCash (Pakistan) — Mobile Account')}</option>
+                <option value="easypaisa">{t('control.payOptionEasypaisa', 'EasyPaisa (Pakistan) — Mobile Account')}</option>
+              </optgroup>
+              <optgroup label={t('control.optUnitedStates', '🇺🇸 United States')}>
+                <option value="venmo">{t('control.payOptionVenmo', 'Venmo (USA) — @username & memo')}</option>
+                <option value="cashapp">{t('control.payOptionCashapp', 'Cash App (USA) — $cashtag & amount')}</option>
+              </optgroup>
+              <optgroup label={t('control.optIndia', '🇮🇳 India')}>
+                <option value="upi">{t('control.payOptionUpi', 'UPI / GPay / PhonePe / Paytm (India) — Virtual Payment Address')}</option>
+              </optgroup>
+              <optgroup label={t('control.optChina', '🇨🇳 China')}>
+                <option value="alipay">{t('control.payOptionAlipay', 'Alipay (China) — Alipay QR Link')}</option>
+                <option value="wechat">{t('control.payOptionWechat', 'WeChat Pay (China) — WeChat Pay Payload (wxp://)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optBrazil', '🇧🇷 Brazil')}>
+                <option value="pix">{t('control.payOptionPix', 'PIX (Brazil) — Key / CPF / CNPJ / Email / Phone')}</option>
+              </optgroup>
+              <optgroup label={t('control.optSoutheastAsia', '🌏 Southeast Asia')}>
+                <option value="grabpay">{t('control.payOptionGrabpay', 'GrabPay (Singapore, Malaysia, Philippines)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optAfrica', '🌍 Africa')}>
+                <option value="mpesa">{t('control.payOptionMpesa', 'M-Pesa (Kenya, Tanzania) — Till / Paybill / Phone')}</option>
+              </optgroup>
+            </>
+          ) : (
+            <>
+              <optgroup label={t('control.optGlobalPayment', '🌐 Global Payment Methods')}>
+                <option value="paypal">{t('control.payOptionPaypal', 'PayPal (Global) — PayPal.me / Handle')}</option>
+                <option value="custom">{t('control.payOptionCustom', 'Custom Wallet Link (Universal Payment URI)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optSaudiArabia', '🇸🇦 Saudi Arabia & Gulf')}>
+                <option value="stcpay">{t('control.payOptionStcpay', 'STC Pay (Saudi Arabia) — Mobile Wallet')}</option>
+                <option value="mada">{t('control.payOptionMada', 'Mada (Saudi Arabia) — IBAN / Payment Link')}</option>
+                <option value="sadad">{t('control.payOptionSadad', 'Sadad (Saudi Arabia) — Biller / Account Reference')}</option>
+              </optgroup>
+              <optgroup label={t('control.optUnitedStates', '🇺🇸 United States')}>
+                <option value="venmo">{t('control.payOptionVenmo', 'Venmo (USA) — @username & memo')}</option>
+                <option value="cashapp">{t('control.payOptionCashapp', 'Cash App (USA) — $cashtag & amount')}</option>
+              </optgroup>
+              <optgroup label={t('control.optPakistan', '🇵🇰 Pakistan')}>
+                <option value="jazzcash">{t('control.payOptionJazzcash', 'JazzCash (Pakistan) — Mobile Account')}</option>
+                <option value="easypaisa">{t('control.payOptionEasypaisa', 'EasyPaisa (Pakistan) — Mobile Account')}</option>
+              </optgroup>
+              <optgroup label={t('control.optIndia', '🇮🇳 India')}>
+                <option value="upi">{t('control.payOptionUpi', 'UPI / GPay / PhonePe / Paytm (India) — Virtual Payment Address')}</option>
+              </optgroup>
+              <optgroup label={t('control.optChina', '🇨🇳 China')}>
+                <option value="alipay">{t('control.payOptionAlipay', 'Alipay (China) — Alipay QR Link')}</option>
+                <option value="wechat">{t('control.payOptionWechat', 'WeChat Pay (China) — WeChat Pay Payload (wxp://)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optBrazil', '🇧🇷 Brazil')}>
+                <option value="pix">{t('control.payOptionPix', 'PIX (Brazil) — Key / CPF / CNPJ / Email / Phone')}</option>
+              </optgroup>
+              <optgroup label={t('control.optSoutheastAsia', '🌏 Southeast Asia')}>
+                <option value="grabpay">{t('control.payOptionGrabpay', 'GrabPay (Singapore, Malaysia, Philippines)')}</option>
+              </optgroup>
+              <optgroup label={t('control.optAfrica', '🌍 Africa')}>
+                <option value="mpesa">{t('control.payOptionMpesa', 'M-Pesa (Kenya, Tanzania) — Till / Paybill / Phone')}</option>
+              </optgroup>
+            </>
+          )}
         </select>
       </div>
 

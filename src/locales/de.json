@@ -3440,5 +3440,10 @@
   "auth.resetSuccessMsg": "Wir haben Anweisungen an {email} gesendet",
   "auth.backToSignIn": "Zurück zur Anmeldung",
   "auth.cancel": "Abbrechen",
-  "auth.sendResetLink": "Link senden"
+  "auth.sendResetLink": "Link senden",
+  "control.advancedSettings": "Erweiterte QR-Engine-Einstellungen",
+  "control.advancedSettingsDesc": "Konfigurieren Sie die Fehlerkorrekturstufe, die Ruhezone und den Dichteabstand.",
+  "tools.payment.btn": "Zahlungs-QR erstellen",
+  "tools.payment.desc": "Generieren Sie Zahlungsanforderungen, benutzerdefinierte Links für digitale Geldbörsen, UPI und Rechnungs-QR-Codes. Unterstützt globale Methoden wie PayPal, Venmo und mehr.",
+  "tools.payment.title": "Zahlungs- und Wallet-QR"
 }

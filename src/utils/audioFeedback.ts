@@ -1,6 +1,8 @@
 export interface SoundSettings {
   soundEnabled: boolean;
-  soundVolume: number; // 0.0 to 1.0
+  soundVolume: number; // 0.0 to 1.0 (Master volume)
+  scanVolume: number; // 0.0 to 1.0 (Scan alerts volume)
+  saveVolume: number; // 0.0 to 1.0 (Save actions volume)
   soundType: 'beep' | 'chime' | 'ping' | 'pop';
   playOnGenerate: boolean;
   playOnTestScan: boolean;
@@ -13,9 +15,12 @@ export const getDefaultSoundSettings = (): SoundSettings => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
+      const masterVol = typeof parsed.soundVolume === 'number' ? parsed.soundVolume : 0.4;
       return {
         soundEnabled: typeof parsed.soundEnabled === 'boolean' ? parsed.soundEnabled : true,
-        soundVolume: typeof parsed.soundVolume === 'number' ? parsed.soundVolume : 0.4,
+        soundVolume: masterVol,
+        scanVolume: typeof parsed.scanVolume === 'number' ? parsed.scanVolume : masterVol,
+        saveVolume: typeof parsed.saveVolume === 'number' ? parsed.saveVolume : masterVol,
         soundType: ['beep', 'chime', 'ping', 'pop'].includes(parsed.soundType) ? parsed.soundType : 'chime',
         playOnGenerate: typeof parsed.playOnGenerate === 'boolean' ? parsed.playOnGenerate : true,
         playOnTestScan: typeof parsed.playOnTestScan === 'boolean' ? parsed.playOnTestScan : true,
@@ -27,6 +32,8 @@ export const getDefaultSoundSettings = (): SoundSettings => {
   return {
     soundEnabled: true,
     soundVolume: 0.4,
+    scanVolume: 0.4,
+    saveVolume: 0.4,
     soundType: 'chime',
     playOnGenerate: true,
     playOnTestScan: true,
@@ -49,10 +56,20 @@ export const playAudioSound = (
   customSettings?: SoundSettings
 ) => {
   const settings = customSettings || getDefaultSoundSettings();
-  if (!settings.soundEnabled || settings.soundVolume <= 0) return;
+  if (!settings.soundEnabled) return;
 
   if (action === 'generate' && !settings.playOnGenerate && !customSettings) return;
   if (action === 'test_scan' && !settings.playOnTestScan && !customSettings) return;
+
+  // Granular volume control selection
+  let targetVol = settings.soundVolume;
+  if (action === 'test_scan') {
+    targetVol = typeof settings.scanVolume === 'number' ? settings.scanVolume : settings.soundVolume;
+  } else if (action === 'generate') {
+    targetVol = typeof settings.saveVolume === 'number' ? settings.saveVolume : settings.soundVolume;
+  }
+
+  if (targetVol <= 0) return;
 
   try {
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -60,7 +77,7 @@ export const playAudioSound = (
 
     const ctx = new AudioCtx();
     const now = ctx.currentTime;
-    const vol = Math.min(Math.max(settings.soundVolume, 0), 1);
+    const vol = Math.min(Math.max(targetVol, 0), 1);
 
     if (action === 'test_scan' || settings.soundType === 'ping') {
       // Crisp success ping tone

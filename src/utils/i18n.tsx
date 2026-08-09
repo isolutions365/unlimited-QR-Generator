@@ -401,12 +401,9 @@ export function useDocumentLanguage() {
     if (typeof window !== 'undefined') {
       const html = document.documentElement;
       
-      // Directly and synchronously update the HTML language to match exactly the user selected locale.
+      // Dynamically and synchronously update the HTML dir and language attributes to match the user selected locale.
       html.setAttribute('lang', locale);
-      
-      // Keep the overall document structure and layouts strictly in LTR direction to prevent breaking headers,
-      // footers, branding, navigation, icons, logos, and QR code widgets.
-      html.setAttribute('dir', 'ltr');
+      html.setAttribute('dir', isRtlLocale(locale) ? 'rtl' : 'ltr');
       
       if (isRtlLocale(locale)) {
         html.classList.add('rtl-active');

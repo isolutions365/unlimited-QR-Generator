@@ -294,6 +294,30 @@ body, html {
    Professional RTL Support for Arabic & Urdu 
    ========================================== */
 
+/* Layout & Grid Alignment for RTL Modes */
+.rtl-active,
+html[dir="rtl"] .rtl-active {
+  direction: rtl;
+}
+
+/* Explicit Grid Template Column flow for major dashboard & card layouts in RTL */
+.rtl-active .grid,
+html[dir="rtl"] .grid {
+  direction: rtl;
+}
+
+/* Flex row direction reversals for RTL layouts to prevent text/icon overlap */
+.rtl-active .flex-row:not(.ltr-lock),
+html[dir="rtl"] .flex-row:not(.ltr-lock) {
+  flex-direction: row-reverse;
+}
+
+/* Reverse Tailwind space-x- utility margins in RTL mode */
+.rtl-active [class*="space-x-"]:not(.ltr-lock) > :not([hidden]) ~ :not([hidden]),
+html[dir="rtl"] [class*="space-x-"]:not(.ltr-lock) > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1 !important;
+}
+
 /* Apply RTL and right-align ONLY to genuine content paragraphs, descriptions, list items, and headings */
 .rtl-active p,
 .rtl-active li,
@@ -309,6 +333,19 @@ body, html {
 .rtl-active .rtl-content {
   direction: rtl !important;
   text-align: right !important;
+  unicode-bidi: plaintext !important;
+}
+
+/* Ensure inline elements or badges inside RTL blocks wrap & align cleanly without reverse punctuation flips */
+.rtl-active span:not(.ltr-lock):not(.font-mono):not(.logo):not(.brand-name):not(code) {
+  unicode-bidi: plaintext;
+}
+
+/* Placeholders & input text alignment in RTL mode */
+.rtl-active input::placeholder,
+.rtl-active textarea::placeholder {
+  text-align: right;
+  direction: rtl;
 }
 
 /* Permanently lock Branding, Logos, Brand Name, URLs, QR Codes, Icons, and non-content fields to LTR direction */
@@ -327,6 +364,19 @@ body, html {
 .rtl-active pre {
   direction: ltr !important;
   text-align: left !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Fix RTL list marker positioning and padding */
+.rtl-active ul,
+.rtl-active ol {
+  direction: rtl !important;
+}
+
+.rtl-active ul.list-disc,
+.rtl-active ol.list-decimal {
+  padding-right: 1.25rem !important;
+  padding-left: 0 !important;
 }
 
 /* Use CSS Logical Properties instead of physical margins/paddings on RTL content paragraphs to adapt beautifully */

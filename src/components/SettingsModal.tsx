@@ -92,6 +92,20 @@ export default function SettingsModal({
     saveSoundSettings(updated);
   };
 
+  const handleScanVolumeChange = (vol: number) => {
+    const updated = { ...localSettings, scanVolume: vol };
+    setLocalSettings(updated);
+    onUpdateSoundSettings(updated);
+    saveSoundSettings(updated);
+  };
+
+  const handleSaveVolumeChange = (vol: number) => {
+    const updated = { ...localSettings, saveVolume: vol };
+    setLocalSettings(updated);
+    onUpdateSoundSettings(updated);
+    saveSoundSettings(updated);
+  };
+
   const handleGenerateToggle = (enabled: boolean) => {
     const updated = { ...localSettings, playOnGenerate: enabled };
     setLocalSettings(updated);
@@ -249,36 +263,109 @@ export default function SettingsModal({
               </div>
             )}
 
-            {/* Event Specific Triggers */}
+            {/* Event Specific Triggers & Granular Volumes */}
             {localSettings.soundEnabled && (
               <div className="space-y-3">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  {t('settings.triggersTitle', 'Trigger Events')}
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center justify-between">
+                  <span>{t('settings.triggersTitle', 'Trigger Events & Specific Volumes')}</span>
+                  <span className="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold">
+                    {t('settings.granularLabel', 'Granular Control')}
+                  </span>
                 </label>
-                <div className="bg-slate-50/80 rounded-xl border border-slate-200 p-3 space-y-3">
-                  <label className="flex items-center justify-between cursor-pointer">
-                    <span className="text-xs font-semibold text-slate-700">
-                      {t('settings.onGenerateLabel', 'Play sound when QR code is generated or saved')}
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={localSettings.playOnGenerate}
-                      onChange={(e) => handleGenerateToggle(e.target.checked)}
-                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                    />
-                  </label>
+                <div className="bg-slate-50/80 rounded-xl border border-slate-200 p-4 space-y-4">
+                  {/* Scan Alerts Volume & Toggle */}
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={localSettings.playOnTestScan}
+                          onChange={(e) => handleTestScanToggle(e.target.checked)}
+                          className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                        />
+                        <span className="text-xs font-bold text-slate-800">
+                          {t('settings.onTestScanLabel', 'Scan Alerts Sound')}
+                        </span>
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-bold text-indigo-600">
+                          {localSettings.playOnTestScan ? `${Math.round((localSettings.scanVolume ?? localSettings.soundVolume) * 100)}%` : t('settings.muted', 'Muted')}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playAudioSound('test_scan', { ...localSettings, soundEnabled: true, playOnTestScan: true });
+                          }}
+                          className="p-1 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors cursor-pointer"
+                          title={t('settings.testScanSound', 'Test Scan Alert Sound')}
+                        >
+                          <Play className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    {localSettings.playOnTestScan && (
+                      <div className="flex items-center gap-3 pl-6">
+                        <Volume2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.05"
+                          value={localSettings.scanVolume ?? localSettings.soundVolume}
+                          onChange={(e) => handleScanVolumeChange(parseFloat(e.target.value))}
+                          className="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                        />
+                      </div>
+                    )}
+                  </div>
+
                   <div className="border-t border-slate-200/60" />
-                  <label className="flex items-center justify-between cursor-pointer">
-                    <span className="text-xs font-semibold text-slate-700">
-                      {t('settings.onTestScanLabel', 'Play sound on successful QR test scan')}
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={localSettings.playOnTestScan}
-                      onChange={(e) => handleTestScanToggle(e.target.checked)}
-                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                    />
-                  </label>
+
+                  {/* Save Actions Volume & Toggle */}
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={localSettings.playOnGenerate}
+                          onChange={(e) => handleGenerateToggle(e.target.checked)}
+                          className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                        />
+                        <span className="text-xs font-bold text-slate-800">
+                          {t('settings.onGenerateLabel', 'Save & Generate Actions Sound')}
+                        </span>
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-bold text-indigo-600">
+                          {localSettings.playOnGenerate ? `${Math.round((localSettings.saveVolume ?? localSettings.soundVolume) * 100)}%` : t('settings.muted', 'Muted')}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playAudioSound('generate', { ...localSettings, soundEnabled: true, playOnGenerate: true });
+                          }}
+                          className="p-1 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors cursor-pointer"
+                          title={t('settings.testSaveSound', 'Test Save Action Sound')}
+                        >
+                          <Play className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    {localSettings.playOnGenerate && (
+                      <div className="flex items-center gap-3 pl-6">
+                        <Volume2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.05"
+                          value={localSettings.saveVolume ?? localSettings.soundVolume}
+                          onChange={(e) => handleSaveVolumeChange(parseFloat(e.target.value))}
+                          className="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
