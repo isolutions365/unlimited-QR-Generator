@@ -9,9 +9,13 @@
     "start": "node dist/server.cjs",
     "lint": "tsc --noEmit"
   },
+  "resolutions": {
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1"
+  },
   "overrides": {
-    "react": "$react",
-    "react-dom": "$react-dom"
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1"
   },
   "dependencies": {
     "@capacitor/core": "^8.5.0",
