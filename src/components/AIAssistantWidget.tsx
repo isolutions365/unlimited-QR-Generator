@@ -434,8 +434,8 @@ export default function AIAssistantWidget({
 
   return (
     <>
-      {/* 1. Floating Trigger Button (Bottom Right - Fixed Z-50) */}
-      <div className="fixed bottom-6 right-6 z-50">
+      {/* 1. Floating Trigger Button (Positioned vertically separated from reCAPTCHA badge & MobileNav) */}
+      <div className="ai-assistant-floating-container" id="ai-assistant-floating-wrapper">
         <AnimatePresence>
           {!isOpen && (
             <motion.button
@@ -482,7 +482,7 @@ export default function AIAssistantWidget({
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-              className="fixed inset-y-0 right-0 z-50 w-full sm:w-[420px] md:w-[460px] bg-white shadow-2xl flex flex-col border-l border-slate-200 text-slate-800 overflow-hidden"
+              className="fixed inset-y-0 right-0 rtl:right-auto rtl:left-0 z-50 w-full sm:w-[420px] md:w-[460px] bg-white shadow-2xl flex flex-col border-l rtl:border-l-0 rtl:border-r border-slate-200 text-slate-800 overflow-hidden"
             >
               {/* Drawer Header (Modern Gradient: "AI Workspace Assistant") */}
               <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 text-white p-4 sm:p-5 flex items-center justify-between border-b border-indigo-800/20 shadow-md">

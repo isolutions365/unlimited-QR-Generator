@@ -3409,7 +3409,7 @@ export default function App() {
             exit={{ y: 50, opacity: 0, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 140, damping: 20 }}
             id="cookie-consent-banner"
-            className="fixed bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-md bg-slate-950 border border-slate-800/80 text-white p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col gap-4 z-[9999] backdrop-blur-md"
+            className="cookie-consent-container bg-slate-950 border border-slate-800/80 text-white p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col gap-4 z-[9999] backdrop-blur-md"
           >
             <div className="flex gap-3">
               <div id="cookie-icon-wrapper" className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl flex-shrink-0 h-10 w-10 flex items-center justify-center">
@@ -3606,8 +3606,8 @@ export default function App() {
       </>
       )}
 
-      {/* Floating Real-Time Scan Alerts Toaster Panel (Bottom Right) */}
-      <div className="fixed bottom-6 right-6 z-100 w-full max-w-sm flex flex-col gap-3 pointer-events-none p-4" id="floating-notification-toaster-container">
+      {/* Floating Real-Time Scan Alerts Toaster Panel (Top Right) */}
+      <div className="toast-floating-container w-full max-w-sm flex flex-col gap-3 pointer-events-none p-4" id="floating-notification-toaster-container">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div

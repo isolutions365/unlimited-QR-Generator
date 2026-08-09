@@ -313,15 +313,17 @@ export default function QRMarketingPlatform({ onBack }: QRMarketingPlatformProps
         </main>
       </div>
 
-      {/* Floating AI Co-Pilot Trigger Button */}
-      <button 
-        onClick={() => setIsAssistantOpen(true)}
-        className="fixed bottom-6 right-6 z-40 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-xl hover:shadow-2xl transition-all flex items-center gap-2 group cursor-pointer"
-        id="ai-copilot-floating-btn"
-      >
-        <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
-        <span className="text-xs font-black tracking-wider uppercase pr-1">AI Co-Pilot</span>
-      </button>
+      {/* Floating AI Co-Pilot Trigger Button (Positioned vertically above AI Assistant) */}
+      <div className="ai-copilot-floating-container" id="ai-copilot-floating-wrapper">
+        <button 
+          onClick={() => setIsAssistantOpen(true)}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-xl hover:shadow-2xl transition-all flex items-center gap-2 group cursor-pointer"
+          id="ai-copilot-floating-btn"
+        >
+          <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
+          <span className="text-xs font-black tracking-wider uppercase pr-1">AI Co-Pilot</span>
+        </button>
+      </div>
 
       {/* Sliding AI Co-Pilot Panel */}
       {isAssistantOpen && (

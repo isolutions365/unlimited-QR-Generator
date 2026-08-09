@@ -432,6 +432,156 @@ html[dir="rtl"] [class*="space-x-"]:not(.ltr-lock) > :not([hidden]) ~ :not([hidd
   animation: logo-breath 3.4s ease-in-out infinite;
 }
 
+/* ==========================================================================
+   Global Floating UI Elements Layout & Non-Overlapping Position Rules
+   ========================================================================== */
+
+/* 1. Google reCAPTCHA Enterprise Badge (.grecaptcha-badge) */
+.grecaptcha-badge {
+  position: fixed !important;
+  bottom: 16px !important;
+  right: 16px !important;
+  z-index: 40 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  transition: bottom 0.3s ease, right 0.3s ease, left 0.3s ease, transform 0.3s ease !important;
+}
+
+/* Mobile Screens: Position reCAPTCHA badge above MobileBottomNav (h-16) */
+@media (max-width: 767px) {
+  .grecaptcha-badge {
+    bottom: 72px !important;
+    right: 12px !important;
+  }
+}
+
+/* RTL Mode for reCAPTCHA badge */
+.rtl-active .grecaptcha-badge,
+html[dir="rtl"] .grecaptcha-badge {
+  right: auto !important;
+  left: 16px !important;
+}
+
+@media (max-width: 767px) {
+  .rtl-active .grecaptcha-badge,
+  html[dir="rtl"] .grecaptcha-badge {
+    right: auto !important;
+    left: 12px !important;
+  }
+}
+
+
+/* 2. Global AI Workspace Assistant Button Container */
+.ai-assistant-floating-container {
+  position: fixed !important;
+  bottom: 144px !important; /* Clears MobileBottomNav + reCAPTCHA on mobile */
+  right: 16px !important;
+  z-index: 50 !important;
+  transition: bottom 0.3s ease, right 0.3s ease, left 0.3s ease, transform 0.25s ease !important;
+}
+
+@media (min-width: 768px) {
+  .ai-assistant-floating-container {
+    bottom: 88px !important; /* Stacked 12px above reCAPTCHA badge (16px + 60px + 12px = 88px) */
+    right: 20px !important;
+  }
+}
+
+/* RTL Mode for AI Assistant Widget Container */
+.rtl-active .ai-assistant-floating-container,
+html[dir="rtl"] .ai-assistant-floating-container {
+  right: auto !important;
+  left: 16px !important;
+}
+
+@media (min-width: 768px) {
+  .rtl-active .ai-assistant-floating-container,
+  html[dir="rtl"] .ai-assistant-floating-container {
+    right: auto !important;
+    left: 20px !important;
+  }
+}
+
+
+/* 3. Marketing Platform AI Co-Pilot Floating Button Container */
+.ai-copilot-floating-container {
+  position: fixed !important;
+  bottom: 200px !important; /* Stacked above AI Assistant on mobile */
+  right: 16px !important;
+  z-index: 49 !important;
+  transition: bottom 0.3s ease, right 0.3s ease, left 0.3s ease, transform 0.25s ease !important;
+}
+
+@media (min-width: 768px) {
+  .ai-copilot-floating-container {
+    bottom: 148px !important; /* Stacked above AI Assistant on desktop (88px + 44px + 16px = 148px) */
+    right: 20px !important;
+  }
+}
+
+.rtl-active .ai-copilot-floating-container,
+html[dir="rtl"] .ai-copilot-floating-container {
+  right: auto !important;
+  left: 16px !important;
+}
+
+@media (min-width: 768px) {
+  .rtl-active .ai-copilot-floating-container,
+  html[dir="rtl"] .ai-copilot-floating-container {
+    right: auto !important;
+    left: 20px !important;
+  }
+}
+
+
+/* 4. Floating Notification Toaster Container (Top Right / Top Left in RTL) */
+.toast-floating-container {
+  position: fixed !important;
+  top: 80px !important;
+  right: 16px !important;
+  z-index: 9990 !important;
+}
+
+.rtl-active .toast-floating-container,
+html[dir="rtl"] .toast-floating-container {
+  right: auto !important;
+  left: 16px !important;
+}
+
+
+/* 5. Cookie Preference Consent Banner (Bottom Left / Bottom Right in RTL) */
+.cookie-consent-container {
+  position: fixed !important;
+  bottom: 80px !important;
+  left: 16px !important;
+  right: 16px !important;
+  z-index: 9999 !important;
+}
+
+@media (min-width: 768px) {
+  .cookie-consent-container {
+    bottom: 24px !important;
+    left: 24px !important;
+    right: auto !important;
+    max-width: 28rem !important;
+  }
+}
+
+.rtl-active .cookie-consent-container,
+html[dir="rtl"] .cookie-consent-container {
+  left: 16px !important;
+  right: 16px !important;
+}
+
+@media (min-width: 768px) {
+  .rtl-active .cookie-consent-container,
+  html[dir="rtl"] .cookie-consent-container {
+    left: auto !important;
+    right: 24px !important;
+  }
+}
+
+
 
 
 

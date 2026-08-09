@@ -14,10 +14,10 @@ export default defineConfig(() => {
       dedupe: ['react', 'react-dom', 'react-dom/client', 'scheduler'],
     },
     build: {
-      target: 'esnext',
+      target: 'es2022',
       minify: 'esbuild' as const,
       cssMinify: true,
-      sourcemap: 'hidden' as const,
+      sourcemap: true,
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
