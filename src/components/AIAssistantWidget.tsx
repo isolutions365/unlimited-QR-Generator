@@ -10,6 +10,7 @@ import { signInAnonymously } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { playAudioSound } from '../utils/audioFeedback';
 import { QRProject } from '../types';
+import { useTranslation } from '../utils/i18n';
 
 interface AIAssistantWidgetProps {
   activeTab: string;
@@ -92,6 +93,7 @@ export default function AIAssistantWidget({
   currentProject,
   onUpdateProject
 }: AIAssistantWidgetProps) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -456,7 +458,7 @@ export default function AIAssistantWidget({
                 <Sparkles className="w-4 h-4 animate-pulse text-amber-300" />
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
               </div>
-              <span>AI Assistant</span>
+              <span>{t('ai.buttonLabel', 'AI Assistant')}</span>
             </motion.button>
           )}
         </AnimatePresence>
@@ -492,11 +494,11 @@ export default function AIAssistantWidget({
                   </div>
                   <div>
                     <h2 className="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
-                      <span>AI Workspace Assistant</span>
+                      <span>{t('ai.workspaceTitle', 'AI Workspace Assistant')}</span>
                       <span className="text-[10px] uppercase font-black bg-amber-400/20 text-amber-200 px-2 py-0.5 rounded-full border border-amber-300/30">Co-Pilot</span>
                     </h2>
                     <p className="text-xs text-indigo-100 font-medium opacity-90">
-                      Powered by Gemini AI • Real-time Co-Pilot
+                      {t('ai.workspaceSubtitle', 'Powered by Gemini AI • Real-time Co-Pilot')}
                     </p>
                   </div>
                 </div>
@@ -517,7 +519,7 @@ export default function AIAssistantWidget({
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer"
                 >
                   <Palette className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>Color Palette</span>
+                  <span>{t('ai.quickActionColor', 'Color Palette')}</span>
                 </button>
 
                 <button
@@ -525,7 +527,7 @@ export default function AIAssistantWidget({
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer"
                 >
                   <LinkIcon className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>UTM Tracking</span>
+                  <span>{t('ai.quickActionUtm', 'UTM Tracking')}</span>
                 </button>
 
                 <button
@@ -533,7 +535,7 @@ export default function AIAssistantWidget({
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer"
                 >
                   <FileText className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>vCard / Menu</span>
+                  <span>{t('ai.quickActionVcard', 'vCard / Menu')}</span>
                 </button>
 
                 <button
@@ -541,7 +543,7 @@ export default function AIAssistantWidget({
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer"
                 >
                   <SearchCheck className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>Diagnostics</span>
+                  <span>{t('ai.quickActionDiagnostics', 'Diagnostics')}</span>
                 </button>
               </div>
 
