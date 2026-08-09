@@ -436,61 +436,49 @@ html[dir="rtl"] [class*="space-x-"]:not(.ltr-lock) > :not([hidden]) ~ :not([hidd
    Global Floating UI Elements Layout & Non-Overlapping Position Rules
    ========================================================================== */
 
-/* 1. Google reCAPTCHA Enterprise Badge (.grecaptcha-badge rendered in compact icon form, expanding on hover) */
+/* 1. Google reCAPTCHA Enterprise Badge embedded in footer */
 .grecaptcha-badge {
-  position: fixed !important;
-  bottom: 16px !important;
-  right: 16px !important;
-  z-index: 40 !important;
+  position: relative !important;
+  bottom: auto !important;
+  right: auto !important;
+  left: auto !important;
+  top: auto !important;
+  z-index: 1 !important;
   width: 70px !important;
   height: 60px !important;
   overflow: hidden !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   border-radius: 8px !important;
-  transition: width 0.3s ease, bottom 0.3s ease, right 0.3s ease, left 0.3s ease !important;
+  margin: 12px auto !important;
+  display: inline-block !important;
+  transition: width 0.3s ease !important;
 }
 
 .grecaptcha-badge:hover {
   width: 256px !important;
 }
 
-/* Mobile Screens: Position reCAPTCHA badge above MobileBottomNav (h-16) */
-@media (max-width: 767px) {
-  .grecaptcha-badge {
-    bottom: 72px !important;
-    right: 12px !important;
-  }
-}
-
-/* RTL Mode for reCAPTCHA badge */
+/* RTL / Mobile resets for reCAPTCHA badge since it's now inline in footer */
 .rtl-active .grecaptcha-badge,
 html[dir="rtl"] .grecaptcha-badge {
   right: auto !important;
-  left: 16px !important;
-}
-
-@media (max-width: 767px) {
-  .rtl-active .grecaptcha-badge,
-  html[dir="rtl"] .grecaptcha-badge {
-    right: auto !important;
-    left: 12px !important;
-  }
+  left: auto !important;
 }
 
 
 /* 2. Global AI Workspace Assistant Button Container */
 .ai-assistant-floating-container {
   position: fixed !important;
-  bottom: 144px !important; /* Clears MobileBottomNav + reCAPTCHA on mobile */
-  right: 16px !important;
+  bottom: 84px !important; /* Clears MobileBottomNav on mobile */
+  right: 20px !important;
   z-index: 50 !important;
   transition: bottom 0.3s ease, right 0.3s ease, left 0.3s ease, transform 0.25s ease !important;
 }
 
 @media (min-width: 768px) {
   .ai-assistant-floating-container {
-    bottom: 88px !important; /* Stacked 12px above reCAPTCHA badge (16px + 60px + 12px = 88px) */
-    right: 20px !important;
+    bottom: 24px !important; /* Clean distance above footer */
+    right: 24px !important;
   }
 }
 
@@ -498,14 +486,14 @@ html[dir="rtl"] .grecaptcha-badge {
 .rtl-active .ai-assistant-floating-container,
 html[dir="rtl"] .ai-assistant-floating-container {
   right: auto !important;
-  left: 16px !important;
+  left: 20px !important;
 }
 
 @media (min-width: 768px) {
   .rtl-active .ai-assistant-floating-container,
   html[dir="rtl"] .ai-assistant-floating-container {
     right: auto !important;
-    left: 20px !important;
+    left: 24px !important;
   }
 }
 
@@ -513,30 +501,30 @@ html[dir="rtl"] .ai-assistant-floating-container {
 /* 3. Marketing Platform AI Co-Pilot Floating Button Container */
 .ai-copilot-floating-container {
   position: fixed !important;
-  bottom: 200px !important; /* Stacked above AI Assistant on mobile */
-  right: 16px !important;
+  bottom: 140px !important;
+  right: 20px !important;
   z-index: 49 !important;
   transition: bottom 0.3s ease, right 0.3s ease, left 0.3s ease, transform 0.25s ease !important;
 }
 
 @media (min-width: 768px) {
   .ai-copilot-floating-container {
-    bottom: 148px !important; /* Stacked above AI Assistant on desktop (88px + 44px + 16px = 148px) */
-    right: 20px !important;
+    bottom: 84px !important; /* Stacked 12px above AI Assistant on desktop */
+    right: 24px !important;
   }
 }
 
 .rtl-active .ai-copilot-floating-container,
 html[dir="rtl"] .ai-copilot-floating-container {
   right: auto !important;
-  left: 16px !important;
+  left: 20px !important;
 }
 
 @media (min-width: 768px) {
   .rtl-active .ai-copilot-floating-container,
   html[dir="rtl"] .ai-copilot-floating-container {
     right: auto !important;
-    left: 20px !important;
+    left: 24px !important;
   }
 }
 

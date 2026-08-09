@@ -449,6 +449,18 @@ const categoryCardVariants: any = {
 export default function App() {
   const { user: fbUser, loading: fbLoading, logout: fbLogout } = useFirebaseAuth();
   useReCaptchaEnterprise(); // Safely initialize and execute reCAPTCHA Enterprise on mount
+
+  // Embed reCAPTCHA badge into footer slot automatically
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const badge = document.querySelector('.grecaptcha-badge');
+      const slot = document.getElementById('recaptcha-footer-slot');
+      if (badge && slot && !slot.contains(badge)) {
+        slot.appendChild(badge);
+      }
+    }, 800);
+    return () => clearInterval(timer);
+  }, []);
   const platform = usePlatformLayout();
   const [activeMobileTab, setActiveMobileTab] = useState<MobileTabType>('generator');
   const [user, setUser] = useState<UserSession | null>(null);
@@ -3602,6 +3614,7 @@ export default function App() {
             <a href="/ai-gateway" onClick={(e) => { e.preventDefault(); navigateTo('/ai-gateway'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.aiGateway', 'Enterprise AI & Developer Gateway')}</a>
           </div>
         </div>
+        <div id="recaptcha-footer-slot" className="flex items-center justify-center my-6"></div>
       </footer>
       </>
       )}
