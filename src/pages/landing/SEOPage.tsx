@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../../utils/i18n';
+import { getProductionBaseUrl } from '../../config/siteConfig';
 
 import { landingPages, LandingPageData } from './SEODatabase';
 import { aeoDatabase } from './AEOData';
@@ -237,7 +238,7 @@ export default function SEOPage({
   };
 
   const buildBreadcrumbSchema = () => {
-    const rootUrl = typeof window !== 'undefined' ? window.location.origin : 'https://qrcodeps.com';
+    const rootUrl = getProductionBaseUrl();
     return {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",

@@ -1,4 +1,5 @@
 import React from 'react';
+import { getProductionBaseUrl } from '../config/siteConfig';
 import {
   DndContext,
   closestCenter,
@@ -413,7 +414,7 @@ export default function SavedProjects({
   React.useEffect(() => {
     if (!selectedDetailProject || !detailCanvasRef.current) return;
     const proj = selectedDetailProject;
-    const appUrl = ((import.meta as any).env?.VITE_APP_URL || window.location.origin);
+    const appUrl = getProductionBaseUrl();
     const content = (proj.trackingEnabled && proj.trackingId)
       ? `${appUrl}/qr/${proj.trackingId}`
       : (proj.content || 'https://example.com');
@@ -523,7 +524,7 @@ export default function SavedProjects({
 
   // Download SVG from Details Modal
   const handleDownloadSVGFromModal = (proj: QRProject) => {
-    const appUrl = ((import.meta as any).env?.VITE_APP_URL || window.location.origin);
+    const appUrl = getProductionBaseUrl();
     const content = (proj.trackingEnabled && proj.trackingId)
       ? `${appUrl}/qr/${proj.trackingId}`
       : (proj.content || 'https://example.com');
@@ -567,7 +568,7 @@ export default function SavedProjects({
 
   const handleCopyLink = (e: React.MouseEvent, trackingId: string, id: string) => {
     e.stopPropagation();
-    const appUrl = ((import.meta as any).env?.VITE_APP_URL || window.location.origin);
+    const appUrl = getProductionBaseUrl();
     navigator.clipboard.writeText(`${appUrl}/qr/${trackingId}`);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -1319,7 +1320,7 @@ export default function SavedProjects({
               <button
                 type="button"
                 onClick={() => {
-                  const appUrl = ((import.meta as any).env?.VITE_APP_URL || window.location.origin);
+                  const appUrl = getProductionBaseUrl();
                   navigator.clipboard.writeText(`${appUrl}/qr/${analyticsProject.trackingId}`);
                   setCopiedId(analyticsProject.id);
                   setTimeout(() => setCopiedId(null), 2000);
@@ -1506,7 +1507,7 @@ export default function SavedProjects({
                       <span className="text-[9px] text-indigo-600 font-bold uppercase block">Generated Redirect Short Link</span>
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-xs font-mono font-bold text-indigo-950 break-all truncate">
-                          {`${((import.meta as any).env?.VITE_APP_URL || window.location.origin)}/qr/${selectedDetailProject.trackingId}`}
+                          {`${getProductionBaseUrl()}/qr/${selectedDetailProject.trackingId}`}
                         </span>
                         <button
                           type="button"

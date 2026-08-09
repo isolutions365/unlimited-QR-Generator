@@ -13,6 +13,7 @@ import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'fireb
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { useTranslation } from '../utils/i18n';
+import { buildProductionUrl } from '../config/siteConfig';
 
 // Interfaces
 interface MenuVariant {
@@ -725,7 +726,7 @@ const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
           id: currentMenu.id,
           name: currentMenu.restaurantName || 'Restaurant Menu',
           type: 'menu',
-          content: `${window.location.origin}/#menu-${currentMenu.id}`,
+          content: buildProductionUrl(`/#menu-${currentMenu.id}`),
           userId: userId,
           trackingId: currentMenu.id
         }).catch(() => {});
@@ -1163,7 +1164,7 @@ const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
   // QR Generator properties
   const getQRContent = () => {
     // Generates a mock direct digital menu landing URL that the user can scan to open
-    return `${window.location.origin}/menu-preview?id=${menu.id}&rest=${encodeURIComponent(menu.restaurantName)}`;
+    return buildProductionUrl(`/menu-preview?id=${menu.id}&rest=${encodeURIComponent(menu.restaurantName)}`);
   };
 
   const getQRImageSrc = () => {

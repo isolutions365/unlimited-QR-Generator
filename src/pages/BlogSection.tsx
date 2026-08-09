@@ -6,6 +6,7 @@ import {
 import { blogCategories, BlogArticle } from '../data/blogData';
 import { getLocalizedBlog, Locale } from '../utils/translations';
 import { useTranslation } from '../utils/i18n';
+import { buildProductionUrl } from '../config/siteConfig';
 
 interface BlogSectionProps {
   initialSlug?: string | null;
@@ -63,7 +64,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
   };
 
   const copyArticleLink = (slug: string) => {
-    const url = `${window.location.origin}/blog/${slug}`;
+    const url = buildProductionUrl(`/blog/${slug}`);
     navigator.clipboard.writeText(url).then(() => {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);

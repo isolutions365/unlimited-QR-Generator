@@ -1,4 +1,5 @@
 import { Locale, SUPPORTED_LOCALES } from './translations';
+import { getProductionBaseUrl } from '../config/siteConfig';
 
 export interface LocalizedSEOConfig {
   title: string;
@@ -84,7 +85,7 @@ function updateMetaTag(name: string, content: string, typeKey: 'name' | 'propert
 }
 
 function getLocalizedCanonicalUrl(rawUrl: string, locale: Locale): string {
-  const urlObj = new URL(rawUrl, window.location.origin);
+  const urlObj = new URL(rawUrl, getProductionBaseUrl());
   const cleanPath = urlObj.pathname.replace(/^\/(ar|ur|es|fr|de|pt|it|tr|id|hi|ja|ko|zh)/, '');
   const prefix = locale === 'en' ? '' : `/${locale}`;
   return `${urlObj.origin}${prefix}${cleanPath === '/' ? '' : cleanPath}${urlObj.search}`;
@@ -114,7 +115,7 @@ function injectHreflangs(rawUrl: string, doc: Document) {
   // Remove any existing hreflang tags to prevent duplicates
   doc.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
 
-  const urlObj = new URL(rawUrl, window.location.origin);
+  const urlObj = new URL(rawUrl, getProductionBaseUrl());
   const cleanPath = urlObj.pathname.replace(/^\/(ar|ur|es|fr|de|pt|it|tr|id|hi|ja|ko|zh)/, '');
 
   SUPPORTED_LOCALES.forEach((l) => {
@@ -153,7 +154,7 @@ function injectJsonLd(config: LocalizedSEOConfig, locale: Locale, doc: Document)
     "inLanguage": locale,
     "potentialAction": {
       "@type": "SearchAction",
-      "target": `${window.location.origin}${locale === 'en' ? '' : '/' + locale}/?search={search_term_string}`,
+      "target": `${getProductionBaseUrl()}${locale === 'en' ? '' : '/' + locale}/?search={search_term_string}`,
       "query-input": "required name=search_term_string"
     }
   };
@@ -169,7 +170,7 @@ function injectJsonLd(config: LocalizedSEOConfig, locale: Locale, doc: Document)
         "@type": "ListItem",
         "position": idx + 1,
         "name": crumb.name,
-        "item": crumb.url.startsWith('http') ? crumb.url : `${window.location.origin}${crumb.url}`
+        "item": crumb.url.startsWith('http') ? crumb.url : `${getProductionBaseUrl()}${crumb.url}`
       }))
     };
     scripts.push(breadcrumbSchema);
@@ -182,7 +183,7 @@ function injectJsonLd(config: LocalizedSEOConfig, locale: Locale, doc: Document)
       "@type": "Product",
       "name": config.title,
       "description": config.description,
-      "image": config.image || `${window.location.origin}/logo.png`,
+      "image": config.image || `${getProductionBaseUrl()}/logo.png`,
       "offers": {
         "@type": "Offer",
         "price": "0.00",

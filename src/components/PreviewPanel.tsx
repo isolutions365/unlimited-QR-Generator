@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useTranslation } from '../utils/i18n';
+import { getProductionBaseUrl } from '../config/siteConfig';
 
 import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG, getEmblemFontSize } from '../utils/qrRenderer';
@@ -124,7 +125,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const frameTextPosition = currentProject.design?.frameTextPosition || 'bottom';
 
   const qrContent = currentProject.content || 'https://www.freeqrgen.pro';
-  const appUrl = (window as any).location?.origin || '';
+  const appUrl = getProductionBaseUrl();
   const trackingId = currentProject.trackingId || '';
   const trackingEnabled = currentProject.trackingEnabled || false;
 

@@ -13,6 +13,7 @@ import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useTranslation } from '../utils/i18n';
+import { buildProductionUrl } from '../config/siteConfig';
 
 // Interfaces
 interface FormField {
@@ -409,7 +410,7 @@ export default function FormBuilder() {
           id: formId,
           name: formTitle,
           type: 'form',
-          content: `${window.location.origin}/share-preview?type=form&id=${formId}`,
+          content: buildProductionUrl(`/share-preview?type=form&id=${formId}`),
           userId: userId,
           trackingId: formId
         }).catch(() => {});
@@ -585,7 +586,7 @@ export default function FormBuilder() {
 
   // Share URL & QR Code API
   const getFormVisitorLink = (id: string) => {
-    return `${window.location.origin}/share-preview?type=form&id=${id}`;
+    return buildProductionUrl(`/share-preview?type=form&id=${id}`);
   };
 
   const getFormQRImageSrc = (form: CustomFormConfig) => {

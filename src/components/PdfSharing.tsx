@@ -13,6 +13,7 @@ import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'fireb
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { useTranslation } from '../utils/i18n';
+import { buildProductionUrl } from '../config/siteConfig';
 
 // Interfaces
 interface PdfVersion {
@@ -254,7 +255,7 @@ export default function PdfSharing() {
           id: newShare.id,
           name: newShare.title || 'PDF Share',
           type: 'pdf',
-          content: `${window.location.origin}/#pdf-${newShare.id}`,
+          content: buildProductionUrl(`/#pdf-${newShare.id}`),
           userId: userId,
           trackingId: newShare.id
         }).catch(() => {});
@@ -548,7 +549,7 @@ export default function PdfSharing() {
 
   // QR Redirect Link generator
   const getVisitorLink = (id: string) => {
-    return `${window.location.origin}/share-preview?type=pdf&id=${id}`;
+    return buildProductionUrl(`/share-preview?type=pdf&id=${id}`);
   };
 
   const getQRImageSrc = (share: PdfShareConfig) => {

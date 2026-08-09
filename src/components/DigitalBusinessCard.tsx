@@ -12,6 +12,7 @@ import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'fireb
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { useTranslation } from '../utils/i18n';
+import { buildProductionUrl } from '../config/siteConfig';
 
 // Interfaces
 interface SocialLink {
@@ -279,7 +280,7 @@ export default function DigitalBusinessCard() {
           id: currentCard.id,
           name: currentCard.name || 'Digital Business Card',
           type: 'vcard',
-          content: `${window.location.origin}/#card-${currentCard.id}`,
+          content: buildProductionUrl(`/#card-${currentCard.id}`),
           userId: userId,
           trackingId: currentCard.id
         }).catch(() => {});
@@ -326,7 +327,7 @@ export default function DigitalBusinessCard() {
   };
 
   const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/card-preview?name=${encodeURIComponent(cardData.name)}&title=${encodeURIComponent(cardData.title)}&company=${encodeURIComponent(cardData.company)}&email=${encodeURIComponent(cardData.email)}&phone=${encodeURIComponent(cardData.phone)}&website=${encodeURIComponent(cardData.website)}`;
+    const shareUrl = buildProductionUrl(`/card-preview?name=${encodeURIComponent(cardData.name)}&title=${encodeURIComponent(cardData.title)}&company=${encodeURIComponent(cardData.company)}&email=${encodeURIComponent(cardData.email)}&phone=${encodeURIComponent(cardData.phone)}&website=${encodeURIComponent(cardData.website)}`);
     if (navigator.share) {
       try {
         await navigator.share({
@@ -349,7 +350,7 @@ export default function DigitalBusinessCard() {
       return generateVCard();
     }
     // Web Mode link formulation
-    return `${window.location.origin}/card-preview?id=${cardData.id}&name=${encodeURIComponent(cardData.name)}&company=${encodeURIComponent(cardData.company)}`;
+    return buildProductionUrl(`/card-preview?id=${cardData.id}&name=${encodeURIComponent(cardData.name)}&company=${encodeURIComponent(cardData.company)}`);
   };
 
   // QR Code Image Generator API Endpoint

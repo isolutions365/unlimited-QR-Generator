@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { buildProductionUrl } from '../../../../config/siteConfig';
 import { 
   Smartphone, Plus, Search, Edit2, Link2, Eye, Layout, Trash2, 
   Save, Globe, Copy, ArrowUp, ArrowDown, GripVertical, Settings, 
@@ -482,7 +483,7 @@ export default function LandingPagesModule() {
 
   // Copy link to clipboard
   const handleCopyLink = (slug: string) => {
-    const fullLink = `${window.location.origin}/p/${slug}`;
+    const fullLink = buildProductionUrl(`/p/${slug}`);
     navigator.clipboard.writeText(fullLink);
     setCopiedSlug(slug);
     setTimeout(() => setCopiedSlug(null), 2000);

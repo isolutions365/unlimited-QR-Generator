@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
+import { getProductionBaseUrl } from '../config/siteConfig';
 
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -277,7 +278,7 @@ export default function GrowthSuite({
 
   const copyReferralLink = () => {
     if (!profile) return;
-    const link = `${window.location.origin}/?ref=${profile.referralCode}`;
+    const link = `${getProductionBaseUrl()}/?ref=${profile.referralCode}`;
     navigator.clipboard.writeText(link);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
@@ -664,7 +665,7 @@ export default function GrowthSuite({
                         <input 
                           type="text" 
                           readOnly 
-                          value={`${window.location.origin}/?ref=${profile?.referralCode}`}
+                          value={`${getProductionBaseUrl()}/?ref=${profile?.referralCode}`}
                           className="flex-1 text-xs border border-slate-200 rounded-xl p-3 bg-white font-mono text-slate-600 select-all focus:outline-none"
                         />
                         <button 

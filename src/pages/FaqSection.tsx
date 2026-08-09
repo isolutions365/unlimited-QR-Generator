@@ -3,6 +3,7 @@ import { Search, HelpCircle, ChevronDown, ChevronUp, Copy, Check, ArrowLeft, Shi
 import { faqCategories, FAQItem } from '../data/faqData';
 import { getLocalizedFaq, faqCategoryLabels, Locale } from '../utils/translations';
 import { useTranslation } from '../utils/i18n';
+import { buildProductionUrl } from '../config/siteConfig';
 
 interface FaqSectionProps {
   onNavigate: (path: string) => void;
@@ -39,7 +40,7 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
 
   const copyShareLink = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const url = `${window.location.origin}/faq?q=${id}`;
+    const url = buildProductionUrl(`/faq?q=${id}`);
     navigator.clipboard.writeText(url).then(() => {
       setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2000);

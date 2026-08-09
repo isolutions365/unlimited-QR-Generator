@@ -7,6 +7,7 @@ import {
 import { knowledgeArticles, KnowledgeArticle } from '../data/knowledgeData';
 import { Locale } from '../utils/translations';
 import { useTranslation } from '../utils/i18n';
+import { getProductionBaseUrl, buildProductionUrl } from '../config/siteConfig';
 
 interface KnowledgeHubProps {
   section: 'academy' | 'blog' | 'guides' | 'tutorials' | 'resources' | 'glossary';
@@ -85,7 +86,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
   };
 
   const copyArticleLink = (slug: string) => {
-    const url = `${window.location.origin}/${section}/${slug}`;
+    const url = buildProductionUrl(`/${section}/${slug}`);
     navigator.clipboard.writeText(url).then(() => {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
@@ -93,7 +94,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
   };
 
   const getShareUrl = (slug: string) => {
-    return `${window.location.origin}/${section}/${slug}`;
+    return buildProductionUrl(`/${section}/${slug}`);
   };
 
   // Breadcrumb schema & JSON-LD schema injection
@@ -105,7 +106,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
       return;
     }
 
-    const rootUrl = window.location.origin;
+    const rootUrl = getProductionBaseUrl();
     const articleUrl = `${rootUrl}/${section}/${activeArticle.slug}`;
 
     // 1. Breadcrumb Schema

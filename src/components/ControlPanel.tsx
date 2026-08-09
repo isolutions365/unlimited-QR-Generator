@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
+import { getProductionBaseUrl } from '../config/siteConfig';
 
 import { QRProject } from '../types';
 import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp } from 'lucide-react';
@@ -334,7 +335,7 @@ export default function ControlPanel({ currentProject,
     const qrContent = localProject.content || 'https://www.freeqrgen.pro';
     const trackingEnabled = localProject.trackingEnabled || false;
     const trackingId = localProject.trackingId || '';
-    const appUrl = (window as any).location?.origin || '';
+    const appUrl = getProductionBaseUrl();
     const trackingUrl = trackingId ? `${appUrl}/qr/${trackingId}` : null;
     const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : qrContent;
 

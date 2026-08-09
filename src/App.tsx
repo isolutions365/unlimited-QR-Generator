@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getProductionBaseUrl } from './config/siteConfig';
 import { api, UserSession } from './lib/api';
 import { useFirebaseAuth } from './context/FirebaseAuthContext';
 import { useReCaptchaEnterprise } from './hooks/useReCaptchaEnterprise';
@@ -214,14 +215,14 @@ import Header from './components/Header';
 import Logo from './components/Logo';
 
 // Additional dynamic code splitting for secondary tabs and widgets
-const TemplatesTab = React.lazy(() => import('./components/TemplatesTab'));
-const SavedProjects = React.lazy(() => import('./components/SavedProjects'));
-const AnalyticsDashboard = React.lazy(() => import('./components/AnalyticsDashboard'));
-const BarcodeGenerator = React.lazy(() => import('./components/BarcodeGenerator'));
-const DigitalBusinessCard = React.lazy(() => import('./components/DigitalBusinessCard'));
-const RestaurantMenu = React.lazy(() => import('./components/RestaurantMenu'));
-const PdfSharing = React.lazy(() => import('./components/PdfSharing'));
-const FormBuilder = React.lazy(() => import('./components/FormBuilder'));
+const TemplatesTab = lazyWithRetry(() => import('./components/TemplatesTab'));
+const SavedProjects = lazyWithRetry(() => import('./components/SavedProjects'));
+const AnalyticsDashboard = lazyWithRetry(() => import('./components/AnalyticsDashboard'));
+const BarcodeGenerator = lazyWithRetry(() => import('./components/BarcodeGenerator'));
+const DigitalBusinessCard = lazyWithRetry(() => import('./components/DigitalBusinessCard'));
+const RestaurantMenu = lazyWithRetry(() => import('./components/RestaurantMenu'));
+const PdfSharing = lazyWithRetry(() => import('./components/PdfSharing'));
+const FormBuilder = lazyWithRetry(() => import('./components/FormBuilder'));
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
@@ -1187,7 +1188,7 @@ export default function App() {
   }, [currentPath, locale]);
 
   const buildHomepageSchema = () => {
-    const rootUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.freeqrgen.pro';
+    const rootUrl = getProductionBaseUrl();
     return {
       "@context": "https://schema.org",
       "@graph": [
@@ -1894,6 +1895,10 @@ export default function App() {
     isPlatformSection ||
     isTrustCenterSection ||
     cleanPath === '/terms' ||
+    cleanPath === '/menu-preview' ||
+    cleanPath === '/card-preview' ||
+    cleanPath === '/share-preview' ||
+    cleanPath.startsWith('/p/') ||
     cleanPath.startsWith('/qr/');
 
   return (
@@ -2578,6 +2583,22 @@ export default function App() {
                 view="terms" 
                 onNavigate={navigateTo} 
               />
+            </React.Suspense>
+          ) : cleanPath === '/menu-preview' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <RestaurantMenu />
+            </React.Suspense>
+          ) : cleanPath === '/card-preview' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <DigitalBusinessCard />
+            </React.Suspense>
+          ) : cleanPath === '/share-preview' ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              {new URLSearchParams(window.location.search).get('type') === 'form' ? <FormBuilder /> : <PdfSharing />}
+            </React.Suspense>
+          ) : cleanPath.startsWith('/p/') ? (
+            <React.Suspense fallback={<LazyLoader />}>
+              <SEOPage slug={cleanPath.substring(3)} onSelectRoute={navigateTo} onInitiateGenerator={handleInitiateGenerator} />
             </React.Suspense>
           ) : cleanPath.startsWith('/qr/') ? (
             <QRRedirector 
