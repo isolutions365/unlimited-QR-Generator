@@ -100,4 +100,4 @@ export interface DynamicQRScanLog {
   referrer?: string;
 }
 
-export type AppTab = 'create' | 'barcode' | 'templates' | 'analytics' | 'animations' | 'bulk' | 'card' | 'menu' | 'pdf' | 'form';
+export type AppTab = 'create' | 'barcode' | 'templates' | 'analytics' | 'animations' | 'bulk' | 'card' | 'menu' | 'pdf' | 'form' | 'print';

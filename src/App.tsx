@@ -223,12 +223,13 @@ const DigitalBusinessCard = lazyWithRetry(() => import('./components/DigitalBusi
 const RestaurantMenu = lazyWithRetry(() => import('./components/RestaurantMenu'));
 const PdfSharing = lazyWithRetry(() => import('./components/PdfSharing'));
 const FormBuilder = lazyWithRetry(() => import('./components/FormBuilder'));
+const PrintModeLayout = lazyWithRetry(() => import('./components/PrintModeLayout'));
 import { 
   QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
-  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode, FileSpreadsheet, Wallet, FormInput
+  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode, FileSpreadsheet, Wallet, FormInput, Printer
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -2028,6 +2029,16 @@ export default function App() {
           }
           desktopMainContent={null}
         />
+      ) : activeTab === 'print' ? (
+        <ErrorBoundary isInline={false}>
+          <React.Suspense fallback={<LazyLoader />}>
+            <PrintModeLayout
+              currentProject={currentProject}
+              onBack={() => setActiveTab('create')}
+              t={t}
+            />
+          </React.Suspense>
+        </ErrorBoundary>
       ) : (
         <>
           {/* Dynamic Upper Banner */}
@@ -2644,6 +2655,7 @@ export default function App() {
                 { id: 'animations', name: t('nav.animationsTab', 'Animations'), icon: Play, iconColor: 'text-purple-500', isSpecial: true },
                 { id: 'analytics', name: t('nav.analyticsTab', 'Scan Analytics'), icon: BarChart3, iconColor: 'text-indigo-500' },
                 { id: 'templates', name: t('nav.templatesTab', 'Templates'), icon: LayoutTemplate, iconColor: 'text-indigo-500' },
+                { id: 'print', name: t('nav.printModeTab', 'Print Studio'), icon: Printer, iconColor: 'text-emerald-500' },
               ].map((tab) => {
                 const isActive = activeTab === tab.id;
                 const IconComponent = tab.icon;
