@@ -44,6 +44,8 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
     navigator.clipboard.writeText(url).then(() => {
       setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2000);
+    }).catch((err) => {
+      console.warn('[FaqSection] Clipboard write error caught:', err);
     });
   };
 

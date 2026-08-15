@@ -3,7 +3,7 @@ import { useTranslation } from '../utils/i18n';
 
 import { 
   Shield, Activity, FileText, Users, Award, Cpu, BookOpen, Heart, 
-  Mail, Compass, Sparkles, CheckCircle2, Globe, ArrowLeft, Calendar, 
+  Mail, Compass, Zap, CheckCircle2, Globe, ArrowLeft, Calendar, 
   ArrowUpRight, Download, ExternalLink, Lock, Scale, Terminal, Info, 
   ChevronRight, AlertCircle, Fingerprint, Eye, Check, RefreshCw, Star, 
   MapPin, MessageSquare, Briefcase, Share2, ClipboardList
@@ -162,7 +162,7 @@ export const trustPages: TrustPageContent[] = [
     metaTitle: 'Why Choose FreeQRGen.pro | Open Access E-E-A-T Matrix Barcodes',
     metaDesc: 'Discover why FreeQRGen.pro is the preferred platform for high-performance marketing campaigns. Clean technical architecture without arbitrary scan limits.',
     badge: 'VALUE ADVANTAGE',
-    iconName: 'Sparkles',
+    iconName: 'Zap',
     lastUpdated: 'July 2, 2026',
     version: 'v2.1.0',
     authorId: 'sarah-chen',
@@ -1256,7 +1256,7 @@ export default function TrustCenterHub({
   const renderNavIcon = (name: string, className: string = "w-4 h-4") => {
     switch (name) {
       case 'Info': return <Info className={className} />;
-      case 'Sparkles': return <Sparkles className={className} />;
+      case 'Zap': return <Zap className={className} />;
       case 'BookOpen': return <BookOpen className={className} />;
       case 'Cpu': return <Cpu className={className} />;
       case 'Shield': return <Shield className={className} />;
@@ -1490,7 +1490,7 @@ export default function TrustCenterHub({
               <div className="border border-indigo-100 bg-indigo-50/30 rounded-2xl p-5 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-100/50 pb-3">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-indigo-600" />
+                    <Zap className="w-4 h-4 text-indigo-600" />
                     <h3 className="text-xs font-black text-indigo-950 uppercase tracking-wider font-mono">
                       {t('trust.aiSearchAnswer', 'AI Search Engine Quick Answer')}
                     </h3>

@@ -3,7 +3,7 @@ import {
   QrCode, Link2, Copy, Edit2, RotateCcw, Calendar, Check, Search, Plus, 
   Trash2, Shield, Lock, Globe, Smartphone, Clock, Filter, SlidersHorizontal, 
   AlertTriangle, Play, Pause, Archive, ExternalLink, X, CheckSquare, Square, 
-  ChevronDown, RefreshCw, Sparkles, HelpCircle, Layers, CheckCircle2, MoreVertical
+  ChevronDown, RefreshCw, Zap, HelpCircle, Layers, CheckCircle2, MoreVertical
 } from 'lucide-react';
 import { auth } from '../../../../lib/firebase';
 import { signInAnonymously } from 'firebase/auth';
@@ -181,7 +181,7 @@ export default function DynamicQRModule() {
   const getShortUrl = (id: string) => `https://qrf.gs/s/${id}`;
 
   const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -569,7 +569,7 @@ export default function DynamicQRModule() {
         <div>
           <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
             Dynamic QR Links
-            <Sparkles className="w-4 h-4 text-indigo-600" />
+            <Zap className="w-4 h-4 text-indigo-600" />
           </h1>
           <p className="text-xs text-slate-500 mt-1">Change target endpoints, implement geographic routing, schedule rules, and track redirects on-the-fly.</p>
         </div>

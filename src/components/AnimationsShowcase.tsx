@@ -4,7 +4,7 @@ import { useTranslation } from '../utils/i18n';
 import { motion, AnimatePresence } from 'motion/react';
 import { QRProject } from '../types';
 import { renderStyledQR, getEmblemFontSize } from '../utils/qrRenderer';
-import { Sparkles, Zap, Flame, RotateCw, Play, Monitor, Tv, Video, Download, Check, Shield } from 'lucide-react';
+import { Zap, Flame, RotateCw, Play, Monitor, Tv, Video, Download, Check, Shield } from 'lucide-react';
 
 interface AnimationsShowcaseProps {
   currentProject: Partial<QRProject>;
@@ -51,6 +51,8 @@ export default function AnimationsShowcase({
         eyeColorTopRight: currentProject.design?.eyeColorTopRight,
         eyeColorBottomLeft: currentProject.design?.eyeColorBottomLeft,
         errorCorrectionLevel: currentProject.design?.errorCorrectionLevel
+      }).catch((err) => {
+        console.warn('[AnimationsShowcase] QR rendering caught error:', err);
       });
     }
   }, [currentProject, textToEncode]);
@@ -102,7 +104,7 @@ export default function AnimationsShowcase({
       id: 'colorShift' as AnimationPresetId,
       title: t('animations.preset.colorShift.title', 'Cosmic Color Shift'),
       description: t('animations.preset.colorShift.desc', 'Soft hue rotation transitions the QR pattern colors over time using Framer Motion.'),
-      icon: Sparkles,
+      icon: Zap,
       badge: t('animations.preset.colorShift.badge', 'Highly Engaged'),
       badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-100'
     },
@@ -221,7 +223,7 @@ export default function AnimationsShowcase({
           
           <div className="relative z-10 text-center mb-6">
             <h3 className="text-sm font-bold text-gray-900 tracking-tight flex items-center justify-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-purple-600" />
+              <Zap className="w-4 h-4 text-purple-600" />
               {t('animations.canvasTitle', 'Dynamic Animated Canvas')}
             </h3>
             <p className="text-[11px] text-gray-400 mt-1">{t('animations.canvasDesc', 'Live simulation with active Framer Motion hardware layers')}</p>

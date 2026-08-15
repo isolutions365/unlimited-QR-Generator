@@ -1,5 +1,6 @@
 import React, { memo, forwardRef, useRef, useEffect, useState } from 'react';
 import { renderStyledQR } from '../utils/qrRenderer';
+import { FrameStyle } from '../types';
 
 export interface MemoizedQRCanvasProps {
   textToEncode: string;
@@ -21,7 +22,7 @@ export interface MemoizedQRCanvasProps {
   eyeColorBottomLeft?: string;
   errorCorrectionLevel: 'L' | 'M' | 'Q' | 'H';
   isPrintModalOpen: boolean;
-  frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'custom';
+  frameStyle?: FrameStyle;
   frameText?: string;
   frameColor?: string;
   frameTextColor?: string;
@@ -113,6 +114,8 @@ export const MemoizedQRCanvas = memo(
           if (onDrawComplete) {
             onDrawComplete();
           }
+        }).catch((err) => {
+          console.warn('[MemoizedQRCanvas] renderStyledQR error caught safely:', err);
         });
 
         // Trigger redraw animation

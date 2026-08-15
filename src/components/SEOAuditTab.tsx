@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   Search, Filter, Globe, CheckCircle2, AlertTriangle, XCircle, 
   Code2, ExternalLink, Download, Copy, Check, ChevronRight, 
-  Sparkles, Layers, FileCode, ShieldCheck, HelpCircle, Eye, Info, RefreshCw
+  Zap, Layers, FileCode, ShieldCheck, HelpCircle, Eye, Info, RefreshCw
 } from 'lucide-react';
 import { Locale, SUPPORTED_LOCALES } from '../utils/translations';
 import { 
@@ -72,7 +72,7 @@ export default function SEOAuditTab({ currentLocale, onLocaleChange }: SEOAuditT
   };
 
   const handleCopyJsonLd = (snippet: object, index: number) => {
-    navigator.clipboard.writeText(JSON.stringify(snippet, null, 2));
+    navigator.clipboard.writeText(JSON.stringify(snippet, null, 2)).catch(() => {});
     setCopiedSnippetIndex(index);
     setTimeout(() => setCopiedSnippetIndex(null), 2000);
   };
@@ -100,7 +100,7 @@ export default function SEOAuditTab({ currentLocale, onLocaleChange }: SEOAuditT
 <!-- Hreflang Alternates (${route.hreflangs.length} locales) -->
 ${route.hreflangs.map(h => `<link rel="alternate" hreflang="${h.lang}" href="${h.url}" />`).join('\n')}`;
 
-    navigator.clipboard.writeText(headMarkup);
+    navigator.clipboard.writeText(headMarkup).catch(() => {});
     setCopiedHead(true);
     setTimeout(() => setCopiedHead(false), 2000);
   };

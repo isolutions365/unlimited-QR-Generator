@@ -7,7 +7,7 @@ import {
   Smartphone, 
   Monitor, 
   SlidersHorizontal,
-  Sparkles
+  Zap
 } from 'lucide-react';
 import Logo from './Logo';
 import { UserSession } from '../lib/api';

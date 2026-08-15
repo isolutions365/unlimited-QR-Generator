@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { Sparkles, QrCode, Shield, Activity, Share2 } from 'lucide-react';
+import { Zap, QrCode, Shield, Activity, Share2 } from 'lucide-react';
 
 export default function QR3DExperience() {
   const { t } = useTranslation();
@@ -106,7 +106,7 @@ export default function QR3DExperience() {
               <div className="w-3 h-3 rounded-full bg-indigo-500 shadow-xs" />
               <span className="text-[10px] font-black tracking-widest text-indigo-600 uppercase font-mono">{t('vision.title', 'VISION QR PRO')}</span>
             </div>
-            <Sparkles className="w-4 h-4 text-purple-500 animate-pulse" />
+            <Zap className="w-4 h-4 text-purple-500 animate-pulse" />
           </div>
 
           {/* Central 3D Floating QR Cube */}

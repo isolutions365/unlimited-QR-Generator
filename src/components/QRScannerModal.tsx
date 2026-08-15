@@ -8,7 +8,7 @@ import {
   Copy, 
   ExternalLink, 
   RefreshCw, 
-  Sparkles, 
+  Zap, 
   Flashlight, 
   Volume2, 
   VolumeX,
@@ -134,7 +134,7 @@ export default function QRScannerModal({ isOpen, onClose, onScannedResult }: QRS
 
   const handleCopy = () => {
     if (!scannedCode) return;
-    navigator.clipboard.writeText(scannedCode);
+    navigator.clipboard.writeText(scannedCode).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

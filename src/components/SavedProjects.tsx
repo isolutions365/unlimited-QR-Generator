@@ -9,15 +9,13 @@ import {
   useSensors,
   DragEndEvent,
   DragStartEvent,
-  DragOverlay,
-} from '@dnd-kit/core';
+  DragOverlay } from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  rectSortingStrategy,
-} from '@dnd-kit/sortable';
+  rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 import { useTranslation } from '../utils/i18n';
@@ -31,7 +29,7 @@ import {
   RefreshCw, 
   Trash2, 
   Copy, 
-  Sparkles, 
+  Zap, 
   Check, 
   Database, 
   Folder, 
@@ -395,6 +393,21 @@ export default function SavedProjects({
   const { t, locale } = useTranslation();
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
+  const [sortBy, setSortBy] = React.useState<'manual' | 'date_desc' | 'date_asc' | 'name_asc' | 'name_desc' | 'scans_desc' | 'scans_asc'>(() => {
+    try {
+      return (localStorage.getItem('qr_projects_history_sort_by') as any) || 'manual';
+    } catch {
+      return 'manual';
+    }
+  });
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('qr_projects_history_sort_by', sortBy);
+    } catch (err) {
+      console.warn('Failed to save sortBy preference:', err);
+    }
+  }, [sortBy]);
   const [newFolderName, setNewFolderName] = React.useState('');
   const [isCreatingFolder, setIsCreatingFolder] = React.useState(false);
   const [isRenamingFolder, setIsRenamingFolder] = React.useState(false);
@@ -569,7 +582,7 @@ export default function SavedProjects({
   const handleCopyLink = (e: React.MouseEvent, trackingId: string, id: string) => {
     e.stopPropagation();
     const appUrl = getProductionBaseUrl();
-    navigator.clipboard.writeText(`${appUrl}/qr/${trackingId}`);
+    navigator.clipboard.writeText(`${appUrl}/qr/${trackingId}`).catch(() => {});
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -725,9 +738,23 @@ export default function SavedProjects({
 
   React.useEffect(() => {
     if (!activeDragProject) {
-      setOrderedProjects(filteredProjects);
+      const list = [...filteredProjects];
+      if (sortBy === 'date_desc') {
+        list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      } else if (sortBy === 'date_asc') {
+        list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      } else if (sortBy === 'name_asc') {
+        list.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      } else if (sortBy === 'name_desc') {
+        list.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      } else if (sortBy === 'scans_desc') {
+        list.sort((a, b) => (b.scanCount || 0) - (a.scanCount || 0));
+      } else if (sortBy === 'scans_asc') {
+        list.sort((a, b) => (a.scanCount || 0) - (b.scanCount || 0));
+      }
+      setOrderedProjects(list);
     }
-  }, [filteredProjects, activeDragProject]);
+  }, [filteredProjects, activeDragProject, sortBy]);
 
   const handleDndDragStart = (event: DragStartEvent) => {
     const { active } = event;
@@ -742,6 +769,10 @@ export default function SavedProjects({
     setActiveDragProject(null);
 
     if (!over || active.id === over.id) return;
+
+    if (sortBy !== 'manual') {
+      setSortBy('manual');
+    }
 
     setOrderedProjects((items) => {
       const oldIndex = items.findIndex((item) => item.id === active.id);
@@ -926,7 +957,7 @@ export default function SavedProjects({
         </div>
       ) : projects.length === 0 ? (
         <div className="py-12 text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-          <Sparkles className="w-8 h-8 text-indigo-400 mx-auto mb-2" />
+          <Zap className="w-8 h-8 text-indigo-400 mx-auto mb-2" />
           <h3 className="text-xs font-bold text-slate-800">{t('saved.noProjectsTitle', 'No Projects Saved Yet')}</h3>
           <p className="text-[11px] text-slate-500 mt-1 max-w-xs mx-auto">
             {t('saved.noProjectsDesc', 'Configure a QR code, customize colors or logo, and click "Save Design" to store it here.')}
@@ -1006,72 +1037,102 @@ export default function SavedProjects({
             )}
           </div>
 
-          {/* Active Folder Header Banner with Rename & Actions */}
-          {activeCategory !== null && (
-            <div className="bg-indigo-50/80 border border-indigo-200/80 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 shadow-2xs">
-              <div className="flex items-center gap-2">
-                <FolderOpen className="w-4 h-4 text-indigo-600 shrink-0" />
-                {isRenamingFolder ? (
-                  <form onSubmit={handleRenameFolderSubmit} className="flex items-center gap-1.5">
-                    <input
-                      type="text"
-                      autoFocus
-                      value={renameInputValue}
-                      onChange={(e) => setRenameInputValue(e.target.value)}
-                      className="bg-white border border-indigo-300 rounded-lg px-2 py-1 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <button
-                      type="submit"
-                      className="px-2 py-1 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 cursor-pointer"
-                    >
-                      Save
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsRenamingFolder(false)}
-                      className="px-2 py-1 bg-slate-200 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-300 cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                  </form>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-extrabold text-indigo-950">
-                      Folder: <span className="text-indigo-600 underline decoration-indigo-300">{activeCategory}</span>
-                    </span>
-                    <span className="text-[10px] font-bold text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded-full font-mono">
-                      {filteredProjects.length} items
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                {!isRenamingFolder && activeCategory !== 'uncategorized' && (
+          {/* Unified List Toolbar (Folder management & Sorting Selection) */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80 border border-slate-200/60 rounded-2xl p-3.5 shadow-2xs">
+            <div className="flex items-center gap-2 min-w-0">
+              {activeCategory !== null ? (
+                <FolderOpen className="w-4.5 h-4.5 text-indigo-600 shrink-0" />
+              ) : (
+                <Layers className="w-4.5 h-4.5 text-indigo-600 shrink-0" />
+              )}
+              
+              {isRenamingFolder ? (
+                <form onSubmit={handleRenameFolderSubmit} className="flex items-center gap-1.5">
+                  <input
+                    type="text"
+                    autoFocus
+                    value={renameInputValue}
+                    onChange={(e) => setRenameInputValue(e.target.value)}
+                    className="bg-white border border-indigo-300 rounded-lg px-2 py-1 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-36"
+                  />
+                  <button
+                    type="submit"
+                    className="px-2.5 py-1 bg-indigo-600 text-white rounded-lg text-[11px] font-bold hover:bg-indigo-700 cursor-pointer"
+                  >
+                    Save
+                  </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      setRenameInputValue(activeCategory);
-                      setIsRenamingFolder(true);
-                    }}
-                    className="px-2.5 py-1 bg-white hover:bg-indigo-100/60 border border-indigo-200 text-indigo-700 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
+                    onClick={() => setIsRenamingFolder(false)}
+                    className="px-2.5 py-1 bg-slate-200 text-slate-700 rounded-lg text-[11px] font-bold hover:bg-slate-300 cursor-pointer"
                   >
-                    <Edit className="w-3 h-3 text-indigo-600" />
-                    Rename
+                    Cancel
                   </button>
-                )}
+                </form>
+              ) : (
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-xs font-extrabold text-indigo-950 truncate">
+                    {activeCategory === null 
+                      ? t('saved.allProjectsLabel', 'All Saved QR Codes') 
+                      : activeCategory === 'uncategorized' 
+                        ? t('saved.uncategorizedTitle', 'Uncategorized Items') 
+                        : `${t('saved.folderLabel', 'Folder')}: ${activeCategory}`}
+                  </span>
+                  <span className="text-[10px] font-bold text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded-full font-mono shrink-0">
+                    {filteredProjects.length} items
+                  </span>
+                </div>
+              )}
+            </div>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveCategory(null)}
-                  className="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0 self-end sm:self-auto">
+              {/* Folder Actions if active */}
+              {!isRenamingFolder && activeCategory !== null && (
+                <div className="flex items-center gap-1.5 mr-1 pr-1.5 border-r border-slate-200">
+                  {activeCategory !== 'uncategorized' && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRenameInputValue(activeCategory);
+                        setIsRenamingFolder(true);
+                      }}
+                      className="px-2.5 py-1.5 bg-white hover:bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
+                    >
+                      <Edit className="w-3 h-3 text-indigo-600" />
+                      Rename
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setActiveCategory(null)}
+                    className="px-2.5 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3 text-slate-500" />
+                    Show All
+                  </button>
+                </div>
+              )}
+
+              {/* Advanced Sorting Selector */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-bold text-slate-500 whitespace-nowrap">Sort By:</span>
+                <select
+                  aria-label="Sort projects list"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="bg-white hover:border-indigo-400 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors shadow-3xs cursor-pointer"
                 >
-                  <X className="w-3 h-3 text-slate-500" />
-                  Show All
-                </button>
+                  <option value="manual">⚙️ {t('sort.manual', 'Custom Drag & Drop')}</option>
+                  <option value="date_desc">📅 {t('sort.dateDesc', 'Newest Created')}</option>
+                  <option value="date_asc">📅 {t('sort.dateAsc', 'Oldest Created')}</option>
+                  <option value="name_asc">🔤 {t('sort.nameAsc', 'Name: A to Z')}</option>
+                  <option value="name_desc">🔤 {t('sort.nameDesc', 'Name: Z to A')}</option>
+                  <option value="scans_desc">📊 {t('sort.scansDesc', 'Scans: High to Low')}</option>
+                  <option value="scans_asc">📊 {t('sort.scansAsc', 'Scans: Low to High')}</option>
+                </select>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Batch Action Toolbar */}
           {selectedIds.length > 0 && (
@@ -1321,7 +1382,7 @@ export default function SavedProjects({
                 type="button"
                 onClick={() => {
                   const appUrl = getProductionBaseUrl();
-                  navigator.clipboard.writeText(`${appUrl}/qr/${analyticsProject.trackingId}`);
+                  navigator.clipboard.writeText(`${appUrl}/qr/${analyticsProject.trackingId}`).catch(() => {});
                   setCopiedId(analyticsProject.id);
                   setTimeout(() => setCopiedId(null), 2000);
                 }}

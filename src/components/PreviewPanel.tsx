@@ -332,32 +332,36 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
     if (needsRedrawForExport) {
       // Re-draw onto canvas WITH the logo before exporting!
-      await renderStyledQR(canvasRef.current, textToEncode, {
-        fgColor,
-        bgColor,
-        gradientType,
-        gradientColor,
-        dotStyle,
-        eyeStyle,
-        logoUrl: logoUrl || undefined,
-        logoScale,
-        margin,
-        logoRotation,
-        logoAutoCenter,
-        logoOffsetX,
-        logoOffsetY,
-        eyeColorTopLeft: eyeColorTopLeft || undefined,
-        eyeColorTopRight: eyeColorTopRight || undefined,
-        eyeColorBottomLeft: eyeColorBottomLeft || undefined,
-        errorCorrectionLevel,
-        frameStyle: frameStyle !== 'none' ? frameStyle as any : undefined,
-        frameText,
-        frameColor: frameColor || undefined,
-        frameTextColor: frameTextColor || undefined,
-        frameFontSize,
-        frameTextPosition,
-        skipLogoImage: false
-      });
+      try {
+        await renderStyledQR(canvasRef.current, textToEncode, {
+          fgColor,
+          bgColor,
+          gradientType,
+          gradientColor,
+          dotStyle,
+          eyeStyle,
+          logoUrl: logoUrl || undefined,
+          logoScale,
+          margin,
+          logoRotation,
+          logoAutoCenter,
+          logoOffsetX,
+          logoOffsetY,
+          eyeColorTopLeft: eyeColorTopLeft || undefined,
+          eyeColorTopRight: eyeColorTopRight || undefined,
+          eyeColorBottomLeft: eyeColorBottomLeft || undefined,
+          errorCorrectionLevel,
+          frameStyle: frameStyle !== 'none' ? frameStyle as any : undefined,
+          frameText,
+          frameColor: frameColor || undefined,
+          frameTextColor: frameTextColor || undefined,
+          frameFontSize,
+          frameTextPosition,
+          skipLogoImage: false
+        });
+      } catch (err) {
+        console.warn('[PreviewPanel] Export QR rendering caught error:', err);
+      }
     }
 
     if (selectedFormat === 'PNG') {
@@ -433,32 +437,36 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
     if (needsRedrawForExport) {
       // Restore on-screen canvas (no logo image)
-      await renderStyledQR(canvasRef.current, textToEncode, {
-        fgColor,
-        bgColor,
-        gradientType,
-        gradientColor,
-        dotStyle,
-        eyeStyle,
-        logoUrl: logoUrl || undefined,
-        logoScale,
-        margin,
-        logoRotation,
-        logoAutoCenter,
-        logoOffsetX,
-        logoOffsetY,
-        eyeColorTopLeft: eyeColorTopLeft || undefined,
-        eyeColorTopRight: eyeColorTopRight || undefined,
-        eyeColorBottomLeft: eyeColorBottomLeft || undefined,
-        errorCorrectionLevel,
-        frameStyle: frameStyle !== 'none' ? frameStyle as any : undefined,
-        frameText,
-        frameColor: frameColor || undefined,
-        frameTextColor: frameTextColor || undefined,
-        frameFontSize,
-        frameTextPosition,
-        skipLogoImage: true
-      });
+      try {
+        await renderStyledQR(canvasRef.current, textToEncode, {
+          fgColor,
+          bgColor,
+          gradientType,
+          gradientColor,
+          dotStyle,
+          eyeStyle,
+          logoUrl: logoUrl || undefined,
+          logoScale,
+          margin,
+          logoRotation,
+          logoAutoCenter,
+          logoOffsetX,
+          logoOffsetY,
+          eyeColorTopLeft: eyeColorTopLeft || undefined,
+          eyeColorTopRight: eyeColorTopRight || undefined,
+          eyeColorBottomLeft: eyeColorBottomLeft || undefined,
+          errorCorrectionLevel,
+          frameStyle: frameStyle !== 'none' ? frameStyle as any : undefined,
+          frameText,
+          frameColor: frameColor || undefined,
+          frameTextColor: frameTextColor || undefined,
+          frameFontSize,
+          frameTextPosition,
+          skipLogoImage: true
+        });
+      } catch (err) {
+        console.warn('[PreviewPanel] Restore on-screen QR rendering caught error:', err);
+      }
     }
 
     // Trigger visual success checkmark animation
@@ -477,7 +485,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
   const handleCopyLink = () => {
     if (!trackingUrl) return;
-    navigator.clipboard.writeText(trackingUrl);
+    navigator.clipboard.writeText(trackingUrl).catch(() => {});
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };

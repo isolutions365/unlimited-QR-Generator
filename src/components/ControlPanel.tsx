@@ -3,7 +3,7 @@ import { useTranslation } from '../utils/i18n';
 import { getProductionBaseUrl } from '../config/siteConfig';
 
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Sparkles, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Zap, Paintbrush, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp, UtensilsCrossed, Star, UserCheck, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
@@ -449,7 +449,7 @@ export default function ControlPanel({ currentProject,
       {/* Scope Title */}
       <motion.div variants={itemVariants}>
         <h2 className="text-lg font-semibold tracking-tight text-gray-900 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-indigo-600" />
+          <Paintbrush className="w-5 h-5 text-indigo-600" />
           {t('control.customizeTitle', 'Customize Your QR Code')}
         </h2>
         <p className="text-xs text-gray-500 mt-1">{t('control.desc', 'Configure type, contents, custom styles, and centerpiece tags.')}</p>
@@ -1300,16 +1300,18 @@ export default function ControlPanel({ currentProject,
         {/* Frame Template Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {[
-            { id: 'none', label: 'No Frame', desc: 'Sleek & clean matrix', icon: SquareDot },
-            { id: 'scan-me', label: 'Scan Me', desc: 'Universal CTA badge', icon: QrCode },
-            { id: 'visit-website', label: 'Visit Website', desc: 'Ideal for web links', icon: Globe },
-            { id: 'wifi-password', label: 'WiFi Password', desc: 'Network credentials', icon: Wifi },
-            { id: 'download-app', label: 'Download App', desc: 'App store links', icon: Download },
-            { id: 'follow-us', label: 'Follow Us', desc: 'Social media profiles', icon: Share2 },
-            { id: 'join-wifi', label: 'Join WiFi', desc: 'Instant guest connection', icon: Wifi },
-            { id: 'order-now', label: 'Order Now', desc: 'Menus & storefronts', icon: ShoppingBag },
-            { id: 'pay-here', label: 'Pay Here', desc: 'Mobile wallets & payments', icon: CreditCard },
-            { id: 'custom', label: 'Custom Text', desc: 'Fully personalized wording', icon: Sparkles },
+            { id: 'none', label: 'No Frame', desc: 'Sleek & clean matrix', icon: SquareDot, defaultText: '' },
+            { id: 'scan-me', label: 'Scan Me', desc: 'Universal CTA badge', icon: QrCode, defaultText: 'SCAN ME' },
+            { id: 'menu', label: 'Menu', desc: 'Restaurant & food menus', icon: UtensilsCrossed, defaultText: 'VIEW MENU' },
+            { id: 'website', label: 'Website', desc: 'Web portal & landing links', icon: Globe, defaultText: 'VISIT WEBSITE' },
+            { id: 'wifi', label: 'Connect WiFi', desc: 'Instant guest connection', icon: Wifi, defaultText: 'CONNECT WIFI' },
+            { id: 'download-app', label: 'Download App', desc: 'App store & Play store', icon: Download, defaultText: 'DOWNLOAD APP' },
+            { id: 'order-now', label: 'Order Now', desc: 'Menus & storefronts', icon: ShoppingBag, defaultText: 'ORDER NOW' },
+            { id: 'pay-here', label: 'Pay Here', desc: 'Mobile wallets & payments', icon: CreditCard, defaultText: 'PAY HERE' },
+            { id: 'follow-us', label: 'Follow Us', desc: 'Social media channels', icon: Share2, defaultText: 'FOLLOW US' },
+            { id: 'save-contact', label: 'Save Contact', desc: 'Digital vCard & contacts', icon: UserCheck, defaultText: 'SAVE CONTACT' },
+            { id: 'rate-us', label: 'Rate & Review', desc: 'Customer reviews & feedback', icon: Star, defaultText: 'RATE & REVIEW' },
+            { id: 'custom', label: 'Custom Text', desc: 'Fully personalized wording', icon: Zap, defaultText: 'SCAN TO REGISTER' },
           ].map(preset => {
             const isSelected = (localProject.design?.frameStyle || 'none') === preset.id;
             const IconComp = preset.icon;
@@ -1328,9 +1330,9 @@ export default function ControlPanel({ currentProject,
                     }
                   }
                 }}
-                className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-[62px] cursor-pointer relative group ${
+                className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between h-[64px] cursor-pointer relative group ${
                   isSelected
-                    ? 'border-indigo-600 bg-indigo-50/30 ring-2 ring-indigo-500/20 shadow-xs'
+                    ? 'border-indigo-600 bg-indigo-50/40 ring-2 ring-indigo-500/20 shadow-xs'
                     : 'border-slate-200/70 bg-white hover:border-slate-300 hover:bg-slate-50/60'
                 }`}
               >
@@ -1353,56 +1355,84 @@ export default function ControlPanel({ currentProject,
 
         {/* Configurable Frame Text & Quick Suggestions */}
         {localProject.design?.frameStyle && localProject.design?.frameStyle !== 'none' && (
-          <div className="space-y-2.5 pt-2 border-t border-gray-100/70">
+          <div className="space-y-3 pt-2.5 border-t border-gray-100/80">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label htmlFor="custom-frame-text" className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block">
                   {localProject.design?.frameStyle === 'custom'
-                    ? t('control.customFrameLabelText', 'Call-To-Action (CTA) Text')
+                    ? t('control.customFrameLabelText', 'Call-To-Action (CTA) Banner Text')
                     : t('control.overridePresetLabelText', 'Customize Call-To-Action (CTA) Text')}
                 </label>
-                <span className="text-[9px] font-mono text-slate-400">
-                  {(localProject.design?.frameText || '').length}/20 {t('control.chars', 'chars')}
-                </span>
+                <div className="flex items-center gap-2">
+                  {localProject.design?.frameText && (
+                    <button
+                      type="button"
+                      onClick={() => setDesignField('frameText', '', true)}
+                      className="text-[9.5px] text-slate-400 hover:text-slate-700 flex items-center gap-0.5 transition-colors font-medium"
+                    >
+                      <X className="w-3 h-3" />
+                      Reset to Default
+                    </button>
+                  )}
+                  <span className="text-[9px] font-mono text-slate-400">
+                    {(localProject.design?.frameText || '').length}/30 {t('control.chars', 'chars')}
+                  </span>
+                </div>
               </div>
 
-              <input
-                id="custom-frame-text"
-                type="text"
-                maxLength={20}
-                className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
-                placeholder={(() => {
-                  const style = localProject.design?.frameStyle;
-                  if (style === 'scan-me') return 'SCAN ME';
-                  if (style === 'visit-website') return 'VISIT WEBSITE';
-                  if (style === 'wifi-password') return 'WIFI PASSWORD';
-                  if (style === 'download-app') return 'DOWNLOAD APP';
-                  if (style === 'follow-us') return 'FOLLOW US';
-                  if (style === 'join-wifi') return 'JOIN WIFI';
-                  if (style === 'order-now') return 'ORDER NOW';
-                  if (style === 'pay-here') return 'PAY HERE';
-                  return 'e.g. SCAN TO REGISTER';
-                })()}
-                value={localProject.design?.frameText || ''}
-                onChange={e => setDesignField('frameText', e.target.value, true)}
-              />
+              <div className="relative flex items-center">
+                <input
+                  id="custom-frame-text"
+                  type="text"
+                  maxLength={30}
+                  className="w-full text-xs px-3 py-2 pr-8 rounded-xl bg-white border border-gray-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                  placeholder={(() => {
+                    const style = localProject.design?.frameStyle;
+                    if (style === 'scan-me') return 'SCAN ME';
+                    if (style === 'menu') return 'VIEW MENU';
+                    if (style === 'website' || style === 'visit-website') return 'VISIT WEBSITE';
+                    if (style === 'wifi' || style === 'wifi-password' || style === 'join-wifi') return 'CONNECT WIFI';
+                    if (style === 'download-app') return 'DOWNLOAD APP';
+                    if (style === 'follow-us') return 'FOLLOW US';
+                    if (style === 'order-now') return 'ORDER NOW';
+                    if (style === 'pay-here') return 'PAY HERE';
+                    if (style === 'save-contact') return 'SAVE CONTACT';
+                    if (style === 'rate-us') return 'RATE & REVIEW';
+                    return 'e.g. SCAN FOR SPECIAL OFFER';
+                  })()}
+                  value={localProject.design?.frameText || ''}
+                  onChange={e => setDesignField('frameText', e.target.value, true)}
+                />
+                {localProject.design?.frameText && (
+                  <button
+                    type="button"
+                    onClick={() => setDesignField('frameText', '', true)}
+                    className="absolute right-2 text-slate-400 hover:text-slate-600 p-0.5 rounded-full hover:bg-slate-100"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Quick CTA Suggestion Chips */}
             <div>
-              <span className="text-[9.5px] text-gray-500 block mb-1 font-medium">
+              <span className="text-[9.5px] text-gray-500 block mb-1.5 font-medium">
                 {t('control.quickCtaSuggestions', 'Quick CTA Suggestions:')}
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {[
                   'SCAN ME',
+                  'VIEW MENU',
                   'VISIT WEBSITE',
+                  'CONNECT WIFI',
                   'DOWNLOAD APP',
                   'ORDER NOW',
                   'PAY HERE',
-                  'CONNECT WIFI',
                   'FOLLOW US',
-                  'GET DEAL'
+                  'SAVE CONTACT',
+                  'RATE US',
+                  'EXPLORE MORE'
                 ].map(suggestion => (
                   <button
                     key={suggestion}
@@ -1428,7 +1458,7 @@ export default function ControlPanel({ currentProject,
                       id="frame-color-picker"
                       type="color"
                       aria-label="Frame Color"
-                      className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border border-gray-200 p-0.5"
+                      className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl cursor-pointer border border-gray-200 p-0.5"
                       value={localProject.design?.frameColor || localProject.design?.fgColor || '#4f46e5'}
                       onChange={e => setDesignField('frameColor', e.target.value)}
                     />
@@ -1447,7 +1477,7 @@ export default function ControlPanel({ currentProject,
                       id="frame-text-color-picker"
                       type="color"
                       aria-label="CTA Text Color"
-                      className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl cursor-pointer border border-gray-200 p-0.5"
+                      className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl cursor-pointer border border-gray-200 p-0.5"
                       value={localProject.design?.frameTextColor || '#ffffff'}
                       onChange={e => setDesignField('frameTextColor', e.target.value)}
                     />
@@ -1455,6 +1485,36 @@ export default function ControlPanel({ currentProject,
                       {localProject.design?.frameTextColor || '#ffffff'}
                     </span>
                   </div>
+                </div>
+              </div>
+
+              {/* Quick Preset Palette Colors for Frame */}
+              <div>
+                <span className="text-[9.5px] text-gray-500 block mb-1 font-medium">Quick Frame Color Themes:</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { name: 'Indigo', color: '#4f46e5', textColor: '#ffffff' },
+                    { name: 'Obsidian', color: '#0f172a', textColor: '#ffffff' },
+                    { name: 'Emerald', color: '#059669', textColor: '#ffffff' },
+                    { name: 'Rose', color: '#e11d48', textColor: '#ffffff' },
+                    { name: 'Amber', color: '#d97706', textColor: '#ffffff' },
+                    { name: 'Violet', color: '#7c3aed', textColor: '#ffffff' },
+                    { name: 'Ocean', color: '#0284c7', textColor: '#ffffff' },
+                    { name: 'Slate', color: '#475569', textColor: '#ffffff' },
+                  ].map(theme => (
+                    <button
+                      key={theme.name}
+                      type="button"
+                      onClick={() => {
+                        setDesignField('frameColor', theme.color);
+                        setDesignField('frameTextColor', theme.textColor);
+                      }}
+                      className="flex items-center gap-1 px-2 py-0.5 rounded-lg border border-slate-200/80 bg-white hover:bg-slate-50 text-[9.5px] font-medium text-slate-700 transition-all shadow-2xs"
+                    >
+                      <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0 shadow-2xs" style={{ backgroundColor: theme.color }} />
+                      <span>{theme.name}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -1487,7 +1547,7 @@ export default function ControlPanel({ currentProject,
                   </label>
                   <select
                     id="frame-text-position-select"
-                    className="w-full text-xs px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                    className="w-full text-xs px-2.5 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
                     value={localProject.design?.frameTextPosition || 'bottom'}
                     onChange={e => setDesignField('frameTextPosition', e.target.value)}
                   >
@@ -1626,7 +1686,7 @@ export default function ControlPanel({ currentProject,
             <div className="space-y-3.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
+                  <Zap className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
                   <div>
                     <span className="text-xs font-semibold text-slate-900 block">{t('control.smartOptimization', 'Smart Optimization')}</span>
                     <span className="text-[10px] text-slate-500 block">{t('control.smartOptDesc', 'Auto-balances error correction & module spacing.')}</span>

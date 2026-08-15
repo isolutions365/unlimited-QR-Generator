@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Globe, ShieldAlert, CheckCircle2, AlertTriangle, Info, Play, RefreshCw, 
-  Download, ArrowLeft, ArrowRight, Layers, Layout, Clock, Sparkles, 
+  Download, ArrowLeft, ArrowRight, Layers, Layout, Clock, Zap, 
   Terminal, Check, Search, Filter, Cpu, HelpCircle, FileText
 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
@@ -272,7 +272,7 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
             </div>
             
             <div className="flex items-center gap-1.5 bg-indigo-800/60 text-indigo-300 py-1 px-2.5 rounded-full text-[9px] font-bold font-mono w-max mb-3">
-              <Sparkles className="w-3 h-3" />
+              <Zap className="w-3 h-3" />
               {t('i18n.sessionEngine', 'SESSION ENGINE')}
             </div>
             

@@ -596,7 +596,7 @@ export default function FormBuilder() {
   };
 
   const copyLink = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
     setCopiedLabel(label);
     playAudioSound('generate');
     setTimeout(() => setCopiedLabel(null), 2000);

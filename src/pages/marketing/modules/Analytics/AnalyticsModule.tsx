@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   BarChart3, Globe, Smartphone, Compass, RefreshCw, Calendar, 
-  MapPin, Clock, Server, Eye, ExternalLink, Sparkles, Filter, 
+  MapPin, Clock, Server, Eye, ExternalLink, Zap, Filter, 
   ChevronDown, HelpCircle, Activity, Heart, ArrowUpRight, Play, Copy, ArrowRight, CheckCircle2, AlertCircle, Plus
 } from 'lucide-react';
 import { 

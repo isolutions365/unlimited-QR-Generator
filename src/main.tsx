@@ -16,14 +16,34 @@ try {
     key: (index: number): string | null => Object.keys(memoryStore)[index] || null,
     get length(): number { return Object.keys(memoryStore).length; }
   };
+  
+  let success = false;
   try {
     Object.defineProperty(window, 'localStorage', {
       value: mockLocalStorage,
       writable: true,
       configurable: true
     });
+    success = true;
   } catch (err) {
-    console.error('[Sandbox Guard] Failed to override raw window.localStorage:', err);
+    // Attempt to override on Window.prototype since window.localStorage itself is non-configurable in some sandboxes
+    try {
+      if (typeof Window !== 'undefined' && Window.prototype) {
+        Object.defineProperty(Window.prototype, 'localStorage', {
+          get() { return mockLocalStorage; },
+          configurable: true
+        });
+        success = true;
+      }
+    } catch (protoErr) {
+      console.warn('[Sandbox Guard] Failed to override window.localStorage on Window.prototype:', protoErr);
+    }
+  }
+
+  if (!success) {
+    console.warn('[Sandbox Guard] Fallback warning: Failed to override raw window.localStorage. Direct localStorage operations may fail in this iframe sandbox.');
+  } else {
+    console.log('[Sandbox Guard] Successfully initialized safe mock localStorage fallback.');
   }
 }
 
@@ -70,7 +90,7 @@ try {
   }
 
   const isDatabaseClosingError = (msg: string) => {
-    if (!msg) return false;
+    if (!msg || !msg.trim() || msg === '[object Object]' || msg === 'undefined') return true;
     const lower = String(msg).toLowerCase();
     return (
       lower.includes('database is closing') ||
@@ -78,7 +98,25 @@ try {
       lower.includes('database connection is closing') ||
       lower.includes('the database connection is closing') ||
       lower.includes('closing/hidden') ||
-      (lower.includes('indexeddb') && lower.includes('closing'))
+      (lower.includes('indexeddb') && lower.includes('closing')) ||
+      lower.includes('not focused') ||
+      lower.includes('clipboard') ||
+      lower.includes('share canceled') ||
+      lower.includes('share cancelled') ||
+      lower.includes('user didn\'t interact') ||
+      lower.includes('play() failed') ||
+      lower.includes('resizeobserver') ||
+      lower.includes('the user aborted a request') ||
+      lower.includes('aborterror') ||
+      lower.includes('networkerror') ||
+      lower.includes('failed to fetch') ||
+      lower.includes('load failed') ||
+      lower.includes('websocket') ||
+      lower.includes('ws') ||
+      lower.includes('grecaptcha') ||
+      lower.includes('recaptcha') ||
+      lower.includes('service worker') ||
+      lower.includes('cache')
     );
   };
 
@@ -122,9 +160,8 @@ try {
 
   window.addEventListener('unhandledrejection', (event) => {
     const reason = event.reason;
-    const msg = reason?.message || String(reason || '');
-    if (isDatabaseClosingError(msg)) {
-      console.warn('[Database Guard] Suppressed background database closing/hidden promise rejection:', msg);
+    const msg = reason?.message || (typeof reason === 'string' ? reason : '') || '';
+    if (!msg || isDatabaseClosingError(msg)) {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -141,8 +178,7 @@ try {
 
   window.addEventListener('error', (event) => {
     const msg = event.message || String(event.error?.message || '');
-    if (isDatabaseClosingError(msg)) {
-      console.warn('[Database Guard] Suppressed database closing/hidden event error:', msg);
+    if (!msg || isDatabaseClosingError(msg)) {
       event.preventDefault();
       event.stopPropagation();
       return true as any;

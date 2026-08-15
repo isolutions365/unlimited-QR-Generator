@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from '../utils/i18n';
-import { Wallet, QrCode, Info, HelpCircle, CheckCircle2, ShieldCheck, CreditCard, Sparkles } from 'lucide-react';
+import { Wallet, QrCode, Info, HelpCircle, CheckCircle2, ShieldCheck, CreditCard, Zap } from 'lucide-react';
 
 export function computePaymentContent(method: string, fields: Record<string, string>): string {
   const h = (fields.handle || '').trim();
@@ -362,7 +362,7 @@ export default function PaymentWalletPanel({ content, onChangeContent }: Payment
       {/* Educational & Helpful Info Section */}
       <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3 text-xs text-slate-700 space-y-2.5">
         <div className="flex items-start gap-2">
-          <Sparkles className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+          <Zap className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
           <div>
             <h5 className="font-bold text-slate-950 text-[11px] uppercase tracking-wider flex items-center gap-1">
               {t('control.paymentWalletGuideTitle', 'Payment & Wallet QR Guide')}

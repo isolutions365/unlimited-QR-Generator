@@ -10,7 +10,7 @@ import {
   FileSpreadsheet, 
   FileArchive, 
   RotateCcw,
-  Sparkles,
+  Zap,
   PlayCircle,
   HelpCircle,
   X,
@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 import { renderStyledQR } from '../utils/qrRenderer';
+import { FrameStyle } from '../types';
 
 interface BulkEntry {
   id: string;
@@ -46,12 +47,19 @@ export default function BulkQRGenerator() {
   const [editingUrl, setEditingUrl] = useState('');
 
   // Design Presets for the bulk package
-  const [bulkDesign, setBulkDesign] = useState({
+  const [bulkDesign, setBulkDesign] = useState<{
+    fgColor: string;
+    bgColor: string;
+    dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+    eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
+    frameStyle: FrameStyle;
+    frameText: string;
+  }>({
     fgColor: '#4f46e5',
     bgColor: '#ffffff',
-    dotStyle: 'rounded' as 'square' | 'rounded' | 'dots' | 'classy',
-    eyeStyle: 'rounded' as 'square' | 'rounded' | 'circle' | 'leaf',
-    frameStyle: 'none' as 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'order-now' | 'pay-here' | 'custom',
+    dotStyle: 'rounded',
+    eyeStyle: 'rounded',
+    frameStyle: 'none',
     frameText: 'SCAN ME'
   });
 
@@ -594,7 +602,7 @@ export default function BulkQRGenerator() {
           {/* Style Presets Card */}
           <div className="p-4 bg-white border border-slate-200/80 rounded-2xl shadow-sm space-y-4">
             <h3 className="text-xs font-semibold text-gray-900 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-100 pb-2">
-              <Sparkles className="w-4 h-4 text-purple-600" />
+              <Zap className="w-4 h-4 text-purple-600" />
               {t('bulk.templateConfig', 'Batch Template Styles')}
             </h3>
             
@@ -677,10 +685,15 @@ export default function BulkQRGenerator() {
                 >
                   <option value="none">No Frame (Clean Matrix)</option>
                   <option value="scan-me">Scan Me Frame</option>
-                  <option value="visit-website">Visit Website Frame</option>
+                  <option value="menu">Menu / View Menu Frame</option>
+                  <option value="website">Website / Visit Website Frame</option>
+                  <option value="wifi">Connect WiFi Frame</option>
                   <option value="download-app">Download App Frame</option>
                   <option value="order-now">Order Now Frame</option>
                   <option value="pay-here">Pay Here Frame</option>
+                  <option value="follow-us">Follow Us Frame</option>
+                  <option value="save-contact">Save Contact Frame</option>
+                  <option value="rate-us">Rate & Review Frame</option>
                 </select>
                 <p className="text-[9.5px] text-gray-400 mt-1 leading-tight">
                   * Note: Frame labels will automatically display the respective row file name to keep your physical scans distinguished!

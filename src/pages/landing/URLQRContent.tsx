@@ -8,7 +8,7 @@ import {
   ChevronDown,
   ChevronUp,
   ArrowRight,
-  Sparkles,
+  Zap,
   FileText,
   Globe,
   QrCode,
@@ -283,7 +283,7 @@ export default function URLQRContent({
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="space-y-4 max-w-xl">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 ltr-lock" />
+            <Zap className="w-3.5 h-3.5 ltr-lock" />
             <span className="ltr-lock">{t('urlqr.ctaBadge', '100% Free & Unlimited')}</span>
           </span>
           <h3 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">

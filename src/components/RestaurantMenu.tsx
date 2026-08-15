@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Utensils, Plus, Trash2, Edit2, Check, Download, Share2, 
-  QrCode, Eye, Globe, Sparkles, PlusCircle, CheckCircle2, 
+  QrCode, Eye, Globe, Zap, PlusCircle, CheckCircle2, 
   Copy, Smartphone, FileCode, Flame, Tag, HelpCircle, 
   ChevronRight, ArrowLeft, ShoppingBag, DollarSign, UploadCloud,
   Layers, Star, RefreshCw, MessageSquare
@@ -1149,7 +1149,7 @@ const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
   };
 
   const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
     setCopiedField(label);
     playAudioSound('generate');
     setTimeout(() => setCopiedField(null), 2000);

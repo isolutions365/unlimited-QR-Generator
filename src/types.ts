@@ -1,3 +1,20 @@
+export type FrameStyle =
+  | 'none'
+  | 'scan-me'
+  | 'menu'
+  | 'website'
+  | 'visit-website'
+  | 'wifi'
+  | 'wifi-password'
+  | 'join-wifi'
+  | 'download-app'
+  | 'follow-us'
+  | 'order-now'
+  | 'pay-here'
+  | 'save-contact'
+  | 'rate-us'
+  | 'custom';
+
 export interface QRProject {
   id: string;
   userId: string;
@@ -24,7 +41,7 @@ export interface QRProject {
     logoAutoCenter?: boolean; // toggle automatic centering or offset
     logoOffsetX?: number; // logo offset adjustment X (-100 to 100)
     logoOffsetY?: number; // logo offset adjustment Y (-100 to 100)
-    frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'order-now' | 'pay-here' | 'custom';
+    frameStyle?: FrameStyle;
     frameText?: string;
     frameColor?: string;
     frameTextColor?: string;

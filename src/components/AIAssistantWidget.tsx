@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Sparkles, X, Send, Bot, User, Loader2, ArrowRight, CheckCircle2,
+  X, Send, Bot, User, Loader2, ArrowRight, CheckCircle2,
   Palette, Link as LinkIcon, FileText, SearchCheck, Utensils, Contact,
   Smartphone, Megaphone, Check, Zap
 } from 'lucide-react';
@@ -95,6 +95,13 @@ export default function AIAssistantWidget({
 }: AIAssistantWidgetProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(() => {
+    try {
+      return localStorage.getItem('qr_has_opened_ai_assistant') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
@@ -449,14 +456,20 @@ export default function AIAssistantWidget({
               whileTap={{ scale: 0.95 }}
               onClick={() => {
                 playAudioSound('preview');
+                try {
+                  localStorage.setItem('qr_has_opened_ai_assistant', 'true');
+                } catch {}
+                setHasOpened(true);
                 setIsOpen(true);
               }}
               aria-label="Open AI Workspace Assistant"
               className="flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:to-violet-800 text-white rounded-full shadow-xl hover:shadow-2xl font-bold text-xs tracking-wide transition-all cursor-pointer border border-indigo-400/30 group"
             >
               <div className="relative">
-                <Sparkles className="w-4 h-4 animate-pulse text-amber-300" />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
+                <Zap className="w-4 h-4 animate-pulse text-amber-300" />
+                {!hasOpened && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
+                )}
               </div>
               <span>{t('ai.buttonLabel', 'AI Assistant')}</span>
             </motion.button>
@@ -490,7 +503,7 @@ export default function AIAssistantWidget({
               <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 text-white p-4 sm:p-5 flex items-center justify-between border-b border-indigo-800/20 shadow-md">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner">
-                    <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
+                    <Zap className="w-5 h-5 text-amber-300 animate-pulse" />
                   </div>
                   <div>
                     <h2 className="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
@@ -863,7 +876,7 @@ export default function AIAssistantWidget({
                       </div>
                       <div className="bg-white border border-slate-200 p-3.5 rounded-2xl text-xs shadow-3xs text-slate-600 italic flex flex-col gap-1">
                         <span className="font-bold text-[10px] uppercase tracking-wider text-indigo-600 not-italic flex items-center gap-1">
-                          <Sparkles className="w-3 h-3 text-amber-500 animate-pulse" />
+                          <Zap className="w-3 h-3 text-amber-500 animate-pulse" />
                           <span>AI Co-Pilot Working</span>
                         </span>
                         <span>{currentStep || 'Synthesizing layout structures...'}</span>
@@ -966,7 +979,7 @@ export default function AIAssistantWidget({
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   disabled={isLoading}
-                  placeholder="Ask AI Assistant (e.g., 'Suggest red color theme')"
+                  placeholder={t('ai.inputPlaceholder', "Ask AI Assistant (e.g., 'Suggest red color theme')")}
                   className="flex-1 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-indigo-500 focus:bg-white text-xs font-medium px-3.5 py-2.5 rounded-xl outline-hidden transition-all text-slate-800 placeholder-slate-400"
                 />
                 <button

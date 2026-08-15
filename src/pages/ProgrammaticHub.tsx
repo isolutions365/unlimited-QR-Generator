@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  ChevronRight, Home, Sparkles, ArrowRight, Check, HelpCircle, 
+  ChevronRight, Home, Zap, ArrowRight, Check, HelpCircle, 
   ChevronDown, BookOpen, LayoutTemplate, Star, Info, Cpu, 
   ShieldCheck, AlertTriangle, FileText, Search, Printer, Palette, 
   ArrowUpRight, Share2, Eye, Award, CheckCircle2, RefreshCw
@@ -83,7 +83,7 @@ export default function ProgrammaticHub({
           slug: sol.slug,
           name: sol.name,
           badge: sol.badge,
-          iconName: 'Sparkles',
+          iconName: 'Zap',
           metaTitle: sol.metaTitle,
           metaDesc: sol.metaDesc,
           heroGradient: 'from-indigo-600 to-purple-800',
@@ -453,7 +453,7 @@ export default function ProgrammaticHub({
               <div className="bg-indigo-900 text-white rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
                 <div className="absolute inset-0 bg-grid-white/[0.03]" />
                 <h3 className="text-xs uppercase tracking-widest text-indigo-300 font-black mb-3 flex items-center gap-1.5 relative z-10">
-                  <Sparkles className="w-4 h-4 text-indigo-300" />
+                  <Zap className="w-4 h-4 text-indigo-300" />
                   {t('programmatic.theDigitalBridgeSolution', 'The Digital Bridge solution')}
                 </h3>
                 <h2 className="text-xl md:text-2xl font-black tracking-tight mb-4 relative z-10">
@@ -634,7 +634,7 @@ export default function ProgrammaticHub({
                 <div className="space-y-4">
                   <div className="flex gap-3 items-start">
                     <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <Sparkles className="w-4 h-4" />
+                      <Zap className="w-4 h-4" />
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-800 text-xs uppercase tracking-tight">{t('programmatic.dynamicUrlBarcode', 'Dynamic URL Barcode')}</h4>

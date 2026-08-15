@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { 
   BarChart3, TrendingUp, Users, QrCode, ArrowUpRight, Megaphone, 
-  Calendar, Download, HardDrive, Zap, RefreshCw, Sparkles, 
-  Plus, Eye, Link2, Copy, Check, FileText, Globe, Smartphone, ArrowRight,
+  Calendar, Download, HardDrive, Zap, RefreshCw, Plus, Eye, Link2, Copy, Check, FileText, Globe, Smartphone, ArrowRight,
   Utensils, Contact
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -77,7 +76,7 @@ export default function DashboardModule() {
   };
 
   const handleCopy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -89,7 +88,7 @@ export default function DashboardModule() {
         <div>
           <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
             Marketing Overview
-            <Sparkles className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
+            <Zap className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
           </h1>
           <p className="text-xs text-slate-500 mt-1">Real-time dynamic campaign statistics, storage consumption, and traffic logs.</p>
         </div>

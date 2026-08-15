@@ -3,7 +3,7 @@ import { buildProductionUrl } from '../../../../config/siteConfig';
 import { 
   Smartphone, Plus, Search, Edit2, Link2, Eye, Layout, Trash2, 
   Save, Globe, Copy, ArrowUp, ArrowDown, GripVertical, Settings, 
-  Palette, ShieldAlert, Sparkles, Sliders, CheckCircle, Clock, 
+  Palette, ShieldAlert, Zap, Sliders, CheckCircle, Clock, 
   Download, Grid, MapPin, Mail, Play, MousePointer, Share2, FileText,
   Smartphone as PhoneIcon, Monitor, Check, Calendar, Inbox, ChevronRight,
   Filter, RotateCcw, RefreshCcw
@@ -484,7 +484,7 @@ export default function LandingPagesModule() {
   // Copy link to clipboard
   const handleCopyLink = (slug: string) => {
     const fullLink = buildProductionUrl(`/p/${slug}`);
-    navigator.clipboard.writeText(fullLink);
+    navigator.clipboard.writeText(fullLink).catch(() => {});
     setCopiedSlug(slug);
     setTimeout(() => setCopiedSlug(null), 2000);
   };

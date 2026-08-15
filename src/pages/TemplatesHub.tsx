@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 
 import { 
-  ChevronRight, Home, Sparkles, ArrowRight, Check, HelpCircle, 
+  ChevronRight, Home, Zap, ArrowRight, Check, HelpCircle, 
   ChevronDown, BookOpen, LayoutTemplate, Star, Info, Cpu, 
   ShieldCheck, AlertTriangle, FileText, Bot, Search, Tag, ExternalLink, RefreshCw
 } from 'lucide-react';
@@ -313,7 +313,7 @@ export default function TemplatesHub({
             {/* Use Cases */}
             <div className="space-y-6">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-indigo-500" />
+                <Zap className="w-5 h-5 text-indigo-500" />
                 <span>{t('templates.standardUseCases', 'Standard Production Use Cases')}</span>
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

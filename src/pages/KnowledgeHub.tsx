@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check,
-  ChevronRight, MessageSquare, Sparkles, Filter, Search, BookOpen, ExternalLink,
+  ChevronRight, MessageSquare, Zap, Filter, Search, BookOpen, ExternalLink,
   Twitter, Facebook, Linkedin, HelpCircle, FileText, Printer, ShieldAlert, Wifi, Info
 } from 'lucide-react';
 import { knowledgeArticles, KnowledgeArticle } from '../data/knowledgeData';
@@ -90,6 +90,8 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
     navigator.clipboard.writeText(url).then(() => {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
+    }).catch((err) => {
+      console.warn('[KnowledgeHub] Clipboard write error caught:', err);
     });
   };
 
@@ -275,13 +277,13 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
                 <span className="text-xs font-bold uppercase tracking-widest text-white/80 font-mono">{t('knowledge.authorityBlock', 'FreeQRGen Authority Block')}</span>
                 <h2 className="text-lg sm:text-2xl font-bold tracking-tight">{activeArticle.seoTitle}</h2>
               </div>
-              <Sparkles className="absolute right-6 bottom-6 w-16 h-16 text-white/10" />
+              <Zap className="absolute right-6 bottom-6 w-16 h-16 text-white/10" />
             </div>
 
             {/* AI Summary Box (AEO/GEO Optimized Section) */}
             <div className="p-5 bg-gradient-to-br from-indigo-50/50 to-slate-50 border border-indigo-100 rounded-2xl space-y-3" id="ai-summary-card">
               <div className="flex items-center gap-2 text-indigo-700 font-bold text-xs uppercase tracking-wider font-mono">
-                <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" />
+                <Zap className="w-4 h-4 text-amber-500 animate-pulse" />
                 <span>{t('knowledge.aiSummaryTitle', 'AI Search Engine Core Synthesis Box')}</span>
               </div>
               <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed italic">
@@ -650,7 +652,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-white/90 bg-slate-900/40 px-2 py-0.5 rounded-md relative z-10">
                       {article.category}
                     </span>
-                    <Sparkles className="absolute right-3 bottom-3 w-8 h-8 text-white/15" />
+                    <Zap className="absolute right-3 bottom-3 w-8 h-8 text-white/15" />
                   </div>
 
                   {/* Body Info */}

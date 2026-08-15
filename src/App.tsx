@@ -225,11 +225,11 @@ const PdfSharing = lazyWithRetry(() => import('./components/PdfSharing'));
 const FormBuilder = lazyWithRetry(() => import('./components/FormBuilder'));
 const PrintModeLayout = lazyWithRetry(() => import('./components/PrintModeLayout'));
 import { 
-  QrCode, LogIn, LogOut, Sparkles, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
+  QrCode, LogIn, LogOut, Zap, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
-  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode, FileSpreadsheet, Wallet, FormInput, Printer
+  BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode, FileSpreadsheet, Wallet, FormInput, Printer, Copy, Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -483,8 +483,10 @@ export default function App() {
     deviceType: string;
     browser: string;
     timestamp: string;
+    ip?: string;
   }
   const [toasts, setToasts] = useState<LiveToast[]>([]);
+  const [copiedToastId, setCopiedToastId] = useState<string | null>(null);
   const [nPermission, setNPermission] = useState<NotificationPermission>(() => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
       try {
@@ -560,10 +562,11 @@ export default function App() {
                 {
                   id: uid,
                   projectName: data.projectName,
-                  approxLocation: data.approxLocation,
+                  approxLocation: data.approxLocation || 'Unknown Location',
                   deviceType: data.deviceType,
                   browser: data.browser,
-                  timestamp: data.timestamp
+                  timestamp: data.timestamp,
+                  ip: data.ip || data.ipAddress || ''
                 }
               ]);
 
@@ -1811,8 +1814,24 @@ export default function App() {
       return;
     }
     try {
-      await api.seedScanClick(projectId, trackingId);
+      const seededLog = await api.seedScanClick(projectId, trackingId);
       await fetchUserData();
+
+      // Trigger instant live toast notification for simulator testing
+      const targetProj = projects.find(p => p.id === projectId);
+      const uid = `toast-sim-${Date.now()}`;
+      setToasts((prev) => [
+        ...prev,
+        {
+          id: uid,
+          projectName: targetProj?.name || 'Dynamic QR',
+          approxLocation: seededLog.approxLocation || 'New York, US',
+          deviceType: seededLog.deviceType || 'Mobile (iOS)',
+          browser: seededLog.browser || 'Safari',
+          timestamp: new Date().toISOString(),
+          ip: seededLog.ip || '192.168.1.104'
+        }
+      ]);
     } catch (err: any) {
       console.error(err);
       setErrorMessage(t('error.seedFailed', 'Verification Error: Seed writing failed. Make sure user is fully logged in.'));
@@ -2125,7 +2144,7 @@ export default function App() {
                     className="w-full flex items-center justify-between px-2 py-2.5 text-xs font-black tracking-wider uppercase text-slate-300 hover:text-white transition-colors cursor-pointer"
                   >
                     <span className="font-mono tracking-widest text-[10px] flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                      <Zap className="w-3.5 h-3.5 text-indigo-400" />
                       {navTranslations[locale].creativeStation}
                     </span>
                     <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileCreativeOpen ? 'rotate-180' : ''}`} />
@@ -2306,7 +2325,7 @@ export default function App() {
                     className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
                   >
                     <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                      <Zap className="w-3.5 h-3.5 text-indigo-400" />
                     </div>
                     <span className="font-bold text-indigo-400">{t('nav.solutionsDir', 'Solutions Directory')}</span>
                   </button>
@@ -2645,7 +2664,7 @@ export default function App() {
               }}
             >
               {[
-                { id: 'create', name: t('nav.creativeStationTab', 'Creative Station'), icon: Sparkles, iconColor: 'text-indigo-500' },
+                { id: 'create', name: t('nav.creativeStationTab', 'Creative Station'), icon: Palette, iconColor: 'text-indigo-500' },
                 { id: 'form', name: t('nav.formTab', 'Form Builder'), icon: FormInput, iconColor: 'text-indigo-500' },
                 { id: 'menu', name: t('nav.restaurantMenuTab', 'Restaurant Menus'), icon: Utensils, iconColor: 'text-amber-500' },
                 { id: 'card', name: t('nav.digitalCardTab', 'Digital Cards'), icon: Contact, iconColor: 'text-indigo-500' },
@@ -3670,16 +3689,47 @@ export default function App() {
                 <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1.5 pt-1.5 border-t border-slate-800/80">
                   <div>
                     <span className="text-[8px] text-slate-400 font-semibold block uppercase">Location</span>
-                    <span className="text-[10px] font-bold text-slate-200 block truncate">
+                    <span className="text-[10px] font-bold text-slate-200 block truncate" title={toast.approxLocation}>
                       📍 {toast.approxLocation}
                     </span>
                   </div>
                   <div>
                     <span className="text-[8px] text-slate-400 font-semibold block uppercase font-sans">Device</span>
-                    <span className="text-[10px] font-bold text-slate-200 block truncate">
-                      📱 {toast.deviceType} ({toast.browser})
+                    <span className="text-[10px] font-bold text-slate-200 block truncate" title={`${toast.deviceType} (${toast.browser})`}>
+                      📱 {toast.deviceType}
                     </span>
                   </div>
+                </div>
+
+                {/* Subtle Copy Action Bar */}
+                <div className="flex items-center justify-between gap-2 mt-2 pt-1.5 border-t border-slate-800/60">
+                  <span className="text-[9px] font-mono text-slate-400 truncate max-w-[170px]" title={toast.ip ? `IP: ${toast.ip}` : toast.approxLocation}>
+                    {toast.ip ? `IP: ${toast.ip}` : toast.approxLocation}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const textToCopy = toast.ip ? toast.ip : toast.approxLocation;
+                      navigator.clipboard.writeText(textToCopy).catch(() => {});
+                      setCopiedToastId(toast.id);
+                      setTimeout(() => setCopiedToastId(null), 2000);
+                    }}
+                    className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/90 border border-slate-700/60 rounded-md px-2 py-0.5 transition-all cursor-pointer shrink-0 active:scale-95"
+                    title={toast.ip ? "Copy IP address" : "Copy location string"}
+                  >
+                    {copiedToastId === toast.id ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400 shrink-0" />
+                        <span className="text-emerald-400 text-[9px] font-semibold">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span>Copy {toast.ip ? 'IP' : 'Location'}</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
 

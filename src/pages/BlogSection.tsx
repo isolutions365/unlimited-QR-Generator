@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check,
-  BookOpen, ChevronRight, MessageSquare, AlertCircle, Sparkles, Filter 
+  BookOpen, ChevronRight, MessageSquare, AlertCircle, Zap, Filter 
 } from 'lucide-react';
 import { blogCategories, BlogArticle } from '../data/blogData';
 import { getLocalizedBlog, Locale } from '../utils/translations';
@@ -68,6 +68,8 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
     navigator.clipboard.writeText(url).then(() => {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
+    }).catch((err) => {
+      console.warn('[BlogSection] Clipboard write error caught:', err);
     });
   };
 

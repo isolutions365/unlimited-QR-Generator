@@ -3,7 +3,7 @@ import { useTranslation } from '../utils/i18n';
 import { isRtlLocale } from '../utils/translations';
 
 import { QRProject } from '../types';
-import { Sparkles, Check, Flame, Palette, Layers, Info, ShieldAlert } from 'lucide-react';
+import { Zap, Check, Flame, Palette, Layers, Info, ShieldAlert } from 'lucide-react';
 import { motion } from 'motion/react';
 import { renderStyledQR } from '../utils/qrRenderer';
 

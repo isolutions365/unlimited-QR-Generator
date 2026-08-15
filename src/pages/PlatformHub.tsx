@@ -3,7 +3,7 @@ import { useTranslation } from '../utils/i18n';
 
 import { 
   Shield, Activity, FileText, Users, Award, Cpu, BookOpen, 
-  Mail, Sparkles, CheckCircle2, Globe, ArrowLeft, Calendar, 
+  Mail, Zap, CheckCircle2, Globe, ArrowLeft, Calendar, 
   ArrowUpRight, Download, ExternalLink, Lock, Scale, Terminal, Info, 
   ChevronRight, AlertCircle, Fingerprint, Eye, Check, RefreshCw, Star, 
   MessageSquare, Briefcase, Share2, ClipboardList, Settings, Database, 
@@ -1034,7 +1034,7 @@ export default function PlatformHub({
   }, [activeModule, moduleKey, t]);
 
   const handleCopyCode = (code: string, id: string) => {
-    navigator.clipboard.writeText(code);
+    navigator.clipboard.writeText(code).catch(() => {});
     setCopiedCodeIndex(id);
     setTimeout(() => setCopiedCodeIndex(null), 2000);
   };
@@ -1053,7 +1053,7 @@ export default function PlatformHub({
       case 'Download': return <Download className="w-5 h-5" />;
       case 'RefreshCw': return <RefreshCw className="w-5 h-5" />;
       case 'Layers': return <Layers className="w-5 h-5" />;
-      default: return <Sparkles className="w-5 h-5" />;
+      default: return <Zap className="w-5 h-5" />;
     }
   };
 
@@ -1317,7 +1317,7 @@ func main() {
             {/* AI Optimization Overviews Block */}
             <div className="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl">
               <h2 className="text-xs font-extrabold text-indigo-900 tracking-wider uppercase mb-4 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-indigo-600" /> {t('platform.aiSummaryTitle', 'AI LLM Optimization Summary (AEO Grounding Block)')}
+                <Zap className="w-4 h-4 text-indigo-600" /> {t('platform.aiSummaryTitle', 'AI LLM Optimization Summary (AEO Grounding Block)')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">

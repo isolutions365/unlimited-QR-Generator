@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   Contact, Mail, Phone, MapPin, Globe, Share2, Download, Save, 
   QrCode, ExternalLink, Trash2, Plus, CheckCircle2, Copy, 
-  Sparkles, ShieldCheck, Smartphone, Eye, UploadCloud, ChevronRight, Check,
+  Zap, ShieldCheck, Smartphone, Eye, UploadCloud, ChevronRight, Check,
   Briefcase, Landmark, Info
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
@@ -55,79 +55,284 @@ const PRESET_LOGOS = [
 export default function DigitalBusinessCard() {
   const { locale } = useTranslation();
   const isArabic = locale === 'ar';
+  const isUrdu = locale === 'ur';
+  const isRtl = isArabic || isUrdu;
 
   const tCard = (enText: string): string => {
-    if (!isArabic) return enText;
-    const dict: Record<string, string> = {
-      "Creative Contact Station": "محطة الاتصال الإبداعية",
-      "Digital Business Cards": "بطاقات العمل الرقمية",
-      "Design professional, contact-rich digital business cards (vCards) with customizable layouts, active preset logos, instant WhatsApp or social media links, Apple/Google Wallet simulations, and elegant dynamic QR codes.": "صمّم بطاقات عمل رقمية (vCard) احترافية وغنية ببيانات الاتصال مع تخطيطات قابلة للتخصيص، وشعارات مسبقة الضبط نشطة، وروابط WhatsApp أو وسائل التواصل الاجتماعي الفورية، ومحاكاة Apple/Google Wallet، ورموز QR ديناميكية أنيقة.",
-      "1. Personal Information & Bio": "1. المعلومات الشخصية والنبذة",
-      "Choose name, position title, and primary workplace context.": "اختر الاسم، والمسمى الوظيفي، وبيئة العمل الأساسية.",
-      "Full Name": "الاسم الكامل",
-      "Job Title": "المسمى الوظيفي",
-      "Company": "الشركة",
-      "2. High-Converting Contact Coordinates": "2. إحداثيات الاتصال عالية التحويل",
-      "Fill details for live clickable buttons on the digital card.": "املأ التفاصيل للأزرار القابلة للنقر عليها مباشرة على البطاقة الرقمية.",
-      "Email Address": "البريد الإلكتروني",
-      "Phone Number": "رقم الهاتف",
-      "WhatsApp Number (International)": "رقم الواتساب (دولي)",
-      "Office Address": "عنوان المكتب",
-      "Personal/Company Website": "موقع الشركة أو الموقع الشخصي",
-      "3. Social Links & Custom Networks": "3. روابط التواصل الاجتماعي والشبكات المخصصة",
-      "Add responsive redirection channels with direct brand icons.": "أضف قنوات إعادة توجيه سريعة الاستجابة مع أيقونات العلامات التجارية المباشرة.",
-      "4. Visual Aesthetic & Theme Customizer": "4. الجمالية البصرية ومخصص المظهر",
-      "Choose premium typography palettes, custom avatars, logos, and responsive card templates.": "اختر لوحات الخطوط الفاخرة، والصور الرمزية المخصصة، والشعارات، وقوالب البطاقات سريعة الاستجابة.",
-      "Select Layout Template": "اختر قالب التخطيط",
-      "Choose Styling Theme": "اختر مظهر التنسيق",
-      "Save & Publish Card": "حفظ ونشر البطاقة",
-      "Publishing...": "جاري النشر...",
-      "Load Creative Sample": "تحميل عينة إبداعية",
-      "Live Smartphone Simulator": "محاكي الهاتف الذكي المباشر",
-      "Flip Card": "قلب البطاقة",
-      "Save Contact (.vcf)": "حفظ جهة الاتصال (.vcf)",
-      "Add to Apple Wallet": "إضافة إلى Apple Wallet",
-      "Add to Google Wallet": "إضافة إلى Google Wallet",
-      "Active Live Preview & QR Scan": "المعاينة المباشرة ومسح QR النشط",
-      "Scan this dynamic high-fidelity QR code with a phone to access this digital business card on any mobile device instantly.": "امسح رمز QR الديناميكي عالي الدقة هذا بهاتفك للوصول إلى بطاقة العمل الرقمية هذه على أي جهاز محمول على الفور.",
-      "Publish card to activate live dynamic links!": "انشر البطاقة لتنشيط الروابط الديناميكية المباشرة!",
-      "Bio / Brief Description": "النبذة / وصف قصير",
-      "Profile Photo URL": "رابط صورة الملف الشخصي",
-      "Or choose premium preset avatar": "أو اختر صورة رمزية مميزة مسبقة الضبط",
-      "Corporate Logo text": "نص شعار الشركة",
-      "Or choose preset tech symbol": "أو اختر رمزًا تقنيًا جاهزًا",
-      "Card Theme Style": "نمط مظهر البطاقة",
-      "Layout Orientation": "توجيه التخطيط",
-      "Standard Portrait": "عمودي قياسي",
-      "Minimal Centered": "بسيط ممركز",
-      "Executive Split": "تنفيذي منقسم",
-      "Add Social / Digital Channel": "إضافة قناة اجتماعية / رقمية",
-      "Select Platform": "اختر المنصة",
-      "Redirection URL": "رابط إعادة التوجيه",
-      "Add Link Channel": "إضافة قناة الرابط",
-      "Active Social & Web Channels": "القنوات الاجتماعية وقنوات الويب النشطة",
-      "Trash Channel": "حذف القناة",
-      "Card details saved successfully!": "تم حفظ تفاصيل البطاقة بنجاح!"
-    };
-    return dict[enText] || enText;
+    if (isArabic) {
+      const arDict: Record<string, string> = {
+        "Creative Contact Station": "محطة الاتصال الإبداعية",
+        "Digital Business Cards": "بطاقات العمل الرقمية",
+        "Design professional, contact-rich digital business cards (vCards) with customizable layouts, active preset logos, instant WhatsApp or social media links, Apple/Google Wallet simulations, and elegant dynamic QR codes.": "صمّم بطاقات عمل رقمية (vCard) احترافية وغنية ببيانات الاتصال مع تخطيطات قابلة للتخصيص، وشعارات مسبقة الضبط نشطة، وروابط WhatsApp أو وسائل التواصل الاجتماعي الفورية، ومحاكاة Apple/Google Wallet، ورموز QR ديناميكية أنيقة.",
+        "1. Personal Information & Bio": "1. المعلومات الشخصية والنبذة",
+        "Choose name, position title, and primary workplace context.": "اختر الاسم، والمسمى الوظيفي، وبيئة العمل الأساسية.",
+        "Full Name": "الاسم الكامل",
+        "Job Title": "المسمى الوظيفي",
+        "Company": "الشركة",
+        "Job Title / Designation": "المسمى الوظيفي / المنصب",
+        "Company Name": "اسم الشركة",
+        "Official Website": "الموقع الرسمي",
+        "Email Address": "البريد الإلكتروني",
+        "Phone Number": "رقم الهاتف",
+        "WhatsApp Chat Link (Or Number)": "رابط أو رقم محادثة واتساب",
+        "Office/Postal Address": "عنوان المكتب / البريد",
+        "Profile Photo (Self-Contained)": "صورة الملف الشخصي",
+        "Upload Image": "رفع صورة",
+        "Presets:": "نماذج:",
+        "Company Emblem / Brand Logo": "شعار الشركة أو العلامة التجارية",
+        "Upload Brand Logo": "رفع شعار العلامة التجارية",
+        "Texts:": "نصوص:",
+        "Dynamic Social Integrations": "تكاملات التواصل الاجتماعي الديناميكية",
+        "Append custom profiles links (LinkedIn, YouTube, X, etc.)": "أضف روابط الملفات الشخصية (LinkedIn, YouTube, X, إلخ)",
+        "Add Link": "إضافة رابط",
+        "No active social links. Click \"Add Link\" to integrate networks.": "لا توجد روابط تواصل اجتماعي مضافة. انقر فوق \"إضافة رابط\" لإدراج الشبكات.",
+        "Visual Theme & Layout": "المظهر البصري والتخطيط",
+        "Executive Minimal": "تنفيذي بسيط",
+        "White & Blue": "أبيض وأزرق",
+        "Sleek Obsidian": "سبجي أنيق",
+        "Dark & Amber Gold": "داكن وذهبي عنبري",
+        "Tech Slate": "تقني رمادي",
+        "Sleek Cyan Neon": "سيان نيون أنيق",
+        "Warm Craft": "حرفي دافئ",
+        "Organic Clay Cream": "طمي كريمي عضوي",
+        "Saved Cards on Account / Cache": "البطاقات المحفوظة في الحساب / الذاكرة",
+        "No saved passes found. Click \"Save Pass\" above to register and secure your business card!": "لا توجد بطاقات محفوظة. انقر على \"حفظ البطاقة\" أعلاه لتسجيل وتأمين بطاقة عملك!",
+        "Double-Sided Live Mockup": "معاينة حية تفاعلية ثنائية الجوانب",
+        "Flip Card": "قلب البطاقة",
+        "Flip Card (View Front)": "قلب البطاقة (عرض الوجه)",
+        "Flip Card (View Back)": "قلب البطاقة (عرض الخلف)",
+        "Front": "الوجه",
+        "Back": "الخلف",
+        "INDEPENDENT": "مستقل",
+        "Anonymous User": "مستخدم غير محدد",
+        "Product Developer": "مطور منتجات",
+        "Logo": "شعار",
+        "Contact Channels": "قنوات الاتصال",
+        "Personal QR ID": "معرّف QR الشخصي",
+        "Scan to Connect": "امسح للتواصل",
+        "Interact & Share": "تفاعل ومشاركة",
+        "Direct vCard": "vCard مباشر",
+        "Web Profile": "الملف الشخصي عبر الويب",
+        "VCARD GENERATOR DATA": "بيانات منشئ VCARD",
+        "WEB REDIRECT MODULE": "وحدة إعادة التوجيه للويب",
+        "Encodes Name, Address, Email, Phone, Logo & Website inside the QR matrix.": "يشفر الاسم والعنوان والبريد والهاتف والشعار والموقع داخل مصفوفة QR.",
+        "Creates a simulated, interactive digital business profile on scan.": "ينشئ ملف تعريف رقمي تفاعلي لبطاقة العمل عند المسح.",
+        "Save Contact (.vcf)": "حفظ جهة الاتصال (.vcf)",
+        "Download QR (PNG)": "تنزيل رمز QR (PNG)",
+        "Download QR (SVG)": "تنزيل رمز QR (SVG)",
+        "Share Card Link": "مشاركة رابط البطاقة",
+        "Copied!": "تم النسخ!",
+        "Copied": "تم النسخ",
+        "Mobile Wallet Pass Export": "تصدير بطاقة المحفظة الإلكترونية",
+        "Save your contact card directly to smartphone wallets for quick tap-and-share access.": "احفظ بطاقة اتصالك مباشرة في محفظة الهاتف الذكي للوصول السريع والمشاركة بنقرة واحدة.",
+        " Apple Wallet": " محفظة آبل (Apple Wallet)",
+        "🤖 Google Wallet": "🤖 محفظة جوجل (Google Wallet)",
+        "Apple Wallet Card": "بطاقة محفظة آبل",
+        "MEMBER": "عضو",
+        "Designation": "المنصب",
+        "SMARTPASS INTEGRATION": "تكامل البطاقة الذكية",
+        "✓ Ready to Install": "✓ جاهز للتثبيت",
+        "Apple Wallet Digital Pass": "بطاقة محفظة آبل الرقمية",
+        "Copy Pass Payload": "نسخ حمولة البطاقة",
+        "Export your formatted wallet card to save or distribute directly to iOS devices.": "صدّر بطاقة محفظتك المنسقة لحفظها أو توزيعها مباشرة على أجهزة iOS.",
+        "Download Apple Wallet Pass File": "تنزيل ملف بطاقة محفظة آبل",
+        "Google Wallet Pass": "بطاقة محفظة جوجل",
+        "AFFILIATE": "شريك",
+        "Card Holder": "صاحب البطاقة",
+        "Google Wallet Digital Pass": "بطاقة محفظة جوجل الرقمية",
+        "Export your formatted wallet card payload for instant Android Google Wallet sync.": "صدّر حمولة بطاقة محفظتك للمزامنة الفورية مع محفظة جوجل على أجهزة أندرويد.",
+        "Download Google Wallet File": "تنزيل ملف محفظة جوجل",
+        "Create New Card": "إنشاء بطاقة جديدة",
+        "Card Credentials & Info": "بيانات ومعلومات البطاقة",
+        "Save Pass": "حفظ البطاقة",
+        "Saving...": "جاري الحفظ...",
+        "Custom": "مخصص",
+        "2. High-Converting Contact Coordinates": "2. إحداثيات الاتصال عالية التحويل",
+        "Fill details for live clickable buttons on the digital card.": "املأ التفاصيل للأزرار القابلة للنقر عليها مباشرة على البطاقة الرقمية.",
+        "WhatsApp Number (International)": "رقم الواتساب (دولي)",
+        "Office Address": "عنوان المكتب",
+        "Personal/Company Website": "موقع الشركة أو الموقع الشخصي",
+        "3. Social Links & Custom Networks": "3. روابط التواصل الاجتماعي والشبكات المخصصة",
+        "Add responsive redirection channels with direct brand icons.": "أضف قنوات إعادة توجيه سريعة الاستجابة مع أيقونات العلامات التجارية المباشرة.",
+        "4. Visual Aesthetic & Theme Customizer": "4. الجمالية البصرية ومخصص المظهر",
+        "Choose premium typography palettes, custom avatars, logos, and responsive card templates.": "اختر لوحات الخطوط الفاخرة، والصور الرمزية المخصصة، والشعارات، وقوالب البطاقات سريعة الاستجابة.",
+        "Select Layout Template": "اختر قالب التخطيط",
+        "Choose Styling Theme": "اختر مظهر التنسيق",
+        "Save & Publish Card": "حفظ ونشر البطاقة",
+        "Publishing...": "جاري النشر...",
+        "Load Creative Sample": "تحميل عينة إبداعية",
+        "Live Smartphone Simulator": "محاكي الهاتف الذكي المباشر",
+        "Add to Apple Wallet": "إضافة إلى Apple Wallet",
+        "Add to Google Wallet": "إضافة إلى Google Wallet",
+        "Active Live Preview & QR Scan": "المعاينة المباشرة ومسح QR النشط",
+        "Scan this dynamic high-fidelity QR code with a phone to access this digital business card on any mobile device instantly.": "امسح رمز QR الديناميكي عالي الدقة هذا بهاتفك للوصول إلى بطاقة العمل الرقمية هذه على أي جهاز محمول على الفور.",
+        "Publish card to activate live dynamic links!": "انشر البطاقة لتنشيط الروابط الديناميكية المباشرة!",
+        "Bio / Brief Description": "النبذة / وصف قصير",
+        "Profile Photo URL": "رابط صورة الملف الشخصي",
+        "Or choose premium preset avatar": "أو اختر صورة رمزية مميزة مسبقة الضبط",
+        "Corporate Logo text": "نص شعار الشركة",
+        "Or choose preset tech symbol": "أو اختر رمزًا تقنيًا جاهزًا",
+        "Card Theme Style": "نمط مظهر البطاقة",
+        "Layout Orientation": "توجيه التخطيط",
+        "Standard Portrait": "عمودي قياسي",
+        "Minimal Centered": "بسيط ممركز",
+        "Executive Split": "تنفيذي منقسم",
+        "Add Social / Digital Channel": "إضافة قناة اجتماعية / رقمية",
+        "Select Platform": "اختر المنصة",
+        "Redirection URL": "رابط إعادة التوجيه",
+        "Add Link Channel": "إضافة قناة الرابط",
+        "Active Social & Web Channels": "القنوات الاجتماعية وقنوات الويب النشطة",
+        "Trash Channel": "حذف القناة",
+        "Card details saved successfully!": "تم حفظ تفاصيل البطاقة بنجاح!"
+      };
+      return arDict[enText] || enText;
+    }
+
+    if (isUrdu) {
+      const urDict: Record<string, string> = {
+        "Creative Contact Station": "تخلیقی رابطہ مرکز",
+        "Digital Business Cards": "ڈیجیٹل بزنس کارڈز",
+        "Design professional, contact-rich digital business cards (vCards) with customizable layouts, active preset logos, instant WhatsApp or social media links, Apple/Google Wallet simulations, and elegant dynamic QR codes.": "حسب ضرورت لے آؤٹ، فعال پری سیٹ لوگوز، فوری واٹس ایپ یا سوشل میڈیا لنکس، ایپل/گوگل والیٹ سمیلیشنز اور خوبصورت متحرک کیو آر کوڈز کے ساتھ پیشہ ورانہ اور رابطوں سے بھرپور ڈیجیٹل بزنس کارڈز (vCards) ڈیزائن کریں۔",
+        "1. Personal Information & Bio": "1. ذاتی معلومات اور بائیو",
+        "Choose name, position title, and primary workplace context.": "نام، عہدہ کا عنوان، اور بنیادی کام کی جگہ کا سیاق و سباق منتخب کریں۔",
+        "Full Name": "پورا نام",
+        "Job Title": "عہدہ / جاب ٹائٹل",
+        "Company": "کمپنی",
+        "Job Title / Designation": "عہدہ / منصب",
+        "Company Name": "کمپنی کا نام",
+        "Official Website": "سرکاری ویب سائٹ",
+        "Email Address": "ای میل ایڈریس",
+        "Phone Number": "رقم / فون نمبر",
+        "WhatsApp Chat Link (Or Number)": "واٹس ایپ چیٹ لنک (یا نمبر)",
+        "Office/Postal Address": "دفتر / ڈاک کا پتہ",
+        "Profile Photo (Self-Contained)": "پروفائل تصویر",
+        "Upload Image": "تصویر اپ لوڈ کریں",
+        "Presets:": "پری سیٹس:",
+        "Company Emblem / Brand Logo": "کمپنی کا مونوگرام / برانڈ لوگو",
+        "Upload Brand Logo": "برانڈ لوگو اپ لوڈ کریں",
+        "Texts:": "متن:",
+        "Dynamic Social Integrations": "ڈائنامک سوشل لنکس انٹیگریشنز",
+        "Append custom profiles links (LinkedIn, YouTube, X, etc.)": "کسٹم پروفائل لنکس شامل کریں (LinkedIn, YouTube, X, وغیرہ)",
+        "Add Link": "لنک شامل کریں",
+        "No active social links. Click \"Add Link\" to integrate networks.": "کوئی فعال سوشل لنکس نہیں ہیں۔ نیٹ ورکس شامل کرنے کے لیے \"لنک شامل کریں\" پر کلک کریں۔",
+        "Visual Theme & Layout": "بصری تھیم اور لے آؤٹ",
+        "Executive Minimal": "ایگزیکٹو منیمل",
+        "White & Blue": "سفید اور نیلا",
+        "Sleek Obsidian": "سلیک اوبسیڈین",
+        "Dark & Amber Gold": "ڈارک اور عنبر گولڈ",
+        "Tech Slate": "ٹیک سلیٹ",
+        "Sleek Cyan Neon": "سلیک سیان نیون",
+        "Warm Craft": "وارم کرافٹ",
+        "Organic Clay Cream": "آرگینک کلے کریم",
+        "Saved Cards on Account / Cache": "اکاؤنٹ / کیشے میں محفوظ شدہ کارڈز",
+        "No saved passes found. Click \"Save Pass\" above to register and secure your business card!": "کوئی محفوظ شدہ کارڈ نہیں ملا۔ اپنے بزنس کارڈ کو محفوظ کرنے کے لیے اوپر \"پاس محفوظ کریں\" پر کلک کریں!",
+        "Double-Sided Live Mockup": "ڈبل رخا لائیو ماک اپ",
+        "Flip Card": "کارڈ پلٹیں",
+        "Flip Card (View Front)": "کارڈ پلٹیں (سامنے کا رخ)",
+        "Flip Card (View Back)": "کارڈ پلٹیں (پیچھے کا رخ)",
+        "Front": "سامنے",
+        "Back": "پیچھے",
+        "INDEPENDENT": "خود مختار",
+        "Anonymous User": "نامعلوم صارف",
+        "Product Developer": "پروڈکٹ ڈویلپر",
+        "Logo": "لوگو",
+        "Contact Channels": "رابطے کے ذرائع",
+        "Personal QR ID": "ذاتی QR شناخت",
+        "Scan to Connect": "رابطے کے لیے اسکین کریں",
+        "Interact & Share": "بات چیت اور اشتراک",
+        "Direct vCard": "براہ راست vCard",
+        "Web Profile": "ویب پروفائل",
+        "VCARD GENERATOR DATA": "VCARD جنریٹر ڈیٹا",
+        "WEB REDIRECT MODULE": "ویب ری ڈائریکٹ ماڈیول",
+        "Encodes Name, Address, Email, Phone, Logo & Website inside the QR matrix.": "QR میٹرکس کے اندر نام، پتہ، ای میل، فون، لوگو اور ویب سائٹ کو انکوڈ کرتا ہے۔",
+        "Creates a simulated, interactive digital business profile on scan.": "اسکین کرنے پر ایک انٹرایکٹو ڈیجیٹل بزنس پروفائل بناتا ہے۔",
+        "Save Contact (.vcf)": "رابطہ محفوظ کریں (.vcf)",
+        "Download QR (PNG)": "QR ڈاؤن لوڈ کریں (PNG)",
+        "Download QR (SVG)": "QR ڈاؤن لوڈ کریں (SVG)",
+        "Share Card Link": "کارڈ کا لنک شیئر کریں",
+        "Copied!": "کاپی ہو گیا!",
+        "Copied": "کاپی ہو گیا",
+        "Mobile Wallet Pass Export": "موبائل والیٹ پاس ایکسپورٹ",
+        "Save your contact card directly to smartphone wallets for quick tap-and-share access.": "فوری ٹیپ اور شیئر کے لیے اپنے رابطہ کارڈ کو براہ راست اسمارٹ فون والیٹس میں محفوظ کریں۔",
+        " Apple Wallet": " ایپل والیٹ (Apple Wallet)",
+        "🤖 Google Wallet": "🤖 گوگل والیٹ (Google Wallet)",
+        "Apple Wallet Card": "ایپل والیٹ کارڈ",
+        "MEMBER": "رکن",
+        "Designation": "عہدہ",
+        "SMARTPASS INTEGRATION": "اسمارٹ پاس انٹیگریشن",
+        "✓ Ready to Install": "✓ انسٹال کے لیے تیار",
+        "Apple Wallet Digital Pass": "ایپل والیٹ ڈیجیٹل پاس",
+        "Copy Pass Payload": "پاس پے لوڈ کاپی کریں",
+        "Export your formatted wallet card to save or distribute directly to iOS devices.": "iOS ڈیوائسز پر براہ راست محفوظ کرنے یا تقسیم کرنے کے لیے اپنا والیٹ کارڈ ایکسپورٹ کریں۔",
+        "Download Apple Wallet Pass File": "ایپل والیٹ پاس فائل ڈاؤن لوڈ کریں",
+        "Google Wallet Pass": "گوگل والیٹ پاس",
+        "AFFILIATE": "ایفیلی ایٹ",
+        "Card Holder": "کارڈ ہولڈر",
+        "Google Wallet Digital Pass": "گوگل والیٹ ڈیجیٹل پاس",
+        "Export your formatted wallet card payload for instant Android Google Wallet sync.": "اینڈرائیڈ گوگل والیٹ کے ساتھ فوری مطابقت پذیری کے لیے اپنے فارمیٹ شدہ کارڈ کا ڈیٹا برآمد کریں۔",
+        "Download Google Wallet File": "گوگل والیٹ فائل ڈاؤن لوڈ کریں",
+        "Create New Card": "نیا کارڈ بنائیں",
+        "Card Credentials & Info": "کارڈ کی معلومات اور تفصیلات",
+        "Save Pass": "پاس محفوظ کریں",
+        "Saving...": "محفوظ ہو رہا ہے...",
+        "Custom": "کسٹم",
+        "2. High-Converting Contact Coordinates": "2. اعلیٰ تبدیلی والے رابطہ ذرائع",
+        "Fill details for live clickable buttons on the digital card.": "ڈیجیٹل کارڈ پر براہ راست کلک کے قابل بٹنوں کے لیے تفصیلات بھریں۔",
+        "WhatsApp Number (International)" : "واٹس ایپ نمبر (بین الاقوامی)",
+        "Office Address": "دفتر کا پتہ",
+        "Personal/Company Website": "ذاتی/کمپنی کی ویب سائٹ",
+        "3. Social Links & Custom Networks": "3. سوشل لنکس اور کسٹم نیٹ ورکس",
+        "Add responsive redirection channels with direct brand icons.": "براہ راست برانڈ شبیہیں کے ساتھ ریسپانسیو ری ڈائریکشن چینلز شامل کریں۔",
+        "4. Visual Aesthetic & Theme Customizer": "4. بصری جمالیات اور تھیم کسٹمائزر",
+        "Choose premium typography palettes, custom avatars, logos, and responsive card templates.": "پریمیم ٹائپوگرافی پیلیٹس، کسٹم اوتار، لوگوز، اور ریسپانسیو کارڈ ٹیمپلیٹس منتخب کریں۔",
+        "Select Layout Template": "لے آؤٹ ٹیمپلیٹ منتخب کریں",
+        "Choose Styling Theme": "اسٹائلنگ تھیم منتخب کریں",
+        "Save & Publish Card": "کارڈ محفوظ اور شائع کریں",
+        "Publishing...": "شائع ہو رہا ہے...",
+        "Load Creative Sample": "تخلیقی نمونہ لوڈ کریں",
+        "Live Smartphone Simulator": "لائیو اسمارٹ فون سمیلیٹر",
+        "Add to Apple Wallet": "ایپل والیٹ میں شامل کریں",
+        "Add to Google Wallet": "گوگل والیٹ میں شامل کریں",
+        "Active Live Preview & QR Scan": "لائیو پیش نظارہ اور کیو آر اسکین",
+        "Scan this dynamic high-fidelity QR code with a phone to access this digital business card on any mobile device instantly.": "کسی بھی موبائل ڈیوائس پر فوری طور پر اس ڈیجیٹل بزنس کارڈ تک رسائی کے لیے فون کے ساتھ اس متحرک ہائی فیڈیلیٹی QR کوڈ کو اسکین کریں۔",
+        "Publish card to activate live dynamic links!": "براہ راست متحرک لنکس کو فعال کرنے کے لیے کارڈ شائع کریں!",
+        "Bio / Brief Description": "بائیو / مختصر تفصیل",
+        "Profile Photo URL": "پروفائل تصویر کا URL",
+        "Or choose premium preset avatar": "یا پریمیم پری سیٹ اوتار منتخب کریں",
+        "Corporate Logo text": "کمپنی کا لوگو متن",
+        "Or choose preset tech symbol": "یا پہلے سے طے شدہ ٹیک علامت منتخب کریں",
+        "Card Theme Style": "کارڈ تھیم کا انداز",
+        "Layout Orientation": "لے آؤٹ کی سمت",
+        "Standard Portrait": "معیاری پورٹریٹ",
+        "Minimal Centered": "کم سے کم مرکز",
+        "Executive Split": "ایگزیکٹو اسپلٹ",
+        "Add Social / Digital Channel": "سوشل / ڈیجیٹل چینل شامل کریں",
+        "Select Platform": "پلیٹ فارم منتخب کریں",
+        "Redirection URL": "ری ڈائریکشن یو آر ایل",
+        "Add Link Channel": "لنک چینل شامل کریں",
+        "Active Social & Web Channels": "فعال سوشل اور ویب چینلز",
+        "Trash Channel": "چینل حذف کریں",
+        "Card details saved successfully!": "کارڈ کی تفصیلات کامیابی سے محفوظ ہو گئیں!"
+      };
+      return urDict[enText] || enText;
+    }
+
+    return enText;
   };
 
   const [cardData, setCardData] = useState<DigitalCardData>({
     id: 'card-' + Math.random().toString(36).substring(2, 9),
-    name: isArabic ? 'سارة جينكينز' : 'Sarah Jenkins',
+    name: '',
     photoUrl: PRESET_AVATARS[0],
     logoUrl: '',
-    company: isArabic ? 'أبيكس للحلول الرقمية' : 'Apex Digital Solutions',
-    title: isArabic ? 'رئيس قسم التصميم' : 'Chief Design Officer',
-    email: 'sarah.jenkins@apexcorp.io',
-    phone: '+1 (555) 234-5678',
-    whatsApp: '+15552345678',
-    address: isArabic ? '100 شارع الصنوبر، سان فرانسيسكو، كاليفورنيا 94111' : '100 Pine Street, San Francisco, CA 94111',
-    website: 'https://apexcorp.io',
-    socialLinks: [
-      { id: '1', platform: 'LinkedIn', url: 'https://linkedin.com/in/sarah-jenkins-design' },
-      { id: '2', platform: 'Twitter/X', url: 'https://x.com/sarahj_design' }
-    ],
+    company: '',
+    title: '',
+    email: '',
+    phone: '',
+    whatsApp: '',
+    address: '',
+    website: '',
+    socialLinks: [],
     theme: 'executive',
     layout: 'standard'
   });
@@ -320,7 +525,7 @@ export default function DigitalBusinessCard() {
   };
 
   const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
     setCopiedField(label);
     playAudioSound('generate');
     setTimeout(() => setCopiedField(null), 2000);
@@ -537,7 +742,7 @@ export default function DigitalBusinessCard() {
   const selectedTheme = themeStyles[cardData.theme];
 
   return (
-    <div id="digital-business-card-module" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div id="digital-business-card-module" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir={isRtl ? 'rtl' : 'ltr'}>
       {/* Intro Header */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -555,19 +760,17 @@ export default function DigitalBusinessCard() {
             onClick={() => {
               setCardData({
                 id: 'card-' + Math.random().toString(36).substring(2, 9),
-                name: 'Sarah Jenkins',
+                name: '',
                 photoUrl: PRESET_AVATARS[0],
                 logoUrl: '',
-                company: 'Apex Digital Solutions',
-                title: 'Chief Design Officer',
-                email: 'sarah.jenkins@apexcorp.io',
-                phone: '+1 (555) 234-5678',
-                whatsApp: '+15552345678',
-                address: '100 Pine Street, San Francisco, CA 94111',
-                website: 'https://apexcorp.io',
-                socialLinks: [
-                  { id: '1', platform: 'LinkedIn', url: 'https://linkedin.com/in/sarah-jenkins-design' }
-                ],
+                company: '',
+                title: '',
+                email: '',
+                phone: '',
+                whatsApp: '',
+                address: '',
+                website: '',
+                socialLinks: [],
                 theme: 'executive',
                 layout: 'standard'
               });
@@ -575,7 +778,7 @@ export default function DigitalBusinessCard() {
             }}
             className="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-200 transition-colors cursor-pointer"
           >
-            Create New Card
+            {tCard("Create New Card")}
           </button>
         </div>
       </div>
@@ -586,103 +789,103 @@ export default function DigitalBusinessCard() {
           
           {/* Card Meta & Saving info */}
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-            <h3 className="text-lg font-bold text-slate-800">Card Credentials & Info</h3>
+            <h3 className="text-lg font-bold text-slate-800">{tCard("Card Credentials & Info")}</h3>
             <button
               onClick={handleSaveCard}
               disabled={isSaving}
               className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-colors cursor-pointer disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              {isSaving ? 'Saving...' : 'Save Pass'}
+              {isSaving ? tCard("Saving...") : tCard("Save Pass")}
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Full Name</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Full Name")}</label>
               <input
                 type="text"
                 value={cardData.name}
                 onChange={e => setCardData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="e.g. Sarah Jenkins"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                placeholder={isArabic ? "مثال: سارة جينكينز" : isUrdu ? "مثال: سارہ جاوید" : "e.g. Sarah Jenkins"}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs placeholder:text-slate-400 placeholder:font-normal focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Job Title / Designation</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Job Title / Designation")}</label>
               <input
                 type="text"
                 value={cardData.title}
                 onChange={e => setCardData(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="e.g. Chief Design Officer"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                placeholder={isArabic ? "مثال: رئيس قسم التصميم" : isUrdu ? "مثال: چیف ڈیزائن آفیسر" : "e.g. Chief Design Officer"}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs placeholder:text-slate-400 placeholder:font-normal focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Company Name</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Company Name")}</label>
               <input
                 type="text"
                 value={cardData.company}
                 onChange={e => setCardData(prev => ({ ...prev, company: e.target.value }))}
-                placeholder="e.g. Apex Digital Solutions"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                placeholder={isArabic ? "مثال: أبيكس للحلول الرقمية" : isUrdu ? "مثال: ایپیکس ڈیجیٹل سلوشنز" : "e.g. Apex Digital Solutions"}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs placeholder:text-slate-400 placeholder:font-normal focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Official Website</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Official Website")}</label>
               <input
                 type="text"
                 value={cardData.website}
                 onChange={e => setCardData(prev => ({ ...prev, website: e.target.value }))}
                 placeholder="e.g. https://apexcorp.io"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs placeholder:text-slate-400 placeholder:font-normal focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Email Address")}</label>
               <input
                 type="email"
                 value={cardData.email}
                 onChange={e => setCardData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="e.g. sarah@apexcorp.io"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs placeholder:text-slate-400 placeholder:font-normal focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Phone Number</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Phone Number")}</label>
               <input
                 type="text"
                 value={cardData.phone}
                 onChange={e => setCardData(prev => ({ ...prev, phone: e.target.value }))}
                 placeholder="e.g. +1 (555) 234-5678"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs placeholder:text-slate-400 placeholder:font-normal focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">WhatsApp Chat Link (Or Number)</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("WhatsApp Chat Link (Or Number)")}</label>
               <input
                 type="text"
                 value={cardData.whatsApp}
                 onChange={e => setCardData(prev => ({ ...prev, whatsApp: e.target.value }))}
                 placeholder="e.g. +15552345678"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs placeholder:text-slate-400 placeholder:font-normal focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Office/Postal Address</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Office/Postal Address")}</label>
               <input
                 type="text"
                 value={cardData.address}
                 onChange={e => setCardData(prev => ({ ...prev, address: e.target.value }))}
-                placeholder="e.g. 100 Pine Street, San Francisco, CA"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                placeholder={isArabic ? "مثال: 100 شارع الصنوبر، سان فرانسيسكو، كاليفورنيا" : isUrdu ? "مثال: 100 پائن اسٹریٹ، سان فرانسسکو، کیلیفورنیا" : "e.g. 100 Pine Street, San Francisco, CA"}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs placeholder:text-slate-400 placeholder:font-normal focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               />
             </div>
           </div>
@@ -690,7 +893,7 @@ export default function DigitalBusinessCard() {
           {/* Asset uploads: Photo & Logo */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-100 pt-5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Profile Photo (Self-Contained)</label>
+              <label className="block text-xs font-bold text-slate-700 mb-2">{tCard("Profile Photo (Self-Contained)")}</label>
               
               <div className="flex items-center gap-3">
                 <img
@@ -702,7 +905,7 @@ export default function DigitalBusinessCard() {
                 <div className="flex-1">
                   <label className="flex items-center justify-center border border-dashed border-slate-300 rounded-xl py-2 px-3 hover:bg-slate-50 transition-colors cursor-pointer text-center text-xs text-slate-600 gap-1.5 font-semibold">
                     <UploadCloud className="w-4 h-4 text-slate-400" />
-                    Upload Image
+                    {tCard("Upload Image")}
                     <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
                   </label>
                 </div>
@@ -710,7 +913,7 @@ export default function DigitalBusinessCard() {
 
               {/* Preset avatars choice */}
               <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1">
-                <span className="text-[10px] text-slate-400 shrink-0 font-semibold">Presets:</span>
+                <span className="text-[10px] text-slate-400 shrink-0 font-semibold">{tCard("Presets:")}</span>
                 {PRESET_AVATARS.map((url, i) => (
                   <button
                     key={i}
@@ -727,7 +930,7 @@ export default function DigitalBusinessCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Company Emblem / Brand Logo</label>
+              <label className="block text-xs font-bold text-slate-700 mb-2">{tCard("Company Emblem / Brand Logo")}</label>
 
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 border border-slate-200 rounded-xl flex items-center justify-center shrink-0 bg-slate-50 overflow-hidden text-xs">
@@ -740,7 +943,7 @@ export default function DigitalBusinessCard() {
                 <div className="flex-1">
                   <label className="flex items-center justify-center border border-dashed border-slate-300 rounded-xl py-2 px-3 hover:bg-slate-50 transition-colors cursor-pointer text-center text-xs text-slate-600 gap-1.5 font-semibold">
                     <UploadCloud className="w-4 h-4 text-slate-400" />
-                    Upload Brand Logo
+                    {tCard("Upload Brand Logo")}
                     <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                   </label>
                 </div>
@@ -748,7 +951,7 @@ export default function DigitalBusinessCard() {
 
               {/* Preset logo labels choice */}
               <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1">
-                <span className="text-[10px] text-slate-400 shrink-0 font-semibold">Texts:</span>
+                <span className="text-[10px] text-slate-400 shrink-0 font-semibold">{tCard("Texts:")}</span>
                 {PRESET_LOGOS.map((emblem, i) => (
                   <button
                     key={i}
@@ -771,8 +974,8 @@ export default function DigitalBusinessCard() {
           <div className="border-t border-slate-100 pt-5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-xs font-bold text-slate-800">Dynamic Social Integrations</h4>
-                <p className="text-[10px] text-slate-400">Append custom profiles links (LinkedIn, YouTube, X, etc.)</p>
+                <h4 className="text-xs font-bold text-slate-800">{tCard("Dynamic Social Integrations")}</h4>
+                <p className="text-[10px] text-slate-400">{tCard("Append custom profiles links (LinkedIn, YouTube, X, etc.)")}</p>
               </div>
               <button
                 type="button"
@@ -780,7 +983,7 @@ export default function DigitalBusinessCard() {
                 className="py-1 px-3 border border-indigo-200 text-indigo-600 hover:bg-indigo-50 text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
-                Add Link
+                {tCard("Add Link")}
               </button>
             </div>
 
@@ -798,7 +1001,7 @@ export default function DigitalBusinessCard() {
                     <option value="GitHub">GitHub</option>
                     <option value="Facebook">Facebook</option>
                     <option value="YouTube">YouTube</option>
-                    <option value="Custom">Custom</option>
+                    <option value="Custom">{tCard("Custom")}</option>
                   </select>
                   <input
                     type="text"
@@ -818,7 +1021,7 @@ export default function DigitalBusinessCard() {
               ))}
               {cardData.socialLinks.length === 0 && (
                 <div className="text-center py-4 bg-slate-50 border border-slate-100 rounded-xl">
-                  <p className="text-[11px] text-slate-400">No active social links. Click "Add Link" to integrate networks.</p>
+                  <p className="text-[11px] text-slate-400">{tCard("No active social links. Click \"Add Link\" to integrate networks.")}</p>
                 </div>
               )}
             </div>
@@ -826,7 +1029,7 @@ export default function DigitalBusinessCard() {
 
           {/* Style Customizer */}
           <div className="border-t border-slate-100 pt-5 space-y-4">
-            <h4 className="text-xs font-bold text-slate-800">Visual Theme & Layout</h4>
+            <h4 className="text-xs font-bold text-slate-800">{tCard("Visual Theme & Layout")}</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { id: 'executive', label: 'Executive Minimal', desc: 'White & Blue', bg: 'bg-white border-slate-200' },
@@ -840,13 +1043,13 @@ export default function DigitalBusinessCard() {
                     setCardData(prev => ({ ...prev, theme: themeItem.id as any }));
                     playAudioSound('preview');
                   }}
-                  className={`p-3 rounded-xl border text-left transition-all relative cursor-pointer ${cardData.theme === themeItem.id ? 'ring-2 ring-indigo-500 border-transparent shadow-sm scale-[1.02]' : 'hover:bg-slate-50 border-slate-200/80'}`}
+                  className={`p-3 rounded-xl border text-left rtl:text-right transition-all relative cursor-pointer ${cardData.theme === themeItem.id ? 'ring-2 ring-indigo-500 border-transparent shadow-sm scale-[1.02]' : 'hover:bg-slate-50 border-slate-200/80'}`}
                 >
                   <div className={`w-4 h-4 rounded-full ${themeItem.bg} mb-2 border`} />
-                  <p className="text-[10px] font-bold leading-tight truncate">{themeItem.label}</p>
-                  <p className="text-[8px] text-slate-400 mt-0.5">{themeItem.desc}</p>
+                  <p className="text-[10px] font-bold leading-tight truncate">{tCard(themeItem.label)}</p>
+                  <p className="text-[8px] text-slate-400 mt-0.5">{tCard(themeItem.desc)}</p>
                   {cardData.theme === themeItem.id && (
-                    <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-indigo-600 rounded-full" />
+                    <span className="absolute top-2 right-2 rtl:right-auto rtl:left-2 w-1.5 h-1.5 bg-indigo-600 rounded-full" />
                   )}
                 </button>
               ))}
@@ -855,7 +1058,7 @@ export default function DigitalBusinessCard() {
 
           {/* Database & saved cards listing */}
           <div className="border-t border-slate-100 pt-5">
-            <h4 className="text-xs font-bold text-slate-800 mb-3">Saved Cards on Account / Cache</h4>
+            <h4 className="text-xs font-bold text-slate-800 mb-3">{tCard("Saved Cards on Account / Cache")}</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {savedCards.map(saved => (
                 <div
@@ -865,7 +1068,7 @@ export default function DigitalBusinessCard() {
                   <button
                     type="button"
                     onClick={() => handleSelectCard(saved)}
-                    className="flex-1 text-left min-w-0"
+                    className="flex-1 text-left rtl:text-right min-w-0"
                   >
                     <p className="text-xs font-bold text-slate-800 truncate">{saved.name}</p>
                     <p className="text-[10px] text-slate-400 truncate">{saved.title} | {saved.company}</p>
@@ -881,7 +1084,7 @@ export default function DigitalBusinessCard() {
               ))}
               {savedCards.length === 0 && (
                 <div className="col-span-full py-6 text-center text-[11px] text-slate-400 bg-slate-50 border border-slate-100 rounded-xl">
-                  No saved passes found. Click "Save Pass" above to register and secure your business card!
+                  {tCard("No saved passes found. Click \"Save Pass\" above to register and secure your business card!")}
                 </div>
               )}
             </div>
@@ -895,7 +1098,7 @@ export default function DigitalBusinessCard() {
           {/* Section 1: Visual Interactive 3D/Flippable Card Mockup */}
           <div className="space-y-3">
             <div className="flex items-center justify-between px-2">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Double-Sided Live Mockup</span>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">{tCard("Double-Sided Live Mockup")}</span>
               <button
                 onClick={() => {
                   setIsFlipped(!isFlipped);
@@ -904,7 +1107,7 @@ export default function DigitalBusinessCard() {
                 className="py-1 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1"
               >
                 <Smartphone className="w-3.5 h-3.5 text-indigo-500" />
-                Flip Card (View {isFlipped ? 'Front' : 'Back'})
+                {isFlipped ? tCard("Flip Card (View Front)") : tCard("Flip Card (View Back)")}
               </button>
             </div>
 
@@ -927,13 +1130,13 @@ export default function DigitalBusinessCard() {
                     {/* Visual header */}
                     <div>
                       <span className={`inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${selectedTheme.badge}`}>
-                        {cardData.company || 'INDEPENDENT'}
+                        {cardData.company || (isArabic ? 'أبيكس للحلول الرقمية' : isUrdu ? 'ایپیکس ڈیجیٹل سلوشنز' : 'Apex Digital Solutions')}
                       </span>
                       <h4 className="text-xl sm:text-2xl font-black tracking-tight mt-2 leading-tight">
-                        {cardData.name || 'Anonymous User'}
+                        {cardData.name || (isArabic ? 'سارة جينكينز' : isUrdu ? 'سارہ جاوید' : 'Sarah Jenkins')}
                       </h4>
                       <p className="text-[11px] font-semibold text-slate-400 mt-1">
-                        {cardData.title || 'Product Developer'}
+                        {cardData.title || (isArabic ? 'رئيس قسم التصميم' : isUrdu ? 'چیف ڈیزائن آفیسر' : 'Chief Design Officer')}
                       </p>
                     </div>
 
@@ -942,7 +1145,7 @@ export default function DigitalBusinessCard() {
                       {cardData.logoUrl ? (
                         <img src={cardData.logoUrl} alt="Logo" referrerPolicy="no-referrer" className="w-full h-full object-contain" />
                       ) : (
-                        <span>Logo</span>
+                        <span>{tCard("Logo")}</span>
                       )}
                     </div>
                   </div>
@@ -956,9 +1159,9 @@ export default function DigitalBusinessCard() {
                       className="w-12 h-12 rounded-full object-cover border-2 border-indigo-500 bg-slate-100 shadow-sm shrink-0"
                     />
                     <div className="min-w-0">
-                      <p className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Contact Channels</p>
-                      <p className="text-xs font-bold truncate opacity-90">{cardData.email}</p>
-                      <p className="text-[11px] truncate opacity-85 mt-0.5">{cardData.phone}</p>
+                      <p className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">{tCard("Contact Channels")}</p>
+                      <p className="text-xs font-bold truncate opacity-90">{cardData.email || 'sarah@apexcorp.io'}</p>
+                      <p className="text-[11px] truncate opacity-85 mt-0.5">{cardData.phone || '+1 (555) 234-5678'}</p>
                     </div>
                   </div>
                 </div>
@@ -971,27 +1174,23 @@ export default function DigitalBusinessCard() {
                     {/* Info fields */}
                     <div className="col-span-8 space-y-2.5">
                       <div className="space-y-0.5">
-                        <span className="text-[8px] font-bold text-slate-400 tracking-widest uppercase block">Personal QR ID</span>
-                        <p className="text-xs font-black truncate">{cardData.name}</p>
+                        <span className="text-[8px] font-bold text-slate-400 tracking-widest uppercase block">{tCard("Personal QR ID")}</span>
+                        <p className="text-xs font-black truncate">{cardData.name || (isArabic ? 'سارة جينكينز' : isUrdu ? 'سارہ جاوید' : 'Sarah Jenkins')}</p>
                       </div>
 
-                      {cardData.address && (
-                        <div className="flex items-start gap-1.5">
-                          <MapPin className="w-3 h-3 text-indigo-500 shrink-0 mt-0.5" />
-                          <p className="text-[9px] font-semibold opacity-90 leading-normal">{cardData.address}</p>
-                        </div>
-                      )}
+                      <div className="flex items-start gap-1.5">
+                        <MapPin className="w-3 h-3 text-indigo-500 shrink-0 mt-0.5" />
+                        <p className="text-[9px] font-semibold opacity-90 leading-normal">{cardData.address || (isArabic ? '100 شارع الصنوبر، سان فرانسيسكو' : isUrdu ? '100 پائن اسٹریٹ، سان فرانسسکو' : '100 Pine Street, San Francisco, CA')}</p>
+                      </div>
 
-                      {cardData.website && (
-                        <div className="flex items-center gap-1.5">
-                          <Globe className="w-3 h-3 text-indigo-500 shrink-0" />
-                          <p className="text-[9px] font-semibold opacity-90 truncate">{cardData.website.replace(/^https?:\/\//i, '')}</p>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-1.5">
+                        <Globe className="w-3 h-3 text-indigo-500 shrink-0" />
+                        <p className="text-[9px] font-semibold opacity-90 truncate">{(cardData.website || 'https://apexcorp.io').replace(/^https?:\/\//i, '')}</p>
+                      </div>
 
                       {/* Social chips list */}
                       <div className="flex flex-wrap gap-1 pt-1">
-                        {cardData.socialLinks.map(link => (
+                        {(cardData.socialLinks.length > 0 ? cardData.socialLinks : [{ id: 'demo1', platform: 'LinkedIn' }, { id: 'demo2', platform: 'Twitter/X' }]).map(link => (
                           <span
                             key={link.id}
                             className={`text-[8px] font-bold px-1.5 py-0.5 rounded-md ${selectedTheme.badge}`}
@@ -1011,7 +1210,7 @@ export default function DigitalBusinessCard() {
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <span className="text-[8px] text-slate-400 font-bold uppercase tracking-wider text-center">Scan to Connect</span>
+                      <span className="text-[8px] text-slate-400 font-bold uppercase tracking-wider text-center">{tCard("Scan to Connect")}</span>
                     </div>
                   </div>
                 </div>
@@ -1024,7 +1223,7 @@ export default function DigitalBusinessCard() {
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
                 <QrCode className="w-4 h-4 text-indigo-600" />
-                Interact & Share
+                {tCard("Interact & Share")}
               </h4>
               <div className="bg-white border border-slate-200 rounded-lg p-0.5 flex">
                 <button
@@ -1034,7 +1233,7 @@ export default function DigitalBusinessCard() {
                   }}
                   className={`px-2 py-1 text-[10px] font-bold rounded-md ${qrMode === 'vcard' ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:bg-slate-50'}`}
                 >
-                  Direct vCard
+                  {tCard("Direct vCard")}
                 </button>
                 <button
                   onClick={() => {
@@ -1043,7 +1242,7 @@ export default function DigitalBusinessCard() {
                   }}
                   className={`px-2 py-1 text-[10px] font-bold rounded-md ${qrMode === 'web' ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:bg-slate-50'}`}
                 >
-                  Web Profile
+                  {tCard("Web Profile")}
                 </button>
               </div>
             </div>
@@ -1060,12 +1259,12 @@ export default function DigitalBusinessCard() {
               <div className="flex-1 space-y-3 w-full">
                 <div>
                   <p className="text-[10px] text-slate-400 font-bold tracking-wider uppercase">
-                    {qrMode === 'vcard' ? 'VCARD GENERATOR DATA' : 'WEB REDIRECT MODULE'}
+                    {qrMode === 'vcard' ? tCard('VCARD GENERATOR DATA') : tCard('WEB REDIRECT MODULE')}
                   </p>
                   <p className="text-xs font-semibold text-slate-700 mt-0.5 leading-relaxed">
                     {qrMode === 'vcard' 
-                      ? 'Encodes Name, Address, Email, Phone, Logo & Website inside the QR matrix.'
-                      : 'Creates a simulated, interactive digital business profile on scan.'}
+                      ? tCard('Encodes Name, Address, Email, Phone, Logo & Website inside the QR matrix.')
+                      : tCard('Creates a simulated, interactive digital business profile on scan.')}
                   </p>
                 </div>
 
@@ -1075,28 +1274,28 @@ export default function DigitalBusinessCard() {
                     className="py-1.5 px-3 bg-indigo-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-indigo-700 cursor-pointer shadow-xs transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    Save Contact (.vcf)
+                    {tCard("Save Contact (.vcf)")}
                   </button>
                   <button
                     onClick={() => downloadQRCode('png')}
                     className="py-1.5 px-3 bg-slate-900 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-slate-800 cursor-pointer shadow-xs transition-colors"
                   >
                     <QrCode className="w-3.5 h-3.5 text-indigo-400" />
-                    Download QR (PNG)
+                    {tCard("Download QR (PNG)")}
                   </button>
                   <button
                     onClick={() => downloadQRCode('svg')}
                     className="py-1.5 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors"
                   >
                     <Download className="w-3.5 h-3.5 text-indigo-500" />
-                    Download QR (SVG)
+                    {tCard("Download QR (SVG)")}
                   </button>
                   <button
                     onClick={handleShare}
                     className="py-1.5 px-3 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors"
                   >
                     <Share2 className="w-3.5 h-3.5 text-indigo-500" />
-                    {copiedField === 'Share Link' ? 'Copied!' : 'Share Card Link'}
+                    {copiedField === 'Share Link' ? tCard('Copied!') : tCard('Share Card Link')}
                   </button>
                 </div>
               </div>
@@ -1108,10 +1307,10 @@ export default function DigitalBusinessCard() {
             <div>
               <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
                 <Smartphone className="w-4 h-4 text-indigo-600" />
-                Mobile Wallet Pass Export
+                {tCard("Mobile Wallet Pass Export")}
               </h4>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Save your contact card directly to smartphone wallets for quick tap-and-share access.
+                {tCard("Save your contact card directly to smartphone wallets for quick tap-and-share access.")}
               </p>
             </div>
 
@@ -1124,7 +1323,7 @@ export default function DigitalBusinessCard() {
                 }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${selectedWalletTab === 'apple' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:bg-white/50'}`}
               >
-                 Apple Wallet
+                {tCard(" Apple Wallet")}
               </button>
               <button
                 onClick={() => {
@@ -1133,7 +1332,7 @@ export default function DigitalBusinessCard() {
                 }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${selectedWalletTab === 'google' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:bg-white/50'}`}
               >
-                🤖 Google Wallet
+                {tCard("🤖 Google Wallet")}
               </button>
             </div>
 
@@ -1154,26 +1353,26 @@ export default function DigitalBusinessCard() {
                     <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                       <div className="flex items-center gap-2">
                         <span className="text-xl"></span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Apple Wallet Card</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{tCard("Apple Wallet Card")}</span>
                       </div>
-                      <span className="text-[9px] font-bold text-slate-400 uppercase">{cardData.company || 'MEMBER'}</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase">{cardData.company || (isArabic ? 'أبيكس للحلول الرقمية' : isUrdu ? 'ایپیکس ڈیجیٹل سلوشنز' : 'Apex Digital Solutions')}</span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest block">Designation</span>
-                        <span className="text-xs font-bold text-slate-200">{cardData.title}</span>
+                        <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest block">{tCard("Designation")}</span>
+                        <span className="text-xs font-bold text-slate-200">{cardData.title || (isArabic ? 'رئيس قسم التصميم' : isUrdu ? 'چیف ڈیزائن آفیسر' : 'Chief Design Officer')}</span>
                       </div>
                       <div>
-                        <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest block">Full Name</span>
-                        <span className="text-xs font-bold text-slate-200">{cardData.name}</span>
+                        <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest block">{tCard("Full Name")}</span>
+                        <span className="text-xs font-bold text-slate-200">{cardData.name || (isArabic ? 'سارة جينكينز' : isUrdu ? 'سارہ جاوید' : 'Sarah Jenkins')}</span>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between bg-slate-900/40 p-3 rounded-xl border border-slate-800">
-                      <div className="space-y-1 text-left">
-                        <span className="text-[8px] text-slate-500 font-bold block">SMARTPASS INTEGRATION</span>
-                        <span className="text-[10px] text-emerald-400 font-semibold block">✓ Ready to Install</span>
+                      <div className="space-y-1 text-left rtl:text-right">
+                        <span className="text-[8px] text-slate-500 font-bold block">{tCard("SMARTPASS INTEGRATION")}</span>
+                        <span className="text-[10px] text-emerald-400 font-semibold block">{tCard("✓ Ready to Install")}</span>
                       </div>
                       <div className="w-12 h-12 bg-white p-0.5 rounded-sm">
                         <img src={getQRImageSrc()} alt="Pass QR" className="w-full h-full" />
@@ -1186,19 +1385,19 @@ export default function DigitalBusinessCard() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                         <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                        Apple Wallet Digital Pass
+                        {tCard("Apple Wallet Digital Pass")}
                       </span>
                       <button
                         onClick={() => copyToClipboard(getAppleWalletPassJSON(), 'Apple Pass Data')}
                         className="text-[10px] text-slate-500 hover:text-indigo-600 font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Copy className="w-3 h-3" />
-                        {copiedField === 'Apple Pass Data' ? 'Copied' : 'Copy Pass Payload'}
+                        {copiedField === 'Apple Pass Data' ? tCard('Copied') : tCard('Copy Pass Payload')}
                       </button>
                     </div>
 
                     <p className="text-[11px] text-slate-500 leading-normal">
-                      Export your formatted wallet card to save or distribute directly to iOS devices.
+                      {tCard("Export your formatted wallet card to save or distribute directly to iOS devices.")}
                     </p>
 
                     <button
@@ -1206,7 +1405,7 @@ export default function DigitalBusinessCard() {
                       className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-all"
                     >
                       <Download className="w-4 h-4 text-indigo-400" />
-                      Download Apple Wallet Pass File
+                      {tCard("Download Apple Wallet Pass File")}
                     </button>
                   </div>
                 </motion.div>
@@ -1223,21 +1422,21 @@ export default function DigitalBusinessCard() {
                     <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                       <div className="flex items-center gap-2">
                         <Landmark className="w-4 h-4 text-blue-400" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Google Wallet Pass</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{tCard("Google Wallet Pass")}</span>
                       </div>
-                      <span className="text-[9px] font-bold text-slate-400 uppercase">{cardData.company || 'AFFILIATE'}</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase">{cardData.company || (isArabic ? 'أبيكس للحلول الرقمية' : isUrdu ? 'ایپیکس ڈیجیٹل سلوشنز' : 'Apex Digital Solutions')}</span>
                     </div>
 
                     <div className="space-y-3">
                       <div>
-                        <span className="text-[7.5px] text-slate-400 font-bold uppercase block tracking-widest">Card Holder</span>
-                        <h5 className="text-base font-bold text-slate-100">{cardData.name}</h5>
+                        <span className="text-[7.5px] text-slate-400 font-bold uppercase block tracking-widest">{tCard("Card Holder")}</span>
+                        <h5 className="text-base font-bold text-slate-100">{cardData.name || (isArabic ? 'سارة جينكينز' : isUrdu ? 'سارہ جاوید' : 'Sarah Jenkins')}</h5>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="text-[7.5px] text-slate-400 font-bold uppercase block tracking-widest">Email Address</span>
-                          <span className="text-xs font-bold text-slate-200">{cardData.email}</span>
+                          <span className="text-[7.5px] text-slate-400 font-bold uppercase block tracking-widest">{tCard("Email Address")}</span>
+                          <span className="text-xs font-bold text-slate-200">{cardData.email || 'sarah@apexcorp.io'}</span>
                         </div>
                         <div className="w-14 h-14 bg-white p-0.5 rounded-sm">
                           <img src={getQRImageSrc()} alt="Pass QR" className="w-full h-full" />
@@ -1251,19 +1450,19 @@ export default function DigitalBusinessCard() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                         <ShieldCheck className="w-4 h-4 text-blue-600" />
-                        Google Wallet Digital Pass
+                        {tCard("Google Wallet Digital Pass")}
                       </span>
                       <button
                         onClick={() => copyToClipboard(getGoogleWalletJSON(), 'Google Pass Data')}
                         className="text-[10px] text-slate-500 hover:text-indigo-600 font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Copy className="w-3 h-3" />
-                        {copiedField === 'Google Pass Data' ? 'Copied' : 'Copy Pass Payload'}
+                        {copiedField === 'Google Pass Data' ? tCard('Copied') : tCard('Copy Pass Payload')}
                       </button>
                     </div>
 
                     <p className="text-[11px] text-slate-500 leading-normal">
-                      Export your formatted wallet card payload for instant Android Google Wallet sync.
+                      {tCard("Export your formatted wallet card payload for instant Android Google Wallet sync.")}
                     </p>
 
                     <button
@@ -1271,7 +1470,7 @@ export default function DigitalBusinessCard() {
                       className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-all"
                     >
                       <Download className="w-4 h-4 text-blue-400" />
-                      Download Google Wallet File
+                      {tCard("Download Google Wallet File")}
                     </button>
                   </div>
                 </motion.div>

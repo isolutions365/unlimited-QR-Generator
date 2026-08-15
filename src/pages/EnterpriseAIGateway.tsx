@@ -3,7 +3,7 @@ import { useTranslation } from '../utils/i18n';
 
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Sparkles, Shield, Cpu, Sliders, Play, Trash, Check, Copy, AlertCircle, 
+  Zap, Shield, Cpu, Sliders, Play, Trash, Check, Copy, AlertCircle, 
   Settings, RefreshCw, Key, Code, HelpCircle, FileText, Database, Activity, 
   ToggleLeft, ToggleRight, Layers, Bell, Eye, EyeOff, Plus, ChevronRight, BarChart3,
   Globe, Info, AlertTriangle, ArrowLeft
@@ -169,7 +169,7 @@ export default function EnterpriseAIGateway({
   };
 
   const copyKeyText = (keyId: string, masked: string) => {
-    navigator.clipboard.writeText(masked.replace(/•/g, '0'));
+    navigator.clipboard.writeText(masked.replace(/•/g, '0')).catch(() => {});
     setCopiedKeyId(keyId);
     setTimeout(() => setCopiedKeyId(null), 2000);
   };
@@ -338,7 +338,7 @@ export default function EnterpriseAIGateway({
               {/* Playground Simulator */}
               <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
                 <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-4.5 h-4.5 text-indigo-600" />
+                  <Zap className="w-4.5 h-4.5 text-indigo-600" />
                   <h3 className="text-xs font-black uppercase text-slate-800 tracking-tight">
                     {t('enterprise.inferencePlayground', 'AI Service Inference Playground')}
                   </h3>

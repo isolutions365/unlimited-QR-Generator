@@ -12,7 +12,7 @@ import {
   Eye, 
   EyeOff, 
   Scissors, 
-  Sparkles,
+  Zap,
   Smartphone,
   BookOpen
 } from 'lucide-react';

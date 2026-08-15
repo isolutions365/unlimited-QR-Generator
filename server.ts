@@ -99,8 +99,159 @@ function notifyUserOfScan(userId: string, scan: any, projectName: string) {
 // Fixed hardcoded JWT secret fallback vulnerability by generating a high-entropy random key when process.env is empty
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 
+// Rate Limiting In-Memory Store & Middleware Factory
+interface RateLimitRecord {
+  count: number;
+  resetTime: number;
+}
+
+const rateLimitStores = new Map<string, Map<string, RateLimitRecord>>();
+
+function createRateLimiter(options: {
+  windowMs: number; // e.g. 15 * 60 * 1000
+  maxRequests: number; // e.g. 20, 100
+  bucketName: string;
+  errorMessage?: string;
+}) {
+  if (!rateLimitStores.has(options.bucketName)) {
+    rateLimitStores.set(options.bucketName, new Map());
+  }
+
+  const store = rateLimitStores.get(options.bucketName)!;
+
+  // Periodic cleanup of expired records every 5 minutes to avoid memory leaks
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, record] of store.entries()) {
+      if (now > record.resetTime) {
+        store.delete(key);
+      }
+    }
+  }, 5 * 60 * 1000).unref();
+
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    // Extract client IP robustly across proxies and direct connections
+    const rawIp = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || req.ip || '127.0.0.1';
+    const clientIp = rawIp.split(',')[0].trim();
+    const now = Date.now();
+
+    let record = store.get(clientIp);
+
+    if (!record || now > record.resetTime) {
+      record = {
+        count: 1,
+        resetTime: now + options.windowMs,
+      };
+      store.set(clientIp, record);
+    } else {
+      record.count += 1;
+    }
+
+    const remaining = Math.max(0, options.maxRequests - record.count);
+    const retryAfterSec = Math.ceil((record.resetTime - now) / 1000);
+
+    // Standard rate limiting HTTP headers
+    res.setHeader('X-RateLimit-Limit', options.maxRequests);
+    res.setHeader('X-RateLimit-Remaining', remaining);
+    res.setHeader('X-RateLimit-Reset', Math.ceil(record.resetTime / 1000));
+
+    if (record.count > options.maxRequests) {
+      res.setHeader('Retry-After', retryAfterSec);
+      const friendlyMessage = options.errorMessage || 'Too many requests. Thodi der baad try karein.';
+      return res.status(429).json({
+        error: friendlyMessage,
+        message: friendlyMessage,
+        retryAfter: retryAfterSec,
+        resetTime: new Date(record.resetTime).toISOString(),
+      });
+    }
+
+    next();
+  };
+}
+
+// Configured Rate Limiters for specific endpoint tiers
+// 1. Auth Tier: 10 requests per 15 minutes to prevent brute-force attacks
+const authRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  maxRequests: 10,
+  bucketName: 'auth_tier',
+  errorMessage: 'Too many login / signup attempts. Security ke liye thodi der baad dobara try karein (Too many requests, please try again in a few minutes).'
+});
+
+// 2. AI Capabilities Tier: 20 requests per 15 minutes (cost-protection for AI calls)
+const aiRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  maxRequests: 20,
+  bucketName: 'ai_tier',
+  errorMessage: 'AI Assistant request limit reach ho gayi hai. Thodi der baad try karein (AI request quota exceeded, please try again shortly).'
+});
+
+// 3. QR Generation / Project Save Tier: 100 requests per 15 minutes per IP
+const qrGenRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  maxRequests: 100,
+  bucketName: 'qr_gen_tier',
+  errorMessage: 'QR generation limit exceed ho gayi hai. Thodi der baad try karein (Too many requests, please try again in a few minutes).'
+});
+
+// 4. Form Submissions / Feedback Tier: 25 requests per 15 minutes per IP
+const formRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  maxRequests: 25,
+  bucketName: 'form_tier',
+  errorMessage: 'Form submission limit reach ho gayi hai. Thodi der baad try karein (Submission rate limit exceeded, please try again shortly).'
+});
+
 export const app = express();
 app.use(express.json());
+
+  // Tight and Strict CORS policy configuration
+  const allowedOrigins = [
+    'https://www.freeqrgen.pro',
+    'https://freeqrgen.pro',
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://localhost:4173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5173'
+  ];
+
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+
+    // Direct browser visits or non-cross-origin requests do not send Origin header and are allowed
+    if (!origin) {
+      return next();
+    }
+
+    const isAllowedExact = allowedOrigins.includes(origin);
+    const isAllowedPattern = 
+      /^https?:\/\/localhost:\d+$/.test(origin) || 
+      /^https?:\/\/127\.0\.0\.1:\d+$/.test(origin) || 
+      origin.endsWith('.run.app');
+
+    if (isAllowedExact || isAllowedPattern) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Max-Age', '86400'); // Cache preflight responses for 24 hours
+
+      // Immediately respond to preflight requests with zero content
+      if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+      }
+      return next();
+    }
+
+    // Block cross-origin requests from any unauthorized origin
+    console.warn(`[CORS Blocked] Cross-origin request blocked from unauthorized origin: ${origin}`);
+    return res.status(403).json({
+      error: 'CORS policy violation. Cross-origin access from this origin is not authorized.',
+      message: 'Access denied.'
+    });
+  });
 
   // SEO Redirection Engine: 301 redirect non-www, Netlify URLs, old domains, and temporary domains to the primary www domain
   app.use((req, res, next) => {
@@ -303,7 +454,7 @@ app.use(express.json());
   });
 
   // Dynamic Translation Proxy Endpoint powered by Gemini AI
-  app.post('/api/translate', async (req, res) => {
+  app.post('/api/translate', aiRateLimiter, async (req, res) => {
     const { text, lang } = req.body;
     if (!text || !lang) {
       return res.status(400).json({ error: 'text and lang parameters are required' });
@@ -355,7 +506,7 @@ English text: "${text}"`;
     '/api/register', '/api/register/',
     '/api/signup', '/api/signup/',
     '/api/v1/auth/register', '/api/v1/auth/signup', '/api/v1/register', '/api/v1/signup'
-  ], validateAuthPayload, async (req, res) => {
+  ], authRateLimiter, validateAuthPayload, async (req, res) => {
     const { email, password, name } = req.body;
 
     try {
@@ -396,7 +547,7 @@ English text: "${text}"`;
     '/api/login', '/api/login/',
     '/api/signin', '/api/signin/',
     '/api/v1/auth/login', '/api/v1/auth/signin', '/api/v1/login', '/api/v1/signin'
-  ], validateAuthPayload, async (req, res) => {
+  ], authRateLimiter, validateAuthPayload, async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -455,7 +606,7 @@ English text: "${text}"`;
   });
 
   // Save/Create/Update Project
-  app.post('/api/projects', authenticateToken, validateProjectPayload, async (req: any, res) => {
+  app.post('/api/projects', authenticateToken, qrGenRateLimiter, validateProjectPayload, async (req: any, res) => {
     const { id, name, type, content, design, trackingEnabled, trackingId, expiryDate, expiryRedirectType, expiryRedirectUrl, expiryMessage, category } = req.body;
 
     const projectId = id || `proj-${Math.random().toString(36).substring(2, 11)}`;
@@ -765,7 +916,7 @@ English text: "${text}"`;
   });
 
   // POST User Profile (Updates)
-  app.post('/api/user/profile', authenticateToken, async (req: any, res) => {
+  app.post('/api/user/profile', authenticateToken, formRateLimiter, async (req: any, res) => {
     const { avatar, bio, company, linkedin, twitter, github, defaultQrType, defaultFgColor, defaultBgColor } = req.body;
     try {
       const existing = await getOrCreateProfile(req.user.id, req.user.name, req.user.email);
@@ -919,7 +1070,7 @@ English text: "${text}"`;
   });
 
   // POST Create Community Post
-  app.post('/api/community/posts', authenticateToken, async (req: any, res) => {
+  app.post('/api/community/posts', authenticateToken, formRateLimiter, async (req: any, res) => {
     const { title, content, category } = req.body;
     if (!title || !content || !category) {
       return res.status(400).json({ error: 'Title, content and category are required' });
@@ -974,7 +1125,7 @@ English text: "${text}"`;
   });
 
   // POST Upvote Community Post
-  app.post('/api/community/posts/:id/upvote', authenticateToken, async (req: any, res) => {
+  app.post('/api/community/posts/:id/upvote', authenticateToken, formRateLimiter, async (req: any, res) => {
     const { id } = req.params;
     try {
       let post: any = null;
@@ -1050,7 +1201,7 @@ English text: "${text}"`;
   });
 
   // POST Comment on Community Post
-  app.post('/api/community/posts/:id/comment', authenticateToken, async (req: any, res) => {
+  app.post('/api/community/posts/:id/comment', authenticateToken, formRateLimiter, async (req: any, res) => {
     const { id } = req.params;
     const { content } = req.body;
     if (!content) return res.status(400).json({ error: 'Comment content is required' });
@@ -1152,7 +1303,7 @@ English text: "${text}"`;
   });
 
   // POST Newsletter Subscribe
-  app.post('/api/newsletter/subscribe', async (req, res) => {
+  app.post('/api/newsletter/subscribe', formRateLimiter, async (req, res) => {
     const { email, preferences } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });
 
@@ -1179,7 +1330,7 @@ English text: "${text}"`;
   });
 
   // POST Feedback Submit
-  app.post('/api/feedback/submit', async (req: any, res) => {
+  app.post('/api/feedback/submit', formRateLimiter, async (req: any, res) => {
     const { type, satisfaction, text, email, userId } = req.body;
     if (!type || !satisfaction || !text) {
       return res.status(400).json({ error: 'Type, satisfaction score, and feedback text are required.' });
@@ -1478,7 +1629,7 @@ English text: "${text}"`;
   }
 
   // 1. AI Color Suggestions endpoint
-  app.post('/api/ai/suggest-colors', async (req: any, res) => {
+  app.post('/api/ai/suggest-colors', aiRateLimiter, async (req: any, res) => {
     const { industry, promptVibe, locale } = req.body;
     const searchVibe = `${industry || ''} ${promptVibe || ''}`.trim().toLowerCase();
 
@@ -1573,7 +1724,7 @@ English text: "${text}"`;
   });
 
   // 2. AI QR Style Suggestions endpoint
-  app.post('/api/ai/suggest-styles', async (req: any, res) => {
+  app.post('/api/ai/suggest-styles', aiRateLimiter, async (req: any, res) => {
     const { vibe, locale } = req.body;
     const searchVibe = (vibe || '').toLowerCase();
 
@@ -1652,7 +1803,7 @@ English text: "${text}"`;
   });
 
   // 3. AI Brand Matcher endpoint
-  app.post('/api/ai/brand-match', async (req: any, res) => {
+  app.post('/api/ai/brand-match', aiRateLimiter, async (req: any, res) => {
     const { brandName, brandDescription, locale } = req.body;
     const query = `${brandName || ''} ${brandDescription || ''}`.trim().toLowerCase();
 
@@ -1735,7 +1886,7 @@ English text: "${text}"`;
   });
 
   // 4. AI Design Recommendations endpoint (public to support instant landing-page scannability audit)
-  app.post(['/api/ai/design-recommendations', '/ai/design-recommendations'], async (req: any, res) => {
+  app.post(['/api/ai/design-recommendations', '/ai/design-recommendations'], aiRateLimiter, async (req: any, res) => {
     try {
       const { qrContent, currentDesign, locale } = req.body || {};
       const contentStr = qrContent || '';
@@ -1871,7 +2022,7 @@ English text: "${text}"`;
   });
 
   // 5. Smart Layout Optimizer endpoint
-  app.post('/api/ai/layout-optimize', async (req: any, res) => {
+  app.post('/api/ai/layout-optimize', aiRateLimiter, async (req: any, res) => {
     const { qrContent, currentDesign, locale } = req.body;
     const contentStr = qrContent || '';
 
@@ -1937,7 +2088,7 @@ English text: "${text}"`;
   });
 
   // 6. AI Co-Pilot Assistant router endpoint
-  app.post('/api/ai/assistant', async (req: any, res) => {
+  app.post('/api/ai/assistant', aiRateLimiter, async (req: any, res) => {
     const { prompt, userId, locale } = req.body;
     const userPrompt = (prompt || '').trim();
     const searchPrompt = userPrompt.toLowerCase();

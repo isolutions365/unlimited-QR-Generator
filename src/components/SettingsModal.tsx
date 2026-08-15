@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Volume2, VolumeX, Sliders, Play, Check, Sparkles, Shield, RotateCcw, Trash2, RefreshCw } from 'lucide-react';
+import { X, Volume2, VolumeX, Sliders, Play, Check, Zap, Shield, RotateCcw, Trash2, RefreshCw } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 import { SoundSettings, saveSoundSettings, playAudioSound } from '../utils/audioFeedback';
 

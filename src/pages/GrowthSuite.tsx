@@ -5,7 +5,7 @@ import { getProductionBaseUrl } from '../config/siteConfig';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   User, Award, Star, Share2, Copy, Check, Users, MessageSquare, ThumbsUp, 
-  Calendar, Lightbulb, ChevronRight, Send, Sparkles, AlertCircle, 
+  Calendar, Lightbulb, ChevronRight, Send, Zap, AlertCircle, 
   ArrowUpRight, TrendingUp, Filter, Search, ShieldCheck, Mail, Heart, 
   RefreshCw, Layers, Sliders, Play, Trash2, CheckCircle2, ChevronDown, Bell
 } from 'lucide-react';
@@ -279,7 +279,7 @@ export default function GrowthSuite({
   const copyReferralLink = () => {
     if (!profile) return;
     const link = `${getProductionBaseUrl()}/?ref=${profile.referralCode}`;
-    navigator.clipboard.writeText(link);
+    navigator.clipboard.writeText(link).catch(() => {});
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
   };
@@ -301,7 +301,7 @@ export default function GrowthSuite({
       <aside className="w-full lg:w-64 bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm shrink-0">
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
+            <Zap className="w-5 h-5 text-indigo-600 animate-pulse" />
             <span className="text-sm font-black uppercase tracking-wider font-mono text-slate-800">{t('growth.suiteTitle', 'Growth Suite')}</span>
           </div>
           {user && (
@@ -1071,7 +1071,7 @@ export default function GrowthSuite({
             {/* Case Study Details */}
             <div className="bg-slate-900 text-slate-100 rounded-2xl p-6 md:p-8 relative overflow-hidden">
               <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 opacity-10">
-                <Sparkles className="w-72 h-72 text-indigo-400" />
+                <Zap className="w-72 h-72 text-indigo-400" />
               </div>
               <span className="text-[9px] font-black uppercase tracking-widest text-indigo-400 font-mono block mb-2">{t('growth.caseStudyReport', 'CASE STUDY REPORT')}</span>
               <h3 className="text-lg font-black uppercase text-white tracking-tight max-w-xl">

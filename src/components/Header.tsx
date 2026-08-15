@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { QrCode, Sparkles, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, Barcode, FileSpreadsheet, BarChart3 } from 'lucide-react';
+import { QrCode, Zap, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, Barcode, FileSpreadsheet, BarChart3 } from 'lucide-react';
 import Navigation from './Navigation';
 import LanguageSelector from './LanguageSelector';
 import { Locale } from '../utils/translations';
@@ -46,7 +46,7 @@ export default function Header({
     { name: t('nav.blogTitle', 'Blog'), path: '/blog', icon: BookOpen },
     { name: t('nav.templates', 'Templates'), path: '/templates', icon: LayoutTemplate },
     { name: t('nav.aiGateway', 'AI Gateway'), path: '/ai-gateway', icon: Bot },
-    { name: t('nav.solutions', 'Solutions'), path: '/solutions', icon: Sparkles },
+    { name: t('nav.solutions', 'Solutions'), path: '/solutions', icon: Zap },
     { name: t('nav.industries', 'Industries'), path: '/industries', icon: Utensils },
     { name: t('nav.useCases', 'Use Cases'), path: '/use-cases', icon: Cpu },
     { name: t('nav.comparisons', 'Comparisons'), path: '/compare', icon: Scale },

@@ -8,6 +8,7 @@ export interface LiveToast {
   deviceType: string;
   browser: string;
   timestamp: string;
+  ip?: string;
 }
 
 export function useScanNotifications(user: UserSession | null, nPermission: NotificationPermission) {
@@ -55,10 +56,11 @@ export function useScanNotifications(user: UserSession | null, nPermission: Noti
                 {
                   id: uid,
                   projectName: data.projectName,
-                  approxLocation: data.approxLocation,
+                  approxLocation: data.approxLocation || 'Unknown Location',
                   deviceType: data.deviceType,
                   browser: data.browser,
-                  timestamp: data.timestamp
+                  timestamp: data.timestamp,
+                  ip: data.ip || data.ipAddress || ''
                 }
               ]);
 

@@ -4,7 +4,7 @@ import {
   FileText, Upload, QrCode, Eye, Download, Shield, Clock, 
   Trash2, FileUp, Settings, BarChart2, RefreshCw, Key, 
   Calendar, Check, Copy, HardDrive, History, FileCheck, 
-  Sparkles, ExternalLink, HelpCircle, Lock, LockOpen, Info,
+  Zap, ExternalLink, HelpCircle, Lock, LockOpen, Info,
   Search, ShieldAlert, ArrowRight, Share2, Plus, Sliders, Smartphone
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
@@ -486,7 +486,7 @@ export default function PdfSharing() {
   };
 
   const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
     setCopiedField(label);
     playAudioSound('generate');
     setTimeout(() => setCopiedField(null), 2000);

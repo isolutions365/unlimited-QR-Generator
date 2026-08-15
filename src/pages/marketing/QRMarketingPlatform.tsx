@@ -2,9 +2,10 @@ import React, { useState, useEffect, Suspense, useRef } from 'react';
 import { 
   ArrowLeft, LayoutDashboard, Megaphone, QrCode, BarChart3, 
   Smartphone, Contact, Utensils, FileText, ClipboardList, 
-  Settings, FileBarChart2, Menu, X, HelpCircle, ShieldCheck, Sparkles,
+  Settings, FileBarChart2, Menu, X, HelpCircle, ShieldCheck, Zap,
   Send, Bot, User, Loader2
 } from 'lucide-react';
+import { useTranslation } from '../../utils/i18n';
 
 // Lazy load modules
 const DashboardModule = React.lazy(() => import('./modules/Dashboard/DashboardModule'));
@@ -64,6 +65,7 @@ interface ChatMessage {
 }
 
 export default function QRMarketingPlatform({ onBack }: QRMarketingPlatformProps) {
+  const { t } = useTranslation();
   const [activeModule, setActiveModule] = useState<ModuleId>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
@@ -227,7 +229,7 @@ export default function QRMarketingPlatform({ onBack }: QRMarketingPlatformProps
             <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-sm">Enterprise Features</span>
             <h1 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5 mt-0.5">
               QR Marketing Platform
-              <Sparkles className="w-4 h-4 text-amber-500" />
+              <Zap className="w-4 h-4 text-amber-500" />
             </h1>
           </div>
         </div>
@@ -238,7 +240,7 @@ export default function QRMarketingPlatform({ onBack }: QRMarketingPlatformProps
             onClick={() => setIsAssistantOpen(true)}
             className="hidden md:flex py-1.5 px-3 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border border-indigo-150 rounded-xl text-[11px] font-bold text-indigo-700 items-center gap-1.5 transition-colors cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+            <Zap className="w-3.5 h-3.5 text-indigo-600" />
             AI Co-Pilot
           </button>
 
@@ -320,8 +322,8 @@ export default function QRMarketingPlatform({ onBack }: QRMarketingPlatformProps
           className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-xl hover:shadow-2xl transition-all flex items-center gap-2 group cursor-pointer"
           id="ai-copilot-floating-btn"
         >
-          <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
-          <span className="text-xs font-black tracking-wider uppercase pr-1">AI Co-Pilot</span>
+          <Zap className="w-5 h-5 text-amber-300 animate-pulse" />
+          <span className="text-xs font-black tracking-wider uppercase pr-1">{t('ai.coPilot', 'AI Co-Pilot')}</span>
         </button>
       </div>
 
@@ -343,8 +345,8 @@ export default function QRMarketingPlatform({ onBack }: QRMarketingPlatformProps
                   <Bot className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-xs font-extrabold text-slate-900">AI Co-Pilot Assistant</h2>
-                  <p className="text-[10px] text-slate-500 font-semibold">Generates fully integrated QR platform resources</p>
+                  <h2 className="text-xs font-extrabold text-slate-900">{t('ai.coPilot', 'AI Co-Pilot')} {t('ai.assistant', 'Assistant')}</h2>
+                  <p className="text-[10px] text-slate-500 font-semibold">{t('ai.workspaceSubtitle', 'Powered by Gemini AI • Real-time Intelligent Assistant')}</p>
                 </div>
               </div>
               <button 

@@ -1,4 +1,5 @@
 import qrcode from 'qrcode';
+import { FrameStyle } from '../types';
 
 interface DrawOptions {
   fgColor: string;
@@ -19,7 +20,7 @@ interface DrawOptions {
   logoOffsetX?: number;
   logoOffsetY?: number;
   skipLogoImage?: boolean;
-  frameStyle?: 'none' | 'scan-me' | 'visit-website' | 'wifi-password' | 'download-app' | 'follow-us' | 'join-wifi' | 'order-now' | 'pay-here' | 'custom';
+  frameStyle?: FrameStyle;
   frameText?: string;
   frameColor?: string;
   frameTextColor?: string;
@@ -70,14 +71,16 @@ export async function renderStyledQR(
     const frameColor = options.frameColor || options.fgColor || '#4f46e5';
     const frameTextColor = options.frameTextColor || '#ffffff';
     let label = 'SCAN ME';
-    if (options.frameStyle === 'visit-website') label = 'VISIT WEBSITE';
-    if (options.frameStyle === 'wifi-password') label = 'WIFI PASSWORD';
-    if (options.frameStyle === 'download-app') label = 'DOWNLOAD APP';
-    if (options.frameStyle === 'follow-us') label = 'FOLLOW US';
-    if (options.frameStyle === 'join-wifi') label = 'JOIN WIFI';
-    if (options.frameStyle === 'order-now') label = 'ORDER NOW';
-    if (options.frameStyle === 'pay-here') label = 'PAY HERE';
-    if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
+    if (options.frameStyle === 'menu') label = 'VIEW MENU';
+    else if (options.frameStyle === 'website' || options.frameStyle === 'visit-website') label = 'VISIT WEBSITE';
+    else if (options.frameStyle === 'wifi' || options.frameStyle === 'wifi-password' || options.frameStyle === 'join-wifi') label = 'CONNECT WIFI';
+    else if (options.frameStyle === 'download-app') label = 'DOWNLOAD APP';
+    else if (options.frameStyle === 'follow-us') label = 'FOLLOW US';
+    else if (options.frameStyle === 'order-now') label = 'ORDER NOW';
+    else if (options.frameStyle === 'pay-here') label = 'PAY HERE';
+    else if (options.frameStyle === 'save-contact') label = 'SAVE CONTACT';
+    else if (options.frameStyle === 'rate-us') label = 'RATE & REVIEW';
+    else if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
 
     if (options.frameText && ((val) => (val || '').trim())(options.frameText) !== '') {
       label = options.frameText;
@@ -95,10 +98,19 @@ export async function renderStyledQR(
     roundRect(ctx, 35, innerCardY, 380, 320, 16);
     ctx.fill();
 
-    // 3. Render precise centered label text inside bottom banner
+    // 3. Render precise centered label text inside banner with auto-scaling to prevent overflow
     ctx.fillStyle = frameTextColor;
-    const fontSize = options.frameFontSize || 20;
+    let fontSize = options.frameFontSize || 20;
     ctx.font = `bold ${fontSize}px system-ui, -apple-system, sans-serif`;
+    
+    // Auto-scale font size if custom text is long
+    const measuredWidth = ctx.measureText(label).width;
+    const maxTextWidth = 360;
+    if (measuredWidth > maxTextWidth && measuredWidth > 0) {
+      fontSize = Math.max(10, Math.floor(fontSize * (maxTextWidth / measuredWidth)));
+      ctx.font = `bold ${fontSize}px system-ui, -apple-system, sans-serif`;
+    }
+
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const textY = isTop ? 62 : 388;
@@ -466,14 +478,16 @@ export function generateStyledSVG(
     const frameColor = options.frameColor || options.fgColor || '#4f46e5';
     const frameTextColor = options.frameTextColor || '#ffffff';
     let label = 'SCAN ME';
-    if (options.frameStyle === 'visit-website') label = 'VISIT WEBSITE';
-    if (options.frameStyle === 'wifi-password') label = 'WIFI PASSWORD';
-    if (options.frameStyle === 'download-app') label = 'DOWNLOAD APP';
-    if (options.frameStyle === 'follow-us') label = 'FOLLOW US';
-    if (options.frameStyle === 'join-wifi') label = 'JOIN WIFI';
-    if (options.frameStyle === 'order-now') label = 'ORDER NOW';
-    if (options.frameStyle === 'pay-here') label = 'PAY HERE';
-    if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
+    if (options.frameStyle === 'menu') label = 'VIEW MENU';
+    else if (options.frameStyle === 'website' || options.frameStyle === 'visit-website') label = 'VISIT WEBSITE';
+    else if (options.frameStyle === 'wifi' || options.frameStyle === 'wifi-password' || options.frameStyle === 'join-wifi') label = 'CONNECT WIFI';
+    else if (options.frameStyle === 'download-app') label = 'DOWNLOAD APP';
+    else if (options.frameStyle === 'follow-us') label = 'FOLLOW US';
+    else if (options.frameStyle === 'order-now') label = 'ORDER NOW';
+    else if (options.frameStyle === 'pay-here') label = 'PAY HERE';
+    else if (options.frameStyle === 'save-contact') label = 'SAVE CONTACT';
+    else if (options.frameStyle === 'rate-us') label = 'RATE & REVIEW';
+    else if (options.frameStyle === 'custom') label = 'CUSTOM LABEL';
 
     if (options.frameText && ((val) => (val || '').trim())(options.frameText) !== '') {
       label = options.frameText;
@@ -482,15 +496,30 @@ export function generateStyledSVG(
 
     const innerCardY = isTop ? 95 : 35;
     const textY = isTop ? 62 : 388;
-    const fontSize = options.frameFontSize || 20;
+    let fontSize = options.frameFontSize || 20;
+    
+    // Estimate character width for SVG font auto-scaling
+    const estimatedWidth = label.length * (fontSize * 0.65);
+    const maxTextWidth = 360;
+    if (estimatedWidth > maxTextWidth && label.length > 0) {
+      fontSize = Math.max(10, Math.floor((maxTextWidth / (label.length * 0.65))));
+    }
+
+    // Escape any special characters for XML/SVG safety
+    const safeLabel = label
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
 
     bgElements = `
   <!-- Outer Frame Container -->
   <rect x="20" y="20" width="410" height="410" rx="24" ry="24" fill="${frameColor}" />
   <!-- Inner White/bgColor Card -->
   <rect x="35" y="${innerCardY}" width="380" height="320" rx="16" ry="16" fill="${options.bgColor}" />
-  <!-- Bottom Banner Label -->
-  <text x="225" y="${textY}" font-family="system-ui, -apple-system, sans-serif" font-weight="bold" font-size="${fontSize}" fill="${frameTextColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
+  <!-- Banner Label Text -->
+  <text x="225" y="${textY}" font-family="system-ui, -apple-system, sans-serif" font-weight="bold" font-size="${fontSize}" fill="${frameTextColor}" text-anchor="middle" dominant-baseline="middle">${safeLabel}</text>
     `;
   }
 

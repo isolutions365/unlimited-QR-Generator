@@ -5,7 +5,7 @@ import {
   Plane, Compass, Dumbbell, Flame, Flower2 as Spa, Scissors, Camera, 
   User, Eye, FileText, Calendar, HeartHandshake, Presentation, 
   Award, Heart as NgoIcon, Building2, Factory, Car, Truck, 
-  Warehouse as WhIcon, Sparkles, Truck as DeliveryIcon, Flame as KitchenIcon
+  Warehouse as WhIcon, Zap, Truck as DeliveryIcon, Flame as KitchenIcon
 } from 'lucide-react';
 
 export interface SEOProfile {
@@ -38,7 +38,7 @@ export const getSeoIcon = (iconName: string) => {
     Plane, Compass, Dumbbell, Flame, Spa, Scissors, Camera, 
     User, Eye, FileText, Calendar, HeartHandshake, Presentation, 
     Award, NgoIcon, Building2, Factory, Car, Truck, WhIcon, 
-    Sparkles, DeliveryIcon, KitchenIcon
+    Zap, DeliveryIcon, KitchenIcon
   };
   return mapping[iconName] || FileText;
 };
@@ -453,7 +453,7 @@ export const getBespokeProfile = (slug: string): SEOProfile => {
     gradient = 'from-slate-700 to-blue-950';
   } else if (['food-truck', 'cloud-kitchen'].includes(slug)) {
     badge = 'Hospitality';
-    iconName = 'Sparkles';
+    iconName = 'Zap';
     gradient = 'from-amber-500 to-orange-700';
   }
 

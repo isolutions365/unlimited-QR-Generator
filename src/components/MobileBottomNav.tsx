@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { 
   Grid, 
-  Sparkles, 
+  Zap, 
   FolderHeart, 
   Scan, 
   Settings,
@@ -42,7 +42,7 @@ export default function MobileBottomNav({
     {
       id: 'generator',
       label: t('mobileNav.generator', 'Generator'),
-      icon: Sparkles
+      icon: Zap
     },
     {
       id: 'saved',

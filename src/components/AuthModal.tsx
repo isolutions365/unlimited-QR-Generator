@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../lib/api';
 import { loginWithEmail, signupWithEmail, loginWithGoogle, verifyUserEmail, sendPasswordReset, getSignInMethods } from '../lib/firebaseAuthServices';
-import { Mail, Lock, User, X, Eye, EyeOff, Sparkles, KeyRound, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, User, X, Eye, EyeOff, Zap, KeyRound, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 
 interface AuthModalProps {
@@ -146,7 +146,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
           setError(
             <div className="space-y-3">
               <div className="flex items-start gap-2.5 text-amber-900">
-                <Sparkles className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+                <Zap className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
                 <p className="text-xs font-semibold leading-relaxed">
                   {t('auth.googleExistsNotice', 'This email already exists as a Google account. Please continue with Google.')}
                 </p>
@@ -183,7 +183,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
           setError(
             <div className="space-y-3">
               <div className="flex items-start gap-2.5 text-amber-900">
-                <Sparkles className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+                <Zap className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
                 <p className="text-xs font-semibold leading-relaxed">
                   {t('auth.emailRegisteredNotice', 'This email is already registered. Please sign in or reset your password.')}
                 </p>
@@ -231,7 +231,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
           setError(
             <div className="space-y-3">
               <div className="flex items-start gap-2.5 text-amber-900">
-                <Sparkles className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+                <Zap className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
                 <p className="text-xs font-semibold leading-relaxed">
                   {t('auth.googleAccountNotice', 'This email is registered with Google. Please continue using Google Sign-In.')}
                 </p>
@@ -297,7 +297,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
         <div className="px-6 pt-8 pb-4 flex justify-between items-start">
           <div>
             <div className="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 py-1 px-2.5 rounded-full text-[10px] font-bold font-mono mb-2">
-              <Sparkles className="w-3 h-3" />
+              <Zap className="w-3 h-3" />
               {t('auth.secureCloudShield', 'SECURE CLOUD SHIELD')}
             </div>
             <h3 className="text-xl font-bold text-gray-900 tracking-tight">

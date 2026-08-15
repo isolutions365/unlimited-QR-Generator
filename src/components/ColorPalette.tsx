@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from '../utils/i18n';
 
 import { QRProject } from '../types';
-import { Palette, Check, Sparkles, CheckCircle2, AlertTriangle, XCircle, Info, Compass, Eye, Layout } from 'lucide-react';
+import { Palette, Check, Zap, CheckCircle2, AlertTriangle, XCircle, Info, Compass, Eye, Layout } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const presetColors = [
@@ -327,7 +327,7 @@ export default function ColorPalette({
             >
               <div className="flex items-center justify-between gap-3 mt-2 bg-white/60 p-2 rounded-xl border border-gray-200/50">
                 <div className="flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
+                  <Zap className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
                   <span className="text-[10px] text-gray-600 font-semibold">{t('colorPalette.gradientDestination')}</span>
                 </div>
                 <div className="flex items-center gap-1.5 bg-white px-2 py-1 rounded-lg border border-gray-200 shrink-0">
@@ -477,7 +477,7 @@ export default function ColorPalette({
                     setTimeout(() => setAppliedField(null), 1500);
                   }}
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                  <Zap className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
                   <span>
                     {appliedField === 'gradient' ? t('colorPalette.applied') : t('colorPalette.setGradient')}
                   </span>

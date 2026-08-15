@@ -8,7 +8,7 @@ import {
   ChevronDown, 
   ChevronUp, 
   ArrowRight, 
-  Sparkles, 
+  Zap, 
   FileText, 
   Globe, 
   QrCode, 
@@ -345,7 +345,7 @@ export default function URLQRContent({
 
           <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2 col-span-1 sm:col-span-2">
             <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Sparkles className="w-4 h-4" />
+              <Zap className="w-4 h-4" />
             </div>
             <h3 className="text-xs font-bold text-slate-900">Events, Small Businesses & Enterprise Usage</h3>
             <p className="text-xs text-slate-600 leading-relaxed">

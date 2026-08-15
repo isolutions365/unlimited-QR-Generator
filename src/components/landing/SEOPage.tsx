@@ -19,7 +19,7 @@ import {
   FileText, 
   Contact,
   CheckCircle, 
-  Sparkles, 
+  Zap, 
   HelpCircle, 
   ChevronDown, 
   ChevronUp, 
@@ -148,7 +148,7 @@ export default function SEOPage({
       case 'instagram-qr-generator': return <Instagram className="w-8 h-8 text-pink-600" />;
       case 'youtube-qr-generator': return <Youtube className="w-8 h-8 text-red-600" />;
       case 'pdf-qr-generator': return <FileText className="w-8 h-8 text-emerald-600" />;
-      default: return <Sparkles className="w-8 h-8 text-indigo-500" />;
+      default: return <Zap className="w-8 h-8 text-indigo-500" />;
     }
   };
 
@@ -521,7 +521,7 @@ export default function SEOPage({
               {/* Header */}
               <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full text-slate-800 text-[10px] font-bold font-mono">
-                  <Sparkles className="w-3 h-3 text-indigo-600" />
+                  <Zap className="w-3 h-3 text-indigo-600" />
                   <span>GENERATIVE ENGINE OPTIMIZATION (GEO) HUB</span>
                 </div>
                 <h2 className="text-2xl font-black tracking-tight text-slate-950 font-sans">
@@ -546,7 +546,7 @@ export default function SEOPage({
 
                 <div id="ai-summary-50" className="p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/60 space-y-3">
                   <div className="flex items-center gap-2 text-indigo-700 font-mono text-[10px] uppercase font-bold tracking-wider">
-                    <Sparkles className="w-4 h-4" />
+                    <Zap className="w-4 h-4" />
                     <span>50-Word AI Summary</span>
                   </div>
                   <p className="text-xs leading-relaxed text-slate-700 font-medium">

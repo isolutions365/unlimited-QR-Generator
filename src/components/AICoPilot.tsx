@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Sparkles, Palette, Zap, Cpu, Check, 
+  Palette, Zap, Cpu, Check, 
   HelpCircle, AlertCircle, Info, RefreshCw, BarChart, Eye, Search 
 } from 'lucide-react';
 import { api } from '../lib/api';
@@ -227,7 +227,7 @@ export default function AICoPilot({ currentProject, onChange }: AICoPilotProps) 
       <div className="flex items-center justify-between border-b border-slate-850 pb-3 mb-4">
         <div className="flex items-center gap-2">
           <div className="bg-gradient-to-tr from-indigo-500 to-purple-600 p-1.5 rounded-lg text-white">
-            <Sparkles className="w-4 h-4 text-emerald-300 animate-spin-slow" />
+            <Zap className="w-4 h-4 text-emerald-300 animate-spin-slow" />
           </div>
           <div>
             <h3 className="text-xs font-black tracking-widest uppercase text-white font-mono">{t('copilot.title', 'Gemini AI Co-Pilot™')}</h3>

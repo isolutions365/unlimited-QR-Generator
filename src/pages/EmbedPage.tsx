@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../utils/i18n';
 
-import { ArrowLeft, Copy, Check, Code, Sparkles, ExternalLink, ShieldAlert, Heart, Info, Globe } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Code, Zap, ExternalLink, ShieldAlert, Heart, Info, Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface EmbedPageProps {
@@ -63,6 +63,8 @@ export default function EmbedPage({
     navigator.clipboard.writeText(text).then(() => {
       setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2500);
+    }).catch((err) => {
+      console.warn('[EmbedPage] Clipboard write error caught:', err);
     });
   };
 
@@ -84,7 +86,7 @@ export default function EmbedPage({
             {t('embed.badgePartner', 'Developer & Partner Widgets')}
           </span>
           <span className="text-[10px] bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-extrabold uppercase tracking-widest inline-block flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-emerald-600" /> {t('embed.seoOptimized', 'SEO Optimized')}
+            <Zap className="w-3 h-3 text-emerald-600" /> {t('embed.seoOptimized', 'SEO Optimized')}
           </span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-none">
