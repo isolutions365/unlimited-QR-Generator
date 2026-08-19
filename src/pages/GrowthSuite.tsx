@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 import { getProductionBaseUrl } from '../config/siteConfig';
+import { auth, db } from '../lib/firebase';
+import { updatePassword, deleteUser, updateProfile } from 'firebase/auth';
+import { doc, deleteDoc } from 'firebase/firestore';
 
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   User, Award, Star, Share2, Copy, Check, Users, MessageSquare, ThumbsUp, 
   Calendar, Lightbulb, ChevronRight, Send, Zap, AlertCircle, 
   ArrowUpRight, TrendingUp, Filter, Search, ShieldCheck, Mail, Heart, 
-  RefreshCw, Layers, Sliders, Play, Trash2, CheckCircle2, ChevronDown, Bell
+  RefreshCw, Layers, Sliders, Play, Trash2, CheckCircle2, ChevronDown, Bell, Key, ShieldAlert, Home
 } from 'lucide-react';
 import { api } from '../lib/api';
 
@@ -33,6 +36,8 @@ export default function GrowthSuite({
 
   // Form states
   const [editingProfile, setEditingProfile] = useState<boolean>(false);
+  const [nameInput, setNameInput] = useState<string>('');
+  const [avatarInput, setAvatarInput] = useState<string>('');
   const [bioInput, setBioInput] = useState<string>('');
   const [companyInput, setCompanyInput] = useState<string>('');
   const [linkedinInput, setLinkedinInput] = useState<string>('');
@@ -41,6 +46,9 @@ export default function GrowthSuite({
   const [defaultQrType, setDefaultQrType] = useState<string>('url');
   const [defaultFgColor, setDefaultFgColor] = useState<string>('#0f172a');
   const [defaultBgColor, setDefaultBgColor] = useState<string>('#ffffff');
+  const [newPasswordInput, setNewPasswordInput] = useState<string>('');
+  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
 
   // Community creation
   const [newPostTitle, setNewPostTitle] = useState<string>('');
@@ -96,6 +104,8 @@ export default function GrowthSuite({
         // Fetch User Profile
         const profData = await api.getUserProfile(activeRefCode);
         setProfile(profData);
+        setNameInput(profData.name || user?.name || '');
+        setAvatarInput(profData.avatar || profData.photoURL || '');
         setBioInput(profData.bio || '');
         setCompanyInput(profData.company || '');
         setLinkedinInput(profData.linkedin || '');
@@ -144,7 +154,17 @@ export default function GrowthSuite({
     if (!user) return;
     try {
       setLoading(true);
+      setError(null);
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          displayName: nameInput,
+          photoURL: avatarInput || null
+        }).catch(err => console.warn('[Auth Profile Update Note]', err));
+      }
+
       const updated = await api.updateUserProfile({
+        name: nameInput,
+        avatar: avatarInput,
         bio: bioInput,
         company: companyInput,
         linkedin: linkedinInput,
@@ -162,6 +182,40 @@ export default function GrowthSuite({
       setError(err.message || t('growth.updateProfileError', 'Error updating profile details.'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle Password Change
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!auth.currentUser || !newPasswordInput) return;
+    try {
+      setLoading(true);
+      setError(null);
+      setPasswordSuccess(null);
+      await updatePassword(auth.currentUser, newPasswordInput);
+      setPasswordSuccess(t('growth.passwordSuccess', 'Password updated successfully!'));
+      setNewPasswordInput('');
+    } catch (err: any) {
+      setError(err.message || t('growth.passwordError', 'Error updating password. Please re-authenticate if required.'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle Account Deletion
+  const handleDeleteAccount = async () => {
+    if (!auth.currentUser) return;
+    try {
+      setLoading(true);
+      const uid = auth.currentUser.uid;
+      await deleteDoc(doc(db, 'users', uid));
+      await deleteUser(auth.currentUser);
+      onNavigate('/');
+    } catch (err: any) {
+      setError(err.message || t('growth.deleteAccountError', 'Error deleting account. Please re-authenticate before deleting account.'));
+      setLoading(false);
+      setDeleteConfirm(false);
     }
   };
 
@@ -295,7 +349,21 @@ export default function GrowthSuite({
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col lg:flex-row gap-8 items-start relative">
+    <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-4 relative">
+      {/* Breadcrumb Navigation */}
+      <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
+        <button 
+          onClick={() => onNavigate('/')} 
+          className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
+        >
+          <Home className="w-3.5 h-3.5" />
+          <span>{t('common.home', 'Home')}</span>
+        </button>
+        <ChevronRight className="w-3 h-3 text-slate-300" />
+        <span className="text-slate-800 font-bold">{t('growth.suiteTitle', 'Growth Suite')}</span>
+      </nav>
+
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
       
       {/* SaaS Dashboard Inside Sidebar Navigation */}
       <aside className="w-full lg:w-64 bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm shrink-0">
@@ -499,6 +567,28 @@ export default function GrowthSuite({
                       className="space-y-4 text-left border border-indigo-50 bg-indigo-50/10 p-5 rounded-2xl mb-8"
                     >
                       <h3 className="text-xs font-black uppercase tracking-wider text-indigo-600 font-mono border-b border-indigo-100/50 pb-2 mb-3">{t('growth.updateIdentityTitle', 'Update Identity & Workspace Defaults')}</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">{t('growth.fullName', 'Full Name')}</label>
+                          <input 
+                            type="text" 
+                            value={nameInput}
+                            onChange={(e) => setNameInput(e.target.value)}
+                            className="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:border-indigo-500 focus:outline-none bg-white font-sans font-bold text-slate-800"
+                            placeholder={t('growth.namePlaceholder', 'e.g. Muhammad Mubeen')}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">{t('growth.avatarUrl', 'Profile Picture (Avatar URL)')}</label>
+                          <input 
+                            type="text" 
+                            value={avatarInput}
+                            onChange={(e) => setAvatarInput(e.target.value)}
+                            className="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:border-indigo-500 focus:outline-none bg-white font-sans font-mono text-slate-600"
+                            placeholder={t('growth.avatarPlaceholder', 'https://example.com/avatar.jpg')}
+                          />
+                        </div>
+                      </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">{t('growth.professionalBio', 'Professional Bio')}</label>
@@ -722,6 +812,78 @@ export default function GrowthSuite({
                           );
                         })}
                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Security & Account Management (Password & Delete) */}
+                <div className="mt-8 bg-white border border-slate-200/80 rounded-2xl p-6 text-left shadow-xs">
+                  <div className="flex items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+                    <Key className="w-5 h-5 text-indigo-600" />
+                    <h3 className="text-sm font-black uppercase text-slate-800 tracking-tight">{t('growth.securitySettingsTitle', 'Security & Account Credentials')}</h3>
+                  </div>
+
+                  {passwordSuccess && (
+                    <div className="mb-4 p-3 bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-bold rounded-xl flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>{passwordSuccess}</span>
+                    </div>
+                  )}
+
+                  <form onSubmit={handleChangePassword} className="space-y-4 mb-8">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase text-slate-400 font-mono mb-1">{t('growth.newPassword', 'Change Account Password')}</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="password"
+                          value={newPasswordInput}
+                          onChange={(e) => setNewPasswordInput(e.target.value)}
+                          placeholder={t('growth.newPasswordPlaceholder', 'Enter new password (min 6 chars)')}
+                          className="flex-1 text-xs border border-slate-200 rounded-xl p-2.5 focus:outline-none focus:border-indigo-500 font-sans"
+                        />
+                        <button
+                          type="submit"
+                          disabled={!newPasswordInput || newPasswordInput.length < 6}
+                          className="py-2.5 px-5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                        >
+                          {t('growth.updatePassword', 'Update Password')}
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+
+                  <div className="border-t border-red-100 pt-5 mt-5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-xs font-black uppercase text-red-600 font-mono">{t('growth.dangerZone', 'Danger Zone - Delete Account')}</h4>
+                        <p className="text-[11px] text-slate-500 mt-0.5">{t('growth.deleteAccountDesc', 'Permanently delete your account and all associated QR projects and cloud logs.')}</p>
+                      </div>
+                      {!deleteConfirm ? (
+                        <button
+                          type="button"
+                          onClick={() => setDeleteConfirm(true)}
+                          className="py-2 px-4 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold rounded-xl transition-colors cursor-pointer border border-red-200"
+                        >
+                          {t('growth.deleteAccountBtn', 'Delete Account')}
+                        </button>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setDeleteConfirm(false)}
+                            className="py-2 px-3 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-200"
+                          >
+                            {t('growth.cancel', 'Cancel')}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleDeleteAccount}
+                            className="py-2 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-colors shadow-xs"
+                          >
+                            {t('growth.confirmDelete', 'Yes, Delete Permanently')}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1308,6 +1470,7 @@ export default function GrowthSuite({
         )}
 
       </main>
+      </div>
     </div>
   );
 }

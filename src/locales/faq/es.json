@@ -1,1 +1,170 @@
-[]
+[
+  {
+    "id": "what-is-qr-code",
+    "category": "general",
+    "question": "¿Qué es un código QR?",
+    "answer": "Un código QR (Quick Response Code) es un código de barras bidimensional (2D) diseñado por primera vez en 1994 para la industria automotriz en Japón. Consiste en módulos oscuros sobre un fondo claro que pueden ser leídos por smartphones y lectores ópticos, almacenando mucha más información que los códigos de barras lineales tradicionales."
+  },
+  {
+    "id": "how-do-qr-codes-work",
+    "category": "general",
+    "question": "¿Cómo funcionan los códigos QR?",
+    "answer": "Los códigos QR codifican información en datos binarios (unos y ceros) representados en una cuadrícula. Los tres cuadrados grandes en las esquinas son patrones de búsqueda que ayudan al escáner a detectar la orientación y el ángulo, mientras que la corrección de errores permite leer el código incluso si está dañado hasta en un 30% o cubierto por un logotipo."
+  },
+  {
+    "id": "difference-static-dynamic-qr",
+    "category": "general",
+    "question": "¿Cuál es la diferencia entre códigos QR estáticos y dinámicos?",
+    "answer": "Un código QR estático tiene los datos codificados directamente en su matriz; una vez impreso no se puede modificar y no permite rastreo de estadísticas. Un código QR dinámico utiliza un enlace corto de redirección que permite cambiar la URL de destino en cualquier momento sin volver a imprimir y rastrear analíticas en tiempo real."
+  },
+  {
+    "id": "do-qr-codes-expire",
+    "category": "general",
+    "question": "¿Los códigos QR caducan alguna vez?",
+    "answer": "Los códigos QR estáticos creados en FreeQRGen.pro nunca caducan porque sus datos están permanentemente codificados en el diseño y funcionarán indefinidamente mientras el gráfico sea legible."
+  },
+  {
+    "id": "qr-code-data-capacity",
+    "category": "general",
+    "question": "¿Cuántos datos puede almacenar un código QR?",
+    "answer": "Un código QR estándar versión 40 puede almacenar hasta 7.089 caracteres numéricos, 4.296 caracteres alfanuméricos o 2.953 bytes de datos binarios."
+  },
+  {
+    "id": "qr-code-vs-barcode",
+    "category": "general",
+    "question": "¿En qué se diferencia un código QR de un código de barras tradicional?",
+    "answer": "Los códigos de barras 1D tradicionales solo almacenan entre 20 y 25 caracteres en líneas horizontales, mientras que los códigos QR 2D almacenan información horizontal y verticalmente en miles de módulos con lectura omnidireccional en 360 grados."
+  },
+  {
+    "id": "how-to-generate-free-qr",
+    "category": "creation",
+    "question": "¿Cómo creo un código QR gratuito en FreeQRGen.pro?",
+    "answer": "1) Seleccione el tipo de contenido (URL, texto, Wi-Fi, vCard, PDF, WhatsApp); 2) Ingrese sus datos; 3) Personalice colores, marcos y logotipo; 4) Descargue gratis en PNG, SVG o PDF."
+  },
+  {
+    "id": "what-qr-types-supported",
+    "category": "creation",
+    "question": "¿Qué tipos de contenido son compatibles?",
+    "answer": "Admitimos más de 12 formatos: URL web, texto sin formato, tarjetas de presentación digitales (vCard 3.0), redes Wi-Fi, documentos PDF, correos electrónicos, SMS, mensajes de WhatsApp, billeteras cripto y enlaces a tiendas de aplicaciones."
+  },
+  {
+    "id": "can-i-edit-qr-code-destination",
+    "category": "creation",
+    "question": "¿Puedo cambiar el enlace de mi código QR después de imprimirlo?",
+    "answer": "Sí, si utiliza un código QR dinámico puede actualizar el destino en cualquier momento desde su panel de control sin tener que reimprimir volantes ni carteles."
+  },
+  {
+    "id": "how-to-create-wifi-qr",
+    "category": "creation",
+    "question": "¿Cómo crear un código QR para conexión Wi-Fi automática?",
+    "answer": "Seleccione la herramienta Wi-Fi, ingrese el nombre de su red (SSID), el tipo de seguridad y la contraseña. Al escanearlo, los invitados se conectarán automáticamente sin tener que escribir la contraseña manualmente."
+  },
+  {
+    "id": "how-to-create-vcard-qr",
+    "category": "creation",
+    "question": "¿Cómo funciona un código QR de tarjeta digital (vCard)?",
+    "answer": "Un código vCard almacena nombre, teléfono, empresa, correo y dirección. Al escanearlo, el teléfono abre la libreta de contactos para guardar los datos con un solo toque."
+  },
+  {
+    "id": "generate-vector-svg-pdf-qr",
+    "category": "creation",
+    "question": "¿Puedo exportar formatos vectoriales de alta resolución como SVG y PDF para imprimir?",
+    "answer": "¡Sí! FreeQRGen ofrece exportaciones en SVG vectorial y PDF listos para imprenta que se pueden escalar infinitamente sin perder calidad para vallas publicitarias y empaques."
+  },
+  {
+    "id": "can-i-add-logo-to-qr",
+    "category": "customization",
+    "question": "¿Puedo añadir el logo de mi marca sin afectar el escaneo?",
+    "answer": "Sí, configurando el nivel de corrección de errores en 'Q' o 'H' puede superponer el logotipo de su empresa en el centro sin comprometer la legibilidad del escáner."
+  },
+  {
+    "id": "how-error-correction-works",
+    "category": "customization",
+    "question": "¿Cuáles son los niveles de corrección de errores (L, M, Q, H) y cuál elegir?",
+    "answer": "Level L (7% recuperación), Level M (15% estándar general), Level Q (25% recomendado con logos), y Level H (30% para cartelería exterior o logos grandes)."
+  },
+  {
+    "id": "best-contrast-color-practices",
+    "category": "customization",
+    "question": "¿Cuáles son las mejores prácticas de color y contraste para un escaneo rápido?",
+    "answer": "Mantenga siempre un alto contraste entre los módulos oscuros y el fondo claro. Evite colores pasteles o amarillos claros sobre blanco para garantizar un escaneo instantáneo."
+  },
+  {
+    "id": "what-is-quiet-zone",
+    "category": "customization",
+    "question": "¿Qué es la 'Zona de Silencio' (Quiet Zone) y por qué es necesaria?",
+    "answer": "Es el margen blanco que rodea los cuatro lados del código QR (mínimo 4 módulos de ancho) que evita que textos o gráficos adyacentes interfieran con el lector óptico."
+  },
+  {
+    "id": "recommended-minimum-print-size",
+    "category": "customization",
+    "question": "¿Cuál es el tamaño mínimo de impresión recomendado?",
+    "answer": "Para escaneo de cerca (tarjetas, mesas), el mínimo es 2 x 2 cm. Para carteles a distancia, use la regla 10:1 (a 1 metro de distancia, el código debe medir al menos 10 cm)."
+  },
+  {
+    "id": "custom-eyes-shapes-impact",
+    "category": "customization",
+    "question": "¿Personalizar la forma de los ojos o puntos afecta la lectura?",
+    "answer": "FreeQRGen utiliza fórmulas geométricas certificadas que garantizan que los patrones de búsqueda sigan siendo reconocibles al instante por cualquier cámara."
+  },
+  {
+    "id": "are-qr-codes-safe-to-scan",
+    "category": "security",
+    "question": "¿Es seguro escanear códigos QR? ¿Qué es el 'Quishing'?",
+    "answer": "Los códigos QR son pasivos y no pueden instalar malware automáticamente, pero siempre verifique la vista previa de la URL en la cámara antes de abrir sitios desconocidos."
+  },
+  {
+    "id": "does-freeqrgen-track-user-data",
+    "category": "security",
+    "question": "¿FreeQRGen recopila o vende datos de los usuarios?",
+    "answer": "No. La generación estática se realiza 100% en su navegador local con total privacidad. Nunca almacenamos ni vendemos sus datos personales a terceros."
+  },
+  {
+    "id": "is-client-side-generation-private",
+    "category": "security",
+    "question": "¿La generación se realiza en el navegador o en un servidor?",
+    "answer": "Se procesa completamente dentro de su navegador mediante motores Canvas y JavaScript locales, por lo que su información nunca sale de su dispositivo."
+  },
+  {
+    "id": "how-to-secure-enterprise-dynamic-links",
+    "category": "security",
+    "question": "¿Cómo protegen los enlaces dinámicos contra redirecciones maliciosas?",
+    "answer": "Utilizamos cifrado SSL/TLS y validación con Google Safe Browsing para garantizar redirecciones seguras y protección contra malware."
+  },
+  {
+    "id": "can-qr-codes-contain-malware",
+    "category": "security",
+    "question": "¿Puede un código QR infectar un teléfono directamente con un virus?",
+    "answer": "No. Un código QR solo traduce una imagen en texto o URL. Los sistemas iOS y Android nunca descargan ni ejecutan programas sin confirmación previa del usuario."
+  },
+  {
+    "id": "how-to-track-qr-scan-analytics",
+    "category": "business",
+    "question": "¿Cómo pueden las empresas rastrear estadísticas de escaneo?",
+    "answer": "Con códigos QR dinámicos en nuestra plataforma de marketing puede ver total de escaneos, visitantes únicos, mapa de países/ciudades, tipo de dispositivo (iOS/Android) y conversiones."
+  },
+  {
+    "id": "best-materials-for-qr-printing",
+    "category": "business",
+    "question": "¿Qué materiales y acabados (mate vs brillante) son mejores para imprimir?",
+    "answer": "El acabado mate (Matte) es muy superior al brillante porque evita reflejos molestos de luz solar que pueden dificultar el enfoque de la cámara del móvil."
+  },
+  {
+    "id": "restaurant-contactless-menu-qr",
+    "category": "business",
+    "question": "¿Cómo implementan los restaurantes menús digitales con códigos QR?",
+    "answer": "Colocan soportes de acrílico en las mesas que enlazan al menú digital interactivo o PDF, permitiendo a los clientes ver platos y precios actualizados en tiempo real."
+  },
+  {
+    "id": "commercial-use-licensing",
+    "category": "business",
+    "question": "¿Los códigos QR creados en FreeQRGen son gratuitos para uso comercial?",
+    "answer": "Sí, todos los códigos QR generados son 100% gratuitos para uso comercial y personal en empaques, productos, vallas y televisión sin regalías."
+  },
+  {
+    "id": "bulk-qr-code-generation",
+    "category": "business",
+    "question": "¿Puedo crear cientos de códigos QR en lote mediante Excel o CSV?",
+    "answer": "¡Sí! Nuestra herramienta de Generación Masiva (Bulk QR) permite cargar hojas de cálculo con miles de filas y descargar un archivo ZIP con todos los códigos generados en segundos."
+  }
+]

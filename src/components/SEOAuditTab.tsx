@@ -17,17 +17,11 @@ const LOCALE_NAMES: Record<Locale, string> = {
   en: 'English',
   ar: 'العربية',
   ur: 'اردو',
-  es: 'Español',
+  hi: 'हिन्दी',
   fr: 'Français',
-  de: 'Deutsch',
-  pt: 'Português',
-  it: 'Italiano',
+  es: 'Español',
   tr: 'Türkçe',
   id: 'Bahasa Indonesia',
-  hi: 'हिन्दी',
-  ja: '日本語',
-  ko: '한국어',
-  zh: '中文',
 };
 
 interface SEOAuditTabProps {
@@ -151,7 +145,7 @@ ${route.hreflangs.map(h => `<link rel="alternate" hreflang="${h.lang}" href="${h
           </button>
         </div>
 
-        {/* 14 Language Tabs */}
+        {/* 8 Language Tabs */}
         <div>
           <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block mb-2 font-mono">
             SELECT TARGET AUDIT LANGUAGE ({SUPPORTED_LOCALES.length} LOCALES)

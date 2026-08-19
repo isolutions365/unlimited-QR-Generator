@@ -6,7 +6,7 @@ import {
   Mail, Compass, Zap, CheckCircle2, Globe, ArrowLeft, Calendar, 
   ArrowUpRight, Download, ExternalLink, Lock, Scale, Terminal, Info, 
   ChevronRight, AlertCircle, Fingerprint, Eye, Check, RefreshCw, Star, 
-  MapPin, MessageSquare, Briefcase, Share2, ClipboardList
+  MapPin, MessageSquare, Briefcase, Share2, ClipboardList, Home
 } from 'lucide-react';
 
 // ==========================================
@@ -1279,7 +1279,21 @@ export default function TrustCenterHub({
     <div className="min-h-screen bg-slate-50 text-slate-800">
       {/* Upper Navigation Header bar for Trust Hub - aligned with main sticky header */}
       <div className="bg-white border-b border-slate-200/80 sticky top-[72px] sm:top-[88px] z-40 shadow-xs transition-all duration-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 sm:pt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500">
+            <button 
+              onClick={() => onNavigate('/')} 
+              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span>{t('common.home', 'Home')}</span>
+            </button>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <span className="text-slate-800 font-bold">{t('trust.portalTitle', 'Trust Center')}</span>
+          </nav>
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
               onClick={() => onNavigate('/')}
@@ -1310,6 +1324,7 @@ export default function TrustCenterHub({
             </span>
           </div>
         </div>
+      </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-12 mt-4">

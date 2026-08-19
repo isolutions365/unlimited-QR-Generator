@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ScrollableTabContainer from '../components/ScrollableTabContainer';
 import { 
   ChevronRight, Home, Zap, ArrowRight, Check, HelpCircle, 
   ChevronDown, BookOpen, LayoutTemplate, Star, Info, Cpu, 
@@ -760,17 +761,21 @@ export default function ProgrammaticHub({
             </div>
 
             {/* Category tabs filters */}
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl w-full md:w-auto overflow-x-auto whitespace-nowrap">
+            <ScrollableTabContainer
+              className="w-full md:w-auto bg-slate-100 p-1 rounded-xl"
+              gradientColor="from-slate-100"
+              innerClassName="flex items-center gap-1 whitespace-nowrap"
+            >
               {(['all', 'hospitality', 'medical', 'education', 'professional', 'industrial'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveCategoryTab(tab)}
-                  className={`px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${activeCategoryTab === tab ? 'bg-white text-indigo-950 shadow-2xs' : 'text-slate-500 hover:text-slate-800'}`}
+                  className={`px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer shrink-0 ${activeCategoryTab === tab ? 'bg-white text-indigo-950 shadow-2xs' : 'text-slate-500 hover:text-slate-800'}`}
                 >
                   {getTabLabel(tab)}
                 </button>
               ))}
-            </div>
+            </ScrollableTabContainer>
           </div>
 
           {/* Bento-style Listing Grid */}

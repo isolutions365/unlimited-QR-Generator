@@ -119,8 +119,9 @@ export async function renderStyledQR(
 
   // Generate QR Matrix using standard qrcode package API
   let qr;
+  const contentToEncode = (text && text.trim() !== '') ? text : 'https://www.freeqrgen.pro';
   try {
-    qr = qrcode.create(text, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
+    qr = qrcode.create(contentToEncode, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
   } catch (err) {
     console.error("Fatal: QR Code Matrix generation failed inside qrcode package:", err);
     ctx.fillStyle = options.bgColor;
@@ -458,8 +459,9 @@ export function generateStyledSVG(
 
   // Generate QR Matrix
   let qr;
+  const contentToEncode = (text && text.trim() !== '') ? text : 'https://www.freeqrgen.pro';
   try {
-    qr = qrcode.create(text, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
+    qr = qrcode.create(contentToEncode, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
   } catch (err) {
     console.error("Fatal: SVG QR Code Matrix generation failed inside qrcode package:", err);
     return `<?xml version="1.0" encoding="utf-8"?>

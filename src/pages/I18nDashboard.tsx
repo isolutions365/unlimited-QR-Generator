@@ -13,6 +13,7 @@ import {
   Cell, RadialBarChart, RadialBar, Legend
 } from 'recharts';
 import SEOAuditTab from '../components/SEOAuditTab';
+import Logo from '../components/Logo';
 
 interface I18nDashboardProps {
   onBack: () => void;
@@ -188,15 +189,25 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
   return (
     <div className="bg-slate-50 min-h-screen text-slate-800 flex flex-col font-sans" id="i18n-enterprise-dashboard">
       {/* Top Banner / Navbar */}
-      <header className="bg-indigo-950 text-white px-6 py-5 border-b border-indigo-900 shadow-md">
+      <header className="bg-indigo-950 text-white px-6 py-4 border-b border-indigo-900 shadow-md">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-3">
             <button 
               onClick={onBack}
-              className="p-2 bg-indigo-900/50 hover:bg-indigo-800 rounded-xl transition-colors cursor-pointer group"
+              className="p-2 bg-indigo-900/50 hover:bg-indigo-800 rounded-xl transition-colors cursor-pointer group shrink-0"
+              title="Return to Generator"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             </button>
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity"
+              title="Free QR Generator Home"
+            >
+              <Logo size={32} />
+            </button>
+            <div className="h-6 w-[1px] bg-indigo-900 hidden md:block" />
             <div>
               <div className="flex items-center gap-2">
                 <Globe className="w-5 h-5 text-indigo-400 animate-spin-slow" />
@@ -523,17 +534,12 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
                               l === 'en' ? t('i18n.englishSource', 'English (Source)') : 
                               l === 'ar' ? t('i18n.arabic', 'Arabic') : 
                               l === 'ur' ? t('i18n.urdu', 'Urdu') : 
-                              l === 'es' ? t('i18n.spanish', 'Spanish') : 
+                              l === 'hi' ? t('i18n.hindi', 'Hindi') : 
                               l === 'fr' ? t('i18n.french', 'French') : 
-                              l === 'de' ? t('i18n.german', 'German') : 
-                              l === 'pt' ? t('i18n.portuguese', 'Portuguese') : 
-                              l === 'it' ? t('i18n.italian', 'Italian') : 
+                              l === 'es' ? t('i18n.spanish', 'Spanish') : 
                               l === 'tr' ? t('i18n.turkish', 'Turkish') : 
                               l === 'id' ? t('i18n.indonesian', 'Indonesian') : 
-                              l === 'hi' ? t('i18n.hindi', 'Hindi') : 
-                              l === 'ja' ? t('i18n.japanese', 'Japanese') : 
-                              l === 'ko' ? t('i18n.korean', 'Korean') : 
-                              t('i18n.chinese', 'Chinese')
+                              l
                             }
                           </option>
                         ))}

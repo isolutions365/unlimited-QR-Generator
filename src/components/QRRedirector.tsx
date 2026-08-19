@@ -16,6 +16,19 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
   useEffect(() => {
     let active = true;
 
+    const executeRedirect = async (destination: string) => {
+      try {
+        await fetch('/api/scans/record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ trackingId, destinationUrl: destination })
+        }).catch(e => console.warn('Telemetry record notice:', e));
+      } catch (e) {
+        // Non-blocking
+      }
+      window.location.href = destination;
+    };
+
     async function resolveLink() {
       console.log(`[QRRedirector] Starting client-side resolution for ID: "${trackingId}"...`);
       try {
@@ -40,7 +53,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
             const destination = data?.originalUrl || data?.content;
             if (destination) {
               console.log(`[QRRedirector] Executing redirect to originalUrl: "${destination}"`);
-              window.location.href = destination;
+              await executeRedirect(destination);
               return;
             }
           }
@@ -59,7 +72,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
             const destination = data?.originalUrl || data?.content;
             if (destination) {
               console.log(`[QRRedirector] Executing redirect to: "${destination}"`);
-              window.location.href = destination;
+              await executeRedirect(destination);
               return;
             }
           }
@@ -77,7 +90,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
             console.log(`[QRRedirector] [Step 1 SUCCESS] Found match in projects:`, data);
             if (data?.content) {
               console.log(`[QRRedirector] Executing redirect to: "${data.content}"`);
-              window.location.href = data.content;
+              await executeRedirect(data.content);
               return;
             }
           }
@@ -95,7 +108,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
             console.log(`[QRRedirector] [Step 2 SUCCESS] Found match in projects:`, data);
             if (data?.content) {
               console.log(`[QRRedirector] Executing redirect to content URL: "${data.content}"`);
-              window.location.href = data.content;
+              await executeRedirect(data.content);
               return;
             }
           }
@@ -114,7 +127,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
             const destination = data?.destinationUrl || data?.targetUrl || data?.content;
             if (destination) {
               console.log(`[QRRedirector] Executing redirect to: "${destination}"`);
-              window.location.href = destination;
+              await executeRedirect(destination);
               return;
             }
           }
@@ -133,7 +146,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
             const destination = data?.destinationUrl || data?.targetUrl || data?.content;
             if (destination) {
               console.log(`[QRRedirector] Executing redirect to: "${destination}"`);
-              window.location.href = destination;
+              await executeRedirect(destination);
               return;
             }
           }
@@ -152,7 +165,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
             const destination = data?.destinationUrl || data?.targetUrl || data?.content;
             if (destination) {
               console.log(`[QRRedirector] Executing redirect to destinationUrl: "${destination}"`);
-              window.location.href = destination;
+              await executeRedirect(destination);
               return;
             }
           }
@@ -167,7 +180,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
           const docPdfSnap = await getDoc(docPdfRef);
           if (docPdfSnap.exists() && active) {
             console.log(`[QRRedirector] [Step 5 SUCCESS] Found match in pdf_shares:`, docPdfSnap.data());
-            window.location.href = `/#pdf-${trackingId}`;
+            await executeRedirect(`/#pdf-${trackingId}`);
             return;
           }
         } catch (stepErr) {
@@ -181,7 +194,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
           const docCardSnap = await getDoc(docCardRef);
           if (docCardSnap.exists() && active) {
             console.log(`[QRRedirector] [Step 6 SUCCESS] Found match in business_cards:`, docCardSnap.data());
-            window.location.href = `/#card-${trackingId}`;
+            await executeRedirect(`/#card-${trackingId}`);
             return;
           }
         } catch (stepErr) {
@@ -195,7 +208,7 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
           const docMenuSnap = await getDoc(docMenuRef);
           if (docMenuSnap.exists() && active) {
             console.log(`[QRRedirector] [Step 7 SUCCESS] Found match in restaurant_menus:`, docMenuSnap.data());
-            window.location.href = `/#menu-${trackingId}`;
+            await executeRedirect(`/#menu-${trackingId}`);
             return;
           }
         } catch (stepErr) {

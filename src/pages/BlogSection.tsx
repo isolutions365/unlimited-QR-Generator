@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import ScrollableTabContainer from '../components/ScrollableTabContainer';
 import { 
   ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check,
-  BookOpen, ChevronRight, MessageSquare, AlertCircle, Zap, Filter 
+  BookOpen, ChevronRight, MessageSquare, AlertCircle, Zap, Filter, Home
 } from 'lucide-react';
 import { blogCategories, BlogArticle } from '../data/blogData';
 import { getLocalizedBlog, Locale } from '../utils/translations';
@@ -102,6 +103,26 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
       {activeArticle ? (
         /* Detailed Article View */
         <article className="space-y-8">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
+            <button 
+              onClick={() => onNavigate('/')} 
+              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span>{t('common.home', 'Home')}</span>
+            </button>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <button 
+              onClick={handleBackToList} 
+              className="hover:text-indigo-600 transition-colors cursor-pointer font-semibold"
+            >
+              {t('common.blog', 'Blog')}
+            </button>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <span className="text-slate-800 font-bold truncate max-w-[240px] sm:max-w-none">{activeArticle.title}</span>
+          </nav>
+
           {/* Header Schema navigation */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
             <button
@@ -259,6 +280,19 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
       ) : (
         /* Blog Post Homepage Hub View */
         <div className="space-y-8">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
+            <button 
+              onClick={() => onNavigate('/')} 
+              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span>{t('common.home', 'Home')}</span>
+            </button>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <span className="text-slate-800 font-bold">{t('common.blog', 'Blog')}</span>
+          </nav>
+
           {/* Header introduction */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-4">
@@ -274,16 +308,30 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
             </div>
           </div>
 
+          {locale !== 'en' && (
+            <div className="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-4 text-xs text-amber-800 flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+              <div>
+                <span className="font-bold block mb-0.5">Translation Notice</span>
+                <span>Native translations for this language are currently in progress. Displaying complete technical guides in English to ensure 100% accuracy and prevent placeholder markers.</span>
+              </div>
+            </div>
+          )}
+
           {/* Category Filter list */}
           <div className="relative">
             <div className="flex items-center gap-2 mb-3 text-[10px] font-mono font-bold text-indigo-500 uppercase">
               <Filter className="w-3.5 h-3.5" />
               <span>{t('blog.filterTopic', 'Filter articles by topic')}</span>
             </div>
-            <div className="flex flex-wrap gap-1.5 pb-2 overflow-x-auto border-b border-slate-100 scrollbar-none">
+            <ScrollableTabContainer
+              className="border-b border-slate-100"
+              gradientColor="from-white"
+              innerClassName="flex items-center gap-1.5 pb-2"
+            >
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${ selectedCategory === 'all' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border shrink-0 ${ selectedCategory === 'all' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
               >
                 {t('blog.allCategories', 'All Categories')}
               </button>
@@ -291,12 +339,12 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${ selectedCategory === cat ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap border shrink-0 ${ selectedCategory === cat ? 'bg-indigo-600 text-white border-indigo-600 shadow-md ' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-transparent hover:border-slate-200 ' }`}
                 >
                   {getCategoryLabel(cat)}
                 </button>
               ))}
-            </div>
+            </ScrollableTabContainer>
           </div>
 
           {/* Articles Render Matrix Grid */}

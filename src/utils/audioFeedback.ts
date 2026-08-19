@@ -52,7 +52,7 @@ export const saveSoundSettings = (settings: SoundSettings) => {
  * Synthesize audio feedback tones using Web Audio API
  */
 export const playAudioSound = (
-  action: 'generate' | 'test_scan' | 'preview',
+  action: 'generate' | 'test_scan' | 'preview' | 'click' | 'success',
   customSettings?: SoundSettings
 ) => {
   const settings = customSettings || getDefaultSoundSettings();

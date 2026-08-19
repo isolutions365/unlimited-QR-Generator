@@ -44,7 +44,7 @@ export interface SEOAuditSummary {
   warningCount: number;
   criticalCount: number;
   schemaCoverageRate: number; // Percentage of routes with > 1 schema
-  canonicalHealthRate: number; // Percentage with valid canonical & 14 hreflangs
+  canonicalHealthRate: number; // Percentage with valid canonical & 8 hreflangs
   metaCompletionRate: number; // Percentage with valid title & description lengths
 }
 
@@ -54,17 +54,11 @@ const OG_LOCALE_MAP: Record<Locale, string> = {
   en: 'en_US',
   ar: 'ar_AR',
   ur: 'ur_PK',
-  es: 'es_ES',
+  hi: 'hi_IN',
   fr: 'fr_FR',
-  de: 'de_DE',
-  pt: 'pt_PT',
-  it: 'it_IT',
+  es: 'es_ES',
   tr: 'tr_TR',
   id: 'id_ID',
-  hi: 'hi_IN',
-  ja: 'ja_JP',
-  ko: 'ko_KR',
-  zh: 'zh_CN',
 };
 
 /**
@@ -77,7 +71,7 @@ export function getCanonicalForPath(path: string, locale: Locale): string {
 }
 
 /**
- * Generate hreflang entries for all 14 supported locales
+ * Generate hreflang entries for all 8 supported locales
  */
 export function getHreflangsForPath(path: string): { lang: string; url: string }[] {
   const cleanPath = path === '/' ? '' : path.startsWith('/') ? path : `/${path}`;
@@ -151,7 +145,6 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
     { path: '/use-cases', category: 'Solutions & Industries', defaultTitle: 'High-Traffic QR Code Use Cases Hub | FreeQRGen.pro', defaultDesc: 'Review physical placement guidelines, best practices, common mistakes, and printable templates.' },
 
     // Enterprise & Platforms
-    { path: '/i18n-dashboard', category: 'Core & Trust', defaultTitle: 'FreeQRGen.pro Translation Platform & Visual RTL QA Suite', defaultDesc: 'Enterprise internationalization management system with 14 supported languages and ICU validation.' },
     { path: '/ai-gateway', category: 'Core & Trust', defaultTitle: 'Enterprise AI Gateway & Gemini Intelligence Suite', defaultDesc: 'AI-assisted QR design, prompt-based code styling, and automated campaign recommendations.' },
     { path: '/marketing-platform', category: 'Core & Trust', defaultTitle: 'QR Campaign Management Portal & Dynamic Link Suite', defaultDesc: 'Central hub for tracking scan conversion, location heatmaps, device operating systems, and campaign ROI.' }
   ];
@@ -374,9 +367,10 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
       issues.push('High importance schema snippet (FAQPage) missing for rich search result expansion.');
     }
 
-    if (hreflangs.length !== 15) { // x-default + 14 locales = 15
+    const requiredHreflangs = SUPPORTED_LOCALES.length + 1; // x-default + 8 locales = 9
+    if (hreflangs.length !== requiredHreflangs) {
       healthPoints -= 20;
-      issues.push(`Hreflang count mismatch (${hreflangs.length}/15 required tags).`);
+      issues.push(`Hreflang count mismatch (${hreflangs.length}/${requiredHreflangs} required tags).`);
     }
 
     const finalScore = Math.max(0, healthPoints);

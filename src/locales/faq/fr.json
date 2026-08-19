@@ -1,1 +1,170 @@
-[]
+[
+  {
+    "id": "what-is-qr-code",
+    "category": "general",
+    "question": "Qu'est-ce qu'un code QR ?",
+    "answer": "Un code QR (Quick Response Code) est un code-barres matriciel en deux dimensions (2D) inventé en 1994 au Japon pour l'industrie automobile. Il est composé de modules noirs disposés sur un fond blanc et peut être scanné rapidement par les smartphones et lecteurs optiques pour stocker des liens web, du texte, des coordonnées vCard et des accès Wi-Fi."
+  },
+  {
+    "id": "how-do-qr-codes-work",
+    "category": "general",
+    "question": "Comment fonctionnent les codes QR ?",
+    "answer": "Les codes QR encodent des informations sous forme de données binaires (0 et 1). Les trois grands carrés situés dans les coins servent de repères pour permettre à l'appareil de détecter l'orientation et l'angle du code, tandis que la correction d'erreurs Reed-Solomon permet la lecture même si le code est endommagé jusqu'à 30% ou recouvert d'un logo."
+  },
+  {
+    "id": "difference-static-dynamic-qr",
+    "category": "general",
+    "question": "Quelle est la différence entre un code QR statique et dynamique ?",
+    "answer": "Un code QR statique intègre directement les données dans sa matrice et ne peut être modifié après impression. Un code QR dynamique utilise une URL de redirection courte qui permet de modifier le lien de destination à tout moment sans réimprimer le support physique, tout en offrant des statistiques de scan en temps réel."
+  },
+  {
+    "id": "do-qr-codes-expire",
+    "category": "general",
+    "question": "Les codes QR expirent-ils un jour ?",
+    "answer": "Les codes QR statiques générés sur FreeQRGen.pro n'expirent jamais car leurs données sont définitivement encodées dans le motif matriciel. Ils fonctionneront indéfiniment tant que le code reste net et lisible."
+  },
+  {
+    "id": "qr-code-data-capacity",
+    "category": "general",
+    "question": "Quelle quantité de données un code QR peut-il stocker ?",
+    "answer": "Un code QR standard Version 40 peut stocker jusqu'à 7 089 chiffres, 4 296 caractères alphanumériques ou 2 953 octets de données binaires."
+  },
+  {
+    "id": "qr-code-vs-barcode",
+    "category": "general",
+    "question": "En quoi les codes QR diffèrent-ils des codes-barres traditionnels 1D ?",
+    "answer": "Les codes-barres linéaires 1D classiques ne stockent que 20 à 25 caractères sur des lignes horizontales, tandis que les codes QR 2D stockent des milliers de caractères horizontalement et verticalement avec une lecture omnidirectionnelle à 360 degrés."
+  },
+  {
+    "id": "how-to-generate-free-qr",
+    "category": "creation",
+    "question": "Comment créer un code QR gratuit sur FreeQRGen.pro ?",
+    "answer": "1) Choisissez le type de contenu (URL, texte, Wi-Fi, vCard, PDF, WhatsApp) ; 2) Entrez vos informations ; 3) Personnalisez les couleurs, le logo et les angles ; 4) Téléchargez gratuitement en PNG, SVG ou PDF."
+  },
+  {
+    "id": "what-qr-types-supported",
+    "category": "creation",
+    "question": "Quels types de formats sont pris en charge ?",
+    "answer": "Nous prenons en charge plus de 12 formats : URL web, texte brut, cartes de visite vCard 3.0, réseaux Wi-Fi, PDF, e-mails, SMS, messages WhatsApp, portefeuilles crypto et liens App Store."
+  },
+  {
+    "id": "can-i-edit-qr-code-destination",
+    "category": "creation",
+    "question": "Puis-je modifier l'URL d'un code QR après l'avoir imprimé ?",
+    "answer": "Oui, grâce aux codes QR dynamiques, vous pouvez modifier l'URL de destination à tout moment depuis votre tableau de bord sans devoir réimprimer vos affiches ou emballages."
+  },
+  {
+    "id": "how-to-create-wifi-qr",
+    "category": "creation",
+    "question": "Comment créer un code QR Wi-Fi pour connexion automatique ?",
+    "answer": "Sélectionnez l'outil Wi-Fi, indiquez le nom du réseau (SSID), le type de sécurité et le mot de passe. En scannant le code, les invités se connectent instantanément sans saisir le mot de passe manuellement."
+  },
+  {
+    "id": "how-to-create-vcard-qr",
+    "category": "creation",
+    "question": "Comment fonctionne un code QR de carte de visite numérique (vCard) ?",
+    "answer": "Le code vCard stocke le nom, téléphone, entreprise, e-mail et adresse. Au scan, le smartphone ouvre immédiatement le carnet de contacts pour enregistrer la fiche d'un seul geste."
+  },
+  {
+    "id": "generate-vector-svg-pdf-qr",
+    "category": "creation",
+    "question": "Puis-je exporter en format vectoriel haute résolution comme SVG et PDF pour l'impression ?",
+    "answer": "Oui ! FreeQRGen propose des exports vectoriels SVG et PDF prêts pour l'impression haute définition, qui peuvent être agrandis à l'infini sans aucune perte de qualité pour les panneaux d'affichage et emballages."
+  },
+  {
+    "id": "can-i-add-logo-to-qr",
+    "category": "customization",
+    "question": "Puis-je ajouter le logo de ma marque sans bloquer le scan ?",
+    "answer": "Oui, en réglant le niveau de correction d'erreurs sur 'Q' ou 'H', vous pouvez insérer votre logo au centre du code sans impacter la réactivité du scan."
+  },
+  {
+    "id": "how-error-correction-works",
+    "category": "customization",
+    "question": "Quels sont les niveaux de correction d'erreurs (L, M, Q, H) et lequel choisir ?",
+    "answer": "Level L (7% de restauration), Level M (15% usage général), Level Q (25% recommandé avec logos), et Level H (30% pour l'extérieur et les grands logos)."
+  },
+  {
+    "id": "best-contrast-color-practices",
+    "category": "customization",
+    "question": "Quelles sont les meilleures pratiques de contraste pour un scan instantané ?",
+    "answer": "Privilégiez toujours un contraste élevé entre le motif foncé et l'arrière-plan clair. Évitez les couleurs trop pâles comme le jaune clair sur fond blanc."
+  },
+  {
+    "id": "what-is-quiet-zone",
+    "category": "customization",
+    "question": "Qu'est-ce que la 'Zone de Silence' (Quiet Zone) et pourquoi est-elle obligatoire ?",
+    "answer": "C'est la bordure blanche vierge entourant le code QR (au moins 4 modules de large) qui permet à la caméra de séparer le code des éléments graphiques environnants."
+  },
+  {
+    "id": "recommended-minimum-print-size",
+    "category": "customization",
+    "question": "Quelle est la taille minimale d'impression recommandée ?",
+    "answer": "Pour un scan de près (cartes, tables), le minimum est de 2 x 2 cm. Pour les affiches, appliquez la règle 10:1 (à 1 mètre de distance, le code doit mesurer au moins 10 cm de large)."
+  },
+  {
+    "id": "custom-eyes-shapes-impact",
+    "category": "customization",
+    "question": "La personnalisation des yeux et des points affecte-t-elle la lisibilité ?",
+    "answer": "FreeQRGen utilise des règles géométriques certifiées garantissant que les formes personnalisées restent lisibles instantanément par tous les smartphones."
+  },
+  {
+    "id": "are-qr-codes-safe-to-scan",
+    "category": "security",
+    "question": "Est-il sûr de scanner des codes QR ? Qu'est-ce que le 'Quishing' ?",
+    "answer": "Les codes QR eux-mêmes sont passifs et ne peuvent exécuter de virus automatiquement. Cependant, vérifiez toujours l'aperçu de l'URL affiché sur votre écran avant d'ouvrir un site web inconnu."
+  },
+  {
+    "id": "does-freeqrgen-track-user-data",
+    "category": "security",
+    "question": "FreeQRGen stocke-t-il ou vend-il les données des utilisateurs ?",
+    "answer": "Non. La génération de codes statiques s'exécute à 100% dans votre navigateur en totale confidentialité. Nous ne vendons jamais vos données personnelles."
+  },
+  {
+    "id": "is-client-side-generation-private",
+    "category": "security",
+    "question": "La génération s'effectue-t-elle dans le navigateur ou sur un serveur ?",
+    "answer": "Elle est entièrement réalisée dans votre navigateur via des moteurs Canvas locaux, vos données ne quittent donc jamais votre appareil."
+  },
+  {
+    "id": "how-to-secure-enterprise-dynamic-links",
+    "category": "security",
+    "question": "Comment les liens dynamiques sont-ils sécurisés ?",
+    "answer": "Notre plateforme intègre le chiffrement SSL/TLS et les contrôles Google Safe Browsing pour bloquer les redirections suspectes ou corrompues."
+  },
+  {
+    "id": "can-qr-codes-contain-malware",
+    "category": "security",
+    "question": "Un code QR peut-il infecter un téléphone avec un virus ?",
+    "answer": "Non. Un code QR ne fait que traduire une image en texte ou en lien. Les systèmes d'exploitation iOS et Android ne téléchargent aucun fichier sans confirmation de l'utilisateur."
+  },
+  {
+    "id": "how-to-track-qr-scan-analytics",
+    "category": "business",
+    "question": "Comment les entreprises peuvent-elles suivre les statistiques de scan ?",
+    "answer": "Avec nos codes QR dynamiques, vous accédez au total des scans, visiteurs uniques, géolocalisation par ville et pays, et types d'appareils (iOS vs Android)."
+  },
+  {
+    "id": "best-materials-for-qr-printing",
+    "category": "business",
+    "question": "Quels matériaux et finitions (mat vs brillant) privilégier pour l'impression ?",
+    "answer": "La finition mate (Matte) est fortement recommandée par rapport au brillant car elle élimine les reflets lumineux qui gênent la mise au point de l'appareil photo."
+  },
+  {
+    "id": "restaurant-contactless-menu-qr",
+    "category": "business",
+    "question": "Comment les restaurants utilisent-ils les menus QR numériques ?",
+    "answer": "Les restaurants placent des chevalets en acrylique sur les tables renvoyant à leur menu numérique, permettant de modifier les plats et les prix en temps réel sans réimprimer le papier."
+  },
+  {
+    "id": "commercial-use-licensing",
+    "category": "business",
+    "question": "Les codes QR créés sur FreeQRGen sont-ils gratuits pour un usage commercial ?",
+    "answer": "Oui, tous les codes générés sont 100% gratuits pour un usage commercial et personnel, sans redevance, sur les emballages, affiches et supports marketing."
+  },
+  {
+    "id": "bulk-qr-code-generation",
+    "category": "business",
+    "question": "Puis-je générer des centaines de codes QR en lot via un fichier Excel ou CSV ?",
+    "answer": "Oui ! Notre outil de génération en masse (Bulk QR) vous permet d'importer un fichier tableur et de télécharger une archive ZIP contenant tous vos codes QR haute résolution en quelques secondes."
+  }
+]

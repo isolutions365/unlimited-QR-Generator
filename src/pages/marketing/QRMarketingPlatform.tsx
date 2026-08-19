@@ -6,6 +6,7 @@ import {
   Send, Bot, User, Loader2
 } from 'lucide-react';
 import { useTranslation } from '../../utils/i18n';
+import Logo from '../../components/Logo';
 
 // Lazy load modules
 const DashboardModule = React.lazy(() => import('./modules/Dashboard/DashboardModule'));
@@ -215,7 +216,7 @@ export default function QRMarketingPlatform({ onBack }: QRMarketingPlatformProps
   return (
     <div id="qr-marketing-platform-container" className="min-h-screen bg-slate-50/50 text-slate-900 flex flex-col relative overflow-hidden">
       {/* Platform Header */}
-      <header className="sticky top-0 z-45 bg-white border-b border-slate-150 px-4 md:px-8 py-4 flex items-center justify-between shadow-3xs">
+      <header className="sticky top-0 z-45 bg-white border-b border-slate-150 px-4 md:px-8 py-3 flex items-center justify-between shadow-3xs">
         <div className="flex items-center gap-3">
           <button 
             onClick={onBack}
@@ -223,6 +224,15 @@ export default function QRMarketingPlatform({ onBack }: QRMarketingPlatformProps
             title="Return to Generator"
           >
             <ArrowLeft className="w-4 h-4" />
+          </button>
+          <div className="h-6 w-[1px] bg-slate-200 hidden md:block" />
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity"
+            title="Free QR Generator Home"
+          >
+            <Logo size={32} />
           </button>
           <div className="h-6 w-[1px] bg-slate-200 hidden md:block" />
           <div>

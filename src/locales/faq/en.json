@@ -3,12 +3,168 @@
     "id": "what-is-qr-code",
     "category": "general",
     "question": "What is a QR Code?",
-    "answer": "A QR Code (Quick Response Code) is a two-dimensional matrix barcode first designed in 1994 for the automotive industry in Japan. It consists of black squares arranged in a square grid on a white background, which can be read by imaging devices such as cameras, smartphones, and dedicated scanners. QR codes can store significantly more data than traditional linear barcodes, including URLs, plain text, contact information, geographic coordinates, and Wi-Fi credentials."
+    "answer": "A QR Code (Quick Response Code) is a two-dimensional matrix barcode first designed in 1994 for the automotive industry in Japan. It consists of black squares arranged in a square grid on a white background, which can be read by imaging devices such as cameras, smartphones, and dedicated optical scanners. QR codes can store significantly more data than traditional linear barcodes, including URLs, plain text, contact information, geographic coordinates, and Wi-Fi credentials."
   },
   {
     "id": "how-do-qr-codes-work",
     "category": "general",
     "question": "How do QR Codes work?",
     "answer": "QR Codes operate by encoding information into binary data (ones and zeros) represented by dark (modules) and light squares on a grid. The three large squares in the corners (and sometimes smaller alignment markers) are finder patterns that help scanner software detect the code's boundaries, orientation, and perspective angle. Advanced error correction algorithms (like Reed-Solomon) are built into the code, letting scanner apps read the embedded information correctly even if up to 30% of the graphic is damaged, dirty, or covered by a custom logo."
+  },
+  {
+    "id": "difference-static-dynamic-qr",
+    "category": "general",
+    "question": "What is the difference between Static and Dynamic QR Codes?",
+    "answer": "A Static QR Code has the target data directly encoded into its matrix pattern—once generated and printed, the content cannot be modified, and scan counts cannot be tracked. A Dynamic QR Code encodes a short redirection URL that points to your desired destination. This allows you to update the destination link anytime without reprinting the physical code, as well as collect real-time scan analytics such as user locations, devices, operating systems, and timestamp data."
+  },
+  {
+    "id": "do-qr-codes-expire",
+    "category": "general",
+    "question": "Do QR Codes ever expire?",
+    "answer": "Static QR codes generated on FreeQRGen.pro never expire because the data is permanently encoded into the matrix itself. They will work indefinitely as long as the graphic remains readable. Dynamic QR codes remain active for the duration of your campaign redirection routing. FreeQRGen does not place arbitrary expiration dates on standard static generation."
+  },
+  {
+    "id": "qr-code-data-capacity",
+    "category": "general",
+    "question": "How much data can a QR Code store?",
+    "answer": "A standard Version 40 QR code can store up to 7,089 numeric characters, 4,296 alphanumeric characters, 2,953 bytes of binary data, or 1,817 Japanese Kanji characters. However, encoding smaller payloads (like short URLs) produces cleaner grids with larger modules, making them significantly easier and faster for smartphone cameras to scan from long distances."
+  },
+  {
+    "id": "qr-code-vs-barcode",
+    "category": "general",
+    "question": "How do QR Codes differ from traditional 1D barcodes?",
+    "answer": "Traditional 1D (linear) barcodes store data horizontally in variable-width parallel lines and typically hold only 20–25 alphanumeric characters (such as UPC/EAN product IDs). QR codes are two-dimensional, storing data horizontally and vertically across thousands of modules. This allows QR codes to encode full URLs, rich contact cards, Wi-Fi credentials, and cryptographic signatures with omnidirectional 360-degree scanner readability."
+  },
+  {
+    "id": "how-to-generate-free-qr",
+    "category": "creation",
+    "question": "How do I create a free QR code on FreeQRGen.pro?",
+    "answer": "Creating a QR code is fast and intuitive: 1) Select your content type (URL, Text, Wi-Fi, vCard, PDF, Email, SMS, WhatsApp, or Social); 2) Enter your content details in the input field; 3) Customize the design with gradient colors, eye shapes, corner frames, and brand logos; 4) Choose your preferred export resolution and download the final graphic in PNG, SVG, or PDF format."
+  },
+  {
+    "id": "what-qr-types-supported",
+    "category": "creation",
+    "question": "What types of content can I encode into a QR Code?",
+    "answer": "FreeQRGen supports over 12 specialized QR types: Website URLs, Plain Text, Digital Business Cards (vCard 3.0 / MeCard), Wi-Fi Network Credentials (WPA/WPA2/WPA3), PDF Documents, Email Compositions (mailto), SMS Text Messages, WhatsApp Direct Messages, Phone Calls (tel:), Crypto Wallet Addresses (Bitcoin, Ethereum, USDT), App Store Deep Links, and Social Media aggregators."
+  },
+  {
+    "id": "can-i-edit-qr-code-destination",
+    "category": "creation",
+    "question": "Can I change the destination URL of my QR code after printing it?",
+    "answer": "Yes, if you use a Dynamic QR Code. Dynamic codes route scanners through a centralized redirection endpoint, allowing you to modify the destination website, menu link, or file upload at any time from your campaign management dashboard without having to reprint billboards, packaging, or printed flyers."
+  },
+  {
+    "id": "how-to-create-wifi-qr",
+    "category": "creation",
+    "question": "How do I create a Wi-Fi QR Code for automatic guest connection?",
+    "answer": "Navigate to the 'Wi-Fi' generator tool, input your network SSID (network name), choose the encryption type (WPA/WPA2, WEP, or Open), and enter your Wi-Fi password. When guests scan the printed code with their iOS or Android camera, a prompt will automatically appear saying 'Join Network' without requiring any manual password typing."
+  },
+  {
+    "id": "how-to-create-vcard-qr",
+    "category": "creation",
+    "question": "How does a digital business card (vCard) QR code work?",
+    "answer": "A vCard QR code encodes your name, phone number, job title, company, email, website, and physical address in standardized VCF 3.0 format. When scanned by any smartphone, the device's native Contacts app opens immediately with all contact fields pre-populated, enabling one-tap saving to the user's address book."
+  },
+  {
+    "id": "generate-vector-svg-pdf-qr",
+    "category": "creation",
+    "question": "Can I export high-resolution vector formats like SVG and PDF for printing?",
+    "answer": "Yes! FreeQRGen provides crisp vector SVG and print-ready PDF exports alongside standard raster PNG and JPEG formats. Vector SVG and PDF files scale infinitely without any pixelation or quality loss, making them ideal for large-scale billboards, commercial packaging, vehicle wraps, and banners."
+  },
+  {
+    "id": "can-i-add-logo-to-qr",
+    "category": "customization",
+    "question": "Can I add a custom brand logo to my QR Code without breaking scannability?",
+    "answer": "Yes. By increasing the error correction level to 'Q' (25%) or 'H' (30%), up to nearly a third of the QR matrix can be obscured while remaining 100% functional. Our generator automatically centers your uploaded logo, creates an optimal quiet padding around the icon, and verifies scanning contrast before export."
+  },
+  {
+    "id": "how-error-correction-works",
+    "category": "customization",
+    "question": "What are QR Error Correction levels (L, M, Q, H) and which should I use?",
+    "answer": "Error correction utilizes Reed-Solomon algorithms to restore damaged code areas. Level L restores up to 7% damage (best for dense data/clean screens); Level M restores up to 15% (standard general use); Level Q restores up to 25% (recommended when adding small logos); Level H restores up to 30% (recommended for outdoor signage, rough surfaces, or prominent center logos)."
+  },
+  {
+    "id": "best-contrast-color-practices",
+    "category": "customization",
+    "question": "What are the best color and contrast practices for high-speed scanning?",
+    "answer": "Always maintain a high contrast ratio between the foreground modules and the background. Optical camera sensors read dark patterns on light backgrounds best (minimum 4:1 contrast ratio). Avoid light yellow or pastel foregrounds on white, and never invert the colors (light modules on dark background) unless you verify scanner compatibility, as some legacy barcode readers struggle with inverted matrices."
+  },
+  {
+    "id": "what-is-quiet-zone",
+    "category": "customization",
+    "question": "What is the 'Quiet Zone' (safe margin) around a QR Code and why is it required?",
+    "answer": "The Quiet Zone is the clear, unprinted blank border surrounding all four sides of a QR code. ISO/IEC 18004 standards specify that the quiet zone must be at least 4 modules wide. This margin prevents surrounding text, illustrations, or packaging edges from confusing optical edge-detection algorithms during scanning."
+  },
+  {
+    "id": "recommended-minimum-print-size",
+    "category": "customization",
+    "question": "What is the recommended minimum print size for physical QR codes?",
+    "answer": "For standard close-range scanning (tabletops, business cards, receipts), the absolute minimum recommended size is 2 x 2 cm (0.8 x 0.8 inches). For medium distances (posters, flyers), use the 10:1 distance-to-size rule: if viewers scan from 1 meter away, the QR code should be at least 10 cm (4 inches) wide."
+  },
+  {
+    "id": "custom-eyes-shapes-impact",
+    "category": "customization",
+    "question": "Does customizing eye markers or module dot shapes affect scanner readability?",
+    "answer": "FreeQRGen uses mathematically compliant geometry formulas for custom dot patterns (such as rounded dots, squircle markers, diamond grid, and smooth corners). As long as the three primary finder patterns maintain standard concentric ring ratios and clear background contrast, smartphone recognition speed remains virtually instantaneous."
+  },
+  {
+    "id": "are-qr-codes-safe-to-scan",
+    "category": "security",
+    "question": "Are QR Codes safe to scan? What is 'Quishing' (QR Phishing)?",
+    "answer": "QR codes themselves are passive data carriers and cannot execute malicious code automatically. However, malicious actors can print QR codes leading to deceptive phishing sites (known as 'Quishing'). Always verify the URL preview displayed by your camera app before confirming navigation, especially in public areas where physical stickers might have been placed over legitimate signage."
+  },
+  {
+    "id": "does-freeqrgen-track-user-data",
+    "category": "security",
+    "question": "Does FreeQRGen store or sell personal scanning data?",
+    "answer": "No. FreeQRGen is engineered with a strict privacy-first architecture. Static QR code generations are rendered 100% locally in your web browser. We never log or sell your private payloads, Wi-Fi credentials, or confidential contact data to third-party ad networks."
+  },
+  {
+    "id": "is-client-side-generation-private",
+    "category": "security",
+    "question": "Is QR generation handled locally in the browser or on a remote server?",
+    "answer": "Standard static generation on FreeQRGen.pro is executed entirely within your browser client using Web Canvas and JavaScript cryptographic engines. Your input payload never leaves your device unless you explicitly save dynamic tracking campaigns to your enterprise cloud workspace."
+  },
+  {
+    "id": "how-to-secure-enterprise-dynamic-links",
+    "category": "security",
+    "question": "How do dynamic short links protect against broken or malicious redirects?",
+    "answer": "Our enterprise dynamic routing engine utilizes SSL/TLS encryption, automated DNS health checks, Google Safe Browsing API integrations, and instant redirect pausing. If an external destination link becomes corrupted or compromised, administrators can update the target destination in seconds without modifying physical prints."
+  },
+  {
+    "id": "can-qr-codes-contain-malware",
+    "category": "security",
+    "question": "Can a QR code directly infect a phone with a virus or malware?",
+    "answer": "No. Scanning a QR code simply translates graphic pixels into a text string or URL. Operating systems (iOS, Android) never automatically download or execute software binaries from a scan alone. They prompt the user with a preview confirmation modal before opening any external website or application."
+  },
+  {
+    "id": "how-to-track-qr-scan-analytics",
+    "category": "business",
+    "question": "How can businesses track scan counts, geolocation, and device metrics?",
+    "answer": "By creating Dynamic QR codes in our Marketing Platform Suite, businesses gain real-time visibility into total scans, unique visitors, top scanning cities, country heatmaps, device types (iOS vs. Android), time-of-day engagement peaks, and UTM marketing campaign conversions."
+  },
+  {
+    "id": "best-materials-for-qr-printing",
+    "category": "business",
+    "question": "What are the best materials and finishes (matte vs glossy) for outdoor QR signage?",
+    "answer": "Matte finishes are strongly recommended over glossy finishes for physical QR signage. Glossy coatings reflect harsh overhead lighting and sunlight, creating glare hotspots that blind optical smartphone camera sensors. For outdoor durability, UV-resistant vinyl, brushed aluminum, and acrylic matte plaques provide the best long-term scanning performance."
+  },
+  {
+    "id": "restaurant-contactless-menu-qr",
+    "category": "business",
+    "question": "How do restaurants implement digital QR menus efficiently?",
+    "answer": "Restaurants can upload PDF menus or link directly to dynamic interactive digital menus. By placing durable acrylic tabletop QR stands, guests scan to view daily specials, allergy warnings, multi-language translations, and instant updates without having to reprint physical paper menus whenever prices change."
+  },
+  {
+    "id": "commercial-use-licensing",
+    "category": "business",
+    "question": "Are QR codes generated on FreeQRGen free for commercial marketing campaigns?",
+    "answer": "Yes. All QR codes created with FreeQRGen.pro are 100% free for commercial and personal usage. You hold full intellectual property rights to your generated designs, and they can be utilized without royalties on product packaging, TV broadcasts, books, billboards, and corporate marketing collateral."
+  },
+  {
+    "id": "bulk-qr-code-generation",
+    "category": "business",
+    "question": "Can I generate hundreds of unique QR codes in bulk via CSV or Excel?",
+    "answer": "Yes! Our built-in Bulk QR Generator tool allows you to upload CSV or spreadsheet files containing thousands of URLs, serial numbers, inventory tags, or employee IDs, and download a bundled ZIP file with high-resolution, branded QR codes in seconds."
   }
 ]

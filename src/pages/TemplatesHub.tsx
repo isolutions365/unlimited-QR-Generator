@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
+import ScrollableTabContainer from '../components/ScrollableTabContainer';
 
 import { 
   ChevronRight, Home, Zap, ArrowRight, Check, HelpCircle, 
@@ -654,7 +655,11 @@ export default function TemplatesHub({
           </div>
 
           {/* Categorization tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+          <ScrollableTabContainer
+            className="w-full"
+            gradientColor="from-white"
+            innerClassName="flex items-center gap-1.5 py-1"
+          >
             <Tag className="w-3.5 h-3.5 text-slate-400 shrink-0 mr-1" />
             {categoriesList.map(cat => (
               <button
@@ -669,7 +674,7 @@ export default function TemplatesHub({
                 {cat.label}
               </button>
             ))}
-          </div>
+          </ScrollableTabContainer>
         </div>
       </section>
 

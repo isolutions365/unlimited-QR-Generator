@@ -86,7 +86,7 @@ function updateMetaTag(name: string, content: string, typeKey: 'name' | 'propert
 
 function getLocalizedCanonicalUrl(rawUrl: string, locale: Locale): string {
   const urlObj = new URL(rawUrl, getProductionBaseUrl());
-  const cleanPath = urlObj.pathname.replace(/^\/(ar|ur|es|fr|de|pt|it|tr|id|hi|ja|ko|zh)/, '');
+  const cleanPath = urlObj.pathname.replace(/^\/(ar|ur|hi|fr|es|tr|id)/, '');
   const prefix = locale === 'en' ? '' : `/${locale}`;
   return `${urlObj.origin}${prefix}${cleanPath === '/' ? '' : cleanPath}${urlObj.search}`;
 }
@@ -96,17 +96,11 @@ function getLocaleOgString(locale: Locale): string {
     en: 'en_US',
     ar: 'ar_AR',
     ur: 'ur_PK',
-    es: 'es_ES',
+    hi: 'hi_IN',
     fr: 'fr_FR',
-    de: 'de_DE',
-    pt: 'pt_PT',
-    it: 'it_IT',
+    es: 'es_ES',
     tr: 'tr_TR',
     id: 'id_ID',
-    hi: 'hi_IN',
-    ja: 'ja_JP',
-    ko: 'ko_KR',
-    zh: 'zh_CN',
   };
   return mappings[locale] || 'en_US';
 }
@@ -116,7 +110,7 @@ function injectHreflangs(rawUrl: string, doc: Document) {
   doc.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
 
   const urlObj = new URL(rawUrl, getProductionBaseUrl());
-  const cleanPath = urlObj.pathname.replace(/^\/(ar|ur|es|fr|de|pt|it|tr|id|hi|ja|ko|zh)/, '');
+  const cleanPath = urlObj.pathname.replace(/^\/(ar|ur|hi|fr|es|tr|id)/, '');
 
   SUPPORTED_LOCALES.forEach((l) => {
     const link = doc.createElement('link');

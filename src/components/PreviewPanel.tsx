@@ -124,13 +124,14 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const frameFontSize = currentProject.design?.frameFontSize || 20;
   const frameTextPosition = currentProject.design?.frameTextPosition || 'bottom';
 
-  const qrContent = currentProject.content || 'https://www.freeqrgen.pro';
+  const qrContent = currentProject.content || '';
   const appUrl = getProductionBaseUrl();
   const trackingId = currentProject.trackingId || '';
   const trackingEnabled = currentProject.trackingEnabled || false;
 
-  const trackingUrl = trackingId ? `${appUrl}/qr/${trackingId}` : null;
-  const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : qrContent;
+  const isRequiredContentFilled = Boolean(currentProject.content && currentProject.content.trim() !== '');
+  const trackingUrl = (trackingId && isRequiredContentFilled) ? `${appUrl}/qr/${trackingId}` : null;
+  const textToEncode = trackingEnabled && trackingUrl ? trackingUrl : (currentProject.content || '');
 
   // Helper to calculate relative luminance for WCAG contrast checking
   const getLuminance = (hexColor: string): number => {
@@ -327,6 +328,20 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
 
   const handleExport = async () => {
     if (!canvasRef.current) return;
+
+    if (!isRequiredContentFilled) {
+      const urlInput = document.getElementById('target-url-input');
+      if (urlInput) {
+        urlInput.focus();
+        urlInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        urlInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/30');
+        setTimeout(() => {
+          urlInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-500/30');
+        }, 3000);
+      }
+      alert(t('control.err.requiredField', 'Please fill out the required destination field before generating or downloading your QR code.'));
+      return;
+    }
 
     const needsRedrawForExport = !isPrintModalOpen;
 
@@ -1116,7 +1131,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     
     if (logoAutoCenter !== false) {
       try {
-        const qr = qrcode.create(textToEncode, { errorCorrectionLevel });
+        const textForQr = (textToEncode && textToEncode.trim() !== '') ? textToEncode : 'https://www.freeqrgen.pro';
+        const qr = qrcode.create(textForQr, { errorCorrectionLevel });
         const modulesCount = qr.modules.size;
         const qrSize = Math.max(100, 450 - margin * 2);
         const cellSize = qrSize / modulesCount;

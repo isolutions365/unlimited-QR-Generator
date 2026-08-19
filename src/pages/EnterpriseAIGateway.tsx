@@ -6,7 +6,7 @@ import {
   Zap, Shield, Cpu, Sliders, Play, Trash, Check, Copy, AlertCircle, 
   Settings, RefreshCw, Key, Code, HelpCircle, FileText, Database, Activity, 
   ToggleLeft, ToggleRight, Layers, Bell, Eye, EyeOff, Plus, ChevronRight, BarChart3,
-  Globe, Info, AlertTriangle, ArrowLeft
+  Globe, Info, AlertTriangle, ArrowLeft, Home
 } from 'lucide-react';
 import { 
   aiService, aiRegistry, QRHealthCenter, promptManager, 
@@ -176,7 +176,19 @@ export default function EnterpriseAIGateway({
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6 font-sans">
-      
+      {/* Breadcrumb Navigation */}
+      <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
+        <button 
+          onClick={onBack} 
+          className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
+        >
+          <Home className="w-3.5 h-3.5" />
+          <span>{t('common.home', 'Home')}</span>
+        </button>
+        <ChevronRight className="w-3 h-3 text-slate-300" />
+        <span className="text-slate-800 font-bold">{t('enterprise.gatewayLabel', 'Enterprise Gateway')}</span>
+      </nav>
+
       {/* 1. HEADER SECTION (Aesthetic Pairing & Negatives space) */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-slate-200 pb-6 gap-4">
         <div className="text-left">

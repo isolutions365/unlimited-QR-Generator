@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import { dbInstance, hashPassword, verifyPassword, getDb, isFallbackMode } from './server/db';
+import { dbInstance, hashPassword, verifyPassword, getDb, isFallbackMode, DbScan, DbProject } from './server/db';
 import { adminDb } from './server/firebase-admin';
 import { doc, getDoc, getDocs, collection, query, where, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { WebSocketServer, WebSocket } from 'ws';
@@ -2275,9 +2275,351 @@ Generate the 'payload' matching the precise data schema for the selected categor
   });
 
 
-  // --- REDIRECTIONAL ACCESS GATE ---
-  // Real-Time public tracking short URL parser
-  app.get('/qr/:trackingId', async (req, res) => {
+  // --- REDIRECTIONAL ACCESS GATE & TELEMETRY ENGINE ---
+  // In-memory Geo Location Cache (IP -> { city, country, countryCode, approxLocation })
+  const geoCache = new Map<string, { city: string; country: string; countryCode: string; approxLocation: string }>();
+
+  // Helper: Extract real client IP
+  function getClientIp(req: express.Request): string {
+    const forwarded = req.headers['x-forwarded-for'];
+    if (typeof forwarded === 'string') {
+      const ips = forwarded.split(',').map(s => s.trim()).filter(Boolean);
+      for (const ip of ips) {
+        if (!isPrivateIp(ip)) return ip;
+      }
+      if (ips.length > 0) return ips[0];
+    }
+    const realIp = req.headers['x-real-ip'];
+    if (typeof realIp === 'string' && realIp.trim()) return realIp.trim();
+    const cfIp = req.headers['cf-connecting-ip'];
+    if (typeof cfIp === 'string' && cfIp.trim()) return cfIp.trim();
+    return req.socket.remoteAddress || req.ip || '127.0.0.1';
+  }
+
+  function isPrivateIp(ip: string): boolean {
+    if (!ip) return true;
+    const clean = ip.replace(/^::ffff:/, '');
+    if (clean === '127.0.0.1' || clean === '::1' || clean === 'localhost' || clean === '0.0.0.0') return true;
+    if (clean.startsWith('10.') || clean.startsWith('192.168.') || clean.startsWith('fc00:') || clean.startsWith('fe80:')) return true;
+    if (/^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(clean)) return true;
+    return false;
+  }
+
+  // Helper: Privacy-preserving IP anonymization
+  function anonymizeIp(ip: string): string {
+    if (!ip) return '127.0.0.xxx';
+    const clean = ip.replace(/^::ffff:/, '').trim();
+    if (clean.includes('.')) {
+      const parts = clean.split('.');
+      if (parts.length === 4) {
+        return `${parts[0]}.${parts[1]}.${parts[2]}.xxx`;
+      }
+    }
+    if (clean.includes(':')) {
+      const parts = clean.split(':');
+      if (parts.length > 3) {
+        return `${parts[0]}:${parts[1]}:${parts[2]}:xxxx::`;
+      }
+    }
+    return 'xxx.xxx.xxx.xxx';
+  }
+
+  // Helper: Parse Device, OS, and Browser from User-Agent
+  function parseDeviceInfo(userAgentRaw: string) {
+    const ua = (userAgentRaw || '').toLowerCase();
+    
+    // 1. Device Type
+    let deviceType = 'Desktop';
+    if (ua.includes('ipad') || ua.includes('tablet') || ua.includes('kindle') || ua.includes('silk') || ua.includes('playbook')) {
+      deviceType = 'Tablet';
+    } else if (ua.includes('mobile') || ua.includes('iphone') || ua.includes('ipod') || ua.includes('android') || ua.includes('blackberry') || ua.includes('windows phone') || ua.includes('opera mini')) {
+      deviceType = 'Mobile';
+    }
+
+    // 2. Operating System
+    let os = 'Unknown OS';
+    if (ua.includes('iphone') || ua.includes('ipad') || ua.includes('ipod') || (ua.includes('os x') && ua.includes('mobile'))) {
+      os = 'iOS';
+    } else if (ua.includes('android')) {
+      os = 'Android';
+    } else if (ua.includes('macintosh') || ua.includes('mac os x')) {
+      os = 'macOS';
+    } else if (ua.includes('windows nt') || ua.includes('win32') || ua.includes('win64')) {
+      os = 'Windows';
+    } else if (ua.includes('cros')) {
+      os = 'ChromeOS';
+    } else if (ua.includes('linux') || ua.includes('ubuntu') || ua.includes('debian') || ua.includes('fedora') || ua.includes('x11')) {
+      os = 'Linux';
+    }
+
+    // 3. Browser
+    let browser = 'Chrome';
+    if (ua.includes('instagram')) {
+      browser = 'Instagram In-App';
+    } else if (ua.includes('tiktok') || ua.includes('musical_ly') || ua.includes('bytelocale')) {
+      browser = 'TikTok In-App';
+    } else if (ua.includes('whatsapp')) {
+      browser = 'WhatsApp';
+    } else if (ua.includes('samsungbrowser')) {
+      browser = 'Samsung Internet';
+    } else if (ua.includes('edg/') || ua.includes('edge/')) {
+      browser = 'Edge';
+    } else if (ua.includes('opr/') || ua.includes('opera/')) {
+      browser = 'Opera';
+    } else if (ua.includes('firefox/') || ua.includes('fxios/')) {
+      browser = 'Firefox';
+    } else if (ua.includes('safari') && !ua.includes('chrome') && !ua.includes('crios') && !ua.includes('android')) {
+      browser = 'Safari';
+    } else if (ua.includes('chrome') || ua.includes('crios')) {
+      browser = 'Chrome';
+    } else {
+      browser = 'Other Browser';
+    }
+
+    return { deviceType, os, browser };
+  }
+
+  // Country language map for fallback
+  const LANG_COUNTRY_MAP: Record<string, { city: string; country: string; countryCode: string }> = {
+    'us': { city: 'New York', country: 'United States', countryCode: 'US' },
+    'en-us': { city: 'New York', country: 'United States', countryCode: 'US' },
+    'gb': { city: 'London', country: 'United Kingdom', countryCode: 'GB' },
+    'uk': { city: 'London', country: 'United Kingdom', countryCode: 'GB' },
+    'en-gb': { city: 'London', country: 'United Kingdom', countryCode: 'GB' },
+    'ca': { city: 'Toronto', country: 'Canada', countryCode: 'CA' },
+    'en-ca': { city: 'Toronto', country: 'Canada', countryCode: 'CA' },
+    'au': { city: 'Sydney', country: 'Australia', countryCode: 'AU' },
+    'en-au': { city: 'Sydney', country: 'Australia', countryCode: 'AU' },
+    'pk': { city: 'Karachi', country: 'Pakistan', countryCode: 'PK' },
+    'ur': { city: 'Islamabad', country: 'Pakistan', countryCode: 'PK' },
+    'ur-pk': { city: 'Karachi', country: 'Pakistan', countryCode: 'PK' },
+    'in': { city: 'Mumbai', country: 'India', countryCode: 'IN' },
+    'hi': { city: 'New Delhi', country: 'India', countryCode: 'IN' },
+    'hi-in': { city: 'New Delhi', country: 'India', countryCode: 'IN' },
+    'de': { city: 'Berlin', country: 'Germany', countryCode: 'DE' },
+    'de-de': { city: 'Berlin', country: 'Germany', countryCode: 'DE' },
+    'fr': { city: 'Paris', country: 'France', countryCode: 'FR' },
+    'fr-fr': { city: 'Paris', country: 'France', countryCode: 'FR' },
+    'es': { city: 'Madrid', country: 'Spain', countryCode: 'ES' },
+    'es-es': { city: 'Madrid', country: 'Spain', countryCode: 'ES' },
+    'it': { city: 'Rome', country: 'Italy', countryCode: 'IT' },
+    'it-it': { city: 'Rome', country: 'Italy', countryCode: 'IT' },
+    'jp': { city: 'Tokyo', country: 'Japan', countryCode: 'JP' },
+    'ja': { city: 'Tokyo', country: 'Japan', countryCode: 'JP' },
+    'ja-jp': { city: 'Tokyo', country: 'Japan', countryCode: 'JP' },
+    'br': { city: 'São Paulo', country: 'Brazil', countryCode: 'BR' },
+    'pt-br': { city: 'São Paulo', country: 'Brazil', countryCode: 'BR' },
+    'ae': { city: 'Dubai', country: 'United Arab Emirates', countryCode: 'AE' },
+    'ar-ae': { city: 'Dubai', country: 'United Arab Emirates', countryCode: 'AE' },
+    'sa': { city: 'Riyadh', country: 'Saudi Arabia', countryCode: 'SA' },
+    'ar-sa': { city: 'Riyadh', country: 'Saudi Arabia', countryCode: 'SA' },
+    'za': { city: 'Johannesburg', country: 'South Africa', countryCode: 'ZA' },
+    'en-za': { city: 'Johannesburg', country: 'South Africa', countryCode: 'ZA' },
+  };
+
+  // Helper: Fast Asynchronous IP Geolocation with Caching and Fallbacks
+  async function resolveLocation(ip: string, req: express.Request): Promise<{ approxLocation: string; city: string; country: string; countryCode: string }> {
+    // Check Cloudflare / CDN headers first
+    const cfCountry = (req.headers['cf-ipcountry'] as string || req.headers['x-appengine-country'] as string || req.headers['x-country-code'] as string || '').toUpperCase();
+    const cfCity = (req.headers['cf-ipcity'] as string || req.headers['x-appengine-city'] as string || '').trim();
+
+    if (cfCountry && cfCountry.length === 2) {
+      const countryName = cfCountry === 'US' ? 'United States' :
+                          cfCountry === 'GB' ? 'United Kingdom' :
+                          cfCountry === 'PK' ? 'Pakistan' :
+                          cfCountry === 'IN' ? 'India' :
+                          cfCountry === 'DE' ? 'Germany' :
+                          cfCountry === 'FR' ? 'France' :
+                          cfCountry === 'CA' ? 'Canada' :
+                          cfCountry === 'AU' ? 'Australia' :
+                          cfCountry === 'JP' ? 'Japan' :
+                          cfCountry === 'BR' ? 'Brazil' :
+                          cfCountry === 'AE' ? 'United Arab Emirates' :
+                          cfCountry === 'SA' ? 'Saudi Arabia' :
+                          cfCountry === 'ZA' ? 'South Africa' : cfCountry;
+      const city = cfCity || 'Regional';
+      return {
+        approxLocation: `${city}, ${countryName}`,
+        city,
+        country: countryName,
+        countryCode: cfCountry
+      };
+    }
+
+    // If private or loopback IP, fallback to language header
+    if (isPrivateIp(ip)) {
+      const langHeader = (req.headers['accept-language'] || '').toLowerCase();
+      for (const [key, val] of Object.entries(LANG_COUNTRY_MAP)) {
+        if (langHeader.includes(key)) {
+          return {
+            approxLocation: `${val.city}, ${val.country}`,
+            city: val.city,
+            country: val.country,
+            countryCode: val.countryCode
+          };
+        }
+      }
+      return {
+        approxLocation: 'London, United Kingdom',
+        city: 'London',
+        country: 'United Kingdom',
+        countryCode: 'GB'
+      };
+    }
+
+    // Check in-memory cache
+    const cached = geoCache.get(ip);
+    if (cached) {
+      return cached;
+    }
+
+    // Live Geolocation API resolution with fast 1200ms timeout
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 1200);
+
+      const res = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
+        signal: controller.signal,
+        headers: { 'User-Agent': 'FreeQRGen-Telemetry/1.0' }
+      });
+      clearTimeout(timer);
+
+      if (res.ok) {
+        const data: any = await res.json();
+        if (data && data.success) {
+          const city = data.city || 'Regional';
+          const country = data.country || 'Global';
+          const countryCode = data.country_code || 'GL';
+          const result = {
+            approxLocation: `${city}, ${country}`,
+            city,
+            country,
+            countryCode
+          };
+          if (geoCache.size < 5000) {
+            geoCache.set(ip, result);
+          }
+          return result;
+        }
+      }
+    } catch (apiErr) {
+      // API failed or aborted, continue to fallback
+    }
+
+    // Fallback to FreeIPAPI
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 1000);
+
+      const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(ip)}`, {
+        signal: controller.signal,
+        headers: { 'User-Agent': 'FreeQRGen-Telemetry/1.0' }
+      });
+      clearTimeout(timer);
+
+      if (res.ok) {
+        const data: any = await res.json();
+        if (data && data.countryName) {
+          const city = data.cityName || 'Regional';
+          const country = data.countryName;
+          const countryCode = data.countryCode || 'GL';
+          const result = {
+            approxLocation: `${city}, ${country}`,
+            city,
+            country,
+            countryCode
+          };
+          if (geoCache.size < 5000) {
+            geoCache.set(ip, result);
+          }
+          return result;
+        }
+      }
+    } catch (apiErr2) {
+      // Second API failed
+    }
+
+    // Fallback to language header
+    const langHeader = (req.headers['accept-language'] || '').toLowerCase();
+    for (const [key, val] of Object.entries(LANG_COUNTRY_MAP)) {
+      if (langHeader.includes(key)) {
+        const result = {
+          approxLocation: `${val.city}, ${val.country}`,
+          city: val.city,
+          country: val.country,
+          countryCode: val.countryCode
+        };
+        return result;
+      }
+    }
+
+    return {
+      approxLocation: 'Global',
+      city: 'Global',
+      country: 'Global',
+      countryCode: 'GL'
+    };
+  }
+
+  // Record complete scan telemetry
+  async function recordScanTelemetry(project: any, trackingId: string, destination: string, req: express.Request) {
+    const rawIp = getClientIp(req);
+    const ip = anonymizeIp(rawIp);
+    const rawUserAgent = req.headers['user-agent'] || '';
+    const { deviceType, os, browser } = parseDeviceInfo(rawUserAgent);
+    const loc = await resolveLocation(rawIp, req);
+    const referrer = (req.headers['referer'] || req.headers['referrer'] || 'Direct Camera Scan') as string;
+    const scanId = `scan-${Math.random().toString(36).substring(2, 11)}`;
+
+    const newScan: DbScan = {
+      id: scanId,
+      projectId: project.id,
+      trackingId: trackingId,
+      timestamp: new Date().toISOString(),
+      deviceType,
+      os,
+      browser,
+      approxLocation: loc.approxLocation,
+      city: loc.city,
+      country: loc.country,
+      countryCode: loc.countryCode,
+      ip,
+      destinationUrl: destination,
+      referrer,
+      userId: project.userId,
+      userAgent: rawUserAgent
+    };
+
+    await dbInstance.createScan(newScan);
+    await dbInstance.incrementProjectScan(project.id);
+    notifyUserOfScan(project.userId, newScan, project.name || 'My QR Code');
+    return newScan;
+  }
+
+  // Public Telemetry Record Endpoint (for client-side SPA redirects or headless integrations)
+  app.post('/api/scans/record', async (req, res) => {
+    const { trackingId, destinationUrl } = req.body;
+    if (!trackingId) {
+      return res.status(400).json({ error: 'trackingId is required' });
+    }
+
+    try {
+      const project = await dbInstance.getProjectByTrackingId(trackingId);
+      if (!project) {
+        return res.status(404).json({ error: 'QR Code not found' });
+      }
+
+      const destination = destinationUrl || project.content || 'https://google.com';
+      const scan = await recordScanTelemetry(project, trackingId, destination, req);
+      res.status(201).json({ success: true, scan });
+    } catch (err: any) {
+      console.error('Scan telemetry logging failed:', err);
+      res.status(500).json({ error: 'Failed to record scan' });
+    }
+  });
+
+  // Handler for QR Redirection & Telemetry Tracking
+  const handleQRRedirect = async (req: express.Request, res: express.Response) => {
     const { trackingId } = req.params;
     console.log(`[Short-Link Redirect] Request received for shortCode/trackingId: "${trackingId}"`);
 
@@ -2453,75 +2795,7 @@ Generate the 'payload' matching the precise data schema for the selected categor
 
       // Record logs if tracking is enabled
       if (project.trackingEnabled) {
-        const rawUserAgent = (req.headers['user-agent'] || '');
-        const userAgent = rawUserAgent.toLowerCase();
-        let deviceType = 'Desktop';
-        if (userAgent.includes('iphone') || userAgent.includes('android') || userAgent.includes('mobi') || userAgent.includes('phone')) {
-          deviceType = 'Mobile';
-        } else if (userAgent.includes('ipad') || userAgent.includes('tablet') || userAgent.includes('kindle')) {
-          deviceType = 'Tablet';
-        }
-
-        let browser = 'Chrome';
-        if (userAgent.includes('firefox') || userAgent.includes('fxios')) {
-          browser = 'Firefox';
-        } else if (userAgent.includes('safari') && !userAgent.includes('chrome') && !userAgent.includes('android')) {
-          browser = 'Safari';
-        } else if (userAgent.includes('edg')) {
-          browser = 'Edge';
-        } else if (userAgent.includes('opera') || userAgent.includes('opr')) {
-          browser = 'Opera';
-        } else if (userAgent.includes('samsungbrowser')) {
-          browser = 'Samsung Internet';
-        }
-
-        const ip = (req.headers['x-forwarded-for'] as string || req.ip || '127.0.0.1').split(',')[0].trim();
-        const lang = (req.headers['accept-language'] || '').toLowerCase();
-        let approxLocation = 'Global';
-        if (lang.includes('gb') || lang.includes('uk')) {
-          approxLocation = 'United Kingdom';
-        } else if (lang.includes('fr')) {
-          approxLocation = 'France';
-        } else if (lang.includes('de')) {
-          approxLocation = 'Germany';
-        } else if (lang.includes('ja') || lang.includes('jp')) {
-          approxLocation = 'Japan';
-        } else if (lang.includes('us') || lang.includes('en-us')) {
-          approxLocation = 'United States';
-        } else if (lang.includes('pk') || lang.includes('ur')) {
-          approxLocation = 'Pakistan';
-        } else if (lang.includes('in') || lang.includes('hi')) {
-          approxLocation = 'India';
-        } else if (lang.includes('ca')) {
-          approxLocation = 'Canada';
-        } else if (lang.includes('au')) {
-          approxLocation = 'Australia';
-        }
-
-        const referrer = (req.headers['referer'] || req.headers['referrer'] || 'Direct / Scan') as string;
-        const scanId = `scan-${Math.random().toString(36).substring(2, 11)}`;
-
-        const newScan = {
-          id: scanId,
-          projectId: project.id,
-          trackingId: trackingId,
-          timestamp: new Date().toISOString(),
-          deviceType,
-          browser,
-          approxLocation,
-          ip,
-          userId: project.userId,
-          referrer,
-          userAgent: rawUserAgent
-        };
-
-        await dbInstance.createScan(newScan);
-
-        // Increment count
-        await dbInstance.incrementProjectScan(project.id);
-
-        // Realtime notification sync
-        notifyUserOfScan(project.userId, newScan, project.name || 'My QR Code');
+        await recordScanTelemetry(project, trackingId, destination, req);
       }
 
       if (showExpiredMessage) {
@@ -2620,7 +2894,12 @@ Generate the 'payload' matching the precise data schema for the selected categor
       console.error('Core scan tracking process failed:', err);
       res.redirect('/');
     }
-  });
+  };
+
+  // Register all QR redirection route variants
+  app.get('/qr/:trackingId', handleQRRedirect);
+  app.get('/r/:trackingId', handleQRRedirect);
+  app.get('/api/r/:trackingId', handleQRRedirect);
 
 
   // --- SEO ROUTING: SITEMAP & ROBOTS ENFORCEMENTS ---
@@ -2629,6 +2908,7 @@ Generate the 'payload' matching the precise data schema for the selected categor
     const baseUrl = 'https://www.freeqrgen.pro';
     const slugs = [
       '',
+      // Generators & Tools
       'wifi-qr-generator',
       'whatsapp-qr-generator',
       'email-qr-generator',
@@ -2651,40 +2931,198 @@ Generate the 'payload' matching the precise data schema for the selected categor
       'crypto-qr-generator',
       'app-store-qr-generator',
       'location-qr-generator',
+
+      // Core & Hubs
       'faq',
       'blog',
+      'templates',
+      'compare',
+      'academy',
+      'guides',
+      'tutorials',
+      'resources',
+      'glossary',
+      'solutions',
+      'industries',
+      'use-cases',
+      'platform',
+      'marketing-platform',
+
+      // Trust Center & Company
       'about',
+      'why-freeqrgen',
+      'editorial-policy',
+      'research-methodology',
       'privacy',
+      'privacy-policy',
+      'security',
+      'data-processing',
+      'accessibility',
       'contact',
-      'terms',
+      'changelog',
+      'release-notes',
+      'system-status',
+      'careers',
+      'media-kit',
+      'brand-assets',
+      'press',
+
+      // Growth Suite
+      'profile',
+      'community',
+      'roadmap',
+      'testimonials',
+      'case-studies',
+      'feedback',
+
+      // Knowledge Hub Guides & Tutorials
+      'academy/what-is-a-qr-code',
+      'academy/how-qr-codes-work',
+      'academy/static-vs-dynamic-qr-codes',
+      'guides/restaurant-qr-codes',
+      'guides/business-card-qr-codes',
+      'guides/wifi-qr-codes',
+      'guides/google-review-qr-codes',
+      'guides/whatsapp-qr-codes',
+      'guides/pdf-qr-codes',
+      'guides/email-qr-codes',
+      'guides/phone-qr-codes',
+      'guides/sms-qr-codes',
+      'guides/url-qr-codes',
+      'guides/location-qr-codes',
+      'guides/vcard-qr-codes',
+      'guides/event-qr-codes',
+      'tutorials/best-qr-code-size-guide',
+      'tutorials/qr-printing-guide',
+      'tutorials/qr-code-error-correction-guide',
+      'resources/qr-security-best-practices',
+
+      // Templates Hub
+      'templates/restaurant-menu-qr-code',
+      'templates/business-card-qr-code',
+      'templates/google-review-qr-code',
+      'templates/whatsapp-qr-code',
+      'templates/wifi-qr-code',
+      'templates/pdf-qr-code',
+      'templates/event-ticket-qr-code',
+      'templates/instagram-qr-code',
+      'templates/facebook-qr-code',
+      'templates/youtube-qr-code',
+      'templates/real-estate-qr-code',
+      'templates/hotel-qr-code',
+      'templates/cafe-qr-code',
+      'templates/gym-qr-code',
+      'templates/school-qr-code',
+      'templates/medical-qr-code',
+      'templates/retail-qr-code',
+      'templates/portfolio-qr-code',
+      'templates/resume-qr-code',
+      'templates/product-packaging-qr-code',
+
+      // Compare Hub
+      'compare/static-vs-dynamic-qr-code',
+      'compare/png-vs-svg-qr-code',
+      'compare/svg-vs-pdf-qr-code',
+      'compare/free-vs-paid-qr-codes',
+      'compare/editable-vs-non-editable-qr-codes',
+      'compare/qr-code-error-correction-levels',
+      'compare/black-vs-colored-qr-codes',
+      'compare/business-card-qr-vs-nfc',
+      'compare/restaurant-qr-vs-printed-menu',
+      'compare/google-review-qr-vs-review-link',
+      'compare/qr-menu-vs-paper-menu',
+
+      // Programmatic SEO Solutions, Industries, Use Cases
+      'solutions/contactless-menu',
+      'solutions/digital-business-card',
+      'solutions/google-review-booster',
+      'solutions/wifi-guest-onboarding',
+      'solutions/event-ticketing-checkin',
+      'solutions/app-download-marketing',
+      'industries/restaurant',
+      'industries/cafe',
+      'industries/hotel',
+      'industries/retail',
+      'industries/e-commerce',
+      'industries/healthcare',
+      'use-cases/tableside-ordering',
+      'use-cases/real-estate-signs',
+      'use-cases/product-packaging-manuals',
+      'use-cases/office-lobby-wifi',
+      'use-cases/concert-ticket-validation',
+      'use-cases/social-media-engagement',
+
+      // Platform Modules
+      'platform/qr-analytics',
+      'platform/dynamic-qr',
+      'platform/bulk-generator',
+      'platform/folder-management',
+      'platform/collections',
+      'platform/saved-designs',
+      'platform/favorite-templates',
+      'platform/team-workspace',
+      'platform/organization',
+      'platform/api-platform',
+      'platform/developer-dashboard',
+      'platform/webhooks',
+      'platform/integrations',
+      'platform/scan-statistics',
+      'platform/campaign-manager',
+      'platform/export-center',
+      'platform/import-center',
+
+      // Blog Articles
       'blog/what-is-qr-code-how-it-works',
-      'blog/10-ways-businesses-use-qr-codes-increase-sales',
-      'blog/how-to-create-wifi-qr-code',
-      'blog/qr-codes-restaurants-digital-menus',
-      'blog/best-qr-code-marketing-strategies',
-      'blog/qr-codes-events-conferences',
-      'blog/qr-codes-in-education',
-      'blog/common-qr-code-mistakes-avoid',
-      'blog/how-qr-codes-improve-customer-experience',
-      'blog/future-of-qr-code-technology',
-      'blog/qr-codes-inventory-management-asset-tracking'
+      'blog/static-vs-dynamic-qr-codes-guide',
+      'blog/qr-code-error-correction-levels-explained',
+      'blog/omnichannel-retail-qr-codes-footfall-to-sales',
+      'blog/b2b-lead-generation-with-qr-landing-pages',
+      'blog/smart-packaging-qr-codes-product-engagement',
+      'blog/utm-tracking-measuring-qr-code-roi-ga4',
+      'blog/retargeting-offline-audiences-with-dynamic-qr',
+      'blog/ab-testing-print-advertising-with-qr-codes',
+      'blog/small-business-qr-code-starter-playbook',
+      'blog/how-to-boost-google-reviews-with-countertop-qr',
+      'blog/contactless-invoicing-qr-payment-receipts',
+      'blog/anatomy-of-2d-matrix-grids-micro-qr-iqr',
+      'blog/qr-code-cybersecurity-preventing-qshing-attacks',
+      'blog/gs1-digital-link-2027-barcode-standards-transition',
+      'blog/hotel-digital-checkin-guest-experience-qr',
+      'blog/touchless-healthcare-clinic-patient-registration-qr',
+      'blog/smart-facility-maintenance-ticketing-equipment-qr',
+      'blog/complete-guide-to-digital-qr-restaurant-menus',
+      'blog/dynamic-pricing-and-realtime-menu-updates-qr',
+      'blog/tableside-ordering-and-speeding-up-table-turnover',
+      'blog/high-speed-event-ticketing-and-access-control-qr',
+      'blog/smart-networking-vcard-badges-for-conferences',
+      'blog/live-audience-polls-qa-interactive-event-qr',
+      'blog/interactive-textbooks-and-classroom-handouts-qr',
+      'blog/campus-navigation-and-smart-building-directories-qr',
+      'blog/qr-based-automated-student-attendance-systems',
+      'blog/multi-link-social-bio-qr-codes-one-scan',
+      'blog/pop-up-store-activations-viral-social-qr-campaigns',
+      'blog/influencer-merch-unboxing-direct-social-engagement',
+
+      // Multilingual locales
+      'ar', 'ur', 'de', 'fr', 'es', 'pt', 'it', 'tr', 'id', 'hi', 'zh', 'ja', 'ko'
     ];
+
     const urlXmls = slugs.map(slug => {
       let priority = '0.8';
       let freq = 'weekly';
       if (slug === '') {
         priority = '1.0';
         freq = 'daily';
-      } else if (['about', 'privacy', 'contact', 'terms'].includes(slug)) {
+      } else if (['about', 'privacy', 'privacy-policy', 'contact', 'terms', 'system-status', 'release-notes', 'changelog'].includes(slug)) {
         priority = '0.5';
         freq = 'monthly';
-      } else if (slug.startsWith('blog/')) {
-        priority = '0.6';
-        freq = 'monthly';
+      } else if (slug.startsWith('blog/') || slug.startsWith('academy/') || slug.startsWith('guides/')) {
+        priority = '0.7';
+        freq = 'weekly';
       }
       return `  <url>
     <loc>${baseUrl}/${slug ? slug : ''}</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>${freq}</changefreq>
     <priority>${priority}</priority>
   </url>`;
@@ -2701,6 +3139,8 @@ ${urlXmls}
     res.header('Content-Type', 'text/plain');
     const robots = `User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /profile
 
 Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
     res.send(robots);

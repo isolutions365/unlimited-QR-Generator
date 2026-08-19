@@ -47,6 +47,9 @@ export const faqCategories = [
 ] as const;
 
 export const getFaqData = (locale: string = 'en'): FAQItem[] => {
-  const data = faqDataMap[locale] || faqDataMap['en'];
-  return data as FAQItem[];
+  const data = faqDataMap[locale];
+  if (Array.isArray(data) && data.length > 0) {
+    return data as FAQItem[];
+  }
+  return (faqDataMap['en'] || []) as FAQItem[];
 };

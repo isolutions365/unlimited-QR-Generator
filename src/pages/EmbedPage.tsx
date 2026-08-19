@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../utils/i18n';
 
-import { ArrowLeft, Copy, Check, Code, Zap, ExternalLink, ShieldAlert, Heart, Info, Globe } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Code, Zap, ExternalLink, ShieldAlert, Heart, Info, Globe, Home, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface EmbedPageProps {
@@ -70,6 +70,19 @@ export default function EmbedPage({
 
   return (
     <div className="max-w-5xl mx-auto py-12 px-6 animate-fade-in" id="embed-page-container">
+      {/* Breadcrumb Navigation */}
+      <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs mb-6">
+        <button 
+          onClick={() => onNavigate('/')} 
+          className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
+        >
+          <Home className="w-3.5 h-3.5" />
+          <span>{t('common.home', 'Home')}</span>
+        </button>
+        <ChevronRight className="w-3 h-3 text-slate-300" />
+        <span className="text-slate-800 font-bold">{t('embed.titleShort', 'Embed Badges')}</span>
+      </nav>
+
       {/* Back button */}
       <button
         onClick={() => onNavigate('/')}

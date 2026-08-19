@@ -64,24 +64,24 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
       if (this.props.isInline) {
         return (
-          <div className="bg-red-50/20 border border-red-100/60 rounded-2xl p-6 my-4 text-center space-y-4 max-w-xl mx-auto">
-            <div className="mx-auto w-10 h-10 bg-red-50 text-red-600 rounded-full flex items-center justify-center">
+          <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 my-4 text-center space-y-3 max-w-xl mx-auto">
+            <div className="mx-auto w-10 h-10 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div className="space-y-1">
-              <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Failed to render section</h4>
-              <p className="text-[11px] text-slate-500 max-w-sm mx-auto leading-relaxed">
-                {this.state.error?.message || 'An error occurred while loading this modular component.'}
+              <h4 className="text-sm font-semibold text-slate-800">Kuch masla ho gaya, dobara try karein</h4>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                Baraye meharbani dobara koshish karein ya page ko refresh karein.
               </p>
             </div>
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-2 pt-1">
               <button
                 type="button"
                 onClick={this.handleReset}
-                className="py-1.5 px-3 bg-slate-900 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 hover:bg-black transition-all active:scale-95 cursor-pointer"
+                className="py-1.5 px-4 bg-slate-900 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 hover:bg-black transition-all active:scale-95 cursor-pointer shadow-xs"
               >
-                <RefreshCw className="w-3 h-3" />
-                Retry Loading
+                <RefreshCw className="w-3.5 h-3.5" />
+                Dobara Koshish Karein
               </button>
             </div>
           </div>
@@ -91,47 +91,22 @@ export default class ErrorBoundary extends React.Component<Props, State> {
       return (
         <div className="min-h-[400px] flex items-center justify-center p-6 bg-slate-50/50 rounded-2xl border border-slate-200 shadow-xs m-4">
           <div className="max-w-md w-full text-center space-y-6 p-8 bg-white rounded-2xl border border-slate-100 shadow-xl">
-            <div className="mx-auto w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center animate-pulse">
+            <div className="mx-auto w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center">
               <AlertTriangle className="w-6 h-6" />
             </div>
             
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-slate-900">Something went wrong</h3>
+              <h3 className="text-lg font-bold text-slate-900">Kuch masla ho gaya, dobara try karein</h3>
               <p className="text-xs text-slate-500 leading-relaxed">
-                An unexpected interface rendering issue occurred. Our runtime protection caught the exception gracefully.
+                Baraye meharbani page ko reload karein ya thori der baad dobara koshish karein.
               </p>
             </div>
 
-            {/* Notification Banner confirming log dispatch to monitoring endpoint */}
-            <div className="bg-amber-50 border border-amber-200/70 p-3 rounded-xl flex items-center gap-2.5 text-left text-amber-900 text-xs">
-              <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-              <div className="flex-1 text-[11px] leading-snug">
-                <span className="font-semibold block text-amber-950">System Crash Notification</span>
-                {this.state.reported ? (
-                  <span className="text-amber-800 flex items-center gap-1 mt-0.5">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0 inline" />
-                    Stack trace logged to monitoring server.
-                  </span>
-                ) : (
-                  <span className="text-amber-800">Dispatching diagnostic telemetry to system monitoring...</span>
-                )}
-              </div>
-            </div>
-
-            {this.state.error && (
-              <div className="text-left bg-slate-50 border border-slate-200/60 p-3 rounded-xl max-h-32 overflow-y-auto">
-                <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider block mb-1">Error trace</span>
-                <span className="text-[11px] font-mono text-slate-700 break-words block">
-                  {this.state.error.message || String(this.state.error)}
-                </span>
-              </div>
-            )}
-
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-3 justify-center pt-2">
               <button
                 type="button"
                 onClick={this.handleReset}
-                className="py-2 px-4 bg-slate-900 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-black transition-all active:scale-95 cursor-pointer"
+                className="py-2.5 px-5 bg-slate-900 text-white rounded-xl text-xs font-semibold flex items-center gap-2 hover:bg-black transition-all active:scale-95 cursor-pointer shadow-xs"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Reload Application
@@ -139,7 +114,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
               <button
                 type="button"
                 onClick={() => window.location.assign('/')}
-                className="py-2 px-4 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-200 transition-all active:scale-95 cursor-pointer"
+                className="py-2.5 px-5 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-2 hover:bg-slate-200 transition-all active:scale-95 cursor-pointer"
               >
                 <Home className="w-3.5 h-3.5" />
                 Return Home

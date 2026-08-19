@@ -544,8 +544,8 @@ export default function ControlPanel({ currentProject,
           <input
             id="project-name-input"
             type="text"
-            className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
-            placeholder={t('control.placeholder.projectName', 'e.g. My Website QR')}
+            className="w-full text-sm px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800 placeholder:text-slate-400"
+            placeholder="My Custom QR Code"
             value={localProject.name || ''}
             onChange={e => onChange({ ...localProject, name: e.target.value }, true)}
           />
@@ -558,8 +558,8 @@ export default function ControlPanel({ currentProject,
               <input
                 id="target-url-input"
                 type="url"
-                className={`flex-1 text-sm px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-white text-slate-800 transition-all ${ urlError && urlError.type === 'error' ? 'border-rose-300 focus:ring-rose-500/20 focus:border-rose-500' : urlError && urlError.type === 'warning' ? 'border-amber-350 focus:ring-amber-500/20 focus:border-amber-500' : 'border-gray-200 focus:ring-indigo-500 focus:border-indigo-500' }`}
-                placeholder="https://example.com"
+                className={`flex-1 text-sm px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-white text-slate-800 placeholder:text-slate-400 transition-all ${ urlError && urlError.type === 'error' ? 'border-rose-300 focus:ring-rose-500/20 focus:border-rose-500' : urlError && urlError.type === 'warning' ? 'border-amber-350 focus:ring-amber-500/20 focus:border-amber-500' : 'border-gray-200 focus:ring-indigo-500 focus:border-indigo-500' }`}
+                placeholder="https://www.freeqrgen.pro"
                 value={localProject.content || ''}
                 onChange={e => onChange({ ...localProject, content: e.target.value }, true)}
               />
@@ -2030,7 +2030,7 @@ export default function ControlPanel({ currentProject,
           <input
             id="emblem-url-input"
             type="text"
-            className="w-full text-xs px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-850"
+            className="w-full text-xs px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800 placeholder:text-slate-400"
             placeholder={t('control.placeholder.logoText', 'e.g. Google, QR, or text/emoji')}
             value={localProject.design?.logoUrl || ''}
             onChange={e => {

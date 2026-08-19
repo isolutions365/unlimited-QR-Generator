@@ -1,9 +1,9 @@
 import { getFaqData, FAQItem, faqCategories } from '../data/faqData';
 import { getBlogArticles, BlogArticle, blogCategories } from '../data/blogData';
 
-export type Locale = 'en' | 'ar' | 'ur' | 'es' | 'fr' | 'de' | 'pt' | 'it' | 'tr' | 'id' | 'hi' | 'ja' | 'ko' | 'zh';
+export type Locale = 'en' | 'ar' | 'ur' | 'hi' | 'fr' | 'es' | 'tr' | 'id';
 
-export const SUPPORTED_LOCALES: Locale[] = ['en', 'ar', 'ur', 'es', 'fr', 'de', 'pt', 'it', 'tr', 'id', 'hi', 'ja', 'ko', 'zh'];
+export const SUPPORTED_LOCALES: Locale[] = ['en', 'ar', 'ur', 'hi', 'fr', 'es', 'tr', 'id'];
 
 export function isRtlLocale(locale: Locale): boolean {
   return locale === 'ar' || locale === 'ur';
@@ -25,7 +25,7 @@ export interface NavItem {
   slug: string;
 }
 
-export const navTranslations: Record<Locale, {
+export const navTranslations: (Record<Locale, {
   creativeStation: string;
   freeQrTools: string;
   designStudio: string;
@@ -48,7 +48,7 @@ export const navTranslations: Record<Locale, {
   cookieConsentText: string;
   accept: string;
   decline: string;
-}> = {
+}> & Record<string, any>) = {
   en: {
     creativeStation: "Creative Station",
     freeQrTools: "Free QR Tools",
@@ -388,7 +388,7 @@ export const navTranslations: Record<Locale, {
 };
 
 // Creative Station Sub-items
-export const creativeSubItems: Record<Locale, { name: string; desc: string }[]> = {
+export const creativeSubItems: (Record<Locale, { name: string; desc: string }[]> & Record<string, any>) = {
   en: [
     { name: 'AI QR Generator', desc: 'Design beautiful prompt-to-artwork QR templates' },
     { name: 'QR Designer', desc: 'Customize eye grids, gradients and quiet spaces' },
@@ -504,7 +504,7 @@ export const creativeSubItems: Record<Locale, { name: string; desc: string }[]> 
 };
 
 // Translated Expert Preset Tools List
-export const presetToolsTranslations: Record<Locale, { name: string; desc: string; slug: string }[]> = {
+export const presetToolsTranslations: (Record<Locale, { name: string; desc: string; slug: string }[]> & Record<string, any>) = {
   en: [
     { name: 'URL QR', slug: 'url-qr-generator', desc: 'Secure web redirects with live trackable shortened links.' },
     { name: 'PDF QR', slug: 'pdf-qr-generator', desc: 'Contactless dynamic documents loading restaurant menus & guides.' },
@@ -676,7 +676,7 @@ export const presetToolsTranslations: Record<Locale, { name: string; desc: strin
 };
 
 // FAQ Category Translations Mapping
-export const faqCategoryLabels: Record<Locale, Record<string, string>> = {
+export const faqCategoryLabels: (Record<Locale, Record<string, string>> & Record<string, any>) = {
   en: {
     all: "All Questions",
     general: "General & Basics",

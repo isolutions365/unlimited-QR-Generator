@@ -85,6 +85,13 @@ export interface DbScan {
   approxLocation: string;
   ip: string;
   userId: string;
+  destinationUrl?: string;
+  referrer?: string;
+  os?: string;
+  city?: string;
+  country?: string;
+  countryCode?: string;
+  userAgent?: string;
 }
 
 // Error Handling Infrastructure - conformance with FireStore integration rules

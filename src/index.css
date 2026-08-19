@@ -436,7 +436,17 @@ html[dir="rtl"] [class*="space-x-"]:not(.ltr-lock) > :not([hidden]) ~ :not([hidd
    Global Floating UI Elements Layout & Non-Overlapping Position Rules
    ========================================================================== */
 
-/* 1. Google reCAPTCHA Enterprise Badge embedded in footer */
+/* 1. Google reCAPTCHA Enterprise Badge styling & safety guards */
+.grecaptcha-error {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.grecaptcha-badge:has(.grecaptcha-error) {
+  display: none !important;
+  visibility: hidden !important;
+}
+
 .grecaptcha-badge {
   position: relative !important;
   bottom: auto !important;

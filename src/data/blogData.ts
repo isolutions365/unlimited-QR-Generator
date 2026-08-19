@@ -46,7 +46,22 @@ export interface BlogArticle {
 }
 
 export const getBlogArticles = (locale: string = 'en'): BlogArticle[] => {
-  return (blogDataMap[locale] || blogDataMap['en']) as BlogArticle[];
+  const articles = blogDataMap[locale];
+  if (Array.isArray(articles) && articles.length > 0) {
+    // Check if articles contain placeholder markers like '[ترجمہ شدہ]', 'Translation]', or bracketed tags
+    const hasPlaceholders = articles.some((art: any) => {
+      const text = `${art.title || ''} ${art.metaDescription || ''} ${art.intro || ''} ${art.contentMarkdown || ''}`;
+      return text.includes('[ترجمہ شدہ]') || text.includes('Translation]') || text.includes('[UR Translation]') || text.includes('[PT Translation]') || text.includes('[FR Translation]') || text.includes('[ES Translation]');
+    });
+
+    if (hasPlaceholders && locale !== 'en') {
+      // If incomplete or containing fake placeholder markers, fallback to English pristine articles per instructions
+      return (blogDataMap['en'] || []) as BlogArticle[];
+    }
+
+    return articles as BlogArticle[];
+  }
+  return (blogDataMap['en'] || []) as BlogArticle[];
 };
 
 export const blogCategories = [

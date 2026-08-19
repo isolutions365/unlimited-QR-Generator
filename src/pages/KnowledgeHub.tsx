@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check,
   ChevronRight, MessageSquare, Zap, Filter, Search, BookOpen, ExternalLink,
-  Twitter, Facebook, Linkedin, HelpCircle, FileText, Printer, ShieldAlert, Wifi, Info
+  Twitter, Facebook, Linkedin, HelpCircle, FileText, Printer, ShieldAlert, Wifi, Info, Home
 } from 'lucide-react';
 import { knowledgeArticles, KnowledgeArticle } from '../data/knowledgeData';
 import { Locale } from '../utils/translations';
@@ -211,7 +211,28 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
     <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 text-slate-800 animate-fade-in" id="knowledge-hub-container">
       {activeArticle ? (
         /* ==================== DETAILED VIEW ==================== */
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="space-y-6">
+          {/* Visual Breadcrumb Bar */}
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
+            <button 
+              onClick={() => onNavigate('/')} 
+              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span>{t('knowledge.home', 'Home')}</span>
+            </button>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <button 
+              onClick={handleBackToList} 
+              className="hover:text-indigo-600 transition-colors cursor-pointer font-semibold capitalize"
+            >
+              {t(`knowledge.sections.${section}`, section)}
+            </button>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <span className="text-slate-800 font-bold truncate max-w-[240px] sm:max-w-none">{activeArticle.title}</span>
+          </nav>
+
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main content grid */}
           <article className="lg:col-span-3 space-y-8" id="kb-article-view">
             {/* Top Bar Navigation */}
@@ -562,9 +583,23 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
             </div>
           </aside>
         </div>
+        </div>
       ) : (
         /* ==================== LIST VIEW ==================== */
         <div className="space-y-8" id="kb-list-view">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
+            <button 
+              onClick={() => onNavigate('/')} 
+              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span>{t('knowledge.home', 'Home')}</span>
+            </button>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <span className="text-slate-800 font-bold capitalize">{t(`knowledge.sections.${section}`, section)}</span>
+          </nav>
+
           {/* Header section with description */}
           <div className="space-y-3 text-center max-w-2xl mx-auto">
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">

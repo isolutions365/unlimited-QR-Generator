@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { QrCode, Zap, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, Barcode, FileSpreadsheet, BarChart3 } from 'lucide-react';
+import { QrCode, Zap, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, Barcode, FileSpreadsheet, BarChart3, User, LogOut } from 'lucide-react';
 import Navigation from './Navigation';
 import LanguageSelector from './LanguageSelector';
 import { Locale } from '../utils/translations';
@@ -39,6 +39,7 @@ export default function Header({
   onOpenSettings, soundEnabled = true
 }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const isRtl = ['ar', 'ur'].includes(locale);
 
   const navLinks = [
@@ -120,16 +121,71 @@ export default function Header({
          {/* Desktop/Tablet Auth */}
          <div className="hidden sm:flex items-center gap-2">
             {user ? (
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-slate-600 max-w-[120px] truncate">
-                  {user.name}
-                </span>
-                <button 
-                  onClick={onSignOut} 
-                  className="px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 rounded-lg whitespace-nowrap shrink-0 cursor-pointer transition-colors"
+              <div className="relative">
+                <button
+                  onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                  className="flex items-center gap-2.5 p-1.5 pl-2 pr-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-full transition-all cursor-pointer shadow-xs"
                 >
-                  {t('nav.signOut', 'Sign Out')}
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold font-mono text-xs flex items-center justify-center shadow-xs uppercase">
+                    {user.name?.[0] || user.email?.[0] || 'U'}
+                  </div>
+                  <span className="text-xs font-bold text-slate-700 max-w-[110px] truncate">
+                    {user.name || 'Account'}
+                  </span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
+
+                <AnimatePresence>
+                  {isProfileDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                      className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 text-left"
+                    >
+                      <div className="px-4 py-3 border-b border-slate-100">
+                        <p className="text-xs font-bold text-slate-800 truncate">{user.name}</p>
+                        <p className="text-[10px] text-slate-400 font-mono truncate mt-0.5">{user.email}</p>
+                      </div>
+
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setIsProfileDropdownOpen(false);
+                            navigateTo('/profile');
+                          }}
+                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
+                        >
+                          <User className="w-4 h-4 text-indigo-500" />
+                          <span>{t('nav.myProfile', 'My Profile & Settings')}</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsProfileDropdownOpen(false);
+                            navigateTo('/');
+                          }}
+                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
+                        >
+                          <QrCode className="w-4 h-4 text-indigo-500" />
+                          <span>{t('nav.savedQRs', 'My Saved QR Codes')}</span>
+                        </button>
+                      </div>
+
+                      <div className="border-t border-slate-100 pt-1 mt-1">
+                        <button
+                          onClick={() => {
+                            setIsProfileDropdownOpen(false);
+                            onSignOut?.();
+                          }}
+                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                        >
+                          <LogOut className="w-4 h-4 text-red-500" />
+                          <span>{t('nav.signOut', 'Sign Out')}</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
               <>

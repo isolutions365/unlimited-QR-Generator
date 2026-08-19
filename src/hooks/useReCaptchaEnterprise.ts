@@ -73,6 +73,15 @@ export function useReCaptchaEnterprise() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // Check if the current hostname is a supported production domain before injecting script
+    const hostname = window.location.hostname;
+    const isSupportedDomain = hostname === 'freeqrgen.pro' || hostname === 'www.freeqrgen.pro';
+
+    if (!isSupportedDomain) {
+      // In dev/staging/preview sandboxes, skip external reCAPTCHA script injection to prevent 'Invalid domain for site key' error badges
+      return;
+    }
+
     // A. Ensure the reCAPTCHA Enterprise script tag is injected and loading
     const scriptId = 'recaptcha-enterprise-script';
     let script = (document.getElementById(scriptId) || document.querySelector('script[src*="recaptcha/enterprise.js"]')) as HTMLScriptElement | null;

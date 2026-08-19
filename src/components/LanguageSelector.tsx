@@ -7,17 +7,11 @@ const LANGUAGES: { code: Locale; native: string; english: string }[] = [
   { code: 'en', native: 'English', english: 'English' },
   { code: 'ar', native: 'العربية', english: 'Arabic' },
   { code: 'ur', native: 'اردو', english: 'Urdu' },
-  { code: 'es', native: 'Español', english: 'Spanish' },
+  { code: 'hi', native: 'हिन्दी', english: 'Hindi' },
   { code: 'fr', native: 'Français', english: 'French' },
-  { code: 'de', native: 'Deutsch', english: 'German' },
-  { code: 'pt', native: 'Português', english: 'Portuguese' },
-  { code: 'it', native: 'Italiano', english: 'Italian' },
+  { code: 'es', native: 'Español', english: 'Spanish' },
   { code: 'tr', native: 'Türkçe', english: 'Turkish' },
   { code: 'id', native: 'Bahasa Indonesia', english: 'Indonesian' },
-  { code: 'hi', native: 'हिन्दी', english: 'Hindi' },
-  { code: 'ja', native: '日本語', english: 'Japanese' },
-  { code: 'ko', native: '한국어', english: 'Korean' },
-  { code: 'zh', native: '中文', english: 'Chinese' },
 ];
 
 interface LanguageSelectorProps {

@@ -18,11 +18,14 @@ import {
 } from 'lucide-react';
 import { QRProject } from '../types';
 import { MemoizedQRCanvas } from './MemoizedQRCanvas';
+import Logo from './Logo';
+import { isRtlLocale, Locale } from '../utils/translations';
 
 interface PrintModeLayoutProps {
   currentProject: Partial<QRProject> | null;
   onBack: () => void;
   t: (key: string, defaultValue: string) => string;
+  locale?: Locale;
 }
 
 type LabelPresetId = 'avery_5160' | 'avery_5161' | 'avery_5163' | 'business_card_h' | 'business_card_v' | 'table_tent' | 'single_label';
@@ -44,13 +47,15 @@ interface LabelPreset {
   category: 'label' | 'card' | 'other';
 }
 
-export default function PrintModeLayout({ currentProject, onBack, t }: PrintModeLayoutProps) {
+export default function PrintModeLayout({ currentProject, onBack, t, locale = 'en' }: PrintModeLayoutProps) {
+  const isRtl = isRtlLocale(locale);
+
   // Label presets with official technical specifications in mm
   const PRESETS: LabelPreset[] = [
     {
       id: 'avery_5160',
-      name: 'Avery 5160 (30 Labels/Sheet)',
-      description: 'Standard 3x10 address & general identifier labels. Perfect for small products.',
+      name: t('print.preset.avery_5160.name', 'Avery 5160 (30 Labels/Sheet)'),
+      description: t('print.preset.avery_5160.desc', 'Standard 3x10 address & general identifier labels. Perfect for small products.'),
       cols: 3,
       rows: 10,
       labelWidthMm: 66.6,
@@ -65,8 +70,8 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
     },
     {
       id: 'avery_5161',
-      name: 'Avery 5161 (20 Labels/Sheet)',
-      description: 'Medium 2x10 shipping & asset tag labels. Excellent size for QR codes.',
+      name: t('print.preset.avery_5161.name', 'Avery 5161 (20 Labels/Sheet)'),
+      description: t('print.preset.avery_5161.desc', 'Medium 2x10 shipping & asset tag labels. Excellent size for QR codes.'),
       cols: 2,
       rows: 10,
       labelWidthMm: 101.6,
@@ -81,8 +86,8 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
     },
     {
       id: 'avery_5163',
-      name: 'Avery 5163 (10 Labels/Sheet)',
-      description: 'Large 2x5 shipping & retail tags. Highly visible display layout.',
+      name: t('print.preset.avery_5163.name', 'Avery 5163 (10 Labels/Sheet)'),
+      description: t('print.preset.avery_5163.desc', 'Large 2x5 shipping & retail tags. Highly visible display layout.'),
       cols: 2,
       rows: 5,
       labelWidthMm: 101.6,
@@ -97,8 +102,8 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
     },
     {
       id: 'business_card_h',
-      name: 'Business Cards - Horizontal (10/Sheet)',
-      description: 'Standard horizontal business card template (3.5" x 2.0") with cutlines.',
+      name: t('print.preset.business_card_h.name', 'Business Cards - Horizontal (10/Sheet)'),
+      description: t('print.preset.business_card_h.desc', 'Standard horizontal business card template (3.5" x 2.0") with cutlines.'),
       cols: 2,
       rows: 5,
       labelWidthMm: 88.9,
@@ -113,8 +118,8 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
     },
     {
       id: 'business_card_v',
-      name: 'Business Cards - Vertical (10/Sheet)',
-      description: 'Modern vertical business card template (2.0" x 3.5") with alignment guides.',
+      name: t('print.preset.business_card_v.name', 'Business Cards - Vertical (10/Sheet)'),
+      description: t('print.preset.business_card_v.desc', 'Modern vertical business card template (2.0" x 3.5") with alignment guides.'),
       cols: 2,
       rows: 5,
       labelWidthMm: 50.8,
@@ -129,8 +134,8 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
     },
     {
       id: 'table_tent',
-      name: 'Foldable Table Tent Card (2/Sheet)',
-      description: 'Tabletop double-sided fold-over stand displays with center alignment guides.',
+      name: t('print.preset.table_tent.name', 'Foldable Table Tent Card (2/Sheet)'),
+      description: t('print.preset.table_tent.desc', 'Tabletop double-sided fold-over stand displays with center alignment guides.'),
       cols: 1,
       rows: 2,
       labelWidthMm: 148.0,
@@ -145,8 +150,8 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
     },
     {
       id: 'single_label',
-      name: 'Single Large Display (1/Sheet)',
-      description: 'Single high-resolution print optimized for flyer templates or posters.',
+      name: t('print.preset.single_label.name', 'Single Large Display (1/Sheet)'),
+      description: t('print.preset.single_label.desc', 'Single high-resolution print optimized for flyer templates or posters.'),
       cols: 1,
       rows: 1,
       labelWidthMm: 160.0,
@@ -170,10 +175,10 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
   const [isRendered, setIsRendered] = useState(false);
 
   // Editable label details (initialized from current project frame or fallback default values)
-  const [companyName, setCompanyName] = useState(currentProject?.name || 'FREEQRGEN CORP');
-  const [headingText, setHeadingText] = useState(currentProject?.design?.frameText || 'SCAN TO LEARN MORE');
-  const [subText, setSubText] = useState('Simply scan with your camera');
-  const [badgeText, setBadgeText] = useState('WEBSITE');
+  const [companyName, setCompanyName] = useState(currentProject?.name || t('print.defaultBrand', 'FREEQRGEN CORP'));
+  const [headingText, setHeadingText] = useState(currentProject?.design?.frameText || t('print.defaultHeading', 'SCAN TO LEARN MORE'));
+  const [subText, setSubText] = useState(t('print.defaultSubtext', 'Simply scan with your camera'));
+  const [badgeText, setBadgeText] = useState(t('print.defaultBadge', 'WEBSITE'));
   const [themeColor, setThemeColor] = useState<string>('#4f46e5'); // indigo
 
   // Fine-tuning states derived from selected preset (allowing fine adjustment)
@@ -209,25 +214,35 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-100 flex flex-col md:flex-row text-slate-800" dir="ltr">
+    <div className={`w-full min-h-screen bg-slate-100 flex flex-col md:flex-row text-slate-800 ${isRtl ? 'rtl-active' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
       {/* Settings control panel sidebar: Hidden during print */}
       <div className="w-full md:w-[420px] bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col h-screen md:sticky md:top-0 no-print shadow-xl z-20 overflow-y-auto">
         {/* Header */}
         <div className="p-5 border-b border-slate-150 bg-gradient-to-r from-slate-900 to-indigo-950 text-white shrink-0">
-          <button 
-            onClick={onBack}
-            className="flex items-center gap-1.5 text-xs text-indigo-200 hover:text-white transition-all font-semibold uppercase tracking-wider mb-3 cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>{t('print.backToStation', 'Back to Station')}</span>
-          </button>
+          <div className="flex items-center justify-between mb-3">
+            <button 
+              onClick={onBack}
+              className="flex items-center gap-1.5 text-xs text-indigo-200 hover:text-white transition-all font-semibold uppercase tracking-wider cursor-pointer"
+            >
+              <ArrowLeft className={`w-3.5 h-3.5 ${isRtl ? 'rotate-180' : ''}`} />
+              <span>{t('print.backToStation', 'Back to Station')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex items-center gap-1.5 cursor-pointer hover:opacity-90 transition-opacity"
+              title="Free QR Generator Home"
+            >
+              <Logo size={28} />
+            </button>
+          </div>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-indigo-500/20 rounded-xl">
               <Printer className="w-5 h-5 text-indigo-400 animate-pulse" />
             </div>
             <div>
-              <h1 className="text-base font-black uppercase tracking-wider leading-none">Print Layout Studio</h1>
-              <p className="text-[10px] text-slate-400 mt-1 font-medium">Physical label & cardstock calibration</p>
+              <h1 className="text-base font-black uppercase tracking-wider leading-none">{t('print.studioTitle', 'Print Layout Studio')}</h1>
+              <p className="text-[10px] text-slate-400 mt-1 font-medium">{t('print.studioSubtitle', 'Physical label & cardstock calibration')}</p>
             </div>
           </div>
         </div>
@@ -238,7 +253,7 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
           <div className="space-y-2">
             <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 flex items-center justify-between">
               <span>{t('print.selectLayoutPreset', 'Select Layout Preset')}</span>
-              <span className="text-[9px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">Standard Dimensions</span>
+              <span className="text-[9px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">{t('print.standardDimensions', 'Standard Dimensions')}</span>
             </label>
             <div className="relative">
               <select
@@ -252,7 +267,7 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
                   </option>
                 ))}
               </select>
-              <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3.5 top-3.5 pointer-events-none" />
+              <ChevronDown className={`w-4 h-4 text-slate-500 absolute ${isRtl ? 'left-3.5' : 'right-3.5'} top-3.5 pointer-events-none`} />
             </div>
             <p className="text-[10px] text-slate-500 font-medium leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100 italic">
               {activePreset.description}
@@ -271,7 +286,7 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
                     paperSize === 'letter' ? 'bg-white text-indigo-600 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  US Letter
+                  {t('print.paperLetter', 'US Letter')}
                 </button>
                 <button
                   type="button"
@@ -280,7 +295,7 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
                     paperSize === 'a4' ? 'bg-white text-indigo-600 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  A4 Page
+                  {t('print.paperA4', 'A4 Page')}
                 </button>
               </div>
             </div>
@@ -514,7 +529,7 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
           </button>
           <div className="mt-2 text-[9px] text-slate-400 font-semibold text-center flex items-center justify-center gap-1.5">
             <HelpCircle className="w-3 h-3 text-indigo-400" />
-            <span>Set margins to "None" in your system print dialog for pixel accuracy.</span>
+            <span>{t('print.dialogTip', 'Set margins to "None" in your system print dialog for pixel accuracy.')}</span>
           </div>
         </div>
       </div>
@@ -527,8 +542,7 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
           <div className="text-left text-xs leading-normal">
             <h4 className="font-bold text-indigo-900">{t('print.interactiveCalibrationTitle', 'Physical Label & Cardstock Blueprint calibrator')}</h4>
             <p className="text-indigo-700 mt-1">
-              Configure parameters on the left. The live paper layout below updates instantly with exact physical margins and sizes. Use 
-              the **Print Sheet Now** button or press **Ctrl+P** to trigger printer layout output.
+              {t('print.calibrationDesc', 'Configure parameters on the left. The live paper layout below updates instantly with exact physical margins and sizes. Use the Print Sheet Now button or press Ctrl+P to trigger printer layout output.')}
             </p>
           </div>
         </div>
@@ -635,7 +649,7 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
                               {/* Fold Line overlay helper (screen only) */}
                               {showGuides && (
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900 text-white text-[5px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-widest no-print z-10 shadow-xs border border-slate-700 pointer-events-none">
-                                  ✦ Fold Guide ✦
+                                  ✦ {t('print.foldGuide', 'Fold Guide')} ✦
                                 </div>
                               )}
                             </div>
@@ -722,7 +736,7 @@ export default function PrintModeLayout({ currentProject, onBack, t }: PrintMode
 
                               <div className="text-center w-full pt-4 border-t border-slate-100">
                                 <p className="text-xs font-black text-slate-800 tracking-wide font-mono uppercase">{subText}</p>
-                                <p className="text-[9px] text-slate-400 mt-1 font-bold uppercase tracking-wider font-mono">Simply Scan & Connect • No Special App Required</p>
+                                <p className="text-[9px] text-slate-400 mt-1 font-bold uppercase tracking-wider font-mono">{t('print.scanConnectNotice', 'Simply Scan & Connect • No Special App Required')}</p>
                               </div>
                             </div>
                           );

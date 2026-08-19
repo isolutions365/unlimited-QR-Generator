@@ -1,4 +1,5 @@
 import React from 'react';
+import ScrollableTabContainer from './ScrollableTabContainer';
 import { getProductionBaseUrl } from '../config/siteConfig';
 import {
   DndContext,
@@ -966,11 +967,15 @@ export default function SavedProjects({
       ) : (
         <div className="flex flex-col gap-3">
           {/* Category Folder Filter Tabs Slider */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 pt-0.5 scrollbar-none flex-wrap">
+          <ScrollableTabContainer
+            className="w-full"
+            gradientColor="from-white"
+            innerClassName="flex items-center gap-2 pb-2 pt-0.5"
+          >
             <button
               type="button"
               onClick={() => setActiveCategory(null)}
-              className={`text-xs px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all cursor-pointer font-bold flex items-center gap-1.5 border ${
+              className={`text-xs px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all cursor-pointer font-bold flex items-center gap-1.5 border shrink-0 ${
                 activeCategory === null
                   ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm ring-2 ring-indigo-500/20'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200'
@@ -991,7 +996,7 @@ export default function SavedProjects({
                 <div
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`text-xs px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all font-bold flex items-center gap-1.5 cursor-pointer border shadow-2xs ${
+                  className={`text-xs px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all font-bold flex items-center gap-1.5 cursor-pointer border shadow-2xs shrink-0 ${
                     isActive
                       ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm ring-2 ring-indigo-500/30'
                       : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-indigo-300'
@@ -1025,7 +1030,7 @@ export default function SavedProjects({
               <button
                 type="button"
                 onClick={() => setActiveCategory('uncategorized')}
-                className={`text-xs px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all cursor-pointer font-bold flex items-center gap-1.5 border ${
+                className={`text-xs px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all cursor-pointer font-bold flex items-center gap-1.5 border shrink-0 ${
                   activeCategory === 'uncategorized'
                     ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm ring-2 ring-indigo-500/20'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border-slate-200'
@@ -1035,7 +1040,7 @@ export default function SavedProjects({
                 {t('saved.uncategorizedLabel', 'Uncategorized')} ({projects.filter(p => !p.category || !(p.category || '').trim()).length})
               </button>
             )}
-          </div>
+          </ScrollableTabContainer>
 
           {/* Unified List Toolbar (Folder management & Sorting Selection) */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80 border border-slate-200/60 rounded-2xl p-3.5 shadow-2xs">

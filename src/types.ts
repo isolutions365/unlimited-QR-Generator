@@ -72,6 +72,13 @@ export interface ScanLog {
   approxLocation: string;
   ip: string;
   userId: string;
+  destinationUrl?: string;
+  referrer?: string;
+  os?: string;
+  city?: string;
+  country?: string;
+  countryCode?: string;
+  userAgent?: string;
 }
 
 export interface DynamicQR {

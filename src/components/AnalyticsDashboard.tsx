@@ -387,29 +387,24 @@ export default function AnalyticsDashboard({
   const compareTimelineData = React.useMemo(() => getCompareTimelineData(), [scansA, scansB, compareRangeType, compareStartDate, compareEndDate]);
 
   // Normalize location strings for heatmap coordination mapping
-  const normalizeCountry = (loc: string): string => {
+  // Helper to normalize country from ScanLog
+  const normalizeCountry = (s: ScanLog): string => {
+    if (s.country && s.country !== 'Global') return s.country;
+    if (!s.approxLocation) return 'Global';
+    const parts = s.approxLocation.split(',');
+    if (parts.length > 1) {
+      return parts[parts.length - 1].trim();
+    }
+    const loc = s.approxLocation.trim();
     if (!loc) return 'Global';
-    const l = ((val) => (val || '').trim())(loc.toLowerCase());
-    if (l.includes('united states') || l === 'us' || l === 'usa') return 'United States';
-    if (l.includes('united kingdom') || l === 'uk' || l === 'gb' || l === 'great britain') return 'United Kingdom';
-    if (l.includes('germany') || l === 'de') return 'Germany';
-    if (l.includes('france') || l === 'fr') return 'France';
-    if (l.includes('ireland') || l === 'ie') return 'Ireland';
-    if (l.includes('japan') || l === 'jp') return 'Japan';
-    if (l.includes('canada') || l === 'ca') return 'Canada';
-    if (l.includes('australia') || l === 'au') return 'Australia';
-    if (l.includes('india') || l === 'in') return 'India';
-    if (l.includes('china') || l === 'cn') return 'China';
-    if (l.includes('brazil') || l === 'br') return 'Brazil';
-    if (l.includes('south africa') || l === 'za') return 'South Africa';
-    return 'Global';
+    return loc;
   };
 
   // Geographical heatmap aggregation
   const getGeographicalData = () => {
     const counts: { [key: string]: number } = {};
     scans.forEach(s => {
-      const country = normalizeCountry(s.approxLocation);
+      const country = normalizeCountry(s);
       counts[country] = (counts[country] || 0) + 1;
     });
 
@@ -420,14 +415,19 @@ export default function AnalyticsDashboard({
       'United States': { x: 150, y: 150, code: 'US' },
       'Brazil': { x: 170, y: 310, code: 'BR' },
       'Ireland': { x: 395, y: 120, code: 'IE' },
-      'United Kingdom': { x: 410, y: 120, code: 'UK' },
+      'United Kingdom': { x: 410, y: 120, code: 'GB' },
       'France': { x: 415, y: 145, code: 'FR' },
       'Germany': { x: 435, y: 135, code: 'DE' },
+      'Spain': { x: 405, y: 165, code: 'ES' },
+      'Italy': { x: 435, y: 165, code: 'IT' },
       'South Africa': { x: 440, y: 370, code: 'ZA' },
+      'Pakistan': { x: 545, y: 185, code: 'PK' },
       'India': { x: 570, y: 210, code: 'IN' },
       'China': { x: 650, y: 165, code: 'CN' },
       'Japan': { x: 720, y: 155, code: 'JP' },
       'Australia': { x: 710, y: 345, code: 'AU' },
+      'United Arab Emirates': { x: 495, y: 200, code: 'AE' },
+      'Saudi Arabia': { x: 480, y: 215, code: 'SA' },
       'Global': { x: 500, y: 280, code: 'GL' }
     };
 
@@ -508,7 +508,14 @@ export default function AnalyticsDashboard({
   // Aggregated totals
   const totalScans = scans.length;
   const activeTrackedQRs = projects.filter(p => p.trackingEnabled).length;
-  const uniqueLocations = Array.from(new Set(scans.map(s => s.approxLocation).filter(Boolean))).length;
+  const uniqueLocations = Array.from(new Set(scans.map(s => {
+    if (s.country && s.country !== 'Global') return s.country;
+    if (s.approxLocation && s.approxLocation.includes(',')) {
+      const parts = s.approxLocation.split(',');
+      return parts[parts.length - 1].trim();
+    }
+    return s.approxLocation;
+  }).filter(Boolean))).length;
 
   const timelineData = getTimelineData();
   const deviceData = getDeviceData();
@@ -1257,18 +1264,23 @@ export default function AnalyticsDashboard({
 
           {/* Interactive Logs Ledger Table */}
           <div className="border border-gray-100 rounded-xl overflow-hidden bg-white">
-            <div className="bg-gray-50/50 px-4 py-3 border-b border-gray-100">
+            <div className="bg-gray-50/50 px-4 py-3 border-b border-gray-100 flex items-center justify-between">
               <h3 className="text-xs font-semibold text-gray-800 tracking-wide uppercase">{t('analytics.streamTitle', 'Click Logs Record History')}</h3>
+              <span className="text-[11px] font-mono text-slate-400">
+                {scans.length} {scans.length === 1 ? 'record' : 'records'} logged
+              </span>
             </div>
-            <div className="max-h-[180px] overflow-y-auto">
-              <table className="w-full text-center text-xs">
+            <div className="max-h-[220px] overflow-y-auto">
+              <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-gray-100 text-gray-500 font-medium">
-                    <th className="py-2.5 px-3">{t('analytics.colDatetime', 'Date')}</th>
-                    <th className="py-2.5 px-3">{t('analytics.colLocation', 'Country')}</th>
-                    <th className="py-2.5 px-3">{t('analytics.colPlatform', 'Hardware')}</th>
+                    <th className="py-2.5 px-3">{t('analytics.colDatetime', 'Date / Time')}</th>
+                    <th className="py-2.5 px-3">{t('analytics.colLocation', 'Location (City, Country)')}</th>
+                    <th className="py-2.5 px-3">{t('analytics.colPlatform', 'Device & OS')}</th>
                     <th className="py-2.5 px-3">{t('analytics.colBrowser', 'Browser')}</th>
-                    <th className="py-2.5 px-3 text-right pr-6">{t('analytics.colIp', 'IP Address')}</th>
+                    <th className="py-2.5 px-3">Destination</th>
+                    <th className="py-2.5 px-3">Referrer</th>
+                    <th className="py-2.5 px-3 text-right pr-4">{t('analytics.colIp', 'IP Address (Masked)')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50 font-mono text-gray-600 text-[11px]">
@@ -1276,11 +1288,29 @@ export default function AnalyticsDashboard({
                     const dateStr = s.timestamp ? new Date(s.timestamp).toLocaleTimeString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : String(t('common.unknown', 'Unknown'));
                     return (
                       <tr key={s.id} className="hover:bg-gray-50/50">
-                        <td className="py-2 px-3 text-slate-400">{dateStr}</td>
-                        <td className="py-2 px-3 font-sans text-gray-800 font-semibold">{s.approxLocation || t('common.global', 'Global')}</td>
-                        <td className="py-2 px-3 font-sans text-indigo-600">{s.deviceType || 'Desktop'}</td>
-                        <td className="py-2 px-3 text-slate-500">{s.browser || 'Chrome'}</td>
-                        <td className="py-2 px-3 text-right pr-6 uppercase tracking-wider">{s.ip || '127.0.0.1'}</td>
+                        <td className="py-2 px-3 text-slate-400 whitespace-nowrap">{dateStr}</td>
+                        <td className="py-2 px-3 font-sans text-gray-800 font-medium whitespace-nowrap">
+                          {s.approxLocation || t('common.global', 'Global')}
+                        </td>
+                        <td className="py-2 px-3 font-sans whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-indigo-50 text-indigo-700">
+                            {s.deviceType || 'Desktop'}{s.os ? ` • ${s.os}` : ''}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3 text-slate-600 font-sans whitespace-nowrap">{s.browser || 'Chrome'}</td>
+                        <td className="py-2 px-3 font-sans max-w-[160px] truncate text-slate-700" title={s.destinationUrl || '-'}>
+                          {s.destinationUrl ? (
+                            <a href={s.destinationUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline truncate block">
+                              {s.destinationUrl.replace(/^https?:\/\//, '')}
+                            </a>
+                          ) : (
+                            <span className="text-slate-400">-</span>
+                          )}
+                        </td>
+                        <td className="py-2 px-3 font-sans max-w-[120px] truncate text-slate-500" title={s.referrer || 'Direct Scan'}>
+                          {s.referrer || 'Direct Scan'}
+                        </td>
+                        <td className="py-2 px-3 text-right pr-4 uppercase tracking-wider text-slate-400 whitespace-nowrap">{s.ip || '127.0.0.xxx'}</td>
                       </tr>
                     );
                   })}

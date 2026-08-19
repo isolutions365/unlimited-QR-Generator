@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ScrollableTabContainer from './ScrollableTabContainer';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   X, Send, Bot, User, Loader2, ArrowRight, CheckCircle2,
@@ -526,39 +527,43 @@ export default function AIAssistantWidget({
               </div>
 
               {/* Quick Actions Shortcuts Toolbar */}
-              <div className="bg-slate-100 border-b border-slate-200 p-2.5 overflow-x-auto flex gap-2 text-xs font-semibold scrollbar-none">
+              <ScrollableTabContainer
+                className="bg-slate-100 border-b border-slate-200 p-2.5 text-xs font-semibold"
+                gradientColor="from-slate-100"
+                innerClassName="flex gap-2"
+              >
                 <button
                   onClick={handleTriggerColorPalettes}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0"
                 >
-                  <Palette className="w-3.5 h-3.5 text-indigo-600" />
+                  <Palette className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                   <span>{t('ai.quickActionColor', 'Color Palette')}</span>
                 </button>
 
                 <button
                   onClick={handleTriggerUTM}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0"
                 >
-                  <LinkIcon className="w-3.5 h-3.5 text-indigo-600" />
+                  <LinkIcon className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                   <span>{t('ai.quickActionUtm', 'UTM Tracking')}</span>
                 </button>
 
                 <button
                   onClick={handleTriggerTextOptimization}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0"
                 >
-                  <FileText className="w-3.5 h-3.5 text-indigo-600" />
+                  <FileText className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                   <span>{t('ai.quickActionVcard', 'vCard / Menu')}</span>
                 </button>
 
                 <button
                   onClick={handleTriggerDiagnostics}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-slate-200 hover:border-indigo-300 rounded-lg whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0"
                 >
-                  <SearchCheck className="w-3.5 h-3.5 text-indigo-600" />
+                  <SearchCheck className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                   <span>{t('ai.quickActionDiagnostics', 'Diagnostics')}</span>
                 </button>
-              </div>
+              </ScrollableTabContainer>
 
               {/* Chat Thread Messages Area */}
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-slate-50/70">
