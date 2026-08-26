@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.freeqrgen.pro/sitemap.xml
+Sitemap: https://www.freeqrbarcodes.com/sitemap.xml

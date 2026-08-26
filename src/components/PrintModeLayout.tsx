@@ -58,13 +58,13 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
       description: t('print.preset.avery_5160.desc', 'Standard 3x10 address & general identifier labels. Perfect for small products.'),
       cols: 3,
       rows: 10,
-      labelWidthMm: 66.6,
+      labelWidthMm: 66.675,
       labelHeightMm: 25.4,
       marginTopMm: 12.7,
       marginBottomMm: 12.7,
-      marginLeftMm: 4.8,
-      marginRightMm: 4.8,
-      colGapMm: 3.1,
+      marginLeftMm: 4.76,
+      marginRightMm: 4.76,
+      colGapMm: 3.175,
       rowGapMm: 0,
       category: 'label'
     },
@@ -78,9 +78,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
       labelHeightMm: 25.4,
       marginTopMm: 12.7,
       marginBottomMm: 12.7,
-      marginLeftMm: 4.1,
-      marginRightMm: 4.1,
-      colGapMm: 3.9,
+      marginLeftMm: 4.127,
+      marginRightMm: 4.127,
+      colGapMm: 3.968,
       rowGapMm: 0,
       category: 'label'
     },
@@ -94,9 +94,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
       labelHeightMm: 50.8,
       marginTopMm: 12.7,
       marginBottomMm: 12.7,
-      marginLeftMm: 4.1,
-      marginRightMm: 4.1,
-      colGapMm: 3.9,
+      marginLeftMm: 4.127,
+      marginRightMm: 4.127,
+      colGapMm: 3.968,
       rowGapMm: 0,
       category: 'label'
     },
@@ -487,31 +487,29 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
 
         {/* Floating Offscreen Generator Engine container */}
         <div className="hidden">
-          {currentProject && currentProject.content && (
-            <MemoizedQRCanvas
-              ref={canvasRef}
-              textToEncode={currentProject.content}
-              fgColor={currentProject.design?.fgColor || '#000000'}
-              bgColor={currentProject.design?.bgColor || '#ffffff'}
-              gradientType={currentProject.design?.gradientType || 'none'}
-              gradientColor={currentProject.design?.gradientColor || '#4f46e5'}
-              dotStyle={currentProject.design?.dotStyle || 'square'}
-              eyeStyle={currentProject.design?.eyeStyle || 'square'}
-              logoUrl={currentProject.design?.logoUrl}
-              logoScale={currentProject.design?.logoScale || 0.15}
-              margin={currentProject.design?.margin || 2}
-              logoRotation={currentProject.design?.logoRotation || 0}
-              logoAutoCenter={currentProject.design?.logoAutoCenter !== false}
-              logoOffsetX={currentProject.design?.logoOffsetX || 0}
-              logoOffsetY={currentProject.design?.logoOffsetY || 0}
-              eyeColorTopLeft={currentProject.design?.eyeColorTopLeft}
-              eyeColorTopRight={currentProject.design?.eyeColorTopRight}
-              eyeColorBottomLeft={currentProject.design?.eyeColorBottomLeft}
-              errorCorrectionLevel={currentProject.design?.errorCorrectionLevel || 'H'}
-              isPrintModalOpen={true}
-              onDrawComplete={handleQrDrawComplete}
-            />
-          )}
+          <MemoizedQRCanvas
+            ref={canvasRef}
+            textToEncode={currentProject?.content || 'https://freeqrgen.pro'}
+            fgColor={currentProject?.design?.fgColor || '#000000'}
+            bgColor={currentProject?.design?.bgColor || '#ffffff'}
+            gradientType={currentProject?.design?.gradientType || 'none'}
+            gradientColor={currentProject?.design?.gradientColor || '#4f46e5'}
+            dotStyle={currentProject?.design?.dotStyle || 'square'}
+            eyeStyle={currentProject?.design?.eyeStyle || 'square'}
+            logoUrl={currentProject?.design?.logoUrl}
+            logoScale={currentProject?.design?.logoScale || 0.15}
+            margin={currentProject?.design?.margin || 2}
+            logoRotation={currentProject?.design?.logoRotation || 0}
+            logoAutoCenter={currentProject?.design?.logoAutoCenter !== false}
+            logoOffsetX={currentProject?.design?.logoOffsetX || 0}
+            logoOffsetY={currentProject?.design?.logoOffsetY || 0}
+            eyeColorTopLeft={currentProject?.design?.eyeColorTopLeft}
+            eyeColorTopRight={currentProject?.design?.eyeColorTopRight}
+            eyeColorBottomLeft={currentProject?.design?.eyeColorBottomLeft}
+            errorCorrectionLevel={currentProject?.design?.errorCorrectionLevel || 'H'}
+            isPrintModalOpen={true}
+            onDrawComplete={handleQrDrawComplete}
+          />
         </div>
 
         {/* Static Trigger Area */}
@@ -535,7 +533,7 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
       </div>
 
       {/* Main Print Preview Page: Stylized and rendered directly inside the DOM */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 overflow-x-auto min-w-[340px] max-h-screen md:overflow-y-auto">
+      <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 overflow-x-auto min-w-[340px] max-h-screen md:overflow-y-auto bg-slate-100/90">
         {/* Helper Tip Callout (No-Print) */}
         <div className="w-full max-w-4xl bg-indigo-50 border border-indigo-100 rounded-2xl p-4 mb-6 flex items-start gap-3 no-print shadow-2xs">
           <Scissors className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
@@ -592,12 +590,12 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                 return (
                   <div
                     key={index}
-                    className="relative flex items-center justify-center bg-white"
+                    className="label-cell relative flex items-center justify-center bg-white"
                     style={{
                       width: `${activePreset.labelWidthMm}mm`,
                       height: `${activePreset.labelHeightMm}mm`,
                       boxSizing: 'border-box',
-                      border: showGuides ? '1px dashed #e2e8f0' : 'none',
+                      border: showGuides ? '1px dashed #cbd5e1' : 'none',
                     }}
                   >
                     {/* Render different styles of labels depending on selection */}
@@ -794,10 +792,10 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
         @media print {
           /* Force physical printing parameters on layout */
           @page {
-            size: ${paperSize === 'letter' ? '8.5in 11in' : 'a4'} portrait;
+            size: ${paperSize === 'letter' ? '8.5in 11in' : '210mm 297mm'} portrait;
             margin: 0 !important;
           }
-          body {
+          body, html {
             background: white !important;
             color: black !important;
             margin: 0 !important;
@@ -809,8 +807,8 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
             display: none !important;
           }
           .print-sheet-container {
-            width: 100% !important;
-            height: 100% !important;
+            width: ${paperSize === 'letter' ? '215.9mm' : '210mm'} !important;
+            height: ${paperSize === 'letter' ? '279.4mm' : '297mm'} !important;
             margin: 0 !important;
             padding: 0 !important;
             box-shadow: none !important;
@@ -819,6 +817,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
             position: absolute !important;
             top: 0 !important;
             left: 0 !important;
+          }
+          .print-sheet-container .label-cell {
+            border: none !important;
           }
         }
       `}</style>

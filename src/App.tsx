@@ -1835,23 +1835,36 @@ export default function App() {
     setProjects(prev => getSortedProjects(prev, user?.id));
   };
 
-  // Fetch projects & scans when logged in
+  // Fetch projects & scans when logged in with non-blocking independent wrapper
   const fetchUserData = async () => {
     if (!user) return;
     setIsLoadingData(true);
-    try {
-      const [projs, scanLogs] = await Promise.all([
-        api.getProjects(),
-        api.getScans()
-      ]);
-      setProjects(getSortedProjects(projs, user.id));
-      setScans(scanLogs);
-    } catch (err: any) {
-      console.error('Error fetching user data dashboard:', err);
-      setErrorMessage(err.message || t('error.loadAnalyticsFailed', 'Error occurred while loading analytics records.'));
-    } finally {
-      setIsLoadingData(false);
-    }
+    
+    // Execute both tasks concurrently, but wrap them so a failure in one does not block the other
+    await Promise.all([
+      (async () => {
+        try {
+          const projs = await api.getProjects();
+          setProjects(getSortedProjects(projs, user.id));
+        } catch (projErr: any) {
+          console.error('[Non-blocking Startup] Failed to fetch projects:', projErr);
+          // Only show error to the user if it's critical, otherwise fall back gracefully
+        }
+      })(),
+      (async () => {
+        try {
+          const scanLogs = await api.getScans();
+          setScans(scanLogs);
+        } catch (scanErr: any) {
+          console.error('[Non-blocking Startup] Failed to fetch scans/analytics:', scanErr);
+          // Fail gracefully without blocking main user interface rendering
+        }
+      })()
+    ]).catch(err => {
+      console.error('[Non-blocking Startup] Promise.all unexpected error:', err);
+    });
+
+    setIsLoadingData(false);
   };
 
   useEffect(() => {

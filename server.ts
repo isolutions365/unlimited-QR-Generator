@@ -210,6 +210,8 @@ app.use(express.json());
   const allowedOrigins = [
     'https://www.freeqrgen.pro',
     'https://freeqrgen.pro',
+    'https://www.freeqrbarcodes.com',
+    'https://freeqrbarcodes.com',
     'http://localhost:3000',
     'http://localhost:5173',
     'http://localhost:4173',
@@ -218,6 +220,11 @@ app.use(express.json());
   ];
 
   app.use((req, res, next) => {
+    // Only apply strict CORS policy to API endpoints (/api/*)
+    if (!req.path.startsWith('/api')) {
+      return next();
+    }
+
     const origin = req.headers.origin;
 
     // Direct browser visits or non-cross-origin requests do not send Origin header and are allowed
@@ -229,7 +236,10 @@ app.use(express.json());
     const isAllowedPattern = 
       /^https?:\/\/localhost:\d+$/.test(origin) || 
       /^https?:\/\/127\.0\.0\.1:\d+$/.test(origin) || 
-      origin.endsWith('.run.app');
+      origin.endsWith('.run.app') ||
+      origin.endsWith('.vercel.app') ||
+      origin.endsWith('freeqrbarcodes.com') ||
+      origin.endsWith('freeqrgen.pro');
 
     if (isAllowedExact || isAllowedPattern) {
       res.setHeader('Access-Control-Allow-Origin', origin);

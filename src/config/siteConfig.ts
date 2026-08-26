@@ -1,14 +1,14 @@
 /**
  * Central site configuration and single source of truth for base URLs.
  * Ensures all generated QR code redirect links, canonical tags, and public share URLs
- * point to the production domain: https://www.freeqrgen.pro
+ * point to the production domain: https://www.freeqrbarcodes.com
  */
 
-export const PRODUCTION_BASE_URL = 'https://www.freeqrgen.pro';
+export const PRODUCTION_BASE_URL = 'https://www.freeqrbarcodes.com';
 
 /**
  * Returns the base URL for public shareable links and generated QR code content.
- * Always resolves to PRODUCTION_BASE_URL ("https://www.freeqrgen.pro") unless explicitly overridden via VITE_APP_URL.
+ * Always resolves to PRODUCTION_BASE_URL ("https://www.freeqrbarcodes.com") unless explicitly overridden via VITE_APP_URL.
  */
 export function getProductionBaseUrl(): string {
   const envUrl = (import.meta as any).env?.VITE_APP_URL;
