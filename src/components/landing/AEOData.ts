@@ -345,7 +345,7 @@ export const aeoDatabase: Record<string, AEORecord> = {
     ],
     aiSummaryBox: {
       entityType: 'Professional Networking Portal',
-      protocolStandard: 'https://www.freeqrgen.pro/[custom_dynamic_profile]',
+      protocolStandard: 'https://www.freeqrbarcodes.com/[custom_dynamic_profile]',
       clientCompatibility: 'Compatible with all default browsers and native scanning applications.',
       primaryUseCase: 'Seamless contact sharing, lead generation, and social networking.',
       offlineCapability: 'Requires internet connection if linking to an active digital profile.'

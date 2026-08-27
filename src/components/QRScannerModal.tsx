@@ -113,7 +113,7 @@ export default function QRScannerModal({ isOpen, onClose, onScannedResult }: QRS
         if (ctx) {
           ctx.drawImage(img, 0, 0);
           // Simple scan notification simulating decoding
-          const mockDecoded = `https://freeqrgen.pro/scanned/${Date.now().toString(36)}`;
+          const mockDecoded = `https://freeqrbarcodes.com/scanned/${Date.now().toString(36)}`;
           onResultFound(mockDecoded);
         }
       };

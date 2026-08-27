@@ -202,9 +202,9 @@ export default function BulkQRGenerator() {
     const csvContent = "name,url\n" +
       "Google,https://google.com\n" +
       "WiFi-Guest,WIFI:S:Guest-Network;T:WPA;P:SuperSecretPass;;\n" +
-      "Order-Table-5,https://menu.freeqrgen.pro/table-5\n" +
+      "Order-Table-5,https://menu.freeqrbarcodes.com/table-5\n" +
       "App-Download,https://apps.apple.com/app/id123456789\n" +
-      "Portfolio-Url,https://www.freeqrgen.pro\n";
+      "Portfolio-Url,https://www.freeqrbarcodes.com\n";
     
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);

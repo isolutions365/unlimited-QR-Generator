@@ -1112,7 +1112,7 @@ export default function TrustCenterHub({
     metaDesc.setAttribute('content', t('trust.pageMetaDesc.' + activePage.slug, activePage.metaDesc));
 
     // 2. Set Canonical URL
-    const canonicalUrl = `https://www.freeqrgen.pro/${activePage.slug}`;
+    const canonicalUrl = `https://www.freeqrbarcodes.com/${activePage.slug}`;
     let canonicalLink = document.querySelector('link[rel="canonical"]');
     if (!canonicalLink) {
       canonicalLink = document.createElement('link');
@@ -1127,7 +1127,7 @@ export default function TrustCenterHub({
       'og:description': t('trust.pageMetaDesc.' + activePage.slug, activePage.metaDesc),
       'og:url': canonicalUrl,
       'og:type': 'website',
-      'og:image': 'https://www.freeqrgen.pro/og-image.jpg'
+      'og:image': 'https://www.freeqrbarcodes.com/og-image.jpg'
     };
     Object.entries(ogTags).forEach(([prop, val]) => {
       let tag = document.querySelector(`meta[property="${prop}"]`);
@@ -1144,7 +1144,7 @@ export default function TrustCenterHub({
       'twitter:title': t('trust.pageMetaTitle.' + activePage.slug, activePage.metaTitle),
       'twitter:description': t('trust.pageMetaDesc.' + activePage.slug, activePage.metaDesc),
       'twitter:url': canonicalUrl,
-      'twitter:image': 'https://www.freeqrgen.pro/og-image.jpg',
+      'twitter:image': 'https://www.freeqrbarcodes.com/og-image.jpg',
       'twitter:card': 'summary_large_image'
     };
     Object.entries(twitterTags).forEach(([name, val]) => {
@@ -1169,13 +1169,13 @@ export default function TrustCenterHub({
           '@type': 'ListItem',
           'position': 1,
           'name': t('trust.navHome', 'Home'),
-          'item': 'https://www.freeqrgen.pro/'
+          'item': 'https://www.freeqrbarcodes.com/'
         },
         {
           '@type': 'ListItem',
           'position': 2,
           'name': t('trust.navTrustCenter', 'Trust Center'),
-          'item': 'https://www.freeqrgen.pro/about'
+          'item': 'https://www.freeqrbarcodes.com/about'
         },
         {
           '@type': 'ListItem',
@@ -1197,14 +1197,14 @@ export default function TrustCenterHub({
         '@type': 'Person',
         'name': t('trust.author.' + activeAuthor.id + '.name', activeAuthor.name),
         'jobTitle': t('trust.author.' + activeAuthor.id + '.role', activeAuthor.role),
-        'sameAs': activeAuthor.socials.linkedin || 'https://www.freeqrgen.pro/'
+        'sameAs': activeAuthor.socials.linkedin || 'https://www.freeqrbarcodes.com/'
       },
       'publisher': {
         '@type': 'Organization',
         'name': t('trust.isolutionsIco', 'iSolutions ICo'),
         'logo': {
           '@type': 'ImageObject',
-          'url': 'https://www.freeqrgen.pro/logo.png'
+          'url': 'https://www.freeqrbarcodes.com/logo.png'
         }
       },
       'mainEntityOfPage': {

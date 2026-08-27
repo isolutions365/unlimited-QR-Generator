@@ -119,7 +119,7 @@ export async function renderStyledQR(
 
   // Generate QR Matrix using standard qrcode package API
   let qr;
-  const contentToEncode = (text && text.trim() !== '') ? text : 'https://www.freeqrgen.pro';
+  const contentToEncode = (text && text.trim() !== '') ? text : 'https://www.freeqrbarcodes.com';
   try {
     qr = qrcode.create(contentToEncode, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
   } catch (err) {
@@ -459,7 +459,7 @@ export function generateStyledSVG(
 
   // Generate QR Matrix
   let qr;
-  const contentToEncode = (text && text.trim() !== '') ? text : 'https://www.freeqrgen.pro';
+  const contentToEncode = (text && text.trim() !== '') ? text : 'https://www.freeqrbarcodes.com';
   try {
     qr = qrcode.create(contentToEncode, { errorCorrectionLevel: options.errorCorrectionLevel || 'H' });
   } catch (err) {

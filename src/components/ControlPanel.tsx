@@ -332,7 +332,7 @@ export default function ControlPanel({ currentProject,
   const calculateAutoCenterOffsets = () => {
     const errorCorrectionLevel = localProject.design?.errorCorrectionLevel || 'H';
     const margin = typeof localProject.design?.margin === 'number' ? localProject.design?.margin : 20;
-    const qrContent = localProject.content || 'https://www.freeqrgen.pro';
+    const qrContent = localProject.content || 'https://www.freeqrbarcodes.com';
     const trackingEnabled = localProject.trackingEnabled || false;
     const trackingId = localProject.trackingId || '';
     const appUrl = getProductionBaseUrl();
@@ -559,7 +559,7 @@ export default function ControlPanel({ currentProject,
                 id="target-url-input"
                 type="url"
                 className={`flex-1 text-sm px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-white text-slate-800 placeholder:text-slate-400 transition-all ${ urlError && urlError.type === 'error' ? 'border-rose-300 focus:ring-rose-500/20 focus:border-rose-500' : urlError && urlError.type === 'warning' ? 'border-amber-350 focus:ring-amber-500/20 focus:border-amber-500' : 'border-gray-200 focus:ring-indigo-500 focus:border-indigo-500' }`}
-                placeholder="https://www.freeqrgen.pro"
+                placeholder="https://www.freeqrbarcodes.com"
                 value={localProject.content || ''}
                 onChange={e => onChange({ ...localProject, content: e.target.value }, true)}
               />

@@ -203,7 +203,7 @@ function MiniQRPreview({ design, testText }: { design: QRTemplate['design']; tes
 
   useEffect(() => {
     if (canvasRef.current) {
-      renderStyledQR(canvasRef.current, testText || 'https://www.freeqrgen.pro', {
+      renderStyledQR(canvasRef.current, testText || 'https://www.freeqrbarcodes.com', {
         fgColor: design.fgColor,
         bgColor: design.bgColor,
         gradientType: design.gradientType,
@@ -262,7 +262,7 @@ export default function TemplatesTab({ currentProject, onChange }: TemplatesTabP
     );
   };
 
-  const sampleUrl = currentProject.content || 'https://www.freeqrgen.pro';
+  const sampleUrl = currentProject.content || 'https://www.freeqrbarcodes.com';
 
   const containerVariants: any = {
     hidden: { opacity: 0 },

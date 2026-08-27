@@ -206,7 +206,7 @@ export default function AIAssistantWidget({
             id: payload.id,
             name: payload.name,
             type: 'url',
-            content: 'https://www.freeqrgen.pro',
+            content: 'https://www.freeqrbarcodes.com',
             trackingEnabled: true,
             createdAt: new Date().toISOString(),
             userId
@@ -430,7 +430,7 @@ export default function AIAssistantWidget({
 
   // Helper to construct current UTM URL
   const buildCurrentUtmUrl = () => {
-    const baseUrl = currentProject?.originalUrl || currentProject?.content || 'https://www.freeqrgen.pro/promo';
+    const baseUrl = currentProject?.originalUrl || currentProject?.content || 'https://www.freeqrbarcodes.com/promo';
     try {
       const u = new URL(baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`);
       u.searchParams.set('utm_source', utmSource.trim() || 'qr_code');

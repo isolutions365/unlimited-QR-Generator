@@ -180,8 +180,8 @@ export default function ProgrammaticHub({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": t('programmatic.home', 'Home'), "item": "https://www.freeqrgen.pro/" },
-          { "@type": "ListItem", "position": 2, "name": section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries'), "item": `https://www.freeqrgen.pro/${section}` }
+          { "@type": "ListItem", "position": 1, "name": t('programmatic.home', 'Home'), "item": "https://www.freeqrbarcodes.com/" },
+          { "@type": "ListItem", "position": 2, "name": section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries'), "item": `https://www.freeqrbarcodes.com/${section}` }
         ]
       };
 
@@ -202,14 +202,14 @@ export default function ProgrammaticHub({
     }
 
     // Detail schemas: FAQPage, HowTo, Article, WebPage, and Organization
-    const canonicalUrl = `https://www.freeqrgen.pro/${section}/${activeProfile.slug}`;
+    const canonicalUrl = `https://www.freeqrbarcodes.com/${section}/${activeProfile.slug}`;
     
     const breadcrumbSchema = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": t('programmatic.home', 'Home'), "item": "https://www.freeqrgen.pro/" },
-        { "@type": "ListItem", "position": 2, "name": section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries'), "item": `https://www.freeqrgen.pro/${section}` },
+        { "@type": "ListItem", "position": 1, "name": t('programmatic.home', 'Home'), "item": "https://www.freeqrbarcodes.com/" },
+        { "@type": "ListItem", "position": 2, "name": section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries'), "item": `https://www.freeqrbarcodes.com/${section}` },
         { "@type": "ListItem", "position": 3, "name": activeProfile.name, "item": canonicalUrl }
       ]
     };
@@ -242,7 +242,7 @@ export default function ProgrammaticHub({
       "@type": "Article",
       "headline": activeProfile.metaTitle,
       "description": activeProfile.metaDesc,
-      "image": "https://www.freeqrgen.pro/og-image.jpg",
+      "image": "https://www.freeqrbarcodes.com/og-image.jpg",
       "author": {
         "@type": "Organization",
         "name": t('programmatic.authorName', 'FreeQRGen.pro Editorial Board')
@@ -252,7 +252,7 @@ export default function ProgrammaticHub({
         "name": t('programmatic.publisherName', 'Free QR Code Generator Inc.'),
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.freeqrgen.pro/favicon-32x32.png"
+          "url": "https://www.freeqrbarcodes.com/favicon-32x32.png"
         }
       },
       "mainEntityOfPage": canonicalUrl
@@ -281,7 +281,7 @@ export default function ProgrammaticHub({
     if (!activeProfile) return;
     
     let typePreset: any = 'url';
-    let defaultContent = `https://www.freeqrgen.pro/?ref=${activeProfile.slug}`;
+    let defaultContent = `https://www.freeqrbarcodes.com/?ref=${activeProfile.slug}`;
     let defaultName = t('programmatic.presetDefaultName', '{{name}} Campaign QR', { name: activeProfile.name });
 
     if (activeProfile.slug === 'wifi-guest-onboarding' || activeProfile.slug === 'office-lobby-wifi') {
@@ -292,10 +292,10 @@ export default function ProgrammaticHub({
       defaultContent = 'BEGIN:VCARD\nFN:John Doe\nORG:Enterprise\nTEL:1234567\nEMAIL:john@example.com\nEND:VCARD';
     } else if (activeProfile.slug === 'app-download-marketing') {
       typePreset = 'app';
-      defaultContent = JSON.stringify({ ios: 'https://apps.apple.com', android: 'https://play.google.com', fallback: 'https://www.freeqrgen.pro' });
+      defaultContent = JSON.stringify({ ios: 'https://apps.apple.com', android: 'https://play.google.com', fallback: 'https://www.freeqrbarcodes.com' });
     } else if (activeProfile.slug === 'restaurant' || activeProfile.slug === 'cafe') {
       typePreset = 'url';
-      defaultContent = `https://www.freeqrgen.pro/menu-demo`;
+      defaultContent = `https://www.freeqrbarcodes.com/menu-demo`;
     }
 
     onInitiateGenerator({

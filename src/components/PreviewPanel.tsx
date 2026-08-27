@@ -1131,7 +1131,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     
     if (logoAutoCenter !== false) {
       try {
-        const textForQr = (textToEncode && textToEncode.trim() !== '') ? textToEncode : 'https://www.freeqrgen.pro';
+        const textForQr = (textToEncode && textToEncode.trim() !== '') ? textToEncode : 'https://www.freeqrbarcodes.com';
         const qr = qrcode.create(textForQr, { errorCorrectionLevel });
         const modulesCount = qr.modules.size;
         const qrSize = Math.max(100, 450 - margin * 2);

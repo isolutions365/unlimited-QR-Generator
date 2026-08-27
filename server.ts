@@ -266,8 +266,8 @@ app.use(express.json());
   // SEO Redirection Engine: 301 redirect non-www, Netlify URLs, old domains, and temporary domains to the primary www domain
   app.use((req, res, next) => {
     const host = (req.headers.host || '').toLowerCase();
-    if (host === 'freeqrgen.pro' || host.includes('netlify.app') || host.includes('unlimitedqrgen.com')) {
-      return res.redirect(301, `https://www.freeqrgen.pro${req.originalUrl}`);
+    if (host === 'freeqrbarcodes.com' || host === 'freeqrgen.pro' || host === 'www.freeqrgen.pro' || host.includes('netlify.app') || host.includes('unlimitedqrgen.com')) {
+      return res.redirect(301, `https://www.freeqrbarcodes.com${req.originalUrl}`);
     }
     next();
   });
@@ -2915,7 +2915,7 @@ Generate the 'payload' matching the precise data schema for the selected categor
   // --- SEO ROUTING: SITEMAP & ROBOTS ENFORCEMENTS ---
   app.get('/sitemap.xml', (req, res) => {
     res.header('Content-Type', 'application/xml');
-    const baseUrl = 'https://www.freeqrgen.pro';
+    const baseUrl = 'https://www.freeqrbarcodes.com';
     const slugs = [
       '',
       // Generators & Tools
@@ -3152,7 +3152,7 @@ Allow: /
 Disallow: /api/
 Disallow: /profile
 
-Sitemap: https://www.freeqrgen.pro/sitemap.xml`;
+Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
     res.send(robots);
   });
 

@@ -71,13 +71,13 @@ export default function TemplatesHub({
             "@type": "ListItem",
             "position": 1,
             "name": t('templates.breadcrumbHome', 'Home'),
-            "item": "https://www.freeqrgen.pro/"
+            "item": "https://www.freeqrbarcodes.com/"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": t('templates.breadcrumbTemplates', 'Templates'),
-            "item": "https://www.freeqrgen.pro/templates"
+            "item": "https://www.freeqrbarcodes.com/templates"
           }
         ]
       };
@@ -99,7 +99,7 @@ export default function TemplatesHub({
     }
 
     // Detail schemas: FAQ and HowTo
-    const canonicalUrl = `https://www.freeqrgen.pro/templates/${activeTemplate.slug}`;
+    const canonicalUrl = `https://www.freeqrbarcodes.com/templates/${activeTemplate.slug}`;
     
     const breadcrumbSchema = {
       "@context": "https://schema.org",
@@ -109,13 +109,13 @@ export default function TemplatesHub({
           "@type": "ListItem",
           "position": 1,
           "name": t('templates.breadcrumbHome', 'Home'),
-          "item": "https://www.freeqrgen.pro/"
+          "item": "https://www.freeqrbarcodes.com/"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": t('templates.breadcrumbTemplates', 'Templates'),
-          "item": "https://www.freeqrgen.pro/templates"
+          "item": "https://www.freeqrbarcodes.com/templates"
         },
         {
           "@type": "ListItem",

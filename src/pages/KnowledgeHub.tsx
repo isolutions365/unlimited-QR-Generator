@@ -143,7 +143,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
       "@type": "Article",
       "headline": activeArticle.seoTitle,
       "description": activeArticle.metaDescription,
-      "image": "https://www.freeqrgen.pro/og-image.jpg",
+      "image": "https://www.freeqrbarcodes.com/og-image.jpg",
       "author": {
         "@type": "Organization",
         "name": String(t('knowledge.editorialTeam', 'FreeQRGen.pro Editorial Team')),

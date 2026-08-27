@@ -40,7 +40,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Hospitality & Dining",
     heroGradient: "from-amber-500 to-orange-600",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/demo/menu",
+    qrContent: "https://www.freeqrbarcodes.com/demo/menu",
     qrName: "Restaurant Menu Campaign",
     intro: "A digital restaurant menu QR code bridges the physical dining room with dynamic online ordering platforms or PDFs. By placing high-contrast QR labels on tables, bar counters, and window clings, patrons can instantly scan with native iOS or Android cameras to read your full culinary catalog without waiting for staff.",
     useCases: [
@@ -104,7 +104,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Professional & Corporate",
     heroGradient: "from-indigo-600 to-slate-800",
     qrType: "card",
-    qrContent: "BEGIN:VCARD\nVERSION:3.0\nN:Smith;Jane;;;\nFN:Jane Smith\nORG:Tech iSolutions\nTITLE:Architect\nTEL;TYPE=CELL:+15550199\nEMAIL:jane@example.com\nURL:https://www.freeqrgen.pro\nEND:VCARD",
+    qrContent: "BEGIN:VCARD\nVERSION:3.0\nN:Smith;Jane;;;\nFN:Jane Smith\nORG:Tech iSolutions\nTITLE:Architect\nTEL;TYPE=CELL:+15550199\nEMAIL:jane@example.com\nURL:https://www.freeqrbarcodes.com\nEND:VCARD",
     qrName: "vCard Business Card",
     intro: "A digital business card (vCard) QR code stores essential professional details, including names, organization hierarchy, telephone lines, digital email, and web links, directly inside the matrix code. Scanning this code triggers the user's native contacts application to prompt an instant 'Create New Contact' window.",
     useCases: [
@@ -360,7 +360,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Publishing & Media",
     heroGradient: "from-rose-500 to-red-600",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/assets/manual-sample.pdf",
+    qrContent: "https://www.freeqrbarcodes.com/assets/manual-sample.pdf",
     qrName: "PDF Download Hub",
     intro: "A PDF QR code connects physical materials with electronic documents. Scanning the code instructs the phone browser to download or view your PDF file, making it ideal for distributing paperless flyers, corporate pamphlets, restaurant menus, or machinery instruction manuals.",
     useCases: [
@@ -488,7 +488,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Social Media Growth",
     heroGradient: "from-pink-500 to-rose-600",
     qrType: "social",
-    qrContent: "https://instagram.com/freeqrgen_pro",
+    qrContent: "https://instagram.com/freeqrbarcodes",
     qrName: "Instagram Follow",
     intro: "An Instagram QR code links real-world foot traffic straight to your digital Instagram profile. When a client scans the code off a retail display, cash register, or product tag, their smartphone opens the official Instagram mobile app directly to your profile, bypassing search friction.",
     useCases: [
@@ -552,7 +552,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Social Media Growth",
     heroGradient: "from-blue-600 to-indigo-800",
     qrType: "social",
-    qrContent: "https://facebook.com/freeqrgen.pro",
+    qrContent: "https://facebook.com/freeqrbarcodes.com",
     qrName: "Facebook Follow",
     intro: "A Facebook QR code links real-world foot traffic to your brand's Facebook page or business community hub. By scanning the code off store displays, flyers, or window clings, clients can instantly like your page, view updates, and write reviews in the Facebook mobile app.",
     useCases: [
@@ -680,7 +680,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Property & Real Estate",
     heroGradient: "from-slate-700 to-indigo-900",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/listings/property-771",
+    qrContent: "https://www.freeqrbarcodes.com/listings/property-771",
     qrName: "Real Estate Listing",
     intro: "A Real Estate QR code connects physical yard signs, flyers, and window displays with online property listings. Scanning the code directs prospective buyers to immersive virtual tours, floor plans, agent contact forms, and pricing details in 1 second.",
     useCases: [
@@ -744,7 +744,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Hospitality & Travel",
     heroGradient: "from-slate-800 to-amber-700",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/concierge/room-402",
+    qrContent: "https://www.freeqrbarcodes.com/concierge/room-402",
     qrName: "Hotel Concierge Portal",
     intro: "A Hotel Guest Services QR code bridges in-room guests with your digital directory, hotel compendium, and service channels. Placing these code signs on desk stands or television screens lets visitors scan with native mobile devices to order in-room dining, book wellness spa treatments, or request concierge help.",
     useCases: [
@@ -808,7 +808,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Hospitality & Dining",
     heroGradient: "from-amber-600 to-amber-900",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/cafe/table-6",
+    qrContent: "https://www.freeqrbarcodes.com/cafe/table-6",
     qrName: "Cafe Order Campaign",
     intro: "A Cafe Table QR code links coffee shop tables directly with your web menus, online ordering apps, or loyalty signups. Letting customers scan table tents reduces morning queue lines, accelerates service velocity, and frees baristas to focus on brewing coffee.",
     useCases: [
@@ -936,7 +936,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Education & Academics",
     heroGradient: "from-sky-500 to-indigo-600",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/edu/cs101-syllabus",
+    qrContent: "https://www.freeqrbarcodes.com/edu/cs101-syllabus",
     qrName: "Class Syllabus",
     intro: "A School Syllabus & Resource QR code bridges physical classroom environments with digital academic resources. Teachers can place these codes on course syllabus handouts, classroom bulletin boards, or textbook covers to link students directly to digital assignments, study schedules, and homework forums.",
     useCases: [
@@ -1000,7 +1000,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Medical & Safety",
     heroGradient: "from-red-600 to-rose-700",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/medical/ice-record-902",
+    qrContent: "https://www.freeqrbarcodes.com/medical/ice-record-902",
     qrName: "Patient ICE Profile",
     intro: "A Medical Emergency Alert (In Case of Emergency - ICE) QR code connects physical medical bracelets, cards, or child safety tags with digital health summaries. Scanning the code provides emergency responders or medical personnel with critical allergies, blood types, medication lists, and emergency contact details.",
     useCases: [
@@ -1064,7 +1064,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Retail & Commerce",
     heroGradient: "from-indigo-600 to-sky-700",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/retail/product-spec",
+    qrContent: "https://www.freeqrbarcodes.com/retail/product-spec",
     qrName: "Retail Showcase",
     intro: "A Retail Product Showcase QR code bridges physical store displays with extensive e-commerce ecosystems. By placing QR tags on apparel tags, shelving displays, or shopping bags, brands can let customers scan to check item availability, read ratings, and unlock rewards in 1 second.",
     useCases: [
@@ -1256,7 +1256,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Logistics & Manufacturing",
     heroGradient: "from-sky-600 to-indigo-900",
     qrType: "url",
-    qrContent: "https://www.freeqrgen.pro/packaging/setup-guide",
+    qrContent: "https://www.freeqrbarcodes.com/packaging/setup-guide",
     qrName: "Packaging Hub",
     intro: "A Product Packaging QR code turns simple cardboard boxes into active, interactive user portals. By printing durable codes on outer packaging or safety leaflets, brands can let buyers scan to stream instructional assembly videos, register warranties, or check authenticity instantly.",
     useCases: [

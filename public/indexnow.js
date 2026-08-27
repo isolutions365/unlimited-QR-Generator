@@ -5,9 +5,9 @@ async function submitToIndexNow(urls) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      host: 'www.freeqrgen.pro',
+      host: 'www.freeqrbarcodes.com',
       key: INDEXNOW_KEY,
-      keyLocation: `https://www.freeqrgen.pro/${INDEXNOW_KEY}.txt`,
+      keyLocation: `https://www.freeqrbarcodes.com/${INDEXNOW_KEY}.txt`,
       urlList: urls
     })
   });
@@ -16,10 +16,10 @@ async function submitToIndexNow(urls) {
 
 // Submit all important URLs
 submitToIndexNow([
-  'https://www.freeqrgen.pro/',
-  'https://www.freeqrgen.pro/url-qr-generator',
-  'https://www.freeqrgen.pro/pdf-qr-generator',
-  'https://www.freeqrgen.pro/wifi-qr-generator',
-  'https://www.freeqrgen.pro/vcard-qr-generator',
-  'https://www.freeqrgen.pro/email-qr-generator'
+  'https://www.freeqrbarcodes.com/',
+  'https://www.freeqrbarcodes.com/url-qr-generator',
+  'https://www.freeqrbarcodes.com/pdf-qr-generator',
+  'https://www.freeqrbarcodes.com/wifi-qr-generator',
+  'https://www.freeqrbarcodes.com/vcard-qr-generator',
+  'https://www.freeqrbarcodes.com/email-qr-generator'
 ]);

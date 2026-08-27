@@ -48,7 +48,7 @@ export interface SEOAuditSummary {
   metaCompletionRate: number; // Percentage with valid title & description lengths
 }
 
-const ROOT_DOMAIN = 'https://www.freeqrgen.pro';
+const ROOT_DOMAIN = 'https://www.freeqrbarcodes.com';
 
 const OG_LOCALE_MAP: Record<Locale, string> = {
   en: 'en_US',

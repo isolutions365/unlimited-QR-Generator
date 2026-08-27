@@ -78,7 +78,7 @@ export default function SEOPage({
         canonicalLink.setAttribute('rel', 'canonical');
         document.head.appendChild(canonicalLink);
       }
-      canonicalLink.setAttribute('href', `https://www.freeqrgen.pro/${pageData.slug}`);
+      canonicalLink.setAttribute('href', `https://www.freeqrbarcodes.com/${pageData.slug}`);
 
       // Robots meta tag injection for indexing optimization
       let metaRobots = document.querySelector('meta[name="robots"]');
@@ -96,7 +96,7 @@ export default function SEOPage({
         ogUrl.setAttribute('property', 'og:url');
         document.head.appendChild(ogUrl);
       }
-      ogUrl.setAttribute('content', `https://www.freeqrgen.pro/${pageData.slug}`);
+      ogUrl.setAttribute('content', `https://www.freeqrbarcodes.com/${pageData.slug}`);
 
       // Open Graph Title
       let ogTitle = document.querySelector('meta[property="og:title"]');
@@ -185,25 +185,25 @@ export default function SEOPage({
           "@type": "HowToStep",
           "name": "Input Destination Link",
           "text": "Paste your complete target URL into the input field, including the http:// or https:// protocol.",
-          "url": "https://www.freeqrgen.pro/url-qr-generator"
+          "url": "https://www.freeqrbarcodes.com/url-qr-generator"
         },
         {
           "@type": "HowToStep",
           "name": "Select Branding & Colors",
           "text": "Choose a stylish linear gradient or solid color, custom eye shapes, and pixel patterns.",
-          "url": "https://www.freeqrgen.pro/url-qr-generator"
+          "url": "https://www.freeqrbarcodes.com/url-qr-generator"
         },
         {
           "@type": "HowToStep",
           "name": "Embed Centerpiece Logo",
           "text": "Upload your brand logo or select standard social icons with High error correction settings.",
-          "url": "https://www.freeqrgen.pro/url-qr-generator"
+          "url": "https://www.freeqrbarcodes.com/url-qr-generator"
         },
         {
           "@type": "HowToStep",
           "name": "Export & Print Layout",
           "text": "Download the code as high-resolution PNG, or scalable vector SVG/PDF.",
-          "url": "https://www.freeqrgen.pro/url-qr-generator"
+          "url": "https://www.freeqrbarcodes.com/url-qr-generator"
         }
       ]
     };

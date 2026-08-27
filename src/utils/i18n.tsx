@@ -79,7 +79,7 @@ export function shouldSkipTranslation(text: any): boolean {
   if (
     lower === 'free qr generator' ||
     lower === 'freeqrgen' ||
-    lower === 'freeqrgen.pro' ||
+    lower === 'freeqrbarcodes.com' ||
     lower === 'isolutions' ||
     lower === 'isolutions ico' ||
     lower === 'reed-solomon' ||

@@ -1278,7 +1278,7 @@ export default function App() {
     let title = 'Free QR Code Generator - Dynamic QR Codes & Custom Creator';
     let description = 'Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Custom styled QR generator template for your brand.';
     
-    const rootUrl = 'https://www.freeqrgen.pro';
+    const rootUrl = 'https://www.freeqrbarcodes.com';
     const canonical = `${rootUrl}${currentPath === '/' ? '' : currentPath}`;
 
     if (currentPath === '/' || currentPath === '') {
@@ -1456,7 +1456,7 @@ export default function App() {
       'og:title': title,
       'og:description': description,
       'og:url': canonical,
-      'og:image': 'https://www.freeqrgen.pro/og-image.jpg',
+      'og:image': 'https://www.freeqrbarcodes.com/og-image.jpg',
       'og:type': 'website'
     };
 
@@ -1475,7 +1475,7 @@ export default function App() {
       'twitter:title': title,
       'twitter:description': description,
       'twitter:url': canonical,
-      'twitter:image': 'https://www.freeqrgen.pro/og-image.jpg'
+      'twitter:image': 'https://www.freeqrbarcodes.com/og-image.jpg'
     };
 
     Object.entries(twitterTags).forEach(([name, content]) => {
@@ -1966,8 +1966,8 @@ export default function App() {
         id: targetId,
         name: currentProject.name || 'My Styled QR',
         type: currentProject.type || 'url',
-        content: contentVal || 'https://www.freeqrgen.pro',
-        originalUrl: originalUrlVal || 'https://www.freeqrgen.pro',
+        content: contentVal || 'https://www.freeqrbarcodes.com',
+        originalUrl: originalUrlVal || 'https://www.freeqrbarcodes.com',
         design: {
           fgColor: currentProject.design?.fgColor || '#0f172a',
           bgColor: currentProject.design?.bgColor || '#ffffff',

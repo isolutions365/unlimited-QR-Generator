@@ -75,7 +75,7 @@ export function useReCaptchaEnterprise() {
 
     // Check if the current hostname is a supported production domain before injecting script
     const hostname = window.location.hostname;
-    const isSupportedDomain = hostname === 'freeqrgen.pro' || hostname === 'www.freeqrgen.pro';
+    const isSupportedDomain = hostname === 'freeqrbarcodes.com' || hostname === 'www.freeqrbarcodes.com';
 
     if (!isSupportedDomain) {
       // In dev/staging/preview sandboxes, skip external reCAPTCHA script injection to prevent 'Invalid domain for site key' error badges

@@ -29,7 +29,7 @@ export default function CompanyPages({
       description = 'Review the Terms & Conditions of FreeQRGen.pro. Understand the user guidelines, fair use policy, and local data persistence rules of our free QR platform.';
     } else if (view === 'about') {
       title = 'About FreeQRGen.pro | Leaders in Dynamic QR Code Technology';
-      description = 'Learn about FreeQRGen.pro (freeqrgen.pro), our mission, technology stack, security architectures, and core team behind the advanced QR code design platform.';
+      description = 'Learn about FreeQRGen.pro (freeqrbarcodes.com), our mission, technology stack, security architectures, and core team behind the advanced QR code design platform.';
     } else if (view === 'contact') {
       title = 'Contact Us | FreeQRGen.pro Support & Compliance Hub';
       description = 'Get in touch with the FreeQRGen.pro technical team or our compliance officers for questions, enterprise integration inquiries, or support.';
@@ -54,7 +54,7 @@ export default function CompanyPages({
       canonicalLink.setAttribute('rel', 'canonical');
       document.head.appendChild(canonicalLink);
     }
-    canonicalLink.setAttribute('href', `https://www.freeqrgen.pro/${view}`);
+    canonicalLink.setAttribute('href', `https://www.freeqrbarcodes.com/${view}`);
   }, [view]);
 
   const breadcrumbSchema = {
@@ -65,13 +65,13 @@ export default function CompanyPages({
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://www.freeqrgen.pro"
+        "item": "https://www.freeqrbarcodes.com"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": view === 'terms' ? 'Terms & Conditions' : view === 'about' ? 'About Us' : view === 'contact' ? 'Contact Us' : 'Privacy Policy',
-        "item": `https://www.freeqrgen.pro/${view}`
+        "item": `https://www.freeqrbarcodes.com/${view}`
       }
     ]
   };
@@ -81,7 +81,7 @@ export default function CompanyPages({
     "@type": "WebPage",
     "name": view === 'terms' ? 'Terms & Conditions - FreeQRGen.pro' : view === 'about' ? 'About Us - FreeQRGen.pro' : view === 'contact' ? 'Contact Us - FreeQRGen.pro' : 'Privacy Policy - FreeQRGen.pro',
     "description": view === 'terms' ? 'Review the Terms & Conditions of FreeQRGen.pro. Understand the user guidelines, fair use policy, and local data persistence rules.' : 'Corporate policy and structural content.',
-    "url": `https://www.freeqrgen.pro/${view}`
+    "url": `https://www.freeqrbarcodes.com/${view}`
   };
 
   const handleSubmit = (e: React.FormEvent) => {

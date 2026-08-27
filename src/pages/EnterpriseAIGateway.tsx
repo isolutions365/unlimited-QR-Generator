@@ -944,7 +944,7 @@ export default function EnterpriseAIGateway({
   "workspace_id": "ws_9ff96fc3054b",
   "data": {
     "qr_id": "qr_08173491",
-    "target_url": "https://www.freeqrgen.pro/solutions/retail",
+    "target_url": "https://www.freeqrbarcodes.com/solutions/retail",
     "fg_color": "#0f172a",
     "accessibility_compliant": true
   }

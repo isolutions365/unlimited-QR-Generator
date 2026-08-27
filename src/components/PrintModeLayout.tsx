@@ -489,7 +489,7 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
         <div className="hidden">
           <MemoizedQRCanvas
             ref={canvasRef}
-            textToEncode={currentProject?.content || 'https://freeqrgen.pro'}
+            textToEncode={currentProject?.content || 'https://freeqrbarcodes.com'}
             fgColor={currentProject?.design?.fgColor || '#000000'}
             bgColor={currentProject?.design?.bgColor || '#ffffff'}
             gradientType={currentProject?.design?.gradientType || 'none'}

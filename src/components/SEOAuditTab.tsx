@@ -360,7 +360,7 @@ ${route.hreflangs.map(h => `<link rel="alternate" hreflang="${h.lang}" href="${h
                     {/* Canonical & Hreflangs */}
                     <td className="py-3.5 px-4">
                       <div className="font-mono text-[11px] text-indigo-700 font-medium truncate max-w-[200px]" title={route.canonicalUrl}>
-                        {route.canonicalUrl.replace('https://www.freeqrgen.pro', '')}
+                        {route.canonicalUrl.replace('https://www.freeqrbarcodes.com', '')}
                       </div>
                       <div className="flex items-center gap-1 mt-1 text-[10px] font-semibold text-slate-500">
                         <Globe className="w-3 h-3 text-indigo-500 shrink-0" />
@@ -523,7 +523,7 @@ ${route.hreflangs.map(h => `<link rel="alternate" hreflang="${h.lang}" href="${h
                     {activeRouteInspect.hreflangs.map((h) => (
                       <div key={h.lang} className="p-2 bg-white rounded-lg border border-slate-200 flex items-center justify-between">
                         <span className="font-black text-indigo-600 uppercase">{h.lang}</span>
-                        <span className="text-slate-500 truncate max-w-[220px]" title={h.url}>{h.url.replace('https://www.freeqrgen.pro', '')}</span>
+                        <span className="text-slate-500 truncate max-w-[220px]" title={h.url}>{h.url.replace('https://www.freeqrbarcodes.com', '')}</span>
                       </div>
                     ))}
                   </div>
