@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ScrollableTabContainer from '../components/ScrollableTabContainer';
+import BreadcrumbNav from '../components/BreadcrumbNav';
 import { 
   ChevronRight, Home, Zap, ArrowRight, Check, HelpCircle, 
   ChevronDown, BookOpen, LayoutTemplate, Star, Info, Cpu, 
@@ -371,18 +372,19 @@ export default function ProgrammaticHub({
             
             <div className="max-w-6xl mx-auto relative z-10">
               {/* Breadcrumbs */}
-              <nav className="flex items-center gap-2 text-xs text-white/70 mb-6 font-medium">
-                <button onClick={() => onNavigate('/')} className="hover:text-white transition-colors flex items-center gap-1">
-                  <Home className="w-3.5 h-3.5" />
-                  {t('programmatic.home', 'Home')}
-                </button>
-                <ChevronRight className="w-3 h-3 text-white/40" />
-                <button onClick={() => onNavigate(`/${section}`)} className="hover:text-white transition-colors uppercase tracking-wider">
-                  {section === 'solutions' ? t('programmatic.solutions', 'Solutions') : section === 'use-cases' ? t('programmatic.useCases', 'Use Cases') : t('programmatic.industries', 'Industries')}
-                </button>
-                <ChevronRight className="w-3 h-3 text-white/40" />
-                <span className="text-white font-bold truncate">{activeProfile.name}</span>
-              </nav>
+              <BreadcrumbNav
+                items={[
+                  {
+                    label: section === 'solutions' ? String(t('programmatic.solutions', 'Solutions')) : section === 'use-cases' ? String(t('programmatic.useCases', 'Use Cases')) : String(t('programmatic.industries', 'Industries')),
+                    onClick: () => onNavigate(`/${section}`),
+                    href: `/${section}`
+                  },
+                  { label: activeProfile.name, active: true }
+                ]}
+                onNavigate={onNavigate}
+                className="mb-6 bg-white/10 text-white border-white/20"
+                schemaId="prog-detail-breadcrumb-schema"
+              />
 
               {/* Badges */}
               <div className="flex items-center gap-2 mb-4">
@@ -722,16 +724,17 @@ export default function ProgrammaticHub({
         /* Dynamic Directory / List View */
         <div className="max-w-6xl mx-auto px-4 md:px-8 pt-12">
           {/* Breadcrumb List */}
-          <nav className="flex items-center gap-2 text-xs text-slate-400 mb-6 font-medium">
-            <button onClick={() => onNavigate('/')} className="hover:text-indigo-600 transition-colors flex items-center gap-1">
-              <Home className="w-3.5 h-3.5" />
-              {t('programmatic.home', 'Home')}
-            </button>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-slate-700 font-bold uppercase tracking-wider">
-              {section === 'solutions' ? t('programmatic.solutionsDirectory', 'Solutions Directory') : section === 'use-cases' ? t('programmatic.useCasesDirectory', 'Use Cases Directory') : t('programmatic.industriesDirectory', 'Industries Directory')}
-            </span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              {
+                label: section === 'solutions' ? String(t('programmatic.solutionsDirectory', 'Solutions Directory')) : section === 'use-cases' ? String(t('programmatic.useCasesDirectory', 'Use Cases Directory')) : String(t('programmatic.industriesDirectory', 'Industries Directory')),
+                active: true
+              }
+            ]}
+            onNavigate={onNavigate}
+            className="mb-6 bg-white"
+            schemaId="prog-list-breadcrumb-schema"
+          />
 
           {/* Directory Title */}
           <div className="mb-10 text-center max-w-2xl mx-auto">

@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Search, HelpCircle, ChevronDown, ChevronUp, Copy, Check, ArrowLeft, ShieldAlert, Home, ChevronRight } from 'lucide-react';
+import { Search, HelpCircle, ChevronDown, ChevronUp, Copy, Check, ArrowLeft, ShieldAlert } from 'lucide-react';
 import ScrollableTabContainer from '../components/ScrollableTabContainer';
 import { faqCategories, FAQItem } from '../data/faqData';
 import { getLocalizedFaq, faqCategoryLabels, Locale } from '../utils/translations';
 import { useTranslation } from '../utils/i18n';
 import { buildProductionUrl } from '../config/siteConfig';
+import BreadcrumbNav from '../components/BreadcrumbNav';
 
 interface FaqSectionProps {
   onNavigate: (path: string) => void;
@@ -75,17 +76,12 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
       </script>
 
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs mb-6">
-        <button 
-          onClick={() => onNavigate('/')} 
-          className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
-        >
-          <Home className="w-3.5 h-3.5" />
-          <span>{t('common.home', 'Home')}</span>
-        </button>
-        <ChevronRight className="w-3 h-3 text-slate-300" />
-        <span className="text-slate-800 font-bold">{t('faq.pageTitle', 'FAQ & Knowledge Base')}</span>
-      </nav>
+      <BreadcrumbNav 
+        items={[{ label: t('faq.pageTitle', 'FAQ & Knowledge Base'), active: true }]} 
+        onNavigate={onNavigate}
+        className="mb-6 bg-white"
+        schemaId="faq-breadcrumb-schema"
+      />
 
       {/* Back button */}
       <button

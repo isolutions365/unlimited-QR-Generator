@@ -8,6 +8,9 @@ import { adminDb } from './server/firebase-admin';
 import { doc, getDoc, getDocs, collection, query, where, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, Type } from '@google/genai';
+import { getBlogArticles, checkArticleTranslationStatus } from './src/data/blogData';
+import { getFaqData } from './src/data/faqData';
+import { presetToolsTranslations } from './src/utils/translations';
 
 // Global Process Exception Handlers to prevent Vercel Serverless Function container crashes
 if (typeof process !== 'undefined') {
@@ -3177,6 +3180,511 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
     }
   });
 
+  // --- TECHNICAL SEO, MULTILINGUAL SCHEMA.ORG & PRERENDERING ENGINE ---
+  const localizedMetadata: Record<string, {
+    title: string;
+    description: string;
+    faqTitle?: string;
+    faqDescription?: string;
+    blogTitle?: string;
+    blogDescription?: string;
+  }> = {
+    en: {
+      title: "Free QR Code Generator - Dynamic QR Codes & Custom Creator",
+      description: "Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.",
+      faqTitle: "Frequently Asked Questions - Free QR Code Generator",
+      faqDescription: "Find answers to common questions about QR codes, static vs dynamic codes, error correction levels, customization, and how to create them.",
+      blogTitle: "Guides, Tutorials & Marketing Blog - Free QR Code Generator",
+      blogDescription: "Read our technical and strategic guides on QR codes, dynamic redirects, QR codes for restaurant menus, business networking, and contactless services."
+    },
+    ur: {
+      title: "مفت کیو آر کوڈ جنریٹر - ڈائنامک کیو آر کوڈز اور کسٹم میکر",
+      description: "لوگو، کسٹم رنگوں، گریڈینٹس اور ریئل ٹائم اسکین تجزیات کے ساتھ مفت ڈائنامک کیو آر کوڈز بنائیں۔ کسی سائن اپ کی ضرورت نہیں ہے۔",
+      faqTitle: "اکثر پوچھے گئے سوالات - مفت کیو آر کوڈ جنریٹر",
+      faqDescription: "کیو آر کوڈز، اسٹیٹک بمقابلہ ڈائنامک کوڈز، اور کسٹمائزیشن کے بارے میں عام سوالات کے جوابات حاصل کریں۔",
+      blogTitle: "رہنما، سبق اور مارکیٹنگ بلاگ - مفت کیو آر کوڈ جنریٹر",
+      blogDescription: "کیو آر کوڈز، ڈائنامک ری ڈائریکٹس، اور ریستوراں کے مینو کے بارے میں ہمارے تکنیکی اور حکمت عملی کے رہنما پڑھیں۔"
+    },
+    ar: {
+      title: "مولد رمز QR مجاني - رموز QR ديناميكية ومخصصة",
+      description: "أنشئ رموز QR ديناميكية مجانية مع شعارات وألوان مخصصة وتدرجات وتحليلات مسح في الوقت الفعلي. لا يلزم الاشتراك.",
+      faqTitle: "الأسئلة الشائعة - مولد رمز QR المجاني",
+      faqDescription: "اعثر على إجابات للأسئلة الشائعة حول رموز QR، والأكواد الثابتة مقابل الديناميكية، والتخصيص.",
+      blogTitle: "الأدلة والدروس ومدونة التسويق - مولد رمز QR المجاني",
+      blogDescription: "اقرأ أدلتنا الفنية والاستراتيجية حول رموز QR والتوجيهات الديناميكية ورموز QR لقوائم المطاعم."
+    },
+    hi: {
+      title: "मुफ़्त क्यूआर कोड जनरेटर - डायनेमिक क्यूआर कोड और कस्टम निर्माता",
+      description: "लोगो, कस्टम रंग, ग्रेडिएंट और रीयल-टाइम स्कैन विश्लेषण के साथ मुफ़्त डायनेमिक क्यूआर कोड बनाएं। किसी साइन-अप की आवश्यकता नहीं है।",
+      faqTitle: "अक्सर पूछे जाने वाले प्रश्न - मुफ़्त क्यूआर कोड जनरेटर",
+      faqDescription: "क्यूआर कोड, स्टेटिक बनाम डायनेमिक कोड और कस्टमाइज़ेशन के बारे में सामान्य प्रश्नों के उत्तर खोजें।",
+      blogTitle: "गाइड, ट्यूटोरियल और मार्केटिंग ब्लॉग - मुफ़्त क्यूआर कोड जनरेटर",
+      blogDescription: "क्यूआर कोड, डायनेमिक रीडायरेक्ट और रेस्तरां मेनू के बारे में हमारे तकनीकी और रणनीतिक गाइड पढ़ें।"
+    },
+    es: {
+      title: "Generador de códigos QR gratis - Códigos QR dinámicos y creador personalizado",
+      description: "Cree códigos QR dinámicos gratuitos con logotipos, colores personalizados, degradados y análisis de escaneo en tiempo real. Sin necesidad de registrarse.",
+      faqTitle: "Preguntas frecuentes - Generador de códigos QR gratis",
+      faqDescription: "Encuentre respuestas a preguntas frecuentes sobre códigos QR, códigos estáticos frente a dinámicos y personalización.",
+      blogTitle: "Blog de guías, tutoriales y marketing - Generador de códigos QR gratis",
+      blogDescription: "Lea nuestras guías técnicas y estratégicas sobre códigos QR, redireccionamientos dinámicos y códigos QR para menús de restaurantes."
+    },
+    fr: {
+      title: "Générateur de code QR gratuit - Codes QR dynamiques et créateur personnalisé",
+      description: "Créez des codes QR dynamiques gratuits avec des logos, des couleurs personnalisées, des dégradés et des analyses de numérisation en temps réel. Sans inscription.",
+      faqTitle: "Foire aux questions (FAQ) - Générateur de code QR gratuit",
+      faqDescription: "Trouvez des réponses aux questions courantes sur les codes QR, les codes statiques ou dynamiques et la personnalisation.",
+      blogTitle: "Guides, didacticiels et blog marketing - Générateur de code QR gratuit",
+      blogDescription: "Lisez nos guides techniques et stratégiques sur les codes QR, les redirections dynamiques et les menus de restaurant."
+    },
+    tr: {
+      title: "Ücretsiz QR Kod Oluşturucu - Dinamik QR Kodları ve Özel Tasarım",
+      description: "Logolar, özel renkler, degradeler ve gerçek zamanlı tarama analitiği ile ücretsiz dinamik QR kodları oluşturun. Kayıt gerekmez.",
+      faqTitle: "Sıkça Sorulan Sorular - Ücretsiz QR Kod Oluşturucu",
+      faqDescription: "QR kodları, statik ve dinamik kodlar ve özelleştirme hakkında sık sorulan soruların yanıtlarını bulun.",
+      blogTitle: "Kılavuzlar, Eğitimler ve Pazarlama Blogu - Ücretsiz QR Kod Oluşturucu",
+      blogDescription: "QR kodları, dinamik yönlendirmeler og restoran menüleri hakkında teknik ve stratejik kılavuzlarımızı okuyun."
+    },
+    id: {
+      title: "Generator Kode QR Gratis - Kode QR Dinamis & Pembuat Kustom",
+      description: "Buat kode QR dinamis gratis dengan logo, warna khusus, gradien, dan analitik pemindaian waktu nyata. Tanpa pendaftaran.",
+      faqTitle: "Pertanyaan Sering Diajukan (FAQ) - Generator Kode QR Gratis",
+      faqDescription: "Temukan jawaban atas pertanyaan umum tentang kode QR, kode statis vs dinamis, dan kustomisasi.",
+      blogTitle: "Blog Panduan, Tutorial & Pemasaran - Generator Kode QR Gratis",
+      blogDescription: "Baca panduan teknis dan strategis kami tentang kode QR, pengalihan dinamis, dan kode QR untuk menu restoran."
+    }
+  };
+
+  function generateSeoAndSchema(locale: string, route: string, fullUrl: string) {
+    const meta = localizedMetadata[locale] || localizedMetadata['en'];
+
+    let title = meta.title;
+    let description = meta.description;
+    let schemaObjects: any[] = [];
+    let noscriptHtml = '';
+
+    const orgSchema = {
+      "@type": "Organization",
+      "@id": "https://www.freeqrbarcodes.com/#organization",
+      "name": "Free QR Code Generator",
+      "url": "https://www.freeqrbarcodes.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://www.freeqrbarcodes.com/#logo",
+        "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png",
+        "caption": "Free QR Code Generator Logo"
+      },
+      "image": {
+        "@id": "https://www.freeqrbarcodes.com/#logo"
+      }
+    };
+
+    const webSiteSchema = {
+      "@type": "WebSite",
+      "@id": "https://www.freeqrbarcodes.com/#website",
+      "name": "Free QR Code Generator",
+      "url": "https://www.freeqrbarcodes.com/",
+      "publisher": {
+        "@id": "https://www.freeqrbarcodes.com/#organization"
+      },
+      "potentialAction": [{
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.freeqrbarcodes.com/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }]
+    };
+
+    schemaObjects.push(orgSchema, webSiteSchema);
+
+    if (route === "" || route === "/") {
+      const features = presetToolsTranslations[locale] || presetToolsTranslations['en'] || [];
+      const featureList = features.map((f: any) => `${f.name}: ${f.desc}`);
+
+      const webAppSchema = {
+        "@type": "WebApplication",
+        "@id": "https://www.freeqrbarcodes.com/#webapplication",
+        "name": meta.title,
+        "url": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale}`,
+        "description": meta.description,
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": featureList,
+        "creator": {
+          "@id": "https://www.freeqrbarcodes.com/#organization"
+        }
+      };
+      schemaObjects.push(webAppSchema);
+
+      noscriptHtml = `
+<noscript>
+  <div style="padding: 2rem; max-width: 800px; margin: 0 auto; font-family: sans-serif; line-height: 1.6;">
+    <h1>${meta.title}</h1>
+    <p>${meta.description}</p>
+    <h2>Our Professional QR & Barcode Creator Tools:</h2>
+    <ul>
+      ${features.map((f: any) => `<li><strong>${f.name}</strong> - ${f.desc}</li>`).join('\n')}
+    </ul>
+  </div>
+</noscript>`;
+
+    } else if (route === "faq" || route === "faq/") {
+      title = meta.faqTitle || title;
+      description = meta.faqDescription || description;
+
+      const faqItems = getFaqData(locale);
+      const mainEntity = faqItems.map((item: any) => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.answer
+        }
+      }));
+
+      const faqSchema = {
+        "@type": "FAQPage",
+        "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}faq/#faqpage`,
+        "mainEntity": mainEntity
+      };
+
+      const breadcrumbSchema = {
+        "@type": "BreadcrumbList",
+        "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}faq/#breadcrumb`,
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "FAQ",
+            "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}faq`
+          }
+        ]
+      };
+
+      schemaObjects.push(faqSchema, breadcrumbSchema);
+
+      noscriptHtml = `
+<noscript>
+  <div style="padding: 2rem; max-width: 800px; margin: 0 auto; font-family: sans-serif; line-height: 1.6;">
+    <h1>${title}</h1>
+    <p>${description}</p>
+    <h2>Frequently Asked Questions:</h2>
+    <dl>
+      ${faqItems.map((item: any) => `
+        <dt style="font-weight: bold; font-size: 1.2rem; margin-top: 1.5rem;">${item.question}</dt>
+        <dd style="margin-left: 0; margin-top: 0.5rem; color: #333;">${item.answer}</dd>
+      `).join('\n')}
+    </dl>
+  </div>
+</noscript>`;
+
+    } else if (route === "blog" || route === "blog/") {
+      title = meta.blogTitle || title;
+      description = meta.blogDescription || description;
+
+      const articles = getBlogArticles(locale);
+      const itemListElement = articles.map((art: any, index: number) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": art.title,
+        "url": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog/${art.slug}`
+      }));
+
+      const itemListSchema = {
+        "@type": "ItemList",
+        "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog/#itemlist`,
+        "name": meta.blogTitle,
+        "description": meta.blogDescription,
+        "itemListElement": itemListElement
+      };
+
+      const breadcrumbSchema = {
+        "@type": "BreadcrumbList",
+        "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog/#breadcrumb`,
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog`
+          }
+        ]
+      };
+
+      schemaObjects.push(itemListSchema, breadcrumbSchema);
+
+      noscriptHtml = `
+<noscript>
+  <div style="padding: 2rem; max-width: 800px; margin: 0 auto; font-family: sans-serif; line-height: 1.6;">
+    <h1>${title}</h1>
+    <p>${description}</p>
+    <h2>Latest Guides & Tutorials:</h2>
+    <ul style="list-style: none; padding-left: 0;">
+      ${articles.map((art: any) => `
+        <li style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1.5rem;">
+          <h3><a href="/${locale === 'en' ? '' : locale + '/'}blog/${art.slug}" style="color: #0066cc; text-decoration: none; font-size: 1.4rem;">${art.title}</a></h3>
+          <p style="color: #555; margin: 0.5rem 0;">${art.intro}</p>
+          <small style="color: #888;">Published on ${art.date} by ${art.author} &bull; ${art.readingTime}</small>
+        </li>
+      `).join('\n')}
+    </ul>
+  </div>
+</noscript>`;
+
+    } else if (route.startsWith("blog/")) {
+      const slug = route.substring(5).replace(/\/$/, "");
+      const articles = getBlogArticles(locale);
+      const article = articles.find((a: any) => a.slug === slug);
+
+      if (article) {
+        title = article.metaTitle || article.title;
+        description = article.metaDescription || article.intro;
+
+        const cleanBody = article.contentMarkdown.replace(/[#*`>_\-]/g, ' ').substring(0, 10000);
+
+        const blogPostingSchema = {
+          "@type": "BlogPosting",
+          "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog/${slug}/#blogposting`,
+          "headline": article.title,
+          "description": article.metaDescription || article.intro,
+          "datePublished": "2026-06-02T08:00:00+00:00",
+          "dateModified": "2026-06-02T08:00:00+00:00",
+          "author": {
+            "@type": "Person",
+            "name": article.author || "I-Solutions Specialist"
+          },
+          "publisher": {
+            "@id": "https://www.freeqrbarcodes.com/#organization"
+          },
+          "mainEntityOfPage": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog/${slug}`,
+          "articleBody": cleanBody
+        };
+
+        const breadcrumbSchema = {
+          "@type": "BreadcrumbList",
+          "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog/${slug}/#breadcrumb`,
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale}`
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Blog",
+              "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog`
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": article.title,
+              "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog/${slug}`
+            }
+          ]
+        };
+
+        schemaObjects.push(breadcrumbSchema);
+
+        // Confirm translation status before attaching BlogPosting schema to prevent indexing incomplete content
+        const translationStatus = checkArticleTranslationStatus(article, locale);
+        if (translationStatus.isComplete || locale === 'en') {
+          schemaObjects.push(blogPostingSchema);
+        }
+
+        noscriptHtml = `
+<noscript>
+  <article style="padding: 2rem; max-width: 800px; margin: 0 auto; font-family: sans-serif; line-height: 1.6;">
+    <p><a href="/${locale === 'en' ? '' : locale + '/'}blog" style="color: #0066cc;">&larr; Back to Blog</a></p>
+    <header>
+      <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">${article.title}</h1>
+      <div style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">
+        Published on ${article.date} by ${article.author} &bull; ${article.readingTime}
+      </div>
+    </header>
+    <p style="font-size: 1.2rem; color: #333; font-style: italic; margin-bottom: 2rem;">${article.intro}</p>
+    <div class="article-content" style="color: #222; font-size: 1.1rem;">
+      ${article.contentMarkdown.split('\n\n').map((p: string) => {
+        const trimmed = p.trim();
+        if (trimmed.startsWith('### ')) {
+          return `<h3 style="font-size: 1.4rem; margin-top: 1.8rem; margin-bottom: 0.8rem;">${trimmed.substring(4)}</h3>`;
+        }
+        if (trimmed.startsWith('## ')) {
+          return `<h2 style="font-size: 1.7rem; margin-top: 2rem; margin-bottom: 1rem;">${trimmed.substring(3)}</h2>`;
+        }
+        if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+          const items = trimmed.split(/\n[\*\-]\s+/);
+          return `<ul style="margin-bottom: 1.2rem; padding-left: 1.5rem;">${items.map(item => `<li>${item.replace(/^[\*\-]\s+/, '')}</li>`).join('')}</ul>`;
+        }
+        return `<p style="margin-bottom: 1.2rem;">${trimmed}</p>`;
+      }).join('\n')}
+    </div>
+  </article>
+</noscript>`;
+      }
+    } else {
+      const toolSlug = route.replace(/\/$/, "");
+      const tools = presetToolsTranslations[locale] || presetToolsTranslations['en'] || [];
+      const matchedTool = tools.find((t: any) => t.slug === toolSlug);
+
+      if (matchedTool) {
+        title = `${matchedTool.name} - Free QR Code Generator`;
+        description = matchedTool.desc;
+
+        const breadcrumbSchema = {
+          "@type": "BreadcrumbList",
+          "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}${toolSlug}/#breadcrumb`,
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale}`
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": matchedTool.name,
+              "item": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}${toolSlug}`
+            }
+          ]
+        };
+        schemaObjects.push(breadcrumbSchema);
+
+        noscriptHtml = `
+<noscript>
+  <div style="padding: 2rem; max-width: 800px; margin: 0 auto; font-family: sans-serif; line-height: 1.6;">
+    <h1>${title}</h1>
+    <p>${description}</p>
+    <p><a href="/${locale === 'en' ? '' : locale}" style="color: #0066cc;">&larr; Return to main QR/Barcode designer</a></p>
+  </div>
+</noscript>`;
+      }
+    }
+
+    const graphJson = {
+      "@context": "https://schema.org",
+      "@graph": schemaObjects
+    };
+
+    const schemaHtml = `<script type="application/ld+json">\n${JSON.stringify(graphJson, null, 2)}\n</script>`;
+
+    return {
+      title,
+      description,
+      schemaHtml,
+      noscriptHtml
+    };
+  }
+
+  async function serveHtmlWithSeoAndSchema(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const isFile = req.path.includes('.') && !req.path.endsWith('.html');
+    const isViteInternal = req.path.startsWith('/@') || req.path.startsWith('/node_modules/') || req.path.startsWith('/src/');
+    if (req.method !== 'GET' || req.path.startsWith('/api/') || req.path.startsWith('/ws') || req.path === '/sitemap.xml' || req.path === '/robots.txt' || isFile || isViteInternal) {
+      return next();
+    }
+
+    try {
+      let templatePath = '';
+      const isProd = process.env.NODE_ENV === 'production';
+      if (isProd) {
+        templatePath = path.join(process.cwd(), 'dist', 'index.html');
+      } else {
+        templatePath = path.join(process.cwd(), 'index.html');
+      }
+
+      const fs = await import('fs');
+      if (!fs.existsSync(templatePath)) {
+        return next();
+      }
+
+      let html = fs.readFileSync(templatePath, 'utf-8');
+
+      if (!isProd && (global as any).viteInstance) {
+        html = await (global as any).viteInstance.transformIndexHtml(req.originalUrl || req.url, html);
+      }
+
+      const pathParts = req.path.split('/').filter(Boolean);
+      let locale = 'en';
+      const supportedLocales = ['ar', 'ur', 'de', 'fr', 'es', 'pt', 'it', 'tr', 'id', 'hi', 'zh', 'ja', 'ko'];
+      
+      let actualPathParts = [...pathParts];
+      if (pathParts.length > 0 && supportedLocales.includes(pathParts[0])) {
+        locale = pathParts[0];
+        actualPathParts.shift();
+      }
+
+      const route = actualPathParts.join('/');
+
+      const seoData = generateSeoAndSchema(locale, route, `https://www.freeqrbarcodes.com${req.originalUrl || req.url}`);
+
+      let injectedHtml = html;
+
+      if (seoData.title) {
+        injectedHtml = injectedHtml.replace(/<title>.*?<\/title>/i, `<title>${seoData.title}</title>`);
+        injectedHtml = injectedHtml.replace(/<meta property="og:title" content=".*?" \/>/i, `<meta property="og:title" content="${seoData.title}" />`);
+        injectedHtml = injectedHtml.replace(/<meta name="twitter:title" content=".*?" \/>/i, `<meta name="twitter:title" content="${seoData.title}" />`);
+      }
+      if (seoData.description) {
+        injectedHtml = injectedHtml.replace(/<meta name="description" content=".*?" \/>/i, `<meta name="description" content="${seoData.description}" />`);
+        injectedHtml = injectedHtml.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${seoData.description}" />`);
+        injectedHtml = injectedHtml.replace(/<meta name="twitter:description" content=".*?" \/>/i, `<meta name="twitter:description" content="${seoData.description}" />`);
+      }
+
+      const canonicalUrl = `https://www.freeqrbarcodes.com${req.originalUrl || req.url}`;
+      injectedHtml = injectedHtml.replace(/<link rel="canonical" href=".*?" \/>/i, `<link rel="canonical" href="${canonicalUrl}" />`);
+
+      if (seoData.schemaHtml) {
+        const startMarker = '<!-- DYNAMIC_SCHEMA_START -->';
+        const endMarker = '<!-- DYNAMIC_SCHEMA_END -->';
+        const startIndex = injectedHtml.indexOf(startMarker);
+        const endIndex = injectedHtml.indexOf(endMarker);
+        if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+          injectedHtml = injectedHtml.substring(0, startIndex) + 
+                         seoData.schemaHtml + 
+                         injectedHtml.substring(endIndex + endMarker.length);
+        } else {
+          injectedHtml = injectedHtml.replace('<!-- DYNAMIC_SCHEMA_PLACEHOLDER -->', seoData.schemaHtml);
+        }
+      }
+
+      if (seoData.noscriptHtml) {
+        injectedHtml = injectedHtml.replace('</body>', `${seoData.noscriptHtml}\n</body>`);
+      }
+
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      res.status(200).send(injectedHtml);
+
+    } catch (err) {
+      console.error('[SEO Injection Middleware Error]:', err);
+      next();
+    }
+  }
+
   // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---
   async function startServer() {
     console.log("Starting Express...");
@@ -3273,6 +3781,8 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
         server: { middlewareMode: true },
         appType: 'spa',
       });
+      (global as any).viteInstance = vite;
+      app.get('*', serveHtmlWithSeoAndSchema);
       app.use(vite.middlewares);
     } else {
       const distPath = path.join(process.cwd(), 'dist');
@@ -3290,12 +3800,7 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
           }
         }
       }));
-      app.get('*', (req, res) => {
-        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
-        res.sendFile(path.join(distPath, 'index.html'));
-      });
+      app.get('*', serveHtmlWithSeoAndSchema);
     }
 
     const server = app.listen(PORT, '0.0.0.0', () => {

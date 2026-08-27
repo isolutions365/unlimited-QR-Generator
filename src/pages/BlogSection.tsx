@@ -2,17 +2,30 @@ import React, { useState, useMemo, useEffect } from 'react';
 import ScrollableTabContainer from '../components/ScrollableTabContainer';
 import { 
   ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check,
-  BookOpen, ChevronRight, MessageSquare, AlertCircle, Zap, Filter, Home
+  BookOpen, ChevronRight, MessageSquare, AlertCircle, Zap, Filter
 } from 'lucide-react';
-import { blogCategories, BlogArticle } from '../data/blogData';
+import { blogCategories, BlogArticle, checkArticleTranslationStatus } from '../data/blogData';
 import { getLocalizedBlog, Locale } from '../utils/translations';
 import { useTranslation } from '../utils/i18n';
 import { buildProductionUrl } from '../config/siteConfig';
+import BreadcrumbNav from '../components/BreadcrumbNav';
 
 interface BlogSectionProps {
   initialSlug?: string | null;
   onNavigate: (path: string) => void;
   locale?: Locale;
+}
+
+function formatDateToISO(dateStr: string): string {
+  if (!dateStr) return new Date().toISOString();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return `${dateStr}T08:00:00+00:00`;
+  }
+  const parsed = new Date(dateStr);
+  if (!isNaN(parsed.getTime())) {
+    return parsed.toISOString();
+  }
+  return '2026-06-02T08:00:00+00:00';
 }
 
 export default function BlogSection({ initialSlug, onNavigate, locale: propLocale }: BlogSectionProps) {
@@ -44,6 +57,79 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
     if (!activeArticleSlug) return null;
     return localizedArticles.find(art => art.slug === activeArticleSlug) || null;
   }, [activeArticleSlug, localizedArticles]);
+
+  // Dynamically compute BlogPosting JSON-LD schema when an article is active and translation status is confirmed
+  const articleSchema = useMemo(() => {
+    if (!activeArticle) return null;
+
+    const status = checkArticleTranslationStatus(activeArticle, locale);
+    // Ensure content integrity: confirm translation status to prevent indexing incomplete content
+    if (!status.isComplete && locale !== 'en') {
+      return null;
+    }
+
+    const articleUrl = buildProductionUrl(`/${locale === 'en' ? '' : locale + '/'}blog/${activeArticle.slug}`);
+    const isoDate = formatDateToISO(activeArticle.date);
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      '@id': `${articleUrl}#blogposting`,
+      'headline': activeArticle.title,
+      'description': activeArticle.metaDescription || activeArticle.intro,
+      'datePublished': isoDate,
+      'dateModified': isoDate,
+      'author': {
+        '@type': 'Person',
+        'name': activeArticle.author || 'I-Solutions Specialist'
+      },
+      'publisher': {
+        '@type': 'Organization',
+        '@id': 'https://www.freeqrbarcodes.com/#organization',
+        'name': 'Free QR Code Generator',
+        'url': 'https://www.freeqrbarcodes.com/',
+        'logo': {
+          '@type': 'ImageObject',
+          '@id': 'https://www.freeqrbarcodes.com/#logo',
+          'url': 'https://www.freeqrbarcodes.com/apple-touch-icon.png'
+        }
+      },
+      'mainEntityOfPage': {
+        '@type': 'WebPage',
+        '@id': articleUrl
+      },
+      'url': articleUrl,
+      'inLanguage': locale,
+      'articleBody': activeArticle.contentMarkdown ? activeArticle.contentMarkdown.replace(/[#*`>_\-]/g, ' ').substring(0, 5000) : undefined
+    };
+  }, [activeArticle, locale]);
+
+  // Synchronize dynamic script tag in document.head
+  useEffect(() => {
+    const scriptId = 'blog-article-jsonld';
+    let scriptEl = document.getElementById(scriptId);
+
+    if (articleSchema) {
+      if (!scriptEl) {
+        scriptEl = document.createElement('script');
+        scriptEl.id = scriptId;
+        scriptEl.setAttribute('type', 'application/ld+json');
+        document.head.appendChild(scriptEl);
+      }
+      scriptEl.textContent = JSON.stringify(articleSchema, null, 2);
+    } else {
+      if (scriptEl) {
+        scriptEl.remove();
+      }
+    }
+
+    return () => {
+      const el = document.getElementById(scriptId);
+      if (el) {
+        el.remove();
+      }
+    };
+  }, [articleSchema]);
 
   // Filter articles based on category selection
   const filteredArticles = useMemo(() => {
@@ -104,24 +190,15 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
         /* Detailed Article View */
         <article className="space-y-8">
           {/* Breadcrumb Navigation */}
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
-            <button 
-              onClick={() => onNavigate('/')} 
-              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>{t('common.home', 'Home')}</span>
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <button 
-              onClick={handleBackToList} 
-              className="hover:text-indigo-600 transition-colors cursor-pointer font-semibold"
-            >
-              {t('common.blog', 'Blog')}
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <span className="text-slate-800 font-bold truncate max-w-[240px] sm:max-w-none">{activeArticle.title}</span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              { label: t('common.blog', 'Blog'), onClick: handleBackToList, href: '/blog' },
+              { label: activeArticle.title, active: true }
+            ]}
+            onNavigate={onNavigate}
+            className="bg-white"
+            schemaId="blog-article-breadcrumb-schema"
+          />
 
           {/* Header Schema navigation */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
@@ -281,17 +358,14 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
         /* Blog Post Homepage Hub View */
         <div className="space-y-8">
           {/* Breadcrumb Navigation */}
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
-            <button 
-              onClick={() => onNavigate('/')} 
-              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>{t('common.home', 'Home')}</span>
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <span className="text-slate-800 font-bold">{t('common.blog', 'Blog')}</span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              { label: t('common.blog', 'Blog'), active: true }
+            ]}
+            onNavigate={onNavigate}
+            className="bg-white"
+            schemaId="blog-hub-breadcrumb-schema"
+          />
 
           {/* Header introduction */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">

@@ -178,33 +178,65 @@
     <meta name="twitter:description" content="Generate customized dynamic QR codes with logos, custom gradients, eye shapes, and real-time scan analytics." />
     <meta name="twitter:image" content="https://www.freeqrbarcodes.com/og-image.jpg" />
 
-    <!-- Schema.org Structured Data (JSON-LD) for Rich Snippets -->
+    <!-- DYNAMIC_SCHEMA_START -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Free QR Code Generator",
-      "url": "https://www.freeqrbarcodes.com/",
-      "description": "Free unlimited QR code generator with custom colors, logos, gradients. Supports URL, Text, WiFi, Contact, Arabic/RTL. No signup required.",
-      "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "featureList": [
-        "URL QR Code", "WiFi QR Code", "Contact QR Code",
-        "Custom Colors", "Logo in QR", "QR Scanner",
-        "Arabic RTL Support", "PWA Installable", "No signup"
-      ],
-      "creator": {
-        "@type": "Organization",
-        "name": "I-Solutions",
-        "url": "https://www.freeqrbarcodes.com/"
-      }
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.freeqrbarcodes.com/#organization",
+          "name": "Free QR Code Generator",
+          "url": "https://www.freeqrbarcodes.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://www.freeqrbarcodes.com/#logo",
+            "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png",
+            "caption": "Free QR Code Generator Logo"
+          },
+          "image": {
+            "@id": "https://www.freeqrbarcodes.com/#logo"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.freeqrbarcodes.com/#website",
+          "name": "Free QR Code Generator",
+          "url": "https://www.freeqrbarcodes.com/",
+          "publisher": {
+            "@id": "https://www.freeqrbarcodes.com/#organization"
+          },
+          "potentialAction": [{
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.freeqrbarcodes.com/?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }]
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://www.freeqrbarcodes.com/#webapplication",
+          "name": "Free QR Code Generator - Dynamic QR Codes & Custom Creator",
+          "url": "https://www.freeqrbarcodes.com/",
+          "description": "Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.",
+          "applicationCategory": "UtilitiesApplication",
+          "operatingSystem": "Any",
+          "browserRequirements": "Requires JavaScript",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "creator": {
+            "@id": "https://www.freeqrbarcodes.com/#organization"
+          }
+        }
+      ]
     }
     </script>
+    <!-- DYNAMIC_SCHEMA_END -->
 
     <!-- Performance Optimization: Limit to critical preconnects (Max 3 to satisfy PageSpeed audits) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

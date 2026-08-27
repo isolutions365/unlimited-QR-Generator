@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 import ScrollableTabContainer from '../components/ScrollableTabContainer';
+import BreadcrumbNav from '../components/BreadcrumbNav';
 
 import { 
   Shield, Activity, FileText, Users, Award, Cpu, BookOpen, 
@@ -1163,24 +1164,15 @@ func main() {
       <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white border-b border-indigo-800 px-6 py-8 md:py-12">
         <div className="max-w-7xl mx-auto flex flex-col gap-6">
           {/* Breadcrumb Navigation */}
-          <nav className="flex items-center gap-2 text-xs font-medium text-indigo-200">
-            <button 
-              onClick={() => onNavigate('/')} 
-              className="hover:text-white transition-colors flex items-center gap-1 cursor-pointer font-semibold"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>{t('common.home', 'Home')}</span>
-            </button>
-            <ChevronRight className="w-3 h-3 text-indigo-400" />
-            <button 
-              onClick={() => onNavigate('/platform')} 
-              className="hover:text-white transition-colors cursor-pointer font-semibold"
-            >
-              {t('platform.hubTitle', 'Platform')}
-            </button>
-            <ChevronRight className="w-3 h-3 text-indigo-400" />
-            <span className="text-white font-bold">{activeModule.name}</span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              { label: String(t('platform.hubTitle', 'Platform')), onClick: () => onNavigate('/platform'), href: '/platform' },
+              { label: activeModule.name, active: true }
+            ]}
+            onNavigate={onNavigate}
+            className="bg-white/10 text-white border-white/20"
+            schemaId="platform-breadcrumb-schema"
+          />
 
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex-1">

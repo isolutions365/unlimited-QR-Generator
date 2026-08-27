@@ -8,6 +8,7 @@ import { knowledgeArticles, KnowledgeArticle } from '../data/knowledgeData';
 import { Locale } from '../utils/translations';
 import { useTranslation } from '../utils/i18n';
 import { getProductionBaseUrl, buildProductionUrl } from '../config/siteConfig';
+import BreadcrumbNav from '../components/BreadcrumbNav';
 
 interface KnowledgeHubProps {
   section: 'academy' | 'blog' | 'guides' | 'tutorials' | 'resources' | 'glossary';
@@ -213,24 +214,15 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
         /* ==================== DETAILED VIEW ==================== */
         <div className="space-y-6">
           {/* Visual Breadcrumb Bar */}
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
-            <button 
-              onClick={() => onNavigate('/')} 
-              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>{t('knowledge.home', 'Home')}</span>
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <button 
-              onClick={handleBackToList} 
-              className="hover:text-indigo-600 transition-colors cursor-pointer font-semibold capitalize"
-            >
-              {t(`knowledge.sections.${section}`, section)}
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <span className="text-slate-800 font-bold truncate max-w-[240px] sm:max-w-none">{activeArticle.title}</span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              { label: String(t(`knowledge.sections.${section}`, section)), onClick: handleBackToList, href: `/${section}` },
+              { label: activeArticle.title, active: true }
+            ]}
+            onNavigate={onNavigate}
+            className="bg-white"
+            schemaId="kb-detail-breadcrumb-schema"
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main content grid */}
@@ -588,17 +580,14 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
         /* ==================== LIST VIEW ==================== */
         <div className="space-y-8" id="kb-list-view">
           {/* Breadcrumb Navigation */}
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-2.5 px-4 rounded-xl border border-slate-100 shadow-2xs">
-            <button 
-              onClick={() => onNavigate('/')} 
-              className="hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer font-semibold"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>{t('knowledge.home', 'Home')}</span>
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <span className="text-slate-800 font-bold capitalize">{t(`knowledge.sections.${section}`, section)}</span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              { label: String(t(`knowledge.sections.${section}`, section)), active: true }
+            ]}
+            onNavigate={onNavigate}
+            className="bg-white"
+            schemaId="kb-list-breadcrumb-schema"
+          />
 
           {/* Header section with description */}
           <div className="space-y-3 text-center max-w-2xl mx-auto">

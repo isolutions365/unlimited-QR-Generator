@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 import ScrollableTabContainer from '../components/ScrollableTabContainer';
+import BreadcrumbNav from '../components/BreadcrumbNav';
 
 import { 
   ChevronRight, Home, Zap, ArrowRight, Check, HelpCircle, 
@@ -202,24 +203,15 @@ export default function TemplatesHub({
       <div className="bg-slate-50 min-h-screen pb-20 font-sans" id="template-detail-container">
         {/* Breadcrumb section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-3 px-4 rounded-xl border border-slate-100 shadow-sm" aria-label={t('templates.ariaBreadcrumb', 'Breadcrumb')}>
-            <button 
-              onClick={() => onNavigate('/')} 
-              className="hover:text-indigo-600 flex items-center gap-1 transition-colors"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>{t('templates.breadcrumbHome', 'Home')}</span>
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <button 
-              onClick={handleBackToDirectory} 
-              className="hover:text-indigo-600 transition-colors"
-            >
-              {t('templates.breadcrumbTemplates', 'Templates')}
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <span className="text-slate-800 font-semibold truncate max-w-[200px] sm:max-w-none">{t('templates.item.' + activeTemplate.slug + '.title', activeTemplate.title)}</span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              { label: String(t('templates.breadcrumbTemplates', 'Templates')), onClick: handleBackToDirectory, href: '/templates' },
+              { label: String(t('templates.item.' + activeTemplate.slug + '.title', activeTemplate.title)), active: true }
+            ]}
+            onNavigate={onNavigate}
+            className="bg-white"
+            schemaId="templates-detail-breadcrumb-schema"
+          />
         </div>
 
         {/* Hero Section */}
@@ -605,17 +597,14 @@ export default function TemplatesHub({
       
       {/* Directory Breadcrumbs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-3 px-4 rounded-xl border border-slate-100 shadow-sm" aria-label={t('templates.ariaBreadcrumb', 'Breadcrumb')}>
-          <button 
-            onClick={() => onNavigate('/')} 
-            className="hover:text-indigo-600 flex items-center gap-1 transition-colors"
-          >
-            <Home className="w-3.5 h-3.5" />
-            <span>{t('templates.breadcrumbHome', 'Home')}</span>
-          </button>
-          <ChevronRight className="w-3 h-3 text-slate-300" />
-          <span className="text-slate-800 font-semibold">{t('templates.directoryBreadcrumb', 'Templates Directory')}</span>
-        </nav>
+        <BreadcrumbNav
+          items={[
+            { label: String(t('templates.directoryBreadcrumb', 'Templates Directory')), active: true }
+          ]}
+          onNavigate={onNavigate}
+          className="bg-white"
+          schemaId="templates-directory-breadcrumb-schema"
+        />
       </div>
 
       {/* Directory Hero */}

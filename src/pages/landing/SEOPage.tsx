@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../../utils/i18n';
 import { getProductionBaseUrl } from '../../config/siteConfig';
+import BreadcrumbNav from '../../components/BreadcrumbNav';
 
 import { landingPages, LandingPageData } from './SEODatabase';
 import { aeoDatabase } from './AEOData';
@@ -289,19 +290,15 @@ export default function SEOPage({
         <div className="max-w-5xl mx-auto flex flex-col gap-8 relative z-10">
           
           {/* Breadcrumb row */}
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest leading-none select-none">
-            <button 
-              onClick={() => onSelectRoute('/')} 
-              className="hover:text-indigo-600 transition-colors flex items-center gap-1 cursor-pointer font-semibold"
-            >
-              <Home className="w-3.5 h-3.5" />
-              {t('seo.home', 'Home')}
-            </button>
-            <span className="text-slate-300">/</span>
-            <span className="text-slate-400">{t('seo.generators', 'Generators')}</span>
-            <span className="text-slate-300">/</span>
-            <span className="text-slate-900 font-bold tracking-tight">{getLocalized(`seo.landing.${pageData.slug}.keyword`, pageData.keyword)}</span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              { label: String(t('seo.generators', 'Generators')) },
+              { label: String(getLocalized(`seo.landing.${pageData.slug}.keyword`, pageData.keyword)), active: true }
+            ]}
+            onNavigate={onSelectRoute}
+            className="bg-white/80 backdrop-blur-xs"
+            schemaId="seo-landing-breadcrumb-schema"
+          />
 
           {/* Dynamic Return Anchor */}
           <div>

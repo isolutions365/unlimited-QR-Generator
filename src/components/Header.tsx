@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { QrCode, Zap, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, Barcode, FileSpreadsheet, BarChart3, User, LogOut } from 'lucide-react';
+import { QrCode, Zap, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, Barcode, FileSpreadsheet, BarChart3, User, LogOut, Sparkles } from 'lucide-react';
 import Navigation from './Navigation';
 import LanguageSelector from './LanguageSelector';
 import { Locale } from '../utils/translations';

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
+import BreadcrumbNav from '../components/BreadcrumbNav';
 
 import { 
   ChevronRight, Home, ArrowRight, Check, HelpCircle, 
@@ -198,24 +199,15 @@ export default function CompareHub({
       <div className="bg-slate-50 min-h-screen pb-20 font-sans" id="compare-detail-container">
         {/* Breadcrumbs */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-3 px-4 rounded-xl border border-slate-100 shadow-sm" aria-label="Breadcrumb">
-            <button 
-              onClick={() => onNavigate('/')} 
-              className="hover:text-indigo-600 flex items-center gap-1 transition-colors"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>Home</span>
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <button 
-              onClick={handleBackToDirectory} 
-              className="hover:text-indigo-600 transition-colors"
-            >
-              Comparisons
-            </button>
-            <ChevronRight className="w-3 h-3 text-slate-300" />
-            <span className="text-slate-800 font-semibold truncate max-w-[200px] sm:max-w-none">{activeCompare.title}</span>
-          </nav>
+          <BreadcrumbNav
+            items={[
+              { label: String(t('compare.directory', 'Comparisons Directory')), onClick: handleBackToDirectory, href: '/compare' },
+              { label: activeCompare.title, active: true }
+            ]}
+            onNavigate={onNavigate}
+            className="bg-white"
+            schemaId="compare-detail-breadcrumb-schema"
+          />
         </div>
 
         {/* Hero Banner Area */}
@@ -603,17 +595,14 @@ export default function CompareHub({
       
       {/* Directory Breadcrumbs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white py-3 px-4 rounded-xl border border-slate-100 shadow-sm" aria-label={t('compare.breadcrumb', 'Breadcrumb')}>
-          <button 
-            onClick={() => onNavigate('/')} 
-            className="hover:text-indigo-600 flex items-center gap-1 transition-colors"
-          >
-            <Home className="w-3.5 h-3.5" />
-            <span>{t('compare.home', 'Home')}</span>
-          </button>
-          <ChevronRight className="w-3 h-3 text-slate-300" />
-          <span className="text-slate-800 font-semibold">{t('compare.directory', 'Comparisons Directory')}</span>
-        </nav>
+        <BreadcrumbNav
+          items={[
+            { label: String(t('compare.directory', 'Comparisons Directory')), active: true }
+          ]}
+          onNavigate={onNavigate}
+          className="bg-white"
+          schemaId="compare-directory-breadcrumb-schema"
+        />
       </div>
 
       {/* Directory Hero */}

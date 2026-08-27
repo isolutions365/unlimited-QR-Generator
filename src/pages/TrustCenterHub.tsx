@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
+import BreadcrumbNav from '../components/BreadcrumbNav';
 
 import { 
   Shield, Activity, FileText, Users, Award, Cpu, BookOpen, Heart, 
@@ -1329,15 +1330,15 @@ export default function TrustCenterHub({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-12 mt-4">
         {/* Breadcrumb Navigation Component */}
-        <nav className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-8 pt-2" aria-label={t('trust.breadcrumb', 'Breadcrumb')}>
-          <button onClick={() => onNavigate('/')} className="hover:text-indigo-600 transition-colors">
-            {t('trust.navHome', 'HOME')}
-          </button>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-slate-400">{t('trust.navTrustCenter', 'TRUST CENTER')}</span>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-indigo-600 truncate max-w-[200px]">{t('trust.pageTitle.' + activePage.slug, activePage.title)}</span>
-        </nav>
+        <BreadcrumbNav
+          items={[
+            { label: String(t('trust.navTrustCenter', 'TRUST CENTER')), href: '/security' },
+            { label: String(t('trust.pageTitle.' + activePage.slug, activePage.title)), active: true }
+          ]}
+          onNavigate={onNavigate}
+          className="mb-8 bg-white"
+          schemaId="trust-breadcrumb-schema"
+        />
 
         {/* Primary Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

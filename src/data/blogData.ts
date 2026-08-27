@@ -76,3 +76,35 @@ export const blogCategories = [
   "Education QR Codes",
   "Social Media Marketing"
 ] as const;
+
+export function checkArticleTranslationStatus(article: BlogArticle, locale: string = 'en'): { isComplete: boolean; isFallback: boolean } {
+  if (locale === 'en') {
+    return { isComplete: true, isFallback: false };
+  }
+
+  const rawLocalizedArray = blogDataMap[locale];
+  if (!Array.isArray(rawLocalizedArray) || rawLocalizedArray.length === 0) {
+    return { isComplete: false, isFallback: true };
+  }
+
+  const rawArticle = rawLocalizedArray.find((art: any) => art.slug === article.slug);
+  if (!rawArticle) {
+    return { isComplete: false, isFallback: true };
+  }
+
+  const combinedText = `${rawArticle.title || ''} ${rawArticle.metaDescription || ''} ${rawArticle.intro || ''} ${rawArticle.contentMarkdown || ''}`;
+
+  // Check for placeholder markers like [XX Translation], [ترجمہ شدہ], etc.
+  const placeholderRegex = /\[.*?(Translation|ترجمہ|Draft|Placeholder).*?\]/i;
+  const hasPlaceholders = placeholderRegex.test(combinedText) || combinedText.includes('Translation]');
+
+  if (hasPlaceholders) {
+    return { isComplete: false, isFallback: true };
+  }
+
+  if (!rawArticle.title || !rawArticle.contentMarkdown || rawArticle.contentMarkdown.trim().length < 50) {
+    return { isComplete: false, isFallback: true };
+  }
+
+  return { isComplete: true, isFallback: false };
+}
