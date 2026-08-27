@@ -6,6 +6,7 @@ import {
   Zap, Layers, FileCode, ShieldCheck, HelpCircle, Eye, Info, RefreshCw
 } from 'lucide-react';
 import { Locale, SUPPORTED_LOCALES } from '../utils/translations';
+import { useTranslation } from '../utils/i18n';
 import { 
   auditAllRoutes, 
   AuditedRouteInfo, 
@@ -30,6 +31,7 @@ interface SEOAuditTabProps {
 }
 
 export default function SEOAuditTab({ currentLocale, onLocaleChange }: SEOAuditTabProps) {
+  const { t } = useTranslation();
   const [selectedAuditLocale, setSelectedAuditLocale] = useState<Locale>(currentLocale);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -246,13 +248,13 @@ ${route.hreflangs.map(h => `<link rel="alternate" hreflang="${h.lang}" href="${h
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
           {/* Search */}
           <div className="md:col-span-5 relative">
-            <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+            <Search className="w-4 h-4 absolute start-3 top-3 text-slate-400" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search route path, title, or keywords..."
-              className="w-full pl-9 pr-4 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              placeholder={t('input.placeholder.search', 'Search route path, title, or keywords...')}
+              className="w-full ps-9 pe-4 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-start"
             />
           </div>
 
@@ -261,9 +263,9 @@ ${route.hreflangs.map(h => `<link rel="alternate" hreflang="${h.lang}" href="${h
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white font-medium cursor-pointer"
+              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white font-medium cursor-pointer text-start"
             >
-              <option value="all">All Route Categories</option>
+              <option value="all">{t('select.option.all', 'All Route Categories')}</option>
               <option value="Generators & Tools">Generators & Tools</option>
               <option value="Core & Trust">Core & Trust</option>
               <option value="Knowledge & Blog">Knowledge & Blog</option>

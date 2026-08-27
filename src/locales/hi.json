@@ -3234,460 +3234,63 @@
   "urlqr.dynamicEncodingTitle": "डायनामिक URL QR एन्कोडिंग",
   "urlqr.dynamicUrlEncoding": "डायनामिक URL एन्कोडिंग",
   "urlqr.dynamicUrlQrCode": "डायनामिक URL QR कोड",
-  "urlqr.faqA1": "एक URL QR कोड (क्विक रिस्पॉन्स कोड) एक विशेष द्वि-आयामी ऑप्टिकल बारकोड है जो एक वेब पते या हाइपरलिंक प्रोटोकॉल (जैसे HTTP या HTTPS) को समाहित करता है। जब किसी स्मार्ट डिवाइस के अंतर्निहित ऑप्टिकल सेंसर या कैमरे द्वारा स्कैन किया जाता है, तो डिवाइस स्थिर ब्लैक-एंड-व्हाइट पिक्सेल ग्रिड को डिकोड करता है, लक्ष्य वेब स्ट्रिंग को निकालता है, और स्वचालित रूप से उपयोगकर्ता के मोबाइल ब्राउज़र को निर्दिष्ट लैंडिंग पृष्ठ पर रीडायरेक्ट कर देता है। यह एक घर्षण-रहित भौतिक-से-डिजिटल लिंक के रूप में कार्य करता है, जिससे मैन्युअल टाइपिंग की आवश्यकता समाप्त हो जाती है।",
-  "urlqr.faqA10": "हाँ। आप मानक HTTPS वेब लिंक, सबडोमेन, डीप लिंक जो सीधे विशिष्ट मोबाइल ऐप्स खोलते हैं (जैसे instagram://, fb://, spotify://), ऐप स्टोर डाउनलोड लिंक, और UTM अभियान ट्रैकिंग पैरामीटर्स वाले URL को एन्कोड कर सकते हैं।",
-  "urlqr.faqA11": "अत्यधिक सुरक्षा हमारा मुख्य मूल्य है। सभी स्टैटिक QR कोड संकलन पूरी तरह से आपके स्थानीय ब्राउज़र सैंडबॉक्स के अंदर होते हैं। हम कभी भी आपके गंतव्य URL या कस्टमाइज़्ड ब्रांड एसेट्स को रिमोट डेटाबेस पर प्रसारित, संग्रहीत या अनुक्रमित नहीं करते हैं, जिससे पूर्ण डेटा गोपनीयता सुनिश्चित होती है।",
-  "urlqr.faqA12": "हाँ। हमारा प्लेटफ़ॉर्म SVG जैसे अनंत स्केलेबल वेक्टर फॉर्मेट और प्रिंट-रेडी PDF, साथ ही उच्च-रिज़ॉल्यूशन PNG रैस्टर फ़ाइलों में एक्सपोर्ट करने का समर्थन करता है। यह सुनिश्चित करता है कि विशाल बिलबोर्ड या छोटे उत्पाद पैकेजों पर प्रिंट होने पर भी आपका कोड बिल्कुल स्पष्ट रहे।",
-  "urlqr.faqA13": "कभी नहीं। हम एक स्वच्छ, पेशेवर और पूरी तरह से अनब्रांडेड उपयोगिता प्रदान करने में विश्वास करते हैं। सभी जेनरेट की गई फाइलें 100% वॉटरमार्क-मुक्त हैं, जो आपके ब्रांड को पूर्ण रचनात्मक नियंत्रण देती हैं।",
-  "urlqr.faqA14": "सबसे पहले, सत्यापित करें कि लक्ष्य URL सही ढंग से लिखा गया है और सक्रिय है। दूसरा, जांचें कि अग्रभूमि (foreground) और पृष्ठभूमि (background) के बीच उच्च कंट्रास्ट है। तीसरा, सुनिश्चित करें कि भौतिक कोड बहुत छोटा या धुंधला प्रिंट नहीं है, और सत्यापित करें कि कस्टम सेंटर लोगो कोना फाइंडर पैटर्न को ब्लॉक नहीं कर रहा है।",
-  "urlqr.faqA15": "हाँ। आप इसे सीधे किसी भी वेब-होस्टेड दस्तावेज़, डिजिटल मेनू, Google ड्राइव फ़ोल्डर, या ऑनलाइन PDF से लिंक कर सकते हैं। इसके अतिरिक्त, हम उन विशिष्ट उपयोगकर्ता प्रवाहों को अनुकूलित करने के लिए समर्पित WiFi, PDF, और vCard जनरेटर प्रदान करते हैं।",
-  "urlqr.faqA2": "हाँ, 100% निःशुल्क। FreeQRGen.pro पर बनाए गए स्टैटिक URL QR कोड हमेशा के लिए निःशुल्क हैं, उनकी कोई स्कैनिंग सीमा नहीं है, और वे कभी समाप्त नहीं होंगे। हम कोई छिपा हुआ वॉटरमार्क नहीं डालते हैं, और प्रीमियम साइन-अप आवश्यकताओं या परीक्षण अवधि का कोई सवाल ही नहीं है।",
-  "urlqr.faqA3": "एक स्टैटिक URL QR कोड वास्तविक गंतव्य वेब पते को सीधे अपने पिक्सेल मैट्रिक्स में एम्बेड करता है। एक बार प्रिंट हो जाने के बाद, गंतव्य लिंक को संशोधित नहीं किया जा सकता है। दूसरी ओर, एक डायनामिक URL QR कोड एक छोटा रीडायरेक्ट लिंक एन्कोड करता है। यह रीडायरेक्ट लिंक उपयोगकर्ता को एक एनालिटिक्स सर्वर के माध्यम से रूट करता है, जिससे आप भौतिक QR कोड को दोबारा प्रिंट किए बिना किसी भी समय लक्ष्य गंतव्य URL को अपडेट कर सकते हैं, साथ ही व्यापक स्कैन आँकड़ों को ट्रैक भी कर सकते हैं।",
-  "urlqr.faqA4": "बिल्कुल। हमारा प्लेटफ़ॉर्म पूर्ण-स्पेक्ट्रम सौंदर्य अनुकूलन प्रदान करता है। आप रैखिक ग्रेडिएंट्स, कस्टम सॉलिड कलर्स, विविध डॉट स्टाइल, कस्टम कॉर्नर आई शेप्स में से चुन सकते हैं, और सुरक्षित रूप से अपने ब्रांड का सेंटरपीस लोगो अपलोड कर सकते हैं। जनरेटर यह सुनिश्चित करने के लिए मानक रीड-सोलोमन त्रुटि सुधार बनाए रखता है कि विज़ुअल स्टाइलिंग के बाद भी कोड कार्यात्मक बना रहे।",
-  "urlqr.faqA5": "स्कैन की कोई सीमा नहीं है। चाहे आपका प्रिंटेड QR कोड 10 बार स्कैन किया जाए या 1 करोड़ बार, यह अनिश्चित काल तक सक्रिय और कार्यात्मक रहेगा, बिना किसी छिपे हुए बैंडविड्थ शुल्क के।",
-  "urlqr.faqA6": "नहीं। सभी आधुनिक Apple iOS और Google Android उपकरणों में उनके डिफ़ॉल्ट कैमरा एप्लिकेशन में सीधे QR कोड स्कैनर एकीकृत होते हैं। उपयोगकर्ता बस अपना कैमरा खोलते हैं, इसे कोड की ओर इंगित करते हैं, और दिखाई देने वाले इंस्टेंट वेब बैनर पर टैप करते हैं।",
-  "urlqr.faqA7": "मानक मार्केटिंग सामग्री (जैसे बिज़नेस कार्ड, ब्रोशर, या रेस्तरां टेबल टेंट) के लिए, हम 2.0 सेमी x 2.0 सेमी (0.8 इंच x 0.8 इंच) के न्यूनतम भौतिक प्रिंट आकार की अनुशंसा करते हैं। बड़े डिस्प्ले के लिए, सुनिश्चित करें कि दूरी-से-आकार का अनुपात लगभग 10:1 है (उदाहरण के लिए, 10 मीटर दूर से स्कैन किया गया कोड कम से कम 1 मीटर चौड़ा होना चाहिए)।",
-  "urlqr.faqA8": "ऑप्टिकल स्कैनर गहरे अग्रभूमि पिक्सेल को हल्के पृष्ठभूमि कैनवास से अलग करने के लिए उच्च कंट्रास्ट पर निर्भर करते हैं। अधिकतम विश्वसनीयता के लिए, हमेशा एक साफ, ठोस हल्के पृष्ठभूमि पर गहरे अग्रभूमि रंग (जैसे काला, गहरा नीला, या गहरा बैंगनी) का उपयोग करें। रंगों को उलटने या कम-कंट्रास्ट पैलेट का उपयोग करने से कोड कैमरों के लिए अपठनीय हो सकता है।",
-  "urlqr.faqA9": "QR कोड रीड-सोलोमन गणितीय त्रुटि सुधार का उपयोग करते हैं, जो पैटर्न को सफलतापूर्वक स्कैन करने की अनुमति देता है, भले ही इसका 30% हिस्सा गंदा, क्षतिग्रस्त या कस्टम लोगो द्वारा ढका हुआ हो। यदि आप एक सेंटरपीस ब्रांड लोगो एम्बेड करने की योजना बना रहे हैं, तो हमारा जनरेटर स्कैनक्षमता को संरक्षित करने के लिए स्वचालित रूप से त्रुटि सुधार को उच्च (H) सेटिंग (30% अतिरेक) पर स्केल कर देता है।",
-  "urlqr.faqQ1": "URL QR कोड क्या है और यह कैसे काम करता है?",
-  "urlqr.faqQ10": "क्या मैं URL QR कोड में डीप लिंक एन्कोड कर सकता हूँ?",
-  "urlqr.faqQ11": "क्या आपकी वेबसाइट का उपयोग करते समय मेरा व्यक्तिगत डेटा सुरक्षित है?",
-  "urlqr.faqQ12": "क्या मैं पेशेवर प्रिंट के लिए अपने QR कोड को वेक्टर फॉर्मेट में डाउनलोड कर सकता हूँ?",
-  "urlqr.faqQ13": "क्या FreeQRGen.pro मेरे QR कोड पर वॉटरमार्क या ब्रांडिंग डालता है?",
-  "urlqr.faqQ14": "यदि मेरा QR कोड स्कैन नहीं हो रहा है तो मुझे क्या करना चाहिए?",
-  "urlqr.faqQ15": "क्या मैं URL QR कोड को डिजिटल मेनू या PDF से लिंक कर सकता हूँ?",
-  "urlqr.faqQ2": "क्या FreeQRGen.pro पर URL QR कोड जेनरेट करना पूरी तरह से निःशुल्क है?",
-  "urlqr.faqQ3": "स्टैटिक और डायनामिक URL QR कोड के बीच क्या अंतर है?",
-  "urlqr.faqQ4": "क्या मैं अपने URL QR कोड के डिज़ाइन, रंगों और लोगो को कस्टमाइज़ कर सकता हूँ?",
-  "urlqr.faqQ5": "मेरा जेनरेट किया गया QR कोड कितने स्कैन प्राप्त कर सकता है?",
-  "urlqr.faqQ6": "क्या मेरे लिंक को खोलने के लिए उपयोगकर्ताओं को किसी विशेष स्कैनिंग ऐप की आवश्यकता है?",
-  "urlqr.faqQ7": "क्या URL QR कोड प्रिंट करने के लिए कोई इष्टतम आकार है?",
-  "urlqr.faqQ8": "QR कोड को स्टाइल करते समय कंट्रास्ट महत्वपूर्ण क्यों है?",
-  "urlqr.faqQ9": "एरर करेक्शन कैसे काम करता है और मुझे किस स्तर का उपयोग करना चाहिए?",
-  "urlqr.faqTitle": "अक्सर पूछे जाने वाले प्रश्न",
-  "urlqr.howItWorksDescEnd": ", जो 8-बिट वर्णों का समर्थन करता है और प्रोटोकॉल मानकों, क्वेरी पैरामीटर, सबफ़ोल्डर और हैशटैग को सफलतापूर्वक समायोजित करता है।",
-  "urlqr.howItWorksDescStart": "एक मानक अल्फ़ान्यूमेरिक स्ट्रिंग (जैसे वेबसाइट URL) को स्कैन करने योग्य भौतिक मैट्रिक्स में बदलना सटीक गणितीय एन्कोडिंग शामिल करता है। मानक QR कोड चार प्राथमिक मोड का समर्थन करते हैं: न्यूमेरिक, अल्फ़ान्यूमेरिक, बाइट और कांजी। URL QR कोड मुख्य रूप से ",
-  "urlqr.howItWorksDescStrong": "बाइट मोड",
-  "urlqr.howItWorksTitle": "URL QR कोड पर्दे के पीछे कैसे काम करते हैं",
-  "urlqr.redirecting": "तुरंत रीडायरेक्ट हो रहा है...",
-  "urlqr.redirectionActive": "सक्रिय रीडायरेक्शन निर्देशांक",
-  "urlqr.staticEncodingDesc": "एक स्टेटिक QR कोड में, लक्ष्य लिंक सीधे ब्लैक-एंड-व्हाइट मॉड्यूल ग्रिड में हार्डकोड किया जाता है। आपके URL की लंबाई सीधे कोड के भौतिक घनत्व को प्रभावित करती है। ट्रैकिंग पैरामीटर वाला एक लंबा URL सैकड़ों छोटे पिक्सेल ब्लॉकों के साथ एक अत्यधिक सघन मैट्रिक्स बनाता है, जिसके लिए उच्च प्रिंट रिज़ॉल्यूशन और बड़ी स्कैन दूरी की आवश्यकता होती है।",
-  "urlqr.staticEncodingTitle": "स्टेटिक URL QR एन्कोडिंग",
-  "urlqr.staticUrlEncoding": "स्टेटिक URL एन्कोडिंग",
-  "urlqr.staticUrlQrCode": "स्टेटिक URL QR कोड",
-  "urlqr.tableDynamic": "डायनामिक URL QR कोड",
-  "urlqr.tableF1": "अपडेट करने योग्य गंतव्य",
-  "urlqr.tableF1No": "नहीं (स्थायी)",
-  "urlqr.tableF1Yes": "हाँ (रीयल-टाइम अपडेट)",
-  "urlqr.tableF2": "स्कैन ट्रैकिंग और एनालिटिक्स",
-  "urlqr.tableF2No": "नहीं",
-  "urlqr.tableF2Yes": "हाँ (डिवाइस, स्थान, समय)",
-  "urlqr.tableF3": "छोटा किया गया रीडायरेक्ट URL",
-  "urlqr.tableF3No": "नहीं (सीधा एम्बेड)",
-  "urlqr.tableF3Yes": "हाँ (मैट्रिक्स को साफ रखता है)",
-  "urlqr.tableF4": "स्कैनिंग गति",
-  "urlqr.tableF4Dynamic": "तत्काल (सरल ग्रिड)",
-  "urlqr.tableF4Static": "URL की लंबाई के अनुसार बदलती है",
-  "urlqr.tableF5": "लागत",
-  "urlqr.tableF5Free": "100% मुफ़्त (हमेशा के लिए)",
-  "urlqr.tableF5Premium": "मुफ़्त मानक, प्रीमियम एनालिटिक्स",
-  "urlqr.tableFeature": "सुविधा",
-  "urlqr.tableStatic": "स्टेटिक URL QR कोड",
-  "urlqr.targetLabel": "लक्ष्य रीडायरेक्ट URL पता",
-  "urlqr.technicalParameter": "तकनीकी पैरामीटर",
-  "urlqr.title": "क्लाउड डायनामिक रीडायरेक्शन",
-  "urlqr.trustDescEnd": " एक पूरी तरह से पारदर्शी, ब्राउज़र-आधारित सेवा प्रदान करता है।",
-  "urlqr.trustDescStart": "अन्य ऑनलाइन जनरेटरों के विपरीत जो आपके ट्रैफ़िक को तृतीय-पक्ष डोमेन के माध्यम से रीडायरेक्ट करते हैं, अवांछित विज्ञापन डालते हैं, या कष्टप्रद वॉटरमार्क जोड़ते हैं, ",
-  "urlqr.trustDescStrong": "FreeQRGen.pro",
-  "urlqr.trustEnterprise": "एंटरप्राइज़-ग्रेड सुरक्षा",
-  "urlqr.trustFree": "100% हमेशा के लिए मुफ़्त",
-  "urlqr.trustLocal": "स्थानीय ब्राउज़र प्रोसेसिंग",
-  "urlqr.trustNoReg": "कोई पंजीकरण आवश्यक नहीं",
-  "urlqr.trustNoWatermark": "कभी कोई वॉटरमार्क नहीं",
-  "urlqr.trustTitle": "बेदाग गुणवत्ता और विश्वास सुरक्षा मानक",
-  "urlqr.trustVector": "हाई-स्पीड वेक्टर एक्सपोर्ट",
-  "urlqr.verifyDestination": "गंतव्य सत्यापित करें",
-  "vision.ready": "तैयार",
-  "vision.title": "VISION QR PRO",
-  "vision.tlsSecured": "TLS सुरक्षित",
-  "🎉 Referral Signup Bonus!": "🎉 रेफ़रल साइनअप बोनस!",
-  "👋 Welcome to FreeQRGen.pro!": "👋 FreeQRGen.pro में आपका स्वागत है!",
-  "💬 Feedback Submitted!": "💬 प्रतिक्रिया प्रस्तुत की गई!",
-  "nav.aiGateway": "एआई गेटवे",
-  "nav.barcodeGeneratorTab": "बारकोड जनरेटर",
-  "common.none": "कोई नहीं",
-  "common.unknown": "अज्ञात",
-  "common.untitled": "बिना शीर्षक",
-  "common.global": "ग्लोबल",
-  "barcode.title": "प्रोफेशनल बारकोड स्टूडियो",
-  "barcode.subtitle": "उत्पाद टैग और एसेट ट्रैकिंग के लिए उच्च-घनत्व वाले EAN, UPC, Code 128 और Code 39 बारकोड जनरेट करें।",
-  "barcode.presetsCategory": "प्रिसेट और मानक टेम्पलेट",
-  "barcode.preset.custom.label": "कस्टम पेलोड",
-  "barcode.preset.custom.desc": "चयनित प्रारूप के साथ संगत कोई भी कस्टम स्ट्रिंग दर्ज करें।",
-  "barcode.preset.general.label": "सामान्य उत्पाद टैग",
-  "barcode.preset.general.desc": "मानक लेबलिंग के लिए बुनियादी अल्फ़ान्यूमेरिक उत्पाद कोड।",
-  "barcode.preset.retail_sku_ean.label": "खुदरा SKU (EAN-13)",
-  "barcode.preset.retail_sku_ean.desc": "12-अंकीय वैश्विक मानक उत्पाद पहचान कोड।",
-  "barcode.preset.retail_sku_upc.label": "खुदरा SKU (UPC-A)",
-  "barcode.preset.retail_sku_upc.desc": "11-अंकीय उत्तरी अमेरिकी मानक उत्पाद पहचान।",
-  "barcode.preset.serial.label": "डिवाइस सीरियल नंबर",
-  "barcode.preset.serial.desc": "उच्च घनत्व वाला अल्फ़ान्यूमेरिक अद्वितीय पहचानकर्ता।",
-  "barcode.preset.inventory.label": "इन्वेंटरी एसेट ID",
-  "barcode.preset.inventory.desc": "औद्योगिक गोदाम परिसंपत्ति ट्रैकिंग पहचानकर्ता।",
-  "barcode.payloadContent": "पेलोड सामग्री",
-  "barcode.generateRandom": "रैंडम जनरेट करें",
-  "barcode.inputPlaceholder": "बारकोड बनाने के लिए सामग्री दर्ज करें...",
-  "barcode.symbologyFormat": "सिम्बोलॉजी प्रारूप",
-  "barcode.format.code128": "CODE128 (अल्फ़ान्यूमेरिक - सामान्य उद्देश्य)",
-  "barcode.format.ean13": "EAN-13 (12/13 संख्यात्मक - ग्लोबल रिटेल)",
-  "barcode.format.upc": "UPC-A (11/12 संख्यात्मक - उत्तरी अमेरिका रिटेल)",
-  "barcode.format.code39": "CODE39 (अपरकेस अल्फ़ान्यूमेरिक)",
-  "barcode.margin": "क्वाइट ज़ोन मार्जिन",
-  "barcode.barHeight": "बार की ऊंचाई ({height}px)",
-  "barcode.lineThickness": "रेखा की मोटाई ({width}px)",
-  "barcode.lineColor": "बार लाइन का रंग",
-  "barcode.backgroundColor": "बैकग्राउंड कलर",
-  "barcode.renderValueText": "नीचे टेक्स्ट प्रदर्शित करें",
-  "barcode.renderValueTextDesc": "ऊर्ध्वाधर बार के नीचे पठनीय संख्याएं प्रदर्शित करें।",
-  "barcode.livePreviewBoard": "लाइव बारकोड कैनवास",
-  "barcode.invalidStructure": "अमान्य संरचना",
-  "barcode.symbologyLabel": "सिम्बोलॉजी",
-  "barcode.charactersLabel": "अक्षर",
-  "barcode.heightLabel": "ऊंचाई",
-  "barcode.linesColorLabel": "लाइन कलर",
-  "barcode.downloadPng": "PNG डाउनलोड करें",
-  "barcode.downloadSvg": "SVG वेक्टर डाउनलोड करें",
-  "barcode.tipTitle": "स्कैनिंग सर्वोत्तम अभ्यास",
-  "barcode.tipDesc": "बार लाइनों और बैकग्राउंड के बीच उच्च कंट्रास्ट बनाए रखें। लेजर स्कैनर्स के लिए दोनों तरफ पर्याप्त मार्जिन सुनिश्चित करें।",
-  "barcode.renderFailed": "रेंडरर {format} के लिए इस पेलोड को पार्स करने में विफल रहा। कृपया अपने प्रारूप वर्णों को सत्यापित करें।",
-  "barcode.unsupportedChars": "चयनित प्रारूप के लिए अमान्य अक्षर।",
-  "barcode.helpEan": "EAN-13 के लिए ठीक 12 या 13 अंकों की आवश्यकता होती है।",
-  "barcode.helpUpc": "UPC-A के लिए ठीक 11 या 12 अंकों की आवश्यकता होती है।",
-  "barcode.helpCode39": "Code 39 0-9 संख्याएं, अपरकेस A-Z, स्पेस, और - . $ / + % स्वीकार करता है।",
-  "barcode.helpCode128": "Code 128 मानक ASCII प्रिंट करने योग्य अक्षरों को स्वीकार करता है।",
-  "templates.name.minimalist": "मिनिमलिस्ट ब्लैक",
-  "templates.badge.minimalist": "क्लासिक",
-  "templates.desc.minimalist": "मानक चौकोर फ्रेम के साथ साफ उच्च-कंट्रास्ट वाले काले बिंदु।",
-  "templates.name.vibrant": "वाइब्रेंट इंडिगो",
-  "templates.badge.vibrant": "मॉडर्न",
-  "templates.desc.vibrant": "जीवंत ग्रेडिएंट एक्सेंट के साथ गोल तरल बिंदु।",
-  "templates.name.cyberpunk": "साइबरपंक नियॉन",
-  "templates.badge.cyberpunk": "टेक",
-  "templates.desc.cyberpunk": "स्टाइलिश कोने के लक्ष्यों के साथ उच्च-दृश्यता नियॉन टोन।",
-  "templates.name.emerald": "एमराल्ड इको",
-  "templates.badge.emerald": "ऑर्गेनिक",
-  "templates.desc.emerald": "मुलायम गोल बिंदुओं के साथ गहरा वानस्पतिक हरा थीम।",
-  "templates.name.royal": "रॉयल गोल्ड",
-  "templates.badge.royal": "प्रीमियम",
-  "templates.desc.royal": "उच्च सटीकता वाले टारगेट केंद्रों के साथ शानदार सुनहरे बॉर्डर।",
-  "templates.name.cosmic": "कॉस्मिक पर्पल",
-  "templates.badge.cosmic": "रचनात्मक",
-  "templates.desc.cosmic": "अतिरिक्त कंट्रास्ट आई फ्रेम के साथ समृद्ध बैंगनी पैलेट।",
-  "templates.name.tokyo": "टोक्यो नाइट",
-  "templates.badge.tokyo": "डार्क थीम",
-  "templates.desc.tokyo": "सियान नियॉन डॉट स्टाइल के साथ मिडनाइट कैनवास।",
-  "templates.name.corporate": "कॉर्पोरेट ब्लू",
-  "templates.badge.corporate": "बिजनेस",
-  "templates.desc.corporate": "तीव्र कंट्रास्ट के साथ विश्वसनीय एंटरप्राइज़ ब्लू स्टाइल।",
-  "templates.palette": "पैलेट:",
-  "templates.dotsLabel": "बिंदु:",
-  "templates.eyesLabel": "• आंखें:",
-  "templates.tipLabel": "टिप:",
-  "templates.tipDesc": "किसी भी टेम्पलेट को लागू करने के बाद, आप अपनी ब्रांड आवश्यकताओं के अनुसार संपादन करने के लिए किसी भी समय क्रिएटिव स्टेशन टैब पर वापस जा सकते हैं।",
-  "analytics.clearLog": "एनालिटिक्स लॉग साफ़ करें",
-  "analytics.trackingEnabled": "वास्तविक समय ट्रैकिंग सक्षम है",
-  "analytics.approxCountries": "लगभग देश",
-  "analytics.telemetryResolved": "क्लाइंट टेलीमेट्री के माध्यम से हल किए गए स्थान",
-  "analytics.noLogsDesc": "डैशबोर्ड का निरीक्षण करने के लिए अपने सक्रिय कोड को स्कैन करें या परीक्षण बटन का उपयोग करें।",
-  "analytics.clickScanMetrics": "क्लिक स्कैन मेट्रिक्स",
-  "analytics.last7Days": "पिछले 7 दिन",
-  "analytics.last30Days": "पिछले 30 दिन",
-  "analytics.dailyScanTrends": "दैनिक स्कैन रुझान",
-  "analytics.dailyTrendsDesc": "पिछले {days} दिनों में रुझानों की तुलना करने के लिए प्रोजेक्ट चुनें।",
-  "analytics.sideBySideTitle": "साइड-बाय-साइड प्रोजेक्ट प्रदर्शन",
-  "analytics.sideBySideDesc": "डेटा की तुलना करने के लिए दो अलग-अलग क्यूआर प्रोजेक्ट चुनें।",
-  "analytics.vs": "बनाम",
-  "analytics.timeframe": "समय सीमा:",
-  "analytics.range7Days": "7 दिन",
-  "analytics.range30Days": "30 दिन",
-  "analytics.customRange": "कस्टम रेंज",
-  "analytics.start": "शुरू",
-  "analytics.to": "से",
-  "analytics.end": "अंत",
-  "analytics.overlayRequires2": "तुलना के लिए 2+ प्रोजेक्ट आवश्यक हैं",
-  "analytics.overlayRequires2Desc": "यह मॉड्यूल आपको एक ही चार्ट पर कई परियोजनाओं के रुझान देखने की अनुमति देता है। कृपया कम से कम दो प्रोजेक्ट बनाएं।",
-  "analytics.overlay7Day": "7-दिवसीय स्कैन वॉल्यूम ओवरले",
-  "analytics.overlay30Day": "30-दिवसीय स्कैन वॉल्यूम ओवरले",
-  "analytics.overlayCustom": "कस्टम स्कैन वॉल्यूम ओवरले",
-  "analytics.projectA": "प्रोजेक्ट A",
-  "analytics.projectB": "प्रोजेक्ट B",
-  "analytics.metricBreakdown": "मेट्रिक ब्रेकडाउन तुलना",
-  "analytics.totalScans": "कुल स्कैन",
-  "analytics.approxLocationsReach": "लगभग स्थान पहुंच",
-  "analytics.topBrowserA": "शीर्ष ब्राउज़र A",
-  "analytics.topBrowserB": "शीर्ष ब्राउज़र B",
-  "analytics.selectedVs": "* चयनित: {projA} बनाम {projB}।",
-  "analytics.scansCount": "{count} स्कैन",
-  "analytics.highHeat": "उच्च (>70%)",
-  "analytics.moderateHeat": "मध्यम (40-70%)",
-  "analytics.lowHeat": "कम (<40%)",
-  "analytics.browsersTitle": "प्रमुख मोबाइल ब्राउज़र",
-  "analytics.colIp": "आईपी एड्रेस",
-  "auth.emailRequired": "ईमेल आवश्यक है",
-  "auth.resetFailed": "रीसेट लिंक भेजने में विफल",
-  "auth.userNotFound": "इस ईमेल के साथ कोई खाता नहीं मिला",
-  "auth.invalidEmail": "कृपया एक वैध ईमेल पता दर्ज करें",
-  "auth.tooManyRequests": "बहुत सारे प्रयास। कृपया बाद में पुनः प्रयास करें",
-  "auth.networkError": "नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें",
-  "auth.googleFailed": "गूगल साइन-इन विफल रहा",
-  "auth.popupClosed": "साइन-इन पॉपअप बंद कर दिया गया था",
-  "auth.popupCancelled": "साइन-इन रद्द कर दिया गया था",
-  "auth.googleExistsNotice": "Google के माध्यम से इस ईमेल के साथ एक खाता पहले से मौजूद है। कृपया Google से साइन इन करें।",
-  "auth.continueWithGoogle": "गूगल के साथ जारी रखें",
-  "auth.emailRegisteredNotice": "यह ईमेल पासवर्ड के साथ पंजीकृत है। कृपया नीचे साइन इन करें।",
-  "auth.signIn": "साइन इन करें",
-  "auth.resetPassword": "पासवर्ड रीसेट करें",
-  "auth.googleAccountNotice": "यह ईमेल गूगल से जुड़ा है। गूगल से साइन इन करने के लिए नीचे क्लिक करें।",
-  "auth.invalidCredentials": "अमान्य ईमेल या पासवर्ड",
-  "auth.emailInUse": "यह ईमेल पहले से पंजीकृत है",
-  "auth.weakPassword": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
-  "auth.orContinueWithEmail": "या ईमेल से जारी रखें",
-  "auth.forgotPasswordLink": "पासवर्ड भूल गए?",
-  "auth.submitting": "कृपया प्रतीक्षा करें...",
-  "auth.resetPasswordTitle": "अपना पासवर्ड रीसेट करें",
-  "auth.resetPasswordDesc": "अपना ईमेल पता दर्ज करें और हम आपको एक रीसेट लिंक भेजेंगे।",
-  "auth.resetSentHeader": "अपना ईमेल जांचें",
-  "auth.resetSuccessMsg": "हमने {email} पर निर्देश भेज दिए हैं",
-  "auth.backToSignIn": "साइन इन पर वापस जाएं",
-  "auth.cancel": "रद्द करें",
-  "auth.sendResetLink": "रीसेट लिंक भेजें",
-  "control.advancedSettings": "उन्नत क्यूआर इंजन सेटिंग्स",
-  "control.advancedSettingsDesc": "त्रुटि सुधार स्तर, मूक क्षेत्र (quiet zone) और घनत्व अंतर (density spacing) को कॉन्फ़िगर करें।",
-  "tools.payment.btn": "भुगतान क्यूआर बनाएं",
-  "tools.payment.desc": "भुगतान अनुरोध, कस्टम डिजिटल वॉलेट लिंक, यूपीआई (UPI) और चालान क्यूआर कोड जेनरेट करें। पेपाल, वेनमो जैसी वैश्विक विधियों का समर्थन करता है।",
-  "tools.payment.title": "भुगतान और वॉलेट क्यूआर",
-  "nav.formTab": "फॉर्म बिल्डर",
-  "nav.restaurantMenuTab": "रेस्तरां मेनू",
-  "nav.digitalCardTab": "डिजिटल कार्ड",
-  "nav.pdfTab": "पीडीएफ साझाकरण",
-  "nav.bulkGeneratorTab": "थोक जेनरेटर",
-  "barcode.validFormat": "वैध बारकोड प्रारूप.",
-  "barcode.passedValidation": "प्रारूप सत्यापन पारित! उच्च भौतिक कंट्रास्ट प्रस्तुत करने के लिए तैयार है।",
-  "barcode.valEmpty": "बारकोड जनरेट करने के लिए कृपया एक मान दर्ज करें।",
-  "barcode.valEanDigits": "EAN-13 के लिए केवल संख्यात्मक वर्णों (0-9) की आवश्यकता होती है।",
-  "barcode.valEanLen": "EAN-13 के लिए बिल्कुल 12 या 13 अंकों की आवश्यकता होती है (वर्तमान: {count})। 12-अंकीय इनपुट का चेकसम स्वचालित रूप से जुड़ जाता है।",
-  "barcode.valUpcDigits": "यूपीसी-ए के लिए केवल संख्यात्मक वर्णों (0-9) की आवश्यकता होती है।",
-  "barcode.valUpcLen": "यूपीसी-ए के लिए बिल्कुल 11 या 12 अंकों की आवश्यकता होती है (वर्तमान: {count})। 11-अंकीय इनपुट का चेकसम स्वचालित रूप से जुड़ जाता है।",
-  "barcode.valCode39Chars": "कोड39 0-9, ए-जेड (कैप्स), स्पेस और प्रतीकों का समर्थन करता है: -। $ / + %",
-  "barcode.valCode128Ascii": "Code128 केवल मानक 128 ASCII वर्णों का समर्थन करता है।",
-  "saved.batchDeleteBtn": "चयनित को हटाओ",
-  "saved.batchMoveBtn": "फ़ोल्डर में ले जाएँ",
-  "saved.batchSelectedCount": "{count} चयनित",
-  "saved.clearSelection": "स्पष्ट चयन",
-  "saved.deselectAll": "सबको अचयनित करो",
-  "saved.moveSelectedTo": "चयनित को यहां ले जाएं",
-  "saved.selectAll": "सबका चयन करें",
-  "tools.payment.pro": "प्रो",
-  "control.paymentWalletSetup": "मोबाइल वॉलेट और भुगतान सेटअप",
-  "control.paymentWalletDesc": "लोकप्रिय वैश्विक और क्षेत्रीय मोबाइल वॉलेट के लिए त्वरित भुगतान क्यूआर कोड बनाएं।",
-  "control.paymentWalletGuideTitle": "भुगतान और वॉलेट क्यूआर गाइड",
-  "control.paymentWalletGuideDesc": "तत्काल मोबाइल हस्तांतरण के लिए भुगतान क्यूआर उत्पन्न करें। फ़ोन नंबर या खाता आईडी मैन्युअल रूप से टाइप किए बिना स्कैन करें और तुरंत भुगतान करें।",
-  "control.paymentPrimaryUses": "प्राथमिक उपयोग:",
-  "control.shopCheckouts": "दुकान चेकआउट:",
-  "control.shopCheckoutsDesc": "तेज़ संपर्क रहित बिक्री के लिए काउंटरों पर रखें।",
-  "control.freelanceBilling": "फ्रीलांस और बिलिंग:",
-  "control.freelanceBillingDesc": "तत्काल ग्राहक भुगतान के लिए डिजिटल चालान में जोड़ें।",
-  "control.tipsDonations": "युक्तियाँ एवं दान:",
-  "control.tipsDonationsDesc": "ग्राहक सुझाव या दान दान सहजता से स्वीकार करें।",
-  "control.p2pTransfers": "पी2पी स्थानान्तरण:",
-  "control.p2pTransfersDesc": "रात्रिभोज के बिलों को आसानी से विभाजित करने के लिए मित्रों/परिवार के साथ साझा करें।",
-  "control.paymentHowToCreate": "कैसे बनाये:",
-  "control.stepSelectWallet": "अपना वॉलेट/नेटवर्क चुनें (जैसे एसटीसी पे, पेपाल, माडा, यूपीआई)।",
-  "control.stepInputAccount": "अपना खाता आईडी, हैंडल या मोबाइल नंबर दर्ज करें।",
-  "control.stepPresetAmount": "वैकल्पिक: एक पूर्व निर्धारित अनुरोध राशि और नोट सेट करें।",
-  "control.stepDownloadQr": "रंग/लोगो अनुकूलित करें, फिर क्यूआर डाउनलोड करें!",
-  "control.regionalWalletsTitle": "🇸🇦 खाड़ी, 🇵🇰 पाकिस्तान और 🇮🇳 क्षेत्रीय वॉलेट:",
-  "control.regionalWalletsDesc": "सऊदी अरब और खाड़ी देश एसटीसी पे, माडा और सादाद का समर्थन करते हैं। पाकिस्तान JazzCash और EasyPaisa का समर्थन करता है। भारत UPI (GPay, PhonePe) को सपोर्ट करता है।",
-  "control.selectPaymentMethod": "क्षेत्र और भुगतान वॉलेट चुनें",
-  "control.optGlobalPayment": "🌐 वैश्विक भुगतान के तरीके",
-  "control.payOptionPaypal": "पेपैल (वैश्विक) - PayPal.me/हैंडल",
-  "control.payOptionCustom": "कस्टम वॉलेट लिंक (यूनिवर्सल पेमेंट यूआरआई)",
-  "control.optUnitedStates": "🇺🇸संयुक्त राज्य अमेरिका",
-  "control.payOptionVenmo": "वेनमो (यूएसए) - @उपयोगकर्ता नाम और मेमो",
-  "control.payOptionCashapp": "कैश ऐप (यूएसए) - $कैशटैग और राशि",
-  "control.optIndia": "🇮🇳भारत",
-  "control.payOptionUpi": "UPI / GPay / PhonePe / Paytm (भारत) - वर्चुअल भुगतान पता",
-  "control.optChina": "🇨🇳चीन",
-  "control.payOptionAlipay": "Alipay (चीन) - Alipay QR लिंक",
-  "control.payOptionWechat": "वीचैट पे (चीन) - वीचैट पे पेलोड (wxp://)",
-  "control.optBrazil": "🇧🇷 ब्राज़ील",
-  "control.payOptionPix": "PIX (ब्राज़ील) - कुंजी / CPF / CNPJ / ईमेल / फ़ोन",
-  "control.optSoutheastAsia": "🌏 दक्षिणपूर्व एशिया",
-  "control.payOptionGrabpay": "ग्रैबपे (सिंगापुर, मलेशिया, फिलीपींस)",
-  "control.optAfrica": "🌍 अफ़्रीका",
-  "control.payOptionMpesa": "एम-पेसा (केन्या, तंजानिया) - टिल/पेबिल/फोन",
-  "control.optPakistan": "🇵🇰पाकिस्तान",
-  "control.payOptionJazzcash": "जैज़कैश (पाकिस्तान) - मोबाइल खाता",
-  "control.payOptionEasypaisa": "ईज़ीपैसा (पाकिस्तान) - मोबाइल खाता",
-  "control.optSaudiArabia": "🇸🇦 सऊदी अरब और खाड़ी",
-  "control.payOptionStcpay": "एसटीसी पे (सऊदी अरब) - मोबाइल वॉलेट",
-  "control.payOptionMada": "माडा (सऊदी अरब)-आईबीएएन/भुगतान लिंक",
-  "control.payOptionSadad": "सादाद (सऊदी अरब) - बिलर / खाता संदर्भ",
-  "control.payPaypalHandleLabel": "PayPal उपयोगकर्ता नाम, ईमेल, या PayPal.me हैंडल",
-  "control.payPaypalHandlePlaceholder": "जैसे john_doe या paypal.me/john_doe",
-  "control.payRequestedAmountOptional": "अनुरोधित राशि (वैकल्पिक)",
-  "control.payCurrencyCode": "मुद्रा कोड",
-  "control.payVenmoHandleLabel": "वेनमो @उपयोगकर्ता नाम",
-  "control.payAmountUsdOptional": "राशि ($) (वैकल्पिक)",
-  "control.payPaymentNoteOptional": "भुगतान नोट/मेमो (वैकल्पिक)",
-  "control.payCashappTagLabel": "कैश ऐप $कैशटैग",
-  "control.payUpiVpaLabel": "यूपीआई वीपीए आईडी (वर्चुअल भुगतान पता)",
-  "control.payPayeeNameOptional": "प्राप्तकर्ता का नाम (वैकल्पिक)",
-  "control.payAmountInrOptional": "राशि (₹ INR) (वैकल्पिक)",
-  "control.payTransactionNoteOptional": "लेनदेन नोट (वैकल्पिक)",
-  "control.payAlipayAccountLabel": "Alipay खाता आईडी/प्राप्तकर्ता क्यूआर लिंक",
-  "control.payWechatPayloadLabel": "वीचैट पे पेलोड कोड या लिंक (wxp://)",
-  "control.payPixKeyLabel": "PIX कुंजी (CPF / CNPJ / ईमेल / फ़ोन / रैंडम कुंजी)",
-  "control.payReceiverName": "प्राप्तकर्ता का नाम",
-  "control.payCity": "शहर",
-  "control.payAmountBrlOptional": "राशि (बीआरएल आर$)",
-  "control.payGrabpayLinkLabel": "GrabPay भुगतान लिंक या फ़ोन नंबर",
-  "control.payMpesaTill": "संख्या तक",
-  "control.payMpesaPaybill": "पेबिल नंबर (वैकल्पिक)",
-  "control.payMpesaAccount": "भुगतान बिल खाता संख्या",
-  "control.payJazzcashAccLabel": "जैज़कैश खाता/मोबाइल नंबर",
-  "control.payAmountPkrOptional": "राशि (पीकेआर) (वैकल्पिक)",
-  "control.payEasypaisaAccLabel": "EasyPaisa खाता / मोबाइल नंबर",
-  "control.payStcpayMobileLabel": "एसटीसी पे मोबाइल नंबर",
-  "control.payAmountSarOptional": "राशि (एसएआर ر.س) (वैकल्पिक)",
-  "control.payMadaIbanLabel": "माडा आईबीएएन या भुगतान लिंक",
-  "control.paySadadBillerLabel": "सदाद बिलर / खाता आईडी",
-  "control.payCustomUrlLabel": "भुगतान लिंक/वॉलेट यूआरएल",
-  "control.generatedQrPayload": "एन्कोडेड भुगतान पेलोड:",
-  "control.type.payment": "भुगतान / वॉलेट",
-  "control.payRequestedAmount": "Requested Amount (Optional)",
-  "control.payVenmoNoteLabel": "Payment Note / Memo (Optional)",
-  "control.payCashappHandleLabel": "Cash App $Cashtag",
-  "control.payUpiIdLabel": "UPI VPA ID (Virtual Payment Address)",
-  "control.payPayeeNameLabel": "Payee Name (Optional)",
-  "control.payUpiAmountLabel": "Amount (₹ INR) (Optional)",
-  "control.payTxnNoteLabel": "Transaction Note (Optional)",
-  "control.payAlipayLabel": "Alipay Account ID / Payee QR Link",
-  "control.payWechatLabel": "WeChat Pay Payload Code or Link (wxp://)",
-  "control.payReceiverNameLabel": "Receiver Name",
-  "control.payCityLabel": "City",
-  "control.payPixAmountLabel": "Amount (BRL R$)",
-  "control.payGrabLinkLabel": "GrabPay Payment Link or Phone Number",
-  "control.payTillLabel": "Till Number",
-  "control.payPaybillLabel": "Paybill Number (Optional)",
-  "control.payMpesaAccountLabel": "Paybill Account Number",
-  "control.payJazzAccountLabel": "JazzCash Account / Mobile Number",
-  "control.payJazzAmountLabel": "Amount (PKR) (Optional)",
-  "control.payEasyAccountLabel": "EasyPaisa Account / Mobile Number",
-  "control.payStcPhoneLabel": "STC Pay Mobile Number",
-  "control.payStcAmountLabel": "Amount (SAR ر.س) (Optional)",
-  "control.framePreset.order-now": "अभी ऑर्डर करें",
-  "control.framePresetDesc.order-now": "मेनू और स्टोरफ्रंट",
-  "control.framePreset.pay-here": "यहाँ भुगतान करें",
-  "control.framePresetDesc.pay-here": "मोबाइल वॉलेट और भुगतान",
-  "control.frameSelectionTitle": "फ़्रेम और कॉल-टू-एक्शन टेम्प्लेट",
-  "control.frameSelectionDesc": "अपने QR कोड को 'स्कैन मी' या 'वेबसाइट पर जाएं' जैसे कॉल-टू-एक्शन टेक्स्ट के साथ पूर्व-डिज़ाइन किए गए टेम्प्लेट में लपेटें।",
-  "control.framePreset.menu": "मेनू",
-  "control.framePreset.rate-us": "हमें रेट करें",
-  "control.framePreset.save-contact": "संपर्क सहेजें",
-  "control.framePreset.website": "वेबसाइट",
-  "control.framePreset.wifi": "वाई-फाई",
-  "control.framePresetDesc.menu": "मेनू और कैटलॉग",
-  "control.framePresetDesc.rate-us": "समीक्षा और रेटिंग",
-  "control.framePresetDesc.save-contact": "बिजनेस कार्ड और संपर्क",
-  "control.framePresetDesc.website": "वेबसाइटें और लिंक",
-  "control.framePresetDesc.wifi": "वाई-फाई नेटवर्क",
-  "ai.buttonLabel": "एआई सहायक",
-  "ai.assistant": "एआई सहायक",
-  "ai.title": "एआई सहायक",
-  "ai.coPilot": "एआई सह-पायलट",
-  "Digital Business Cards": "डिजिटल बिजनेस कार्ड",
-  "Card Credentials & Info": "कार्ड क्रेडेंशियल और जानकारी",
-  "Full Name": "पूरा नाम",
-  "Job Title": "नौकरी का पद",
-  "Job Title / Designation": "नौकरी का पद / पदनाम",
-  "Company Name": "कंपनी का नाम",
-  "Official Website": "आधिकारिक वेबसाइट",
-  "Email Address": "ईमेल पता",
-  "Phone Number": "फ़ोन नंबर",
-  "Create New Card": "नया कार्ड बनाएं",
-  "Save Pass": "कार्ड सहेजें",
-  "AI Assistant": "एआई सहायक",
-  "Creative Contact Station": "रचनात्मक संपर्क स्टेशन",
-  "Design professional, contact-rich digital business cards (vCards) with customizable layouts, active preset logos, instant WhatsApp or social media links, Apple/Google Wallet simulations, and elegant dynamic QR codes.": "अनुकूलन योग्य लेआउट, सक्रिय प्रीसेट लोगो, त्वरित व्हाट्सएप या सोशल मीडिया लिंक, ऐप्पल/गूगल वॉलेट सिमुलेशन और सुरुचिपूर्ण गतिशील क्यूआर कोड के साथ पेशेवर, संपर्क-समृद्ध डिजिटल बिजनेस कार्ड (वीकार्ड) डिज़ाइन करें।",
-  "1. Personal Information & Bio": "1. व्यक्तिगत जानकारी और जीवनी",
-  "Choose name, position title, and primary workplace context.": "नाम, पद का शीर्षक और प्राथमिक कार्यस्थल संदर्भ चुनें।",
-  "WhatsApp Chat Link (Or Number)": "व्हाट्सएप चैट लिंक (या नंबर)",
-  "Office/Postal Address": "कार्यालय/डाक का पता",
-  "Profile Photo (Self-Contained)": "प्रोफ़ाइल फ़ोटो (आत्म-निहित)",
-  "Upload Image": "छवि अपलोड करें",
-  "Presets:": "प्रीसेट:",
-  "Company Emblem / Brand Logo": "कंपनी का प्रतीक / ब्रांड लोगो",
-  "Upload Brand Logo": "ब्रांड लोगो अपलोड करें",
-  "Texts:": "पाठ:",
-  "Dynamic Social Integrations": "गतिशील सामाजिक एकीकरण",
-  "Append custom profiles links (LinkedIn, YouTube, X, etc.)": "कस्टम प्रोफाइल लिंक जोड़ें (लिंक्डइन, यूट्यूब, एक्स, आदि)",
-  "Add Link": "लिंक जोड़ें",
-  "No active social links. Click \"Add Link\" to integrate networks.": "कोई सक्रिय सामाजिक लिंक नहीं। नेटवर्क को एकीकृत करने के लिए \"लिंक जोड़ें\" पर क्लिक करें।",
-  "Visual Theme & Layout": "दृश्य विषय और लेआउट",
-  "Executive Minimal": "कार्यकारी न्यूनतम",
-  "White & Blue": "सफेद और नीला",
-  "Sleek Obsidian": "चिकना ओब्सीडियन",
-  "Dark & Amber Gold": "डार्क और एम्बर गोल्ड",
-  "Tech Slate": "टेक स्लेट",
-  "Sleek Cyan Neon": "चिकना सियान नियॉन",
-  "Warm Craft": "गर्म शिल्प",
-  "Organic Clay Cream": "जैविक क्ले क्रीम",
-  "Saved Cards on Account / Cache": "खाते पर सहेजे गए कार्ड / कैश",
-  "No saved passes found. Click \"Save Pass\" above to register and secure your business card!": "कोई सहेजा गया पास नहीं मिला। अपने बिजनेस कार्ड को पंजीकृत और सुरक्षित करने के लिए ऊपर \"कार्ड सहेजें\" पर क्लिक करें!",
-  "Double-Sided Live Mockup": "दो तरफा लाइव मॉकअप",
-  "Flip Card": "कार्ड पलटें",
-  "Flip Card (View Front)": "कार्ड पलटें (सामने का दृश्य)",
-  "Flip Card (View Back)": "कार्ड पलटें (पीछे का दृश्य)",
-  "Front": "सामने",
-  "Back": "पीछे",
-  "INDEPENDENT": "स्वतंत्र",
-  "Anonymous User": "अनाम उपयोगकर्ता",
-  "Product Developer": "उत्पाद डेवलपर",
-  "Logo": "लोगो",
-  "Contact Channels": "संपर्क चैनल",
-  "Personal QR ID": "व्यक्तिगत क्यूआर आईडी",
-  "Scan to Connect": "कनेक्ट करने के लिए स्कैन करें",
-  "Interact & Share": "बातचीत और साझा करें",
-  "Direct vCard": "प्रत्यक्ष वीकार्ड",
-  "Web Profile": "वेब प्रोफाइल",
-  "VCARD GENERATOR DATA": "वीकार्ड जनरेटर डेटा",
-  "WEB REDIRECT MODULE": "वेब रीडायरेक्ट मॉड्यूल",
-  "Encodes Name, Address, Email, Phone, Logo & Website inside the QR matrix.": "क्यूआर मैट्रिक्स के अंदर नाम, पता, ईमेल, फोन, लोगो और वेबसाइट को एनकोड करता है।",
-  "Creates a simulated, interactive digital business profile on scan.": "स्कैन करने पर एक सिम्युलेटेड, इंटरैक्टिव डिजिटल बिजनेस प्रोफाइल बनाता है।",
-  "Save Contact (.vcf)": "संपर्क सहेजें (.vcf)",
-  "Download QR (PNG)": "क्यूआर डाउनलोड करें (PNG)",
-  "Download QR (SVG)": "क्यूआर डाउनलोड करें (SVG)",
-  "Share Card Link": "कार्ड लिंक साझा करें",
-  "Copied!": "कॉपी कर लिया गया!",
-  "Copied": "कॉपी किया गया",
-  "Mobile Wallet Pass Export": "मोबाइल वॉलेट पास निर्यात",
-  "Save your contact card directly to smartphone wallets for quick tap-and-share access.": "त्वरित टैप-एंड-शेयर एक्सेस के लिए अपने संपर्क कार्ड को सीधे स्मार्टफोन वॉलेट में सहेजें।",
-  " Apple Wallet": " ऐप्पल वॉलेट",
-  "🤖 Google Wallet": "🤖 गूगल वॉलेट",
-  "Apple Wallet Card": "ऐप्पल वॉलेट कार्ड",
-  "MEMBER": "सदस्य",
-  "Designation": "पदनाम",
-  "SMARTPASS INTEGRATION": "स्मार्टपास एकीकरण",
-  "✓ Ready to Install": "✓ स्थापित करने के लिए तैयार",
-  "Apple Wallet Digital Pass": "ऐप्पल वॉलेट डिजिटल पास",
-  "Copy Pass Payload": "पास पेलोड कॉपी करें",
-  "Export your formatted wallet card to save or distribute directly to iOS devices.": "आईओएस उपकरणों पर सीधे सहेजने या वितरित करने के लिए अपने स्वरूपित वॉलेट कार्ड को निर्यात करें।",
-  "Download Apple Wallet Pass File": "ऐप्पल वॉलेट पास फ़ाइल डाउनलोड करें",
-  "Google Wallet Pass": "गूगल वॉलेट पास",
-  "AFFILIATE": "संबद्ध",
-  "Card Holder": "कार्ड धारक",
-  "Google Wallet Digital Pass": "गूगल वॉलेट डिजिटल पास",
-  "Export your formatted wallet card payload for instant Android Google Wallet sync.": "त्वरित एंड्रॉइड गूगल वॉलेट सिंक के लिए अपने स्वरूपित वॉलेट कार्ड पेलोड को निर्यात करें।",
-  "Download Google Wallet File": "गूगल वॉलेट फ़ाइल डाउनलोड करें"
-}
+  "urlqr.faqA1": "एक URL QR कोड (क्विक रिस्पॉन्स कोड) एक विशेष द्वि-आयामी ऑप्टिकल बारकोड है जो एक वेब पते या हाइपरलिंक प्रोटोकॉल (जैसे HTTP या HTTPS) को समाहित करता है। जब किसी स्मार्ट डिवाइस के अंतर्निहित ऑप्टिकल सेंसर या कैमरे द्वारा स्कैन किया जाता है, तो डिवाइस स्थिर ब्लैक-एंड-व्हाइट पिक्सेल ग्रिड को डिकोड करता है, लक्ष्य वेब स्ट्रिंग को निकालता है, और स्वचालित रूप से उपयोगकर�x��}�rGr�?EI��l@R�^-���@�C����ul��1� �L��gHB� �A�4W�]kGtP����qp�/6���O�_��WUY��U]�3���!3�U���ߙ����q��#��������������q�?�æ|l_u�������<��l�ߪ��S[�����O�oǛ������g���#���������z>9Ś~R.�R�Ћ��z�Ԗ��@�ZͿ�z�k��C���������4��5��o�7�g��{��#9cA|����~�P�,������d@{�+�4�:0�	��փ�������;�����S��G�\~M���q���ʌR+�e�Ԍj����+?��ߨ��x��w��D�w�Y�l|1�d���wϊw5��w ���>�w�
+����	������1 bWaR�g[}�L�쎏�' ߑ��9`�P?�ʣ� Y�wz$?|�?л��]ʣы�38OZy'Zʢ��cbqA����N��*�3�Lji=��@����p��}V���ԣ��}����^���)hz7�C��Өx��ty����g/[�{���#p�����i8��Y �����;��в��}������O3�}��y��n����ީ^��Y�7rH����|�����#}�9Ű'̾iHVa�e�;bJ>t�{d���}��a,�֠����[bX�#=W_3�F�K�������򙷏u��!�	��RȾF.��S���.���#+|wp�#<_%-��0��5R���ws�v#j���u&9�B��N[����Ơ��.�
+�m#>����Z�<��>����l�#�{b�K�9=�ԉ:{z<̲��+;8�|fX�;.�#Ok�/��3�/����o���+�h��p���*�u-~����K֑��#�5f�m���H�� 7�h`P��kw;�@%_uԅ���[�Zޠa�>hf  �Y��8`��RrG��"�������9 ��m$r��'$�{����p!V?_n���= k+�,O:��!��/4��P���lhLo�_�2��@���2��h�{��[:6��iO�n,�2 EyT"h|-��d�M���P9��^���S
+�zߨh��|j�{� �BN�dG��ݾ��$����������X��a��V䅍�y��FX�ڷ�"d�A��X�����������"��,6�W(ݑ�����4��\�bK#�0i
+`���]�Ⱦ�Ô�#�i/ei��u�ۺ)��Q��}���ǎ���׭��i���n���Mr���Ɨ"��d}&�4����_׵�wౠ_�.G�ƞ��4�9͗u�/F"hN����"��m��0Y�ۖ�vQW�'Vqm��\���'�~�Ѱ���9Í@�/�P	�lD�~������xO���V�"�ĥ4]j��9KbJR4P�Q8���[�Θ��n����*���L澉
+hr���YesN*��yz��g�k��I�s���:nÚd{�M>����qr1CkJ��ͩ(k���������艹��j��_i���̀����񇳗��x;K��"�(�m�-%�=��5��+'d���q�5
+s�#z&��<_`�=X�J�g�Yv���۲��g���b���E�~��xf�G��f���A�!��4���q�KX�%�����o���y�	�� � 5\�v�,����	�i�>rxO\_E�!,�1�����D
+h#�1%k��g����%�[�i�MCĩhm�b�m����a�}�x)<>/���!<!ߩ ��D���4��l�b��&�Tz�f�c5��:�+�R��v'�|����2��p�["a"�#|H�mp5Ԑ�ȕh��?m(�06�k�y�6 o�`�wp��G���m�!�����\�4$e��E`D��8�V�$F f��V��_�;QS���E:���_����j�%�A���MQD�|�P��f��1�� 9_1AkP����C����~ð�Š��q��s-@��dj����=��m8��A5AL���6l���
+�#ďWj�5Gmt�1�h����'0ف#��	Sǡ�Ze�+KА �|���1D�Vz
+�,���cD�kª��A���|r�2XL7rffسy�b�c��\y��'�p�L�(]+�=�����Ayl�	G��>%�Q����q��i<r=�D��i���
+j1�^En!|�;Ts�G<+-����i$�;��l�H��MQt%z�#�8R?nicy�cc���v[z�ɵ9ܨ�'[�,M��vOS��1lre6J�n��D��Q#��ƺ�0�tO��۶��r<�}���5��_yٌ�p`� C�F����L�:{�pL�/Ff��%2{�B��[�0�`�{��<jb� �B�r�����H��S 5G�:N �m������r@�VV��Q��&~6Ɣ�B�+7T
+��*��bc+5,,i�E_Ό�"�����v�S����'��lr*_X�����c���sڿ�"2�^��F)S��E��2)b_��p���e9jT-���w2��#�ê�>$��>u�4j�ͫ[F�`�އTk[`!<�X�Ul4�Q�̉џN��<����|$p��@��a����C��c@O����{dP��Y(@_��/�53�M�$r�ֶ�"k��Ren�7R�H}KSB�w���7yI�#��}�9���(�� |���=�O�����پ��8��f��e,1�3��ұ}��G����?G�9���ǐ��c����Vc�����{ǥp��!���������>�@>G�Lq�gjT�	��Q	Y\nϡr�������P�H�\�>�a8���T�@#�@	��Y�0L�3��t<�5�0GD��տ�׸����)�(H*��K��;��"��8��9ۂ�����؆=؀��@P&u1G��4C�=sϻO��	�bOIZ���MN��T���c�
+��z"�F>%�3Sq����t�h�JU�:HP0!T������/��g'����"{EɼǸ�������-q��P(�:@%堃+9�N��x�ނeaY�e�����*���.E7{h�k�״�T��F�=S��`9N0>�!��Ӑ����A�'*�=ѩ�Wث��D�7|S��{IV�#��y�n��V�2J�r�E1�� E$�J#�������+���^�''cMC ���ˡk*��H���v �`��LuIZe� �{<��>I��K��'�	9�s�0�e���R*0�._�N�
+8u}�o��
+q�g��$O Dy�	FZ�8mџ-���Z�a����^��"��"�vI�t.��*���P%�-�m���A	�w�n�X�F������4NJV�]6��A�>��:� P��2ݴC���r���D��u�a"6�K�@���&���o�+rq���,3z�AS��?�6��O:͘��`����~�;5N���Hm�/��ޚ�|�f7��q^��j���|���R�"�W��\\kp�u�F�r�0/�a}�C��5QvA�^w
+����z��������<-/�^�����DYǩ�q��wp���A]�o����e�b�'djK2�l��rQ�!����}v��v@����c=���.M_1�~Pr.f=I����G��b��:N��Թw}VT���Ɏ�$��{�$
+��1����=<�6��NWQh����J�.n0I�*���x#��"��|M�U�`�a@7�,�w�����:E�*J�����xp��5)�3�*}?�[��+�>�rl -+����w�N"�r=mȭ�c	��mX#8�Ꮙ`��c&9�}T���|jX��b��`��H�>&��~�������C��h6:	�`��!*�Z���#���S��}���&W�E���$�=�"�Bu��7J���)���a&t걜�P�d�Sp�ǲme�CR;�k�;D<ը��U�l���p$)�h��Z��}�!��K�.?2�,ĉ$KuXq��Yg�����~�M��a���{'Zh��W[�Jb�ϐva���~s������!�^M�ze��{�/UZ*0��q�T��q���;�1fOxp�;�t*�
+����`�wx(��gX2;:.�����y؝	�8��%��J}+�$0y��Ah_� !C���[��WYX;n}]`�Ι��#P-���Q�bu��v�bN37Z[���G)aH���K�8�x�uLX�$��Q�B���&V��&�W�����Of�x%�PTʝ��cL�nv�����ͬ��C%�r������T͖���h!n�}�l	sM�-�/��zԜ��h%���[�ս*?ڙ�*��1&L~AYS%�`�쬐u��>X{�:n�c�H[�-5�/�2���5S�hFC�s6�����z����wə�}���o���M�E�Q�,�U�j�H�|#��P�ڬ�#�����.]y����.��sѷ������j��6�F�.�s�8�=/Q�rzBe�řKN�_'	Rx�BK�W;K�<3��'24��w@��o
+�x�u��@_X&��J������Yx�x�(hy�e����	hޱ1C5�lrQj���G�+Qv��`�"����Yv��
+��hP���R�Sfk�}{��*@�Q\�7c��X�N 7\��/q3Β�UI䝤�p,�7�r��f��yƳ8j�R ���w"��������J?��^si�sq]�a��/�����ߞ���b6^��,j��d��m�si����&�?#� (����2�����ʣwp��>��z��N�&E���p�|]x��m<����?슋q�P��\wa%�t�Y�v���3;f�[�mP��<5j�a�kE7ǣ�d�[�*	0s��'Eh���(�j,wg�$��h�G	�y��Wt0���<�Vڊ}�೥y�ۺ�Jo�H�r����������L�����z���qK�t%�#����x��D\�@��M�l|l��H���ugϻl�@������9ҥ�fE��V�~��хɫc���ԘPq����������{uNޑd?��Y�ǝ|JR�R����5YV7���J���C4�����u)[ӕ񦵹��?��9��zx��b��kd#��6�^�a/�L� �2�0��a��a�<�����Q@�%�p����*�hq���ժ��]v	 T��� �cd%h��N�4�6����8jq�|�Aڂsu]�H���~ot����԰��G&֡IC�@	'��`�+e<f�ɰ;��v&ټ69pcj������3�h��9%��D{-�a.����0��0��P5&ٯ����.�X6tj��ʋ�ԧ���[�R���u3nI���� ��c}L{L�0����f�)�\t~�3�S��j�Fo������6Ө1�J_��!�a�`R�^	s'	։g�V#51' ��^�Rs�JZ�ng�������K@KRҤ��v�Ч�%�+i3]Z��JW�C��-��>������˝tQ�5���ƀ�s����.9��D����ܨ�a4��P�
+bY��>3!�A����/�mM�<���Eq^OJ?qU�R.vz���aF&���@����1/-��L q�w���֑n�R��A?�O��`N�:֐��v'��~'K���;��p�ф�G~����}�������~��9����#���	��V��,�g�����P9�:{&�����s�1��c�����AA�dqKʈ��f7��ow0�+R)�G��sӉ���,s�Kֲ�s<g�������S�	��
+�F~xҽ�܌g��f�:�FY�g#6@�$+%eL��7�fҘ�dݺ��-J"��bZ=���ˎ9]*^����(��8��p*���@'��Y�s��k�tiI�!�l�Jg �	�f�/�(������P��f�$�B�=�wc�L"�*f���-Q���~!�@N�
+ˇ��Zl��|A�ԓ�Н,�&dFl���r)/�@�!>���\��fa��5��ع(=�����4Sm痠�>�o�o�Q���Զ�-�K���k0%a�_��\��yo��;,��4��A1�z����n�Y'nLI�����s�ȗb�P)��7�������ijk��'��g��=l84׹�U�i��0S��2�S����1��&kcK-�����FM���	���O�CL���-KB���Incu�ɞ�����d��*+p<��	�dw�vS:Z�x+Z��f�JV�2�;7z�T���Υ�1��Q�N�5��3�5h��@�ن ��	� �en�}��giԉ'�Z%�������G���o	&o&Y��/�Ps�$x߂�F�3Vx��D�3�{�T�[�M8i+f�\8 �u0,f�q��n��'$�1�;w���X�2�y�U����z%��
+ ���tӡ�-��H��s�%���v���mP:h)�ܥ 
+��3��H2�Mڮ�?gܞ�h����w�������8DnF)̊�S��|�5Y��I�}�ΗT�e��+��8a��^��Sv��S��`��-��
+���j��9�}���.�����>�9����#����Cɶ۱I�7ƣ,ad�����K�=�{����Ex�I���Io��$] �/A�nS &�(6���{����bÎX���U�ң��d1p��8�蝗�N&�b���Ҋ)o����2
+r���_��W	�8c�F�iZ@8Dx�!�c�X4��.�� ��Q3�tl�ڒ���N�@8���p�ۇ�uퟀE��K-�~5��"wBOY�۹Zk��$�5B�8uӾԨ�����B^ޚ�V�z�x���W�R�C�/��
+�Lh��v�5�"
+`݁����mo��c����UpDBQ+j�v�z>^o�Qv9]";���V`����{ao��p����E�Ik�BK��6��J�gmR�b�4cD���mk���Q������n��%X'���Q¡ mܔ�I'[���y�垅�[�b�b�t����B��t��m��Pχ��ʣ�-=3���z�&��Z�/�o}5�:���շ��	^)ŐLe�]Me,
+_�J�H�I��\=j]��&����ʅ�=�B����坟��Vs���ٯ���S�}4Ǥƽw�l�{��G6����64��if�����o.�IF��Y�q�eCB���lFVs��C/}��1GSE\���	�j:]z�y҈ϭ���;qbÙ��"h Um��h0cQ��]�a�vG�{ c��4@���7)���q�*�������7U��ċ�*�u�#Ƈys��E���X��%�'�x j�fՀp��9��V�2���E�D&0<���V���u�:���7�I�I7�����ޙ;�|���]�*ڹ�\���E�T,|I�.��2�f{����Zg����i6m�9�<r��ׯ8��0��9��|�r/�k�,a�0�T�鷆Dy�T�2 o7U8_�|���%i ���^jJsQ����H���zg�X"��d��s����h.����r�FC{<	���h�DM�~�%��Ѡ,lq����>����r��tL;aʟ6�p�����e�<�&I��!�~'\g���( �Nt�D ��q�7>���3��Ί_�������|y2Wx�f���u��g�P��,-c�����~z�OGD�6t�����#?>U�k���-oF���- f��b�86�X�2Ļ��0mN�aZ��{! 1Gõ�Y�W��g��e��O�u�AzY�5^�����s��X6yWb�jڹ�*j�nQ������-���Dѿ���L���j=SrAa�x��-FB��s�Z�����I�+QK+�8�X{˾_���_Rx,���K;,fw0N���4eе�έ4�q!˰�i�W�s�[A�� @e���6�&L������
+�i�V;��;5�d	%�ٌ���mO5�'ͱ�����C`cd��o�֊Z��٬Zn�
+O�����D��䖤�e�or`pa(�2��0�}��lO'E��ڪ0��#�����G*x�j����IZ��㤳�Ȣ��'�Nk����Dd,��%�>�C��8�Yh]�n#{;H���Tҝ-y�Ԛn����(�%�7���˗��ـ'�Z=�śбNI�M��KwY�B;��C?e�5jaJ�D,)/j�Ł�m,�ǧOtӭ�y5�����䷤�;��\���E�T�u�]! ͦ�2�jp�l�h`�.��RJT{9�|zxs߲�S�K8nSRg���J'��!��/2�ۨ����9�[�ޙ�dF�`]���g! 0�Yg"-�m�>�s�y��L��A�0`�n����ܜ4��<�K�O�	�MPT�
+�[�I�>~E-���ӹr�,�����@kW�v�ǭƬڭ����Q�2K��Q�Z�1kb����M7����c���yֱz�z%K�C��MR���XG�|�H��H�%�O�V�����bݚG��ΓΪ��Q]��z\BpAM3Qh��	�ro�t��$��!�o�naNp;�Q'���ި
+LHA1���C�q���M�n���.մ��F��L3����wes<e}�Y�2T;�<��V�1{pԢ)o�D�_�Y��gKN�]��߾��A���X]�W�t���/��>s�I!׉��p�J����'.))�e����d)�DM�"t� @=�}fG��4ʴ����� !���Ǝ]�6o[lB�J�D��+����Ӭ����������YYs�p�t�V{������*��ƑUE ���V�w�O�oVڝU�Ƃ˜ά�A�>�X�>hO�Z�A��%�P�vH��z��@��ȩ�όT�w�x�����7�ы���i��V��z���%��{��ct����oٱ�8U�����u{ꮢQҽf�?)�*� U��o%G����	�nO�[-F@�5
+e<���x�v
+�}����µ	Q�"o���gEM!�\�����y=I�V\�p��]P��-�����,yt3nH�S_>7�N|�P����p_cm���	��7��p�|K>���w
+�͙�O U����2HڙJ��cEz<)�e=l�i�Z�Ү��Mg>ǊD B=�V��%��
+�b�OZ�J^�#r�-�z�yyO��2~5�ʻ�t۔��3H��j&`㒗w���׳�݁)Iv��w3�N�����YH_`ڜ�p�5�� ��_�eE��Y��n(>�"w��>�A��f���C��]�'�	�֟`�Ĕ����AƤ�H�t�3���B������T�;�WG;
+x�*�;��#��DD���Ni&KV�l�z�E��y�S�x֝,_N�S�q�F��؂�;x��\U��zZ5�~٠�q*G���}���	�=�ʰ�f���^�Rs�)� .fq�Ta�sI�I��L �2�v���VOZ�*���k
+����s���#VW���a4t�v~>�~��B����Kw�J�0��D{�b:���V�X֡eI��v�i5�	q*%^@�.x�0ə�|���8��v�j܎�6�b������N��w J�[(�GI��{_�s�hl4������>eN3�9)4����;d���6�2��� �5�Ne1�	s�@'U&)j×��h�@4�QZe���T�λ�t)s%�.;m���n�eUz
+H�p��0�:*�Tc`%
+fLP�_/��t��h�A�܌�SL�X���im��qV;[��5O\<��'Q���WY��>t�k������aFL���r�#2��QV�s��N?f�[n�9�Ġv��e�lQ��Q��Ӎ#����y�ǘ�����34�ʷ�ED��|nO���,S�1�Vhӑ��b���}sHЂ'�*8�2���n�U:�۩06_����>�t*ʗq�Q�:%y4�J^2�[�羸>3-F.�D�cbf9m�3���1{����x�+&2ֲm�䕸��:ws�<R�+�s�L۝K�]�Y�׿e^P���GzS���Z[�w�J�]ޠ}*,8*jB�����+�'K֨�	.O() �˷Q���a6Z���T�S�����^o%�9WoV �Z2��Ul���c6�,����Y��V�d�ŭ��6�JѶ�)*������
+��{���_t��%�E�6W�J�F99!~@O� [�P@�t��D�Z�q�,��z[���NŲ�ó�h���`���>wD��7` �֩夅�n��5�l� :�L�P:)����R���Rn�\��e��Z�3ݣdΆ7w�CH���Fn�n���(���,�jd�F�����k贷Vη3�m5|f��h� i��u��	15sQ����_����	�]��s��\���3�#Q�.,ٚ���I�o�<Ďo/�y�R-��9����2<�����Ƒє ��:�2��`i*o�x��YR�=}��^��OP	�W�q�kF�b�J<�`�c Yk.ޠU���A���γK�_��Lt#�;��	��
+5_����R2�V�̇*tQ#������%�*#����M'�1� 򏷶"��H&%Ց�D��\Ɏ�:�6���=*݊���(1jDt�Mǲ�j�1�b�_���
+�tN���=��Z�M���k��xsG���#��胨�h��j �1��s$ �l��(ߏ�����y��.����ƸB[�Sv�R��\��`�#�.��Y�<đ2t���T7��V}վ+��l�bC/��w�e5�U�v=o������I�j���i'v�н�'�Mw"���7-]��p��qW�Ge�#6G��M�J�eo9�}�[_�V<�����=�R>���[Y�����k1}u�DD�#��NE	� I�tF'�\�&vEGg�������-�Z*�4ط3�/�e��f,Ϟ�(w�F�����_ŶC�2U}ktdXcT�g�xϟ���l\���qv��R-rt��W��)V	Ş˚��:��to��m�X�.�w3��*u�=��L]a1m��',����Z$/=L�@#��Y�$,��u�����E����09��r~�!���<1 �\B37*Jmp�H����w�#w/a�~�e���l�z/3k�z�J��P��t�����O�!eO/D-�[���wNfkCXe'��mnC�UV�UM��gM6o%l���=,س�*�Ƈ�Qt����h��|`��O^��c�l��?1����b5}%�;1��T$m�*��]�P_����+i�Ƥ��]4�l���_�h)d�M[ի�k�L���b�$�t�ӂ�L6Y���=����
+d�4 �Z!O�t*=�����N����`��Ə��j�:�(����7`M�q<%?�1�P(��,���rc�4~����|��X8%x=7{Y̖(�&ǳ׻���Wq��� ��H�b�C~({ШdN.��㚷0ϯdU�X���X±�ѴJ��$�ܙ��&X�����: ���!�s�S��+{nr�TW	��d��Ӭg�Vz�~�!�:�>�2J'SYJB{�D��"� G�::�S��um9����c,g�,��ם��W;V�*TV��ýN6.��4b�k�k�m��a{T��u��t�R�4��+��_�G��6������#�첋��m�-]����7��YϤ�lr�+jq��5VA����[��a)ބ[�ll����f�����]���uj]S���/��V>�����V䎓S{���J/o��n�y�?����,&8L=�����f����p���z.��y���X-]3Y��y�X�{�
+�S���{�+: ����(�[~<"X~�E��B��I[��e�~G(o_�Q��Pg��ٍ�A��ә���a��Ɖ!��pGQ�����D�P�yj-*L���W����n-�T��A�	�gX�@��{�����v���&HZ���)��tA0��m�al��3�����G$�$K�������}���S�J;j�2X{H���$Ψk��I]�Q|�)�s�+ 6����[?��BټB�x�1q�.�RA�����b� �3\���D��
+a*	��i1y^�PJ�BL�����4��> ��-������v�.JkrL�X˒��0W���[]�����nT�J:�j&��̢��2�1��:	:��S4ӥT~��������ʕ�+��<�Բ7�H4��"��?5�	����D��t�P�,go5��~��d��V��ԕ���\��^V�
+!㾕� �d�0.������J�!��_&9�_��>Ŋ��p��%����6�J�Bh\��e2�N�߂�W��a���f���뷸���@��-v�; �Wr&d��e�-��� q�P�;�=��܄�ּ�GE�	闵�3q�+F�@�'W���s�V�<חT>���a��5�y��6邩�4�c��S0&ک��j=�A���pID��jm�������S�鿨^�<��pĽd��R�͠������:���k�ͣd�r���%��j�$e�&��Is%�u��獞����ׂL�Hy��r�S:�t���bMK`)�n�G��FX
+U�y����$�kX�cnΘ=\o����J�=���BL�]���$��zpYQu�U�V��^�*�\���̕�ݿ!������8t��R9r�����ͪY~o6xި�9�'ӒK�2~U& �������f�F��c��vZiJ"�Ac�E�qc�5&~�v��}�zLĝ��h� ֣ K>N�Ϳ���>��%��5��LH�	��7W�F��$��.�rmp5E�n�F���R���/h�_�+$�$��������{�q3�p��� �M�9�><|ߤg;RymϪ���b&��($�3�&D}��Q�����r�K]rY�H��][�����2��Ʒ�zW�x�\P�9:���yZ ���F�Rqͮm��B��%�Ő�c��t��7�5i�K��^%�\����ȵl����r�I>���K��7 bt�ܭ	�-k>�&�\��7��ٿN$60�������5F}Q�"��h�CR�6�y�:;����2i�J15%-e�tF+<W|��A�N��r@��
+i2�H�TT_6�l������L��\[jBP�^_S�3N.U�]���IΈR�A�~f�bj;&���BR~�z���w���x�ޘD��z�!�:FH��#zֲS�<�n����bq8�b�8�O�R����"��U� ������u�yA/�o�]��ƿǯ�_l&m����@�k���ғ��I#it�ᦎ���Gֆ#G�뜋�7�]j!���������W�"�Wf>�e���3�����h����y͸F׶���J������4�W>���6mt�q>�7�6�¯؛g�v U�xk�������j�Mr�c	`�oS<&�O��~�E
+��~��j��$����m�t�zp7�����m�ޝ.u��r�ɡ]���+�P���b`2��������̑�:�F����Nĸ�`4����yq�������f����I^�������ܭ4�}|᜘�p~z��Լ�r����|��Q�C�j�;���B����qWC�mL耟��7�]y2&��"GR։βN�K�<Kn[S�'�=�d�f�1�-��%�V�^�b�b1��/1�{,�kG of�m7TRv%"���0�7ƴ����3��2�+ƹ�Ye�L�9{�E��}�6���6ܣ3��zb�pM��C��B�i��id�f}qt�>oT&�SV�32s��h)��fl�g����5��V�t�u�|&v\�J�4����YZ���B�'�ܶ���ᡅ10�5���2Ņ����C��K�fn�.�9i"�ښ���psU��|%�:m��7��ݚ�O��h�D�4Lk�Fu���	�r��~����T����K�K��l8����w>����==�a&�OO>%�@��B��A���y�va�;��x�?9�������W���U�i��X2���rYM��.\9wa��G�^�D��ɳ�욻29;?397'���_�$�����\�z8�$��/�l54%N���3����%;C:NG� 17j�R�0��f[�����N	��z��ߕ-\
+� ��غ����퀗��B�:f�B�;,�\���fR�4؎_B]/���(�C+YG���H�CӒ�	���8����:?�JB��y6�sI�8d���"��h����� 7Igi�29�P��ŋӗ�'�/p��K� ����݇���ʽ\Eި�oc&嶩(U
+����F�&��5W[�r�c��N�镓C$��)��A��{=ߋz]tXʭ���#V�h�֧����ݦ�~��4{2�.��&�����DSJ�1�wV����PCҮ�[�nl��}�J����e�eeŧ�"Sʡ�Ik�L�������$�fj�l.ZQ,/aa#tWL�AR�@�S6�]�	�`��������Y���!I�m�E].��Bùn[1@.��_����ץ �xWe2UPb��v���{Y��!���J�?9%�[�D;΄�$ �2߹nzY�X�� �'��ZŻ!�/�듬��`gM�볗���N$T�=5��S���_.=/�97?�!L�'ݸ+]�\Ī��� �,rFج��=&�F��.�����6u]�.�o��F�cF�(�ԓ����nh?I݇`$܉:P?7���)96i��?j�BR�$���7��&�t[�\[���\�0ƒ��%��ɒ=v�}1�X���Iv1��Lš��&�sLbB}+�NP��GUT��h#���3Wt�A�O;���']/29�Ϊ�`��Oq���ox��i&Y]:�Y`���TW����/iPv��=���T�IfVcqQ�
+��s����|n%M%C�7�c
+b���8-a>;�\��EMYq�Y�;I]�o�3�4���%����/�����|� 򪡬�)�.F 8�Q�qxw�ޏ
+)^)�Z?v�T��ń�Qf�w�iV׆�)5F�AѪ�8S�i�����b~��$���v^x�5U�����B~?*-�L%�����?x1m6�[�5����z~T��S���	��J����_⇒�oB
+!x��?�7�Κ�o*"ɥ�i6E����T�.M�U�:�UrM�
+�8o�8�r�Rʗ��m�����\��\�R�u�|YEM,8V]QY���n���Dpd%�a.0A5�b�.�r�:��M�B1��ĭ,j��0(:P�u��4�+�v֖��s�Z�ϧ0[L2]� V��	<X4��èk$�{Qu�t�\�|�
+}��>��o���h��C"��4�ք ��	��;eCp�5.�	�d�����̌-��c1s��<u���+�w5E�=�v��J;B� :��a���q)�nH\���6Ţ<lY��fw��X����%�b>��*xluiSY_�v��,׆���D���,��|"��-@�m7��a��Jt;Y�(CV�C穤삪�LU<M�cc,f��Z7#Ѐ�/A�"���bF�v��N�*��(i� n�����ĳ����*���c�+3C��~X[�����+-|�Z���g�  �� �գ�

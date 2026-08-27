@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'motion/react';
 import { 
   Printer, 
   ArrowLeft, 
@@ -12,9 +11,10 @@ import {
   Eye, 
   EyeOff, 
   Scissors, 
-  Zap,
-  Smartphone,
-  BookOpen
+  Sparkles,
+  Layers,
+  LayoutGrid,
+  Info
 } from 'lucide-react';
 import { QRProject } from '../types';
 import { MemoizedQRCanvas } from './MemoizedQRCanvas';
@@ -22,9 +22,9 @@ import Logo from './Logo';
 import { isRtlLocale, Locale } from '../utils/translations';
 
 interface PrintModeLayoutProps {
-  currentProject: Partial<QRProject> | null;
-  onBack: () => void;
-  t: (key: string, defaultValue: string) => string;
+  currentProject?: Partial<QRProject> | null;
+  onBack?: () => void;
+  t?: (key: string, defaultValue: string) => string;
   locale?: Locale;
 }
 
@@ -33,6 +33,7 @@ type LabelPresetId = 'avery_5160' | 'avery_5161' | 'avery_5163' | 'business_card
 interface LabelPreset {
   id: LabelPresetId;
   name: string;
+  badge: string;
   description: string;
   cols: number;
   rows: number;
@@ -47,15 +48,28 @@ interface LabelPreset {
   category: 'label' | 'card' | 'other';
 }
 
-export default function PrintModeLayout({ currentProject, onBack, t, locale = 'en' }: PrintModeLayoutProps) {
+export default function PrintModeLayout({
+  currentProject = null,
+  onBack = () => {},
+  t,
+  locale = 'en'
+}: PrintModeLayoutProps) {
   const isRtl = isRtlLocale(locale);
+  const safeT = (key: string, defaultText: string) => {
+    try {
+      return (typeof t === 'function' ? t(key, defaultText) : defaultText) || defaultText;
+    } catch {
+      return defaultText;
+    }
+  };
 
   // Label presets with official technical specifications in mm
   const PRESETS: LabelPreset[] = [
     {
       id: 'avery_5160',
-      name: t('print.preset.avery_5160.name', 'Avery 5160 (30 Labels/Sheet)'),
-      description: t('print.preset.avery_5160.desc', 'Standard 3x10 address & general identifier labels. Perfect for small products.'),
+      name: safeT('print.preset.avery_5160.name', 'Avery 5160 (30 Labels/Sheet)'),
+      badge: '3 × 10 • 30/Sheet',
+      description: safeT('print.preset.avery_5160.desc', 'Standard 3x10 address & general identifier labels. Perfect for small products.'),
       cols: 3,
       rows: 10,
       labelWidthMm: 66.675,
@@ -70,8 +84,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
     },
     {
       id: 'avery_5161',
-      name: t('print.preset.avery_5161.name', 'Avery 5161 (20 Labels/Sheet)'),
-      description: t('print.preset.avery_5161.desc', 'Medium 2x10 shipping & asset tag labels. Excellent size for QR codes.'),
+      name: safeT('print.preset.avery_5161.name', 'Avery 5161 (20 Labels/Sheet)'),
+      badge: '2 × 10 • 20/Sheet',
+      description: safeT('print.preset.avery_5161.desc', 'Medium 2x10 shipping & asset tag labels. Excellent size for QR codes.'),
       cols: 2,
       rows: 10,
       labelWidthMm: 101.6,
@@ -86,8 +101,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
     },
     {
       id: 'avery_5163',
-      name: t('print.preset.avery_5163.name', 'Avery 5163 (10 Labels/Sheet)'),
-      description: t('print.preset.avery_5163.desc', 'Large 2x5 shipping & retail tags. Highly visible display layout.'),
+      name: safeT('print.preset.avery_5163.name', 'Avery 5163 (10 Labels/Sheet)'),
+      badge: '2 × 5 • 10/Sheet',
+      description: safeT('print.preset.avery_5163.desc', 'Large 2x5 shipping & retail tags. Highly visible display layout.'),
       cols: 2,
       rows: 5,
       labelWidthMm: 101.6,
@@ -102,8 +118,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
     },
     {
       id: 'business_card_h',
-      name: t('print.preset.business_card_h.name', 'Business Cards - Horizontal (10/Sheet)'),
-      description: t('print.preset.business_card_h.desc', 'Standard horizontal business card template (3.5" x 2.0") with cutlines.'),
+      name: safeT('print.preset.business_card_h.name', 'Business Cards - Horizontal (10/Sheet)'),
+      badge: '3.5" × 2" • 10/Sheet',
+      description: safeT('print.preset.business_card_h.desc', 'Standard horizontal business card template (3.5" x 2.0") with cutlines.'),
       cols: 2,
       rows: 5,
       labelWidthMm: 88.9,
@@ -118,8 +135,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
     },
     {
       id: 'business_card_v',
-      name: t('print.preset.business_card_v.name', 'Business Cards - Vertical (10/Sheet)'),
-      description: t('print.preset.business_card_v.desc', 'Modern vertical business card template (2.0" x 3.5") with alignment guides.'),
+      name: safeT('print.preset.business_card_v.name', 'Business Cards - Vertical (10/Sheet)'),
+      badge: '2" × 3.5" • 10/Sheet',
+      description: safeT('print.preset.business_card_v.desc', 'Modern vertical business card template (2.0" x 3.5") with alignment guides.'),
       cols: 2,
       rows: 5,
       labelWidthMm: 50.8,
@@ -134,8 +152,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
     },
     {
       id: 'table_tent',
-      name: t('print.preset.table_tent.name', 'Foldable Table Tent Card (2/Sheet)'),
-      description: t('print.preset.table_tent.desc', 'Tabletop double-sided fold-over stand displays with center alignment guides.'),
+      name: safeT('print.preset.table_tent.name', 'Foldable Table Tent Card (2/Sheet)'),
+      badge: 'Foldable • 2/Sheet',
+      description: safeT('print.preset.table_tent.desc', 'Tabletop double-sided fold-over stand displays with center alignment guides.'),
       cols: 1,
       rows: 2,
       labelWidthMm: 148.0,
@@ -150,8 +169,9 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
     },
     {
       id: 'single_label',
-      name: t('print.preset.single_label.name', 'Single Large Display (1/Sheet)'),
-      description: t('print.preset.single_label.desc', 'Single high-resolution print optimized for flyer templates or posters.'),
+      name: safeT('print.preset.single_label.name', 'Single Large Display (1/Sheet)'),
+      badge: 'Poster • 1/Sheet',
+      description: safeT('print.preset.single_label.desc', 'Single high-resolution print optimized for flyer templates or posters.'),
       cols: 1,
       rows: 1,
       labelWidthMm: 160.0,
@@ -170,21 +190,21 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
   const [selectedPresetId, setSelectedPresetId] = useState<LabelPresetId>('avery_5160');
   const [paperSize, setPaperSize] = useState<'letter' | 'a4'>('letter');
   const [showGuides, setShowGuides] = useState(true);
-  const [qrScale, setQrScale] = useState(70); // percentage size of QR code within individual cell
+  const [qrScale, setQrScale] = useState(72); // percentage size of QR code within individual cell
   const [qrImg, setQrImg] = useState<string>('');
   const [isRendered, setIsRendered] = useState(false);
 
   // Editable label details (initialized from current project frame or fallback default values)
-  const [companyName, setCompanyName] = useState(currentProject?.name || t('print.defaultBrand', 'FREEQRGEN CORP'));
-  const [headingText, setHeadingText] = useState(currentProject?.design?.frameText || t('print.defaultHeading', 'SCAN TO LEARN MORE'));
-  const [subText, setSubText] = useState(t('print.defaultSubtext', 'Simply scan with your camera'));
-  const [badgeText, setBadgeText] = useState(t('print.defaultBadge', 'WEBSITE'));
+  const [companyName, setCompanyName] = useState(currentProject?.name || safeT('print.defaultBrand', 'FREEQRGEN CORP'));
+  const [headingText, setHeadingText] = useState(currentProject?.design?.frameText || safeT('print.defaultHeading', 'SCAN TO LEARN MORE'));
+  const [subText, setSubText] = useState(safeT('print.defaultSubtext', 'Simply scan with your camera'));
+  const [badgeText, setBadgeText] = useState(safeT('print.defaultBadge', 'WEBSITE'));
   const [themeColor, setThemeColor] = useState<string>('#4f46e5'); // indigo
 
   // Fine-tuning states derived from selected preset (allowing fine adjustment)
   const [marginTop, setMarginTop] = useState(12.7);
-  const [marginLeft, setMarginLeft] = useState(4.8);
-  const [colGap, setColGap] = useState(3.1);
+  const [marginLeft, setMarginLeft] = useState(4.76);
+  const [colGap, setColGap] = useState(3.175);
   const [rowGap, setRowGap] = useState(0);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -214,15 +234,16 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
   };
 
   return (
-    <div className={`w-full min-h-screen bg-slate-100 flex flex-col md:flex-row text-slate-800 ${isRtl ? 'rtl-active' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className={`print-mode-wrapper w-full min-h-screen bg-slate-100 flex flex-col md:flex-row text-slate-800 ${isRtl ? 'rtl-active' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
       {/* Settings control panel sidebar: Hidden during print */}
-      <div className="w-full md:w-[420px] bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col h-screen md:sticky md:top-0 no-print shadow-xl z-20 overflow-y-auto">
-        {/* Header */}
-        <div className="p-5 border-b border-slate-150 bg-gradient-to-r from-slate-900 to-indigo-950 text-white shrink-0">
-          <div className="flex items-center justify-between mb-3">
+      <div className="w-full md:w-[420px] bg-white border-b md:border-b-0 md:border-r border-slate-200/90 flex flex-col h-screen md:sticky md:top-0 no-print shadow-xs z-20 overflow-y-auto">
+        {/* Header - Light Modern Aesthetic */}
+        <div className="p-5 border-b border-slate-200/70 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 shrink-0">
+          <div className="flex items-center justify-between mb-3.5">
             <button 
+              type="button"
               onClick={onBack}
-              className="flex items-center gap-1.5 text-xs text-indigo-200 hover:text-white transition-all font-semibold uppercase tracking-wider cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200/80 px-2.5 py-1.5 rounded-lg shadow-2xs transition-all font-semibold cursor-pointer"
             >
               <ArrowLeft className={`w-3.5 h-3.5 ${isRtl ? 'rotate-180' : ''}`} />
               <span>{t('print.backToStation', 'Back to Station')}</span>
@@ -237,12 +258,20 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
             </button>
           </div>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-500/20 rounded-xl">
-              <Printer className="w-5 h-5 text-indigo-400 animate-pulse" />
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200/60 flex items-center justify-center shrink-0 shadow-2xs">
+              <Printer className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
-              <h1 className="text-base font-black uppercase tracking-wider leading-none">{t('print.studioTitle', 'Print Layout Studio')}</h1>
-              <p className="text-[10px] text-slate-400 mt-1 font-medium">{t('print.studioSubtitle', 'Physical label & cardstock calibration')}</p>
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-50 border border-indigo-100 text-[10px] font-bold text-indigo-700 mb-0.5">
+                <Sparkles className="w-2.5 h-2.5 text-indigo-600" />
+                <span>Avery 5160 & Sheet Calibration</span>
+              </div>
+              <h1 className="text-base font-extrabold tracking-tight text-slate-900 leading-tight">
+                {t('print.studioTitle', 'Print Layout Studio')}
+              </h1>
+              <p className="text-[11px] text-slate-500 font-medium">
+                {t('print.studioSubtitle', 'Physical label & cardstock calibration')}
+              </p>
             </div>
           </div>
         </div>
@@ -251,25 +280,43 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
         <div className="p-5 space-y-6 flex-1">
           {/* Preset Selector */}
           <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 flex items-center justify-between">
+            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center justify-between">
               <span>{t('print.selectLayoutPreset', 'Select Layout Preset')}</span>
-              <span className="text-[9px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">{t('print.standardDimensions', 'Standard Dimensions')}</span>
+              <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold border border-slate-200/60">
+                {activePreset.badge}
+              </span>
             </label>
             <div className="relative">
               <select
                 value={selectedPresetId}
                 onChange={(e) => setSelectedPresetId(e.target.value as LabelPresetId)}
-                className="w-full p-3 pr-10 bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 focus:outline-hidden appearance-none cursor-pointer transition-all shadow-3xs"
+                className="w-full p-3 pr-10 bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-300 focus:border-indigo-500 rounded-xl text-xs font-bold text-slate-800 focus:outline-hidden appearance-none cursor-pointer transition-all shadow-2xs"
               >
-                {PRESETS.map((preset) => (
-                  <option key={preset.id} value={preset.id}>
-                    {preset.name}
-                  </option>
-                ))}
+                <optgroup label="Standard Label Sheets (Avery)">
+                  {PRESETS.filter(p => p.category === 'label').map((preset) => (
+                    <option key={preset.id} value={preset.id}>
+                      {preset.name}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="Cards & Tags">
+                  {PRESETS.filter(p => p.category === 'card').map((preset) => (
+                    <option key={preset.id} value={preset.id}>
+                      {preset.name}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="Stands & Displays">
+                  {PRESETS.filter(p => p.category === 'other').map((preset) => (
+                    <option key={preset.id} value={preset.id}>
+                      {preset.name}
+                    </option>
+                  ))}
+                </optgroup>
               </select>
               <ChevronDown className={`w-4 h-4 text-slate-500 absolute ${isRtl ? 'left-3.5' : 'right-3.5'} top-3.5 pointer-events-none`} />
             </div>
-            <p className="text-[10px] text-slate-500 font-medium leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100 italic">
+            <p className="text-[11px] text-slate-600 leading-relaxed bg-slate-50/80 p-3 rounded-xl border border-slate-200/70">
               {activePreset.description}
             </p>
           </div>
@@ -277,13 +324,15 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
           {/* Quick Paper Format & Guides */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{t('print.paperFormat', 'Paper Size')}</span>
-              <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                {t('print.paperFormat', 'Paper Size')}
+              </span>
+              <div className="flex bg-slate-100/80 p-1 rounded-xl border border-slate-200">
                 <button
                   type="button"
                   onClick={() => setPaperSize('letter')}
-                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
-                    paperSize === 'letter' ? 'bg-white text-indigo-600 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
+                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                    paperSize === 'letter' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   {t('print.paperLetter', 'US Letter')}
@@ -291,8 +340,8 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                 <button
                   type="button"
                   onClick={() => setPaperSize('a4')}
-                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
-                    paperSize === 'a4' ? 'bg-white text-indigo-600 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
+                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                    paperSize === 'a4' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   {t('print.paperA4', 'A4 Page')}
@@ -301,34 +350,39 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
             </div>
 
             <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{t('print.cutlines', 'Crop Guidelines')}</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                {t('print.cutlines', 'Crop Guidelines')}
+              </span>
               <button
                 type="button"
                 onClick={() => setShowGuides(!showGuides)}
-                className={`w-full py-2 px-3 rounded-xl border text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 ${
+                className={`w-full py-2 px-3 rounded-xl border text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs ${
                   showGuides 
-                    ? 'bg-indigo-50 border-indigo-200 text-indigo-700' 
+                    ? 'bg-indigo-50/80 border-indigo-200 text-indigo-700' 
                     : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                {showGuides ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                {showGuides ? <Eye className="w-3.5 h-3.5 text-indigo-600" /> : <EyeOff className="w-3.5 h-3.5 text-slate-400" />}
                 <span>{showGuides ? t('print.guidesOn', 'Guides Active') : t('print.guidesOff', 'Guides Hidden')}</span>
               </button>
             </div>
           </div>
 
           {/* Design Tuning Sliders */}
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-150 space-y-4">
-            <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-slate-700">
-              <Sliders className="w-3.5 h-3.5 text-indigo-600" />
-              <span>{t('print.calibrationSettings', 'Fine Calibration Settings')}</span>
+          <div className="bg-slate-50/70 p-4 rounded-2xl border border-slate-200/80 space-y-4 shadow-2xs">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+              <div className="flex items-center gap-1.5">
+                <Sliders className="w-3.5 h-3.5 text-indigo-600" />
+                <span>{t('print.calibrationSettings', 'Fine Calibration Settings')}</span>
+              </div>
+              <span className="text-[10px] font-normal text-slate-500">Millimeter Precision</span>
             </div>
 
             {/* QR Scale Inside Cell */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-[11px] font-bold text-slate-600">
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-[11px] font-semibold text-slate-700">
                 <span>{t('print.qrCodeSizeScale', 'QR Code Scale')}</span>
-                <span>{qrScale}%</span>
+                <span className="font-mono text-indigo-600 font-bold">{qrScale}%</span>
               </div>
               <input
                 type="range"
@@ -336,50 +390,50 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                 max="95"
                 value={qrScale}
                 onChange={(e) => setQrScale(parseInt(e.target.value))}
-                className="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+                className="w-full accent-indigo-600 h-2 bg-slate-200 rounded-lg cursor-pointer transition-all"
               />
             </div>
 
             {/* Top Margin */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-[11px] font-bold text-slate-600">
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-[11px] font-semibold text-slate-700">
                 <span>{t('print.topMarginMm', 'Top Margin')}</span>
-                <span>{marginTop.toFixed(1)} mm</span>
+                <span className="font-mono text-indigo-600 font-bold">{marginTop.toFixed(1)} mm</span>
               </div>
               <input
                 type="range"
                 min="0"
                 max="40"
-                step="0.5"
+                step="0.1"
                 value={marginTop}
                 onChange={(e) => setMarginTop(parseFloat(e.target.value))}
-                className="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+                className="w-full accent-indigo-600 h-2 bg-slate-200 rounded-lg cursor-pointer transition-all"
               />
             </div>
 
             {/* Left Margin */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-[11px] font-bold text-slate-600">
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-[11px] font-semibold text-slate-700">
                 <span>{t('print.leftMarginMm', 'Left Margin')}</span>
-                <span>{marginLeft.toFixed(1)} mm</span>
+                <span className="font-mono text-indigo-600 font-bold">{marginLeft.toFixed(1)} mm</span>
               </div>
               <input
                 type="range"
                 min="0"
                 max="40"
-                step="0.5"
+                step="0.1"
                 value={marginLeft}
                 onChange={(e) => setMarginLeft(parseFloat(e.target.value))}
-                className="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+                className="w-full accent-indigo-600 h-2 bg-slate-200 rounded-lg cursor-pointer transition-all"
               />
             </div>
 
             {/* Grid Spacings (Gaps) */}
             {activePreset.cols > 1 && (
-              <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-bold text-slate-600">
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-[11px] font-semibold text-slate-700">
                   <span>{t('print.columnGapMm', 'Column Gap')}</span>
-                  <span>{colGap.toFixed(1)} mm</span>
+                  <span className="font-mono text-indigo-600 font-bold">{colGap.toFixed(1)} mm</span>
                 </div>
                 <input
                   type="range"
@@ -388,16 +442,16 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                   step="0.1"
                   value={colGap}
                   onChange={(e) => setColGap(parseFloat(e.target.value))}
-                  className="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+                  className="w-full accent-indigo-600 h-2 bg-slate-200 rounded-lg cursor-pointer transition-all"
                 />
               </div>
             )}
 
             {activePreset.rows > 1 && (
-              <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-bold text-slate-600">
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-[11px] font-semibold text-slate-700">
                   <span>{t('print.rowGapMm', 'Row Gap')}</span>
-                  <span>{rowGap.toFixed(1)} mm</span>
+                  <span className="font-mono text-indigo-600 font-bold">{rowGap.toFixed(1)} mm</span>
                 </div>
                 <input
                   type="range"
@@ -406,79 +460,95 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                   step="0.1"
                   value={rowGap}
                   onChange={(e) => setRowGap(parseFloat(e.target.value))}
-                  className="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+                  className="w-full accent-indigo-600 h-2 bg-slate-200 rounded-lg cursor-pointer transition-all"
                 />
               </div>
             )}
           </div>
 
           {/* Editable Label Information Fields */}
-          <div className="space-y-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">{t('print.labelContent', 'Label Copy Content')}</span>
+          <div className="space-y-3.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+              {t('print.labelContent', 'Label Copy Content')}
+            </span>
             
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-slate-600 block">{t('print.companyNameLabel', 'Brand / Company Name')}</span>
+            <div className="space-y-1">
+              <span className="text-[11px] font-semibold text-slate-700 block">
+                {t('print.companyNameLabel', 'Brand / Company Name')}
+              </span>
               <input
                 type="text"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 maxLength={40}
-                className="w-full p-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden"
+                placeholder="e.g. FreeQRGen Corp"
+                className="w-full p-2.5 bg-slate-50 hover:bg-white border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden transition-all shadow-2xs"
               />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-slate-600 block">{t('print.headingLabel', 'Main Heading')}</span>
+            <div className="space-y-1">
+              <span className="text-[11px] font-semibold text-slate-700 block">
+                {t('print.headingLabel', 'Main Heading')}
+              </span>
               <input
                 type="text"
                 value={headingText}
                 onChange={(e) => setHeadingText(e.target.value)}
                 maxLength={50}
-                className="w-full p-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden"
+                placeholder="e.g. SCAN TO LEARN MORE"
+                className="w-full p-2.5 bg-slate-50 hover:bg-white border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden transition-all shadow-2xs"
               />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-slate-600 block">{t('print.badgeLabel', 'Badge Label')}</span>
+            <div className="space-y-1">
+              <span className="text-[11px] font-semibold text-slate-700 block">
+                {t('print.badgeLabel', 'Badge Label')}
+              </span>
               <input
                 type="text"
                 value={badgeText}
                 onChange={(e) => setBadgeText(e.target.value)}
                 maxLength={20}
-                className="w-full p-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden"
+                placeholder="e.g. WEBSITE"
+                className="w-full p-2.5 bg-slate-50 hover:bg-white border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden transition-all shadow-2xs"
               />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-slate-600 block">{t('print.subtextLabel', 'Secondary Subtext')}</span>
+            <div className="space-y-1">
+              <span className="text-[11px] font-semibold text-slate-700 block">
+                {t('print.subtextLabel', 'Secondary Subtext')}
+              </span>
               <input
                 type="text"
                 value={subText}
                 onChange={(e) => setSubText(e.target.value)}
                 maxLength={60}
-                className="w-full p-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden"
+                placeholder="e.g. Simply scan with your camera"
+                className="w-full p-2.5 bg-slate-50 hover:bg-white border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden transition-all shadow-2xs"
               />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-slate-600 block">{t('print.colorLabel', 'Theme Color Accent')}</span>
-              <div className="flex gap-2">
+            <div className="space-y-1.5">
+              <span className="text-[11px] font-semibold text-slate-700 block">
+                {t('print.colorLabel', 'Theme Color Accent')}
+              </span>
+              <div className="flex items-center gap-2">
                 {['#4f46e5', '#2563eb', '#16a34a', '#dc2626', '#d97706', '#0f172a'].map((c) => (
                   <button
                     key={c}
                     type="button"
                     onClick={() => setThemeColor(c)}
-                    className="w-6 h-6 rounded-full border border-slate-200 cursor-pointer flex items-center justify-center transition-all hover:scale-110 shrink-0"
+                    className="w-7 h-7 rounded-full border border-slate-200 cursor-pointer flex items-center justify-center transition-all hover:scale-110 shrink-0 shadow-2xs"
                     style={{ backgroundColor: c }}
                   >
-                    {themeColor === c && <Check className="w-3 h-3 text-white" />}
+                    {themeColor === c && <Check className="w-3.5 h-3.5 text-white" />}
                   </button>
                 ))}
                 <input
                   type="color"
                   value={themeColor}
                   onChange={(e) => setThemeColor(e.target.value)}
-                  className="w-6 h-6 rounded-full border border-slate-200 cursor-pointer overflow-hidden"
+                  className="w-7 h-7 rounded-full border border-slate-200 cursor-pointer overflow-hidden shadow-2xs"
                 />
               </div>
             </div>
@@ -513,33 +583,35 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
         </div>
 
         {/* Static Trigger Area */}
-        <div className="p-4 bg-slate-50 border-t border-slate-150 shrink-0 select-none">
+        <div className="p-4 bg-slate-50 border-t border-slate-200/80 shrink-0 select-none">
           <button
             type="button"
             onClick={handlePrint}
             disabled={!isRendered}
-            className={`w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer ${
+            className={`w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer ${
               !isRendered ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
-            <Printer className="w-4 h-4 text-indigo-200" />
+            <Printer className="w-4 h-4 text-indigo-100" />
             <span>{t('print.triggerPrintNow', 'PRINT SHEET NOW')}</span>
           </button>
-          <div className="mt-2 text-[9px] text-slate-400 font-semibold text-center flex items-center justify-center gap-1.5">
-            <HelpCircle className="w-3 h-3 text-indigo-400" />
+          <div className="mt-2 text-[10px] text-slate-500 font-medium text-center flex items-center justify-center gap-1.5">
+            <Info className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
             <span>{t('print.dialogTip', 'Set margins to "None" in your system print dialog for pixel accuracy.')}</span>
           </div>
         </div>
       </div>
 
       {/* Main Print Preview Page: Stylized and rendered directly inside the DOM */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 overflow-x-auto min-w-[340px] max-h-screen md:overflow-y-auto bg-slate-100/90">
+      <div className="flex-1 flex flex-col items-center justify-start p-6 md:p-10 overflow-x-auto min-w-[340px] max-h-screen md:overflow-y-auto bg-slate-100/90">
         {/* Helper Tip Callout (No-Print) */}
-        <div className="w-full max-w-4xl bg-indigo-50 border border-indigo-100 rounded-2xl p-4 mb-6 flex items-start gap-3 no-print shadow-2xs">
-          <Scissors className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
+        <div className="w-full max-w-4xl bg-white border border-slate-200/80 rounded-2xl p-4 mb-6 flex items-start gap-3 no-print shadow-xs">
+          <div className="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0">
+            <Scissors className="w-4 h-4 text-indigo-600" />
+          </div>
           <div className="text-left text-xs leading-normal">
-            <h4 className="font-bold text-indigo-900">{t('print.interactiveCalibrationTitle', 'Physical Label & Cardstock Blueprint calibrator')}</h4>
-            <p className="text-indigo-700 mt-1">
+            <h4 className="font-bold text-slate-900">{t('print.interactiveCalibrationTitle', 'Physical Label & Cardstock Blueprint calibrator')}</h4>
+            <p className="text-slate-600 mt-0.5">
               {t('print.calibrationDesc', 'Configure parameters on the left. The live paper layout below updates instantly with exact physical margins and sizes. Use the Print Sheet Now button or press Ctrl+P to trigger printer layout output.')}
             </p>
           </div>
@@ -547,7 +619,7 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
 
         {/* Paper Container: Simulates a physical A4/Letter page sheet with shadow */}
         <div 
-          className="print-sheet-container bg-white shadow-2xl relative select-none shrink-0"
+          className="print-sheet-container bg-white shadow-xl relative select-none shrink-0"
           style={{
             width: paperSize === 'letter' ? '215.9mm' : '210mm',
             height: paperSize === 'letter' ? '279.4mm' : '297mm',
@@ -558,8 +630,8 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
         >
           {/* Alignment guide labels (screen only) */}
           {showGuides && (
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-rose-600 text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider no-print z-30 shadow-xs flex items-center gap-1">
-              <Scissors className="w-2.5 h-2.5" />
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[8px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider no-print z-30 shadow-xs flex items-center gap-1">
+              <Scissors className="w-2.5 h-2.5 text-amber-400" />
               <span>{t('print.activeAlignmentMarks', 'Crop Guides Active — Hidden on Printing')}</span>
             </div>
           )}
@@ -585,12 +657,10 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
               }}
             >
               {Array.from({ length: activePreset.cols * activePreset.rows }).map((_, index) => {
-                const isFoldGuide = selectedPresetId === 'table_tent';
-
                 return (
                   <div
                     key={index}
-                    className="label-cell relative flex items-center justify-center bg-white"
+                    className="label-cell relative flex items-center justify-center bg-white overflow-hidden"
                     style={{
                       width: `${activePreset.labelWidthMm}mm`,
                       height: `${activePreset.labelHeightMm}mm`,
@@ -604,42 +674,42 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                         // Standard Table Tent Folding display
                         if (selectedPresetId === 'table_tent') {
                           return (
-                            <div className="w-full h-full flex divide-x divide-dashed divide-slate-200 relative">
+                            <div className="w-full h-full flex divide-x divide-dashed divide-slate-200 relative p-2 overflow-hidden">
                               {/* Left side (Back View - Rotated 180 degrees) */}
-                              <div className="w-1/2 h-full p-4 flex flex-col items-center justify-between rotate-180 text-center select-none opacity-80">
-                                <div>
-                                  <span className="text-[7px] font-bold text-slate-400 uppercase tracking-widest block font-mono">{companyName}</span>
-                                  <h4 className="text-[10px] font-black text-slate-800 leading-tight mt-1 uppercase">{t('preview.thankYou', 'Thank You!')}</h4>
+                              <div className="w-1/2 h-full p-2.5 flex flex-col items-center justify-between rotate-180 text-center select-none opacity-80 overflow-hidden">
+                                <div className="max-w-full">
+                                  <span className="text-[7px] font-bold text-slate-400 uppercase tracking-widest block font-mono truncate">{companyName}</span>
+                                  <h4 className="text-[10px] font-extrabold text-slate-800 leading-tight mt-0.5 uppercase truncate">{t('preview.thankYou', 'Thank You!')}</h4>
                                 </div>
-                                <div className="p-1 border border-slate-100 rounded-md bg-white">
-                                  <img src={qrImg} className="w-[32mm] h-[32mm] opacity-90" alt="Print QR Table Tent" />
+                                <div className="p-1 border border-slate-100 rounded-md bg-white shrink-0">
+                                  <img src={qrImg} className="w-[30mm] h-[30mm] opacity-90" alt="Print QR Table Tent" />
                                 </div>
-                                <span className="text-[6px] text-slate-400 font-black uppercase tracking-wider block font-mono">{t('preview.backDisplay', 'Back Display')}</span>
+                                <span className="text-[6px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{t('preview.backDisplay', 'Back Display')}</span>
                               </div>
 
                               {/* Right side (Front display viewport) */}
-                              <div className="w-1/2 h-full p-4 flex flex-col items-center justify-between text-center select-none relative">
+                              <div className="w-1/2 h-full p-2.5 flex flex-col items-center justify-between text-center select-none relative overflow-hidden">
                                 <div 
                                   className="absolute top-0 right-0 left-0 h-1" 
                                   style={{ backgroundColor: themeColor }}
                                 />
-                                <div>
-                                  <span className="text-[7px] font-bold text-slate-400 uppercase tracking-widest block font-mono">{companyName}</span>
-                                  <h3 className="text-[10px] font-black text-slate-900 leading-snug tracking-tight mt-1 uppercase">{headingText}</h3>
+                                <div className="max-w-full">
+                                  <span className="text-[7px] font-bold text-slate-400 uppercase tracking-widest block font-mono truncate">{companyName}</span>
+                                  <h3 className="text-[10px] font-extrabold text-slate-900 leading-snug tracking-tight mt-0.5 uppercase truncate">{headingText}</h3>
                                 </div>
-                                <div className="flex flex-col items-center gap-1.5">
+                                <div className="flex flex-col items-center gap-1 shrink-0">
                                   <div className="p-1 border border-slate-100 rounded-md bg-white shadow-3xs">
-                                    <img src={qrImg} className="w-[38mm] h-[38mm]" alt="Print QR Table Tent" />
+                                    <img src={qrImg} className="w-[34mm] h-[34mm]" alt="Print QR Table Tent" />
                                   </div>
                                   <div 
-                                    className="px-2 py-0.5 text-[6px] font-black uppercase rounded text-white tracking-widest"
+                                    className="px-2 py-0.5 text-[6px] font-bold uppercase rounded text-white tracking-widest truncate max-w-[40mm]"
                                     style={{ backgroundColor: themeColor }}
                                   >
                                     {badgeText}
                                   </div>
                                 </div>
-                                <div>
-                                  <span className="text-[7px] font-bold text-slate-600 block truncate max-w-[55mm] font-mono leading-none">{subText}</span>
+                                <div className="max-w-full">
+                                  <span className="text-[7px] font-medium text-slate-600 block truncate max-w-[55mm] font-mono leading-none">{subText}</span>
                                   <span className="text-[5px] text-slate-400 font-bold block uppercase mt-0.5 font-mono">{t('preview.foldStandDisplay', 'Fold and Stand display')}</span>
                                 </div>
                               </div>
@@ -659,11 +729,11 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                           const isHoriz = selectedPresetId === 'business_card_h';
                           return (
                             <div 
-                              className={`w-full h-full flex relative text-left bg-white overflow-hidden p-3.5 justify-between items-center ${
+                              className={`w-full h-full flex relative text-left bg-white overflow-hidden p-2.5 justify-between items-center ${
                                 isHoriz ? 'flex-row' : 'flex-col text-center'
                               }`}
                             >
-                              {/* Left Accent Bar */}
+                              {/* Accent Bar */}
                               <div 
                                 className="absolute bg-slate-900"
                                 style={{ 
@@ -678,18 +748,18 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                               />
 
                               {/* Card Text Content */}
-                              <div className={`flex-1 flex flex-col justify-between h-full ${isHoriz ? 'pl-2 text-left' : 'pt-2 items-center'}`}>
-                                <div>
-                                  <div className="text-[7px] font-bold text-slate-400 tracking-wider uppercase font-mono">{companyName}</div>
-                                  <div className="text-[11px] font-black text-slate-800 leading-tight mt-0.5 uppercase tracking-tight">{headingText}</div>
+                              <div className={`flex-1 flex flex-col justify-between h-full min-w-0 ${isHoriz ? (isRtl ? 'pr-2.5 text-right' : 'pl-2.5 text-left') : 'pt-2 items-center'}`}>
+                                <div className="max-w-full">
+                                  <div className="text-[7px] font-bold text-slate-400 tracking-wider uppercase font-mono truncate">{companyName}</div>
+                                  <div className="text-[11px] font-extrabold text-slate-900 leading-tight mt-0.5 uppercase tracking-tight line-clamp-2">{headingText}</div>
                                 </div>
-                                <div className="text-[7px] text-slate-500 font-semibold font-mono truncate max-w-[45mm]">{subText}</div>
+                                <div className="text-[7px] text-slate-500 font-medium font-mono truncate max-w-full">{subText}</div>
                               </div>
 
                               {/* QR Core with badge */}
                               <div className="flex flex-col items-center justify-center gap-1 shrink-0">
                                 <div 
-                                  className="text-[6px] font-black uppercase px-2 py-0.5 rounded tracking-wider text-white"
+                                  className="text-[6px] font-bold uppercase px-1.5 py-0.5 rounded tracking-wider text-white truncate max-w-[25mm]"
                                   style={{ backgroundColor: themeColor }}
                                 >
                                   {badgeText}
@@ -712,60 +782,77 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
                         // Single Large Poster View
                         if (selectedPresetId === 'single_label') {
                           return (
-                            <div className="w-full h-full flex flex-col justify-between items-center p-8 text-center bg-white">
-                              <div>
-                                <span className="inline-block px-4 py-1 text-[10px] font-black tracking-widest uppercase rounded-full text-indigo-700 bg-indigo-50 font-mono mb-4">
+                            <div className="w-full h-full flex flex-col justify-between items-center p-8 text-center bg-white overflow-hidden">
+                              <div className="max-w-full">
+                                <span className="inline-block px-4 py-1 text-[10px] font-bold tracking-widest uppercase rounded-full text-indigo-700 bg-indigo-50 font-mono mb-3 border border-indigo-100">
                                   {companyName}
                                 </span>
-                                <h1 className="text-2xl font-black text-slate-900 tracking-tight uppercase leading-snug px-2">{headingText}</h1>
+                                <h1 className="text-2xl font-black text-slate-900 tracking-tight uppercase leading-snug px-2 line-clamp-2">{headingText}</h1>
                               </div>
 
-                              <div className="flex flex-col items-center justify-center my-6">
-                                <div className="p-4 border-4 border-slate-100 rounded-3xl bg-white shadow-lg">
-                                  <img src={qrImg} className="w-[85mm] h-[85mm]" alt="Print QR large display" />
+                              <div className="flex flex-col items-center justify-center my-4">
+                                <div className="p-3 border-2 border-slate-100 rounded-2xl bg-white shadow-md">
+                                  <img src={qrImg} className="w-[80mm] h-[80mm]" alt="Print QR large display" />
                                 </div>
                                 <div 
-                                  className="mt-4 py-1.5 px-4 text-[9px] font-black uppercase tracking-widest rounded-lg text-white shadow-xs"
+                                  className="mt-3 py-1 px-3 text-[9px] font-bold uppercase tracking-widest rounded-lg text-white shadow-2xs"
                                   style={{ backgroundColor: themeColor }}
                                 >
                                   {badgeText}
                                 </div>
                               </div>
 
-                              <div className="text-center w-full pt-4 border-t border-slate-100">
-                                <p className="text-xs font-black text-slate-800 tracking-wide font-mono uppercase">{subText}</p>
-                                <p className="text-[9px] text-slate-400 mt-1 font-bold uppercase tracking-wider font-mono">{t('print.scanConnectNotice', 'Simply Scan & Connect • No Special App Required')}</p>
+                              <div className="text-center w-full pt-3 border-t border-slate-100 max-w-full">
+                                <p className="text-xs font-bold text-slate-800 tracking-wide font-mono uppercase truncate">{subText}</p>
+                                <p className="text-[9px] text-slate-400 mt-1 font-medium uppercase tracking-wider font-mono">{t('print.scanConnectNotice', 'Simply Scan & Connect • No Special App Required')}</p>
                               </div>
                             </div>
                           );
                         }
 
-                        // Standard Avery label grid cell items
+                        // Standard Avery 5160, 5161, 5163 label grid cell items
+                        // Precise horizontal side-by-side hierarchy: QR on left/right + Structured copy opposite
+                        const qrDimension = Math.max(14, Math.min(activePreset.labelHeightMm - 5, 20) * (qrScale / 100));
+
                         return (
-                          <div className="w-full h-full p-2 flex items-center justify-between gap-2 overflow-hidden">
-                            {/* Text side */}
-                            <div className="flex-1 flex flex-col justify-between h-full py-0.5 text-left min-w-0">
-                              <span className="text-[6px] font-bold text-slate-400 uppercase tracking-widest font-mono truncate">{companyName}</span>
-                              <p className="text-[8px] font-black text-slate-800 leading-tight tracking-tight uppercase line-clamp-2">{headingText}</p>
-                              <span className="text-[6px] text-slate-500 font-semibold font-mono truncate max-w-[40mm]">{subText}</span>
+                          <div 
+                            className="w-full h-full p-2 flex items-center justify-between gap-2 overflow-hidden box-border bg-white"
+                            dir={isRtl ? 'rtl' : 'ltr'}
+                          >
+                            {/* Text side - High-contrast, clean hierarchy, no overlap */}
+                            <div className={`flex-1 flex flex-col justify-center h-full py-0.5 min-w-0 ${isRtl ? 'text-right' : 'text-left'}`}>
+                              <span className="text-[6.5px] font-bold text-slate-400 uppercase tracking-wider font-mono truncate leading-none block mb-0.5">
+                                {companyName}
+                              </span>
+                              <p className="text-[8.5px] font-extrabold text-slate-900 leading-tight tracking-tight uppercase line-clamp-2 my-auto">
+                                {headingText}
+                              </p>
+                              <div className="flex items-center gap-1.5 mt-0.5 overflow-hidden">
+                                <span className="text-[6.5px] text-slate-500 font-medium font-mono truncate leading-none">
+                                  {subText}
+                                </span>
+                              </div>
                             </div>
 
                             {/* Badge & QR Code side */}
-                            <div className="flex flex-col items-center gap-0.5 shrink-0">
-                              <div 
-                                className="px-1.5 py-0.2 text-[5px] font-black uppercase rounded tracking-wider text-white"
-                                style={{ backgroundColor: themeColor }}
-                              >
-                                {badgeText}
-                              </div>
-                              <div className="p-0.5 border border-slate-100 rounded-md bg-white shadow-3xs">
+                            <div className="flex flex-col items-center justify-center gap-0.5 shrink-0">
+                              {badgeText && (
+                                <div 
+                                  className="px-1.5 py-0.2 text-[5px] font-bold uppercase rounded text-white tracking-wider max-w-[20mm] truncate"
+                                  style={{ backgroundColor: themeColor }}
+                                >
+                                  {badgeText}
+                                </div>
+                              )}
+                              <div className="p-0.5 border border-slate-100 rounded-sm bg-white shadow-3xs flex items-center justify-center">
                                 <img 
                                   src={qrImg} 
                                   style={{
-                                    width: `${(activePreset.labelHeightMm - 8) * (qrScale / 100)}mm`,
-                                    height: `${(activePreset.labelHeightMm - 8) * (qrScale / 100)}mm`,
-                                    maxHeight: '18mm',
-                                    maxWidth: '18mm'
+                                    width: `${qrDimension}mm`,
+                                    height: `${qrDimension}mm`,
+                                    maxWidth: '20mm',
+                                    maxHeight: '20mm',
+                                    display: 'block'
                                   }}
                                   alt="Print QR" 
                                 />
@@ -789,40 +876,60 @@ export default function PrintModeLayout({ currentProject, onBack, t, locale = 'e
 
       {/* Styled css media injection to handle physical print rules perfectly */}
       <style>{`
+        @page {
+          size: ${paperSize === 'letter' ? 'letter' : 'a4'} portrait;
+          margin: 0mm !important;
+        }
         @media print {
-          /* Force physical printing parameters on layout */
-          @page {
-            size: ${paperSize === 'letter' ? '8.5in 11in' : '210mm 297mm'} portrait;
-            margin: 0 !important;
-          }
-          body, html {
-            background: white !important;
-            color: black !important;
-            margin: 0 !important;
-            padding: 0 !important;
+          *, *:before, *:after {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
-          .no-print {
+          body, html {
+            margin: 0mm !important;
+            padding: 0mm !important;
+            background: #ffffff !important;
+            color: #000000 !important;
+            overflow: visible !important;
+            height: auto !important;
+            width: 100% !important;
+          }
+          .no-print, nav, header, aside, .sidebar, #header, #footer {
             display: none !important;
+          }
+          .print-mode-wrapper {
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: block !important;
+            min-height: 0 !important;
+            overflow: visible !important;
           }
           .print-sheet-container {
             width: ${paperSize === 'letter' ? '215.9mm' : '210mm'} !important;
             height: ${paperSize === 'letter' ? '279.4mm' : '297mm'} !important;
+            max-width: none !important;
+            max-height: none !important;
             margin: 0 !important;
             padding: 0 !important;
             box-shadow: none !important;
-            background: white !important;
+            background: #ffffff !important;
             border: none !important;
             position: absolute !important;
             top: 0 !important;
             left: 0 !important;
+            page-break-after: avoid !important;
+            page-break-inside: avoid !important;
           }
           .print-sheet-container .label-cell {
             border: none !important;
+            box-shadow: none !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
         }
       `}</style>
     </div>
   );
 }
+

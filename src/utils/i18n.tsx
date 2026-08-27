@@ -126,6 +126,8 @@ Object.entries(enDictionary).forEach(([key, value]) => {
   }
 });
 
+import { i18n } from '../i18n';
+
 interface I18nContextType {
   locale: Locale;
   changeLocale: (newLocale: Locale) => void;
@@ -140,6 +142,9 @@ interface I18nContextType {
   formatCurrency: (value: number | string, currency?: string, options?: Intl.NumberFormatOptions) => string;
   formatRelativeTime: (value: number, unit?: Intl.RelativeTimeFormatUnit) => string;
   getRelativeTimeString: (date: Date | string | number) => string;
+  formatDimensions: (width: number, height: number, unit?: string) => string;
+  formatFileSize: (bytes: number) => string;
+  formatDateLabel: (date: Date | string | number, style?: 'short' | 'medium' | 'full') => string;
 
   // Developer & Diagnostic Tooling
   requestedKeys: string[];
@@ -204,6 +209,11 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const changeLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem('app-locale', newLocale);
+
+    // Sync with i18next instance if available
+    if (i18n && typeof i18n.changeLanguage === 'function') {
+      i18n.changeLanguage(newLocale).catch(() => {});
+    }
 
     // Update the URL path prefix dynamically to support /locale/...
     const { cleanPath } = extractLocaleAndPath(window.location.pathname);
@@ -310,6 +320,33 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const formatDimensions = (width: number, height: number, unit?: string) => {
+    try {
+      return formatters.formatDimensions(width, height, unit || 'px', locale);
+    } catch (e) {
+      console.warn('[i18n] formatDimensions fallback:', e);
+      return `${width} × ${height} ${unit || 'px'}`;
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    try {
+      return formatters.formatFileSize(bytes, locale);
+    } catch (e) {
+      console.warn('[i18n] formatFileSize fallback:', e);
+      return `${bytes} B`;
+    }
+  };
+
+  const formatDateLabel = (date: Date | string | number, style?: 'short' | 'medium' | 'full') => {
+    try {
+      return formatters.formatDateLabel(date, locale, style || 'medium');
+    } catch (e) {
+      console.warn('[i18n] formatDateLabel fallback:', e);
+      return String(date);
+    }
+  };
+
   /**
    * Loads all supported dictionaries directly from individual imports.
    */
@@ -374,6 +411,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         formatCurrency,
         formatRelativeTime,
         getRelativeTimeString,
+        formatDimensions,
+        formatFileSize,
+        formatDateLabel,
         requestedKeys: Array.from(runtimeKeySet),
         loadedDictionaries: dictionaryCache,
         dictionary,
@@ -394,22 +434,58 @@ export function useTranslation() {
   return context;
 }
 
+/**
+ * Synchronizes HTML document attributes and injects SEO hreflang tags for all supported locales
+ */
+export function updateDocumentHeadAndHreflang(locale: string) {
+  if (typeof window === 'undefined') return;
+
+  const html = document.documentElement;
+  const isRtl = isRtlLocale(locale as Locale);
+
+  // 1. Synchronize lang and dir attributes
+  html.setAttribute('lang', locale);
+  html.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+
+  if (isRtl) {
+    html.classList.add('rtl-active');
+  } else {
+    html.classList.remove('rtl-active');
+  }
+
+  // 2. Inject or update dynamic SEO link tags (<link rel="alternate" hreflang="..." href="..." />)
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const { cleanPath } = extractLocaleAndPath(window.location.pathname);
+  const normalizedPath = cleanPath === '/' ? '' : cleanPath;
+
+  // Remove existing i18n hreflang links to prevent duplicate accumulation
+  const existingLinks = document.querySelectorAll('link[rel="alternate"][data-i18n-hreflang]');
+  existingLinks.forEach((el) => el.remove());
+
+  // Inject hreflang link for each supported locale
+  (SUPPORTED_LOCALES as string[]).forEach((loc) => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'alternate');
+    link.setAttribute('hreflang', loc);
+    link.setAttribute('data-i18n-hreflang', 'true');
+    const href = loc === 'en' ? `${baseUrl}${normalizedPath || '/'}` : `${baseUrl}/${loc}${normalizedPath}`;
+    link.setAttribute('href', href);
+    document.head.appendChild(link);
+  });
+
+  // Inject x-default alternate tag (defaulting to primary English version)
+  const xDefault = document.createElement('link');
+  xDefault.setAttribute('rel', 'alternate');
+  xDefault.setAttribute('hreflang', 'x-default');
+  xDefault.setAttribute('data-i18n-hreflang', 'true');
+  xDefault.setAttribute('href', `${baseUrl}${normalizedPath || '/'}`);
+  document.head.appendChild(xDefault);
+}
+
 export function useDocumentLanguage() {
   const { locale } = useTranslation();
 
   useLayoutEffect(() => {
-    if (typeof window !== 'undefined') {
-      const html = document.documentElement;
-      
-      // Dynamically and synchronously update the HTML dir and language attributes to match the user selected locale.
-      html.setAttribute('lang', locale);
-      html.setAttribute('dir', isRtlLocale(locale) ? 'rtl' : 'ltr');
-      
-      if (isRtlLocale(locale)) {
-        html.classList.add('rtl-active');
-      } else {
-        html.classList.remove('rtl-active');
-      }
-    }
+    updateDocumentHeadAndHreflang(locale);
   }, [locale]);
 }

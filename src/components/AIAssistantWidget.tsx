@@ -948,7 +948,7 @@ export default function AIAssistantWidget({
                             <button
                               key={cmd.label}
                               onClick={() => handleCommandSubmit(cmd.label)}
-                              className="w-full flex items-center justify-between p-2.5 bg-white hover:bg-indigo-50/60 border border-slate-200 hover:border-indigo-200 rounded-xl transition-all text-left group cursor-pointer"
+                              className="w-full flex items-center justify-between p-2.5 bg-white hover:bg-indigo-50/60 border border-slate-200 hover:border-indigo-200 rounded-xl transition-all text-start group cursor-pointer"
                             >
                               <div className="flex items-center gap-2.5 min-w-0">
                                 <div className="p-1.5 bg-slate-100 group-hover:bg-indigo-100 text-slate-600 group-hover:text-indigo-700 rounded-lg transition-colors border border-slate-200">
@@ -959,7 +959,7 @@ export default function AIAssistantWidget({
                                   <span className="text-[10px] text-slate-500 block truncate">{cmd.desc}</span>
                                 </div>
                               </div>
-                              <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-indigo-600 shrink-0 ml-2 transition-colors" />
+                              <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-indigo-600 shrink-0 ms-2 transition-colors rtl:rotate-180" />
                             </button>
                           );
                         })}

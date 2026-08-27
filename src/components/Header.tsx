@@ -10,19 +10,19 @@ import Logo from './Logo';
 import { UserSession } from '../lib/api';
 
 interface HeaderProps {
-  isScrolled: boolean;
-  t: (key: string, fallback: string) => string;
-  locale: Locale;
-  currentPath: string;
-  navigateTo: (path: string) => void;
-  changeLocale: (locale: Locale) => void;
-  creativeSubItems: any;
-  presetToolsTranslations: any;
-  handleInitiateGenerator: any;
-  getPresetIcon: (slug: string) => any;
-  setActiveTab: (tab: AppTab) => void;
+  isScrolled?: boolean;
+  t?: (key: string, fallback: string) => string;
+  locale?: Locale;
+  currentPath?: string;
+  navigateTo?: (path: string) => void;
+  changeLocale?: (locale: Locale) => void;
+  creativeSubItems?: any;
+  presetToolsTranslations?: any;
+  handleInitiateGenerator?: any;
+  getPresetIcon?: (slug: string) => any;
+  setActiveTab?: (tab: AppTab) => void;
   activeTab?: AppTab;
-  navTranslations: any;
+  navTranslations?: any;
   user?: UserSession | null;
   onSignInClick?: () => void;
   onSignUpClick?: () => void;
@@ -32,25 +32,47 @@ interface HeaderProps {
 }
 
 export default function Header({ 
-  isScrolled, t, locale, currentPath, navigateTo, changeLocale,
-  creativeSubItems, presetToolsTranslations, handleInitiateGenerator,
-  getPresetIcon, setActiveTab, activeTab, navTranslations,
-  user, onSignInClick, onSignUpClick, onSignOut,
-  onOpenSettings, soundEnabled = true
+  isScrolled = false,
+  t,
+  locale = 'en',
+  currentPath = '/',
+  navigateTo = () => {},
+  changeLocale = () => {},
+  creativeSubItems = {},
+  presetToolsTranslations = {},
+  handleInitiateGenerator = () => {},
+  getPresetIcon = () => Sparkles,
+  setActiveTab = () => {},
+  activeTab = 'create',
+  navTranslations = {},
+  user = null,
+  onSignInClick = () => {},
+  onSignUpClick = () => {},
+  onSignOut = () => {},
+  onOpenSettings = () => {},
+  soundEnabled = true
 }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const isRtl = ['ar', 'ur'].includes(locale);
 
+  const safeT = (key: string, fallback: string) => {
+    try {
+      return (typeof t === 'function' ? safeT(key, fallback) : fallback) || fallback;
+    } catch {
+      return fallback;
+    }
+  };
+
   const navLinks = [
-    { name: t('nav.faqTitle', 'FAQ'), path: '/faq', icon: HelpCircle },
-    { name: t('nav.blogTitle', 'Blog'), path: '/blog', icon: BookOpen },
-    { name: t('nav.templates', 'Templates'), path: '/templates', icon: LayoutTemplate },
-    { name: t('nav.aiGateway', 'AI Gateway'), path: '/ai-gateway', icon: Bot },
-    { name: t('nav.solutions', 'Solutions'), path: '/solutions', icon: Zap },
-    { name: t('nav.industries', 'Industries'), path: '/industries', icon: Utensils },
-    { name: t('nav.useCases', 'Use Cases'), path: '/use-cases', icon: Cpu },
-    { name: t('nav.comparisons', 'Comparisons'), path: '/compare', icon: Scale },
+    { name: safeT('nav.faqTitle', 'FAQ'), path: '/faq', icon: HelpCircle },
+    { name: safeT('nav.blogTitle', 'Blog'), path: '/blog', icon: BookOpen },
+    { name: safeT('nav.templates', 'Templates'), path: '/templates', icon: LayoutTemplate },
+    { name: safeT('nav.aiGateway', 'AI Gateway'), path: '/ai-gateway', icon: Bot },
+    { name: safeT('nav.solutions', 'Solutions'), path: '/solutions', icon: Zap },
+    { name: safeT('nav.industries', 'Industries'), path: '/industries', icon: Utensils },
+    { name: safeT('nav.useCases', 'Use Cases'), path: '/use-cases', icon: Cpu },
+    { name: safeT('nav.comparisons', 'Comparisons'), path: '/compare', icon: Scale },
   ];
 
   const handleLanguageSelect = (newLocale: Locale) => {
@@ -107,7 +129,7 @@ export default function Header({
            <button
              onClick={onOpenSettings}
              className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer relative"
-             title={t('settings.headerBtnTooltip', 'Sound & Audio Settings')}
+             title={safeT('settings.headerBtnTooltip', 'Sound & Audio Settings')}
              aria-label="Sound Settings"
            >
              {soundEnabled ? (
@@ -157,7 +179,7 @@ export default function Header({
                           className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
                         >
                           <User className="w-4 h-4 text-indigo-500" />
-                          <span>{t('nav.myProfile', 'My Profile & Settings')}</span>
+                          <span>{safeT('nav.myProfile', 'My Profile & Settings')}</span>
                         </button>
                         <button
                           onClick={() => {
@@ -167,7 +189,7 @@ export default function Header({
                           className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
                         >
                           <QrCode className="w-4 h-4 text-indigo-500" />
-                          <span>{t('nav.savedQRs', 'My Saved QR Codes')}</span>
+                          <span>{safeT('nav.savedQRs', 'My Saved QR Codes')}</span>
                         </button>
                       </div>
 
@@ -180,7 +202,7 @@ export default function Header({
                           className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                         >
                           <LogOut className="w-4 h-4 text-red-500" />
-                          <span>{t('nav.signOut', 'Sign Out')}</span>
+                          <span>{safeT('nav.signOut', 'Sign Out')}</span>
                         </button>
                       </div>
                     </motion.div>
@@ -193,13 +215,13 @@ export default function Header({
                   onClick={onSignInClick} 
                   className="px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 rounded-lg whitespace-nowrap shrink-0 cursor-pointer transition-colors"
                 >
-                  {t('nav.signIn', 'Sign In')}
+                  {safeT('nav.signIn', 'Sign In')}
                 </button>
                 <button 
                   onClick={onSignUpClick} 
                   className="hidden sm:flex px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold whitespace-nowrap shrink-0 cursor-pointer transition-all active:scale-98"
                 >
-                  {t('nav.signUp', 'Sign Up')}
+                  {safeT('nav.signUp', 'Sign Up')}
                 </button>
               </>
             )}
@@ -248,7 +270,7 @@ export default function Header({
                  {user ? (
                    <div className="flex flex-col gap-2">
                      <span className="px-4 py-2 text-sm font-semibold text-slate-500">
-                       {t('nav.signedInAs', 'Signed in as:')} <strong className="text-slate-800">{user.name}</strong>
+                       {safeT('nav.signedInAs', 'Signed in as:')} <strong className="text-slate-800">{user.name}</strong>
                      </span>
                      <button 
                        onClick={() => {
@@ -257,7 +279,7 @@ export default function Header({
                        }} 
                        className="w-full px-4 py-3 text-lg font-bold text-red-600 hover:bg-red-50 rounded-lg text-left cursor-pointer transition-colors"
                      >
-                       {t('nav.signOut', 'Sign Out')}
+                       {safeT('nav.signOut', 'Sign Out')}
                      </button>
                    </div>
                  ) : (
@@ -269,7 +291,7 @@ export default function Header({
                        }} 
                        className="w-full px-4 py-3 text-lg font-bold text-slate-700 hover:bg-slate-100 rounded-lg text-left cursor-pointer transition-colors"
                      >
-                       {t('nav.signIn', 'Sign In')}
+                       {safeT('nav.signIn', 'Sign In')}
                      </button>
                      <button 
                        onClick={() => {
@@ -278,7 +300,7 @@ export default function Header({
                        }} 
                        className="w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-lg font-bold text-left cursor-pointer transition-colors"
                      >
-                       {t('nav.signUp', 'Sign Up')}
+                       {safeT('nav.signUp', 'Sign Up')}
                      </button>
                    </>
                  )}

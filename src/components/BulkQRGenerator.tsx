@@ -17,6 +17,7 @@ import {
   Edit2
 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
+import { isRtlLocale } from '../utils/translations';
 import { renderStyledQR } from '../utils/qrRenderer';
 import { FrameStyle } from '../types';
 
@@ -29,7 +30,8 @@ interface BulkEntry {
 }
 
 export default function BulkQRGenerator() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const isRtl = isRtlLocale(locale);
   
   const [entries, setEntries] = useState<BulkEntry[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -287,7 +289,7 @@ export default function BulkQRGenerator() {
     const canvas = hiddenCanvasRef.current;
     if (!canvas) {
       setStatus('error');
-      setErrorMessage('Canvas rendering error. Please try again.');
+      setErrorMessage(t('bulk.errorCanvas', 'Canvas rendering error. Please try again.'));
       return;
     }
 
@@ -325,7 +327,7 @@ export default function BulkQRGenerator() {
         updated[i] = { ...updated[i], status: 'success' };
       } catch (err) {
         console.error(`Error rendering row ${entry.name}:`, err);
-        updated[i] = { ...updated[i], status: 'error', errorMsg: 'Failed to render.' };
+        updated[i] = { ...updated[i], status: 'error', errorMsg: t('bulk.errorRenderRow', 'Failed to render.') };
       }
 
       setProgress(Math.round(((i + 1) / updated.length) * 100));
@@ -350,16 +352,16 @@ export default function BulkQRGenerator() {
     } catch (err) {
       console.error('Error compiling zip archive:', err);
       setStatus('error');
-      setErrorMessage('Failed to generate ZIP archive file.');
+      setErrorMessage(t('bulk.errorZip', 'Failed to generate ZIP archive file.'));
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <FileSpreadsheet className="w-5.5 h-5.5 text-indigo-600" />
+            <FileSpreadsheet className="w-5.5 h-5.5 text-indigo-600 shrink-0" />
             {t('bulk.title', 'Bulk QR Code Generator')}
           </h2>
           <p className="text-xs text-gray-500 mt-0.5">
@@ -452,17 +454,17 @@ export default function BulkQRGenerator() {
               <form onSubmit={addManualEntry} className="flex flex-wrap items-center gap-2">
                 <input
                   type="text"
-                  placeholder="e.g. Code-1"
+                  placeholder={t('bulk.namePlaceholder', 'e.g. Code-1')}
                   value={manualName}
                   onChange={e => setManualName(e.target.value)}
-                  className="px-2 py-1 text-xs border border-slate-200 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 max-w-[100px]"
+                  className="px-2.5 py-1 text-xs border border-slate-200 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 max-w-[120px]"
                 />
                 <input
                   type="text"
-                  placeholder="URL or data text"
+                  placeholder={t('bulk.urlPlaceholder', 'URL or data text')}
                   value={manualUrl}
                   onChange={e => setManualUrl(e.target.value)}
-                  className="px-2 py-1 text-xs border border-slate-200 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 max-w-[150px]"
+                  className="px-2.5 py-1 text-xs border border-slate-200 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 max-w-[170px]"
                 />
                 <button
                   type="submit"
@@ -482,14 +484,14 @@ export default function BulkQRGenerator() {
               </div>
             ) : (
               <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
-                <table className="w-full text-left text-xs border-collapse">
+                <table className="w-full text-start text-xs border-collapse">
                   <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-100 sticky top-0 z-10">
                     <tr>
-                      <th className="py-2.5 px-4 w-[60px]">{t('bulk.index', '#')}</th>
-                      <th className="py-2.5 px-3 min-w-[140px]">{t('bulk.fileName', 'File Name (.png)')}</th>
-                      <th className="py-2.5 px-3 min-w-[200px]">{t('bulk.payloadData', 'QR Encoded Content')}</th>
+                      <th className="py-2.5 px-4 w-[60px] text-start">{t('bulk.index', '#')}</th>
+                      <th className="py-2.5 px-3 min-w-[140px] text-start">{t('bulk.fileName', 'File Name (.png)')}</th>
+                      <th className="py-2.5 px-3 min-w-[200px] text-start">{t('bulk.payloadData', 'QR Encoded Content')}</th>
                       <th className="py-2.5 px-3 w-[110px] text-center">{t('bulk.status', 'Status')}</th>
-                      <th className="py-2.5 px-4 w-[100px] text-right">{t('bulk.actions', 'Actions')}</th>
+                      <th className="py-2.5 px-4 w-[100px] text-end">{t('bulk.actions', 'Actions')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -497,11 +499,11 @@ export default function BulkQRGenerator() {
                       const isEditing = editingId === entry.id;
                       
                       return (
-                        <tr key={entry.id} className="hover:bg-slate-55/30 transition-colors">
-                          <td className="py-2 px-4 font-mono font-semibold text-slate-400">
+                        <tr key={entry.id} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="py-2 px-4 font-mono font-semibold text-slate-400 text-start">
                             {idx + 1}
                           </td>
-                          <td className="py-2 px-3 font-semibold text-gray-900">
+                          <td className="py-2 px-3 font-semibold text-gray-900 text-start">
                             {isEditing ? (
                               <input
                                 type="text"
@@ -513,7 +515,7 @@ export default function BulkQRGenerator() {
                               <span className="truncate block max-w-[180px]">{entry.name}.png</span>
                             )}
                           </td>
-                          <td className="py-2 px-3 text-slate-600 font-mono text-[10.5px]">
+                          <td className="py-2 px-3 text-slate-600 font-mono text-[10.5px] text-start">
                             {isEditing ? (
                               <input
                                 type="text"
@@ -534,7 +536,7 @@ export default function BulkQRGenerator() {
                               </span>
                             )}
                             {entry.status === 'generating' && (
-                              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-55 text-indigo-700 animate-pulse">
+                              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 animate-pulse">
                                 {t('bulk.rendering', 'Rendering...')}
                               </span>
                             )}
@@ -550,19 +552,19 @@ export default function BulkQRGenerator() {
                               </span>
                             )}
                           </td>
-                          <td className="py-2 px-4 text-right">
+                          <td className="py-2 px-4 text-end">
                             <div className="flex items-center justify-end gap-1.5">
                               {isEditing ? (
                                 <>
                                   <button
                                     onClick={saveInlineEdit}
-                                    className="p-1 text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors"
+                                    className="p-1 text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors cursor-pointer"
                                   >
                                     <Check className="w-3.5 h-3.5" />
                                   </button>
                                   <button
                                     onClick={() => setEditingId(null)}
-                                    className="p-1 text-slate-400 hover:bg-slate-50 rounded-md transition-colors"
+                                    className="p-1 text-slate-400 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
                                   >
                                     <X className="w-3.5 h-3.5" />
                                   </button>
@@ -572,14 +574,14 @@ export default function BulkQRGenerator() {
                                   <button
                                     onClick={() => startInlineEdit(entry)}
                                     disabled={status === 'generating'}
-                                    className="p-1 text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors disabled:opacity-40"
+                                    className="p-1 text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors disabled:opacity-40 cursor-pointer"
                                   >
                                     <Edit2 className="w-3.5 h-3.5" />
                                   </button>
                                   <button
                                     onClick={() => deleteEntry(entry.id)}
                                     disabled={status === 'generating'}
-                                    className="p-1 text-red-500 hover:bg-red-50 rounded-md transition-colors disabled:opacity-40"
+                                    className="p-1 text-red-500 hover:bg-red-50 rounded-md transition-colors disabled:opacity-40 cursor-pointer"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
@@ -610,7 +612,7 @@ export default function BulkQRGenerator() {
               {/* Foreground Color picker */}
               <div>
                 <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">
-                  {t('control.qrForegroundColor', 'QR Fore Color')}
+                  {t('bulk.qrForegroundColor', 'QR Fore Color')}
                 </span>
                 <div className="flex items-center gap-2">
                   <input
@@ -626,7 +628,7 @@ export default function BulkQRGenerator() {
               {/* Background Color picker */}
               <div>
                 <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1.5">
-                  {t('control.backgroundColor', 'QR Back Color')}
+                  {t('bulk.backgroundColor', 'QR Back Color')}
                 </span>
                 <div className="flex items-center gap-2">
                   <input
@@ -642,102 +644,104 @@ export default function BulkQRGenerator() {
               {/* Dot Shape style */}
               <div>
                 <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1">
-                  {t('control.dotStyle', 'Matrix Dots')}
+                  {t('bulk.dotStyle', 'Matrix Dots')}
                 </span>
                 <select
                   value={bulkDesign.dotStyle}
                   onChange={e => setBulkDesign({ ...bulkDesign, dotStyle: e.target.value as any })}
                   className="w-full text-xs px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                  <option value="square">Square</option>
-                  <option value="rounded">Rounded Blocks</option>
-                  <option value="dots">Circular Dots</option>
-                  <option value="classy">Classy Retro</option>
+                  <option value="square">{t('bulk.dotSquare', 'Square')}</option>
+                  <option value="rounded">{t('bulk.dotRounded', 'Rounded Blocks')}</option>
+                  <option value="dots">{t('bulk.dotDots', 'Circular Dots')}</option>
+                  <option value="classy">{t('bulk.dotClassy', 'Classy Retro')}</option>
                 </select>
               </div>
 
               {/* Eye Shape style */}
               <div>
                 <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1">
-                  {t('control.eyeStyle', 'Corner Eye Frames')}
+                  {t('bulk.eyeStyle', 'Corner Eye Frames')}
                 </span>
                 <select
                   value={bulkDesign.eyeStyle}
                   onChange={e => setBulkDesign({ ...bulkDesign, eyeStyle: e.target.value as any })}
                   className="w-full text-xs px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                  <option value="square">Square Frame</option>
-                  <option value="rounded">Smooth Rounded</option>
-                  <option value="circle">Clean Circle</option>
-                  <option value="leaf">Aesthetic Leaf</option>
+                  <option value="square">{t('bulk.eyeSquare', 'Square Frame')}</option>
+                  <option value="rounded">{t('bulk.eyeRounded', 'Smooth Rounded')}</option>
+                  <option value="circle">{t('bulk.eyeCircle', 'Clean Circle')}</option>
+                  <option value="leaf">{t('bulk.eyeLeaf', 'Aesthetic Leaf')}</option>
                 </select>
               </div>
 
               {/* Outer Edge Frame style */}
               <div>
                 <span className="text-[10px] font-bold text-gray-900 tracking-wider uppercase block mb-1">
-                  {t('control.outerEdgeLabelFrame', 'CTA Label Frame')}
+                  {t('bulk.outerEdgeLabelFrame', 'CTA Label Frame')}
                 </span>
                 <select
                   value={bulkDesign.frameStyle}
                   onChange={e => setBulkDesign({ ...bulkDesign, frameStyle: e.target.value as any })}
                   className="w-full text-xs px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                  <option value="none">No Frame (Clean Matrix)</option>
-                  <option value="scan-me">Scan Me Frame</option>
-                  <option value="menu">Menu / View Menu Frame</option>
-                  <option value="website">Website / Visit Website Frame</option>
-                  <option value="wifi">Connect WiFi Frame</option>
-                  <option value="download-app">Download App Frame</option>
-                  <option value="order-now">Order Now Frame</option>
-                  <option value="pay-here">Pay Here Frame</option>
-                  <option value="follow-us">Follow Us Frame</option>
-                  <option value="save-contact">Save Contact Frame</option>
-                  <option value="rate-us">Rate & Review Frame</option>
+                  <option value="none">{t('bulk.frameNone', 'No Frame (Clean Matrix)')}</option>
+                  <option value="scan-me">{t('bulk.frameScanMe', 'Scan Me Frame')}</option>
+                  <option value="menu">{t('bulk.frameMenu', 'Menu / View Menu Frame')}</option>
+                  <option value="website">{t('bulk.frameWebsite', 'Website / Visit Website Frame')}</option>
+                  <option value="wifi">{t('bulk.frameWifi', 'Connect WiFi Frame')}</option>
+                  <option value="download-app">{t('bulk.frameDownloadApp', 'Download App Frame')}</option>
+                  <option value="order-now">{t('bulk.frameOrderNow', 'Order Now Frame')}</option>
+                  <option value="pay-here">{t('bulk.framePayHere', 'Pay Here Frame')}</option>
+                  <option value="follow-us">{t('bulk.frameFollowUs', 'Follow Us Frame')}</option>
+                  <option value="save-contact">{t('bulk.frameSaveContact', 'Save Contact Frame')}</option>
+                  <option value="rate-us">{t('bulk.frameRateUs', 'Rate & Review Frame')}</option>
                 </select>
                 <p className="text-[9.5px] text-gray-400 mt-1 leading-tight">
-                  * Note: Frame labels will automatically display the respective row file name to keep your physical scans distinguished!
+                  {t('bulk.frameNote', '* Note: Frame labels will automatically display the respective row file name to keep your physical scans distinguished!')}
                 </p>
               </div>
             </div>
           </div>
 
           {/* Generator Export Control */}
-          <div className="p-4 bg-gradient-to-br from-indigo-900 to-slate-900 rounded-2xl text-white shadow-md space-y-4">
-            <h3 className="text-xs font-semibold tracking-wider uppercase flex items-center gap-1.5 text-indigo-200">
-              <FileArchive className="w-4 h-4 text-indigo-300" />
+          <div className="p-5 bg-gradient-to-br from-slate-50 via-white to-indigo-50/40 rounded-2xl text-slate-800 border border-slate-200/80 shadow-xs space-y-4">
+            <h3 className="text-xs font-bold tracking-wider uppercase flex items-center gap-1.5 text-indigo-700">
+              <FileArchive className="w-4 h-4 text-indigo-600" />
               {t('bulk.generationTitle', 'Export ZIP Package')}
             </h3>
 
             {status === 'generating' ? (
               <div className="space-y-3 py-1">
                 <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-indigo-200 animate-pulse">Rendering Batch...</span>
-                  <span className="font-mono text-indigo-300">{progress}%</span>
+                  <span className="text-indigo-700 animate-pulse font-medium">
+                    {t('bulk.renderingBatch', 'Rendering Batch...')}
+                  </span>
+                  <span className="font-mono text-indigo-700 font-bold">{progress}%</span>
                 </div>
                 
                 {/* Visual Progress Bar */}
-                <div className="w-full h-2 bg-slate-800/80 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/60">
                   <div 
-                    className="h-full bg-indigo-500 transition-all duration-150"
+                    className="h-full bg-indigo-600 transition-all duration-150 rounded-full"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <p className="text-[10px] text-indigo-200/70 text-center italic">
-                  Compiling, wrapping files and building ZIP package folder...
+                <p className="text-[10.5px] text-slate-500 text-center italic">
+                  {t('bulk.compilingZip', 'Compiling, wrapping files and building ZIP package folder...')}
                 </p>
               </div>
             ) : (
               <div className="space-y-3">
-                <p className="text-[11px] text-indigo-100/80 leading-relaxed">
-                  Ready to compile <span className="font-bold text-white">{entries.length}</span> styled QR codes inside a high-contrast package. Keep naming pristine.
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {t('bulk.readyToCompile', 'Ready to compile {count} styled QR codes inside a high-contrast package.', { count: entries.length })}
                 </p>
 
                 <button
                   type="button"
                   onClick={startGeneration}
                   disabled={entries.length === 0}
-                  className="w-full py-2.5 px-4 text-xs font-bold text-indigo-950 bg-indigo-200 hover:bg-indigo-100 disabled:bg-slate-800 disabled:text-slate-500 disabled:opacity-40 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 px-4 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed rounded-xl transition-all shadow-xs hover:shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <PlayCircle className="w-4.5 h-4.5" />
                   {t('bulk.generateAll', 'Generate & Download ZIP')}
@@ -746,11 +750,11 @@ export default function BulkQRGenerator() {
             )}
             
             {status === 'success' && (
-              <div className="p-2.5 bg-emerald-500/20 border border-emerald-500/30 rounded-xl flex items-start gap-2 animate-fade-in">
-                <Check className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
-                <div className="text-[10px]">
-                  <h4 className="font-bold text-white">ZIP Package Downloaded!</h4>
-                  <p className="text-emerald-100 mt-0.5">Check your downloads folder for the ready-to-use PNG bundle.</p>
+              <div className="p-3 bg-emerald-50 border border-emerald-200/80 rounded-xl flex items-start gap-2 animate-fade-in">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="text-xs">
+                  <h4 className="font-bold text-emerald-900">{t('bulk.zipDownloaded', 'ZIP Package Downloaded!')}</h4>
+                  <p className="text-emerald-700 text-[11px] mt-0.5">{t('bulk.zipDownloadedDesc', 'Check your downloads folder for the ready-to-use PNG bundle.')}</p>
                 </div>
               </div>
             )}

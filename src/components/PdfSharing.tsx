@@ -562,43 +562,43 @@ export default function PdfSharing() {
     <div id="pdf-sharing-module" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
       {/* Banner Area */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 sm:p-8 rounded-3xl relative overflow-hidden shadow-lg border border-slate-800">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-slate-50 via-white to-blue-50 text-slate-900 p-6 sm:p-8 rounded-2xl relative overflow-hidden shadow-sm border border-slate-200/80">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="space-y-2 relative z-10">
+        <div className="space-y-2 relative z-10 text-left rtl:text-right">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center">
-              <FileText className="w-5 h-5 text-indigo-400" />
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-xs">
+              <FileText className="w-5 h-5" />
             </div>
-            <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-950/40 px-2.5 py-1 rounded-full border border-indigo-500/20">
+            <span className="text-xs font-bold text-indigo-700 uppercase tracking-wider bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
               {tPdf("PDF Sharing & Hosting")}
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">
             {tPdf("Dynamic QR PDF Sharing Hub")}
           </h2>
-          <p className="text-slate-400 text-sm max-w-xl">
+          <p className="text-slate-600 text-sm max-w-xl leading-relaxed">
             {tPdf("Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.")}
           </p>
         </div>
 
         {/* Storage Quota Meter */}
-        <div className="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl w-full md:w-64 relative z-10">
+        <div className="bg-white/90 backdrop-blur-sm border border-slate-200/80 p-4 rounded-2xl w-full md:w-64 relative z-10 shadow-xs">
           <div className="flex justify-between text-xs font-bold mb-1.5">
-            <span className="text-slate-300 flex items-center gap-1">
-              <HardDrive className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="text-slate-700 flex items-center gap-1.5">
+              <HardDrive className="w-3.5 h-3.5 text-indigo-600" />
               {tPdf("Cloud Space Used")}
             </span>
-            <span className="text-indigo-400">{totalStorageUsedMB.toFixed(1)} / {storageLimitMB} MB</span>
+            <span className="text-indigo-600 font-semibold">{totalStorageUsedMB.toFixed(1)} / {storageLimitMB} MB</span>
           </div>
-          <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/40">
             <div 
-              className="h-full bg-linear-to-r from-indigo-500 to-emerald-400 rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full transition-all duration-500"
               style={{ width: `${(totalStorageUsedMB / storageLimitMB) * 100}%` }}
             />
           </div>
-          <p className="text-[10px] text-slate-400 mt-1.5">{tPdf("Guests get 100MB free persistent sandbox storage.")}</p>
+          <p className="text-[10px] text-slate-500 mt-1.5">{tPdf("Guests get 100MB free persistent sandbox storage.")}</p>
         </div>
       </div>
 

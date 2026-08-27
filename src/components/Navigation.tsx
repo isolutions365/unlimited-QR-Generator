@@ -10,14 +10,20 @@ interface NavLink {
 }
 
 interface NavigationProps {
-  links: NavLink[];
-  currentPath: string;
+  links?: NavLink[];
+  currentPath?: string;
   activeTab?: string;
-  onLinkClick: (link: NavLink) => void;
-  isRtl: boolean;
+  onLinkClick?: (link: NavLink) => void;
+  isRtl?: boolean;
 }
 
-export default function Navigation({ links, currentPath, activeTab, onLinkClick, isRtl }: NavigationProps) {
+export default function Navigation({
+  links = [],
+  currentPath = '/',
+  activeTab = 'create',
+  onLinkClick = () => {},
+  isRtl = false
+}: NavigationProps) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280);
@@ -55,8 +61,9 @@ export default function Navigation({ links, currentPath, activeTab, onLinkClick,
     }
   })();
 
-  const visibleLinks = links.slice(0, maxVisible);
-  const moreLinks = links.slice(maxVisible);
+  const safeLinks = Array.isArray(links) ? links : [];
+  const visibleLinks = safeLinks.slice(0, maxVisible);
+  const moreLinks = safeLinks.slice(maxVisible);
 
   const isLinkActive = (link: NavLink) => {
     if (link.action) {

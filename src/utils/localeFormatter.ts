@@ -155,3 +155,60 @@ export function getRelativeTimeString(
   const diffInYears = Math.round(diffInMonths / 12);
   return formatRelativeTime(diffInYears, 'year', locale);
 }
+
+/**
+ * Format physical or pixel dimensions localized (e.g. "1,000 × 1,000 px" or "100 × 100 mm")
+ */
+export function formatDimensions(
+  width: number,
+  height: number,
+  unit: string = 'px',
+  locale: string = 'en'
+): string {
+  try {
+    const formattedWidth = formatNumber(width, locale);
+    const formattedHeight = formatNumber(height, locale);
+    return `${formattedWidth} × ${formattedHeight} ${unit}`;
+  } catch (error) {
+    console.warn('formatDimensions failed', error);
+    return `${width} × ${height} ${unit}`;
+  }
+}
+
+/**
+ * Format file size with Intl.NumberFormat according to active locale (e.g. "2.5 MB", "500 KB")
+ */
+export function formatFileSize(
+  bytes: number,
+  locale: string = 'en'
+): string {
+  try {
+    if (bytes === 0) return `0 B`;
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const val = parseFloat((bytes / Math.pow(k, i)).toFixed(1));
+    const formattedVal = formatNumber(val, locale, { maximumFractionDigits: 1 });
+    return `${formattedVal} ${sizes[i]}`;
+  } catch (error) {
+    console.warn('formatFileSize failed', error);
+    return `${bytes} B`;
+  }
+}
+
+/**
+ * Format date labels into clean localized strings
+ */
+export function formatDateLabel(
+  date: Date | string | number,
+  locale: string = 'en',
+  style: 'short' | 'medium' | 'full' = 'medium'
+): string {
+  const optionsMap: Record<string, Intl.DateTimeFormatOptions> = {
+    short: { month: 'numeric', day: 'numeric', year: '2-digit' },
+    medium: { month: 'short', day: 'numeric', year: 'numeric' },
+    full: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
+  };
+  return formatDate(date, locale, optionsMap[style] || optionsMap.medium);
+}
+

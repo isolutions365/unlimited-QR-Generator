@@ -19,9 +19,34 @@ export interface QRProject {
   id: string;
   userId: string;
   name: string;
+  title?: string;
   type: 'url' | 'text' | 'wifi' | 'card' | 'email' | 'phone' | 'sms' | 'social' | 'crypto' | 'geo' | 'app' | 'payment' | 'vcard' | 'form' | 'pdf' | 'menu';
   content: string;
   originalUrl?: string;
+  // Optional flat design properties for convenience
+  fgColor?: string;
+  bgColor?: string;
+  gradientType?: 'none' | 'linear' | 'radial';
+  gradientColor?: string;
+  dotStyle?: 'square' | 'rounded' | 'dots' | 'classy';
+  eyeStyle?: 'square' | 'rounded' | 'circle' | 'leaf';
+  logoUrl?: string;
+  logoScale?: number;
+  margin?: number;
+  logoRotation?: number;
+  eyeColorTopLeft?: string;
+  eyeColorTopRight?: string;
+  eyeColorBottomLeft?: string;
+  errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H';
+  logoAutoCenter?: boolean;
+  logoOffsetX?: number;
+  logoOffsetY?: number;
+  frameStyle?: FrameStyle;
+  frameText?: string;
+  frameColor?: string;
+  frameTextColor?: string;
+  frameFontSize?: number;
+  frameTextPosition?: 'bottom' | 'top';
   design: {
     fgColor: string;
     bgColor: string;
@@ -124,4 +149,4 @@ export interface DynamicQRScanLog {
   referrer?: string;
 }
 
-export type AppTab = 'create' | 'barcode' | 'templates' | 'analytics' | 'animations' | 'bulk' | 'card' | 'menu' | 'pdf' | 'form' | 'print';
+export type AppTab = 'create' | 'barcode' | 'templates' | 'analytics' | 'animations' | 'bulk' | 'card' | 'menu' | 'pdf' | 'form' | 'print' | 'zatca';

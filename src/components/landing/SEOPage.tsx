@@ -479,11 +479,11 @@ export default function SEOPage({
                         <button
                           type="button"
                           onClick={() => toggleFaq(idx)}
-                          className="w-full text-left py-4 px-5 flex items-center justify-between gap-4 font-semibold text-xs text-slate-900 hover:text-indigo-600 transition-colors cursor-pointer select-none"
+                          className="w-full text-start py-4 px-5 flex items-center justify-between gap-4 font-semibold text-xs text-slate-900 hover:text-indigo-600 transition-colors cursor-pointer select-none"
                         >
                           <span className="flex items-center gap-2">
                             <HelpCircle className={`w-4 h-4 shrink-0 transition-colors ${isOpen ? 'text-indigo-600' : 'text-slate-400'}`} />
-                            {faq.q}
+                            {t(faq.q, faq.q)}
                           </span>
                           {isOpen ? (
                             <ChevronUp className="w-4 h-4 text-indigo-600 shrink-0" />
@@ -500,8 +500,8 @@ export default function SEOPage({
                               exit={{ height: 0, opacity: 0 }}
                               className="border-t border-slate-100"
                             >
-                              <div className="p-5 text-xs text-slate-600 leading-relaxed bg-slate-50/50">
-                                {faq.a}
+                              <div className="p-5 text-xs text-slate-600 leading-relaxed bg-slate-50/50 text-start">
+                                {t(faq.a, faq.a)}
                               </div>
                             </motion.div>
                           )}

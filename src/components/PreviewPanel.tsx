@@ -2510,14 +2510,14 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                 {/* Left Panel: Settings Controls */}
                 <div className="w-full md:w-5/12 bg-slate-50 border-r border-slate-100 flex flex-col h-full overflow-y-auto">
                   {/* Header */}
-                  <div className="p-5 border-b border-slate-100 bg-gradient-to-r from-slate-900 to-indigo-950 text-white">
+                  <div className="p-5 border-b border-slate-200/80 bg-gradient-to-r from-slate-50 via-white to-indigo-50/50 text-slate-900">
                     <div className="flex items-center gap-2.5">
-                      <div className="p-1.5 bg-indigo-500/20 rounded-lg">
-                        <FileText className="w-5 h-5 text-indigo-400" />
+                      <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-xl">
+                        <FileText className="w-5 h-5 text-indigo-600" />
                       </div>
                       <div className="text-left">
-                        <h3 className="text-sm font-black uppercase tracking-wider text-white">{t('preview.printReadyStudio', 'Print-Ready Studio')}</h3>
-                        <p className="text-[10px] text-indigo-200 font-medium">{t('preview.prepressDesc', 'Pre-press calibration & layout center')}</p>
+                        <h3 className="text-sm font-bold tracking-tight text-slate-900">{t('preview.printReadyStudio', 'Print-Ready Studio')}</h3>
+                        <p className="text-xs text-slate-500 font-medium">{t('preview.prepressDesc', 'Pre-press calibration & layout center')}</p>
                       </div>
                     </div>
                   </div>

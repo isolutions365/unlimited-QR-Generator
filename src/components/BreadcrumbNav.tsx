@@ -18,6 +18,44 @@ export interface BreadcrumbNavProps {
   schemaId?: string;
 }
 
+export function generateBreadcrumbSchema(
+  items: BreadcrumbItem[],
+  locale: string = 'en',
+  baseUrl: string = getProductionBaseUrl(),
+  schemaId: string = 'dynamic-breadcrumb'
+) {
+  const fullItems: BreadcrumbItem[] = [
+    {
+      label: locale === 'es' ? 'Inicio' : locale === 'fr' ? 'Accueil' : locale === 'de' ? 'Startseite' : 'Home',
+      href: `/${locale === 'en' ? '' : locale}`
+    },
+    ...items
+  ];
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    '@id': `${baseUrl}/${locale === 'en' ? '' : locale}#breadcrumb-${schemaId}`,
+    'itemListElement': fullItems.map((item, idx) => {
+      let itemUrl = baseUrl;
+      if (item.href) {
+        if (item.href.startsWith('http')) {
+          itemUrl = item.href;
+        } else {
+          const cleanHref = item.href.replace(/^\//, '');
+          itemUrl = cleanHref ? `${baseUrl}/${cleanHref}` : baseUrl;
+        }
+      }
+      return {
+        '@type': 'ListItem',
+        'position': idx + 1,
+        'name': item.label,
+        'item': itemUrl
+      };
+    })
+  };
+}
+
 export default function BreadcrumbNav({ items, className = '', onNavigate, schemaId = 'dynamic-breadcrumb-schema' }: BreadcrumbNavProps) {
   const { t, locale } = useTranslation();
   const rootUrl = getProductionBaseUrl();
@@ -37,28 +75,7 @@ export default function BreadcrumbNav({ items, className = '', onNavigate, schem
     const scriptTagId = schemaId;
     let scriptEl = document.getElementById(scriptTagId);
 
-    const schemaData = {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      '@id': `${rootUrl}/${locale === 'en' ? '' : locale}#breadcrumb-${schemaId}`,
-      'itemListElement': fullItems.map((item, idx) => {
-        let itemUrl = rootUrl;
-        if (item.href) {
-          if (item.href.startsWith('http')) {
-            itemUrl = item.href;
-          } else {
-            const cleanHref = item.href.replace(/^\//, '');
-            itemUrl = `${rootUrl}/${cleanHref}`;
-          }
-        }
-        return {
-          '@type': 'ListItem',
-          'position': idx + 1,
-          'name': item.label,
-          'item': itemUrl
-        };
-      })
-    };
+    const schemaData = generateBreadcrumbSchema(items, locale, rootUrl, schemaId);
 
     if (!scriptEl) {
       scriptEl = document.createElement('script');

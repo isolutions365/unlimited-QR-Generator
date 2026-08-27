@@ -1220,29 +1220,28 @@ const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
     <div id="restaurant-menu-module" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
       {/* Visual Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 sm:p-8 rounded-3xl relative overflow-hidden shadow-lg border border-slate-800">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-rose-500/5 rounded-full blur-2xl pointer-events-none" />
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-gradient-to-br from-slate-50 via-white to-blue-50/50 p-6 sm:p-8 lg:p-10 rounded-2xl relative overflow-hidden shadow-xs border border-slate-200/60">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-100/40 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+        <div className="absolute bottom-0 left-0 w-60 h-60 bg-amber-100/35 rounded-full blur-2xl pointer-events-none -ml-16 -mb-16" />
 
-        <div className="space-y-2 relative z-10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center">
-              <Utensils className="w-5 h-5 text-amber-400" />
-            </div>
-            <span className="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-500/20">
-              {tMenu("Interactive Menu Hub")}
+        <div className="space-y-3 relative z-10 max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50/90 border border-amber-200/70 text-amber-800 text-xs font-semibold tracking-wide shadow-2xs">
+            <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-700 shrink-0">
+              <Utensils className="w-3 h-3" />
             </span>
+            <span>{tMenu("Interactive Menu Hub")}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
             {tMenu("Gourmet QR Restaurant Menu")}
           </h2>
-          <p className="text-slate-400 text-sm max-w-xl">
+          <p className="text-slate-600 text-sm leading-relaxed max-w-xl sm:max-w-2xl">
             {tMenu("Design beautiful, high-converting digital restaurant menus with variants, active promotion tags, multi-language translation selectors, and interactive simulated smartphone menu previews.")}
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 relative z-10">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 relative z-10 shrink-0">
           <button
+            type="button"
             onClick={() => {
               setMenu({
                 id: 'menu-' + Math.random().toString(36).substring(2, 9),
@@ -1270,17 +1269,19 @@ const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
               });
               playAudioSound('preview');
             }}
-            className="px-4 py-2 bg-slate-800 text-slate-300 hover:text-white border border-slate-700 rounded-xl text-xs font-bold transition-all hover:bg-slate-750 cursor-pointer"
+            className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200/90 rounded-xl text-xs font-semibold shadow-xs hover:shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-1.5"
           >
-            {tMenu("Load Italian Theme")}
+            <Utensils className="w-3.5 h-3.5 text-slate-500" />
+            <span>{tMenu("Load Italian Theme")}</span>
           </button>
           <button
+            type="button"
             onClick={handleSaveMenu}
             disabled={isSaving}
-            className={`px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-lg shadow-emerald-950/40 transition-all cursor-pointer ${selectedTheme.accent}`}
+            className={`px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${selectedTheme.accent}`}
           >
             <CheckCircle2 className="w-4 h-4" />
-            {isSaving ? tMenu('Syncing...') : tMenu('Publish & Sync Menu')}
+            <span>{isSaving ? tMenu('Syncing...') : tMenu('Publish & Sync Menu')}</span>
           </button>
         </div>
       </div>

@@ -409,15 +409,15 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
               <div>
                 <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">{t('auth.fullName', 'Full Name')}</label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <User className="absolute start-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
                     required
                     disabled={isLoading}
-                    placeholder="Jane Doe"
+                    placeholder={t('input.placeholder.name', 'Enter full name')}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 ps-10 pe-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-start"
                   />
                 </div>
               </div>
@@ -426,15 +426,15 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
             <div>
               <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">{t('auth.emailAddress', 'Email Address')}</label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Mail className="absolute start-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="email"
                   required
                   disabled={isLoading}
-                  placeholder="name@company.com"
+                  placeholder={t('input.placeholder.email', 'name@company.com')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 ps-10 pe-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-start"
                 />
               </div>
             </div>
@@ -442,21 +442,21 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
             <div>
               <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">{t('auth.securePassword', 'Secure Password')}</label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Lock className="absolute start-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   disabled={isLoading}
-                  placeholder="••••••••••••"
+                  placeholder={t('input.placeholder.password', '••••••••••••')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 pl-10 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl py-3 ps-10 pe-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-start"
                 />
                 <button
                   type="button"
                   disabled={isLoading}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute end-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>

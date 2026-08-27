@@ -223,13 +223,14 @@ const RestaurantMenu = lazyWithRetry(() => import('./components/RestaurantMenu')
 const PdfSharing = lazyWithRetry(() => import('./components/PdfSharing'));
 const FormBuilder = lazyWithRetry(() => import('./components/FormBuilder'));
 const PrintModeLayout = lazyWithRetry(() => import('./components/PrintModeLayout'));
+const ZatcaInvoiceGenerator = lazyWithRetry(() => import('./components/ZatcaInvoiceGenerator'));
 import { 
   QrCode, LogIn, LogOut, Zap, LayoutGrid, RotateCcw, AlertCircle, ShieldCheck,
   ChevronDown, ChevronUp, Menu, X, ArrowRight, ArrowUp, ArrowDown, Clock, Star, Compass, Link2,
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
   BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode, FileSpreadsheet, Wallet, FormInput, Printer, Copy, Check,
-  Maximize2, Tablet, Download, Search, ExternalLink
+  Maximize2, Tablet, Download, Search, ExternalLink, FileCheck2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -815,6 +816,12 @@ export default function App() {
 
   // Active Tab
   const [activeTab, setActiveTab ] = useState<AppTab>('create');
+
+  useEffect(() => {
+    if (activeTab === 'zatca' && locale !== 'ar') {
+      setActiveTab('create');
+    }
+  }, [locale, activeTab]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -2966,6 +2973,7 @@ export default function App() {
               { id: 'analytics', name: t('nav.analyticsTab', 'Scan Analytics'), icon: BarChart3, iconColor: 'text-indigo-500' },
               { id: 'templates', name: t('nav.templatesTab', 'Templates'), icon: LayoutTemplate, iconColor: 'text-indigo-500' },
               { id: 'print', name: t('nav.printModeTab', 'Print Studio'), icon: Printer, iconColor: 'text-emerald-500' },
+              ...(locale === 'ar' ? [{ id: 'zatca', name: 'فاتورة ZATCA', icon: FileCheck2, iconColor: 'text-emerald-600', isSpecial: true }] : []),
             ].map((tab) => {
               const isActive = activeTab === tab.id;
               const IconComponent = tab.icon;
@@ -3188,6 +3196,27 @@ export default function App() {
             <ErrorBoundary isInline>
               <React.Suspense fallback={<LazyLoader />}>
                 <FormBuilder />
+              </React.Suspense>
+            </ErrorBoundary>
+          </div>
+        )}
+
+        {activeTab === 'zatca' && locale === 'ar' && (
+          <div className="w-full">
+            <ErrorBoundary isInline>
+              <React.Suspense fallback={<LazyLoader />}>
+                <ZatcaInvoiceGenerator
+                  onInitiateCustomQR={(config) => {
+                    setActiveTab('create');
+                    if (config.content) {
+                      setCurrentProject(prev => ({
+                        ...prev,
+                        content: config.content,
+                        name: config.name || prev.name
+                      }));
+                    }
+                  }}
+                />
               </React.Suspense>
             </ErrorBoundary>
           </div>

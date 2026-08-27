@@ -672,3 +672,6 @@ export function generateStyledSVG(
 ${paths}  </g>
 ${logoSvg}</svg>`;
 }
+
+export const renderStyledSvgQR = generateStyledSVG;
+
