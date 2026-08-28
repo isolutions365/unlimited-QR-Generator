@@ -6,6 +6,44 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
+      // Storage Sandbox Guard: Ensure window.localStorage and window.sessionStorage never throw SecurityError in iframe sandboxes
+      (function() {
+        function createMemoryStorage() {
+          var store = {};
+          return {
+            getItem: function(k) { return store.hasOwnProperty(k) ? store[k] : null; },
+            setItem: function(k, v) { store[k] = String(v); },
+            removeItem: function(k) { delete store[k]; },
+            clear: function() { store = {}; },
+            key: function(i) { return Object.keys(store)[i] || null; },
+            get length() { return Object.keys(store).length; }
+          };
+        }
+        try {
+          var tk = '__storage_guard_test__';
+          window.localStorage.setItem(tk, '1');
+          window.localStorage.removeItem(tk);
+        } catch(e) {
+          console.warn('[Sandbox Guard] localStorage blocked or throwing. Polyfilling with memory storage.');
+          var mockLocal = createMemoryStorage();
+          try { Object.defineProperty(window, 'localStorage', { value: mockLocal, configurable: true, writable: true }); } catch(err) {
+            try { if (window.Window && window.Window.prototype) Object.defineProperty(window.Window.prototype, 'localStorage', { get: function() { return mockLocal; }, configurable: true }); } catch(e2) {}
+          }
+        }
+        try {
+          var tkS = '__session_guard_test__';
+          window.sessionStorage.setItem(tkS, '1');
+          window.sessionStorage.removeItem(tkS);
+        } catch(e) {
+          console.warn('[Sandbox Guard] sessionStorage blocked or throwing. Polyfilling with memory storage.');
+          var mockSession = createMemoryStorage();
+          try { Object.defineProperty(window, 'sessionStorage', { value: mockSession, configurable: true, writable: true }); } catch(err) {
+            try { if (window.Window && window.Window.prototype) Object.defineProperty(window.Window.prototype, 'sessionStorage', { get: function() { return mockSession; }, configurable: true }); } catch(e2) {}
+          }
+        }
+      })();
+    </script>
+    <script>
       // Global Interceptor to prevent reCAPTCHA / App Check key-validation domain restrictions and background rejections from causing unhandled exceptions
       (function() {
         function isIgnorableError(msg) {
@@ -278,7 +316,7 @@
         </div>
       </div>
     </div>
-    <script type="module" defer src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
 

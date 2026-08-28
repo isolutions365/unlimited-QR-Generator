@@ -40,44 +40,71 @@ export const FirebaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Persistent listener for Firebase Authentication state changes
-    const unsubscribeAuth = onAuthStateChanged(
-      auth,
-      async (currentUser) => {
-        setUser(currentUser);
+    // Safety timeout to ensure loading state resolves even if auth listener hangs
+    const safetyTimer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    if (!auth) {
+      setLoading(false);
+      clearTimeout(safetyTimer);
+      return;
+    }
+
+    let unsubscribeAuth: (() => void) | undefined;
+    let unsubscribeToken: (() => void) | undefined;
+
+    try {
+      // Persistent listener for Firebase Authentication state changes
+      unsubscribeAuth = onAuthStateChanged(
+        auth,
+        async (currentUser) => {
+          clearTimeout(safetyTimer);
+          setUser(currentUser);
+          if (currentUser) {
+            try {
+              const token = await currentUser.getIdToken();
+              setIdToken(token);
+            } catch (tokenErr: any) {
+              console.warn('[FirebaseAuthContext] Token retrieval notice:', tokenErr);
+              setIdToken(null);
+            }
+          } else {
+            setIdToken(null);
+          }
+          setLoading(false);
+        },
+        (authErr) => {
+          clearTimeout(safetyTimer);
+          console.error('[FirebaseAuthContext] Listener error:', authErr);
+          setError(authErr.message);
+          setLoading(false);
+        }
+      );
+
+      // Listen for Token refresh events
+      unsubscribeToken = onIdTokenChanged(auth, async (currentUser) => {
         if (currentUser) {
           try {
-            const token = await currentUser.getIdToken();
-            setIdToken(token);
-          } catch (tokenErr: any) {
-            console.warn('[FirebaseAuthContext] Token retrieval notice:', tokenErr);
+            const freshToken = await currentUser.getIdToken();
+            setIdToken(freshToken);
+          } catch {
             setIdToken(null);
           }
         } else {
           setIdToken(null);
         }
-        setLoading(false);
-      },
-      (authErr) => {
-        console.error('[FirebaseAuthContext] Listener error:', authErr);
-        setError(authErr.message);
-        setLoading(false);
-      }
-    );
-
-    // Listen for Token refresh events
-    const unsubscribeToken = onIdTokenChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        const freshToken = await currentUser.getIdToken();
-        setIdToken(freshToken);
-      } else {
-        setIdToken(null);
-      }
-    });
+      });
+    } catch (err: any) {
+      console.warn('[FirebaseAuthContext] Listener setup notice:', err);
+      clearTimeout(safetyTimer);
+      setLoading(false);
+    }
 
     return () => {
-      unsubscribeAuth();
-      unsubscribeToken();
+      clearTimeout(safetyTimer);
+      if (unsubscribeAuth) unsubscribeAuth();
+      if (unsubscribeToken) unsubscribeToken();
     };
   }, []);
 

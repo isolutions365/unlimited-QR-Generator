@@ -1463,7 +1463,7 @@ English text: "${text}"`;
         apiKey: apiKey,
         httpOptions: {
           headers: {
-            'User-Agent': 'aistudio-build'
+            'User-Agent': 'isolutions-build'
           }
         }
       });
@@ -3782,8 +3782,8 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
         appType: 'spa',
       });
       (global as any).viteInstance = vite;
-      app.get('*', serveHtmlWithSeoAndSchema);
       app.use(vite.middlewares);
+      app.get('*', serveHtmlWithSeoAndSchema);
     } else {
       const distPath = path.join(process.cwd(), 'dist');
       app.use(express.static(distPath, {

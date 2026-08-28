@@ -50,48 +50,166 @@ const PRESET_PDF_TEMPLATES = [
 ];
 
 export default function PdfSharing() {
-  const { locale } = useTranslation();
+  const { t, locale } = useTranslation();
+  const isRtl = locale === 'ar' || locale === 'ur';
   const isArabic = locale === 'ar';
+  const isUrdu = locale === 'ur';
 
   const tPdf = (enText: string): string => {
-    if (!isArabic) return enText;
-    const dict: Record<string, string> = {
-      "Instant PDF & File Sharing": "مشاركة ملفات PDF والمستندات الفورية",
-      "PDF Dynamic Sharing Core": "نواة مشاركة الـ PDF الديناميكية",
-      "PDF Sharing & Hosting": "مشاركة واستضافة ملفات PDF",
-      "Dynamic QR PDF Sharing Hub": "مركز مشاركة ملفات PDF عبر رمز QR الديناميكي",
-      "Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.": "حمّل الكتيبات والملفات أو قوائم الطعام بصيغة PDF. أنشئ على الفور رموز QR، واستبدل الملف الأساسي في أي وقت دون تغيير رمز QR، وقم بتكوين كلمات المرور، وتتبع تنزيلات المستخدمين.",
-      "Cloud Space Used": "مساحة السحاب المستخدمة",
-      "Guests get 100MB free persistent sandbox storage.": "يحصل الضيوف على مساحة تخزين رملية مستمرة ومجانية سعتها 100 ميجابايت.",
-      "Upload product catalogs, menus, user guides, or books. Instantly generate highly customizable QR codes, secure files with download quotas/passwords, and preview and manage complete download analytics dashboards.": "حمّل كتالوجات المنتجات، أو قوائم الطعام، أو أدلة المستخدم، أو الكتب. أنشئ على الفور رموز QR قابلة للتخصيص بدرجة كبيرة، واحفظ الملفات بكلمات مرور وحصص تنزيل محددة، وعاين لوحة معلومات تحليل التنزيل وأدرها بشكل كامل.",
-      "1. Core Document Upload": "1. رفع المستند الأساسي",
-      "2. Security & Download Rules": "2. قواعد الحماية والتنزيل",
-      "3. Visual Palette Theme": "3. مظهر لوحة الألوان المرئية",
-      "Drag and Drop your PDF document here": "اسحب وأسقط مستند الـ PDF هنا",
-      "or click to browse local storage": "أو انقر لتصفح التخزين المحلي",
-      "Document Title": "عنوان المستند",
-      "Brief Slogan / Description": "وصف قصير / شعار",
-      "Save & Publish Sharing QR": "حفظ ونشر رمز QR للمشاركة",
-      "Publishing...": "جاري النشر...",
-      "Active Live Preview & QR": "المعاينة المباشرة ورمز QR النشط",
-      "Scan this secure high-contrast QR design with a phone to view or download the attached PDF document instantly.": "امسح تصميم رمز QR عالي التباين هذا باستخدام الهاتف لعرض أو تنزيل مستند PDF المرفق على الفور.",
-      "Publish sharing config to activate live dynamic QR code!": "انشر إعدادات المشاركة لتنشيط رمز QR الديناميكي المباشر!",
-      "PDF Dynamic Sharing Core Preview": "معاينة نواة مشاركة PDF الديناميكية",
-      "PDF Details": "تفاصيل الـ PDF",
-      "Version History": "سجل الإصدارات",
-      "No shares available yet.": "لا توجد مشاركات متاحة بعد.",
-      "Total Shared PDFs": "إجمالي ملفات PDF المشاركة",
-      "Gated with dynamic parameters": "محمي بمعايير ديناميكية",
-      "Password Protection": "حماية بكلمة مرور",
-      "Enter password (optional)": "أدخل كلمة المرور (اختياري)",
-      "Set Expiry Date": "تعيين تاريخ انتهاء الصلاحية",
-      "Maximum Downloads Allowed": "أقصى عدد تنزيلات مسموح به",
-      "Unlimited if empty": "غير محدود إذا كان فارغًا",
-      "Choose Color Accent": "اختر تباين الألوان",
-      "Live Smartphone Simulator": "محاكي الهاتف الذكي المباشر",
-      "Active Document PDF Shares": "مشاركات مستندات PDF النشطة"
-    };
-    return dict[enText] || enText;
+    if (isArabic) {
+      const arDict: Record<string, string> = {
+        "Instant PDF & File Sharing": "مشاركة ملفات PDF والمستندات الفورية",
+        "PDF Dynamic Sharing Core": "نواة مشاركة الـ PDF الديناميكية",
+        "PDF Sharing & Hosting": "مشاركة واستضافة ملفات PDF",
+        "Dynamic QR PDF Sharing Hub": "مركز مشاركة ملفات PDF عبر رمز QR الديناميكي",
+        "Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.": "حمّل الكتيبات والملفات أو قوائم الطعام بصيغة PDF. أنشئ على الفور رموز QR، واستبدل الملف الأساسي في أي وقت دون تغيير رمز QR، وقم بتكوين كلمات المرور، وتتبع تنزيلات المستخدمين.",
+        "Cloud Space Used": "مساحة السحاب المستخدمة",
+        "Guests get 100MB free persistent sandbox storage.": "يحصل الضيوف على مساحة تخزين رملية مستمرة ومجانية سعتها 100 ميجابايت.",
+        "1. Core Document Upload": "1. رفع المستند الأساسي",
+        "Drag & drop your PDF file or try out one of our pre-configured documents.": "اسحب وأسقط ملف PDF الخاص بك أو جرب أحد المستندات المعدة مسبقًا.",
+        "Drag & drop PDF here, or click to browse": "اسحب وأسقط ملف PDF هنا، أو انقر للتصفح",
+        "Supports standard PDF formats up to 25 MB": "يدعم صيغ PDF القياسية حتى حجم 25 ميجابايت",
+        "Ready to publish": "جاهز للنشر",
+        "Or Use High-Quality Culinary / Real Estate Presets": "أو استخدم قوالب مسبقة عالية الجودة (قوائم طعام / عقارات / خطط)",
+        "Document Title": "عنوان المستند",
+        "e.g. Real Estate Q4 Portfolio": "مثال: المحفظة العقارية للربع الرابع",
+        "Brand Styling Palette": "لوحة ألوان الهوية",
+        "Classic Indigo": "نيلي كلاسيكي",
+        "Organic Emerald": "زمردي طبيعي",
+        "Elegant Rose": "وردي أنيق",
+        "Autumn Saffron": "زعفراني خريفي",
+        "Short Description / Subtitle": "وصف قصير / عنوان فرعي",
+        "Brief detail shown to users scanning or downloading the PDF.": "تفاصيل موجزة تظهر للمستخدمين عند مسح أو تنزيل ملف PDF.",
+        "Security, Passwords & Expiry Limits (Optional)": "الحماية وكلمات المرور وحدود انتهاء الصلاحية (اختياري)",
+        "Set Password Protection": "تعيين الحماية بكلمة مرور",
+        "e.g. Vault44": "مثال: Vault44",
+        "Expiration Date": "تاريخ انتهاء الصلاحية",
+        "Max Download Limit": "الحد الأقصى لعدد التنزيلات",
+        "Unlimited if empty": "غير محدود إذا تُرك فارغاً",
+        "Hosting Document...": "جاري استضافة المستند...",
+        "Publish & Generate QR": "نشر وتوليد رمز QR",
+        "Active Hosted PDF Documents": "مستندات PDF المستضافة النشطة",
+        "Secure": "محمي",
+        "Expired": "منتهي الصلاحية",
+        "Limit Reached": "تم بلوغ الحد",
+        "Delete Document Share": "حذف مشاركة المستند",
+        "Views": "مشاهدات",
+        "Downloads": "تنزيلات",
+        "No hosted PDFs. Create your first file sharing above to populate database.": "لا توجد ملفات PDF مستضافة. أنشئ أول مشاركة ملف أعلاه لملء قاعدة البيانات.",
+        "Dynamic QR Code": "رمز QR الديناميكي",
+        "Point phone camera to trigger immediate secure download.": "وجّه كاميرا الهاتف لبدء التنزيل الآمن الفوري.",
+        "Simulate Mobile Scan": "محاكاة مسح الهاتف",
+        "Copy Share Link": "نسخ رابط المشاركة",
+        "Copied Link!": "تم نسخ الرابط!",
+        "Real-time QR tracking active": "تتبع رمز QR في الوقت الفعلي نشط",
+        "Security & Expiry Controls": "عناصر التحكم في الأمان وانتهاء الصلاحية",
+        "Password Protection": "الحماية بكلمة مرور",
+        "Require code before file download.": "طلب رمز الحماية قبل تنزيل الملف.",
+        "No Password": "بدون كلمة مرور",
+        "PDF link turns off automatically.": "يتوقف رابط الـ PDF تلقائياً بعد هذا التاريخ.",
+        "Max Downloads": "الحد الأقصى للتنزيلات",
+        "Stop traffic once limit is crossed.": "إيقاف الوصول بمجرد تجاوز الحد.",
+        "Unlimited": "غير محدود",
+        "Version History & Replacement": "سجل الإصدارات واستبدال الملف",
+        "Replace File": "استبدال الملف",
+        "Active": "نشط",
+        "Activate This": "تفعيل هذا الإصدار",
+        "Select a document from list on the left or create one to launch dynamic QR tracking.": "اختر مستنداً من القائمة على اليسار أو أنشئ مستنداً جديداً لبدء تتبع رمز QR الديناميكي.",
+        "MOBILE PORTAL SIMULATION": "محاكاة بوابة الهاتف المحمول",
+        "Close [X]": "إغلاق [X]",
+        "Document Vault Secure Gated": "خزينة المستندات محمية بكلمة مرور",
+        "Please provide the visitor password configured by the publisher.": "يرجى إدخال كلمة مرور الزائر التي حددها الناشر.",
+        "Enter password...": "أدخل كلمة المرور...",
+        "Inaccurate key. Try again.": "كلمة المرور غير صحيحة. حاول مرة أخرى.",
+        "Unlock PDF Access": "فتح الوصول إلى ملف الـ PDF",
+        "DOCUMENT METADATA": "بيانات المستند الوصفية",
+        "Max downloads: ": "أقصى تنزيلات: ",
+        "Expires: ": "ينتهي في: ",
+        "Simulate Visitor View (Live View+1)": "محاكاة مشاهدة زائر (مشاهدة مباشرة +1)",
+        "Simulate File Download (Download+1)": "محاكاة تنزيل الملف (تنزيل +1)",
+        "✓ Simulated Page View recorded! Check the live stats.": "✓ تم تسجيل مشاهدة الصفحة التجريبية! تحقق من الإحصائيات المباشرة.",
+        "✓ Simulated File Download triggered successfully!": "✓ تم تشغيل تنزيل الملف التجريبي بنجاح!",
+        "Powered by Dynamic QR Router • Instant update analytics.": "مشغل بواسطة موجه QR الديناميكي • تحليلات وتحديث فوري."
+      };
+      if (arDict[enText]) return arDict[enText];
+    } else if (isUrdu) {
+      const urDict: Record<string, string> = {
+        "Instant PDF & File Sharing": "فوری پی ڈی ایف اور فائل شیئرنگ",
+        "PDF Dynamic Sharing Core": "پی ڈی ایف ڈائنامک شیئرنگ ہب",
+        "PDF Sharing & Hosting": "پی ڈی ایف شیئرنگ اور ہوسٹنگ",
+        "Dynamic QR PDF Sharing Hub": "ڈائنامک کیو آر پی ڈی ایف شیئرنگ ہب",
+        "Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.": "پی ڈی ایف بروشرز، رئیل اسٹیٹ گائیڈز، یا مینو اپ لوڈ کریں۔ فوری کیو آر بنائیں، کیو آر بدلے بغیر فائل تبدیل کریں، پاس ورڈ لگائیں، اور ڈاؤن لوڈز ٹریک کریں۔",
+        "Cloud Space Used": "استعمال شدہ کلاؤڈ اسپیس",
+        "Guests get 100MB free persistent sandbox storage.": "مہمان صارفین کے لیے 100MB مفت اسٹوریج۔",
+        "1. Core Document Upload": "1. دستاویز اپ لوڈ کریں",
+        "Drag & drop your PDF file or try out one of our pre-configured documents.": "اپنی پی ڈی ایف فائل ڈریگ اینڈ ڈراپ کریں یا ہمارے پہلے سے موجود نمونے استعمال کریں۔",
+        "Drag & drop PDF here, or click to browse": "پی ڈی ایف فائل یہاں ڈراپ کریں یا براؤز کریں",
+        "Supports standard PDF formats up to 25 MB": "25MB تک پی ڈی ایف فائلیں سپورٹڈ ہیں",
+        "Ready to publish": "پبلش کے لیے تیار",
+        "Or Use High-Quality Culinary / Real Estate Presets": "یا معیاری پری سیٹس استعمال کریں",
+        "Document Title": "دستاویز کا عنوان",
+        "e.g. Real Estate Q4 Portfolio": "مثال: رئیل اسٹیٹ پورٹ فولیو",
+        "Brand Styling Palette": "برانڈ کلر پیلیٹ",
+        "Classic Indigo": "کلاسک انڈیگو",
+        "Organic Emerald": "اورگینک زمرد",
+        "Elegant Rose": "خوبصورت گلاب",
+        "Autumn Saffron": "زعفرانی رنگ",
+        "Short Description / Subtitle": "مختصر تفصیل / ذیلی عنوان",
+        "Brief detail shown to users scanning or downloading the PDF.": "اسکین کرنے والے صارفین کو نظر آنے والی مختصر معلومات۔",
+        "Security, Passwords & Expiry Limits (Optional)": "سیکیورٹی، پاس ورڈ اور میعاد کی حدود (اختیاری)",
+        "Set Password Protection": "پاس ورڈ پروٹیکشن لگائیں",
+        "e.g. Vault44": "مثال: Vault44",
+        "Expiration Date": "میعاد ختم ہونے کی تاریخ",
+        "Max Download Limit": "زیادہ سے زیادہ ڈاؤن لوڈ کی حد",
+        "Unlimited if empty": "خالی رہنے پر لامحدود",
+        "Hosting Document...": "دستاویز ہوسٹ ہو رہی ہے...",
+        "Publish & Generate QR": "پبلش کریں اور کیو آر بنائیں",
+        "Active Hosted PDF Documents": "فعال ہوسٹ شدہ پی ڈی ایف دستاویزات",
+        "Secure": "محفوظ",
+        "Expired": "میعاد ختم",
+        "Limit Reached": "حد مکمل",
+        "Delete Document Share": "دستاویز حذف کریں",
+        "Views": "مناظر",
+        "Downloads": "ڈاؤن لوڈز",
+        "No hosted PDFs. Create your first file sharing above to populate database.": "کوئی پی ڈی ایف موجود نہیں۔ نیا شیئر بنانے کے لیے اوپر فارم پُر کریں۔",
+        "Dynamic QR Code": "ڈائنامک کیو آر کوڈ",
+        "Point phone camera to trigger immediate secure download.": "فوری محفوظ ڈاؤن لوڈ کے لیے فون کیمرہ اسکین کریں۔",
+        "Simulate Mobile Scan": "موبائل اسکین کا تجربہ کریں",
+        "Copy Share Link": "شیئر لنک کاپی کریں",
+        "Copied Link!": "لنک کاپی ہو گیا!",
+        "Real-time QR tracking active": "ریئل ٹائم کیو آر ٹریکنگ فعال ہے",
+        "Security & Expiry Controls": "سیکیورٹی اور میعاد کنٹرولز",
+        "Password Protection": "پاس ورڈ سیکیورٹی",
+        "Require code before file download.": "ڈاؤن لوڈ سے پہلے پاس ورڈ ضروری ہے۔",
+        "No Password": "کوئی پاس ورڈ نہیں",
+        "PDF link turns off automatically.": "لنک خود بخود بند ہو جائے گا۔",
+        "Max Downloads": "زیادہ سے زیادہ ڈاؤن لوڈز",
+        "Stop traffic once limit is crossed.": "حد پار ہونے پر لنک بند کریں۔",
+        "Unlimited": "لامحدود",
+        "Version History & Replacement": "ورژن کی تاریخ اور تبدیلی",
+        "Replace File": "فائل تبدیل کریں",
+        "Active": "فعال",
+        "Activate This": "اسے فعال کریں",
+        "Select a document from list on the left or create one to launch dynamic QR tracking.": "فہرست سے ایک دستاویز منتخب کریں یا نئی بنائیں۔",
+        "MOBILE PORTAL SIMULATION": "موبائل پورٹل سمولیشن",
+        "Close [X]": "بند کریں [X]",
+        "Document Vault Secure Gated": "محفوظ دستاویز والٹ",
+        "Please provide the visitor password configured by the publisher.": "براہ کرم پبلشر کا مقرر کردہ پاس ورڈ درج کریں۔",
+        "Enter password...": "پاس ورڈ درج کریں...",
+        "Inaccurate key. Try again.": "غلط پاس ورڈ۔ دوبارہ کوشش کریں۔",
+        "Unlock PDF Access": "پی ڈی ایف ان لاک کریں",
+        "DOCUMENT METADATA": "دستاویز میٹا ڈیٹا",
+        "Max downloads: ": "زیادہ سے زیادہ ڈاؤن لوڈز: ",
+        "Expires: ": "میعاد ختم: ",
+        "Simulate Visitor View (Live View+1)": "وزیٹر ویو سمولیٹ کریں (ویو +1)",
+        "Simulate File Download (Download+1)": "ڈاؤن لوڈ سمولیٹ کریں (ڈاؤن لوڈ +1)",
+        "✓ Simulated Page View recorded! Check the live stats.": "✓ پیج ویو ریکارڈ ہو گیا! لائیو شماریات چیک کریں۔",
+        "✓ Simulated File Download triggered successfully!": "✓ فائل ڈاؤن لوڈ کامیابی سے مکمل ہو گئی!",
+        "Powered by Dynamic QR Router • Instant update analytics.": "ڈائنامک کیو آر راؤٹر کی جانب سے پیش کردہ • فوری اینالیٹکس۔"
+      };
+      if (urDict[enText]) return urDict[enText];
+    }
+    return enText;
   };
 
   const [shares, setShares] = useState<PdfShareConfig[]>([]);
@@ -559,14 +677,14 @@ export default function PdfSharing() {
   };
 
   return (
-    <div id="pdf-sharing-module" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div id="pdf-sharing-module" dir={isRtl ? 'rtl' : 'ltr'} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
       {/* Banner Area */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-slate-50 via-white to-blue-50 text-slate-900 p-6 sm:p-8 rounded-2xl relative overflow-hidden shadow-sm border border-slate-200/80">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="space-y-2 relative z-10 text-left rtl:text-right">
+        <div className="space-y-2 relative z-10 text-start">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-xs">
               <FileText className="w-5 h-5" />
@@ -614,7 +732,7 @@ export default function PdfSharing() {
                 <FileUp className="w-5 h-5 text-indigo-600" />
                 {tPdf("1. Core Document Upload")}
               </h3>
-              <p className="text-[11px] text-slate-400">Drag & drop your PDF file or try out one of our pre-configured documents.</p>
+              <p className="text-[11px] text-slate-400">{tPdf("Drag & drop your PDF file or try out one of our pre-configured documents.")}</p>
             </div>
 
             <form onSubmit={handleCreateShare} className="space-y-4">
@@ -652,12 +770,12 @@ export default function PdfSharing() {
                   {uploadedFile ? (
                     <div>
                       <p className="text-xs font-bold text-slate-800">{uploadedFile.name}</p>
-                      <p className="text-[10px] text-emerald-600 font-extrabold mt-0.5">Ready to publish ({uploadedFile.size})</p>
+                      <p className="text-[10px] text-emerald-600 font-extrabold mt-0.5">{tPdf("Ready to publish")} ({uploadedFile.size})</p>
                     </div>
                   ) : (
                     <div>
-                      <p className="text-xs font-bold text-slate-700">Drag & drop PDF here, or click to browse</p>
-                      <p className="text-[10px] text-slate-400 mt-1">Supports standard PDF formats up to 25 MB</p>
+                      <p className="text-xs font-bold text-slate-700">{tPdf("Drag & drop PDF here, or click to browse")}</p>
+                      <p className="text-[10px] text-slate-400 mt-1">{tPdf("Supports standard PDF formats up to 25 MB")}</p>
                     </div>
                   )}
                 </div>
@@ -665,14 +783,14 @@ export default function PdfSharing() {
 
               {/* Presets Grid */}
               <div className="space-y-2">
-                <label className="text-[10px] text-slate-400 font-black uppercase tracking-wider">Or Use High-Quality Culinary / Real Estate Presets</label>
+                <label className="text-[10px] text-slate-400 font-black uppercase tracking-wider">{tPdf("Or Use High-Quality Culinary / Real Estate Presets")}</label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {PRESET_PDF_TEMPLATES.map((tpl, i) => (
                     <button
                       key={tpl.name}
                       type="button"
                       onClick={() => selectPresetTemplate(i)}
-                      className={`p-2.5 rounded-xl border text-left transition-all text-xs flex items-center gap-2 cursor-pointer ${uploadedFile?.name === tpl.name ? 'bg-indigo-50 border-indigo-300 text-indigo-700 font-bold' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+                      className={`p-2.5 rounded-xl border text-start transition-all text-xs flex items-center gap-2 cursor-pointer ${uploadedFile?.name === tpl.name ? 'bg-indigo-50 border-indigo-300 text-indigo-700 font-bold' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
                     >
                       <FileText className="w-4 h-4 text-indigo-500 shrink-0" />
                       <div className="min-w-0">
@@ -687,38 +805,38 @@ export default function PdfSharing() {
               {/* Form Metadata fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Document Title</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Document Title")}</label>
                   <input
                     type="text"
                     value={newTitle}
                     onChange={e => setNewTitle(e.target.value)}
-                    placeholder="e.g. Real Estate Q4 Portfolio"
+                    placeholder={tPdf("e.g. Real Estate Q4 Portfolio")}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-1 focus:ring-indigo-400 outline-none"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Brand Styling Palette</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Brand Styling Palette")}</label>
                   <select
                     value={pdfThemeColor}
                     onChange={e => setPdfThemeColor(e.target.value as any)}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
                   >
-                    <option value="indigo">Classic Indigo</option>
-                    <option value="emerald">Organic Emerald</option>
-                    <option value="rose">Elegant Rose</option>
-                    <option value="amber">Autumn Saffron</option>
+                    <option value="indigo">{tPdf("Classic Indigo")}</option>
+                    <option value="emerald">{tPdf("Organic Emerald")}</option>
+                    <option value="rose">{tPdf("Elegant Rose")}</option>
+                    <option value="amber">{tPdf("Autumn Saffron")}</option>
                   </select>
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Short Description / Subtitle</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Short Description / Subtitle")}</label>
                   <input
                     type="text"
                     value={newDescription}
                     onChange={e => setNewDescription(e.target.value)}
-                    placeholder="Brief detail shown to users scanning or downloading the PDF."
+                    placeholder={tPdf("Brief detail shown to users scanning or downloading the PDF.")}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-1 focus:ring-indigo-400 outline-none"
                   />
                 </div>
@@ -728,47 +846,47 @@ export default function PdfSharing() {
               <div className="bg-slate-50 p-4 rounded-xl space-y-3 border border-slate-100">
                 <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider flex items-center gap-1">
                   <Settings className="w-3.5 h-3.5 text-slate-500" />
-                  Security, Passwords & Expiry Limits (Optional)
+                  {tPdf("Security, Passwords & Expiry Limits (Optional)")}
                 </span>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 mb-1">Set Password Protection</label>
+                    <label className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Set Password Protection")}</label>
                     <div className="relative">
-                      <Key className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" />
+                      <Key className="absolute inset-y-0 start-2.5 my-auto w-3.5 h-3.5 text-slate-400" />
                       <input
                         type="password"
                         value={pdfPassword}
                         onChange={e => setPdfPassword(e.target.value)}
-                        placeholder="e.g. Vault44"
-                        className="w-full pl-8 pr-2 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-800 text-[11px] outline-none"
+                        placeholder={tPdf("e.g. Vault44")}
+                        className="w-full ps-8 pe-2 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-800 text-[11px] outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 mb-1">Expiration Date</label>
+                    <label className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Expiration Date")}</label>
                     <div className="relative">
-                      <Calendar className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" />
+                      <Calendar className="absolute inset-y-0 start-2.5 my-auto w-3.5 h-3.5 text-slate-400" />
                       <input
                         type="date"
                         value={pdfExpiry}
                         onChange={e => setPdfExpiry(e.target.value)}
-                        className="w-full pl-8 pr-2 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-800 text-[11px] outline-none"
+                        className="w-full ps-8 pe-2 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-800 text-[11px] outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 mb-1">Max Download Limit</label>
+                    <label className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Max Download Limit")}</label>
                     <div className="relative">
-                      <Download className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" />
+                      <Download className="absolute inset-y-0 start-2.5 my-auto w-3.5 h-3.5 text-slate-400" />
                       <input
                         type="number"
                         value={pdfMaxDownloads}
                         onChange={e => setPdfMaxDownloads(e.target.value)}
-                        placeholder="Unlimited if empty"
-                        className="w-full pl-8 pr-2 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-800 text-[11px] outline-none"
+                        placeholder={tPdf("Unlimited if empty")}
+                        className="w-full ps-8 pe-2 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-800 text-[11px] outline-none"
                       />
                     </div>
                   </div>
@@ -782,7 +900,7 @@ export default function PdfSharing() {
                   className="px-5 py-2.5 bg-indigo-600 text-white font-extrabold text-xs rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-sm cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" />
-                  {isSaving ? 'Hosting Document...' : 'Publish & Generate QR'}
+                  {isSaving ? tPdf('Hosting Document...') : tPdf('Publish & Generate QR')}
                 </button>
               </div>
             </form>
@@ -792,7 +910,7 @@ export default function PdfSharing() {
           <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 sm:p-8 space-y-4">
             <h3 className="text-base font-black text-slate-800 flex items-center gap-1.5">
               <FileCheck className="w-5 h-5 text-indigo-600" />
-              Active Hosted PDF Documents ({shares.length})
+              {tPdf("Active Hosted PDF Documents")} ({shares.length})
             </h3>
 
             <div className="space-y-3">
@@ -819,23 +937,23 @@ export default function PdfSharing() {
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 ${theme.lightBg} ${theme.border}`}>
                         <FileText className={`w-5 h-5 ${theme.text}`} />
                       </div>
-                      <div className="min-w-0">
+                      <div className="min-w-0 text-start">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <p className="text-xs font-black text-slate-800 truncate">{share.title}</p>
                           {share.password && (
                             <span className="text-[8px] bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded-md flex items-center gap-0.5 font-bold">
                               <Lock className="w-2.5 h-2.5" />
-                              Secure
+                              {tPdf("Secure")}
                             </span>
                           )}
                           {expired && (
                             <span className="text-[8px] bg-rose-50 text-rose-800 border border-rose-200 px-1.5 py-0.5 rounded-md font-bold">
-                              Expired
+                              {tPdf("Expired")}
                             </span>
                           )}
                           {limitReached && (
                             <span className="text-[8px] bg-red-100 text-red-800 border border-red-200 px-1.5 py-0.5 rounded-md font-bold">
-                              Limit Reached
+                              {tPdf("Limit Reached")}
                             </span>
                           )}
                         </div>
@@ -849,12 +967,12 @@ export default function PdfSharing() {
                     <div className="flex items-center gap-3 justify-end">
                       {/* Analytics counters badge */}
                       <div className="flex items-center gap-2 bg-slate-100/80 px-2.5 py-1.5 rounded-xl border border-slate-200/40 text-[10px] text-slate-600 font-bold shrink-0">
-                        <span className="flex items-center gap-1" title="Views">
+                        <span className="flex items-center gap-1" title={tPdf("Views")}>
                           <Eye className="w-3.5 h-3.5 text-slate-400" />
                           {share.viewCount}
                         </span>
                         <span className="text-slate-300">|</span>
-                        <span className="flex items-center gap-1" title="Downloads">
+                        <span className="flex items-center gap-1" title={tPdf("Downloads")}>
                           <Download className="w-3.5 h-3.5 text-slate-400" />
                           {share.downloadCount}
                         </span>
@@ -866,7 +984,7 @@ export default function PdfSharing() {
                           handleDeleteShare(share.id);
                         }}
                         className="p-1.5 text-slate-300 hover:text-rose-600 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                        title="Delete Document Share"
+                        title={tPdf("Delete Document Share")}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -877,7 +995,7 @@ export default function PdfSharing() {
 
               {shares.length === 0 && (
                 <div className="text-center py-8 bg-slate-50 border border-slate-100 rounded-2xl">
-                  <p className="text-xs text-slate-400">No hosted PDFs. Create your first file sharing above to populate database.</p>
+                  <p className="text-xs text-slate-400">{tPdf("No hosted PDFs. Create your first file sharing above to populate database.")}</p>
                 </div>
               )}
             </div>
@@ -895,13 +1013,13 @@ export default function PdfSharing() {
               <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 sm:p-8 text-center space-y-5 relative overflow-hidden">
                 <div className={`absolute top-0 inset-x-0 h-1.5 bg-linear-to-r from-indigo-500 to-emerald-400`} />
                 
-                <div className="flex items-center justify-between text-left">
+                <div className="flex items-center justify-between text-start">
                   <div>
                     <h3 className="text-sm font-black text-slate-800 flex items-center gap-1">
                       <QrCode className="w-4.5 h-4.5 text-indigo-600" />
-                      Dynamic QR Code
+                      {tPdf("Dynamic QR Code")}
                     </h3>
-                    <p className="text-[10px] text-slate-400">Point phone camera to trigger immediate secure download.</p>
+                    <p className="text-[10px] text-slate-400">{tPdf("Point phone camera to trigger immediate secure download.")}</p>
                   </div>
 
                   <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${selectedTheme.badge}`}>
@@ -925,7 +1043,7 @@ export default function PdfSharing() {
                     className="py-2 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 border border-indigo-100"
                   >
                     <Smartphone className="w-3.5 h-3.5" />
-                    Simulate Mobile Scan
+                    {tPdf("Simulate Mobile Scan")}
                   </button>
 
                   <button
@@ -935,7 +1053,7 @@ export default function PdfSharing() {
                     className="py-2 px-3 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 border border-slate-200"
                   >
                     <Copy className="w-3.5 h-3.5 text-slate-500" />
-                    {copiedField === 'visitor-link' ? 'Copied Link!' : 'Copy Share Link'}
+                    {copiedField === 'visitor-link' ? tPdf('Copied Link!') : tPdf('Copy Share Link')}
                   </button>
                 </div>
 
@@ -943,16 +1061,16 @@ export default function PdfSharing() {
                   <span>ID: {selectedShare.id}</span>
                   <span className="font-semibold text-slate-500 flex items-center gap-1">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    Real-time QR tracking active
+                    {tPdf("Real-time QR tracking active")}
                   </span>
                 </div>
               </div>
 
               {/* Card 2: Expiry & Security Controls Settings */}
-              <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 space-y-4">
+              <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 space-y-4 text-start">
                 <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1">
                   <Shield className="w-4 h-4 text-emerald-600" />
-                  Security & Expiry Controls
+                  {tPdf("Security & Expiry Controls")}
                 </h3>
 
                 <div className="space-y-3 text-xs">
@@ -961,8 +1079,8 @@ export default function PdfSharing() {
                     <div className="flex items-center gap-2">
                       <Key className="w-4 h-4 text-slate-400" />
                       <div>
-                        <p className="font-bold text-slate-800">Password Protection</p>
-                        <p className="text-[9px] text-slate-400">Require code before file download.</p>
+                        <p className="font-bold text-slate-800">{tPdf("Password Protection")}</p>
+                        <p className="text-[9px] text-slate-400">{tPdf("Require code before file download.")}</p>
                       </div>
                     </div>
 
@@ -970,7 +1088,7 @@ export default function PdfSharing() {
                       type="password"
                       defaultValue={selectedShare.password || ''}
                       onBlur={(e) => handleUpdateSecuritySettings({ password: e.target.value || undefined })}
-                      placeholder="No Password"
+                      placeholder={tPdf("No Password")}
                       className="w-28 px-2.5 py-1 text-[11px] rounded-lg border border-slate-200 outline-none text-slate-800 bg-white"
                     />
                   </div>
@@ -980,8 +1098,8 @@ export default function PdfSharing() {
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-slate-400" />
                       <div>
-                        <p className="font-bold text-slate-800">Expiration Date</p>
-                        <p className="text-[9px] text-slate-400">PDF link turns off automatically.</p>
+                        <p className="font-bold text-slate-800">{tPdf("Expiration Date")}</p>
+                        <p className="text-[9px] text-slate-400">{tPdf("PDF link turns off automatically.")}</p>
                       </div>
                     </div>
 
@@ -998,14 +1116,14 @@ export default function PdfSharing() {
                     <div className="flex items-center gap-2">
                       <Download className="w-4 h-4 text-slate-400" />
                       <div>
-                        <p className="font-bold text-slate-800">Max Downloads</p>
-                        <p className="text-[9px] text-slate-400">Stop traffic once limit is crossed.</p>
+                        <p className="font-bold text-slate-800">{tPdf("Max Downloads")}</p>
+                        <p className="text-[9px] text-slate-400">{tPdf("Stop traffic once limit is crossed.")}</p>
                       </div>
                     </div>
 
                     <input
                       type="number"
-                      placeholder="Unlimited"
+                      placeholder={tPdf("Unlimited")}
                       defaultValue={selectedShare.maxDownloads || ''}
                       onBlur={(e) => handleUpdateSecuritySettings({ maxDownloads: e.target.value ? parseInt(e.target.value) : undefined })}
                       className="w-20 px-2.5 py-1 text-[11px] rounded-lg border border-slate-200 outline-none text-slate-800 bg-white"
@@ -1015,17 +1133,17 @@ export default function PdfSharing() {
               </div>
 
               {/* Card 3: Version Control & Real-time replacement */}
-              <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 space-y-4">
+              <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 space-y-4 text-start">
                 <div className="flex items-center justify-between border-b border-slate-150 pb-3">
                   <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1">
                     <History className="w-4 h-4 text-amber-500" />
-                    Version History & Replacement
+                    {tPdf("Version History & Replacement")}
                   </h3>
 
                   {/* Replacement button input */}
                   <label className="text-[10px] text-indigo-600 font-bold cursor-pointer hover:underline flex items-center gap-0.5">
                     <Upload className="w-3.5 h-3.5" />
-                    Replace File
+                    {tPdf("Replace File")}
                     <input
                       type="file"
                       accept=".pdf"
@@ -1059,14 +1177,14 @@ export default function PdfSharing() {
 
                         {isActive ? (
                           <span className="text-[8px] bg-emerald-50 text-emerald-800 border border-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider font-extrabold shrink-0">
-                            Active
+                            {tPdf("Active")}
                           </span>
                         ) : (
                           <button
                             onClick={() => handleRollbackVersion(ver)}
                             className="text-[9px] text-indigo-600 font-bold hover:underline shrink-0"
                           >
-                            Activate This
+                            {tPdf("Activate This")}
                           </button>
                         )}
                       </div>
@@ -1079,7 +1197,7 @@ export default function PdfSharing() {
           ) : (
             <div className="bg-slate-50/50 rounded-3xl border border-dashed border-slate-300 p-8 text-center space-y-3">
               <FileText className="w-10 h-10 text-slate-300 mx-auto" />
-              <p className="text-xs text-slate-400">Select a document from list on the left or create one to launch dynamic QR tracking.</p>
+              <p className="text-xs text-slate-400">{tPdf("Select a document from list on the left or create one to launch dynamic QR tracking.")}</p>
             </div>
           )}
 
@@ -1095,24 +1213,25 @@ export default function PdfSharing() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
+              dir={isRtl ? 'rtl' : 'ltr'}
               className="bg-white rounded-3xl shadow-xl w-full max-w-sm overflow-hidden border border-slate-100 relative"
             >
               {/* Device header banner decoration */}
               <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <div className="w-2 h-2 rounded-full bg-red-500" />
-                  <span className="text-[10px] font-black tracking-widest text-slate-400">MOBILE PORTAL SIMULATION</span>
+                  <span className="text-[10px] font-black tracking-widest text-slate-400">{tPdf("MOBILE PORTAL SIMULATION")}</span>
                 </div>
                 <button
                   onClick={() => setSimulatedShare(null)}
                   className="text-slate-400 hover:text-white text-xs font-bold cursor-pointer"
                 >
-                  Close [X]
+                  {tPdf("Close [X]")}
                 </button>
               </div>
 
               {/* simulated viewport container */}
-              <div className="p-6 space-y-6">
+              <div className="p-6 space-y-6 text-start">
                 
                 {/* Brand / Logo details inside portal */}
                 <div className="text-center space-y-1">
@@ -1128,26 +1247,26 @@ export default function PdfSharing() {
                   <div className="bg-amber-50 border border-amber-200/60 p-4 rounded-2xl space-y-3 text-center">
                     <Lock className="w-6 h-6 text-amber-600 mx-auto" />
                     <div>
-                      <h5 className="text-xs font-black text-amber-900">Document Vault Secure Gated</h5>
-                      <p className="text-[10px] text-amber-700 mt-0.5">Please provide the visitor password configured by the publisher.</p>
+                      <h5 className="text-xs font-black text-amber-900">{tPdf("Document Vault Secure Gated")}</h5>
+                      <p className="text-[10px] text-amber-700 mt-0.5">{tPdf("Please provide the visitor password configured by the publisher.")}</p>
                     </div>
 
                     <div className="space-y-2">
                       <input
                         type="password"
-                        placeholder="Enter password..."
+                        placeholder={tPdf("Enter password...")}
                         value={visitorPasswordInput}
                         onChange={(e) => setVisitorPasswordInput(e.target.value)}
                         className="w-full text-center py-2 px-3 text-xs bg-white rounded-xl border border-amber-200 outline-none focus:ring-1 focus:ring-amber-500 font-bold"
                       />
                       {passwordError && (
-                        <p className="text-[9px] text-rose-600 font-bold">Inaccurate key. Try again.</p>
+                        <p className="text-[9px] text-rose-600 font-bold">{tPdf("Inaccurate key. Try again.")}</p>
                       )}
                       <button
                         onClick={handleSimulatedPasswordSubmit}
                         className="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer"
                       >
-                        Unlock PDF Access
+                        {tPdf("Unlock PDF Access")}
                       </button>
                     </div>
                   </div>
@@ -1157,19 +1276,19 @@ export default function PdfSharing() {
                     
                     {/* Status check / limits indicators */}
                     <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/50 space-y-2 text-center text-xs">
-                      <p className="text-[10px] text-slate-400 font-bold">DOCUMENT METADATA</p>
+                      <p className="text-[10px] text-slate-400 font-bold">{tPdf("DOCUMENT METADATA")}</p>
                       <p className="font-extrabold text-slate-700">{simulatedShare.activeFileName}</p>
                       <p className="text-[11px] text-indigo-600 font-black">{simulatedShare.activeFileSize}</p>
 
-                      <div className="flex justify-center gap-1 pt-1.5">
+                      <div className="flex justify-center gap-1 pt-1.5 flex-wrap">
                         {simulatedShare.maxDownloads && (
                           <span className="text-[8px] bg-indigo-50 text-indigo-800 border px-2 py-0.5 rounded-md font-bold">
-                            Max downloads: {simulatedShare.maxDownloads}
+                            {tPdf("Max downloads: ")}{simulatedShare.maxDownloads}
                           </span>
                         )}
                         {simulatedShare.expiryDate && (
                           <span className="text-[8px] bg-slate-100 text-slate-600 border px-2 py-0.5 rounded-md font-bold">
-                            Expires: {new Date(simulatedShare.expiryDate).toLocaleDateString()}
+                            {tPdf("Expires: ")}{new Date(simulatedShare.expiryDate).toLocaleDateString()}
                           </span>
                         )}
                       </div>
@@ -1182,7 +1301,7 @@ export default function PdfSharing() {
                         className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
                       >
                         <Eye className="w-4 h-4" />
-                        Simulate Visitor View (Live View+1)
+                        {tPdf("Simulate Visitor View (Live View+1)")}
                       </button>
 
                       <button
@@ -1191,7 +1310,7 @@ export default function PdfSharing() {
                         className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-2xl transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
                       >
                         <Download className="w-4 h-4" />
-                        Simulate File Download (Download+1)
+                        {tPdf("Simulate File Download (Download+1)")}
                       </button>
                     </div>
 
@@ -1203,7 +1322,7 @@ export default function PdfSharing() {
                           animate={{ opacity: 1, y: 0 }}
                           className="bg-emerald-50 text-emerald-800 text-[10px] p-2.5 rounded-xl border border-emerald-100 font-bold text-center"
                         >
-                          ✓ Simulated Page View recorded! Check the live stats.
+                          {tPdf("✓ Simulated Page View recorded! Check the live stats.")}
                         </motion.div>
                       )}
 
@@ -1213,7 +1332,7 @@ export default function PdfSharing() {
                           animate={{ opacity: 1, y: 0 }}
                           className="bg-emerald-50 text-emerald-800 text-[10px] p-2.5 rounded-xl border border-emerald-100 font-bold text-center"
                         >
-                          ✓ Simulated File Download triggered successfully!
+                          {tPdf("✓ Simulated File Download triggered successfully!")}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -1222,7 +1341,7 @@ export default function PdfSharing() {
                 )}
 
                 <div className="text-center text-[9px] text-slate-400 border-t border-slate-100 pt-3">
-                  Powered by Dynamic QR Router • Instant update analytics.
+                  {tPdf("Powered by Dynamic QR Router • Instant update analytics.")}
                 </div>
 
               </div>

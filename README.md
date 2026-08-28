@@ -11,7 +11,7 @@ Free unlimited QR code generator
 
 ## Deployment Guide
 
-This project is fully ready for deployment on **AI Studio** or **Google Cloud Run** as a standard full-stack Node.js/TypeScript Express + Vite application. To prevent build failures or secrets scanning alerts caused by hardcoded API credentials, all Firebase settings have been externalized into environment variables.
+This project is fully ready for deployment on **iSolutions** or **Google Cloud Run** as a standard full-stack Node.js/TypeScript Express + Vite application. To prevent build failures or secrets scanning alerts caused by hardcoded API credentials, all Firebase settings have been externalized into environment variables.
 
 ### 1. Set Up Environment Variables
 
@@ -25,7 +25,7 @@ Provide the following environment variables in your deployment environment setti
 | `VITE_FIREBASE_STORAGE_BUCKET` | Default Cloud Storage Bucket | `your-app.firebasestorage.app` |
 | `VITE_FIREBASE_MESSAGING_SENDER_ID` | Cloud Messaging Sender ID | `954375973804` |
 | `VITE_FIREBASE_APP_ID` | Firebase Web App Identifier | `1:9543...:web:abcde` |
-| `VITE_FIREBASE_FIRESTORE_DATABASE_ID` | Firestore Sub-database (optional) | `ai-studio-9f...` (or `(default)`) |
+| `VITE_FIREBASE_FIRESTORE_DATABASE_ID` | Firestore Sub-database (optional) | `isolutions-9f...` (or `(default)`) |
 | `VITE_FIREBASE_MEASUREMENT_ID` | Firebase Analytics ID (optional) | `G-Z5SBN2TJ5S` |
 
 ### 2. Standalone Local Development

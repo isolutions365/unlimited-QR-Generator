@@ -4,7 +4,7 @@ import {
   Utensils, Plus, Trash2, Edit2, Check, Download, Share2, 
   QrCode, Eye, Globe, Zap, PlusCircle, CheckCircle2, 
   Copy, Smartphone, FileCode, Flame, Tag, HelpCircle, 
-  ChevronRight, ArrowLeft, ShoppingBag, DollarSign, UploadCloud,
+  ChevronRight, ChevronDown, ArrowLeft, ShoppingBag, DollarSign, UploadCloud,
   Layers, Star, RefreshCw, MessageSquare
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
@@ -13,6 +13,7 @@ import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'fireb
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { useTranslation } from '../utils/i18n';
+import { Locale, isRtlLocale } from '../utils/translations';
 import { buildProductionUrl } from '../config/siteConfig';
 
 // Interfaces
@@ -45,11 +46,35 @@ interface RestaurantMenuConfig {
   restaurantName: string;
   description: string;
   currency: string;      // e.g., "USD", "EUR", "GBP", "SAR", etc.
-  selectedLanguage: 'en' | 'es' | 'fr' | 'it' | 'ar'; // Current builder language
+  selectedLanguage: string; // Current dynamic builder language
   categories: MenuCategory[];
   items: MenuItem[];
   themeColor: 'emerald' | 'rose' | 'amber' | 'neutral';
 }
+
+export interface LanguageOption {
+  code: string;
+  name: string;
+  native: string;
+  flag: string;
+}
+
+export const MENU_LANGUAGES: LanguageOption[] = [
+  { code: 'en', name: 'English', native: 'English', flag: '🇺🇸' },
+  { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
+  { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
+  { code: 'fr', name: 'French', native: 'Français', flag: '🇫🇷' },
+  { code: 'it', name: 'Italian', native: 'Italiano', flag: '🇮🇹' },
+  { code: 'de', name: 'German', native: 'Deutsch', flag: '🇩🇪' },
+  { code: 'pt', name: 'Portuguese', native: 'Português', flag: '🇵🇹' },
+  { code: 'tr', name: 'Turkish', native: 'Türkçe', flag: '🇹🇷' },
+  { code: 'id', name: 'Indonesian', native: 'Bahasa Indonesia', flag: '🇮🇩' },
+  { code: 'hi', name: 'Hindi', native: 'हिन्दी', flag: '🇮🇳' },
+  { code: 'ur', name: 'Urdu', native: 'اردو', flag: '🇵🇰' },
+  { code: 'zh', name: 'Chinese', native: '中文', flag: '🇨🇳' },
+  { code: 'ja', name: 'Japanese', native: '日本語', flag: '🇯🇵' },
+  { code: 'ko', name: 'Korean', native: '한국어', flag: '🇰🇷' },
+];
 
 // Currency definition map for supported languages
 export const CURRENCY_MAP: Record<string, { symbol: string; label: string; name: string }> = {
@@ -73,11 +98,16 @@ export const LANGUAGE_DEFAULT_CURRENCY: Record<string, string> = {
   es: 'EUR',
   fr: 'EUR',
   it: 'EUR',
+  de: 'EUR',
+  pt: 'EUR',
   ar: 'SAR',
   ur: 'PKR',
   hi: 'INR',
   id: 'IDR',
-  tr: 'TRY'
+  tr: 'TRY',
+  zh: 'CNY',
+  ja: 'JPY',
+  ko: 'KRW'
 };
 
 // Preset Premium Culinary Images from Unsplash
@@ -407,7 +437,7 @@ export const DEFAULT_ENGLISH_MENU: RestaurantMenuConfig = {
 };
 
 export default function RestaurantMenu() {
-  const { t, locale } = useTranslation();
+  const { t, locale, changeLocale } = useTranslation();
   const isArabic = locale === 'ar';
 
   const filteredCulinaryImages = isArabic
@@ -425,6 +455,10 @@ export default function RestaurantMenu() {
       "Syncing...": "جاري المزامنة...",
       "1. Brand Identity & Global Locales": "1. هوية العلامة التجارية والمواقع العالمية",
       "Configure core descriptors and choose active language to enter data.": "تكوين الأوصاف الأساسية واختيار اللغة النشطة لإدخال البيانات.",
+      "Language": "اللغة",
+      "Select Active Language": "تحديد اللغة النشطة",
+      "Simulated Language": "اللغة المحاكاة",
+      "Select Customer Menu Language": "تحديد لغة قائمة العميل",
       "Restaurant Name": "اسم المطعم",
       "Menu Currency": "عملة القائمة",
       "Short Restaurant Slogan": "شعار المطعم القصير",
@@ -570,38 +604,50 @@ export default function RestaurantMenu() {
     return DEFAULT_ENGLISH_MENU;
   });
 
-  // Keep menu and simulator language aligned when app locale changes
-  useEffect(() => {
-    if (isArabic) {
-      setSimulatedLanguage('ar');
-      setMenu(prev => {
-        if (prev.id === 'menu-default-en' || prev.id.startsWith('menu-default')) {
-          return GULF_ARABIC_MENU_PRESET;
-        }
-        return {
-          ...prev,
-          selectedLanguage: 'ar'
-        };
-      });
-    } else {
-      setSimulatedLanguage('en');
-      setMenu(prev => {
-        if (prev.id === 'menu-default-ar' || prev.id.startsWith('menu-default')) {
-          return DEFAULT_ENGLISH_MENU;
-        }
-        return {
-          ...prev,
-          selectedLanguage: 'en'
-        };
-      });
-    }
-  }, [locale, isArabic]);
-
   // Mobile simulation states
-  const [simulatedLanguage, setSimulatedLanguage] = useState<'en' | 'es' | 'fr' | 'it' | 'ar'>(isArabic ? 'ar' : 'en');
+  const [simulatedLanguage, setSimulatedLanguage] = useState<string>(locale || 'en');
   const [simulatedCart, setSimulatedCart] = useState<{ item: MenuItem; selectedVariant: MenuVariant; quantity: number }[]>([]);
   const [activePreviewItem, setActivePreviewItem] = useState<MenuItem | null>(null);
   const [tempVariant, setTempVariant] = useState<MenuVariant | null>(null);
+
+  // Centralized dynamic language change handler
+  const handleLanguageChange = (newLang: string) => {
+    // 1. Update global app translation / locale state
+    changeLocale(newLang as Locale);
+
+    // 2. Determine default currency for language if applicable
+    const autoCurrency = LANGUAGE_DEFAULT_CURRENCY[newLang];
+
+    // 3. Update restaurant menu configuration
+    setMenu(prev => ({
+      ...prev,
+      selectedLanguage: newLang,
+      ...(autoCurrency ? { currency: autoCurrency } : {})
+    }));
+
+    // 4. Update simulated mobile preview language
+    setSimulatedLanguage(newLang);
+
+    // 5. Sound feedback
+    playAudioSound('preview');
+  };
+
+  // Keep menu and simulator language aligned when app locale changes
+  useEffect(() => {
+    setSimulatedLanguage(locale);
+    setMenu(prev => {
+      if (locale === 'ar' && (prev.id === 'menu-default-en' || prev.id.startsWith('menu-default'))) {
+        return GULF_ARABIC_MENU_PRESET;
+      }
+      if (locale !== 'ar' && prev.id === 'menu-default-ar') {
+        return DEFAULT_ENGLISH_MENU;
+      }
+      return {
+        ...prev,
+        selectedLanguage: locale
+      };
+    });
+  }, [locale]);
 
   // New item draft states
   const [newItemCategory, setNewItemCategory] = useState<string>('cat-1');
@@ -1302,31 +1348,24 @@ const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
                 <p className="text-[11px] text-slate-400">{tMenu("Configure core descriptors and choose active language to enter data.")}</p>
               </div>
 
-              {/* Active Localization Language for input fields */}
-              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
-                {[
-                  { code: 'en', label: '🇬🇧 EN' },
-                  { code: 'es', label: '🇪🇸 ES' },
-                  { code: 'fr', label: '🇫🇷 FR' },
-                  { code: 'it', label: '🇮🇹 IT' },
-                  { code: 'ar', label: '🇸🇦 AR' }
-                ].map(l => (
-                  <button
-                    key={l.code}
-                    onClick={() => {
-                      const autoCurrency = LANGUAGE_DEFAULT_CURRENCY[l.code] || 'USD';
-                      setMenu(prev => ({
-                        ...prev,
-                        selectedLanguage: l.code as any,
-                        currency: autoCurrency
-                      }));
-                      playAudioSound('preview');
-                    }}
-                    className={`px-2.5 py-1 text-[10px] font-black rounded-lg transition-all cursor-pointer ${menu.selectedLanguage === l.code ? 'bg-white text-slate-900 shadow-xs font-black' : 'text-slate-500 hover:text-slate-800'}`}
+              {/* Dynamic Localization Language Dropdown */}
+              <div className="flex items-center gap-2">
+                <div className="relative min-w-[190px] sm:min-w-[220px]">
+                  <select
+                    value={menu.selectedLanguage || locale}
+                    onChange={(e) => handleLanguageChange(e.target.value)}
+                    className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-white shadow-xs transition-all font-semibold cursor-pointer appearance-none"
+                    aria-label={tMenu("Select Active Language")}
                   >
-                    {l.label}
-                  </button>
-                ))}
+                    {MENU_LANGUAGES.map((lang) => (
+                      <option key={lang.code} value={lang.code}>
+                        {lang.flag} {lang.native} ({lang.name})
+                      </option>
+                    ))}
+                  </select>
+                  <Globe className="w-4 h-4 text-indigo-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
               </div>
             </div>
 
@@ -1859,26 +1898,28 @@ const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
           
           {/* Section 1: Simulated Mobile Device Menu Preview */}
           <div id="mobile-menu-simulator-container" className="space-y-3">
-            <div className="flex items-center justify-between px-2">
-              <span className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-1">
-                <Smartphone className="w-4 h-4 text-indigo-600" />
-                {tMenu("Table-Top Smartphone Menu Preview")}
+            <div className="flex items-center justify-between px-2 gap-2">
+              <span className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 truncate">
+                <Smartphone className="w-4 h-4 text-indigo-600 shrink-0" />
+                <span className="truncate">{tMenu("Table-Top Smartphone Menu Preview")}</span>
               </span>
               
-              {/* Simulated Customer Language select */}
-              <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border">
-                {['en', 'es', 'fr', 'it', 'ar'].map(l => (
-                  <button
-                    key={l}
-                    onClick={() => {
-                      setSimulatedLanguage(l as any);
-                      playAudioSound('preview');
-                    }}
-                    className={`px-1.5 py-0.5 text-[9px] font-bold rounded-md uppercase ${simulatedLanguage === l ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-400'}`}
-                  >
-                    {l}
-                  </button>
-                ))}
+              {/* Dynamic Customer Language select dropdown */}
+              <div className="relative min-w-[140px] sm:min-w-[160px]">
+                <select
+                  value={simulatedLanguage || locale}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
+                  className="w-full pl-8 pr-7 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-white shadow-xs transition-all font-semibold cursor-pointer appearance-none"
+                  aria-label={tMenu("Select Customer Menu Language")}
+                >
+                  {MENU_LANGUAGES.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.flag} {lang.native}
+                    </option>
+                  ))}
+                </select>
+                <Globe className="w-3.5 h-3.5 text-indigo-500 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
 

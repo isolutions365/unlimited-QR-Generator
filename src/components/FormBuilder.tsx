@@ -192,73 +192,469 @@ const PALETTES = {
 
 export default function FormBuilder() {
   const { locale } = useTranslation();
-  const isArabic = locale === 'ar';
+  const currentLocale = locale as string;
+  const isArabic = currentLocale === 'ar';
+  const isUrdu = currentLocale === 'ur';
+  const isHindi = currentLocale === 'hi';
+  const isSpanish = currentLocale === 'es';
+  const isFrench = currentLocale === 'fr';
+  const isGerman = currentLocale === 'de';
+  const isRtl = isArabic || isUrdu;
 
   const tForm = (enText: string): string => {
-    if (!isArabic) return enText;
-    const dict: Record<string, string> = {
-      "Custom Form & Survey Engine": "منشئ النماذج والاستبيانات المخصصة",
-      "Interactive Form Builder": "منشئ النماذج التفاعلي",
-      "Create responsive, secure web forms and customer surveys with real-time drag-and-drop field order customisation, custom themes, and full submission data analytics charts.": "أنشئ نماذج ويب واستبيانات عملاء سريعة الاستجابة وآمنة مع إمكانية تخصيص ترتيب الحقول في الوقت الفعلي ومظاهر مخصصة ومخططات تحليلية كاملة لبيانات الإرسال.",
-      "Preset Core Use Case Templates": "قوالب حالات الاستخدام الأساسية الجاهزة",
-      "Select a robust template to boot structural fields instantly, or build from blank.": "اختر قالبًا قويًا لبدء الحقول الهيكلية على الفور، أو ابدأ من الصفر.",
-      "1. Structural Info & Choice": "1. المعلومات الهيكلية والاختيارات",
-      "1. Structural Info & Template Choice": "1. المعلومات الهيكلية واختيار القالب",
-      "Configure initial identity metadata, theme branding, and baseline data-model archetype.": "تكوين بيانات التعريف الأولية للهوية، والمظهر المخصص، وقالب نموذج البيانات الأساسي.",
-      "Form Display Title": "عنوان عرض النموذج",
-      "Brief Slogan / Description": "شعار قصير / وصف",
-      "Choose Theme Palette": "اختر لوحة المظهر",
-      "2. Fields & Payload Schema Editor": "2. محرر الحقول ومخطط الحمولة",
-      "Add, customize, delete, or re-order fields. Mark required fields for secure validation.": "إضافة الحقول أو تخصيصها أو حذفها أو إعادة ترتيبها. حدد الحقول المطلوبة لضمان صحة التحقق الآمن.",
-      "3. Dynamic Live Form Preview": "3. معاينة حية تفاعلية للنموذج",
-      "Interactive Simulated Smartphone Form": "نموذج هاتف ذكي محاكٍ تفاعلي",
-      "4. Your Active Forms & Analytics": "4. نماذجك النشطة والتحليلات",
-      "Manage published forms, read entries, and check structural performance graphics.": "إدارة النماذج المنشورة وقراءة البيانات المدخلة والتحقق من رسومات الأداء الهيكلي.",
-      "Save & Publish Form": "حفظ ونشر النموذج",
-      "Publishing...": "جاري النشر...",
-      "Standard Contact Form": "نموذج الاتصال القياسي",
-      "Customer Satisfaction Survey": "استبيان رضا العملاء",
-      "B2B Lead Generation Form": "نموذج توليد العملاء المحتملين B2B",
-      "Event Registration Ticket": "تذكرة تسجيل الفعالية",
-      "Calendar Appointment Booking": "حجز موعد التقويم",
-      "Celebration RSVP Handler": "معالج دعوة RSVP للاحتفالات",
-      "Continuous Product Feedback": "ملاحظات المنتج المستمرة",
-      "Dynamic Form Builder & QR Core": "منشئ النماذج الديناميكي ونواة QR",
-      "Design contact lists, customer surveys, RSVPs, or feedback boards. Generate instant scannable QR codes, collect secure entries directly in your Submission Dashboard, and track complete metrics.": "صمّم قوائم اتصال، أو استطلاعات رأي العملاء، أو بطاقات RSVP، أو لوحات الملاحظات. أنشئ رموز QR فورية قابلة للمسح الضوئي، واجمع المدخلات بشكل آمن مباشرةً في لوحة معلومات الإرسال الخاصة بك، وتتبّع المقاييس الكاملة.",
-      "TOTAL ACTIVE FORMS": "إجمالي النماذج النشطة",
-      "Gated & authenticated with Firebase Firestore": "محمي وموثق بواسطة قاعدة بيانات فاخرة",
-      "Configure & Build Form": "تكوين وبناء النموذج",
-      "Submission Dashboard": "لوحة معلومات الإرسال",
-      "Create New Form": "إنشاء نموذج جديد",
-      "Submission Analytics": "تحليلات البيانات المرسلة",
-      "1. Configure Identity & Slogan": "1. تكوين الهوية والشعار",
-      "Choose Theme & Palettes": "اختر السمة واللوحة",
-      "Select Template Preset": "اختر إعدادًا مسبقًا للقالب",
-      "Form Template Category": "فئة قالب النموذج",
-      "Add New Custom Field": "إضافة حقل مخصص جديد",
-      "Field Title / Label": "عنوان الحقل / التسمية",
-      "Field Placeholder text": "نص تلميح الحقل (النائب)",
-      "Required Field": "حقل مطلوب",
-      "Add Field": "إضافة حقل",
-      "Form Fields Schema": "مخطط حقول النموذج",
-      "Required": "مطلوب",
-      "Optional": "اختياري",
-      "Type": "النوع",
-      "Edit Field": "تعديل الحقل",
-      "Save": "حفظ",
-      "Cancel": "إلغاء",
-      "Live QR Scan Preview": "معاينة مسح رمز QR المباشر",
-      "Scan this secure dynamic QR design with your phone to access and submit the form live instantly!": "امسح تصميم رمز QR الديناميكي الآمن هذا بهاتفك للوصول إلى النموذج وإرساله على الفور وبشكل مباشر!",
-      "Form Submissions": "بيانات النماذج المرسلة",
-      "View Entries": "عرض الإدخالات",
-      "Close": "إغلاق",
-      "Form Submissions & Entry Records": "سجلات إدخال بيانات النماذج المرسلة",
-      "No submissions received yet.": "لم يتم استلام أي إدخالات بعد.",
-      "Submit Entry": "إرسال البيانات",
-      "Submission success! Your responses have been saved securely.": "تم الإرسال بنجاح! تم حفظ ردودك بشكل آمن.",
-      "Thank you for taking the time to fill out this form!": "شكرًا لك على تخصيص بعض الوقت لملء هذا النموذج!"
-    };
-    return dict[enText] || enText;
+    if (isArabic) {
+      const arDict: Record<string, string> = {
+        "Custom Form & Survey Engine": "منشئ النماذج والاستبيانات المخصصة",
+        "Interactive Form Builder": "منشئ النماذج التفاعلي",
+        "Dynamic Form Builder & QR Core": "منشئ النماذج الديناميكي ونواة QR",
+        "Design contact lists, customer surveys, RSVPs, or feedback boards. Generate instant scannable QR codes, collect secure entries directly in your Submission Dashboard, and track complete metrics.": "صمّم قوائم اتصال، أو استطلاعات رأي العملاء، أو بطاقات RSVP، أو لوحات الملاحظات. أنشئ رموز QR فورية قابلة للمسح الضوئي، واجمع المدخلات بشكل آمن مباشرةً في لوحة معلومات الإرسال الخاصة بك، وتتبّع المقاييس الكاملة.",
+        "TOTAL ACTIVE FORMS": "إجمالي النماذج النشطة",
+        "Gated & authenticated with Firebase Firestore": "محمي وموثق بواسطة قاعدة بيانات فاخرة",
+        "Configure & Build Form": "تكوين وبناء النموذج",
+        "Submission Dashboard": "لوحة معلومات الإرسال",
+        "Bootstrap Instant Form Templates": "قوالب النماذج الفورية الجاهزة",
+        "Click any template below to pre-populate custom fields instantly.": "انقر على أي قالب أدناه لتعبئة الحقول المخصصة فوراً.",
+        "Form Fields & Metadata Configuration": "إعدادات حقول النموذج والبيانات الوصفية",
+        "Customize properties, append custom choices, and order field requirements.": "تخصيص الخصائص وإضافة خيارات مخصصة وترتيب متطلبات الحقول.",
+        "Form Header Title": "عنوان ترويسة النموذج",
+        "e.g. VIP Dinner Confirmation": "مثال: تأكيد عشاء كبار الشخصيات",
+        "Form Color Theme": "سمة لون النموذج",
+        "Classic Indigo": "نيلي كلاسيكي",
+        "Organic Emerald": "زمردي طبيعي",
+        "Elegant Rose": "وردي أنيق",
+        "Autumn Amber": "كهرماني خريفي",
+        "Cosmic Purple": "أرجواني كوني",
+        "Coastal Cyan": "سماوي ساحلي",
+        "Subtext / Explanatory Description": "نص فرعي / وصف توضيحي",
+        "Provide supportive context for prospects scanning your code...": "قدم سياقاً توضيحياً للأشخاص الذين يمسحون الرمز الخاص بك...",
+        "Active Fields": "الحقول النشطة",
+        "Add Custom Field": "إضافة حقل مخصص",
+        "Empty Label": "بدون تسمية",
+        "Collapse": "طي",
+        "Customize": "تخصيص",
+        "Field Type": "نوع الحقل",
+        "Question / Field Label": "السؤال / تسمية الحقل",
+        "Placeholder Guide": "دليل التلميح (النائب)",
+        "Response Required": "الإجابة مطلوبة",
+        "Options (Comma separated list)": "الخيارات (قائمة مفصولة بفواصل)",
+        "Short Text": "نص قصير",
+        "Paragraph Block": "فقرة نصية",
+        "Email Address": "البريد الإلكتروني",
+        "Phone Number": "رقم الهاتف",
+        "Dropdown Choice": "قائمة منسدلة",
+        "Checkbox Option": "خيارات متعددة (مربعات اختيار)",
+        "Date picker": "محدد التاريخ",
+        "File Attachment": "مرفق ملف",
+        "Deploying Firestore Schema...": "جاري نشر النموذج...",
+        "Deploy Form & Activate QR": "نشر النموذج وتفعيل رمز QR",
+        "My Created Forms": "نماذجي المنشأة",
+        "customized fields": "حقول مخصصة",
+        "Created": "تم الإنشاء",
+        "Views": "مشاهدات",
+        "Submissions": "إرسالات",
+        "Delete Form Config": "حذف إعدادات النموذج",
+        "No forms deployed yet. Create your first dynamic form schema above.": "لم يتم نشر أي نماذج بعد. أنشئ أول نموذج ديناميكي أعلاه.",
+        "View to Conversion Analytics": "تحليلات المشاهدة مقابل التحويل",
+        "Scans/Views": "المسح / المشاهدات",
+        "Option Breakdown (Dropdowns)": "توزيع الخيارات (القوائم المنسدلة)",
+        "Select field stats will render here once dropdown questions are populated with answers.": "ستظهر إحصائيات الحقول المحددة هنا بمجرد ملء أسئلة القوائم المنسدلة بالإجابات.",
+        "Aggregated Submissions": "الإرسالات المجمعة",
+        "Real-time database entries logged by your clients.": "سجلات قاعدة البيانات في الوقت الفعلي المسجلة بواسطة عملائك.",
+        "Export to CSV": "تصدير إلى CSV",
+        "Remove Entry": "حذف الإدخال",
+        "Waiting for first scan submissions. Point your phone camera at the QR code on the right to test submission flow.": "في انتظار أول إرسال. وجه كاميرا هاتفك نحو رمز QR على اليمين لاختبار الإرسال.",
+        "Dynamic Form QR": "رمز QR للنموذج الديناميكي",
+        "Scanners are securely directed to fill form answers.": "يتم توجيه الماسحين ضوئياً بأمان لملء إجابات النموذج.",
+        "● Open": "● مفتوح",
+        "● Closed": "● مغلق",
+        "Simulate Mobile Scan": "محاكاة مسح الهاتف",
+        "Copy Form Link": "نسخ رابط النموذج",
+        "Copied Link!": "تم نسخ الرابط!",
+        "Connected to Firebase Auth & DB": "متصل بقاعدة بيانات وتوثيق فايربيس",
+        "Live Builder Wireframe": "المخطط الهيكلي الحي للنموذج",
+        "Sample Title": "عنوان تجريبي",
+        "Sample description context...": "سياق الوصف التجريبي...",
+        "Empty placeholder": "تلميح فارغ",
+        "Create or select a form on the left to activate scannable QR redirections." : "أنشئ أو اختر نموذجاً من اليسار لتفعيل توجيهات رمز QR القابل للمسح.",
+        "PHONE PORTAL VIEW": "معاينة بوابة الهاتف",
+        "Close [X]": "إغلاق [X]",
+        "Submission Received!": "تم استلام الإرسال!",
+        "Thank you. Your answers have been safely written to our database collection.": "شكراً لك. تم حفظ إجاباتك بأمان في قاعدة البيانات الخاصة بنا.",
+        "Submit Another Response": "إرسال رد آخر",
+        "Form is Currently Closed": "النموذج مغلق حالياً",
+        "Submissions are temporarily disabled by the publisher.": "تم تعطيل الإرسال مؤقتاً من قبل الناشر.",
+        "Select choice...": "اختر الخيار...",
+        "Attach screenshot or PDF file": "أرفق لقطة شاشة أو ملف PDF",
+        "Submit Form": "إرسال النموذج",
+        "This form has been closed by the host.": "تم إغلاق هذا النموذج من قبل المضيف.",
+        "contact": "جهة اتصال",
+        "survey": "استبيان",
+        "lead": "عملاء محتملون",
+        "registration": "تسجيل",
+        "appointment": "موعد",
+        "rsvp": "دعوة RSVP",
+        "feedback": "ملاحظات",
+        "Standard Contact Form": "نموذج الاتصال القياسي",
+        "Get in touch with your clients, collect feedback, and answer support queries.": "تواصل مع عملائك واجمع الملاحظات وأجب عن استفسارات الدعم.",
+        "Customer Satisfaction Survey": "استبيان رضا العملاء",
+        "Understand client sentiment, product feedback, and net promoter score.": "فهم آراء العملاء وملاحظات المنتج ومعدل الترويج الصافي.",
+        "B2B Lead Generation Form": "نموذج توليد العملاء المحتملين B2B",
+        "Qualify outbound prospects and aggregate enterprise demo requests.": "تأهيل العملاء المتوقعين وجمع طلبات العروض التوضيحية للمؤسسات.",
+        "Event Registration Ticket": "تذكرة تسجيل الفعالية",
+        "Authorize attendees, VIPs, and media credentials for regional summits.": "اعتماد الحاضرين وكبار الشخصيات والإعلاميين للمؤتمرات الإقليمية.",
+        "Calendar Appointment Booking": "حجز موعد التقويم",
+        "Schedule sales demos, technical consults, or personal client meetings.": "جدولة عروض المبيعات والاستشارات الفنية أو اجتماعات العملاء الشخصية.",
+        "Celebration RSVP Handler": "معالج دعوة RSVP للاحتفالات",
+        "Coordinate wedding receptions, corporate dinners, or milestone anniversaries.": "تنسيق حفلات الزفاف أو عشاء الشركات أو الذكرى السنوية المميزة.",
+        "Continuous Product Feedback": "ملاحظات المنتج المستمرة",
+        "Aggregate software bug reports, feature suggestions, or user feedback.": "تجميع تقارير الأخطاء البرمجية واقتراحات الميزات وملاحظات المستخدمين."
+      };
+      if (arDict[enText]) return arDict[enText];
+    } else if (isUrdu) {
+      const urDict: Record<string, string> = {
+        "Custom Form & Survey Engine": "کسٹم فارم اور سروے انجن",
+        "Interactive Form Builder": "انٹرایکٹو فارم بلڈر",
+        "Dynamic Form Builder & QR Core": "ڈائنامک فارم بلڈر اور کیو آر کور",
+        "Design contact lists, customer surveys, RSVPs, or feedback boards. Generate instant scannable QR codes, collect secure entries directly in your Submission Dashboard, and track complete metrics.": "رابطہ کی فہرستیں، کسٹمر سروے، RSVP یا فیڈ بیک بورڈز ڈیزائن کریں۔ فوری اسکین کے قابل کیو آر کوڈز بنائیں، اپنے سبمشن ڈیش بورڈ میں محفوظ ڈیٹا اکٹھا کریں، اور مکمل اعداد و شمار دیکھیں۔",
+        "TOTAL ACTIVE FORMS": "کل فعال فارمز",
+        "Gated & authenticated with Firebase Firestore": "فائر بیس فائر اسٹور کے ساتھ محفوظ اور تصدیق شدہ",
+        "Configure & Build Form": "فارم ترتیب دیں اور بنائیں",
+        "Submission Dashboard": "سبمشن ڈیش بورڈ",
+        "Bootstrap Instant Form Templates": "فوری فارم ٹیمپلیٹس منتخب کریں",
+        "Click any template below to pre-populate custom fields instantly.": "حسب ضرورت فیلڈز خودکار طور پر بھرنے کے لیے نیچے دیے گئے کسی بھی ٹیمپلیٹ پر کلک کریں۔",
+        "Form Fields & Metadata Configuration": "فارم فیلڈز اور میٹا ڈیٹا کی ترتیبات",
+        "Customize properties, append custom choices, and order field requirements.": "خصوصیات کو حسب ضرورت بنائیں، نئے اختیارات شامل کریں اور فیلڈز کی ترتیب تبدیل کریں۔",
+        "Form Header Title": "فارم کا بنیادی عنوان",
+        "e.g. VIP Dinner Confirmation": "مثال: وی آئی پی ڈنر کی تصدیق",
+        "Form Color Theme": "فارم کا رنگین تھیم",
+        "Classic Indigo": "کلاسک انڈیگو",
+        "Organic Emerald": "قدرتی زمرد",
+        "Elegant Rose": "خوبصورت گلابی",
+        "Autumn Amber": "خزاں عنبر",
+        "Cosmic Purple": "کائناتی جامنی",
+        "Coastal Cyan": "ساحلی نیلا",
+        "Subtext / Explanatory Description": "ذیلی متن / وضاحتی تفصیل",
+        "Provide supportive context for prospects scanning your code...": "کوڈ اسکین کرنے والوں کے لیے وضاحتی معلومات درج کریں...",
+        "Active Fields": "فعال فیلڈز",
+        "Add Custom Field": "کسٹم فیلڈ شامل کریں",
+        "Empty Label": "خالی لیبل",
+        "Collapse": "سمیٹیں",
+        "Customize": "ترتیب دیں",
+        "Field Type": "فیلڈ کی قسم",
+        "Question / Field Label": "سوال / فیلڈ کا لیبل",
+        "Placeholder Guide": "ہیلپ ٹیکسٹ (پلیس ہولڈر)",
+        "Response Required": "لازمی فیلڈ",
+        "Options (Comma separated list)": "اختیارات (کوما سے الگ فہرست)",
+        "Short Text": "مختصر متن",
+        "Paragraph Block": "پیراگراف بلاک",
+        "Email Address": "ای میل ایڈریس",
+        "Phone Number": "فون نمبر",
+        "Dropdown Choice": "ڈراپ ڈاؤن انتخاب",
+        "Checkbox Option": "چیک باکس آپشن",
+        "Date picker": "تاریخ کا انتخاب",
+        "File Attachment": "فائل منسلک کریں",
+        "Deploying Firestore Schema...": "فارم شائع ہو رہا ہے...",
+        "Deploy Form & Activate QR": "فارم شائع کریں اور کیو آر فعال کریں",
+        "My Created Forms": "میرے بنائے گئے فارمز",
+        "customized fields": "کسٹم فیلڈز",
+        "Created": "تخلیق شدہ",
+        "Views": "دیکھے گئے",
+        "Submissions": "جمع کردہ",
+        "Delete Form Config": "فارم ڈیلیٹ کریں",
+        "No forms deployed yet. Create your first dynamic form schema above.": "ابھی تک کوئی فارم نہیں بنایا گیا۔ اوپر اپنا پہلا ڈائنامک فارم بنائیں۔",
+        "View to Conversion Analytics": "ویوز اور کنورژن کے تجزیات",
+        "Scans/Views": "اسکینز / ویوز",
+        "Option Breakdown (Dropdowns)": "اختیارات کا تجزیہ (ڈراپ ڈاؤن)",
+        "Select field stats will render here once dropdown questions are populated with answers.": "جب صارفین ڈراپ ڈاؤن سوالات کے جوابات دیں گے تو اعداد و شمار یہاں ظاہر ہوں گے۔",
+        "Aggregated Submissions": "جمع کردہ جوابات",
+        "Real-time database entries logged by your clients.": "صارفین کے جمع کردہ ریئل ٹائم ڈیٹا ریکارڈز۔",
+        "Export to CSV": "CSV میں ایکسپورٹ کریں",
+        "Remove Entry": "ریکارڈ حذف کریں",
+        "Waiting for first scan submissions. Point your phone camera at the QR code on the right to test submission flow.": "پہلے رسپانس کا انتظار ہے۔ فارم ٹیسٹ کرنے کے لیے دائیں جانب والے QR کوڈ کو فون کیمرے سے اسکین کریں۔",
+        "Dynamic Form QR": "ڈائنامک فارم کیو آر کوڈ",
+        "Scanners are securely directed to fill form answers.": "اسکین کرنے والے صارفین کو محفوظ طریقے سے فارم پر پہنچایا جاتا ہے۔",
+        "● Open": "● فعال",
+        "● Closed": "● بند",
+        "Simulate Mobile Scan": "موبائل اسکین کی مشق",
+        "Copy Form Link": "فارم کا لنک کاپی کریں",
+        "Copied Link!": "لنک کاپی ہو گیا!",
+        "Connected to Firebase Auth & DB": "فائر بیس ڈیٹا بیس سے منسلک",
+        "Live Builder Wireframe": "فارم کا لائیو لے آؤٹ پرویو",
+        "Sample Title": "نمونہ عنوان",
+        "Sample description context...": "نمونہ وضاحتی تفصیل...",
+        "Empty placeholder": "خالی پلیس ہولڈر",
+        "Create or select a form on the left to activate scannable QR redirections.": "کیو آر کوڈ کو فعال کرنے کے لیے بائیں جانب سے فارم منتخب کریں یا نیا بنائیں۔",
+        "PHONE PORTAL VIEW": "موبائل پورٹل ویو",
+        "Close [X]": "بند کریں [X]",
+        "Submission Received!": "فارم کامیابی سے موصول ہو گیا!",
+        "Thank you. Your answers have been safely written to our database collection.": "شکریہ! آپ کے جوابات ہمارے ڈیٹا بیس میں محفوظ کر لیے گئے ہیں۔",
+        "Submit Another Response": "ایک اور رسپانس جمع کریں",
+        "Form is Currently Closed": "فارم فی الوقت بند ہے",
+        "Submissions are temporarily disabled by the publisher.": "ناشر نے فارم جمع کروانا عارضی طور پر روک دیا ہے۔",
+        "Select choice...": "انتخاب کریں...",
+        "Attach screenshot or PDF file": "اسکرین شاٹ یا پی ڈی ایف فائل منسلک کریں",
+        "Submit Form": "فارم جمع کریں",
+        "This form has been closed by the host.": "یہ فارم میزبان نے بند کر دیا ہے۔",
+        "contact": "رابطہ",
+        "survey": "سروے",
+        "lead": "لیڈز",
+        "registration": "رجسٹریشن",
+        "appointment": "ملاقات کا وقت",
+        "rsvp": "دعوت نامہ RSVP",
+        "feedback": "فیڈ بیک",
+        "Standard Contact Form": "معیاری رابطہ فارم",
+        "Get in touch with your clients, collect feedback, and answer support queries.": "گاہکوں سے رابطہ کریں، آراء حاصل کریں اور سوالات کے جوابات دیں۔",
+        "Customer Satisfaction Survey": "کسٹمر فیڈ بیک سروے",
+        "Understand client sentiment, product feedback, and net promoter score.": "صارفین کے اطمینان اور پروڈکٹ کے بارے میں رائے جانیں۔",
+        "B2B Lead Generation Form": "B2B لیڈ جنریشن فارم",
+        "Qualify outbound prospects and aggregate enterprise demo requests.": "نئے تجارتی کسٹمرز اور ڈیمو درخواستوں کو رجسٹر کریں۔",
+        "Event Registration Ticket": "ایونٹ رجسٹریشن ٹکٹ",
+        "Authorize attendees, VIPs, and media credentials for regional summits.": "تقریبات کے لیے مہمانوں اور شرکاء کی تفصیلات رجسٹر کریں۔",
+        "Calendar Appointment Booking": "کیلنڈر بکنگ فارم",
+        "Schedule sales demos, technical consults, or personal client meetings.": "مشاورتی اور کاروباری میٹنگز کا وقت طے کریں۔",
+        "Celebration RSVP Handler": "تقریب RSVP مینیجر",
+        "Coordinate wedding receptions, corporate dinners, or milestone anniversaries.": "شادی، ڈنر اور تقریبات کے لیے شرکت کی تصدیق حاصل کریں۔",
+        "Continuous Product Feedback": "پروڈکٹ فیڈ بیک فارم",
+        "Aggregate software bug reports, feature suggestions, or user feedback.": "بگز کی رپورٹس اور نئی تجاویز اکٹھی کریں۔"
+      };
+      if (urDict[enText]) return urDict[enText];
+    } else if (isHindi) {
+      const hiDict: Record<string, string> = {
+        "Custom Form & Survey Engine": "कस्टम फ़ॉर्म और सर्वेक्षण इंजन",
+        "Interactive Form Builder": "इंटरैक्टिव फ़ॉर्म बिल्डर",
+        "Dynamic Form Builder & QR Core": "डायनामिक फ़ॉर्म बिल्डर और क्यूआर कोर",
+        "Design contact lists, customer surveys, RSVPs, or feedback boards. Generate instant scannable QR codes, collect secure entries directly in your Submission Dashboard, and track complete metrics.": "संपर्क सूचियां, ग्राहक सर्वेक्षण, आरएसवीपी या फीडबैक बोर्ड डिजाइन करें। तुरंत स्कैन करने योग्य क्यूआर कोड बनाएं और सबमिशन डैशबोर्ड में सुरक्षित डेटा एकत्र करें।",
+        "TOTAL ACTIVE FORMS": "कुल सक्रिय फ़ॉर्म",
+        "Gated & authenticated with Firebase Firestore": "फ़ायरबेस डेटाबेस द्वारा सुरक्षित एवं प्रमाणित",
+        "Configure & Build Form": "फ़ॉर्म कॉन्फ़िगर करें और बनाएं",
+        "Submission Dashboard": "सबमिशन डैशबोर्ड",
+        "Bootstrap Instant Form Templates": "त्वरित फ़ॉर्म टेम्प्लेट चुनें",
+        "Click any template below to pre-populate custom fields instantly.": "कस्टम फ़ील्ड्स को तुरंत भरने के लिए नीचे दिए गए किसी भी टेम्प्लेट पर क्लिक करें।",
+        "Form Fields & Metadata Configuration": "फ़ॉर्म फ़ील्ड्स और मेटाडेटा सेटिंग्स",
+        "Customize properties, append custom choices, and order field requirements.": "फ़ील्ड्स को कस्टमाइज़ करें, नए विकल्प जोड़ें और उनकी क्रम संख्या व्यवस्थित करें।",
+        "Form Header Title": "फ़ॉर्म का मुख्य शीर्षक",
+        "e.g. VIP Dinner Confirmation": "उदा. वीआईपी डिनर पुष्टि",
+        "Form Color Theme": "फ़ॉर्म रंगीन थीम",
+        "Classic Indigo": "क्लासिक इंडिगो",
+        "Organic Emerald": "प्राकृतिक एमराल्ड",
+        "Elegant Rose": "एलिगेंट रोज़",
+        "Autumn Amber": "ऑटम एम्बर",
+        "Cosmic Purple": "कॉस्मिक पर्पल",
+        "Coastal Cyan": "कोस्टल सियान",
+        "Subtext / Explanatory Description": "उप-शीर्षक / विवरणात्मक पाठ",
+        "Provide supportive context for prospects scanning your code...": "क्यूआर कोड स्कैन करने वाले उपयोगकर्ताओं के लिए संदर्भ लिखें...",
+        "Active Fields": "सक्रिय फ़ील्ड्स",
+        "Add Custom Field": "कस्टम फ़ील्ड जोड़ें",
+        "Empty Label": "खाली लेबल",
+        "Collapse": "समेटें",
+        "Customize": "कस्टमाइज़ करें",
+        "Field Type": "फ़ील्ड का प्रकार",
+        "Question / Field Label": "प्रश्न / फ़ील्ड लेबल",
+        "Placeholder Guide": "प्लेसहोल्डर गाइड",
+        "Response Required": "अनिवार्य फ़ील्ड",
+        "Options (Comma separated list)": "विकल्प (अल्पविराम द्वारा अलग सूची)",
+        "Short Text": "छोटा पाठ (Short Text)",
+        "Paragraph Block": "पैराग्राफ ब्लॉक",
+        "Email Address": "ईमेल पता",
+        "Phone Number": "फ़ोन नंबर",
+        "Dropdown Choice": "ड्रॉपडाउन विकल्प",
+        "Checkbox Option": "चेकबॉक्स विकल्प",
+        "Date picker": "तारीख चयनकर्ता",
+        "File Attachment": "फ़ाइल संलग्नक",
+        "Deploying Firestore Schema...": "फ़ॉर्म प्रकाशित हो रहा है...",
+        "Deploy Form & Activate QR": "फ़ॉर्म प्रकाशित करें और क्यूआर सक्रिय करें",
+        "My Created Forms": "मेरे बनाए गए फ़ॉर्म",
+        "customized fields": "कस्टम फ़ील्ड्स",
+        "Created": "बनाया गया",
+        "Views": "देखे गए",
+        "Submissions": "सबमिशन",
+        "Delete Form Config": "फ़ॉर्म हटाएं",
+        "No forms deployed yet. Create your first dynamic form schema above.": "अभी तक कोई फ़ॉर्म नहीं बनाया गया है। ऊपर अपना पहला फ़ॉर्म बनाएं।",
+        "View to Conversion Analytics": "व्यूज और कन्वर्ज़न विश्लेषण",
+        "Scans/Views": "स्कैन / व्यूज",
+        "Option Breakdown (Dropdowns)": "विकल्प वितरण (ड्रॉपडाउन)",
+        "Select field stats will render here once dropdown questions are populated with answers.": "जब उपयोगकर्ता प्रश्नों के उत्तर देंगे तो आंकड़े यहां दिखाई देंगे।",
+        "Aggregated Submissions": "एकत्रित सबमिशन",
+        "Real-time database entries logged by your clients.": "ग्राहकों द्वारा सबमिट किए गए रीयल-टाइम रिकॉर्ड।",
+        "Export to CSV": "CSV में एक्सपोर्ट करें",
+        "Remove Entry": "रिकॉर्ड हटाएं",
+        "Waiting for first scan submissions. Point your phone camera at the QR code on the right to test submission flow.": "पहले सबमिशन की प्रतीक्षा है। फ़ॉर्म का परीक्षण करने के लिए दाईं ओर के क्यूआर कोड को स्कैन करें।",
+        "Dynamic Form QR": "डायनामिक फ़ॉर्म क्यूआर",
+        "Scanners are securely directed to fill form answers.": "स्कैनर्स को सुरक्षित रूप से फ़ॉर्म भरने के लिए निर्देशित किया जाता है।",
+        "● Open": "● खुला",
+        "● Closed": "● बंद",
+        "Simulate Mobile Scan": "मोबाइल स्कैन सिम्युलेट करें",
+        "Copy Form Link": "फ़ॉर्म लिंक कॉपी करें",
+        "Copied Link!": "लिंक कॉपी हो गया!",
+        "Connected to Firebase Auth & DB": "फ़ायरबेस डेटाबेस से कनेक्टेड",
+        "Live Builder Wireframe": "फ़ॉर्म का लाइव वायरफ्रेम",
+        "Sample Title": "नमूना शीर्षक",
+        "Sample description context...": "नमूना विवरण...",
+        "Empty placeholder": "खाली प्लेसहोल्डर",
+        "Create or select a form on the left to activate scannable QR redirections.": "क्यूआर सक्रिय करने के लिए बाईं ओर से फ़ॉर्म चुनें या नया बनाएं।",
+        "PHONE PORTAL VIEW": "मोबाइल पोर्टल व्यू",
+        "Close [X]": "बंद करें [X]",
+        "Submission Received!": "सबमिशन प्राप्त हुआ!",
+        "Thank you. Your answers have been safely written to our database collection.": "धन्यवाद! आपके उत्तर हमारे डेटाबेस में सुरक्षित रूप से दर्ज कर लिए गए हैं।",
+        "Submit Another Response": "एक और प्रतिक्रिया सबमिट करें",
+        "Form is Currently Closed": "फ़ॉर्म वर्तमान में बंद है",
+        "Submissions are temporarily disabled by the publisher.": "प्रकाशक द्वारा सबमिशन अस्थायी रूप से अक्षम कर दिया गया है।",
+        "Select choice...": "विकल्प चुनें...",
+        "Attach screenshot or PDF file": "स्क्रीनशॉट या पीडीएफ फाइल संलग्न करें",
+        "Submit Form": "फ़ॉर्म सबमिट करें",
+        "This form has been closed by the host.": "यह फ़ॉर्म होस्ट द्वारा बंद कर दिया गया है।",
+        "contact": "संपर्क",
+        "survey": "सर्वेक्षण",
+        "lead": "लीड्स",
+        "registration": "पंजीकरण",
+        "appointment": "अपॉइंटमेंट",
+        "rsvp": "निमंत्रण RSVP",
+        "feedback": "प्रतिक्रिया",
+        "Standard Contact Form": "मानक संपर्क फ़ॉर्म",
+        "Get in touch with your clients, collect feedback, and answer support queries.": "ग्राहकों से संपर्क करें और सहायता प्रश्नों के उत्तर दें।",
+        "Customer Satisfaction Survey": "ग्राहक संतुष्टि सर्वेक्षण",
+        "Understand client sentiment, product feedback, and net promoter score.": "ग्राहकों की राय और उत्पाद फीडबैक समझें।",
+        "B2B Lead Generation Form": "B2B लीड जनरेशन फ़ॉर्म",
+        "Qualify outbound prospects and aggregate enterprise demo requests.": "संभावित ग्राहकों और डेमो अनुरोधों को एकत्रित करें।",
+        "Event Registration Ticket": "इवेंट पंजीकरण टिकट",
+        "Authorize attendees, VIPs, and media credentials for regional summits.": "प्रतिभागियों और वीआईपी के विवरण पंजीकृत करें।",
+        "Calendar Appointment Booking": "कैलेंडर अपॉइंटमेंट बुकिंग",
+        "Schedule sales demos, technical consults, or personal client meetings.": "मीटिंग और परामर्श का समय निर्धारित करें।",
+        "Celebration RSVP Handler": "उत्सव RSVP हैंडलर",
+        "Coordinate wedding receptions, corporate dinners, or milestone anniversaries.": "विवाह या कार्यक्रमों के लिए उपस्थिति की पुष्टि प्राप्त करें।",
+        "Continuous Product Feedback": "उत्पाद प्रतिक्रिया फ़ॉर्म",
+        "Aggregate software bug reports, feature suggestions, or user feedback.": "बग रिपोर्ट और नई सुविधाओं के सुझाव एकत्र करें।"
+      };
+      if (hiDict[enText]) return hiDict[enText];
+    } else if (isSpanish) {
+      const esDict: Record<string, string> = {
+        "Custom Form & Survey Engine": "Motor de Formularios y Encuestas",
+        "Interactive Form Builder": "Creador Interactivo de Formularios",
+        "Dynamic Form Builder & QR Core": "Creador Dinámico de Formularios y Núcleo QR",
+        "Design contact lists, customer surveys, RSVPs, or feedback boards. Generate instant scannable QR codes, collect secure entries directly in your Submission Dashboard, and track complete metrics.": "Diseñe formularios de contacto, encuestas de clientes, confirmaciones RSVP o comentarios. Genere códigos QR dinámicos y recopile respuestas seguras.",
+        "TOTAL ACTIVE FORMS": "TOTAL DE FORMULARIOS ACTIVOS",
+        "Gated & authenticated with Firebase Firestore": "Protegido y autenticado con Firebase Firestore",
+        "Configure & Build Form": "Configurar y Crear Formulario",
+        "Submission Dashboard": "Panel de Respuestas",
+        "Bootstrap Instant Form Templates": "Plantillas Instantáneas de Formularios",
+        "Click any template below to pre-populate custom fields instantly.": "Haga clic en una plantilla para precargar campos al instante.",
+        "Form Fields & Metadata Configuration": "Campos del Formulario y Configuración",
+        "Customize properties, append custom choices, and order field requirements.": "Personalice propiedades, agregue opciones y organice los campos requeridos.",
+        "Form Header Title": "Título del Formulario",
+        "e.g. VIP Dinner Confirmation": "ej. Confirmación de Cena VIP",
+        "Form Color Theme": "Tema de Color",
+        "Classic Indigo": "Índigo Clásico",
+        "Organic Emerald": "Esmeralda Orgánico",
+        "Elegant Rose": "Rosa Elegante",
+        "Autumn Amber": "Ámbar Otoñal",
+        "Cosmic Purple": "Púrpura Cósmico",
+        "Coastal Cyan": "Cian Costero",
+        "Subtext / Explanatory Description": "Subtítulo / Descripción Explicativa",
+        "Provide supportive context for prospects scanning your code...": "Proporcione contexto para quienes escaneen su código...",
+        "Active Fields": "Campos Activos",
+        "Add Custom Field": "Agregar Campo Personalizado",
+        "Empty Label": "Etiqueta vacía",
+        "Collapse": "Plegar",
+        "Customize": "Personalizar",
+        "Field Type": "Tipo de Campo",
+        "Question / Field Label": "Pregunta / Etiqueta del Campo",
+        "Placeholder Guide": "Texto de Ayuda (Placeholder)",
+        "Response Required": "Respuesta Obligatoria",
+        "Options (Comma separated list)": "Opciones (separadas por comas)",
+        "Short Text": "Texto Corto",
+        "Paragraph Block": "Párrafo",
+        "Email Address": "Correo Electrónico",
+        "Phone Number": "Número de Teléfono",
+        "Dropdown Choice": "Menú Desplegable",
+        "Checkbox Option": "Casilla de Verificación",
+        "Date picker": "Selector de Fecha",
+        "File Attachment": "Archivo Adjunto",
+        "Deploying Firestore Schema...": "Publicando Formulario...",
+        "Deploy Form & Activate QR": "Publicar Formulario y Activar QR",
+        "My Created Forms": "Mis Formularios Creados",
+        "customized fields": "campos personalizados",
+        "Created": "Creado",
+        "Views": "Vistas",
+        "Submissions": "Respuestas",
+        "Delete Form Config": "Eliminar Formulario",
+        "No forms deployed yet. Create your first dynamic form schema above.": "Aún no hay formularios publicados. Cree su primer formulario arriba.",
+        "View to Conversion Analytics": "Analítica de Vistas a Conversión",
+        "Scans/Views": "Escaneos / Vistas",
+        "Option Breakdown (Dropdowns)": "Desglose de Opciones (Desplegables)",
+        "Select field stats will render here once dropdown questions are populated with answers.": "Las estadísticas aparecerán aquí cuando los usuarios respondan.",
+        "Aggregated Submissions": "Respuestas Recopiladas",
+        "Real-time database entries logged by your clients.": "Registros en tiempo real enviados por sus clientes.",
+        "Export to CSV": "Exportar a CSV",
+        "Remove Entry": "Eliminar Registro",
+        "Waiting for first scan submissions. Point your phone camera at the QR code on the right to test submission flow.": "Esperando el primer envío. Apunte la cámara de su teléfono al código QR para probar.",
+        "Dynamic Form QR": "QR de Formulario Dinámico",
+        "Scanners are securely directed to fill form answers.": "Los usuarios son dirigidos de forma segura a responder el formulario.",
+        "● Open": "● Abierto",
+        "● Closed": "● Cerrado",
+        "Simulate Mobile Scan": "Simular Escaneo Móvil",
+        "Copy Form Link": "Copiar Enlace del Formulario",
+        "Copied Link!": "¡Enlace Copiado!",
+        "Connected to Firebase Auth & DB": "Conectado a Base de Datos Firebase",
+        "Live Builder Wireframe": "Vista Previa de Estructura",
+        "Sample Title": "Título de Muestra",
+        "Sample description context...": "Descripción de muestra...",
+        "Empty placeholder": "Texto de ayuda vacío",
+        "Create or select a form on the left to activate scannable QR redirections.": "Cree o elija un formulario a la izquierda para activar el código QR.",
+        "PHONE PORTAL VIEW": "VISTA DE PORTAL MÓVIL",
+        "Close [X]": "Cerrar [X]",
+        "Submission Received!": "¡Respuesta Recibida!",
+        "Thank you. Your answers have been safely written to our database collection.": "Gracias. Sus respuestas han sido guardadas de forma segura.",
+        "Submit Another Response": "Enviar Otra Respuesta",
+        "Form is Currently Closed": "El Formulario está Actualmente Cerrado",
+        "Submissions are temporarily disabled by the publisher.": "Los envíos han sido desactivados temporalmente por el creador.",
+        "Select choice...": "Seleccionar opción...",
+        "Attach screenshot or PDF file": "Adjuntar captura o archivo PDF",
+        "Submit Form": "Enviar Formulario",
+        "This form has been closed by the host.": "Este formulario ha sido cerrado por el anfitrión."
+      };
+      if (esDict[enText]) return esDict[enText];
+    } else if (isFrench) {
+      const frDict: Record<string, string> = {
+        "Custom Form & Survey Engine": "Moteur de Formulaires et Sondages",
+        "Interactive Form Builder": "Générateur Interactif de Formulaires",
+        "Dynamic Form Builder & QR Core": "Générateur Dynamique de Formulaires et QR",
+        "TOTAL ACTIVE FORMS": "TOTAL DES FORMULAIRES ACTIFS",
+        "Configure & Build Form": "Configurer et Créer un Formulaire",
+        "Submission Dashboard": "Tableau des Réponses",
+        "Bootstrap Instant Form Templates": "Modèles de Formulaires Instantanés",
+        "Form Header Title": "Titre du Formulaire",
+        "Form Color Theme": "Thème de Couleur",
+        "Active Fields": "Champs Actifs",
+        "Add Custom Field": "Ajouter un Champ",
+        "Deploy Form & Activate QR": "Publier le Formulaire et Activer le QR",
+        "My Created Forms": "Mes Formulaires Créés",
+        "Simulate Mobile Scan": "Simuler le Scan Mobile",
+        "Copy Form Link": "Copier le Lien",
+        "Submit Form": "Envoyer le Formulaire"
+      };
+      if (frDict[enText]) return frDict[enText];
+    } else if (isGerman) {
+      const deDict: Record<string, string> = {
+        "Custom Form & Survey Engine": "Formular- & Umfrage-Engine",
+        "Interactive Form Builder": "Interaktiver Formular-Builder",
+        "Dynamic Form Builder & QR Core": "Dynamischer Formular-Builder & QR-Kern",
+        "TOTAL ACTIVE FORMS": "GESAMTE AKTIVE FORMULARE",
+        "Configure & Build Form": "Formular konfigurieren & erstellen",
+        "Submission Dashboard": "Einsendungs-Dashboard",
+        "Bootstrap Instant Form Templates": "Sofortige Formular-Vorlagen",
+        "Form Header Title": "Formular-Titel",
+        "Form Color Theme": "Farbthema",
+        "Active Fields": "Aktive Felder",
+        "Add Custom Field": "Benutzerdefiniertes Feld hinzufügen",
+        "Deploy Form & Activate QR": "Formular veröffentlichen & QR aktivieren",
+        "My Created Forms": "Meine erstellten Formulare",
+        "Simulate Mobile Scan": "Mobilen Scan simulieren",
+        "Copy Form Link": "Formular-Link kopieren",
+        "Submit Form": "Formular absenden"
+      };
+      if (deDict[enText]) return deDict[enText];
+    }
+    return enText;
   };
 
   const [forms, setForms] = useState<CustomFormConfig[]>([]);
@@ -677,7 +1073,7 @@ export default function FormBuilder() {
   };
 
   return (
-    <div id="form-builder-module" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div id="form-builder-module" dir={isRtl ? 'rtl' : 'ltr'} className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 ${isRtl ? 'font-arabic' : ''}`}>
       
       {/* Visual Identity Title Board */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-slate-50 via-white to-blue-50 text-slate-900 p-6 sm:p-8 rounded-2xl relative overflow-hidden shadow-sm border border-slate-200/80">
@@ -702,7 +1098,7 @@ export default function FormBuilder() {
         </div>
 
         {/* Global summary count */}
-        <div className="bg-white/90 backdrop-blur-sm border border-slate-200/80 p-4 rounded-2xl w-full md:w-56 shrink-0 z-10 flex flex-col justify-center shadow-xs">
+        <div className="bg-white/90 backdrop-blur-sm border border-slate-200/80 p-4 rounded-2xl w-full md:w-56 shrink-0 z-10 flex flex-col justify-center shadow-xs text-left rtl:text-right">
           <div className="text-xs text-slate-500 font-bold mb-1 tracking-wider uppercase">{tForm("TOTAL ACTIVE FORMS")}</div>
           <div className="text-3xl font-black text-indigo-600">{forms.length}</div>
           <div className="text-[10px] text-slate-400 mt-1">{tForm("Gated & authenticated with Firebase Firestore")}</div>
@@ -746,18 +1142,17 @@ export default function FormBuilder() {
               >
                 {/* Bootstrapped Templates selector */}
                 <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 space-y-4">
-                  <div>
+                  <div className="text-left rtl:text-right">
                     <h3 className="text-sm font-black text-slate-800 flex items-center gap-1.5">
                       <LayoutGrid className="w-4 h-4 text-indigo-600" />
-                      Bootstrap Instant Form Templates
+                      {tForm("Bootstrap Instant Form Templates")}
                     </h3>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Click any template below to pre-populate custom fields instantly.</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">{tForm("Click any template below to pre-populate custom fields instantly.")}</p>
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
                     {Object.keys(FORM_TEMPLATES).map(key => {
                       const isActive = formType === key;
-                      const details = FORM_TEMPLATES[key as keyof typeof FORM_TEMPLATES];
                       return (
                         <button
                           key={key}
@@ -765,7 +1160,7 @@ export default function FormBuilder() {
                           onClick={() => handleTemplateSelect(key as any)}
                           className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 min-h-[72px] ${isActive ? 'bg-indigo-50/50 border-indigo-400 text-indigo-700 font-bold ring-1 ring-indigo-400/30' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
                         >
-                          <span className="text-[10px] capitalize leading-none">{key}</span>
+                          <span className="text-[10px] capitalize leading-none">{tForm(key)}</span>
                         </button>
                       );
                     })}
@@ -774,52 +1169,52 @@ export default function FormBuilder() {
 
                 {/* Main Interactive Form Builder Core */}
                 <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 sm:p-8 space-y-6">
-                  <div>
+                  <div className="text-left rtl:text-right">
                     <h3 className="text-base font-black text-slate-800 flex items-center gap-1.5">
                       <Sliders className="w-5 h-5 text-indigo-600" />
-                      Form Fields & Metadata Configuration
+                      {tForm("Form Fields & Metadata Configuration")}
                     </h3>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Customize properties, append custom choices, and order field requirements.</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">{tForm("Customize properties, append custom choices, and order field requirements.")}</p>
                   </div>
 
                   <form onSubmit={handlePublishForm} className="space-y-6">
                     {/* Title & Desc Fields */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left rtl:text-right">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Form Header Title</label>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">{tForm("Form Header Title")}</label>
                         <input
                           type="text"
                           value={formTitle}
                           onChange={e => setFormTitle(e.target.value)}
-                          placeholder="e.g. VIP Dinner Confirmation"
+                          placeholder={tForm("e.g. VIP Dinner Confirmation")}
                           className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-1 focus:ring-indigo-400 outline-none"
                           required
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Form Color Theme</label>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">{tForm("Form Color Theme")}</label>
                         <select
                           value={formTheme}
                           onChange={e => setFormTheme(e.target.value as any)}
                           className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
                         >
-                          <option value="indigo">Classic Indigo</option>
-                          <option value="emerald">Organic Emerald</option>
-                          <option value="rose">Elegant Rose</option>
-                          <option value="amber">Autumn Amber</option>
-                          <option value="purple">Cosmic Purple</option>
-                          <option value="cyan">Coastal Cyan</option>
+                          <option value="indigo">{tForm("Classic Indigo")}</option>
+                          <option value="emerald">{tForm("Organic Emerald")}</option>
+                          <option value="rose">{tForm("Elegant Rose")}</option>
+                          <option value="amber">{tForm("Autumn Amber")}</option>
+                          <option value="purple">{tForm("Cosmic Purple")}</option>
+                          <option value="cyan">{tForm("Coastal Cyan")}</option>
                         </select>
                       </div>
 
                       <div className="sm:col-span-2">
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Subtext / Explanatory Description</label>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">{tForm("Subtext / Explanatory Description")}</label>
                         <input
                           type="text"
                           value={formDesc}
                           onChange={e => setFormDesc(e.target.value)}
-                          placeholder="Provide supportive context for prospects scanning your code..."
+                          placeholder={tForm("Provide supportive context for prospects scanning your code...")}
                           className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs focus:ring-1 focus:ring-indigo-400 outline-none"
                         />
                       </div>
@@ -828,18 +1223,18 @@ export default function FormBuilder() {
                     {/* Interactive Fields Builder Area */}
                     <div className="border border-slate-100 rounded-2xl overflow-hidden">
                       <div className="bg-slate-50/80 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
-                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider">Active Fields ({formFields.length})</span>
+                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider">{tForm("Active Fields")} ({formFields.length})</span>
                         <button
                           type="button"
                           onClick={addField}
                           className="text-[10px] text-indigo-600 font-bold hover:underline flex items-center gap-1 cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
-                          Add Custom Field
+                          {tForm("Add Custom Field")}
                         </button>
                       </div>
 
-                      <div className="p-4 space-y-3 bg-white max-h-[350px] overflow-y-auto">
+                      <div className="p-4 space-y-3 bg-white max-h-[350px] overflow-y-auto text-left rtl:text-right">
                         {formFields.map((field, idx) => {
                           const isEditing = editingFieldId === field.id;
                           return (
@@ -847,8 +1242,8 @@ export default function FormBuilder() {
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                   <span className="text-[10px] bg-slate-200 text-slate-600 w-5 h-5 rounded-md flex items-center justify-center font-bold">{idx + 1}</span>
-                                  <p className="text-xs font-bold text-slate-700 truncate max-w-[150px]">{field.label || 'Empty Label'}</p>
-                                  <span className="text-[8px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded uppercase font-semibold">{field.type}</span>
+                                  <p className="text-xs font-bold text-slate-700 truncate max-w-[150px]">{field.label || tForm("Empty Label")}</p>
+                                  <span className="text-[8px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded uppercase font-semibold">{tForm(field.type)}</span>
                                 </div>
 
                                 <div className="flex items-center gap-1.5">
@@ -857,7 +1252,7 @@ export default function FormBuilder() {
                                     onClick={() => setEditingFieldId(isEditing ? null : field.id)}
                                     className="text-[10px] text-slate-500 hover:text-indigo-600 font-bold cursor-pointer"
                                   >
-                                    {isEditing ? 'Collapse' : 'Customize'}
+                                    {isEditing ? tForm("Collapse") : tForm("Customize")}
                                   </button>
                                   <button
                                     type="button"
@@ -880,25 +1275,25 @@ export default function FormBuilder() {
                                   >
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                                       <div>
-                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">Field Type</label>
+                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Field Type")}</label>
                                         <select
                                           value={field.type}
                                           onChange={e => updateFieldProperty(field.id, 'type', e.target.value)}
                                           className="w-full p-1.5 rounded-lg border border-slate-200 bg-white text-slate-800"
                                         >
-                                          <option value="text">Short Text</option>
-                                          <option value="textarea">Paragraph Block</option>
-                                          <option value="email">Email Address</option>
-                                          <option value="phone">Phone Number</option>
-                                          <option value="select">Dropdown Choice</option>
-                                          <option value="checkbox">Checkbox Option</option>
-                                          <option value="date">Date picker</option>
-                                          <option value="file">File Attachment</option>
+                                          <option value="text">{tForm("Short Text")}</option>
+                                          <option value="textarea">{tForm("Paragraph Block")}</option>
+                                          <option value="email">{tForm("Email Address")}</option>
+                                          <option value="phone">{tForm("Phone Number")}</option>
+                                          <option value="select">{tForm("Dropdown Choice")}</option>
+                                          <option value="checkbox">{tForm("Checkbox Option")}</option>
+                                          <option value="date">{tForm("Date picker")}</option>
+                                          <option value="file">{tForm("File Attachment")}</option>
                                         </select>
                                       </div>
 
                                       <div className="sm:col-span-2">
-                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">Question / Field Label</label>
+                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Question / Field Label")}</label>
                                         <input
                                           type="text"
                                           value={field.label}
@@ -909,7 +1304,7 @@ export default function FormBuilder() {
                                       </div>
 
                                       <div className="sm:col-span-2">
-                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">Placeholder Guide</label>
+                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Placeholder Guide")}</label>
                                         <input
                                           type="text"
                                           value={field.placeholder}
@@ -919,7 +1314,7 @@ export default function FormBuilder() {
                                         />
                                       </div>
 
-                                      <div className="flex items-center pt-4 pl-2">
+                                      <div className="flex items-center pt-4 pl-2 rtl:pr-2 rtl:pl-0">
                                         <label className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 cursor-pointer select-none">
                                           <input
                                             type="checkbox"
@@ -927,14 +1322,14 @@ export default function FormBuilder() {
                                             onChange={e => updateFieldProperty(field.id, 'required', e.target.checked)}
                                             className="rounded border-slate-300"
                                           />
-                                          Response Required
+                                          {tForm("Response Required")}
                                         </label>
                                       </div>
 
                                       {/* Dropdown Options Customizer */}
                                       {(field.type === 'select' || field.type === 'checkbox') && (
                                         <div className="sm:col-span-3">
-                                          <label className="block text-[10px] font-bold text-indigo-600 mb-0.5">Options (Comma separated list)</label>
+                                          <label className="block text-[10px] font-bold text-indigo-600 mb-0.5">{tForm("Options (Comma separated list)")}</label>
                                           <input
                                             type="text"
                                             value={field.options || ''}
@@ -961,7 +1356,7 @@ export default function FormBuilder() {
                         className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl disabled:opacity-50 transition-colors shadow-sm cursor-pointer flex items-center gap-1.5"
                       >
                         <Plus className="w-4 h-4" />
-                        {isSaving ? 'Deploying Firestore Schema...' : 'Deploy Form & Activate QR'}
+                        {isSaving ? tForm("Deploying Firestore Schema...") : tForm("Deploy Form & Activate QR")}
                       </button>
                     </div>
                   </form>
@@ -969,9 +1364,9 @@ export default function FormBuilder() {
 
                 {/* Created Custom Forms Listing */}
                 <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 space-y-4">
-                  <h3 className="text-base font-black text-slate-800 flex items-center gap-1.5">
+                  <h3 className="text-base font-black text-slate-800 flex items-center gap-1.5 text-left rtl:text-right">
                     <CheckCircle2 className="w-5 h-5 text-indigo-600" />
-                    My Created Forms ({forms.length})
+                    {tForm("My Created Forms")} ({forms.length})
                   </h3>
 
                   <div className="space-y-3">
@@ -985,7 +1380,7 @@ export default function FormBuilder() {
                           onClick={() => { setSelectedForm(f); playAudioSound('preview'); }}
                           className={`p-4 rounded-2xl border transition-all cursor-pointer relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isSelected ? 'bg-slate-50 border-indigo-400 shadow-xs ring-1 ring-indigo-400' : 'border-slate-200 hover:bg-slate-50/50'}`}
                         >
-                          <div className="flex items-start gap-3">
+                          <div className="flex items-start gap-3 text-left rtl:text-right">
                             <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 ${palette.light} ${palette.border}`}>
                               <FormInput className={`w-5 h-5 ${palette.text}`} />
                             </div>
@@ -993,12 +1388,12 @@ export default function FormBuilder() {
                               <div className="flex items-center gap-1.5 flex-wrap">
                                 <p className="text-xs font-black text-slate-800 truncate">{f.title}</p>
                                 <span className={`text-[8px] border px-1.5 py-0.5 rounded-md font-bold uppercase ${f.status === 'active' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'}`}>
-                                  {f.status}
+                                  {f.status === 'active' ? tForm("● Open") : tForm("● Closed")}
                                 </span>
                               </div>
                               <p className="text-[10px] text-slate-400 truncate max-w-xs">{f.description}</p>
                               <p className="text-[9px] text-slate-400 mt-1">
-                                {f.fields.length} customized fields • Created {new Date(f.createdAt).toLocaleDateString()}
+                                {f.fields.length} {tForm("customized fields")} • {tForm("Created")} {new Date(f.createdAt).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
@@ -1006,12 +1401,12 @@ export default function FormBuilder() {
                           <div className="flex items-center gap-3 justify-end shrink-0">
                             {/* Visitor response metrics badge */}
                             <div className="flex items-center gap-2 bg-slate-100 px-2.5 py-1.5 rounded-xl border border-slate-200/40 text-[10px] text-slate-600 font-bold">
-                              <span className="flex items-center gap-1" title="Views">
+                              <span className="flex items-center gap-1" title={tForm("Views")}>
                                 <Eye className="w-3.5 h-3.5 text-slate-400" />
                                 {f.viewCount}
                               </span>
                               <span className="text-slate-300">|</span>
-                              <span className="flex items-center gap-1" title="Submissions">
+                              <span className="flex items-center gap-1" title={tForm("Submissions")}>
                                 <ClipboardList className="w-3.5 h-3.5 text-slate-400" />
                                 {f.submissionCount}
                               </span>
@@ -1020,7 +1415,7 @@ export default function FormBuilder() {
                             <button
                               onClick={(e) => { e.stopPropagation(); handleDeleteForm(f.id); }}
                               className="p-1.5 text-slate-300 hover:text-rose-600 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                              title="Delete Form Config"
+                              title={tForm("Delete Form Config")}
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -1031,7 +1426,7 @@ export default function FormBuilder() {
 
                     {forms.length === 0 && (
                       <div className="text-center py-8 bg-slate-50 border border-slate-100 rounded-2xl">
-                        <p className="text-xs text-slate-400">No forms deployed yet. Create your first dynamic form schema above.</p>
+                        <p className="text-xs text-slate-400">{tForm("No forms deployed yet. Create your first dynamic form schema above.")}</p>
                       </div>
                     )}
                   </div>
@@ -1052,10 +1447,10 @@ export default function FormBuilder() {
                     {/* Analytics Dashboard Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Metric Card 1: Conversion Rate */}
-                      <div className="bg-white rounded-3xl border border-slate-200/60 p-6 space-y-4 shadow-xs">
+                      <div className="bg-white rounded-3xl border border-slate-200/60 p-6 space-y-4 shadow-xs text-left rtl:text-right">
                         <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                           <BarChart2 className="w-4 h-4 text-indigo-600" />
-                          View to Conversion Analytics
+                          {tForm("View to Conversion Analytics")}
                         </h4>
                         
                         <div className="h-44 w-full">
@@ -1076,10 +1471,10 @@ export default function FormBuilder() {
                       </div>
 
                       {/* Metric Card 2: Pie distribution of selected dropdown choice */}
-                      <div className="bg-white rounded-3xl border border-slate-200/60 p-6 space-y-4 shadow-xs">
+                      <div className="bg-white rounded-3xl border border-slate-200/60 p-6 space-y-4 shadow-xs text-left rtl:text-right">
                         <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                           <BarChart2 className="w-4 h-4 text-emerald-600" />
-                          Option Breakdown (Dropdowns)
+                          {tForm("Option Breakdown (Dropdowns)")}
                         </h4>
 
                         {getOptionDistribution().length > 0 ? (
@@ -1115,7 +1510,7 @@ export default function FormBuilder() {
                         ) : (
                           <div className="h-44 flex flex-col items-center justify-center text-center text-xs text-slate-400">
                             <Info className="w-5 h-5 text-slate-300 mb-1" />
-                            <p>Select field stats will render here once dropdown questions are populated with answers.</p>
+                            <p>{tForm("Select field stats will render here once dropdown questions are populated with answers.")}</p>
                           </div>
                         )}
                       </div>
@@ -1123,13 +1518,13 @@ export default function FormBuilder() {
 
                     {/* Submissions Table / Grid list */}
                     <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 sm:p-8 space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-left rtl:text-right">
                         <div>
                           <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
                             <ClipboardList className="w-5 h-5 text-indigo-600" />
-                            Aggregated Submissions ({submissions.length})
+                            {tForm("Aggregated Submissions")} ({submissions.length})
                           </h3>
-                          <p className="text-[11px] text-slate-400 mt-0.5">Real-time database entries logged by your clients.</p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">{tForm("Real-time database entries logged by your clients.")}</p>
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
@@ -1139,12 +1534,12 @@ export default function FormBuilder() {
                             className="py-1.5 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-black rounded-xl transition-all disabled:opacity-50 cursor-pointer flex items-center gap-1 border border-indigo-100"
                           >
                             <Download className="w-3.5 h-3.5" />
-                            Export to CSV
+                            {tForm("Export to CSV")}
                           </button>
                         </div>
                       </div>
 
-                      <div className="space-y-4">
+                      <div className="space-y-4 text-left rtl:text-right">
                         {submissions.map((sub, idx) => {
                           const dateObj = new Date(sub.submittedAt);
                           return (
@@ -1160,7 +1555,7 @@ export default function FormBuilder() {
                                   className="text-[10px] text-slate-400 hover:text-rose-600 cursor-pointer flex items-center gap-0.5"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
-                                  Remove Entry
+                                  {tForm("Remove Entry")}
                                 </button>
                               </div>
 
@@ -1193,7 +1588,7 @@ export default function FormBuilder() {
                         {submissions.length === 0 && (
                           <div className="text-center py-12 bg-slate-50 border border-slate-100 rounded-2xl">
                             <Info className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                            <p className="text-xs text-slate-400">Waiting for first scan submissions. Point your phone camera at the QR code on the right to test submission flow.</p>
+                            <p className="text-xs text-slate-400">{tForm("Waiting for first scan submissions. Point your phone camera at the QR code on the right to test submission flow.")}</p>
                           </div>
                         )}
                       </div>
@@ -1216,20 +1611,20 @@ export default function FormBuilder() {
               <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xs p-6 sm:p-8 text-center space-y-5 relative overflow-hidden">
                 <div className="absolute top-0 inset-x-0 h-1.5 bg-linear-to-r from-indigo-500 to-cyan-400" />
                 
-                <div className="flex items-center justify-between text-left">
+                <div className="flex items-center justify-between text-left rtl:text-right">
                   <div>
                     <h3 className="text-sm font-black text-slate-800 flex items-center gap-1">
                       <QrCode className="w-4.5 h-4.5 text-indigo-600" />
-                      Dynamic Form QR
+                      {tForm("Dynamic Form QR")}
                     </h3>
-                    <p className="text-[10px] text-slate-400">Scanners are securely directed to fill form answers.</p>
+                    <p className="text-[10px] text-slate-400">{tForm("Scanners are securely directed to fill form answers.")}</p>
                   </div>
 
                   <button
                     onClick={() => handleToggleFormStatus(selectedForm)}
                     className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border cursor-pointer select-none transition-all ${selectedForm.status === 'active' ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-rose-50 hover:text-rose-800 hover:border-rose-200' : 'bg-rose-50 text-rose-800 border-rose-200 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-200'}`}
                   >
-                    {selectedForm.status === 'active' ? '● Open' : '● Closed'}
+                    {selectedForm.status === 'active' ? tForm("● Open") : tForm("● Closed")}
                   </button>
                 </div>
 
@@ -1248,7 +1643,7 @@ export default function FormBuilder() {
                     className="py-2 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 border border-indigo-100"
                   >
                     <Smartphone className="w-3.5 h-3.5" />
-                    Simulate Mobile Scan
+                    {tForm("Simulate Mobile Scan")}
                   </button>
 
                   <button
@@ -1258,7 +1653,7 @@ export default function FormBuilder() {
                     className="py-2 px-3 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 border border-slate-200"
                   >
                     <Copy className="w-3.5 h-3.5 text-slate-500" />
-                    {copiedLabel === 'form-link' ? 'Copied Link!' : 'Copy Form Link'}
+                    {copiedLabel === 'form-link' ? tForm("Copied Link!") : tForm("Copy Form Link")}
                   </button>
                 </div>
 
@@ -1266,28 +1661,28 @@ export default function FormBuilder() {
                   <span>ID: {selectedForm.id}</span>
                   <span className="font-semibold text-slate-500 flex items-center gap-1">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    Connected to Firebase Auth & DB
+                    {tForm("Connected to Firebase Auth & DB")}
                   </span>
                 </div>
               </div>
 
               {/* Box 2: Static Side Form Layout Visual preview */}
-              <div className="bg-slate-900 text-slate-100 rounded-3xl p-6 space-y-4 shadow-xl border border-slate-800">
+              <div className="bg-slate-900 text-slate-100 rounded-3xl p-6 space-y-4 shadow-xl border border-slate-800 text-left rtl:text-right">
                 <h4 className="text-xs font-black text-slate-300 uppercase tracking-widest flex items-center gap-1.5">
                   <Eye className="w-4 h-4 text-indigo-400" />
-                  Live Builder Wireframe
+                  {tForm("Live Builder Wireframe")}
                 </h4>
 
                 <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                  <p className="text-xs font-black text-white">{formTitle || 'Sample Title'}</p>
-                  <p className="text-[10px] text-slate-400">{formDesc || 'Sample description context...'}</p>
+                  <p className="text-xs font-black text-white">{formTitle || tForm("Sample Title")}</p>
+                  <p className="text-[10px] text-slate-400">{formDesc || tForm("Sample description context...")}</p>
 
                   <div className="space-y-2.5 pt-2">
                     {formFields.map(f => (
                       <div key={f.id} className="space-y-1">
                         <label className="block text-[10px] text-slate-400 font-bold">{f.label} {f.required && <span className="text-rose-500">*</span>}</label>
                         <div className="w-full h-8 bg-slate-900 border border-slate-800 rounded-lg flex items-center px-2 text-[10px] text-slate-500 italic">
-                          {f.placeholder || 'Empty placeholder'}
+                          {f.placeholder || tForm("Empty placeholder")}
                         </div>
                       </div>
                     ))}
@@ -1299,7 +1694,7 @@ export default function FormBuilder() {
           ) : (
             <div className="bg-slate-50/50 rounded-3xl border border-dashed border-slate-300 p-8 text-center space-y-3">
               <ClipboardList className="w-10 h-10 text-slate-300 mx-auto" />
-              <p className="text-xs text-slate-400">Create or select a form on the left to activate scannable QR redirections.</p>
+              <p className="text-xs text-slate-400">{tForm("Create or select a form on the left to activate scannable QR redirections.")}</p>
             </div>
           )}
 
@@ -1310,7 +1705,7 @@ export default function FormBuilder() {
       {/* Visitor Mobile Simulation Frame Modal */}
       <AnimatePresence>
         {simulatingForm && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div dir={isRtl ? 'rtl' : 'ltr'} className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
             <motion.div 
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -1321,26 +1716,26 @@ export default function FormBuilder() {
               <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
-                  <span className="text-[10px] font-black tracking-widest text-slate-400">PHONE PORTAL VIEW</span>
+                  <span className="text-[10px] font-black tracking-widest text-slate-400">{tForm("PHONE PORTAL VIEW")}</span>
                 </div>
                 <button
                   onClick={() => setSimulatingForm(null)}
                   className="text-slate-400 hover:text-white text-xs font-bold cursor-pointer"
                 >
-                  Close [X]
+                  {tForm("Close [X]")}
                 </button>
               </div>
 
               {/* simulated phone content */}
-              <div className="p-6 space-y-6 max-h-[500px] overflow-y-auto">
+              <div className="p-6 space-y-6 max-h-[500px] overflow-y-auto text-left rtl:text-right">
                 {simulatorSubmitted ? (
                   <div className="text-center py-8 space-y-4">
                     <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
                       <Check className="w-8 h-8 text-emerald-600" />
                     </div>
                     <div>
-                      <h4 className="text-base font-black text-slate-800">Submission Received!</h4>
-                      <p className="text-xs text-slate-400 mt-1">Thank you. Your answers have been safely written to our database collection.</p>
+                      <h4 className="text-base font-black text-slate-800">{tForm("Submission Received!")}</h4>
+                      <p className="text-xs text-slate-400 mt-1">{tForm("Thank you. Your answers have been safely written to our database collection.")}</p>
                     </div>
 
                     <div className="pt-2">
@@ -1348,7 +1743,7 @@ export default function FormBuilder() {
                         onClick={() => { setSimulatorSubmitted(false); setSimulatorAnswers({}); setUploadedSimFiles({}); }}
                         className="py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all cursor-pointer"
                       >
-                        Submit Another Response
+                        {tForm("Submit Another Response")}
                       </button>
                     </div>
                   </div>
@@ -1368,8 +1763,8 @@ export default function FormBuilder() {
                     {simulatingForm.status === 'closed' ? (
                       <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl text-center space-y-1">
                         <AlertCircle className="w-6 h-6 text-rose-600 mx-auto" />
-                        <h5 className="text-xs font-bold text-rose-900">Form is Currently Closed</h5>
-                        <p className="text-[10px] text-rose-700">Submissions are temporarily disabled by the publisher.</p>
+                        <h5 className="text-xs font-bold text-rose-900">{tForm("Form is Currently Closed")}</h5>
+                        <p className="text-[10px] text-rose-700">{tForm("Submissions are temporarily disabled by the publisher.")}</p>
                       </div>
                     ) : (
                       // Dynamic Inputs Render
@@ -1439,7 +1834,7 @@ export default function FormBuilder() {
                                   onChange={e => handleSimulatorAnswerChange(field.id, e.target.value)}
                                   className={`w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-slate-800 ${palette.ring}`}
                                 >
-                                  <option value="">{field.placeholder || 'Select choice...'}</option>
+                                  <option value="">{field.placeholder || tForm("Select choice...")}</option>
                                   {field.options?.split(',').map(o => (
                                     <option key={o.trim()} value={o.trim()}>{o.trim()}</option>
                                   ))}
@@ -1506,7 +1901,7 @@ export default function FormBuilder() {
                                         ✓ {uploadedSimFiles[field.id].name}
                                       </span>
                                     ) : (
-                                      <span className="text-slate-500">Attach screenshot or PDF file</span>
+                                      <span className="text-slate-500">{tForm("Attach screenshot or PDF file")}</span>
                                     )}
                                   </label>
                                 </div>
@@ -1522,7 +1917,7 @@ export default function FormBuilder() {
                             className={`w-full py-2.5 px-4 rounded-xl font-extrabold cursor-pointer flex items-center justify-center gap-1.5 transition-all shadow-xs ${PALETTES[simulatingForm.themeColor || 'indigo'].accent}`}
                           >
                             <Send className="w-3.5 h-3.5" />
-                            Submit Form
+                            {tForm("Submit Form")}
                           </button>
                         </div>
                       </div>

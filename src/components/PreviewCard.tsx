@@ -280,7 +280,7 @@ const PreviewCard = forwardRef<PreviewCardHandle, PreviewCardProps>(({
         </div>
 
         {/* Canvas Render Stage */}
-        <div className="relative aspect-square w-full max-w-[320px] mx-auto bg-slate-50 dark:bg-slate-900/80 rounded-2xl p-4 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center overflow-hidden shadow-inner group">
+        <div className="relative aspect-square w-full max-w-[320px] mx-auto bg-slate-50 dark:bg-slate-900/80 rounded-2xl p-4 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center overflow-hidden shadow-inner group blur-up-placeholder-container">
           {renderError ? (
             <div className="text-center p-4 space-y-2">
               <AlertCircle className="w-8 h-8 text-rose-500 mx-auto animate-bounce" />
@@ -296,7 +296,7 @@ const PreviewCard = forwardRef<PreviewCardHandle, PreviewCardProps>(({
           ) : (
             <canvas
               ref={canvasRef}
-              className={`w-full h-full object-contain rounded-xl transition-all duration-300 ${
+              className={`w-full h-full object-contain rounded-xl transition-all duration-300 animate-blur-up ${
                 isRendering ? 'opacity-50 blur-[1px]' : 'opacity-100'
               }`}
             />

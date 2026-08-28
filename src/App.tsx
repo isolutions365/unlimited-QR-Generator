@@ -65,6 +65,7 @@ const GrowthSuite = lazyWithRetry(() => import('./pages/GrowthSuite'));
 const EnterpriseAIGateway = lazyWithRetry(() => import('./pages/EnterpriseAIGateway'));
 const QRMarketingPlatform = lazyWithRetry(() => import('./pages/marketing/QRMarketingPlatform'));
 import ErrorBoundary from './components/ErrorBoundary';
+import LandingPage from './components/LandingPage';
 
 
 // Non-blocking fallback skeleton loader
@@ -230,7 +231,7 @@ import {
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
   BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode, FileSpreadsheet, Wallet, FormInput, Printer, Copy, Check,
-  Maximize2, Tablet, Download, Search, ExternalLink, FileCheck2
+  Maximize2, Tablet, Download, Search, ExternalLink, FileCheck2, MapPin
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -835,6 +836,7 @@ export default function App() {
 
   // Filter for recently used categories
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<'all' | 'wifi' | 'whatsapp' | 'vcard' | 'restaurant' | 'social'>('all');
+  const [categorySearchQuery, setCategorySearchQuery] = useState('');
 
   // Cookie Consent banner state
   const [showCookieConsent, setShowCookieConsent] = useState(false);
@@ -1213,6 +1215,123 @@ export default function App() {
     !isTemplatesSection &&
     !isCompareSection &&
     !isTrustCenterSection;
+
+  // Granular Category Detection for desktop navigation and mobile navigation drawer
+  const isCreativeCategoryActive = 
+    cleanPath === '/generator' || 
+    ((cleanPath === '/' || cleanPath === '') && ['create', 'templates', 'animations', 'customization', 'batch', 'style', 'palette', 'shapes', 'frames'].includes(activeTab)) ||
+    isTemplatesSection ||
+    (typeof window !== 'undefined' && (window.location.search.includes('tab=create') || window.location.search.includes('tab=templates') || window.location.search.includes('tab=animations')));
+
+  const isToolsCategoryActive = 
+    isFreeQrToolsActive ||
+    ['/barcodes', '/zatca-invoice', '/business-card', '/restaurant-menu', '/bulk-qr'].includes(cleanPath) ||
+    ['/url-qr', '/text-qr', '/wifi-qr', '/vcard-qr', '/email-qr', '/sms-qr', '/phone-qr', '/instagram-qr', '/pdf-qr', '/app-store-qr', '/crypto-qr', '/menu-qr'].some(p => cleanPath === p || cleanPath.startsWith(p + '/')) ||
+    Boolean(presetToolsTranslations[locale]?.some((sub: any) => cleanPath === `/${sub.slug}` || cleanPath === `/tools/${sub.slug}` || cleanPath.startsWith(`/${sub.slug}`)));
+
+  const isDirectoriesCategoryActive = isSolutionsSection || isIndustriesSection || isUseCasesSection || isCompareSection;
+  const isResourcesCategoryActive = cleanPath === '/faq' || cleanPath.startsWith('/blog') || isKnowledgeSection;
+  const isAnalyticsCategoryActive = cleanPath === '/analytics' || activeTab === 'analytics' || (typeof window !== 'undefined' && window.location.search.includes('tab=analytics'));
+  const isTrustCategoryActive = isTrustCenterSection || ['/about', '/contact', '/privacy', '/privacy-policy', '/terms', '/security'].includes(cleanPath);
+
+  // Active Category Key for the Mobile Navigation Drawer highlighting
+  const activeMobileCategoryKey: 'creative' | 'tools' | 'directories' | 'resources' | 'analytics' | 'trust' | 'general' = (() => {
+    if (isCreativeCategoryActive) return 'creative';
+    if (isToolsCategoryActive) return 'tools';
+    if (isDirectoriesCategoryActive) return 'directories';
+    if (isResourcesCategoryActive) return 'resources';
+    if (isAnalyticsCategoryActive) return 'analytics';
+    if (isTrustCategoryActive) return 'trust';
+    return 'general';
+  })();
+
+  // Dynamic Route & Sub-item metadata for clear mobile location clarity
+  const activeMobileRouteInfo = (() => {
+    if (activeMobileCategoryKey === 'creative') {
+      let sub = navTranslations[locale]?.creativeStation || 'Studio Generator';
+      if (activeTab === 'templates' || isTemplatesSection) sub = t('creative.templates', 'Smart Templates');
+      else if (activeTab === 'animations') sub = t('creative.animations', 'Motion & Frames');
+      else if (activeTab === 'create' || cleanPath === '/generator') sub = t('creative.generator', 'Studio Generator');
+      return {
+        categoryName: navTranslations[locale]?.creativeStation || 'Creative Station',
+        subName: sub,
+        badgeColor: 'indigo'
+      };
+    }
+    if (activeMobileCategoryKey === 'tools') {
+      const matchedTool = presetToolsTranslations[locale]?.find((sub: any) => cleanPath === `/${sub.slug}` || cleanPath === `/tools/${sub.slug}`);
+      return {
+        categoryName: navTranslations[locale]?.freeQrTools || 'Free QR Tools',
+        subName: matchedTool ? matchedTool.name : (cleanPath.replace(/^\//, '').replace(/-/g, ' ').toUpperCase() || 'QR Utility'),
+        badgeColor: 'emerald'
+      };
+    }
+    if (activeMobileCategoryKey === 'directories') {
+      let sub = t('nav.solutionsDir', 'Solutions');
+      if (isIndustriesSection) sub = t('nav.industriesDir', 'Industries');
+      else if (isUseCasesSection) sub = t('nav.useCasesDir', 'Use Cases');
+      else if (isCompareSection) sub = t('nav.comparisonsDir', 'Comparisons');
+      return {
+        categoryName: t('nav.directories', 'Directories & Hubs'),
+        subName: sub,
+        badgeColor: 'amber'
+      };
+    }
+    if (activeMobileCategoryKey === 'resources') {
+      let sub = navTranslations[locale]?.faqTitle || 'FAQ';
+      if (cleanPath.startsWith('/blog')) sub = navTranslations[locale]?.blogTitle || 'Blog';
+      else if (isKnowledgeSection) sub = t('nav.academy', 'Academy & Guides');
+      return {
+        categoryName: t('nav.resources', 'Resources & Knowledge'),
+        subName: sub,
+        badgeColor: 'sky'
+      };
+    }
+    if (activeMobileCategoryKey === 'analytics') {
+      return {
+        categoryName: t('nav.scanAnalytics', 'Scan Analytics'),
+        subName: t('analytics.liveData', 'Real-time Metrics'),
+        badgeColor: 'purple'
+      };
+    }
+    if (activeMobileCategoryKey === 'trust') {
+      let sub = navTranslations[locale]?.aboutUs || 'About Us';
+      if (cleanPath.includes('privacy')) sub = navTranslations[locale]?.privacyPolicy || 'Privacy';
+      else if (cleanPath.includes('contact')) sub = navTranslations[locale]?.contactSupport || 'Support';
+      return {
+        categoryName: t('nav.company', 'Company & Trust'),
+        subName: sub,
+        badgeColor: 'slate'
+      };
+    }
+    return {
+      categoryName: 'FreeQRGen',
+      subName: cleanPath === '/' ? 'Studio Workspace' : cleanPath,
+      badgeColor: 'indigo'
+    };
+  })();
+
+  // Helper to test if a Creative Station sub-item is active
+  const isCreativeSubActive = (idx: number) => {
+    if (idx === 0) return (cleanPath === '/' || cleanPath === '/generator') && activeTab === 'create';
+    if (idx === 1) return (cleanPath === '/' || cleanPath === '/generator') && activeTab === 'create';
+    if (idx === 2) return isTemplatesSection || activeTab === 'templates' || (cleanPath === '/generator' && typeof window !== 'undefined' && window.location.search.includes('tab=templates'));
+    if (idx === 3) return activeTab === 'animations' || (cleanPath === '/generator' && typeof window !== 'undefined' && window.location.search.includes('tab=animations'));
+    if (idx === 4) return false;
+    if (idx === 5) return false;
+    return false;
+  };
+
+  // Auto-expand the active route's accordion when mobile menu opens for instant route clarity
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      if (activeMobileCategoryKey === 'creative') {
+        setIsMobileCreativeOpen(true);
+      } else if (activeMobileCategoryKey === 'tools') {
+        setIsMobileToolsOpen(true);
+      }
+    }
+  }, [isMobileMenuOpen, activeMobileCategoryKey]);
 
 
   // Handle escape press & focus trap inside the accessible mobile menu
@@ -1636,7 +1755,18 @@ export default function App() {
   // Synchronize state from direct URLs on mount/navigation
   useEffect(() => {
     const currentSlug = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
-    if (currentSlug === 'restaurant-menu-qr-generator') {
+    const isGeneratorRoute = cleanPath === '/generator' || cleanPath === '/tool' || cleanPath === '/studio';
+
+    if (isGeneratorRoute) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const tabParam = searchParams.get('tab');
+      if (tabParam) {
+        const validTabs: AppTab[] = ['create', 'form', 'menu', 'card', 'pdf', 'barcode', 'bulk', 'animations', 'analytics', 'templates', 'print', 'zatca'];
+        if (validTabs.includes(tabParam as AppTab)) {
+          setActiveTab(tabParam as AppTab);
+        }
+      }
+    } else if (currentSlug === 'restaurant-menu-qr-generator') {
       setActiveTab('menu');
     } else if (currentSlug === 'digital-card-qr-generator') {
       setActiveTab('card');
@@ -1780,7 +1910,7 @@ export default function App() {
     });
     playAudioSound('generate', soundSettings);
     setActiveTab(targetTab);
-    navigateTo('/');
+    navigateTo(`/generator?tab=${targetTab}`);
   };
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
 
@@ -2389,11 +2519,13 @@ export default function App() {
               onSignOut={handleSignOut}
               onOpenSettings={() => setIsSettingsModalOpen(true)}
               soundEnabled={soundSettings.soundEnabled}
+              isMobileMenuOpen={isMobileMenuOpen}
+              onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           />
 
 
 
-      {/* Mobile Sliding Navigation Menu with spring-loaded accessibility drawer */}
+      {/* Mobile Sliding Navigation Menu with dynamic category route tracking */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -2403,7 +2535,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs xl:hidden"
+              className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs xl:hidden"
             />
 
             {/* Slide-In Side Navigation Drawer */}
@@ -2421,7 +2553,7 @@ export default function App() {
               tabIndex={-1}
             >
               {/* Drawer Title & Close Control */}
-              <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/40">
+              <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/60">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-950/45">
                     <QrCode className="w-3.5 h-3.5" />
@@ -2441,21 +2573,79 @@ export default function App() {
                 </button>
               </div>
 
+              {/* Dynamic Active Category & Route Location Banner */}
+              <div className="mx-4 mt-3 mb-1 p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/90 shadow-inner flex items-center justify-between gap-2.5">
+                <div className="min-w-0 flex-1 flex items-center gap-2.5">
+                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                    activeMobileCategoryKey === 'creative' ? 'bg-indigo-600/25 text-indigo-400 border border-indigo-500/30' :
+                    activeMobileCategoryKey === 'tools' ? 'bg-emerald-600/25 text-emerald-400 border border-emerald-500/30' :
+                    activeMobileCategoryKey === 'directories' ? 'bg-amber-600/25 text-amber-400 border border-amber-500/30' :
+                    activeMobileCategoryKey === 'resources' ? 'bg-sky-600/25 text-sky-400 border border-sky-500/30' :
+                    activeMobileCategoryKey === 'analytics' ? 'bg-purple-600/25 text-purple-400 border border-purple-500/30' :
+                    'bg-slate-800 text-slate-400 border border-slate-700'
+                  }`}>
+                    <MapPin className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[8px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                        {t('nav.currentRoute', 'Current Location')}
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active
+                      </span>
+                    </div>
+                    <div className="text-xs font-bold text-white truncate flex items-center gap-1.5 mt-0.5">
+                      <span className={`${
+                        activeMobileCategoryKey === 'creative' ? 'text-indigo-300' :
+                        activeMobileCategoryKey === 'tools' ? 'text-emerald-300' :
+                        activeMobileCategoryKey === 'directories' ? 'text-amber-300' :
+                        activeMobileCategoryKey === 'resources' ? 'text-sky-300' :
+                        activeMobileCategoryKey === 'analytics' ? 'text-purple-300' : 'text-slate-300'
+                      }`}>
+                        {activeMobileRouteInfo.categoryName}
+                      </span>
+                      <span className="text-slate-600 text-[10px]">›</span>
+                      <span className="text-slate-200 truncate text-[11px] font-semibold">{activeMobileRouteInfo.subName}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Staggered Navigation Items list with Accordions */}
-              <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4 scrollbar-thin">
+              <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3 scrollbar-thin">
                 
-                {/* 1. Creative Station Accordion */}
-                <div className="border-b border-slate-800/60 pb-3">
+                {/* 1. Creative Station Category Accordion */}
+                <div className={`rounded-2xl transition-all border ${
+                  activeMobileCategoryKey === 'creative'
+                    ? 'bg-indigo-950/20 border-indigo-500/30 shadow-xs'
+                    : 'border-slate-800/60 pb-2'
+                }`}>
                   <button
                     type="button"
                     onClick={() => setIsMobileCreativeOpen(!isMobileCreativeOpen)}
-                    className="w-full flex items-center justify-between px-2 py-2.5 text-xs font-black tracking-wider uppercase text-slate-300 hover:text-white transition-colors cursor-pointer"
+                    className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      activeMobileCategoryKey === 'creative'
+                        ? 'bg-gradient-to-r from-indigo-950/80 via-indigo-900/40 to-slate-900 text-white border border-indigo-500/30'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
                   >
-                    <span className="font-mono tracking-widest text-[10px] flex items-center gap-2">
-                      <Zap className="w-3.5 h-3.5 text-indigo-400" />
-                      {navTranslations[locale].creativeStation}
+                    <span className="tracking-wide text-xs flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${
+                        activeMobileCategoryKey === 'creative' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-slate-800 text-indigo-400'
+                      }`}>
+                        <Zap className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="font-extrabold">{navTranslations[locale].creativeStation}</span>
                     </span>
-                    <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileCreativeOpen ? 'rotate-180' : ''}`} />
+                    <div className="flex items-center gap-2">
+                      {activeMobileCategoryKey === 'creative' && (
+                        <span className="px-1.5 py-0.5 rounded-full text-[8px] font-mono font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" /> ACTIVE
+                        </span>
+                      )}
+                      <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileCreativeOpen ? 'rotate-180' : ''}`} />
+                    </div>
                   </button>
 
                   <AnimatePresence initial={false}>
@@ -2465,25 +2655,26 @@ export default function App() {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.25, ease: "easeInOut" }}
-                        className="overflow-hidden pl-2 flex flex-col gap-1 mt-1"
+                        className="overflow-hidden p-2 flex flex-col gap-1"
                       >
                         {creativeSubItems[locale].map((sub, idx) => {
                           const subIcons = [Wand2, Palette, LayoutTemplate, Play, Image, Megaphone];
                           const SubIcon = subIcons[idx] || Wand2;
+                          const isActiveSub = isCreativeSubActive(idx);
                           const subActions = [
-                            () => { setActiveTab('create'); navigateTo('/'); },
-                            () => { setActiveTab('create'); navigateTo('/'); },
-                            () => { setActiveTab('templates'); navigateTo('/'); },
-                            () => { setActiveTab('animations'); navigateTo('/'); },
+                            () => { setActiveTab('create'); navigateTo('/generator?tab=create'); },
+                            () => { setActiveTab('create'); navigateTo('/generator?tab=create'); },
+                            () => { setActiveTab('templates'); navigateTo('/generator?tab=templates'); },
+                            () => { setActiveTab('animations'); navigateTo('/generator?tab=animations'); },
                             () => {
-                              setActiveTab('create'); navigateTo('/');
+                              setActiveTab('create'); navigateTo('/generator?tab=create');
                               setTimeout(() => {
                                 const logoSec = document.getElementById('logo-settings-section');
                                 if (logoSec) logoSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
                               }, 250);
                             },
                             () => {
-                              setActiveTab('create'); navigateTo('/');
+                              setActiveTab('create'); navigateTo('/generator?tab=create');
                               setTimeout(() => {
                                 const previewSec = document.getElementById('tour-qr-preview');
                                 if (previewSec) previewSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2499,15 +2690,26 @@ export default function App() {
                                 setIsMobileMenuOpen(false);
                                 subAction();
                               }}
-                              className="w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                              className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
+                                isActiveSub
+                                  ? 'bg-gradient-to-r from-indigo-950/80 to-purple-950/40 text-white border border-indigo-500/40 shadow-xs'
+                                  : 'text-slate-300 hover:text-white hover:bg-slate-800/40 border border-transparent'
+                              }`}
                             >
-                              <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                                <SubIcon className="w-3.5 h-3.5" />
+                              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                                  isActiveSub ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
+                                }`}>
+                                  <SubIcon className="w-3.5 h-3.5" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <span className="block font-bold truncate">{sub.name}</span>
+                                  <span className="block text-[9px] text-slate-500 truncate">{sub.desc}</span>
+                                </div>
                               </div>
-                              <div className="min-w-0 flex-1">
-                                <span className="block font-bold truncate">{sub.name}</span>
-                                <span className="block text-[9px] text-slate-500 truncate">{sub.desc}</span>
-                              </div>
+                              {isActiveSub && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 ml-2 shrink-0 animate-ping" />
+                              )}
                             </button>
                           );
                         })}
@@ -2516,18 +2718,37 @@ export default function App() {
                   </AnimatePresence>
                 </div>
 
-                {/* 2. Free QR Tools Accordion */}
-                <div className="border-b border-slate-800/60 pb-3">
+                {/* 2. Free QR Tools Category Accordion */}
+                <div className={`rounded-2xl transition-all border ${
+                  activeMobileCategoryKey === 'tools'
+                    ? 'bg-emerald-950/20 border-emerald-500/30 shadow-xs'
+                    : 'border-slate-800/60 pb-2'
+                }`}>
                   <button
                     type="button"
                     onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
-                    className="w-full flex items-center justify-between px-2 py-2.5 text-xs font-black tracking-wider uppercase text-slate-300 hover:text-white transition-colors cursor-pointer"
+                    className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      activeMobileCategoryKey === 'tools'
+                        ? 'bg-gradient-to-r from-emerald-950/80 via-teal-900/40 to-slate-900 text-white border border-emerald-500/30'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
                   >
-                    <span className="font-mono tracking-widest text-[10px] flex items-center gap-2">
-                      <Compass className="w-3.5 h-3.5 text-indigo-400" />
-                      {navTranslations[locale].freeQrTools}
+                    <span className="tracking-wide text-xs flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${
+                        activeMobileCategoryKey === 'tools' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-slate-800 text-emerald-400'
+                      }`}>
+                        <Compass className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="font-extrabold">{navTranslations[locale].freeQrTools}</span>
                     </span>
-                    <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileToolsOpen ? 'rotate-180' : ''}`} />
+                    <div className="flex items-center gap-2">
+                      {activeMobileCategoryKey === 'tools' && (
+                        <span className="px-1.5 py-0.5 rounded-full text-[8px] font-mono font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> ACTIVE
+                        </span>
+                      )}
+                      <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isMobileToolsOpen ? 'rotate-180' : ''}`} />
+                    </div>
                   </button>
 
                   <AnimatePresence initial={false}>
@@ -2537,13 +2758,13 @@ export default function App() {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.25, ease: "easeInOut" }}
-                        className="overflow-hidden pl-2 flex flex-col gap-1 mt-1"
+                        className="overflow-hidden p-2 flex flex-col gap-1"
                       >
                         {presetToolsTranslations[locale].map((sub, idx) => {
                           const presetIcons = [Globe, FileText, Wifi, Contact, Mail, Phone, Phone, Instagram, FileText, Smartphone];
                           const SubIcon = presetIcons[idx] || Compass;
                           const isPrebuiltSlug = sub.slug !== 'text-qr' && sub.slug !== 'app-store-qr';
-                          const isCurrentActive = isPrebuiltSlug ? currentPath === `/${sub.slug}` : false;
+                          const isCurrentActive = isPrebuiltSlug ? (cleanPath === `/${sub.slug}` || cleanPath === `/tools/${sub.slug}`) : false;
                           
                           const subAction = sub.slug === 'text-qr' 
                             ? () => handleInitiateGenerator({ type: 'text', content: 'Free QR Tools Text Campaign', name: 'Text QR Campaign' })
@@ -2570,12 +2791,23 @@ export default function App() {
                                   navigateTo(`/${sub.slug}`);
                                 }
                               }}
-                              className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${ isCurrentActive ? 'bg-gradient-to-r from-indigo-950/40 to-purple-950/20 text-indigo-400 border border-indigo-500/20' : 'text-slate-300 hover:text-white hover:bg-slate-800/40' }`}
+                              className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
+                                isCurrentActive
+                                  ? 'bg-gradient-to-r from-emerald-950/80 to-teal-950/40 text-emerald-300 border border-emerald-500/40 shadow-xs'
+                                  : 'text-slate-300 hover:text-white hover:bg-slate-800/40 border border-transparent'
+                              }`}
                             >
-                              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isCurrentActive ? 'bg-indigo-600/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
-                                <SubIcon className="w-3.5 h-3.5" />
+                              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                                  isCurrentActive ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'
+                                }`}>
+                                  <SubIcon className="w-3.5 h-3.5" />
+                                </div>
+                                <span className="font-bold truncate">{sub.name}</span>
                               </div>
-                              <span className="font-bold">{sub.name}</span>
+                              {isCurrentActive && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 ml-2 shrink-0 animate-ping" />
+                              )}
                             </button>
                           );
                         })}
@@ -2584,16 +2816,136 @@ export default function App() {
                   </AnimatePresence>
                 </div>
 
-                {/* 3. General Links */}
-                <div className="flex flex-col gap-1 pt-2">
+                {/* 3. Platform & Solutions Directories */}
+                <div className="pt-2 border-t border-slate-800/60 flex flex-col gap-1">
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400 px-2 py-1 flex items-center justify-between">
+                    <span>{t('nav.directories', 'Directories & Hubs')}</span>
+                    {activeMobileCategoryKey === 'directories' && (
+                      <span className="text-[8px] font-bold text-amber-400 uppercase bg-amber-500/10 px-1.5 py-0.5 rounded-md border border-amber-500/20">Active</span>
+                    )}
+                  </span>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/templates');
+                    }}
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      isTemplatesSection ? 'bg-indigo-950/50 text-indigo-300 border border-indigo-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
+                  >
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isTemplatesSection ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-indigo-400'}`}>
+                      <LayoutTemplate className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold">{t('nav.templatesHub', 'Templates Hub')}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/solutions');
+                    }}
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      isSolutionsSection ? 'bg-amber-950/50 text-amber-300 border border-amber-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
+                  >
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isSolutionsSection ? 'bg-amber-600 text-white' : 'bg-slate-800 text-amber-400'}`}>
+                      <Zap className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold">{t('nav.solutionsDir', 'Solutions Directory')}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/industries');
+                    }}
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      isIndustriesSection ? 'bg-amber-950/50 text-amber-300 border border-amber-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
+                  >
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isIndustriesSection ? 'bg-amber-600 text-white' : 'bg-slate-800 text-amber-400'}`}>
+                      <Utensils className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold">{t('nav.industriesDir', 'Industries Directory')}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/use-cases');
+                    }}
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      isUseCasesSection ? 'bg-amber-950/50 text-amber-300 border border-amber-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
+                  >
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isUseCasesSection ? 'bg-amber-600 text-white' : 'bg-slate-800 text-amber-400'}`}>
+                      <Cpu className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold">{t('nav.useCasesDir', 'Use Cases Directory')}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigateTo('/compare');
+                    }}
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      isCompareSection ? 'bg-amber-950/50 text-amber-300 border border-amber-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
+                  >
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isCompareSection ? 'bg-amber-600 text-white' : 'bg-slate-800 text-amber-400'}`}>
+                      <Scale className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold">{t('nav.comparisonsDir', 'Comparisons Directory')}</span>
+                  </button>
+                </div>
+
+                {/* 4. Analytics & Live Operations */}
+                <div className="pt-2 border-t border-slate-800/60 flex flex-col gap-1">
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400 px-2 py-1 flex items-center justify-between">
+                    <span>{t('nav.analytics', 'Analytics & Intel')}</span>
+                    {activeMobileCategoryKey === 'analytics' && (
+                      <span className="text-[8px] font-bold text-purple-400 uppercase bg-purple-500/10 px-1.5 py-0.5 rounded-md border border-purple-500/20">Active</span>
+                    )}
+                  </span>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setActiveTab('analytics');
+                      navigateTo('/generator?tab=analytics');
+                    }}
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      activeMobileCategoryKey === 'analytics' ? 'bg-purple-950/50 text-purple-300 border border-purple-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
+                  >
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${activeMobileCategoryKey === 'analytics' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-purple-400'}`}>
+                      <BarChart3 className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold">{t('nav.scanAnalytics', 'Scan Analytics')}</span>
+                  </button>
+                </div>
+
+                {/* 5. Resources & Knowledge Base */}
+                <div className="pt-2 border-t border-slate-800/60 flex flex-col gap-1">
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400 px-2 py-1 flex items-center justify-between">
+                    <span>{t('nav.resources', 'Resources & Support')}</span>
+                    {activeMobileCategoryKey === 'resources' && (
+                      <span className="text-[8px] font-bold text-sky-400 uppercase bg-sky-500/10 px-1.5 py-0.5 rounded-md border border-sky-500/20">Active</span>
+                    )}
+                  </span>
+
                   <button
                     onClick={() => {
                       setIsMobileMenuOpen(false);
                       navigateTo('/faq');
                     }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      cleanPath === '/faq' ? 'bg-sky-950/50 text-sky-300 border border-sky-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
                   >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${cleanPath === '/faq' ? 'bg-sky-600 text-white' : 'bg-slate-800 text-sky-400'}`}>
                       <HelpCircle className="w-3.5 h-3.5" />
                     </div>
                     <span className="font-bold">{navTranslations[locale].faqTitle}</span>
@@ -2604,9 +2956,11 @@ export default function App() {
                       setIsMobileMenuOpen(false);
                       navigateTo('/blog');
                     }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      cleanPath.startsWith('/blog') ? 'bg-sky-950/50 text-sky-300 border border-sky-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
                   >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${cleanPath.startsWith('/blog') ? 'bg-sky-600 text-white' : 'bg-slate-800 text-sky-400'}`}>
                       <BookOpen className="w-3.5 h-3.5" />
                     </div>
                     <span className="font-bold">{navTranslations[locale].blogTitle}</span>
@@ -2615,90 +2969,13 @@ export default function App() {
                   <button
                     onClick={() => {
                       setIsMobileMenuOpen(false);
-                      navigateTo('/templates');
-                    }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                      <LayoutTemplate className="w-3.5 h-3.5 text-indigo-400" />
-                    </div>
-                    <span className="font-bold text-indigo-400">{t('nav.templatesHub', 'Templates Hub')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      navigateTo('/solutions');
-                    }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                      <Zap className="w-3.5 h-3.5 text-indigo-400" />
-                    </div>
-                    <span className="font-bold text-indigo-400">{t('nav.solutionsDir', 'Solutions Directory')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      navigateTo('/industries');
-                    }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                      <Utensils className="w-3.5 h-3.5 text-indigo-400" />
-                    </div>
-                    <span className="font-bold text-indigo-400">{t('nav.industriesDir', 'Industries Directory')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      navigateTo('/use-cases');
-                    }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                      <Cpu className="w-3.5 h-3.5 text-indigo-400" />
-                    </div>
-                    <span className="font-bold text-indigo-400">{t('nav.useCasesDir', 'Use Cases Directory')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      navigateTo('/compare');
-                    }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                      <Scale className="w-3.5 h-3.5 text-indigo-400" />
-                    </div>
-                    <span className="font-bold text-indigo-400">{t('nav.comparisonsDir', 'Comparisons Directory')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      setActiveTab('analytics');
-                      navigateTo('/');
-                    }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                      <BarChart3 className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="font-bold">{t('nav.scanAnalytics', 'Scan Analytics')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
                       navigateTo('/about');
                     }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      cleanPath === '/about' ? 'bg-slate-800 text-white border border-slate-700' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
                   >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${cleanPath === '/about' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}>
                       <Info className="w-3.5 h-3.5" />
                     </div>
                     <span className="font-bold">{navTranslations[locale].aboutUs}</span>
@@ -2709,9 +2986,11 @@ export default function App() {
                       setIsMobileMenuOpen(false);
                       navigateTo('/contact');
                     }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      cleanPath === '/contact' ? 'bg-slate-800 text-white border border-slate-700' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
                   >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${cleanPath === '/contact' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}>
                       <MessageSquare className="w-3.5 h-3.5" />
                     </div>
                     <span className="font-bold">{navTranslations[locale].contactSupport}</span>
@@ -2722,35 +3001,37 @@ export default function App() {
                       setIsMobileMenuOpen(false);
                       navigateTo('/privacy');
                     }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors cursor-pointer"
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      cleanPath === '/privacy' || cleanPath === '/privacy-policy' ? 'bg-slate-800 text-white border border-slate-700' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    }`}
                   >
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${cleanPath === '/privacy' || cleanPath === '/privacy-policy' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}>
                       <Shield className="w-3.5 h-3.5" />
                     </div>
                     <span className="font-bold">{navTranslations[locale].privacyPolicy}</span>
                   </button>
+                </div>
                   
-                  {/* Language Selector on Mobile */}
-                  <div className="mt-4 px-2.5 py-3 border-t border-slate-800/60">
-                    <span className="text-[10px] font-bold text-slate-500 block uppercase tracking-wider mb-2 font-mono">{t('nav.selectLanguage', 'Select Language')}</span>
-                    <select
-                      value={locale}
-                      onChange={(e) => {
-                        handleLocaleChange(e.target.value as Locale);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-indigo-500"
-                    >
-                      <option value="en">{t("tools.language.en", "English")}</option>
-                      <option value="ar">{t("tools.language.ar", "العربية")}</option>
-                      <option value="ur">{t("tools.language.ur", "اردو")}</option>
-                      <option value="hi">{t("tools.language.hi", "हिन्दी")}</option>
-                      <option value="fr">{t("tools.language.fr", "Français")}</option>
-                      <option value="es">{t("tools.language.es", "Español")}</option>
-                      <option value="tr">{t("tools.language.tr", "Türkçe")}</option>
-                      <option value="id">{t("tools.language.id", "Bahasa Indonesia")}</option>
-                    </select>
-                  </div>
+                {/* Language Selector on Mobile */}
+                <div className="mt-2 px-2.5 py-3 border-t border-slate-800/60">
+                  <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider mb-2 font-mono">{t('nav.selectLanguage', 'Select Language')}</span>
+                  <select
+                    value={locale}
+                    onChange={(e) => {
+                      handleLocaleChange(e.target.value as Locale);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-slate-200 focus:outline-none focus:border-indigo-500"
+                  >
+                    <option value="en">{t("tools.language.en", "English")}</option>
+                    <option value="ar">{t("tools.language.ar", "العربية")}</option>
+                    <option value="ur">{t("tools.language.ur", "اردو")}</option>
+                    <option value="hi">{t("tools.language.hi", "हिन्दी")}</option>
+                    <option value="fr">{t("tools.language.fr", "Français")}</option>
+                    <option value="es">{t("tools.language.es", "Español")}</option>
+                    <option value="tr">{t("tools.language.tr", "Türkçe")}</option>
+                    <option value="id">{t("tools.language.id", "Bahasa Indonesia")}</option>
+                  </select>
                 </div>
 
               </div>
@@ -2951,9 +3232,24 @@ export default function App() {
             />
           ) : null}
         </ErrorBoundary>
+      ) : (cleanPath === '/' || cleanPath === '') ? (
+        <LandingPage 
+          onSelectCategory={(tabId) => {
+            setActiveTab(tabId as AppTab);
+            navigateTo(`/generator?tab=${tabId}`);
+          }}
+          onPrimaryCTA={() => {
+            setActiveTab('create');
+            navigateTo('/generator?tab=create');
+          }}
+          onSecondaryCTA={() => {
+            setActiveTab('print');
+            navigateTo('/generator?tab=print');
+          }}
+        />
       ) : (
-        <main className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6">
-          <h1 className="sr-only">Free QR Code Generator - Custom Dynamic QR Codes with Analytics</h1>
+        <main id="generator-studio" className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-6 w-full relative z-10 min-h-screen">
+            <h1 className="sr-only">Free QR Code Generator - Custom Dynamic QR Codes with Analytics</h1>
 
           {/* Dynamic Sub-Navigation Bar with Responsive Fade Indicator & Scroll Controls */}
           <ScrollableTabContainer
@@ -3457,451 +3753,609 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Category Filter Controls */}
-              <div id="category-filter-bar" className="flex flex-wrap gap-2 mt-6 pb-4 border-b border-slate-200 relative z-10">
-                {[
-                  { id: 'all', label: t('recent.tab.all') },
-                  { id: 'wifi', label: t('recent.tab.wifi') },
-                  { id: 'whatsapp', label: t('recent.tab.whatsapp') },
-                  { id: 'vcard', label: t('recent.tab.vcard') },
-                  { id: 'restaurant', label: t('recent.tab.menus') },
-                  { id: 'social', label: t('recent.tab.social') }
-                ].map((cat) => (
-                  <button
-                    key={cat.id}
-                    id={`filter-btn-${cat.id}`}
-                    onClick={() => setSelectedCategoryFilter(cat.id as any)}
-                    className={`px-3.5 py-1.5 rounded-xl text-[11px] font-bold tracking-wide transition-all duration-250 cursor-pointer ${ selectedCategoryFilter === cat.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 scale-[1.03]' : 'bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 ' }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
+              {/* Real-time Category Search and Filter Controls */}
+              {(() => {
+                const isCategoryCardVisible = (cardId: 'wifi' | 'whatsapp' | 'vcard' | 'restaurant' | 'social') => {
+                  if (selectedCategoryFilter !== 'all' && selectedCategoryFilter !== cardId) {
+                    return false;
+                  }
+                  const q = categorySearchQuery.trim().toLowerCase();
+                  if (!q) return true;
 
-              <motion.div 
-                variants={categoryContainerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                className="flex overflow-x-auto sm:grid sm:grid-cols-2 gap-4 mt-8 pb-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent relative z-10 snap-x snap-mandatory"
-              >
-                <AnimatePresence mode="popLayout">
-                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'wifi') && (
-                    <motion.div key="wifi-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                       <div 
-                        id="recent-wifi-card" 
-                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[inset_0_0_15px_rgba(99,102,241,0.35),0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
-                        style={{ transition: 'all 0.3s ease' }}
-                      >
-                        <div className="space-y-1">
-                          <span className="text-[10px] text-indigo-600 font-bold uppercase block rtl-content">{t('recent.card.wifi.badge')}</span>
-                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">{t("tools.wifi.pairing")}</h4>
-                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            {t('recent.card.wifi.desc')}
-                          </p>
-                        </div>
+                  const keywordsMap: Record<string, (string | undefined)[]> = {
+                    wifi: [
+                      'wifi', 'wi-fi', 'wireless', 'network', 'router', 'password', 'pairing', 'internet', 'connect',
+                      t('recent.tab.wifi'), t('tools.wifi.pairing'), t('recent.card.wifi.badge'), t('recent.card.wifi.desc'), t('recent.card.wifi.link')
+                    ],
+                    whatsapp: [
+                      'whatsapp', 'chat', 'wa.me', 'message', 'support', 'leads', 'direct', 'text', 'messaging', 'phone', 'customer service',
+                      t('recent.tab.whatsapp'), t('tools.whatsapp.support'), t('recent.card.whatsapp.badge'), t('recent.card.whatsapp.desc'), t('recent.card.whatsapp.link')
+                    ],
+                    vcard: [
+                      'vcard', 'card', 'contact', 'business card', 'digital identity', 'profile', 'phone', 'email', 'address', 'identity', 'v-card',
+                      t('recent.tab.vcard'), t('tools.vcards.rich'), t('recent.card.vcard.badge'), t('recent.card.vcard.desc'), t('recent.card.vcard.link')
+                    ],
+                    restaurant: [
+                      'restaurant', 'menu', 'food', 'dining', 'drinks', 'catalog', 'dishes', 'pdf', 'ordering', 'bistro', 'cafe', 'hosting',
+                      t('recent.tab.menus'), t('tools.menus.pdf'), t('recent.card.restaurant.badge'), t('recent.card.restaurant.desc'), t('recent.card.restaurant.link')
+                    ],
+                    social: [
+                      'social', 'instagram', 'facebook', 'youtube', 'twitter', 'tiktok', 'bio', 'links', 'suite', 'multi-channel', 'profile', 'media',
+                      t('recent.tab.social'), t('tools.social.hubs'), t('recent.card.social.badge'), t('recent.card.social.desc'), t('recent.card.social.link')
+                    ]
+                  };
 
-                        <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] text-slate-500">
-                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
-                            <span className="font-mono font-extrabold text-slate-800 ltr-lock"><RollingNumber value={Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)} />%</span>
-                          </div>
-                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)}%` }}
-                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
-                              className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
-                            />
-                          </div>
-                        </div>
+                  const searchPool = keywordsMap[cardId] || [];
+                  return searchPool.some(term => term && term.toLowerCase().includes(q));
+                };
 
-                        <a
-                          id="recent-wifi-link"
-                          href="/wifi-qr-generator"
-                          onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1 ltr-lock"
-                        >
-                          {t('recent.card.wifi.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
-                        </a>
-                      </div>
-                    </motion.div>
-                  )}
-   
-                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'whatsapp') && (
-                    <motion.div key="whatsapp-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div 
-                        id="recent-whatsapp-card" 
-                        onClick={() => {
-                          playAudioSound('click');
-                          setIsWhatsappOverlayOpen(true);
-                        }}
-                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group cursor-pointer ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
-                        style={{ transition: 'all 0.3s ease' }}
-                        title="Click to expand scan timestamps and device details"
-                      >
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="text-[10px] text-emerald-800 font-bold uppercase block rtl-content">{t('recent.card.whatsapp.badge')}</span>
-                              {(() => {
-                                const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
-                                const count = whatsappScans.length;
-                                const effectiveCount = count > 0 ? count : 25;
-                                
-                                let label = 'High Volume';
-                                let pillClasses = 'bg-emerald-100 text-emerald-800 border-emerald-300/80';
-                                let dotClasses = 'bg-emerald-500';
+                const visibleCategories = (['wifi', 'whatsapp', 'vcard', 'restaurant', 'social'] as const).filter(id => isCategoryCardVisible(id));
+                const isRtl = isRtlLocale(locale);
 
-                                if (effectiveCount >= 20) {
-                                  label = t('recent.card.whatsapp.volumeHigh', 'High Volume');
-                                  pillClasses = 'bg-emerald-100 text-emerald-800 border-emerald-300/80';
-                                  dotClasses = 'bg-emerald-500';
-                                } else if (effectiveCount >= 8) {
-                                  label = t('recent.card.whatsapp.volumeStable', 'Stable');
-                                  pillClasses = 'bg-sky-100 text-sky-800 border-sky-300/80';
-                                  dotClasses = 'bg-sky-500';
-                                } else {
-                                  label = t('recent.card.whatsapp.volumeLow', 'Low');
-                                  pillClasses = 'bg-amber-100 text-amber-800 border-amber-300/80';
-                                  dotClasses = 'bg-amber-500';
-                                }
-
-                                return (
-                                  <span 
-                                    id="recent-whatsapp-volume-pill"
-                                    className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${pillClasses} shadow-2xs transition-all`}
-                                    title={`Scan volume status: ${label}`}
-                                  >
-                                    <span className={`w-1.5 h-1.5 rounded-full ${dotClasses} animate-pulse`} />
-                                    <span>{label}</span>
-                                  </span>
-                                );
-                              })()}
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              <button
-                                type="button"
-                                id="export-whatsapp-card-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  playAudioSound('click');
-                                  handleExportWhatsappScansCSV();
-                                }}
-                                className="inline-flex items-center gap-1 text-[10px] font-extrabold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 hover:border-emerald-300/80 px-2.5 py-0.5 rounded-full transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
-                                title="Export scan logs to CSV"
-                              >
-                                <Download className="w-3 h-3 text-slate-600" />
-                                <span>Export</span>
-                              </button>
-                              <button
-                                type="button"
-                                id="expand-whatsapp-card-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  playAudioSound('click');
-                                  setIsWhatsappOverlayOpen(true);
-                                }}
-                                className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300/80 px-2.5 py-0.5 rounded-full transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
-                                title="Expand scan timestamps and device details overlay"
-                              >
-                                <Maximize2 className="w-3 h-3 text-emerald-700" />
-                                <span>Expand</span>
-                              </button>
-                            </div>
-                          </div>
-                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">{t("tools.whatsapp.support")}</h4>
-                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            {t('recent.card.whatsapp.desc')}
-                          </p>
-                        </div>
-
-                        <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] text-slate-500">
-                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
-                            <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%</span>
-                          </div>
-                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%` }}
-                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
-                              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
-                            />
-                          </div>
-                          <div className="flex justify-between items-center text-[10px] pt-1 text-slate-500">
-                            <span className="font-medium text-slate-600">{t('recent.card.whatsapp.lastScannedLabel', 'Last scanned:')}</span>
-                            <span className="font-mono font-bold text-emerald-700 ltr-lock">
-                              {(() => {
-                                const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
-                                const lastScan = whatsappScans.length > 0 
-                                  ? whatsappScans.reduce((latest, current) => new Date(current.timestamp).getTime() > new Date(latest.timestamp).getTime() ? current : latest, whatsappScans[0])
-                                  : null;
-                                return lastScan?.timestamp ? getRelativeTimeString(lastScan.timestamp) : '2 minutes ago';
-                              })()}
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center text-[10px] pt-1 text-slate-500">
-                            <span className="font-medium text-slate-600">{t('recent.card.whatsapp.trendLabel', '24h Trend:')}</span>
-                            <span className="font-mono font-bold flex items-center gap-1 ltr-lock">
-                              {(() => {
-                                const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
-                                const now = Date.now();
-                                const oneDayMs = 24 * 60 * 60 * 1000;
-                                const last24hCount = whatsappScans.filter(s => {
-                                  const t = new Date(s.timestamp).getTime();
-                                  return now - t <= oneDayMs && now - t >= 0;
-                                }).length;
-                                const prev24hCount = whatsappScans.filter(s => {
-                                  const t = new Date(s.timestamp).getTime();
-                                  return now - t > oneDayMs && now - t <= 2 * oneDayMs;
-                                }).length;
-
-                                const effectiveLast = last24hCount > 0 ? last24hCount : (whatsappScans.length > 0 ? whatsappScans.length : 14);
-                                const effectivePrev = prev24hCount > 0 ? prev24hCount : (whatsappScans.length > 0 ? Math.max(1, whatsappScans.length - 3) : 10);
-                                const isUp = effectiveLast >= effectivePrev;
-                                const diff = effectiveLast - effectivePrev;
-                                const percent = effectivePrev > 0 ? Math.round(Math.abs(diff) / effectivePrev * 100) : 100;
-
-                                return (
-                                  <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-bold ${isUp ? 'text-emerald-700 bg-emerald-50' : 'text-rose-700 bg-rose-50'}`}>
-                                    <ArrowUp className={`w-3 h-3 inline-block shrink-0 transition-transform duration-300 ${isUp ? 'text-emerald-500 rotate-0' : 'text-rose-500 rotate-180'}`} />
-                                    <span>{isUp ? '+' : '-'}{percent}%</span>
-                                  </span>
-                                );
-                              })()}
-                            </span>
-                          </div>
-
-                          <div className="pt-2 border-t border-slate-200/60 mt-1.5">
-                            <div className="flex justify-between items-center text-[10px] text-slate-500 mb-1">
-                              <span className="font-medium text-slate-600">{t('recent.card.whatsapp.7dSummary', '7-Day Activity:')}</span>
-                              <span className="font-mono font-bold text-emerald-700 ltr-lock">
-                                {(() => {
-                                  const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
-                                  const now = Date.now();
-                                  const dayMs = 24 * 60 * 60 * 1000;
-                                  const counts = Array.from({ length: 7 }, (_, i) => {
-                                    const start = now - (6 - i) * dayMs;
-                                    const end = now - (5 - i) * dayMs;
-                                    return whatsappScans.filter(s => {
-                                      const t = new Date(s.timestamp).getTime();
-                                      return i === 6 ? (now - t <= dayMs && now - t >= 0) : (t >= start && t < end);
-                                    }).length;
-                                  });
-                                  const total7d = counts.reduce((a, b) => a + b, 0);
-                                  return `${total7d > 0 ? total7d : 38} scans`;
-                                })()}
-                              </span>
-                            </div>
-                            <div className="flex items-end gap-1 h-5 pt-1 px-1 bg-white/80 rounded border border-slate-200/40">
-                              {(() => {
-                                const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
-                                const now = Date.now();
-                                const dayMs = 24 * 60 * 60 * 1000;
-                                const counts = Array.from({ length: 7 }, (_, i) => {
-                                  const start = now - (6 - i) * dayMs;
-                                  const end = now - (5 - i) * dayMs;
-                                  const c = whatsappScans.filter(s => {
-                                    const t = new Date(s.timestamp).getTime();
-                                    return i === 6 ? (now - t <= dayMs && now - t >= 0) : (t >= start && t < end);
-                                  }).length;
-                                  return c > 0 ? c : (3 + (i * 2) % 5);
-                                });
-                                const maxCount = Math.max(...counts, 5);
-                                return counts.map((count, idx) => {
-                                  const heightPercent = Math.max(20, Math.round((count / maxCount) * 100));
-                                  return (
-                                    <div key={idx} className="flex-1 bg-emerald-200 hover:bg-emerald-600 rounded-t-xs transition-all relative group/bar cursor-pointer" style={{ height: `${heightPercent}%` }}>
-                                      <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover/bar:block bg-slate-900 text-white text-[8px] font-mono px-1 py-0.5 rounded whitespace-nowrap z-20 shadow-md">
-                                        Day {idx + 1}: {count} scans
-                                      </div>
-                                    </div>
-                                  );
-                                });
-                              })()}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mt-4 flex items-center justify-between pt-2 border-t border-slate-200/50">
-                          <a
-                            id="recent-whatsapp-link"
-                            href="/whatsapp-qr-generator"
-                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigateTo('/whatsapp-qr-generator'); }}
-                            className="text-xs font-bold text-emerald-800 group-hover:text-emerald-950 flex items-center gap-1 ltr-lock hover:underline"
-                          >
-                            {t('recent.card.whatsapp.link')}
-                            <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
-                          </a>
-
+                return (
+                  <>
+                    {/* Category Search & Filter Controls */}
+                    <div id="category-controls-bar" className="mt-6 pb-4 border-b border-slate-200 relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                      {/* Real-time Search Bar */}
+                      <div className="relative flex-1 max-w-md w-full">
+                        <Search className={`w-4 h-4 text-slate-400 absolute top-1/2 -translate-y-1/2 pointer-events-none ${isRtl ? 'right-3.5' : 'left-3.5'}`} />
+                        <input
+                          type="text"
+                          id="recent-category-search-input"
+                          value={categorySearchQuery}
+                          onChange={(e) => setCategorySearchQuery(e.target.value)}
+                          placeholder={t('recent.searchPlaceholder', 'Filter categories in real-time (e.g., WiFi, Menu, WhatsApp, vCard)...')}
+                          className={`w-full text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white border border-slate-200 focus:border-indigo-500 rounded-xl py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all ${
+                            isRtl ? 'pr-10 pl-9 text-right' : 'pl-10 pr-9 text-left'
+                          }`}
+                        />
+                        {categorySearchQuery && (
                           <button
                             type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              playAudioSound('click');
-                              setIsWhatsappOverlayOpen(true);
-                            }}
-                            className="text-[11px] font-black text-emerald-800 bg-emerald-100/90 hover:bg-emerald-200 border border-emerald-300/80 px-2.5 py-1 rounded-lg transition-all cursor-pointer shadow-2xs flex items-center gap-1 hover:scale-105 active:scale-95"
+                            id="clear-category-search-btn"
+                            onClick={() => setCategorySearchQuery('')}
+                            className={`absolute top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-700 rounded-md hover:bg-slate-200/60 transition-colors cursor-pointer ${
+                              isRtl ? 'left-2.5' : 'right-2.5'
+                            }`}
+                            title={t('recent.clearSearch', 'Clear search')}
                           >
-                            <Maximize2 className="w-3 h-3 text-emerald-700" />
-                            <span>Expand Overlay</span>
+                            <X className="w-3.5 h-3.5" />
                           </button>
-                        </div>
+                        )}
                       </div>
-                    </motion.div>
-                  )}
-   
-                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'vcard') && (
-                    <motion.div key="vcard-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div 
-                        id="recent-vcard-card" 
-                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[inset_0_0_15px_rgba(168,85,247,0.35),0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
-                        style={{ transition: 'all 0.3s ease' }}
-                      >
-                        <div className="space-y-1">
-                          <span className="text-[10px] text-purple-600 font-bold uppercase block rtl-content">{t('recent.card.vcard.badge')}</span>
-                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-purple-600 transition-colors">{t("tools.vcards.rich")}</h4>
-                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            {t('recent.card.vcard.desc')}
-                          </p>
-                        </div>
 
-                        <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] text-slate-500">
-                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
-                            <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%</span>
-                          </div>
-                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%` }}
-                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
-                              className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
-                            />
-                          </div>
-                        </div>
+                      {/* Category Filter Pills */}
+                      <div id="category-filter-bar" className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+                        {[
+                          { id: 'all', label: t('recent.tab.all') },
+                          { id: 'wifi', label: t('recent.tab.wifi') },
+                          { id: 'whatsapp', label: t('recent.tab.whatsapp') },
+                          { id: 'vcard', label: t('recent.tab.vcard') },
+                          { id: 'restaurant', label: t('recent.tab.menus') },
+                          { id: 'social', label: t('recent.tab.social') }
+                        ].map((cat) => (
+                          <button
+                            key={cat.id}
+                            id={`filter-btn-${cat.id}`}
+                            onClick={() => setSelectedCategoryFilter(cat.id as any)}
+                            className={`px-3 py-1.5 rounded-xl text-[11px] font-bold tracking-wide transition-all duration-200 cursor-pointer whitespace-nowrap ${ selectedCategoryFilter === cat.id ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20 scale-[1.02]' : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 border border-slate-200/80' }`}
+                          >
+                            {cat.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-                        <a
-                          id="recent-vcard-link"
-                          href="/digital-card-qr-generator"
-                          onClick={(e) => { e.preventDefault(); navigateTo('/digital-card-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-purple-600 group-hover:text-purple-800 flex items-center gap-1 ltr-lock"
+                    {/* Active search filter telemetry info */}
+                    {categorySearchQuery && (
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-3 pb-1 relative z-10">
+                        <span>
+                          {visibleCategories.length} {visibleCategories.length === 1 ? 'category card' : 'category cards'} matching &quot;{categorySearchQuery}&quot;
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setCategorySearchQuery('')}
+                          className="text-indigo-600 hover:text-indigo-800 font-bold hover:underline cursor-pointer flex items-center gap-1"
                         >
-                          {t('recent.card.vcard.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
-                        </a>
+                          <X className="w-3 h-3" />
+                          <span>{t('recent.clearSearch', 'Clear search')}</span>
+                        </button>
                       </div>
+                    )}
+
+                    <motion.div 
+                      variants={categoryContainerVariants}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, margin: "-50px" }}
+                      className="flex overflow-x-auto sm:grid sm:grid-cols-2 gap-4 mt-6 pb-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent relative z-10 snap-x snap-mandatory"
+                    >
+                      <AnimatePresence mode="popLayout">
+                        {isCategoryCardVisible('wifi') && (
+                          <motion.div key="wifi-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                             <div 
+                              id="recent-wifi-card" 
+                              className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-indigo-500 hover:shadow-[inset_0_0_15px_rgba(99,102,241,0.35),0_25px_60px_-15px_rgba(99,102,241,0.45),0_0_40px_rgba(99,102,241,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
+                              style={{ transition: 'all 0.3s ease' }}
+                            >
+                              <div className="space-y-1">
+                                <span className="text-[10px] text-indigo-600 font-bold uppercase block rtl-content">{t('recent.card.wifi.badge')}</span>
+                                <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">{t("tools.wifi.pairing")}</h4>
+                                <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                                  {t('recent.card.wifi.desc')}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1.5 mt-4">
+                                <div className="flex justify-between items-center text-[10px] text-slate-500">
+                                  <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                                  <span className="font-mono font-extrabold text-slate-800 ltr-lock"><RollingNumber value={Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)} />%</span>
+                                </div>
+                                <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
+                                  <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${Math.min(100, 68 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'wifi'))?.length || 0) * 3)}%` }}
+                                    transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                                  />
+                                </div>
+                              </div>
+
+                              <a
+                                id="recent-wifi-link"
+                                href="/wifi-qr-generator"
+                                onClick={(e) => { e.preventDefault(); navigateTo('/wifi-qr-generator'); }}
+                                className="mt-4 text-xs font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1 ltr-lock"
+                              >
+                                {t('recent.card.wifi.link')}
+                                <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
+                              </a>
+                            </div>
+                          </motion.div>
+                        )}
+         
+                        {isCategoryCardVisible('whatsapp') && (
+                          <motion.div key="whatsapp-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                            <div 
+                              id="recent-whatsapp-card" 
+                              onClick={() => {
+                                playAudioSound('click');
+                                setIsWhatsappOverlayOpen(true);
+                              }}
+                              className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group cursor-pointer ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
+                              style={{ transition: 'all 0.3s ease' }}
+                              title="Click to expand scan timestamps and device details"
+                            >
+                              <div className="space-y-1">
+                                <div className="flex items-center justify-between gap-2">
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className="text-[10px] text-emerald-800 font-bold uppercase block rtl-content">{t('recent.card.whatsapp.badge')}</span>
+                                    {(() => {
+                                      const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
+                                      const count = whatsappScans.length;
+                                      const effectiveCount = count > 0 ? count : 25;
+                                      
+                                      let label = 'High Volume';
+                                      let pillClasses = 'bg-emerald-100 text-emerald-800 border-emerald-300/80';
+                                      let dotClasses = 'bg-emerald-500';
+
+                                      if (effectiveCount >= 20) {
+                                        label = t('recent.card.whatsapp.volumeHigh', 'High Volume');
+                                        pillClasses = 'bg-emerald-100 text-emerald-800 border-emerald-300/80';
+                                        dotClasses = 'bg-emerald-500';
+                                      } else if (effectiveCount >= 8) {
+                                        label = t('recent.card.whatsapp.volumeStable', 'Stable');
+                                        pillClasses = 'bg-sky-100 text-sky-800 border-sky-300/80';
+                                        dotClasses = 'bg-sky-500';
+                                      } else {
+                                        label = t('recent.card.whatsapp.volumeLow', 'Low');
+                                        pillClasses = 'bg-amber-100 text-amber-800 border-amber-300/80';
+                                        dotClasses = 'bg-amber-500';
+                                      }
+
+                                      return (
+                                        <span 
+                                          id="recent-whatsapp-volume-pill"
+                                          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${pillClasses} shadow-2xs transition-all`}
+                                          title={`Scan volume status: ${label}`}
+                                        >
+                                          <span className={`w-1.5 h-1.5 rounded-full ${dotClasses} animate-pulse`} />
+                                          <span>{label}</span>
+                                        </span>
+                                      );
+                                    })()}
+                                  </div>
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      type="button"
+                                      id="export-whatsapp-card-btn"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        playAudioSound('click');
+                                        handleExportWhatsappScansCSV();
+                                      }}
+                                      className="inline-flex items-center gap-1 text-[10px] font-extrabold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 hover:border-emerald-300/80 px-2.5 py-0.5 rounded-full transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
+                                      title="Export scan logs to CSV"
+                                    >
+                                      <Download className="w-3 h-3 text-slate-600" />
+                                      <span>Export</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      id="expand-whatsapp-card-btn"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        playAudioSound('click');
+                                        setIsWhatsappOverlayOpen(true);
+                                      }}
+                                      className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300/80 px-2.5 py-0.5 rounded-full transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
+                                      title="Expand scan timestamps and device details overlay"
+                                    >
+                                      <Maximize2 className="w-3 h-3 text-emerald-700" />
+                                      <span>Expand</span>
+                                    </button>
+                                  </div>
+                                </div>
+                                <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">{t("tools.whatsapp.support")}</h4>
+                                <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                                  {t('recent.card.whatsapp.desc')}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1.5 mt-4">
+                                <div className="flex justify-between items-center text-[10px] text-slate-500">
+                                  <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                                  <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%</span>
+                                </div>
+                                <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
+                                  <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${Math.min(100, 75 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me')))?.length || 0) * 3)}%` }}
+                                    transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                                    className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
+                                  />
+                                </div>
+                                <div className="flex justify-between items-center text-[10px] pt-1 text-slate-500">
+                                  <span className="font-medium text-slate-600">{t('recent.card.whatsapp.lastScannedLabel', 'Last scanned:')}</span>
+                                  <span className="font-mono font-bold text-emerald-700 ltr-lock">
+                                    {(() => {
+                                      const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
+                                      const lastScan = whatsappScans.length > 0 
+                                        ? whatsappScans.reduce((latest, current) => new Date(current.timestamp).getTime() > new Date(latest.timestamp).getTime() ? current : latest, whatsappScans[0])
+                                        : null;
+                                      return lastScan?.timestamp ? getRelativeTimeString(lastScan.timestamp) : '2 minutes ago';
+                                    })()}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between items-center text-[10px] pt-1 text-slate-500">
+                                  <span className="font-medium text-slate-600">{t('recent.card.whatsapp.trendLabel', '24h Trend:')}</span>
+                                  <span className="font-mono font-bold flex items-center gap-1 ltr-lock">
+                                    {(() => {
+                                      const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
+                                      const now = Date.now();
+                                      const oneDayMs = 24 * 60 * 60 * 1000;
+                                      const last24hCount = whatsappScans.filter(s => {
+                                        const t = new Date(s.timestamp).getTime();
+                                        return now - t <= oneDayMs && now - t >= 0;
+                                      }).length;
+                                      const prev24hCount = whatsappScans.filter(s => {
+                                        const t = new Date(s.timestamp).getTime();
+                                        return now - t > oneDayMs && now - t <= 2 * oneDayMs;
+                                      }).length;
+
+                                      const effectiveLast = last24hCount > 0 ? last24hCount : (whatsappScans.length > 0 ? whatsappScans.length : 14);
+                                      const effectivePrev = prev24hCount > 0 ? prev24hCount : (whatsappScans.length > 0 ? Math.max(1, whatsappScans.length - 3) : 10);
+                                      const isUp = effectiveLast >= effectivePrev;
+                                      const diff = effectiveLast - effectivePrev;
+                                      const percent = effectivePrev > 0 ? Math.round(Math.abs(diff) / effectivePrev * 100) : 100;
+
+                                      return (
+                                        <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-bold ${isUp ? 'text-emerald-700 bg-emerald-50' : 'text-rose-700 bg-rose-50'}`}>
+                                          <ArrowUp className={`w-3 h-3 inline-block shrink-0 transition-transform duration-300 ${isUp ? 'text-emerald-500 rotate-0' : 'text-rose-500 rotate-180'}`} />
+                                          <span>{isUp ? '+' : '-'}{percent}%</span>
+                                        </span>
+                                      );
+                                    })()}
+                                  </span>
+                                </div>
+
+                                <div className="pt-2 border-t border-slate-200/60 mt-1.5">
+                                  <div className="flex justify-between items-center text-[10px] text-slate-500 mb-1">
+                                    <span className="font-medium text-slate-600">{t('recent.card.whatsapp.7dSummary', '7-Day Activity:')}</span>
+                                    <span className="font-mono font-bold text-emerald-700 ltr-lock">
+                                      {(() => {
+                                        const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
+                                        const now = Date.now();
+                                        const dayMs = 24 * 60 * 60 * 1000;
+                                        const counts = Array.from({ length: 7 }, (_, i) => {
+                                          const start = now - (6 - i) * dayMs;
+                                          const end = now - (5 - i) * dayMs;
+                                          return whatsappScans.filter(s => {
+                                            const t = new Date(s.timestamp).getTime();
+                                            return i === 6 ? (now - t <= dayMs && now - t >= 0) : (t >= start && t < end);
+                                          }).length;
+                                        });
+                                        const total7d = counts.reduce((a, b) => a + b, 0);
+                                        return `${total7d > 0 ? total7d : 38} scans`;
+                                      })()}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-end gap-1 h-5 pt-1 px-1 bg-white/80 rounded border border-slate-200/40">
+                                    {(() => {
+                                      const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
+                                      const now = Date.now();
+                                      const dayMs = 24 * 60 * 60 * 1000;
+                                      const counts = Array.from({ length: 7 }, (_, i) => {
+                                        const start = now - (6 - i) * dayMs;
+                                        const end = now - (5 - i) * dayMs;
+                                        const c = whatsappScans.filter(s => {
+                                          const t = new Date(s.timestamp).getTime();
+                                          return i === 6 ? (now - t <= dayMs && now - t >= 0) : (t >= start && t < end);
+                                        }).length;
+                                        return c > 0 ? c : (3 + (i * 2) % 5);
+                                      });
+                                      const maxCount = Math.max(...counts, 5);
+                                      return counts.map((count, idx) => {
+                                        const heightPercent = Math.max(20, Math.round((count / maxCount) * 100));
+                                        return (
+                                          <div key={idx} className="flex-1 bg-emerald-200 hover:bg-emerald-600 rounded-t-xs transition-all relative group/bar cursor-pointer" style={{ height: `${heightPercent}%` }}>
+                                            <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover/bar:block bg-slate-900 text-white text-[8px] font-mono px-1 py-0.5 rounded whitespace-nowrap z-20 shadow-md">
+                                              Day {idx + 1}: {count} scans
+                                            </div>
+                                          </div>
+                                        );
+                                      });
+                                    })()}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="mt-4 flex items-center justify-between pt-2 border-t border-slate-200/50">
+                                <a
+                                  id="recent-whatsapp-link"
+                                  href="/whatsapp-qr-generator"
+                                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigateTo('/whatsapp-qr-generator'); }}
+                                  className="text-xs font-bold text-emerald-800 group-hover:text-emerald-950 flex items-center gap-1 ltr-lock hover:underline"
+                                >
+                                  {t('recent.card.whatsapp.link')}
+                                  <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
+                                </a>
+
+                                <button
+                                  type="button"
+                                  id="quick-edit-whatsapp-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    playAudioSound('click');
+                                    
+                                    // Search for an existing WhatsApp project to load
+                                    const matchingProj = projects?.find(p => (p.type === 'social' || p.type === 'url') && p.content?.includes('wa.me'));
+                                    if (matchingProj) {
+                                      handleSelectProject(matchingProj);
+                                    } else {
+                                      setCurrentProject({
+                                        id: '',
+                                        name: 'WhatsApp Direct Chat',
+                                        type: 'social',
+                                        content: 'https://wa.me/966500000000?text=Hello%20Support',
+                                        design: {
+                                          ...INITIAL_DESIGN.design,
+                                          fgColor: '#059669',
+                                          gradientColor: '#10b981',
+                                          gradientType: 'linear',
+                                          dotStyle: 'dots'
+                                        }
+                                      });
+                                    }
+                                    
+                                    setActiveTab('create');
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                  }}
+                                  className="text-[11px] font-black text-slate-850 bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg transition-all cursor-pointer shadow-2xs flex items-center gap-1 hover:scale-105 active:scale-95"
+                                  title="Load WhatsApp configuration into design studio"
+                                >
+                                  <Wand2 className="w-3 h-3 text-emerald-600 animate-pulse" />
+                                  <span>Quick Edit</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    playAudioSound('click');
+                                    setIsWhatsappOverlayOpen(true);
+                                  }}
+                                  className="text-[11px] font-black text-emerald-800 bg-emerald-100/90 hover:bg-emerald-200 border border-emerald-300/80 px-2.5 py-1 rounded-lg transition-all cursor-pointer shadow-2xs flex items-center gap-1 hover:scale-105 active:scale-95"
+                                >
+                                  <Maximize2 className="w-3 h-3 text-emerald-700" />
+                                  <span>Expand Overlay</span>
+                                </button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+         
+                        {isCategoryCardVisible('vcard') && (
+                          <motion.div key="vcard-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                            <div 
+                              id="recent-vcard-card" 
+                              className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-purple-500 hover:shadow-[inset_0_0_15px_rgba(168,85,247,0.35),0_25px_60px_-15px_rgba(168,85,247,0.45),0_0_40px_rgba(168,85,247,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
+                              style={{ transition: 'all 0.3s ease' }}
+                            >
+                              <div className="space-y-1">
+                                <span className="text-[10px] text-purple-600 font-bold uppercase block rtl-content">{t('recent.card.vcard.badge')}</span>
+                                <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-purple-600 transition-colors">{t("tools.vcards.rich")}</h4>
+                                <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                                  {t('recent.card.vcard.desc')}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1.5 mt-4">
+                                <div className="flex justify-between items-center text-[10px] text-slate-500">
+                                  <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                                  <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%</span>
+                                </div>
+                                <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
+                                  <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${Math.min(100, 92 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && p.type === 'card'))?.length || 0) * 3)}%` }}
+                                    transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                                    className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                                  />
+                                </div>
+                              </div>
+
+                              <a
+                                id="recent-vcard-link"
+                                href="/digital-card-qr-generator"
+                                onClick={(e) => { e.preventDefault(); navigateTo('/digital-card-qr-generator'); }}
+                                className="mt-4 text-xs font-bold text-purple-600 group-hover:text-purple-800 flex items-center gap-1 ltr-lock"
+                              >
+                                {t('recent.card.vcard.link')}
+                                <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
+                              </a>
+                            </div>
+                          </motion.div>
+                        )}
+         
+                        {isCategoryCardVisible('restaurant') && (
+                          <motion.div key="restaurant-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                            <div 
+                              id="recent-restaurant-card" 
+                              className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[inset_0_0_15px_rgba(245,158,11,0.35),0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
+                              style={{ transition: 'all 0.3s ease' }}
+                            >
+                              <div className="space-y-1">
+                                <span className="text-[10px] text-amber-800 font-bold uppercase block rtl-content">{t('recent.card.restaurant.badge')}</span>
+                                <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-amber-800 transition-colors">{t("tools.menus.pdf")}</h4>
+                                <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                                  {t('recent.card.restaurant.desc')}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1.5 mt-4">
+                                <div className="flex justify-between items-center text-[10px] text-slate-500">
+                                  <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                                  <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%</span>
+                                </div>
+                                <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
+                                  <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%` }}
+                                    transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                                    className="h-full bg-gradient-to-r from-amber-500 to-orange-500"
+                                  />
+                                </div>
+                              </div>
+
+                              <a
+                                id="recent-restaurant-link"
+                                href="/restaurant-menu-qr-generator"
+                                onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-menu-qr-generator'); }}
+                                className="mt-4 text-xs font-bold text-amber-800 group-hover:text-amber-955 flex items-center gap-1 ltr-lock"
+                              >
+                                {t('recent.card.restaurant.link')}
+                                <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
+                              </a>
+                            </div>
+                          </motion.div>
+                        )}
+
+                        {isCategoryCardVisible('social') && (
+                          <motion.div key="social-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
+                            <div 
+                              id="recent-social-card" 
+                              className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.35),0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
+                              style={{ transition: 'all 0.3s ease' }}
+                            >
+                              <div className="space-y-1">
+                                <span className="text-[10px] text-pink-600 font-bold uppercase block rtl-content">{t('recent.card.social.badge')}</span>
+                                <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-pink-600 transition-colors">{t("tools.social.hubs")}</h4>
+                                <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                                  {t('recent.card.social.desc')}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1.5 mt-4">
+                                <div className="flex justify-between items-center text-[10px] text-slate-500">
+                                  <span className="rtl-content">{t("tools.scan.activityRate")}</span>
+                                  <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%</span>
+                                </div>
+                                <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
+                                  <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%` }}
+                                    transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                                    className="h-full bg-gradient-to-r from-pink-500 to-rose-500"
+                                  />
+                                </div>
+                              </div>
+
+                              <a
+                                id="recent-social-link"
+                                href="/instagram-qr-generator"
+                                onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }}
+                                className="mt-4 text-xs font-bold text-pink-600 group-hover:text-pink-800 flex items-center gap-1 ltr-lock"
+                              >
+                                {t('recent.card.social.link')}
+                                <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
+                              </a>
+                            </div>
+                          </motion.div>
+                        )}
+
+                        {/* Real-time Empty State when Search Query has 0 matches */}
+                        {visibleCategories.length === 0 && (
+                          <motion.div 
+                            key="no-category-results" 
+                            variants={categoryCardVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            layout
+                            className="col-span-full py-12 px-6 flex flex-col items-center justify-center text-center bg-slate-50/80 border border-dashed border-slate-300 rounded-2xl w-full"
+                          >
+                            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-3 shadow-2xs">
+                              <Search className="w-5 h-5" />
+                            </div>
+                            <h5 className="text-sm font-extrabold text-slate-800 mb-1">
+                              {t('recent.noMatchTitle', 'No matching QR categories found')}
+                            </h5>
+                            <p className="text-xs text-slate-500 max-w-sm mb-4">
+                              {t('recent.noMatchDesc', 'No category cards match your search term. Try checking for typos or reset your filters.')}
+                            </p>
+                            <button
+                              type="button"
+                              id="reset-category-search-btn"
+                              onClick={() => {
+                                setCategorySearchQuery('');
+                                setSelectedCategoryFilter('all');
+                              }}
+                              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+                            >
+                              <RotateCcw className="w-3.5 h-3.5" />
+                              <span>{t('recent.resetSearch', 'Reset Search & Filters')}</span>
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </motion.div>
-                  )}
-   
-                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'restaurant') && (
-                    <motion.div key="restaurant-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div 
-                        id="recent-restaurant-card" 
-                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-amber-500 hover:shadow-[inset_0_0_15px_rgba(245,158,11,0.35),0_25px_60px_-15px_rgba(245,158,11,0.45),0_0_40px_rgba(245,158,11,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
-                        style={{ transition: 'all 0.3s ease' }}
-                      >
-                        <div className="space-y-1">
-                          <span className="text-[10px] text-amber-800 font-bold uppercase block rtl-content">{t('recent.card.restaurant.badge')}</span>
-                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-amber-800 transition-colors">{t("tools.menus.pdf")}</h4>
-                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            {t('recent.card.restaurant.desc')}
-                          </p>
-                        </div>
 
-                        <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] text-slate-500">
-                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
-                            <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%</span>
-                          </div>
-                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${Math.min(100, 40 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'url' || p.type === 'text') && (p.content.includes('menu') || p.content.includes('pdf'))))?.length || 0) * 4)}%` }}
-                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
-                              className="h-full bg-gradient-to-r from-amber-500 to-orange-500"
-                            />
-                          </div>
-                        </div>
-
-                        <a
-                          id="recent-restaurant-link"
-                          href="/restaurant-menu-qr-generator"
-                          onClick={(e) => { e.preventDefault(); navigateTo('/restaurant-menu-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-amber-800 group-hover:text-amber-955 flex items-center gap-1 ltr-lock"
+                    {/* Dynamic scroll indicator if there are > 4 active categories */}
+                    {visibleCategories.length > 4 && (
+                      <div id="scroll-indicator" className="flex items-center justify-center gap-2 mt-4 text-[10px] uppercase tracking-wider font-mono font-bold text-indigo-600 sm:hidden">
+                        <span>{t('recent.swipe')}</span>
+                        <motion.div
+                          animate={{ x: [0, 6, 0] }}
+                          transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
                         >
-                          {t('recent.card.restaurant.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
-                        </a>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </motion.div>
                       </div>
-                    </motion.div>
-                  )}
-
-                  {(selectedCategoryFilter === 'all' || selectedCategoryFilter === 'social') && (
-                    <motion.div key="social-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                      <div 
-                        id="recent-social-card" 
-                        className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-pink-500 hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.35),0_25px_60px_-15px_rgba(236,72,153,0.45),0_0_40px_rgba(236,72,153,0.3)] group ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
-                        style={{ transition: 'all 0.3s ease' }}
-                      >
-                        <div className="space-y-1">
-                          <span className="text-[10px] text-pink-600 font-bold uppercase block rtl-content">{t('recent.card.social.badge')}</span>
-                          <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-pink-600 transition-colors">{t("tools.social.hubs")}</h4>
-                          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                            {t('recent.card.social.desc')}
-                          </p>
-                        </div>
-
-                        <div className="space-y-1.5 mt-4">
-                          <div className="flex justify-between items-center text-[10px] text-slate-500">
-                            <span className="rtl-content">{t("tools.scan.activityRate")}</span>
-                            <span className="font-mono font-extrabold text-slate-800 ltr-lock">{Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%</span>
-                          </div>
-                          <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${Math.min(100, 83 + (scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && (p.content.includes('instagram') || p.content.includes('youtube') || p.content.includes('facebook') || p.content.includes('twitter'))))?.length || 0) * 3)}%` }}
-                              transition={{ type: "spring", stiffness: 80, damping: 15 }}
-                              className="h-full bg-gradient-to-r from-pink-500 to-rose-500"
-                            />
-                          </div>
-                        </div>
-
-                        <a
-                          id="recent-social-link"
-                          href="/instagram-qr-generator"
-                          onClick={(e) => { e.preventDefault(); navigateTo('/instagram-qr-generator'); }}
-                          className="mt-4 text-xs font-bold text-pink-600 group-hover:text-pink-800 flex items-center gap-1 ltr-lock"
-                        >
-                          {t('recent.card.social.link')}
-                          <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-2 ltr-lock" />
-                        </a>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-
-              {/* Dynamic scroll indicator if there are > 4 active categories */}
-              {[
-                'wifi',
-                'whatsapp',
-                'vcard',
-                'restaurant',
-                'social'
-              ].filter(id => selectedCategoryFilter === 'all' || selectedCategoryFilter === id).length > 4 && (
-                <div id="scroll-indicator" className="flex items-center justify-center gap-2 mt-4 text-[10px] uppercase tracking-wider font-mono font-bold text-indigo-600 sm:hidden">
-                  <span>{t('recent.swipe')}</span>
-                  <motion.div
-                    animate={{ x: [0, 6, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-                  >
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </motion.div>
-                </div>
-              )}
+                    )}
+                  </>
+                );
+              })()}
             </section>
 
             {/* Complete Internal Linking Related Pages grid */}

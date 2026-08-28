@@ -25,7 +25,9 @@ import {
   Eye,
   CheckCircle2,
   HelpCircle,
-  Clock
+  Clock,
+  Upload,
+  X
 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 import { renderStyledQR } from '../utils/qrRenderer';
@@ -157,6 +159,18 @@ export default function ZatcaInvoiceGenerator({
   const [customerName, setCustomerName] = useState('مؤسسة الأعمال المتقدمة');
   const [customerVat, setCustomerVat] = useState('310987654321003');
   const [timestamp, setTimestamp] = useState(() => new Date().toISOString().slice(0, 19) + 'Z');
+  const [logoImage, setLogoImage] = useState<string | null>(null);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   
   // Phase 2 Optional Fields
   const [isPhase2, setIsPhase2] = useState(false);
@@ -220,6 +234,17 @@ export default function ZatcaInvoiceGenerator({
     const clean = vatNumber.trim();
     return /^3\d{13}3$/.test(clean);
   }, [vatNumber]);
+
+  // Buyer Name validation rule: non-empty
+  const isCustomerNameValid = useMemo(() => {
+    return customerName.trim().length > 0;
+  }, [customerName]);
+
+  // Buyer VAT validation rule: 15 digits, starts and ends with 3
+  const isCustomerVatValid = useMemo(() => {
+    const clean = customerVat.trim();
+    return /^3\d{13}3$/.test(clean);
+  }, [customerVat]);
 
   // Update Item
   const updateItem = (id: string, field: keyof InvoiceItem, value: any) => {
@@ -415,6 +440,48 @@ export default function ZatcaInvoiceGenerator({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    شعار المنشأة (Company Logo) - اختياري
+                  </label>
+                  
+                  <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                    {logoImage ? (
+                      <div className="relative w-16 h-16 bg-white rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+                        <img src={logoImage} alt="Company Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                        <button
+                          type="button"
+                          onClick={() => setLogoImage(null)}
+                          className="absolute -top-1.5 -right-1.5 p-1 bg-rose-500 hover:bg-rose-600 text-white rounded-full shadow-xs cursor-pointer transition-transform hover:scale-110"
+                          title="حذف الشعار"
+                        >
+                          <X className="w-2.5 h-2.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center shrink-0">
+                        <Building2 className="w-6 h-6 text-slate-400" />
+                      </div>
+                    )}
+                    
+                    <div className="flex-1 space-y-1">
+                      <p className="text-[11px] text-slate-600 font-bold">ارفع شعار منشأتك ليظهر في الفاتورة الضريبية المطبوعة</p>
+                      <p className="text-[10px] text-slate-400">يدعم صيغ PNG, JPG, SVG (يفضل خلفية شفافة)</p>
+                      
+                      <label className="inline-flex items-center gap-1 px-3 py-1 bg-white hover:bg-slate-100 border border-slate-200 hover:border-emerald-500 rounded-lg text-[11px] font-bold text-slate-700 cursor-pointer shadow-2xs transition-all">
+                        <Upload className="w-3 h-3 text-slate-500" />
+                        <span>تحميل الشعار</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleLogoUpload}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     اسم المنشأة / المورّد (Seller Name)
                   </label>
@@ -492,16 +559,58 @@ export default function ZatcaInvoiceGenerator({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    اسم العميل (اختياري)
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-slate-700">
+                      اسم العميل / المشتري (Buyer Name) <span className="text-rose-500">*</span>
+                    </label>
+                    <span className={`text-[10px] font-bold ${isCustomerNameValid ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {isCustomerNameValid ? '✓ صالح' : 'مطلوب'}
+                    </span>
+                  </div>
                   <input
                     type="text"
                     value={customerName}
                     onChange={e => setCustomerName(e.target.value)}
-                    placeholder="اسم العميل / المؤسسة"
-                    className="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50/50"
+                    placeholder="اسم العميل / المشتري"
+                    className={`w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-slate-50/50 ${
+                      isCustomerNameValid
+                        ? 'border-slate-200 focus:ring-emerald-500'
+                        : 'border-rose-300 focus:ring-rose-500 bg-rose-50/20'
+                    }`}
                   />
+                  {!isCustomerNameValid && (
+                    <p className="text-[10px] text-rose-600 mt-1 font-semibold">
+                      اسم العميل / المشتري حقل إلزامي
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-slate-700">
+                      الرقم الضريبي للمشتري (Buyer VAT) <span className="text-rose-500">*</span>
+                    </label>
+                    <span className={`text-[10px] font-mono font-bold ${isCustomerVatValid ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {isCustomerVatValid ? '✓ 15 رقماً صالحاً' : '15 رقماً (يبدأ وينتهي بـ 3)'}
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    maxLength={15}
+                    value={customerVat}
+                    onChange={e => setCustomerVat(e.target.value.replace(/\D/g, ''))}
+                    placeholder="310987654321003"
+                    className={`w-full text-xs sm:text-sm font-mono px-3.5 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-slate-50/50 ${
+                      isCustomerVatValid
+                        ? 'border-slate-200 focus:ring-emerald-500'
+                        : 'border-rose-300 focus:ring-rose-500 bg-rose-50/20'
+                    }`}
+                  />
+                  {!isCustomerVatValid && (
+                    <p className="text-[10px] text-rose-600 mt-1 font-semibold">
+                      الرقم الضريبي للمشتري حقل إلزامي (15 رقم يبدأ وينتهي بالرقم 3)
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -706,8 +815,16 @@ export default function ZatcaInvoiceGenerator({
                   <span className="font-bold text-slate-800 truncate block">{sellerName}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[9.5px]">الرقم الضريبي:</span>
-                  <span className="font-bold font-mono text-slate-800">{vatNumber}</span>
+                  <span className="text-slate-400 block text-[9.5px]">الرقم الضريبي للمورد:</span>
+                  <span className="font-bold font-mono text-slate-800 text-[10.5px]">{vatNumber}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[9.5px]">المشتري / العميل:</span>
+                  <span className="font-bold text-slate-800 truncate block">{customerName || 'عميل نقدي'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[9.5px]">الرقم الضريبي للمشتري:</span>
+                  <span className="font-bold font-mono text-slate-800 text-[10.5px]">{customerVat || '—'}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[9.5px]">الإجمالي مع الضريبة:</span>
@@ -761,7 +878,7 @@ export default function ZatcaInvoiceGenerator({
                   })}
                   className="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 cursor-pointer pt-1"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <QrCode className="w-3.5 h-3.5" />
                   فتح في استوديو التصميم المتقدم
                 </button>
               )}
@@ -852,16 +969,23 @@ export default function ZatcaInvoiceGenerator({
           >
             {/* Invoice Top Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b-2 border-emerald-600 pb-6">
-              <div>
-                <span className="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-black rounded-md tracking-wider">
-                  فاتورة ضريبية مبسطة
-                </span>
-                <h1 className="text-xl sm:text-2xl font-black text-slate-900 mt-2">
-                  {sellerName}
-                </h1>
-                <p className="text-xs text-slate-600 mt-1 font-mono">
-                  الرقم الضريبي للمنشأة: <span className="font-bold text-slate-900">{vatNumber}</span>
-                </p>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                {logoImage && (
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl border border-slate-200 p-2 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                    <img src={logoImage} alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                  </div>
+                )}
+                <div>
+                  <span className="px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-black rounded-md tracking-wider">
+                    فاتورة ضريبية مبسطة
+                  </span>
+                  <h1 className="text-xl sm:text-2xl font-black text-slate-900 mt-2">
+                    {sellerName}
+                  </h1>
+                  <p className="text-xs text-slate-600 mt-1 font-mono">
+                    الرقم الضريبي للمنشأة: <span className="font-bold text-slate-900">{vatNumber}</span>
+                  </p>
+                </div>
               </div>
 
               {/* QR Code in Print View */}
@@ -876,7 +1000,7 @@ export default function ZatcaInvoiceGenerator({
             </div>
 
             {/* Meta details grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-xs">
               <div>
                 <span className="text-slate-400 block text-[10px]">رقم الفاتورة:</span>
                 <span className="font-bold font-mono text-slate-800">{invoiceNumber}</span>
@@ -886,8 +1010,12 @@ export default function ZatcaInvoiceGenerator({
                 <span className="font-bold font-mono text-slate-800">{timestamp}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[10px]">اسم العميل:</span>
+                <span className="text-slate-400 block text-[10px]">اسم العميل / المشتري:</span>
                 <span className="font-bold text-slate-800">{customerName || 'عميل نقدي'}</span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[10px]">الرقم الضريبي للمشتري:</span>
+                <span className="font-bold font-mono text-slate-800">{customerVat || '—'}</span>
               </div>
               <div>
                 <span className="text-slate-400 block text-[10px]">طريقة الدفع:</span>

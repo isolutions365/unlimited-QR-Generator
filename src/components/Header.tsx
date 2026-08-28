@@ -29,6 +29,8 @@ interface HeaderProps {
   onSignOut?: () => void;
   onOpenSettings?: () => void;
   soundEnabled?: boolean;
+  isMobileMenuOpen?: boolean;
+  onToggleMobileMenu?: () => void;
 }
 
 export default function Header({ 
@@ -50,21 +52,36 @@ export default function Header({
   onSignUpClick = () => {},
   onSignOut = () => {},
   onOpenSettings = () => {},
-  soundEnabled = true
+  soundEnabled = true,
+  isMobileMenuOpen: controlledIsMobileMenuOpen,
+  onToggleMobileMenu
 }: HeaderProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [internalIsMobileMenuOpen, setInternalIsMobileMenuOpen] = useState(false);
+  const isMobileMenuOpen = controlledIsMobileMenuOpen !== undefined ? controlledIsMobileMenuOpen : internalIsMobileMenuOpen;
+  const setIsMobileMenuOpen = (val: boolean) => {
+    if (onToggleMobileMenu) {
+      onToggleMobileMenu();
+    } else {
+      setInternalIsMobileMenuOpen(val);
+    }
+  };
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const isRtl = ['ar', 'ur'].includes(locale);
 
   const safeT = (key: string, fallback: string) => {
     try {
-      return (typeof t === 'function' ? safeT(key, fallback) : fallback) || fallback;
+      if (typeof t === 'function') {
+        const translated = t(key, fallback);
+        return translated || fallback;
+      }
+      return fallback;
     } catch {
       return fallback;
     }
   };
 
   const navLinks = [
+    { name: safeT('nav.generator', 'QR Studio'), path: '/generator', icon: QrCode },
     { name: safeT('nav.faqTitle', 'FAQ'), path: '/faq', icon: HelpCircle },
     { name: safeT('nav.blogTitle', 'Blog'), path: '/blog', icon: BookOpen },
     { name: safeT('nav.templates', 'Templates'), path: '/templates', icon: LayoutTemplate },
@@ -89,7 +106,7 @@ export default function Header({
   const handleLinkClick = (link: any) => {
     if (link.action) {
       const tabName = link.action.replace('tab_', '') as AppTab;
-      navigateTo('/');
+      navigateTo(`/generator?tab=${tabName}`);
       setActiveTab?.(tabName);
     } else if (link.path) {
       navigateTo(link.path);
@@ -184,7 +201,7 @@ export default function Header({
                         <button
                           onClick={() => {
                             setIsProfileDropdownOpen(false);
-                            navigateTo('/');
+                            navigateTo('/generator');
                           }}
                           className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
                         >
@@ -234,9 +251,9 @@ export default function Header({
       </div>
     </header>
 
-    {/* Mobile Sliding Navigation Menu */}
+    {/* Mobile Sliding Navigation Menu (fallback if not controlled by App layout) */}
     <AnimatePresence>
-      {isMobileMenuOpen && (
+      {isMobileMenuOpen && !onToggleMobileMenu && (
         <motion.div
           initial={{ opacity: 0, x: isRtl ? '-100%' : '100%' }}
           animate={{ opacity: 1, x: 0 }}

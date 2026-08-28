@@ -3406,7 +3406,7 @@
   "templates.subtitle": "Scegli tra modelli predefiniti e ottimizzati per diverse categorie e settori d'attività.",
   "templates.allTemplates": "Tutti i Modelli",
   "templates.previewTemplate": "Anteprima Modello",
-  "nav.aiGateway": "Gateway AI",
+  "nav.aiGateway": "Gateway IA",
   "nav.barcodeGeneratorTab": "Generatore di Codici a Barre",
   "common.none": "Nessuno",
   "common.unknown": "Sconosciuto",
@@ -3940,5 +3940,9 @@
   "faq.q4": "How does Reed-Solomon error correction protect damaged QR codes?",
   "faq.a4": "Reed-Solomon error correction embeds redundant mathematical data into the matrix, allowing codes to scan even if up to 30% of the surface is covered or damaged.",
   "faq.q5": "Can I customize colors, logos, and frame shapes for brand identity?",
-  "faq.a5": "Absolutely! You can upload brand emblems, adjust foreground and background colors, customize corner eye styles, and add CTA frames."
+  "faq.a5": "Absolutely! You can upload brand emblems, adjust foreground and background colors, customize corner eye styles, and add CTA frames.",
+  "nav.generator": "Studio QR",
+  "nav.myProfile": "Il mio profilo e impostazioni",
+  "nav.savedQRs": "I miei codici QR salvati",
+  "settings.headerBtnTooltip": "Impostazioni audio e suoni"
 }

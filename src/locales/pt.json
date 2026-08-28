@@ -3313,7 +3313,7 @@
   "🎉 Referral Signup Bonus!": "🎉 Bônus de Cadastro por Indicação!",
   "👋 Welcome to FreeQRGen.pro!": "👋 Bem-vindo ao FreeQRGen.pro!",
   "💬 Feedback Submitted!": "💬 Feedback Enviado!",
-  "nav.aiGateway": "Gateway de IA",
+  "nav.aiGateway": "Gateway IA",
   "nav.barcodeGeneratorTab": "Gerador de Código de Barras",
   "common.none": "Nenhum",
   "common.unknown": "Desconhecido",
@@ -3847,5 +3847,9 @@
   "faq.q4": "How does Reed-Solomon error correction protect damaged QR codes?",
   "faq.a4": "Reed-Solomon error correction embeds redundant mathematical data into the matrix, allowing codes to scan even if up to 30% of the surface is covered or damaged.",
   "faq.q5": "Can I customize colors, logos, and frame shapes for brand identity?",
-  "faq.a5": "Absolutely! You can upload brand emblems, adjust foreground and background colors, customize corner eye styles, and add CTA frames."
+  "faq.a5": "Absolutely! You can upload brand emblems, adjust foreground and background colors, customize corner eye styles, and add CTA frames.",
+  "nav.generator": "Estúdio QR",
+  "nav.myProfile": "Meu perfil e configurações",
+  "nav.savedQRs": "Meus códigos QR salvos",
+  "settings.headerBtnTooltip": "Configurações de som e áudio"
 }

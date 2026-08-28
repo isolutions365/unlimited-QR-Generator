@@ -3313,7 +3313,7 @@
   "🎉 Referral Signup Bonus!": "🎉 ¡Bono de Registro por Recomendación!",
   "👋 Welcome to FreeQRGen.pro!": "👋 ¡Bienvenido a FreeQRGen.pro!",
   "💬 Feedback Submitted!": "💬 ¡Comentarios Enviados!",
-  "nav.aiGateway": "Pasarela de IA",
+  "nav.aiGateway": "Pasarela IA",
   "nav.barcodeGeneratorTab": "Generador de Código de Barras",
   "common.none": "Ninguno",
   "common.unknown": "Desconocido",
@@ -3847,5 +3847,9 @@
   "print.studioTitle": "Print Layout Studio",
   "print.subtextLabel": "Secondary Subtext",
   "print.topMarginMm": "Top Margin",
-  "print.triggerPrintNow": "PRINT SHEET NOW"
+  "print.triggerPrintNow": "PRINT SHEET NOW",
+  "nav.generator": "Estudio QR",
+  "nav.myProfile": "Mi perfil y configuración",
+  "nav.savedQRs": "Mis códigos QR guardados",
+  "settings.headerBtnTooltip": "Configuración de audio y sonido"
 }

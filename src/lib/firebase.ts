@@ -1,24 +1,38 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider } from 'firebase/auth';
-import { initializeFirestore } from 'firebase/firestore';
+import { initializeFirestore, getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, AppCheck, getToken } from 'firebase/app-check';
 import appletConfig from '../../firebase-applet-config.json';
 
-// Define the firebaseConfig using import.meta.env with fallback to firebase-applet-config.json
-const rawDatabaseId = import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || appletConfig.firestoreDatabaseId;
-const cleanDatabaseId = (rawDatabaseId && rawDatabaseId.includes('=')) 
+const getEnvVar = (key: string): string | undefined => {
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
+      return import.meta.env[key];
+    }
+    if (typeof process !== 'undefined' && process.env && process.env[key]) {
+      return process.env[key];
+    }
+  } catch {
+    // Return fallback
+  }
+  return undefined;
+};
+
+// Define the firebaseConfig using safe getEnvVar with fallback to firebase-applet-config.json
+const rawDatabaseId = getEnvVar('VITE_FIREBASE_FIRESTORE_DATABASE_ID') || (appletConfig as any)?.firestoreDatabaseId;
+const cleanDatabaseId = (rawDatabaseId && typeof rawDatabaseId === 'string' && rawDatabaseId.includes('=')) 
   ? rawDatabaseId.split('=').pop() 
   : rawDatabaseId;
 
 export const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || appletConfig.apiKey,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || appletConfig.authDomain,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || appletConfig.projectId,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || appletConfig.storageBucket,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || appletConfig.messagingSenderId,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || appletConfig.appId,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || appletConfig.measurementId,
+  apiKey: getEnvVar('VITE_FIREBASE_API_KEY') || appletConfig.apiKey,
+  authDomain: getEnvVar('VITE_FIREBASE_AUTH_DOMAIN') || appletConfig.authDomain,
+  projectId: getEnvVar('VITE_FIREBASE_PROJECT_ID') || appletConfig.projectId,
+  storageBucket: getEnvVar('VITE_FIREBASE_STORAGE_BUCKET') || appletConfig.storageBucket,
+  messagingSenderId: getEnvVar('VITE_FIREBASE_MESSAGING_SENDER_ID') || appletConfig.messagingSenderId,
+  appId: getEnvVar('VITE_FIREBASE_APP_ID') || appletConfig.appId,
+  measurementId: getEnvVar('VITE_FIREBASE_MEASUREMENT_ID') || appletConfig.measurementId,
   firestoreDatabaseId: cleanDatabaseId || '(default)'
 };
 
@@ -150,16 +164,33 @@ const customDbId = firebaseConfig.firestoreDatabaseId && firebaseConfig.firestor
   ? firebaseConfig.firestoreDatabaseId
   : undefined;
 
-export const db = customDbId
-  ? initializeFirestore(app, { experimentalForceLongPolling: true }, customDbId)
-  : initializeFirestore(app, { experimentalForceLongPolling: true });
+let dbInstance: any;
+try {
+  dbInstance = customDbId
+    ? initializeFirestore(app, { experimentalForceLongPolling: true }, customDbId)
+    : initializeFirestore(app, { experimentalForceLongPolling: true });
+} catch (err: any) {
+  console.warn('[Firebase Init] initializeFirestore warning, using getFirestore fallback:', err?.message || err);
+  try {
+    dbInstance = getFirestore(app);
+  } catch (err2: any) {
+    console.error('[Firebase Init] getFirestore fallback error:', err2);
+    dbInstance = null;
+  }
+}
+export const db = dbInstance;
 
-export const auth = getAuth(app);
-
-// Configure persistent login state (Local Storage persistence)
-setPersistence(auth, browserLocalPersistence).catch((err) => {
-  console.warn('[Firebase Auth] Persistence initialization notice:', err?.message || err);
-});
+let authInstance: any;
+try {
+  authInstance = getAuth(app);
+  setPersistence(authInstance, browserLocalPersistence).catch((err) => {
+    console.warn('[Firebase Auth] Persistence initialization notice:', err?.message || err);
+  });
+} catch (err: any) {
+  console.error('[Firebase Auth] getAuth initialization warning:', err);
+  authInstance = null;
+}
+export const auth = authInstance;
 
 // Initialize and prepare Storage instance
 export const storage = getStorage(app);

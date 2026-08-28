@@ -191,10 +191,10 @@ export const MemoizedQRCanvas = memo(
     }, []);
 
     return (
-      <div className="relative" style={{ width: '264px', height: '264px' }}>
+      <div className="relative blur-up-placeholder-container rounded-lg" style={{ width: '264px', height: '264px' }}>
         <canvas
           ref={localCanvasRef}
-          className={`max-w-full rounded-lg bg-white transition-all duration-300 group-hover:scale-[0.98] ${
+          className={`max-w-full rounded-lg bg-white transition-all duration-300 group-hover:scale-[0.98] animate-blur-up ${
             isAnimatingRedraw ? 'animate-qr-fade-in' : ''
           }`}
           style={{ width: '264px', height: '264px' }}

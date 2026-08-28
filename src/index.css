@@ -29,6 +29,101 @@
   }
 }
 
+/* CSS Blur-Up Placeholder Effects for QR Preview Mockups & Tool Icons */
+@keyframes blur-up-reveal {
+  0% {
+    filter: blur(10px) opacity(0.35);
+    transform: scale(0.96);
+  }
+  50% {
+    filter: blur(4px) opacity(0.75);
+  }
+  100% {
+    filter: blur(0px) opacity(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes icon-blur-up {
+  0% {
+    filter: blur(6px) opacity(0.3);
+    transform: scale(0.88);
+  }
+  100% {
+    filter: blur(0px) opacity(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes qr-mockup-blur {
+  0% {
+    filter: blur(14px) contrast(1.15);
+    opacity: 0.3;
+  }
+  60% {
+    filter: blur(3px) contrast(1.05);
+    opacity: 0.85;
+  }
+  100% {
+    filter: blur(0px) contrast(1);
+    opacity: 1;
+  }
+}
+
+.animate-blur-up {
+  animation: blur-up-reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: filter, opacity, transform;
+}
+
+.animate-icon-blur-up {
+  animation: icon-blur-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: filter, opacity, transform;
+}
+
+.animate-qr-blur-up {
+  animation: qr-mockup-blur 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: filter, opacity;
+}
+
+/* CSS Blur-up Skeleton backdrop for image and icon placeholders */
+.blur-up-placeholder-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.blur-up-placeholder-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(110deg, rgba(226, 232, 240, 0.5) 25%, rgba(241, 245, 249, 0.85) 50%, rgba(226, 232, 240, 0.5) 75%);
+  background-size: 200% 100%;
+  animation: sweep-shine 1.6s infinite linear;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.blur-up-placeholder-container.is-loading::before {
+  opacity: 1;
+}
+
+.dark .blur-up-placeholder-container::before {
+  background: linear-gradient(110deg, rgba(30, 41, 59, 0.5) 25%, rgba(51, 65, 85, 0.85) 50%, rgba(30, 41, 59, 0.5) 75%);
+}
+
+/* Micro-interaction tool icon blur-up styling */
+.tool-icon-blur-up {
+  transition: filter 0.3s ease, transform 0.3s ease;
+  animation: icon-blur-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tool-icon-blur-up:hover {
+  filter: blur(0px) drop-shadow(0 3px 6px rgba(99, 102, 241, 0.22));
+}
+
 /* Custom QR Scanner Sweeping Laser Line Keyframe Animation */
 @keyframes qr-scan {
   0% {
