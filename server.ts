@@ -1463,7 +1463,7 @@ English text: "${text}"`;
         apiKey: apiKey,
         httpOptions: {
           headers: {
-            'User-Agent': 'isolutions-build'
+            'User-Agent': 'aistudio-build'
           }
         }
       });

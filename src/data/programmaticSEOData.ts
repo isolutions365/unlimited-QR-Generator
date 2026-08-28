@@ -89,7 +89,7 @@ export const industriesData: SEOProfile[] = [
     name: 'Cafe & Coffee Shop',
     badge: 'Hospitality',
     iconName: 'Coffee',
-    metaTitle: 'Custom Cafe Menu QR Codes | FreeQRGen.pro',
+    metaTitle: 'Custom Cafe Menu QR Codes | FreeQRBarcodes',
     metaDesc: 'Streamline coffee orders and boost local social media followers with custom cafe menu QR codes. Setup WiFi and reviews easily.',
     heroGradient: 'from-amber-500 to-amber-800',
     challenges: [
@@ -284,7 +284,7 @@ export const solutionsData = [
     slug: 'contactless-menu',
     name: 'Contactless Digital Menu Solutions',
     badge: 'Hospitality',
-    metaTitle: 'Contactless Restaurant Menu QR Codes | FreeQRGen.pro',
+    metaTitle: 'Contactless Restaurant Menu QR Codes | FreeQRBarcodes',
     metaDesc: 'Deploy a professional contactless restaurant menu QR code. Speed up tableside ordering, eliminate printing costs, and update menus instantly.',
     desc: 'Bypasses physical paper hand-outs, letting guests read catalogs and pay tableside.',
     targetPreset: 'restaurant'
@@ -293,7 +293,7 @@ export const solutionsData = [
     slug: 'digital-business-card',
     name: 'Dynamic vCard Professional Networking',
     badge: 'Professional',
-    metaTitle: 'Professional vCard QR Code Business Cards | FreeQRGen.pro',
+    metaTitle: 'Professional vCard QR Code Business Cards | FreeQRBarcodes',
     metaDesc: 'Build instant professional connections. Share phone, email, portfolio, and social profiles directly with a single scan.',
     desc: 'Allows instant address book population without manual typing errors.',
     targetPreset: 'business-card'
@@ -311,7 +311,7 @@ export const solutionsData = [
     slug: 'wifi-guest-onboarding',
     name: 'No-Password Guest WiFi Onboarding',
     badge: 'Utilities',
-    metaTitle: 'Free WiFi Password Sharing QR Codes | FreeQRGen.pro',
+    metaTitle: 'Free WiFi Password Sharing QR Codes | FreeQRBarcodes',
     metaDesc: 'Allow guests to join your home or business WiFi network instantly without typing passwords. Safe, secure, and offline-ready.',
     desc: 'Eliminates complex SSID and password sharing on lobby boards.',
     targetPreset: 'wifi-qr'
@@ -341,7 +341,7 @@ export const useCasesData = [
     slug: 'tableside-ordering',
     name: 'Tableside Ordering & Self-Checkout',
     badge: 'Hospitality',
-    metaTitle: 'Tableside QR Code Ordering Solutions | FreeQRGen.pro',
+    metaTitle: 'Tableside QR Code Ordering Solutions | FreeQRBarcodes',
     metaDesc: 'Empower diners to order food and pay bills directly from their physical table. Speed up service and lower labor friction.',
     desc: 'Reduces dining room wait delays by letting guests order and pay directly on their phone.'
   },
@@ -357,7 +357,7 @@ export const useCasesData = [
     slug: 'product-packaging-manuals',
     name: 'Sustainable Product Packaging Manuals',
     badge: 'E-commerce',
-    metaTitle: 'Product Manual QR Codes on Packaging | FreeQRGen.pro',
+    metaTitle: 'Product Manual QR Codes on Packaging | FreeQRBarcodes',
     metaDesc: 'Ditch heavy paper instruction booklets. Link physical cardboard boxes directly to digital user guides, guides, and manuals.',
     desc: 'Replaces massive paper booklets with direct links to dynamic PDF manuals.'
   },
@@ -462,7 +462,7 @@ export const getBespokeProfile = (slug: string): SEOProfile => {
     name: normalName,
     badge,
     iconName,
-    metaTitle: `Secure QR Code Solutions for ${normalName} | FreeQRGen.pro`,
+    metaTitle: `Secure QR Code Solutions for ${normalName} | FreeQRBarcodes`,
     metaDesc: `Deploy professional, enterprise-grade QR code templates custom-made for your ${normalName} business. Increase scanning rates, simplify service checks, and gather client reviews.`,
     heroGradient: gradient,
     challenges: [

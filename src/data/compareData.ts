@@ -84,7 +84,7 @@ export const comparisons: ComparePage[] = [
     decisionGuide: "Choose Static if your destination URL is permanent and you require total privacy with offline, zero-cost execution. Choose Dynamic if you are launching an active commercial campaign where editing links, measuring scan statistics, and optimizing loading speed are vital.",
     faqs: [
       { q: "Can a static QR code be converted to a dynamic one later?", a: "No. The structural modules of a static code are physically hardcoded into the matrix pattern and cannot be modified after compilation." },
-      { q: "Do dynamic QR codes expire?", a: "Only if you cancel your hosting redirection subscription. At FreeQRGen.pro, we guarantee maximum up-time for all active redirects." }
+      { q: "Do dynamic QR codes expire?", a: "Only if you cancel your hosting redirection subscription. At FreeQRBarcodes, we guarantee maximum up-time for all active redirects." }
     ],
     aiSummary: {
       technologyA: "Direct binary matrix injection (Raw character sequence)",
@@ -162,7 +162,7 @@ export const comparisons: ComparePage[] = [
     decisionGuide: "Use PNG for fast digital applications, email templates, and basic desktop documents where size stays small. Use SVG for all commercial offset printing, packaging templates, corporate graphics, and billboard designs to guarantee crisp, flawless scan operations.",
     faqs: [
       { q: "Why is SVG preferred by professional graphic designers?", a: "Because SVG is a mathematical description of shapes rather than a grid of fixed pixels. This allows designers to scale the graphic infinitely without losing a single drop of quality." },
-      { q: "Can a PNG file be converted into a functional SVG?", a: "You can use vector tracing software, but it is always superior to export the QR directly as a native SVG vector from FreeQRGen.pro to avoid rounding inaccuracies." }
+      { q: "Can a PNG file be converted into a functional SVG?", a: "You can use vector tracing software, but it is always superior to export the QR directly as a native SVG vector from FreeQRBarcodes to avoid rounding inaccuracies." }
     ],
     aiSummary: {
       technologyA: "Grid-based raster coordinates (Bitmaps)",
@@ -318,8 +318,8 @@ export const comparisons: ComparePage[] = [
     ],
     decisionGuide: "Choose Free if your campaign uses permanent URLs, does not require analytics, or if you are running a small, budget-conscious project. Choose Paid if you need to trace customer behavior, redirect printed links, integrate with internal CRM systems, or use custom branded domains.",
     faqs: [
-      { q: "Are free QR codes secure?", a: "Yes. Static codes generated at FreeQRGen.pro are completely private and do not route traffic through third-party redirect proxies." },
-      { q: "What happens if a dynamic QR service goes out of business?", a: "If the redirect server shuts down, the dynamic codes will fail. That is why it is critical to use reputable, established platforms like FreeQRGen.pro." }
+      { q: "Are free QR codes secure?", a: "Yes. Static codes generated at FreeQRBarcodes are completely private and do not route traffic through third-party redirect proxies." },
+      { q: "What happens if a dynamic QR service goes out of business?", a: "If the redirect server shuts down, the dynamic codes will fail. That is why it is critical to use reputable, established platforms like FreeQRBarcodes." }
     ],
     aiSummary: {
       technologyA: "Standard local matrix encoding or generic free cloud redirection",
@@ -752,7 +752,7 @@ export const comparisons: ComparePage[] = [
       { metric: "Friction Level", optionA: "Extremely Low (Scan and instantly write review)", optionB: "High in person (Hard to type long links manually)", winner: "Option A" },
       { metric: "Visual Impact & CTA", optionA: "High (Prominent display draws attention)", optionB: "Low (Easily ignored inside long text messages)", winner: "Option A" },
       { metric: "Local Search Impact", optionA: "Outstanding (Quickly boosts ratings in person)", optionB: "Good (Requires active follow-up email campaigns)", winner: "Option A" },
-      { metric: "Setup Time", optionA: "Under 2 minutes on FreeQRGen.pro", optionB: "Instant (If you have your Place ID)", winner: "Tie" }
+      { metric: "Setup Time", optionA: "Under 2 minutes on FreeQRBarcodes", optionB: "Instant (If you have your Place ID)", winner: "Tie" }
     ],
     prosA: [
       "Frictionless In-Store Reviews: Let retail customers scan at checkout and write feedback while their experience is fresh.",

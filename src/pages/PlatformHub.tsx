@@ -1061,11 +1061,11 @@ export default function PlatformHub({
 
   // Code samples for the active dynamic code language tabs
   const codeSamples = {
-    ts: `import { FreeQRGen } from '@freeqrgen/sdk-node';
+    ts: `import { FreeQRBarcodes } from '@freeqrbarcodes/sdk-node';
 
-// Initialize the secure FreeQRGen client with scoped API Key
-const qrClient = new FreeQRGen({
-  apiKey: process.env.FREEQRGEN_API_KEY || 'fqg_live_839da...291f',
+// Initialize the secure FreeQRBarcodes client with scoped API Key
+const qrClient = new FreeQRBarcodes({
+  apiKey: process.env.FREEQRBARCODES_API_KEY || 'fqb_live_839da...291f',
   timeout: 5000,
 });
 
@@ -1093,12 +1093,12 @@ async function generateDynamicCampaign() {
 }
 
 generateDynamicCampaign();`,
-    python: `from freeqrgen import FreeQRGenClient
+    python: `from freeqrbarcodes import FreeQRBarcodesClient
 import os
 
 # Initialize the secure client
-client = FreeQRGenClient(
-    api_key=os.getenv('FREEQRGEN_API_KEY', 'fqg_live_839da...291f')
+client = FreeQRBarcodesClient(
+    api_key=os.getenv('FREEQRBARCODES_API_KEY', 'fqb_live_839da...291f')
 )
 
 try:
@@ -1126,13 +1126,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/freeqrgen/sdk-go"
+	"github.com/freeqrbarcodes/sdk-go"
 )
 
 func main() {
 	// Initialize with API Key and endpoint
 	client := sdk.NewClient(sdk.Config{
-		APIKey: os.Getenv("FREEQRGEN_API_KEY"),
+		APIKey: os.Getenv("FREEQRBARCODES_API_KEY"),
 	})
 
 	// Setup payload configuration

@@ -55,18 +55,18 @@ export const authors: Author[] = [
   },
   {
     id: 'marcus-vance',
-    name: 'FreeQRGen Engineering Team',
+    name: 'FreeQRBarcodes Engineering Team',
     role: 'Trust, Security & Technical Operations Core',
     avatar: 'ET',
     specialization: 'High-Availability Infrastructure, Cryptographic Data Sandboxing, DevSecOps',
-    bio: 'The FreeQRGen Engineering Team is composed of dedicated software engineers, trust experts, and performance specialists. Together, we manage our high-speed global delivery networks, secure serverless routing protocols, and open-access API architectures. Our mission is to maintain 100% platform availability, deliver modern interface performance, and ensure that every generated barcode complies strictly with global standards.',
+    bio: 'The FreeQRBarcodes Engineering Team is composed of dedicated software engineers, trust experts, and performance specialists. Together, we manage our high-speed global delivery networks, secure serverless routing protocols, and open-access API architectures. Our mission is to maintain 100% platform availability, deliver modern interface performance, and ensure that every generated barcode complies strictly with global standards.',
     credentials: [
       'Core Engineering Collective at iSolutions ICo.',
       'Certified Web Security & Cryptographic Sandbox Auditors',
-      'Maintainers of the FreeQRGen High-Availability Globally Distributed Edge Network'
+      'Maintainers of the FreeQRBarcodes High-Availability Globally Distributed Edge Network'
     ],
     socials: {
-      github: 'https://github.com/freeqrgen-org'
+      github: 'https://github.com/freeqrbarcodes-org'
     },
     publications: [
       'Scaling Edge Services for Real-Time Contactless Interaction Utilities',

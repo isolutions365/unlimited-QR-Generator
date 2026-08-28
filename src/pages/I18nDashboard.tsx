@@ -140,7 +140,7 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(template, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `freeqrgen_i18n_${loc}.json`);
+    downloadAnchor.setAttribute("download", `freeqrbarcodes_i18n_${loc}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();

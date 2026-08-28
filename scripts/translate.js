@@ -10,7 +10,7 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
   httpOptions: {
     headers: {
-      'User-Agent': 'isolutions-build',
+      'User-Agent': 'aistudio-build',
     }
   }
 });

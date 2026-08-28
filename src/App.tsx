@@ -1305,7 +1305,7 @@ export default function App() {
       };
     }
     return {
-      categoryName: 'FreeQRGen',
+      categoryName: 'FreeQRBarcodes',
       subName: cleanPath === '/' ? 'Studio Workspace' : cleanPath,
       badgeColor: 'indigo'
     };
@@ -1414,48 +1414,48 @@ export default function App() {
       title = 'Frequently Asked Questions | Free QR Code Generator FAQs';
       description = 'Find detailed developer and business answers to common questions about custom QR code options, dynamic vs static formats, design options, scan limits, logos, and tracking analytics.';
     } else if (currentPath === '/blog') {
-      title = 'QR Code Technology & Marketing Blog | FreeQRGen.pro';
+      title = 'QR Code Technology & Marketing Blog | FreeQRBarcodes';
       description = 'Explore modern design tips, tutorials, and advanced marketing strategies for dynamic and static QR codes. Master QR code scanning engagement and conversion.';
     } else if (currentPath.startsWith('/blog/')) {
       const blogSlug = currentPath.substring(6);
       const article = getBlogArticles(locale).find(art => art.slug === blogSlug);
       if (article) {
-        title = `${article.metaTitle} | FreeQRGen.pro Blog`;
+        title = `${article.metaTitle} | FreeQRBarcodes Blog`;
         description = article.metaDescription;
       } else {
-        title = 'Blog Article | FreeQRGen.pro';
+        title = 'Blog Article | FreeQRBarcodes';
         description = 'Read our informative technical blog post about QR Code solutions.';
       }
     } else if (['/academy', '/guides', '/tutorials', '/resources', '/glossary'].includes(currentPath)) {
       const sect = currentPath.substring(1);
-      title = `Free QR Code ${sect.charAt(0).toUpperCase() + sect.slice(1)} Hub | FreeQRGen.pro`;
-      description = `Access our authoritative FreeQRGen.pro ${sect} platform. Master 2D barcode parameters, printing guidelines, sizing calculators, security rules, and marketing campaigns.`;
+      title = `Free QR Code ${sect.charAt(0).toUpperCase() + sect.slice(1)} Hub | FreeQRBarcodes`;
+      description = `Access our authoritative FreeQRBarcodes ${sect} platform. Master 2D barcode parameters, printing guidelines, sizing calculators, security rules, and marketing campaigns.`;
     } else if (['/academy/', '/guides/', '/tutorials/', '/resources/', '/glossary/'].some(p => currentPath.startsWith(p))) {
       const segment = currentPath.split('/')[1];
       const artSlug = currentPath.split('/')[2];
       const article = knowledgeArticles.find(art => art.slug === artSlug);
       if (article) {
-        title = `${article.seoTitle} | FreeQRGen.pro ${segment.charAt(0).toUpperCase() + segment.slice(1)}`;
+        title = `${article.seoTitle} | FreeQRBarcodes ${segment.charAt(0).toUpperCase() + segment.slice(1)}`;
         description = article.metaDescription;
       } else {
-        title = `${segment.charAt(0).toUpperCase() + segment.slice(1)} Article | FreeQRGen.pro`;
-        description = 'Read our informative technical authority guide on FreeQRGen.pro.';
+        title = `${segment.charAt(0).toUpperCase() + segment.slice(1)} Article | FreeQRBarcodes`;
+        description = 'Read our informative technical authority guide on FreeQRBarcodes.';
       }
     } else if (currentPath === '/templates') {
-      title = 'Free High-Performance QR Code Templates Directory | FreeQRGen.pro';
+      title = 'Free High-Performance QR Code Templates Directory | FreeQRBarcodes';
       description = 'Access our verified, schema-optimized 2D barcode templates designed to capture high-intent physical traffic. Jumpstart campaigns with pristine layouts.';
     } else if (currentPath.startsWith('/templates/')) {
       const tplSlug = currentPath.split('/')[2];
       const template = templatePages.find(t => t.slug === tplSlug);
       if (template) {
-        title = `${template.seoTitle} | FreeQRGen.pro Templates`;
+        title = `${template.seoTitle} | FreeQRBarcodes Templates`;
         description = template.metaDescription;
       } else {
-        title = 'QR Code Preset Template | FreeQRGen.pro';
+        title = 'QR Code Preset Template | FreeQRBarcodes';
         description = 'Utilize our high-performance ready-to-print 2D QR Code template layouts.';
       }
     } else if (currentPath === '/compare') {
-      title = 'QR Code Technology Comparison Directory | FreeQRGen.pro';
+      title = 'QR Code Technology Comparison Directory | FreeQRBarcodes';
       description = 'High-fidelity, professional analytical comparisons between diverse 2D barcode schemas, formats, error levels, and marketing strategies.';
     } else if (currentPath.startsWith('/compare/')) {
       const compSlug = currentPath.substring(9);
@@ -1464,11 +1464,11 @@ export default function App() {
         title = comparison.seoTitle;
         description = comparison.metaDescription;
       } else {
-        title = 'QR Code Technology Comparison | FreeQRGen.pro';
+        title = 'QR Code Technology Comparison | FreeQRBarcodes';
         description = 'Analyze and compare different QR code formats, configurations, and technology options.';
       }
     } else if (currentPath === '/solutions') {
-      title = 'Enterprise QR Code Solutions Directory | FreeQRGen.pro';
+      title = 'Enterprise QR Code Solutions Directory | FreeQRBarcodes';
       description = 'Explore professional contactless QR solutions custom-made for brands, managers, and designers. Speed up checkouts and scan engagement.';
     } else if (currentPath.startsWith('/solutions/')) {
       const solSlug = currentPath.split('/')[2];
@@ -1477,11 +1477,11 @@ export default function App() {
         title = sol.metaTitle;
         description = sol.metaDesc;
       } else {
-        title = 'Professional QR Code Solution | FreeQRGen.pro';
+        title = 'Professional QR Code Solution | FreeQRBarcodes';
         description = 'Deploy high-performance contactless enterprise QR code solutions.';
       }
     } else if (currentPath === '/industries') {
-      title = 'Custom QR Codes for Industries Directory | FreeQRGen.pro';
+      title = 'Custom QR Codes for Industries Directory | FreeQRBarcodes';
       description = 'Browse specialized optical barcode solutions, printable guidelines, and checklists for 40 distinct commercial industries.';
     } else if (currentPath.startsWith('/industries/')) {
       const indSlug = currentPath.split('/')[2];
@@ -1489,7 +1489,7 @@ export default function App() {
       title = ind.metaTitle;
       description = ind.metaDesc;
     } else if (currentPath === '/use-cases') {
-      title = 'High-Traffic QR Code Use Cases Hub | FreeQRGen.pro';
+      title = 'High-Traffic QR Code Use Cases Hub | FreeQRBarcodes';
       description = 'Review physical placement guidelines, best practices, common mistakes, and printable templates for custom 2D scan configurations.';
     } else if (currentPath.startsWith('/use-cases/')) {
       const ucSlug = currentPath.split('/')[2];
@@ -1498,21 +1498,21 @@ export default function App() {
         title = uc.metaTitle;
         description = uc.metaDesc;
       } else {
-        title = 'High-Traffic QR Code Use Case | FreeQRGen.pro';
+        title = 'High-Traffic QR Code Use Case | FreeQRBarcodes';
         description = 'Explore specialized optical barcode placement frameworks and real case studies.';
       }
     } else if (currentPath === '/about') {
       title = 'About Us | Free QR Code Generator Team';
-      description = 'Learn about FreeQRGen.pro and the iSolutions team dedicated to building secure, beautiful, high-performance QR code creator utilities.';
+      description = 'Learn about FreeQRBarcodes and the iSolutions team dedicated to building secure, beautiful, high-performance QR code creator utilities.';
     } else if (currentPath === '/privacy' || currentPath === '/privacy-policy') {
-      title = 'Privacy Policy | FreeQRGen.pro - Secure, Offline-First QR Generation';
-      description = 'Read the FreeQRGen.pro privacy commitment. Learn how we utilize offline-first browser rendering to protect your network passwords, URLs, and vCards.';
+      title = 'Privacy Policy | FreeQRBarcodes - Secure, Offline-First QR Generation';
+      description = 'Read the FreeQRBarcodes privacy commitment. Learn how we utilize offline-first browser rendering to protect your network passwords, URLs, and vCards.';
     } else if (currentPath === '/contact') {
-      title = 'Contact Support & Corporate Inquiry | FreeQRGen.pro';
+      title = 'Contact Support & Corporate Inquiry | FreeQRBarcodes';
       description = 'Get in touch with the iSolutions technical team for enterprise licenses, custom templates, or support requests.';
     } else if (currentPath === '/terms') {
-      title = 'Terms of Service & Usage Limits | FreeQRGen.pro';
-      description = 'Review usage agreements, security expectations, dynamic tracking short-link rules, and API policies of FreeQRGen.pro.';
+      title = 'Terms of Service & Usage Limits | FreeQRBarcodes';
+      description = 'Review usage agreements, security expectations, dynamic tracking short-link rules, and API policies of FreeQRBarcodes.';
     } else {
       // Dynamic Landing Pages
       const slug = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
@@ -1641,7 +1641,7 @@ export default function App() {
           "@type": "WebSite",
           "@id": `${rootUrl}/#website`,
           "url": rootUrl,
-          "name": "FreeQRGen.pro",
+          "name": "Free QR & Barcodes Generator",
           "description": "Design secure, highly custom dynamic QR codes with color gradients, custom dot patterns, embedded logos, and real-time short-link scan analytics.",
           "publisher": {
             "@id": `${rootUrl}/#organization`
@@ -1691,7 +1691,7 @@ export default function App() {
         {
           "@type": "SoftwareApplication",
           "@id": `${rootUrl}/#software`,
-          "name": "FreeQRGen Creator Engine",
+          "name": "Free QR & Barcodes Generator Creator Engine",
           "operatingSystem": "All modern web browsers",
           "applicationCategory": "DesignApplication, BusinessApplication",
           "offers": {

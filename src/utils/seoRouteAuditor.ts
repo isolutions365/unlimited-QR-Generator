@@ -109,7 +109,7 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
     { path: '/youtube-qr-generator', category: 'Generators & Tools', defaultTitle: 'YouTube Channel QR Code Generator | Video Subscriptions', defaultDesc: 'Create YouTube QR codes that open videos or channel subscription prompts directly.' },
     { path: '/restaurant-menu-qr-generator', category: 'Generators & Tools', defaultTitle: 'Digital Restaurant Menu Builder & QR Code Platform', defaultDesc: 'Interactive culinary menu builder with multi-currency, allergen badges, and QR table stands.' },
     { path: '/digital-card-qr-generator', category: 'Generators & Tools', defaultTitle: 'Enterprise Digital Business Card & Networking Suite', defaultDesc: 'Create modern mobile digital business cards with vCard downloads and analytics.' },
-    { path: '/pdf-sharing-qr-generator', category: 'Generators & Tools', defaultTitle: 'Cloud PDF Document Host & Scan Hub | FreeQRGen.pro', defaultDesc: 'Host and share multi-page PDFs with instant QR scanning, password protection, and view metrics.' },
+    { path: '/pdf-sharing-qr-generator', category: 'Generators & Tools', defaultTitle: 'Cloud PDF Document Host & Scan Hub | FreeQRBarcodes', defaultDesc: 'Host and share multi-page PDFs with instant QR scanning, password protection, and view metrics.' },
     { path: '/barcode-generator', category: 'Generators & Tools', defaultTitle: 'Free Universal Barcode Generator | EAN, UPC, Code 128', defaultDesc: 'Generate high-density linear barcodes and 2D matrix codes with vector SVG export.' },
     { path: '/bulk-qr-generator', category: 'Generators & Tools', defaultTitle: 'Bulk QR Code Generator | Batch Processing Engine', defaultDesc: 'Generate hundreds of custom dynamic or static QR codes simultaneously from CSV or Excel files.' },
     { path: '/animated-qr-generator', category: 'Generators & Tools', defaultTitle: 'Animated GIF QR Code Generator | Dynamic Visual Codes', defaultDesc: 'Create eye-catching animated QR codes with smooth movement loops and brand logos.' },
@@ -119,30 +119,30 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
     { path: '/location-qr-generator', category: 'Generators & Tools', defaultTitle: 'Google Maps Location QR Code Generator | GPS Navigation QR', defaultDesc: 'Create location QR codes that open driving directions in Google Maps or Apple Maps.' },
 
     // Core & Trust
-    { path: '/about', category: 'Core & Trust', defaultTitle: 'About Us | Free QR Code Generator Team', defaultDesc: 'Learn about FreeQRGen.pro and the technical team dedicated to building secure, offline-first QR utilities.' },
+    { path: '/about', category: 'Core & Trust', defaultTitle: 'About Us | Free QR Code Generator Team', defaultDesc: 'Learn about FreeQRBarcodes and the technical team dedicated to building secure, offline-first QR utilities.' },
     { path: '/faq', category: 'Core & Trust', defaultTitle: 'Frequently Asked Questions | Free QR Code Generator FAQs', defaultDesc: 'Find answers to common questions about custom QR code options, dynamic vs static formats, design options, scan limits, logos, and tracking analytics.' },
-    { path: '/privacy', category: 'Core & Trust', defaultTitle: 'Privacy Policy | FreeQRGen.pro - Secure Offline QR Generation', defaultDesc: 'Read the FreeQRGen.pro privacy commitment. Learn how offline browser rendering protects your network credentials and contact data.' },
-    { path: '/contact', category: 'Core & Trust', defaultTitle: 'Contact Support & Corporate Inquiry | FreeQRGen.pro', defaultDesc: 'Get in touch with the technical team for enterprise licenses, custom templates, or support requests.' },
-    { path: '/terms', category: 'Core & Trust', defaultTitle: 'Terms of Service & Usage Policy | FreeQRGen.pro', defaultDesc: 'Review usage agreements, security expectations, dynamic tracking short-link rules, and API policies.' },
-    { path: '/why-freeqrgen', category: 'Core & Trust', defaultTitle: 'Why Choose FreeQRGen.pro | Enterprise QR Engine', defaultDesc: 'Discover why thousands of businesses choose FreeQRGen.pro for high-density matrix generation, privacy, and zero fees.' },
-    { path: '/security', category: 'Core & Trust', defaultTitle: 'Security & Compliance Standards | FreeQRGen.pro', defaultDesc: 'Learn about our SOC2, GDPR, and client-side encryption protocols protecting sensitive scan data.' },
-    { path: '/accessibility', category: 'Core & Trust', defaultTitle: 'Accessibility Commitment & WCAG Guidelines | FreeQRGen.pro', defaultDesc: 'Our accessibility standards ensuring high contrast, screen reader compatibility, and universal scannability.' },
-    { path: '/system-status', category: 'Core & Trust', defaultTitle: 'System Status & Service Uptime | FreeQRGen.pro', defaultDesc: 'Real-time service health, server response latency, and network availability monitoring.' },
-    { path: '/media-kit', category: 'Core & Trust', defaultTitle: 'Official Media Kit & Brand Press Assets | FreeQRGen.pro', defaultDesc: 'Download official high-resolution vector logos, brand color guidelines, and founder press profiles.' },
+    { path: '/privacy', category: 'Core & Trust', defaultTitle: 'Privacy Policy | FreeQRBarcodes - Secure Offline QR Generation', defaultDesc: 'Read the FreeQRBarcodes privacy commitment. Learn how offline browser rendering protects your network credentials and contact data.' },
+    { path: '/contact', category: 'Core & Trust', defaultTitle: 'Contact Support & Corporate Inquiry | FreeQRBarcodes', defaultDesc: 'Get in touch with the technical team for enterprise licenses, custom templates, or support requests.' },
+    { path: '/terms', category: 'Core & Trust', defaultTitle: 'Terms of Service & Usage Policy | FreeQRBarcodes', defaultDesc: 'Review usage agreements, security expectations, dynamic tracking short-link rules, and API policies.' },
+    { path: '/why-freeqrgen', category: 'Core & Trust', defaultTitle: 'Why Choose FreeQRBarcodes | Enterprise QR Engine', defaultDesc: 'Discover why thousands of businesses choose FreeQRBarcodes for high-density matrix generation, privacy, and zero fees.' },
+    { path: '/security', category: 'Core & Trust', defaultTitle: 'Security & Compliance Standards | FreeQRBarcodes', defaultDesc: 'Learn about our SOC2, GDPR, and client-side encryption protocols protecting sensitive scan data.' },
+    { path: '/accessibility', category: 'Core & Trust', defaultTitle: 'Accessibility Commitment & WCAG Guidelines | FreeQRBarcodes', defaultDesc: 'Our accessibility standards ensuring high contrast, screen reader compatibility, and universal scannability.' },
+    { path: '/system-status', category: 'Core & Trust', defaultTitle: 'System Status & Service Uptime | FreeQRBarcodes', defaultDesc: 'Real-time service health, server response latency, and network availability monitoring.' },
+    { path: '/media-kit', category: 'Core & Trust', defaultTitle: 'Official Media Kit & Brand Press Assets | FreeQRBarcodes', defaultDesc: 'Download official high-resolution vector logos, brand color guidelines, and founder press profiles.' },
 
     // Knowledge & Blog
-    { path: '/blog', category: 'Knowledge & Blog', defaultTitle: 'QR Code Technology & Marketing Blog | FreeQRGen.pro', defaultDesc: 'Explore modern design tips, tutorials, and advanced marketing strategies for dynamic and static QR codes.' },
+    { path: '/blog', category: 'Knowledge & Blog', defaultTitle: 'QR Code Technology & Marketing Blog | FreeQRBarcodes', defaultDesc: 'Explore modern design tips, tutorials, and advanced marketing strategies for dynamic and static QR codes.' },
     { path: '/academy', category: 'Knowledge & Blog', defaultTitle: 'Free QR Code Academy Hub | Educational Guides', defaultDesc: 'Master 2D barcode parameters, printing guidelines, sizing calculators, security rules, and marketing campaigns.' },
     { path: '/guides', category: 'Knowledge & Blog', defaultTitle: 'Authoritative Technical Guides & QR Best Practices', defaultDesc: 'Deep-dive technical guides on vector contrast ratio, error correction levels, and high-density printing.' },
 
     // Templates & Compare
-    { path: '/templates', category: 'Templates & Compare', defaultTitle: 'Free High-Performance QR Code Templates Directory | FreeQRGen.pro', defaultDesc: 'Access verified, schema-optimized 2D barcode templates designed to capture high-intent physical traffic.' },
-    { path: '/compare', category: 'Templates & Compare', defaultTitle: 'QR Code Technology Comparison Directory | FreeQRGen.pro', defaultDesc: 'High-fidelity analytical comparisons between diverse 2D barcode schemas, formats, error levels, and marketing strategies.' },
+    { path: '/templates', category: 'Templates & Compare', defaultTitle: 'Free High-Performance QR Code Templates Directory | FreeQRBarcodes', defaultDesc: 'Access verified, schema-optimized 2D barcode templates designed to capture high-intent physical traffic.' },
+    { path: '/compare', category: 'Templates & Compare', defaultTitle: 'QR Code Technology Comparison Directory | FreeQRBarcodes', defaultDesc: 'High-fidelity analytical comparisons between diverse 2D barcode schemas, formats, error levels, and marketing strategies.' },
 
     // Solutions & Industries
-    { path: '/solutions', category: 'Solutions & Industries', defaultTitle: 'Enterprise QR Code Solutions Directory | FreeQRGen.pro', defaultDesc: 'Explore professional contactless QR solutions custom-made for brands, managers, and designers.' },
-    { path: '/industries', category: 'Solutions & Industries', defaultTitle: 'Custom QR Codes for Industries Directory | FreeQRGen.pro', defaultDesc: 'Browse specialized optical barcode solutions, printable guidelines, and checklists for commercial industries.' },
-    { path: '/use-cases', category: 'Solutions & Industries', defaultTitle: 'High-Traffic QR Code Use Cases Hub | FreeQRGen.pro', defaultDesc: 'Review physical placement guidelines, best practices, common mistakes, and printable templates.' },
+    { path: '/solutions', category: 'Solutions & Industries', defaultTitle: 'Enterprise QR Code Solutions Directory | FreeQRBarcodes', defaultDesc: 'Explore professional contactless QR solutions custom-made for brands, managers, and designers.' },
+    { path: '/industries', category: 'Solutions & Industries', defaultTitle: 'Custom QR Codes for Industries Directory | FreeQRBarcodes', defaultDesc: 'Browse specialized optical barcode solutions, printable guidelines, and checklists for commercial industries.' },
+    { path: '/use-cases', category: 'Solutions & Industries', defaultTitle: 'High-Traffic QR Code Use Cases Hub | FreeQRBarcodes', defaultDesc: 'Review physical placement guidelines, best practices, common mistakes, and printable templates.' },
 
     // Enterprise & Platforms
     { path: '/ai-gateway', category: 'Core & Trust', defaultTitle: 'Enterprise AI Gateway & Gemini Intelligence Suite', defaultDesc: 'AI-assisted QR design, prompt-based code styling, and automated campaign recommendations.' },
@@ -297,7 +297,7 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
               'name': 'Do these generated QR codes ever expire?',
               'acceptedAnswer': {
                 '@type': 'Answer',
-                'text': 'No, static QR codes generated on FreeQRGen.pro never expire and feature unlimited lifetime scans.'
+                'text': 'No, static QR codes generated on FreeQRBarcodes never expire and feature unlimited lifetime scans.'
               }
             }
           ]
@@ -331,12 +331,12 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
         sampleSnippet: {
           '@context': 'https://schema.org',
           '@type': 'Organization',
-          'name': 'FreeQRGen.pro',
+          'name': 'Free QR & Barcodes Generator',
           'url': ROOT_DOMAIN,
           'logo': `${ROOT_DOMAIN}/logo.png`,
           'sameAs': [
-            'https://twitter.com/freeqrgen',
-            'https://github.com/freeqrgen'
+            'https://twitter.com/freeqrbarcodes',
+            'https://github.com/freeqrbarcodes'
           ]
         }
       });

@@ -218,7 +218,7 @@ Modern hospitality structures map specific QR codes to individual tables (e.g., 
     ],
     faqs: [
       { q: "Should I link to a PDF or a web menu?", a: "Web menus are highly recommended as they adapt to screen sizes. If using a PDF, ensure it is compressed and under 2MB." },
-      { q: "Do restaurant menu QR codes expire?", a: "No, static menu codes on FreeQRGen.pro never expire and provide unlimited free scanning." }
+      { q: "Do restaurant menu QR codes expire?", a: "No, static menu codes on FreeQRBarcodes never expire and provide unlimited free scanning." }
     ],
     relatedArticles: ["pdf-qr-codes", "best-qr-code-size-guide"],
     relatedTools: [

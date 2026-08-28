@@ -112,7 +112,7 @@ ${route.hreflangs.map(h => `<link rel="alternate" hreflang="${h.lang}" href="${h
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `freeqrgen_seo_health_${selectedAuditLocale}.json`);
+    downloadAnchor.setAttribute("download", `freeqrbarcodes_seo_health_${selectedAuditLocale}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
