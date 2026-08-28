@@ -3684,8 +3684,9 @@ export function validateLocaleDictionary(
     // Check bracket matching
     const openBraces = (value.match(/\{/g) || []).length;
     const closeBraces = (value.match(/\}/g) || []).length;
-    const openTags = (value.match(/</g) || []).length;
-    const closeTags = (value.match(/>/g) || []).length;
+    // Match actual HTML-style tag openings (e.g. <0>, <span>) and closings (e.g. </0>, </span>)
+    const openHtmlTags = (value.match(/<[a-zA-Z0-9]+[^>]*>/g) || []).length;
+    const closeHtmlTags = (value.match(/<\/[a-zA-Z0-9]+>/g) || []).length;
 
     if (openBraces !== closeBraces) {
       issues.push({
@@ -3697,12 +3698,12 @@ export function validateLocaleDictionary(
       });
     }
 
-    if (openTags !== closeTags) {
+    if (openHtmlTags !== closeHtmlTags) {
       issues.push({
         key,
         type: 'broken_bracket',
         severity: 'error',
-        message: `Mismatched HTML-style tags in [${locale.toUpperCase()}]: found ${openTags} '<' and ${closeTags} '>'.`,
+        message: `Mismatched HTML-style tags in [${locale.toUpperCase()}]: found ${openHtmlTags} open tags and ${closeHtmlTags} closing tags.`,
         details: value,
       });
     }
