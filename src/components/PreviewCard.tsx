@@ -27,12 +27,23 @@ const PreviewCard = forwardRef<PreviewCardHandle, PreviewCardProps>(({
   const [scaleFactor, setScaleFactor] = useState<1 | 2 | 4>(1);
   const [isRendering, setIsRendering] = useState(false);
   const [renderError, setRenderError] = useState<string | null>(null);
+  const [triggerPulse, setTriggerPulse] = useState(false);
   
   const [copiedImage, setCopiedImage] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeDownloadFormat, setActiveDownloadFormat] = useState<'png' | 'jpg' | 'svg' | null>(null);
 
   const contentToEncode = project.content || 'https://www.freeqrbarcodes.com';
+
+  // Reset pulse state after the animation finishes
+  useEffect(() => {
+    if (triggerPulse) {
+      const timer = setTimeout(() => {
+        setTriggerPulse(false);
+      }, 750);
+      return () => clearTimeout(timer);
+    }
+  }, [triggerPulse]);
 
   // Extract design options
   const fgColor = project.fgColor || '#0f172a';
@@ -96,6 +107,9 @@ const PreviewCard = forwardRef<PreviewCardHandle, PreviewCardProps>(({
           eyeColorBottomLeft: project.eyeColorBottomLeft,
           logoAutoCenter: project.logoAutoCenter !== false
         });
+        if (isMounted) {
+          setTriggerPulse(true);
+        }
       } catch (err: any) {
         console.error('[PreviewCard] Canvas render error:', err);
         if (isMounted) {
@@ -296,10 +310,18 @@ const PreviewCard = forwardRef<PreviewCardHandle, PreviewCardProps>(({
           ) : (
             <canvas
               ref={canvasRef}
-              className={`w-full h-full object-contain rounded-xl transition-all duration-300 animate-blur-up ${
+              className={`w-full h-full object-contain rounded-xl transition-all duration-300 ${
+                triggerPulse ? 'animate-qr-pulse' : 'animate-blur-up'
+              } ${
                 isRendering ? 'opacity-50 blur-[1px]' : 'opacity-100'
               }`}
             />
+          )}
+
+          {triggerPulse && !renderError && (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl z-10">
+              <div className="qr-shimmer-line" />
+            </div>
           )}
 
           {isRendering && (
