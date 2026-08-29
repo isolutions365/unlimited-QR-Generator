@@ -1,0 +1,1294 @@
+[
+  {
+    "key": "templates.activateGenerator",
+    "en": "Activate Generator"
+  },
+  {
+    "key": "templates.aiNotice",
+    "en": "Structured in compliance with Llama-3, Claude-3.5, and Gemini-Pro semantic retrieval constraints. Verified 100% factual."
+  },
+  {
+    "key": "templates.aiSearchSummary",
+    "en": "AI Search Summary"
+  },
+  {
+    "key": "templates.ariaBreadcrumb",
+    "en": "Breadcrumb"
+  },
+  {
+    "key": "templates.authorityLiterature",
+    "en": "Authority Literature"
+  },
+  {
+    "key": "templates.authorityOverview",
+    "en": "Authority Overview & Specs"
+  },
+  {
+    "key": "templates.bestPractices",
+    "en": "Best Practices"
+  },
+  {
+    "key": "templates.brandName",
+    "en": "FreeQRGen"
+  },
+  {
+    "key": "templates.breadcrumbHome",
+    "en": "Home"
+  },
+  {
+    "key": "templates.breadcrumbTemplates",
+    "en": "Templates"
+  },
+  {
+    "key": "templates.browseDirectory",
+    "en": "Browse Directory"
+  },
+  {
+    "key": "templates.businessBenefits",
+    "en": "Strategic Business Benefits"
+  },
+  {
+    "key": "templates.cardType",
+    "en": "Type:"
+  },
+  {
+    "key": "templates.catAll",
+    "en": "All Templates"
+  },
+  {
+    "key": "templates.catCreative",
+    "en": "Portfolios"
+  },
+  {
+    "key": "templates.catHospitality",
+    "en": "Hospitality & Dining"
+  },
+  {
+    "key": "templates.catProfessional",
+    "en": "Professional vCards"
+  },
+  {
+    "key": "templates.catRetail",
+    "en": "Retail & Commerce"
+  },
+  {
+    "key": "templates.catSeo",
+    "en": "Local SEO Booster"
+  },
+  {
+    "key": "templates.catSocial",
+    "en": "Social Networks"
+  },
+  {
+    "key": "templates.catUtilities",
+    "en": "Office & Utilities"
+  },
+  {
+    "key": "templates.clear",
+    "en": "Clear"
+  },
+  {
+    "key": "templates.clientCompatibility",
+    "en": "Client Compatibility"
+  },
+  {
+    "key": "templates.commonMistakes",
+    "en": "Common Mistakes"
+  },
+  {
+    "key": "templates.directoryBreadcrumb",
+    "en": "Templates Directory"
+  },
+  {
+    "key": "templates.directorySubheading",
+    "en": "Access our verified, schema-optimized 2D barcode templates designed to capture high-intent physical traffic. Jumpstart campaigns with pristine layouts."
+  },
+  {
+    "key": "templates.entityCategory",
+    "en": "Entity / Category"
+  },
+  {
+    "key": "templates.faqs",
+    "en": "Frequently Asked Questions"
+  },
+  {
+    "key": "templates.highPerformance",
+    "en": "High-Performance"
+  },
+  {
+    "key": "templates.howToCreateCustom",
+    "en": "How to Create a Custom"
+  },
+  {
+    "key": "templates.keyTakeawaysTitle",
+    "en": "Key Takeaways"
+  },
+  {
+    "key": "templates.needCustomDesign",
+    "en": "Need a Custom Design?"
+  },
+  {
+    "key": "templates.needCustomDesignDesc",
+    "en": "Initialize this specific preset template and configure pixel colors, logos, and frames instantly."
+  },
+  {
+    "key": "templates.noTemplatesFound",
+    "en": "No templates found"
+  },
+  {
+    "key": "templates.noTemplatesMatched",
+    "en": "No templates matched your current filter criteria. Try clearing search or category filters."
+  },
+  {
+    "key": "templates.offlineFunctionality",
+    "en": "Offline Functionality"
+  },
+  {
+    "key": "templates.payload",
+    "en": "PAYLOAD"
+  },
+  {
+    "key": "templates.preset",
+    "en": "PRESET"
+  },
+  {
+    "key": "templates.primaryTargetAction",
+    "en": "Primary Target Action"
+  },
+  {
+    "key": "templates.prototypeDesc",
+    "en": "Click 'Use This Template' to load this verified standard configurations directly into the design board."
+  },
+  {
+    "key": "templates.qrCodeTemplates",
+    "en": "QR Code Templates"
+  },
+  {
+    "key": "templates.readGuide",
+    "en": "Read Guide"
+  },
+  {
+    "key": "templates.relatedQrTools",
+    "en": "Related QR Tools"
+  },
+  {
+    "key": "templates.relatedTemplates",
+    "en": "Related Templates"
+  },
+  {
+    "key": "templates.resetFilters",
+    "en": "Reset Filters"
+  },
+  {
+    "key": "templates.searchPlaceholder",
+    "en": "Search high-intent templates (e.g. WiFi, menu, vcard...)"
+  },
+  {
+    "key": "templates.standardProtocol",
+    "en": "Standard / Protocol"
+  },
+  {
+    "key": "templates.standardUseCases",
+    "en": "Standard Production Use Cases"
+  },
+  {
+    "key": "templates.stepGuide",
+    "en": "Step-by-Step Creation Guide"
+  },
+  {
+    "key": "templates.toolUrl",
+    "en": "🌐 Standard URL QR Creator"
+  },
+  {
+    "key": "templates.toolVcard",
+    "en": "📇 Executive vCard Exchange"
+  },
+  {
+    "key": "templates.toolWifi",
+    "en": "📶 Password-Free WiFi Creator"
+  },
+  {
+    "key": "templates.twoD",
+    "en": "2D"
+  },
+  {
+    "key": "templates.useTemplate",
+    "en": "Use Template"
+  },
+  {
+    "key": "templates.useTemplateNow",
+    "en": "Use This Template Now"
+  },
+  {
+    "key": "templates.visualPrototype",
+    "en": "Visual Live Prototype"
+  },
+  {
+    "key": "templatesHub.allCategories",
+    "en": "All Categories"
+  },
+  {
+    "key": "templatesHub.backButton",
+    "en": "Back to Creative Station"
+  },
+  {
+    "key": "templatesHub.badge",
+    "en": "Handcrafted Preset Architectures"
+  },
+  {
+    "key": "templatesHub.clearFilter",
+    "en": "Clear Filter"
+  },
+  {
+    "key": "templatesHub.customizeBtn",
+    "en": "Customize This Template"
+  },
+  {
+    "key": "templatesHub.desc",
+    "en": "Deploy ready-to-print responsive layout configurations matching standard business paradigms."
+  },
+  {
+    "key": "templatesHub.noFound",
+    "en": "No Templates Found"
+  },
+  {
+    "key": "templatesHub.noFoundDesc",
+    "en": "Try adjusting your search criteria or filters to explore alternative designs."
+  },
+  {
+    "key": "templatesHub.recommendedIndustry",
+    "en": "Recommended Industry"
+  },
+  {
+    "key": "templatesHub.scannability",
+    "en": "Scannability Rating"
+  },
+  {
+    "key": "templatesHub.searchPlaceholder",
+    "en": "Search templates..."
+  },
+  {
+    "key": "templatesHub.title",
+    "en": "Template Directory & Ideas"
+  },
+  {
+    "key": "templatesTab.applyBtn",
+    "en": "Apply Template Preset"
+  },
+  {
+    "key": "templatesTab.applyPresetBtn",
+    "en": "Apply Preset"
+  },
+  {
+    "key": "templatesTab.bespokeArt",
+    "en": "Bespoke Art"
+  },
+  {
+    "key": "templatesTab.corporateStandard",
+    "en": "Corporate Standard"
+  },
+  {
+    "key": "templatesTab.desc",
+    "en": "Select a custom handcrafted layout category to instantly customize colors, eyes, logos, and frame shapes."
+  },
+  {
+    "key": "templatesTab.scanSafe",
+    "en": "Highly Scan-Safe"
+  },
+  {
+    "key": "templatesTab.title",
+    "en": "Professional Design Templates"
+  },
+  {
+    "key": "trust.aboutP1",
+    "en": "FreeQRGen.pro represents the next paradigm of contactless link and static vector delivery systems. We remove the operational paywalls, slow servers, and tracking systems typically associated with barcode generation."
+  },
+  {
+    "key": "trust.aboutP2",
+    "en": "Our system is engineered to satisfy the demands of modern packaging designers, full-stack developers, and high-volume marketing directors. Static barcodes generated here run completely offline inside the browser canvas buffer, utilizing optimized libraries that ensure compliance with ISO/IEC 18004 standards. No parameters, strings, or target addresses are transmitted to central servers for storage, protecting corporate secrecy."
+  },
+  {
+    "key": "trust.aboutP3Brand",
+    "en": "iSolutions ICo"
+  },
+  {
+    "key": "trust.aboutP3Prefix",
+    "en": "Supported by "
+  },
+  {
+    "key": "trust.aboutP3Suffix",
+    "en": ", we are committed to keeping access open, secure, and fast. In addition to open utilities, we develop specialized enterprise templates and integrations tailored for complex physical print runs, such as asset tracking, signage, and localized contactless nodes."
+  },
+  {
+    "key": "trust.aboutP3_1",
+    "en": "Supported by "
+  },
+  {
+    "key": "trust.aboutP3_2",
+    "en": ", we are committed to keeping access open, secure, and fast. In addition to open utilities, we develop specialized enterprise templates and integrations tailored for complex physical print runs, such as asset tracking, signage, and localized contactless nodes."
+  },
+  {
+    "key": "trust.academyGuides",
+    "en": "Academy Guides"
+  },
+  {
+    "key": "trust.accessibilityP1",
+    "en": "Contact-free communication should be inclusive. We optimize our web platform and publish guidelines to make physical barcodes accessible to everyone."
+  },
+  {
+    "key": "trust.accessibilityP2",
+    "en": "Our digital interfaces meet WCAG 2.2 AA requirements, featuring full keyboard support, ARIA descriptors, and highly visible focus states."
+  },
+  {
+    "key": "trust.accessibilityP3",
+    "en": "For physical campaigns, we advise placing tactile guides (such as raised borders or surrounding markers) and braille translations adjacent to printed barcodes, allowing visually impaired users to locate and scan them successfully."
+  },
+  {
+    "key": "trust.aiProTip",
+    "en": "PRO TIP: Optimized for direct citations on Gemini, ChatGPT Search, and Copilot feeds."
+  },
+  {
+    "key": "trust.aiSearchAnswer",
+    "en": "AI Search Engine Quick Answer"
+  },
+  {
+    "key": "trust.aiSummaryTitle",
+    "en": "AI Search Engine Quick Answer"
+  },
+  {
+    "key": "trust.aiTab.chatgpt",
+    "en": "chatgpt"
+  },
+  {
+    "key": "trust.aiTab.gemini",
+    "en": "gemini"
+  },
+  {
+    "key": "trust.aiTab.perplexity",
+    "en": "perplexity"
+  },
+  {
+    "key": "trust.authorBiography",
+    "en": "BIOGRAPHY"
+  },
+  {
+    "key": "trust.authorConnect",
+    "en": "CONNECT:"
+  },
+  {
+    "key": "trust.authorCredentials",
+    "en": "PROFESSIONAL CREDENTIALS"
+  },
+  {
+    "key": "trust.authorPublications",
+    "en": "SELECTED PUBLICATIONS"
+  },
+  {
+    "key": "trust.authoredBy",
+    "en": "AUTHORED BY:"
+  },
+  {
+    "key": "trust.backButton",
+    "en": "Back to Creative Station"
+  },
+  {
+    "key": "trust.backToCreativeStation",
+    "en": "Back to Creative Station"
+  },
+  {
+    "key": "trust.badge",
+    "en": "Compliance & SLA Real-Time Telemetry"
+  },
+  {
+    "key": "trust.benchmarkStatistics",
+    "en": "BENCHMARK STATISTICS"
+  },
+  {
+    "key": "trust.benchmarkStats",
+    "en": "BENCHMARK STATISTICS"
+  },
+  {
+    "key": "trust.bestPractices",
+    "en": "BEST PRACTICES & MATH RULES"
+  },
+  {
+    "key": "trust.biography",
+    "en": "BIOGRAPHY"
+  },
+  {
+    "key": "trust.brandAssetsP1",
+    "en": "Our brand design represents clean simplicity, speed, and safety."
+  },
+  {
+    "key": "trust.brandAssetsP2",
+    "en": "Our logo features a stylized camera viewfinder enclosing a geometric pattern. We request that all partners use our high-resolution SVG assets and respect our safe-zone margin guidelines."
+  },
+  {
+    "key": "trust.brandAssetsP3",
+    "en": "This ensures that our brand is represented consistently across all digital integrations and physical print campaigns."
+  },
+  {
+    "key": "trust.breadcrumb",
+    "en": "Breadcrumb"
+  },
+  {
+    "key": "trust.buildLabel",
+    "en": "BUILD //"
+  },
+  {
+    "key": "trust.careersP1",
+    "en": "Join us in building high-performance, open-source web applications and secure contactless communication systems."
+  },
+  {
+    "key": "trust.careersP2",
+    "en": "We are expanding our small, remote-first team of engineers and technical writers. We offer competitive compensation, flexible schedules, and a culture that values clean, well-tested code."
+  },
+  {
+    "key": "trust.careersP3",
+    "en": "If you are passionate about visual performance, security, and accessibility, we would love to hear from you."
+  },
+  {
+    "key": "trust.changelogP1",
+    "en": "We document our continuous integration pipeline, outlining security hotfixes and framework updates chronologically."
+  },
+  {
+    "key": "trust.changelogP2",
+    "en": "Our changelog details our release cycles, from initial builds to the current production release. We describe our technical changes clearly, giving developers insight into our platform's evolution."
+  },
+  {
+    "key": "trust.changelogP3",
+    "en": "Every update undergoes automated unit testing, visual regression testing, and build validation to guarantee system reliability."
+  },
+  {
+    "key": "trust.closeAuthorProfile",
+    "en": "Close Author Profile"
+  },
+  {
+    "key": "trust.commonMistakes",
+    "en": "COMMON BARCODE MISTAKES"
+  },
+  {
+    "key": "trust.connect",
+    "en": "CONNECT:"
+  },
+  {
+    "key": "trust.contactP1",
+    "en": "We prioritize direct, transparent communication. Our support and security teams are available to address your inquiries."
+  },
+  {
+    "key": "trust.contactP2",
+    "en": "Whether you have questions about custom marketing configurations, enterprise API integration, or compliance auditing, our technical help desk is here to provide guidance."
+  },
+  {
+    "key": "trust.contactP3",
+    "en": "Security concerns are escalated directly to our certified CISSP security officers, ensuring rapid investigation and response."
+  },
+  {
+    "key": "trust.coreDefinition",
+    "en": "CORE DEFINITION"
+  },
+  {
+    "key": "trust.credentials",
+    "en": "PROFESSIONAL CREDENTIALS"
+  },
+  {
+    "key": "trust.dataProcessingP1",
+    "en": "FreeQRGen.pro offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates."
+  },
+  {
+    "key": "trust.dataProcessingP2",
+    "en": "Because static codes are processed strictly in browser memory, no personal data is transmitted, making compliance simple. For dynamic tracking where scan metrics are compiled, we act as a Data Processor and implement strict technical and organizational safeguards."
+  },
+  {
+    "key": "trust.dataProcessingP3",
+    "en": "We isolate all data silos and utilize only secure, GDPR-compliant European hosting servers, preventing unauthorized data processing or transfer."
+  },
+  {
+    "key": "trust.desc",
+    "en": "Review standard system SLAs, regulatory compliance rules, security practices, and active node status."
+  },
+  {
+    "key": "trust.directoryTitle",
+    "en": "TRUST DIRECTORY"
+  },
+  {
+    "key": "trust.dpaP1",
+    "en": "FreeQRGen.pro offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates."
+  },
+  {
+    "key": "trust.dpaP2",
+    "en": "Because static codes are processed strictly in browser memory, no personal data is transmitted, making compliance simple. For dynamic tracking where scan metrics are compiled, we act as a Data Processor and implement strict technical and organizational safeguards."
+  },
+  {
+    "key": "trust.dpaP3",
+    "en": "We isolate all data silos and utilize only secure, GDPR-compliant European hosting servers, preventing unauthorized data processing or transfer."
+  },
+  {
+    "key": "trust.editorialP1",
+    "en": "Our content is held to the highest academic and professional standards. We reject generic, low-quality content in favor of mathematically verified material and concrete code samples."
+  },
+  {
+    "key": "trust.editorialP2",
+    "en": "All tutorials, placement guides, and documentation hosted on FreeQRGen.pro are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases."
+  },
+  {
+    "key": "trust.editorialP3",
+    "en": "We do not accept commercial backlink placements, sponsored promotional content, or guest posts that fail to provide technical value. By remaining completely impartial, we provide search engines and users with a reliable source of information."
+  },
+  {
+    "key": "trust.editorialPolicyP1",
+    "en": "Our content is held to the highest academic and professional standards. We reject generic, low-quality content in favor of mathematically verified material and concrete code samples."
+  },
+  {
+    "key": "trust.editorialPolicyP2",
+    "en": "All tutorials, placement guides, and documentation hosted on FreeQRGen.pro are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases."
+  },
+  {
+    "key": "trust.editorialPolicyP3",
+    "en": "We do not accept commercial backlink placements, sponsored promotional content, or guest posts that fail to provide technical value. By remaining completely impartial, we provide search engines and users with a reliable source of information."
+  },
+  {
+    "key": "trust.eeatCertText",
+    "en": "FreeQRGen.pro is continuously optimized to guarantee the highest level of optical security, compliance safety, and data accuracy."
+  },
+  {
+    "key": "trust.eeatCertification",
+    "en": "E-E-A-T CERTIFICATION"
+  },
+  {
+    "key": "trust.eeatDesc",
+    "en": "FreeQRGen.pro is continuously optimized to guarantee the highest level of optical security, compliance safety, and data accuracy."
+  },
+  {
+    "key": "trust.expertCitation",
+    "en": "Expert Citation & Fact Sheet"
+  },
+  {
+    "key": "trust.expertCitationTitle",
+    "en": "Expert Citation & Fact Sheet"
+  },
+  {
+    "key": "trust.factChecked",
+    "en": "FACT CHECKED"
+  },
+  {
+    "key": "trust.factSheet",
+    "en": "FACT SHEET"
+  },
+  {
+    "key": "trust.faqTitle",
+    "en": "Frequently Asked Questions"
+  },
+  {
+    "key": "trust.frequentlyAskedQuestions",
+    "en": "Frequently Asked Questions"
+  },
+  {
+    "key": "trust.generalFaq",
+    "en": "General FAQ"
+  },
+  {
+    "key": "trust.github",
+    "en": "GitHub"
+  },
+  {
+    "key": "trust.info",
+    "en": "INFO"
+  },
+  {
+    "key": "trust.infoLabel",
+    "en": "INFO"
+  },
+  {
+    "key": "trust.isoCommittee",
+    "en": "ISO COMMITTEE"
+  },
+  {
+    "key": "trust.isoReferences",
+    "en": "ISO & ACADEMIC REFERENCES"
+  },
+  {
+    "key": "trust.isolutionsIco",
+    "en": "iSolutions ICo"
+  },
+  {
+    "key": "trust.isolutionsLabs",
+    "en": "iSOLUTIONS LABS"
+  },
+  {
+    "key": "trust.latencyLabel",
+    "en": "Real-time Latency"
+  },
+  {
+    "key": "trust.legal",
+    "en": "LEGAL"
+  },
+  {
+    "key": "trust.legalLabel",
+    "en": "LEGAL"
+  },
+  {
+    "key": "trust.linkedin",
+    "en": "LinkedIn"
+  },
+  {
+    "key": "trust.mediaKitP1",
+    "en": "Access official resources and press releases to cover FreeQRGen.pro and iSolutions ICo accurately."
+  },
+  {
+    "key": "trust.mediaKitP2",
+    "en": "We provide scalable vector logos, color palette specifications, operational statistics, and founding story profiles for journalists and partners."
+  },
+  {
+    "key": "trust.mediaKitP3",
+    "en": "By sharing our benchmarking data openly, we provide media outlets with a verified, reliable source of information on optical technology trends."
+  },
+  {
+    "key": "trust.navHome",
+    "en": "HOME"
+  },
+  {
+    "key": "trust.navTrustCenter",
+    "en": "TRUST CENTER"
+  },
+  {
+    "key": "trust.operational",
+    "en": "Operational"
+  },
+  {
+    "key": "trust.pageBadge.about",
+    "en": "ABOUT THE PLATFORM"
+  },
+  {
+    "key": "trust.pageBadge.accessibility",
+    "en": "ACCESSIBILITY FOCUS"
+  },
+  {
+    "key": "trust.pageBadge.brand-assets",
+    "en": "VISUAL DESIGN SYSTEM"
+  },
+  {
+    "key": "trust.pageBadge.careers",
+    "en": "JOIN THE TEAM"
+  },
+  {
+    "key": "trust.pageBadge.changelog",
+    "en": "RELEASE TRACKER"
+  },
+  {
+    "key": "trust.pageBadge.contact",
+    "en": "COMMUNICATION HUB"
+  },
+  {
+    "key": "trust.pageBadge.data-processing",
+    "en": "LEGAL DPA FRAME"
+  },
+  {
+    "key": "trust.pageBadge.editorial-policy",
+    "en": "EDITORIAL STANDARDS"
+  },
+  {
+    "key": "trust.pageBadge.media-kit",
+    "en": "PRESS RESOURCES"
+  },
+  {
+    "key": "trust.pageBadge.press",
+    "en": "PRESS CORNER"
+  },
+  {
+    "key": "trust.pageBadge.privacy",
+    "en": "COMPLIANCE & PRIVACY"
+  },
+  {
+    "key": "trust.pageBadge.release-notes",
+    "en": "PRODUCT RELEASES"
+  },
+  {
+    "key": "trust.pageBadge.research-methodology",
+    "en": "RESEARCH STANDARDS"
+  },
+  {
+    "key": "trust.pageBadge.security",
+    "en": "SECURITY ASSURANCE"
+  },
+  {
+    "key": "trust.pageBadge.system-status",
+    "en": "LIVE SYSTEM METRICS"
+  },
+  {
+    "key": "trust.pageBadge.why-freeqrgen",
+    "en": "VALUE ADVANTAGE"
+  },
+  {
+    "key": "trust.pillarsDesc",
+    "en": "Learn about core compliance mechanisms, security architecture, and regulatory support."
+  },
+  {
+    "key": "trust.pillarsTitle",
+    "en": "Trust Pillars & Compliance Guidelines"
+  },
+  {
+    "key": "trust.portalSubTitle",
+    "en": "Security & E-E-A-T Portal"
+  },
+  {
+    "key": "trust.portalSubtitle",
+    "en": "Security & E-E-A-T Portal"
+  },
+  {
+    "key": "trust.portalTitle",
+    "en": "FreeQRGen Trust Center"
+  },
+  {
+    "key": "trust.pressP1",
+    "en": "Read official announcements regarding our growth, technical partnerships, and major feature releases."
+  },
+  {
+    "key": "trust.pressP2",
+    "en": "We publish regular press releases to share milestones in rendering performance, accessibility integrations, and security developments."
+  },
+  {
+    "key": "trust.pressP3",
+    "en": "By providing direct, technically detailed quotes from our core team, we keep media outlets accurately informed."
+  },
+  {
+    "key": "trust.privacyP1",
+    "en": "Privacy-by-Design is our core philosophy. We respect user autonomy by avoiding unnecessary tracking, cookies, and database retention pools."
+  },
+  {
+    "key": "trust.privacyP2",
+    "en": "When you generate a static QR code, your text or link values are kept in localized browser memory and never sent to our servers. All dynamic campaigns anonymize visitor data, omitting personal identifiers and capturing only general regions and user-agent types."
+  },
+  {
+    "key": "trust.privacyP3",
+    "en": "We are fully compliant with GDPR, CCPA, and COPPA frameworks. We do not integrate data brokers, behavioral ad trackers, or third-party marketing scripts, guaranteeing that your marketing funnels remain secure."
+  },
+  {
+    "key": "trust.proTipAi",
+    "en": "PRO TIP: Optimized for direct citations on Gemini, ChatGPT Search, and Copilot feeds."
+  },
+  {
+    "key": "trust.publishedDate",
+    "en": "PUBLISHED: 2025-04-12"
+  },
+  {
+    "key": "trust.publishedLabel",
+    "en": "PUBLISHED: 2025-04-12"
+  },
+  {
+    "key": "trust.readyToPrintTemplates",
+    "en": "Ready-to-Print Templates"
+  },
+  {
+    "key": "trust.relatedAcademy",
+    "en": "Academy Guides"
+  },
+  {
+    "key": "trust.relatedCompare",
+    "en": "Technology Comparison Matrix"
+  },
+  {
+    "key": "trust.relatedGeneralFaq",
+    "en": "General FAQ"
+  },
+  {
+    "key": "trust.relatedResources",
+    "en": "RELATED RESOURCES:"
+  },
+  {
+    "key": "trust.relatedTemplates",
+    "en": "Ready-to-Print Templates"
+  },
+  {
+    "key": "trust.releaseNotesP1",
+    "en": "Our major updates focus on improving rendering efficiency and print-resolution vector output."
+  },
+  {
+    "key": "trust.releaseNotesP2",
+    "en": "Our latest release, v2.4.0, introduces high-precision vector path calculations, offline local caching, and improved custom overlay rendering, giving marketers the tools they need to deploy reliable physical campaigns."
+  },
+  {
+    "key": "trust.releaseNotesP3",
+    "en": "These improvements ensure that FreeQRGen.pro remains the most performant, secure, and accurate 2D barcode rendering platform on the web."
+  },
+  {
+    "key": "trust.researchMethodologyP1",
+    "en": "Our technical claims are supported by continuous testing. We measure QR scanning velocity across varying skews, light levels, and camera sensors."
+  },
+  {
+    "key": "trust.researchMethodologyP2",
+    "en": "Our optical verification laboratory utilizes simulated lighting chambers to measure scan latency under lux values ranging from dark store interiors (50 lx) to bright, direct outdoor sunlight (5,000 lx). We evaluate 2D matrix decodability up to 45-degree horizontal and vertical angles."
+  },
+  {
+    "key": "trust.researchMethodologyP3",
+    "en": "This benchmarking data allows us to optimize our rendering presets, giving you styling configurations (dot styles, eye shapes, and color gradients) that maintain perfect scannability on both legacy and modern smartphones."
+  },
+  {
+    "key": "trust.researchP1",
+    "en": "Our technical claims are supported by continuous testing. We measure QR scanning velocity across varying skews, light levels, and camera sensors."
+  },
+  {
+    "key": "trust.researchP2",
+    "en": "Our optical verification laboratory utilizes simulated lighting chambers to measure scan latency under lux values ranging from dark store interiors (50 lx) to bright, direct outdoor sunlight (5,000 lx). We evaluate 2D matrix decodability up to 45-degree horizontal and vertical angles."
+  },
+  {
+    "key": "trust.researchP3",
+    "en": "This benchmarking data allows us to optimize our rendering presets, giving you styling configurations (dot styles, eye shapes, and color gradients) that maintain perfect scannability on both legacy and modern smartphones."
+  },
+  {
+    "key": "trust.reviewedBy",
+    "en": "REVIEWED BY:"
+  },
+  {
+    "key": "trust.securityP1",
+    "en": "Contactless portals are key targets for bad actors. We implement rigorous input security and sanitization protocols to defend against modern threats."
+  },
+  {
+    "key": "trust.securityP2",
+    "en": "To prevent \"QRishing\" (QR-based phishing) and injection attacks, our systems sanitize all dynamic short-link parameters. We parse strings to remove malicious command paths, database injections, and cross-site scripting (XSS) protocols."
+  },
+  {
+    "key": "trust.securityP3",
+    "en": "Our global servers are hosted on premium, secure cloud networks with active DDOS protection and HTTPS-only transit policies, keeping your brand’s digital redirects insulated from transit exploits."
+  },
+  {
+    "key": "trust.selectTrustPage",
+    "en": "Select Trust Page"
+  },
+  {
+    "key": "trust.selectedPublications",
+    "en": "SELECTED PUBLICATIONS"
+  },
+  {
+    "key": "trust.slaGuarantee",
+    "en": "SLA Guarantee"
+  },
+  {
+    "key": "trust.systemActive",
+    "en": "SYSTEM: ACTIVE // 100% OPERATIONAL"
+  },
+  {
+    "key": "trust.systemHealth",
+    "en": "System Health"
+  },
+  {
+    "key": "trust.systemStatusActive",
+    "en": "SYSTEM: ACTIVE // 100% OPERATIONAL"
+  },
+  {
+    "key": "trust.systemStatusP1",
+    "en": "We share our system uptime and historical reliability metrics openly to demonstrate our operational reliability."
+  },
+  {
+    "key": "trust.systemStatusP2",
+    "en": "Our primary hosting servers, CDNs, and DNS networks run on redundant cloud infrastructure to prevent downtime."
+  },
+  {
+    "key": "trust.systemStatusP3",
+    "en": "Because static codes contain no intermediate server dependencies, they remain 100% active and scannable even during network incidents, ensuring business continuity."
+  },
+  {
+    "key": "trust.technologyComparisonMatrix",
+    "en": "Technology Comparison Matrix"
+  },
+  {
+    "key": "trust.telemetryDesc",
+    "en": "Review node status and latency measurements live."
+  },
+  {
+    "key": "trust.telemetryTitle",
+    "en": "SLA Operational Telemetry"
+  },
+  {
+    "key": "trust.title",
+    "en": "Security & SLA Trust Center"
+  },
+  {
+    "key": "trust.twitter",
+    "en": "Twitter"
+  },
+  {
+    "key": "trust.updatedLabel",
+    "en": "UPDATED:"
+  },
+  {
+    "key": "trust.verifiedBy",
+    "en": "VERIFIED BY:"
+  },
+  {
+    "key": "trust.viewAuthorBio",
+    "en": "View Author Bio"
+  },
+  {
+    "key": "trust.viewReviewerBio",
+    "en": "View Reviewer Bio"
+  },
+  {
+    "key": "trust.whyFreeqrgenP1",
+    "en": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRGen.pro to offer an open, secure alternative."
+  },
+  {
+    "key": "trust.whyFreeqrgenP2",
+    "en": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static QR codes created on FreeQRGen.pro contain direct destination payloads, making them forever independent of our infrastructure."
+  },
+  {
+    "key": "trust.whyFreeqrgenP3",
+    "en": "By moving vector calculations (SVG rendering) to client-side modules, we ensure that you can export infinite-resolution graphics for print without registering or paying licensing fees. It’s professional-grade technology, accessible to everyone."
+  },
+  {
+    "key": "trust.whyP1",
+    "en": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRGen.pro to offer an open, secure alternative."
+  },
+  {
+    "key": "trust.whyP2",
+    "en": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static QR codes created on FreeQRGen.pro contain direct destination payloads, making them forever independent of our infrastructure."
+  },
+  {
+    "key": "trust.whyP3",
+    "en": "By moving vector calculations (SVG rendering) to client-side modules, we ensure that you can export infinite-resolution graphics for print without registering or paying licensing fees. It’s professional-grade technology, accessible to everyone."
+  },
+  {
+    "key": "templates.badge.medical_and_safety",
+    "en": "Medical & Safety"
+  },
+  {
+    "key": "templates.badge.professional_and_corporate",
+    "en": "Professional & Corporate"
+  },
+  {
+    "key": "templates.badge.retail_and_commerce",
+    "en": "Retail & Commerce"
+  },
+  {
+    "key": "templates.badge.creative_and_design",
+    "en": "Creative & Design"
+  },
+  {
+    "key": "templates.badge.logistics_and_manufacturing",
+    "en": "Logistics & Manufacturing"
+  },
+  {
+    "key": "templates.badge.business_growth_and_seo",
+    "en": "Business Growth & SEO"
+  },
+  {
+    "key": "templates.badge.communication_and_crm",
+    "en": "Communication & CRM"
+  },
+  {
+    "key": "templates.badge.home_and_office_utilities",
+    "en": "Home & Office Utilities"
+  },
+  {
+    "key": "templates.badge.publishing_and_media",
+    "en": "Publishing & Media"
+  },
+  {
+    "key": "templates.badge.hospitality_and_dining",
+    "en": "Hospitality & Dining"
+  },
+  {
+    "key": "templates.badge.event_management",
+    "en": "Event Management"
+  },
+  {
+    "key": "templates.badge.social_media_growth",
+    "en": "Social Media Growth"
+  },
+  {
+    "key": "templates.badge.video_marketing",
+    "en": "Video Marketing"
+  },
+  {
+    "key": "templates.badge.property_and_real_estate",
+    "en": "Property & Real Estate"
+  },
+  {
+    "key": "templates.badge.hospitality_and_travel",
+    "en": "Hospitality & Travel"
+  },
+  {
+    "key": "templates.badge.health_and_fitness",
+    "en": "Health & Fitness"
+  },
+  {
+    "key": "templates.badge.education_and_academics",
+    "en": "Education & Academics"
+  },
+  {
+    "key": "templates.item.restaurant-menu-qr-code.title",
+    "en": "Restaurant Menu QR Code Template"
+  },
+  {
+    "key": "templates.item.restaurant-menu-qr-code.desc",
+    "en": "Deploy a professional contactless restaurant menu QR code. Speed up tableside ordering, eliminate printing costs, and sync menus instantly."
+  },
+  {
+    "key": "templates.item.business-card-qr-code.title",
+    "en": "Digital Business Card QR Code Template"
+  },
+  {
+    "key": "templates.item.business-card-qr-code.desc",
+    "en": "Create a standard vCard QR code for digital business cards. Share phone, email, and social handles instantly with native contact cards."
+  },
+  {
+    "key": "templates.item.google-review-qr-code.title",
+    "en": "Google Review QR Code Template"
+  },
+  {
+    "key": "templates.item.google-review-qr-code.desc",
+    "en": "Increase customer reviews with a custom Google Review QR code template. Route clients directly to your business profile review page."
+  },
+  {
+    "key": "templates.item.whatsapp-qr-code.title",
+    "en": "WhatsApp Contact QR Code Template"
+  },
+  {
+    "key": "templates.item.whatsapp-qr-code.desc",
+    "en": "Enable immediate customer inquiries with a WhatsApp click-to-chat QR code template. Pre-fill custom messages for speed."
+  },
+  {
+    "key": "templates.item.wifi-qr-code.title",
+    "en": "WiFi Password Sharing QR Code Template"
+  },
+  {
+    "key": "templates.item.wifi-qr-code.desc",
+    "en": "Let guests scan and connect to your home or office WiFi without typing long passwords. Fully offline-safe and WPA encrypted."
+  },
+  {
+    "key": "templates.item.pdf-qr-code.title",
+    "en": "PDF Document Download QR Code Template"
+  },
+  {
+    "key": "templates.item.pdf-qr-code.desc",
+    "en": "Link physical fliers directly to your electronic user guides, brochures, or whitepapers with a robust PDF QR code landing page."
+  },
+  {
+    "key": "templates.item.event-ticket-qr-code.title",
+    "en": "Event Ticket QR Code Template"
+  },
+  {
+    "key": "templates.item.event-ticket-qr-code.desc",
+    "en": "Issue scannable digital tickets for concerts, conferences, or local meetups. Speed up entry check-in gates with instant validation."
+  },
+  {
+    "key": "templates.item.instagram-qr-code.title",
+    "en": "Instagram Profile QR Code Template"
+  },
+  {
+    "key": "templates.item.instagram-qr-code.desc",
+    "en": "Drive physical foot traffic straight to your visual Instagram feed. Connect offline buyers with social stories and product catalogs."
+  },
+  {
+    "key": "templates.item.facebook-qr-code.title",
+    "en": "Facebook Page QR Code Template"
+  },
+  {
+    "key": "templates.item.facebook-qr-code.desc",
+    "en": "Encourage local clients to like, follow, and review your business page. Bridge physical locations with active Facebook communities."
+  },
+  {
+    "key": "templates.item.youtube-qr-code.title",
+    "en": "YouTube Video QR Code Template"
+  },
+  {
+    "key": "templates.item.youtube-qr-code.desc",
+    "en": "Direct physical audiences to watch product tutorials, trailer showcases, or streaming channels. Boost subscribers from print media."
+  },
+  {
+    "key": "templates.item.real-estate-qr-code.title",
+    "en": "Real Estate Listing QR Code Template"
+  },
+  {
+    "key": "templates.item.real-estate-qr-code.desc",
+    "en": "Place high-contrast QR codes on yard signs and flyers. Let prospective buyers view pricing, dynamic property photos, and tours instantly."
+  },
+  {
+    "key": "templates.item.hotel-qr-code.title",
+    "en": "Hotel Guest Services QR Code Template"
+  },
+  {
+    "key": "templates.item.hotel-qr-code.desc",
+    "en": "Digitize guest books, local recommendations, room services, and checkout schedules. Elevate luxury standards with digital convenience."
+  },
+  {
+    "key": "templates.item.cafe-qr-code.title",
+    "en": "Cafe Table QR Code Template"
+  },
+  {
+    "key": "templates.item.cafe-qr-code.desc",
+    "en": "Deploy individual tableside QR labels for express cafe ordering, daily dynamic slates, and coffee bean sourcing stories."
+  },
+  {
+    "key": "templates.item.gym-qr-code.title",
+    "en": "Gym Check-in & Workout QR Code Template"
+  },
+  {
+    "key": "templates.item.gym-qr-code.desc",
+    "en": "Facilitate rapid member validation at entry turnstiles. Link gym equipment directly to clean video workout tutorials and guidelines."
+  },
+  {
+    "key": "templates.item.school-qr-code.title",
+    "en": "School Classroom & Syllabus QR Code Template"
+  },
+  {
+    "key": "templates.item.school-qr-code.desc",
+    "en": "Bridge homework assignments, semester class syllabi, and physical textbooks directly to rich digital study guides and resources."
+  },
+  {
+    "key": "templates.item.medical-qr-code.title",
+    "en": "Medical Emergency Alert QR Code Template"
+  },
+  {
+    "key": "templates.item.medical-qr-code.desc",
+    "en": "Provide critical, secure emergency contacts and medical background on active wristbands or wallet cards for rapid response."
+  },
+  {
+    "key": "templates.item.retail-qr-code.title",
+    "en": "Retail Product Showcase QR Code Template"
+  },
+  {
+    "key": "templates.item.retail-qr-code.desc",
+    "en": "Link physical packaging directly to rich online catalogs, sizing guides, user manuals, and warranty registration portals."
+  },
+  {
+    "key": "templates.item.portfolio-qr-code.title",
+    "en": "Design Portfolio QR Code Template"
+  },
+  {
+    "key": "templates.item.portfolio-qr-code.desc",
+    "en": "Engage prospective creative agencies with high-fidelity design projects, illustrations, and contactless developer CVs."
+  },
+  {
+    "key": "templates.item.resume-qr-code.title",
+    "en": "Professional Resume QR Code Template"
+  },
+  {
+    "key": "templates.item.resume-qr-code.desc",
+    "en": "Embed your professional offline resume onto business card edges or networking slates. Speed up HR screening with a rich digital biography."
+  },
+  {
+    "key": "templates.item.product-packaging-qr-code.title",
+    "en": "Product Packaging QR Code Template"
+  },
+  {
+    "key": "templates.item.product-packaging-qr-code.desc",
+    "en": "Streamline physical carton space. Connect logistics networks and target retail shoppers with dynamic manuals and origin stories."
+  },
+  {
+    "key": "templates.name.minimalist",
+    "en": "Minimalist Black"
+  },
+  {
+    "key": "templates.badge.minimalist",
+    "en": "Classic"
+  },
+  {
+    "key": "templates.desc.minimalist",
+    "en": "Clean high-contrast dark dots with standard square frame."
+  },
+  {
+    "key": "templates.name.vibrant",
+    "en": "Vibrant Indigo"
+  },
+  {
+    "key": "templates.badge.vibrant",
+    "en": "Modern"
+  },
+  {
+    "key": "templates.desc.vibrant",
+    "en": "Rounded fluid dots with vibrant gradient accents."
+  },
+  {
+    "key": "templates.name.cyberpunk",
+    "en": "Cyberpunk Neon"
+  },
+  {
+    "key": "templates.badge.cyberpunk",
+    "en": "Tech"
+  },
+  {
+    "key": "templates.desc.cyberpunk",
+    "en": "High-visibility neon tones with stylized corner targets."
+  },
+  {
+    "key": "templates.name.emerald",
+    "en": "Emerald Eco"
+  },
+  {
+    "key": "templates.badge.emerald",
+    "en": "Organic"
+  },
+  {
+    "key": "templates.desc.emerald",
+    "en": "Deep botanical green theme with soft rounded dots."
+  },
+  {
+    "key": "templates.name.royal",
+    "en": "Royal Gold"
+  },
+  {
+    "key": "templates.badge.royal",
+    "en": "Premium"
+  },
+  {
+    "key": "templates.desc.royal",
+    "en": "Luxurious gold-tone borders with high precision target centers."
+  },
+  {
+    "key": "templates.name.cosmic",
+    "en": "Cosmic Purple"
+  },
+  {
+    "key": "templates.badge.cosmic",
+    "en": "Creative"
+  },
+  {
+    "key": "templates.desc.cosmic",
+    "en": "Rich purple palette with extra contrast eye frames."
+  },
+  {
+    "key": "templates.name.tokyo",
+    "en": "Tokyo Night"
+  },
+  {
+    "key": "templates.badge.tokyo",
+    "en": "Dark Theme"
+  },
+  {
+    "key": "templates.desc.tokyo",
+    "en": "Midnight canvas with cyan neon dot styling."
+  },
+  {
+    "key": "templates.name.corporate",
+    "en": "Corporate Blue"
+  },
+  {
+    "key": "templates.badge.corporate",
+    "en": "Business"
+  },
+  {
+    "key": "templates.desc.corporate",
+    "en": "Trustworthy enterprise blue styling with sharp contrast."
+  },
+  {
+    "key": "templates.palette",
+    "en": "Palette:"
+  },
+  {
+    "key": "templates.dotsLabel",
+    "en": "Dots:"
+  },
+  {
+    "key": "templates.eyesLabel",
+    "en": "• Eyes:"
+  },
+  {
+    "key": "templates.tipLabel",
+    "en": "Tip:"
+  },
+  {
+    "key": "templates.tipDesc",
+    "en": "After applying any template, you can jump back to the Creative Station tab anytime to perform precision edits, add custom center logos, or adjust the quiet zone spacing to match your unique brand requirements."
+  }
+]

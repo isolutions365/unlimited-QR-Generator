@@ -1,0 +1,1927 @@
+[
+  {
+    "key": "preview.backDisplay",
+    "en": "BACK DISPLAY",
+    "ar": "BACK DISPLAY"
+  },
+  {
+    "key": "preview.centerLogoCoverage",
+    "en": "2. Center Logo Coverage",
+    "ar": "2. Center Logo Coverage"
+  },
+  {
+    "key": "preview.centeredPrepress",
+    "en": "Centered pre-press",
+    "ar": "Centered pre-press"
+  },
+  {
+    "key": "preview.closeSimulatorBtn",
+    "en": "Close Print Simulator",
+    "ar": "Close Print Simulator"
+  },
+  {
+    "key": "preview.colorContrastRatio",
+    "en": "1. Color Contrast Ratio",
+    "ar": "1. Color Contrast Ratio"
+  },
+  {
+    "key": "preview.colorFullColor",
+    "en": "Full Color",
+    "ar": "Full Color"
+  },
+  {
+    "key": "preview.colorGrayscale",
+    "en": "Grayscale",
+    "ar": "Grayscale"
+  },
+  {
+    "key": "preview.colorInkSaver",
+    "en": "Ink Saver",
+    "ar": "Ink Saver"
+  },
+  {
+    "key": "preview.colorLaserMax",
+    "en": "Laser Max",
+    "ar": "Laser Max"
+  },
+  {
+    "key": "preview.colorOriginal",
+    "en": "Original",
+    "ar": "Original"
+  },
+  {
+    "key": "preview.colorPureBw",
+    "en": "Pure B&W",
+    "ar": "Pure B&W"
+  },
+  {
+    "key": "preview.companyBrandName",
+    "en": "Company / Brand Name",
+    "ar": "Company / Brand Name"
+  },
+  {
+    "key": "preview.contrastRatio",
+    "en": "Contrasting Ratio",
+    "ar": "Contrasting Ratio"
+  },
+  {
+    "key": "preview.cropMarksDesc",
+    "en": "Pre-press corners for physical guillotine cutting alignment.",
+    "ar": "Pre-press corners for physical guillotine cutting alignment."
+  },
+  {
+    "key": "preview.customLabelString",
+    "en": "Custom Label String",
+    "ar": "Custom Label String"
+  },
+  {
+    "key": "preview.dataDensity",
+    "en": "Data density parameters",
+    "ar": "Data density parameters"
+  },
+  {
+    "key": "preview.dataDensityCorrection",
+    "en": "3. Data Density & Correction",
+    "ar": "3. Data Density & Correction"
+  },
+  {
+    "key": "preview.decodingModules",
+    "en": "Decoding modules...",
+    "ar": "Decoding modules..."
+  },
+  {
+    "key": "preview.desc",
+    "en": "Download complete design files or save compositions into local folders.",
+    "ar": "تحميل complete design files or save compositions into local folders."
+  },
+  {
+    "key": "preview.displayTextUrl",
+    "en": "Display Text / Web URL",
+    "ar": "Display Text / Web URL"
+  },
+  {
+    "key": "preview.downloadBadge",
+    "en": "Download vector & high-res",
+    "ar": "تحميل متجه & high-res"
+  },
+  {
+    "key": "preview.downloadCompleted",
+    "en": "Download Completed!",
+    "ar": "تحميل Completed!"
+  },
+  {
+    "key": "preview.downloadFormat",
+    "en": "Download Format",
+    "ar": "تحميل Format"
+  },
+  {
+    "key": "preview.downloadVector",
+    "en": "Download Vector file",
+    "ar": "تحميل متجه file"
+  },
+  {
+    "key": "preview.estimatedDensity",
+    "en": "Estimated Pre-press Density:",
+    "ar": "Estimated Pre-press Density:"
+  },
+  {
+    "key": "preview.fixColorsBtn",
+    "en": "Fix Colors (Set Slate on White)",
+    "ar": "Fix Colors (Set Slate on White)"
+  },
+  {
+    "key": "preview.foldAndStand",
+    "en": "Fold and Stand • Easy to Scan",
+    "ar": "Fold and Stand • Easy to Scan"
+  },
+  {
+    "key": "preview.foldLine",
+    "en": "FOLD LINE TO STAND",
+    "ar": "FOLD LINE TO STAND"
+  },
+  {
+    "key": "preview.foldStandDisplay",
+    "en": "Fold and Stand Display",
+    "ar": "Fold and Stand Display"
+  },
+  {
+    "key": "preview.footnoteDesc",
+    "en": "Adds size, date, and custom string in footer margins.",
+    "ar": "Adds size, date, and custom string in footer margins."
+  },
+  {
+    "key": "preview.gradeCritical",
+    "en": "Critical Scannability Warning",
+    "ar": "Critical Scannability Warning"
+  },
+  {
+    "key": "preview.gradeCriticalDesc",
+    "en": "Extremely narrow color contrast or excessively large center overlays detected.",
+    "ar": "Extremely narrow color contrast or excessively large center overlays detected."
+  },
+  {
+    "key": "preview.gradeExcellent",
+    "en": "Excellent Scannability",
+    "ar": "Excellent Scannability"
+  },
+  {
+    "key": "preview.gradeExcellentDesc",
+    "en": "Highly compatible contrast and correct emblem boundaries.",
+    "ar": "Highly compatible contrast and correct emblem boundaries."
+  },
+  {
+    "key": "preview.gradeModerate",
+    "en": "Moderate Scannability",
+    "ar": "Moderate Scannability"
+  },
+  {
+    "key": "preview.gradeModerateDesc",
+    "en": "Warning: gradient backgrounds or large emblems may decrease older camera reading times.",
+    "ar": "Warning: gradient backgrounds or large emblems may decrease older camera reading times."
+  },
+  {
+    "key": "preview.grid2x2",
+    "en": "2x2 Grid (4 Copies)",
+    "ar": "2x2 Grid (4 Copies)"
+  },
+  {
+    "key": "preview.grid2x2Desc",
+    "en": "Even paper distribution",
+    "ar": "Even paper distribution"
+  },
+  {
+    "key": "preview.grid3x3",
+    "en": "3x3 Grid (9 Copies)",
+    "ar": "3x3 Grid (9 Copies)"
+  },
+  {
+    "key": "preview.grid3x3Desc",
+    "en": "Maximum paper utilization",
+    "ar": "Maximum paper utilization"
+  },
+  {
+    "key": "preview.grid4x4",
+    "en": "4x4 Grid (16 Copies)",
+    "ar": "4x4 Grid (16 Copies)"
+  },
+  {
+    "key": "preview.grid4x4Desc",
+    "en": "Small high-density stickers",
+    "ar": "Small high-density stickers"
+  },
+  {
+    "key": "preview.highResDesc",
+    "en": "Select high density output sizes for commercial print boards.",
+    "ar": "Select high density output sizes for commercial print boards."
+  },
+  {
+    "key": "preview.highResTitle",
+    "en": "High-Resolution Prints",
+    "ar": "High-Resolution Prints"
+  },
+  {
+    "key": "preview.inspectorDesc",
+    "en": "Real-time design & color analysis",
+    "ar": "في الوقت الفعلي design & color analysis"
+  },
+  {
+    "key": "preview.launchSimulatorBtn",
+    "en": "Launch Print Simulator",
+    "ar": "Launch Print Simulator"
+  },
+  {
+    "key": "preview.layoutFormatMode",
+    "en": "Layout Format Mode",
+    "ar": "Layout Format Mode"
+  },
+  {
+    "key": "preview.layoutFormatModeDesc",
+    "en": "Print 8 cards on a sheet vs. single layout",
+    "ar": "Print 8 cards on a sheet vs. single layout"
+  },
+  {
+    "key": "preview.layoutOverflow",
+    "en": "Layout Overflow Alert",
+    "ar": "Layout Overflow Alert"
+  },
+  {
+    "key": "preview.left",
+    "en": "Left",
+    "ar": "Left"
+  },
+  {
+    "key": "preview.margin10mm",
+    "en": "10mm (Balanced)",
+    "ar": "10mm (Balanced)"
+  },
+  {
+    "key": "preview.margin25mm",
+    "en": "25mm (Generous)",
+    "ar": "25mm (Generous)"
+  },
+  {
+    "key": "preview.margin2mm",
+    "en": "2mm (Minimum)",
+    "ar": "2mm (Minimum)"
+  },
+  {
+    "key": "preview.mediaFormats",
+    "en": "Standardized physical media formats",
+    "ar": "Standardized physical media formats"
+  },
+  {
+    "key": "preview.miniBadgeLabel",
+    "en": "Mini Badge Label",
+    "ar": "Mini Badge Label"
+  },
+  {
+    "key": "preview.noAppRequired",
+    "en": "No App Download Required • Simply Scan with Smartphone Camera",
+    "ar": "No App تحميل Required • Simply Scan with Smartphone Camera"
+  },
+  {
+    "key": "preview.offsetX",
+    "en": "Offset X (Horizontal)",
+    "ar": "Offset X (Horizontal)"
+  },
+  {
+    "key": "preview.offsetY",
+    "en": "Offset Y (Vertical)",
+    "ar": "Offset Y (Vertical)"
+  },
+  {
+    "key": "preview.placeholder.creativeStudio",
+    "en": "CREATIVE STUDIO",
+    "ar": "CREATIVE STUDIO"
+  },
+  {
+    "key": "preview.placeholder.scanToVisit",
+    "en": "SCAN TO VISIT WEBSITE",
+    "ar": "SCAN TO زيارة الموقع"
+  },
+  {
+    "key": "preview.postPreview",
+    "en": "Post Preview",
+    "ar": "Post Preview"
+  },
+  {
+    "key": "preview.prepressDesc",
+    "en": "Pre-press calibration & layout center",
+    "ar": "Pre-press calibration & layout center"
+  },
+  {
+    "key": "preview.primaryCta",
+    "en": "Primary Call-to-Action",
+    "ar": "Primary Call-to-Action"
+  },
+  {
+    "key": "preview.printBoardDesc",
+    "en": "Verify size metrics and print output directly to localized hardware devices.",
+    "ar": "Verify size metrics and print output directly to localized hardware devices."
+  },
+  {
+    "key": "preview.printBoardTitle",
+    "en": "Print Visual Preview Board",
+    "ar": "Print Visual Preview Board"
+  },
+  {
+    "key": "preview.printCards",
+    "en": "Print Cards",
+    "ar": "Print Cards"
+  },
+  {
+    "key": "preview.printCardsDesc",
+    "en": "Grid Print Mode: 8 Cards formatted for standard paper cutlines",
+    "ar": "Grid Print Mode: 8 Cards formatted for standard paper cutlines"
+  },
+  {
+    "key": "preview.printCardsVertDesc",
+    "en": "Grid Print Mode: 8 Vertical Cards formatted for standard paper cutlines",
+    "ar": "Grid Print Mode: 8 Vertical Cards formatted for standard paper cutlines"
+  },
+  {
+    "key": "preview.printLayoutStudio",
+    "en": "Print Layout Studio",
+    "ar": "Print Layout Studio"
+  },
+  {
+    "key": "preview.printMockupDesc",
+    "en": "Simulate layout coordinates across standard physical billboards.",
+    "ar": "Simulate layout coordinates across standard physical billboards."
+  },
+  {
+    "key": "preview.printMockupTitle",
+    "en": "Print Diagnostic Mockup",
+    "ar": "Print Diagnostic Mockup"
+  },
+  {
+    "key": "preview.printReadyPage",
+    "en": "Print-Ready A4/Letter Page",
+    "ar": "Print-Ready A4/Letter Page"
+  },
+  {
+    "key": "preview.printReadyQr",
+    "en": "Print-Ready QR Code",
+    "ar": "Print-Ready رمز QR"
+  },
+  {
+    "key": "preview.printReadyStudio",
+    "en": "Print-Ready Studio",
+    "ar": "Print-Ready Studio"
+  },
+  {
+    "key": "preview.printSheet",
+    "en": "Print Sheet",
+    "ar": "Print Sheet"
+  },
+  {
+    "key": "preview.printTableTent",
+    "en": "Print Table Tent",
+    "ar": "Print Table Tent"
+  },
+  {
+    "key": "print.activeAlignmentMarks",
+    "en": "Active Cutlines & Alignment Marks — Hidden in print",
+    "ar": "Active Cutlines & Alignment Marks — Hidden in print"
+  },
+  {
+    "key": "print.backToStation",
+    "en": "Back to Station",
+    "ar": "Back to Station"
+  },
+  {
+    "key": "print.badgeLabel",
+    "en": "Badge Label",
+    "ar": "Badge Label"
+  },
+  {
+    "key": "print.calibrationDesc",
+    "en": "Configure parameters on the left. The live paper layout below updates instantly with exact physical margins and sizes. Use the Print Sheet Now button or press Ctrl+P to trigger printer layout output.",
+    "ar": "Configure parameters on the left. The live paper layout below updates instantly with exact physical margins and sizes. Use the Print Sheet Now button or press Ctrl+P to trigger printer layout output."
+  },
+  {
+    "key": "print.calibrationSettings",
+    "en": "Precision Calibration Controls",
+    "ar": "Precision Calibration Controls"
+  },
+  {
+    "key": "print.colorLabel",
+    "en": "Brand Accent Color",
+    "ar": "Brand Accent Color"
+  },
+  {
+    "key": "print.columnGapMm",
+    "en": "Column Gap",
+    "ar": "Column Gap"
+  },
+  {
+    "key": "print.companyNameLabel",
+    "en": "Brand / Company Name",
+    "ar": "Brand / Company Name"
+  },
+  {
+    "key": "print.cutlines",
+    "en": "Cutlines & Bleeds",
+    "ar": "Cutlines & Bleeds"
+  },
+  {
+    "key": "print.defaultBadge",
+    "en": "WEBSITE",
+    "ar": "WEBSITE"
+  },
+  {
+    "key": "print.defaultBrand",
+    "en": "FREEQRGEN CORP",
+    "ar": "FREEQRGEN CORP"
+  },
+  {
+    "key": "print.defaultHeading",
+    "en": "SCAN TO LEARN MORE",
+    "ar": "SCAN TO LEARN MORE"
+  },
+  {
+    "key": "print.defaultSubtext",
+    "en": "Simply scan with your camera",
+    "ar": "Simply scan with your camera"
+  },
+  {
+    "key": "print.dialogTip",
+    "en": "Set margins to \"None\" in your system print dialog for pixel accuracy.",
+    "ar": "Set margins to \"None\" in your system print dialog for pixel accuracy."
+  },
+  {
+    "key": "print.foldGuide",
+    "en": "Fold Guide",
+    "ar": "Fold Guide"
+  },
+  {
+    "key": "print.generatingRaster",
+    "en": "Generating raster QR grid...",
+    "ar": "Generating raster QR grid..."
+  },
+  {
+    "key": "print.guidesOff",
+    "en": "Guides Off",
+    "ar": "Guides Off"
+  },
+  {
+    "key": "print.guidesOn",
+    "en": "Guides On",
+    "ar": "Guides On"
+  },
+  {
+    "key": "print.headingLabel",
+    "en": "Primary Callout Heading",
+    "ar": "Primary Callout Heading"
+  },
+  {
+    "key": "print.interactiveCalibrationTitle",
+    "en": "Physical Label & Cardstock Blueprint calibrator",
+    "ar": "Physical Label & Cardstock Blueprint calibrator"
+  },
+  {
+    "key": "print.labelContent",
+    "en": "Label Content Typography",
+    "ar": "Label Content Typography"
+  },
+  {
+    "key": "print.leftMarginMm",
+    "en": "Left Margin",
+    "ar": "Left Margin"
+  },
+  {
+    "key": "print.paperA4",
+    "en": "A4 Page",
+    "ar": "A4 Page"
+  },
+  {
+    "key": "print.paperFormat",
+    "en": "Paper Size",
+    "ar": "Paper Size"
+  },
+  {
+    "key": "print.paperLetter",
+    "en": "US Letter",
+    "ar": "US Letter"
+  },
+  {
+    "key": "print.preset.avery_5160.desc",
+    "en": "Standard 3x10 address & general identifier labels. Perfect for small products.",
+    "ar": "Standard 3x10 address & general identifier labels. Perfect for small products."
+  },
+  {
+    "key": "print.preset.avery_5160.name",
+    "en": "Avery 5160 (30 Labels/Sheet)",
+    "ar": "Avery 5160 (30 Labels/Sheet)"
+  },
+  {
+    "key": "print.preset.avery_5161.desc",
+    "en": "Medium 2x10 shipping & asset tag labels. Excellent size for QR codes.",
+    "ar": "Medium 2x10 shipping & asset tag labels. Excellent size for رموز QR."
+  },
+  {
+    "key": "print.preset.avery_5161.name",
+    "en": "Avery 5161 (20 Labels/Sheet)",
+    "ar": "Avery 5161 (20 Labels/Sheet)"
+  },
+  {
+    "key": "print.preset.avery_5163.desc",
+    "en": "Large 2x5 shipping & retail tags. Highly visible display layout.",
+    "ar": "Large 2x5 shipping & retail tags. Highly visible display layout."
+  },
+  {
+    "key": "print.preset.avery_5163.name",
+    "en": "Avery 5163 (10 Labels/Sheet)",
+    "ar": "Avery 5163 (10 Labels/Sheet)"
+  },
+  {
+    "key": "print.preset.business_card_h.desc",
+    "en": "Standard horizontal business card template (3.5\" x 2.0\") with cutlines.",
+    "ar": "Standard horizontal بطاقة عمل القالب (3.5\" x 2.0\") with cutlines."
+  },
+  {
+    "key": "print.preset.business_card_h.name",
+    "en": "Business Cards - Horizontal (10/Sheet)",
+    "ar": "بطاقات الأعمال - Horizontal (10/Sheet)"
+  },
+  {
+    "key": "print.preset.business_card_v.desc",
+    "en": "Modern vertical business card template (2.0\" x 3.5\") with alignment guides.",
+    "ar": "Modern vertical بطاقة عمل القالب (2.0\" x 3.5\") with alignment guides."
+  },
+  {
+    "key": "print.preset.business_card_v.name",
+    "en": "Business Cards - Vertical (10/Sheet)",
+    "ar": "بطاقات الأعمال - Vertical (10/Sheet)"
+  },
+  {
+    "key": "print.preset.single_label.desc",
+    "en": "Single high-resolution print optimized for flyer templates or posters.",
+    "ar": "Single high-resolution print optimized for flyer القوالب or posters."
+  },
+  {
+    "key": "print.preset.single_label.name",
+    "en": "Single Large Display (1/Sheet)",
+    "ar": "Single Large Display (1/Sheet)"
+  },
+  {
+    "key": "print.preset.table_tent.desc",
+    "en": "Tabletop double-sided fold-over stand displays with center alignment guides.",
+    "ar": "Tabletop double-sided fold-over stand displays with center alignment guides."
+  },
+  {
+    "key": "print.preset.table_tent.name",
+    "en": "Foldable Table Tent Card (2/Sheet)",
+    "ar": "Foldable Table Tent Card (2/Sheet)"
+  },
+  {
+    "key": "print.qrCodeSizeScale",
+    "en": "QR Code Scale",
+    "ar": "رمز QR Scale"
+  },
+  {
+    "key": "print.scanConnectNotice",
+    "en": "Simply Scan & Connect • No Special App Required",
+    "ar": "Simply Scan & Connect • No Special App Required"
+  },
+  {
+    "key": "print.selectLayoutPreset",
+    "en": "Select Layout Preset",
+    "ar": "Select Layout Preset"
+  },
+  {
+    "key": "print.standardDimensions",
+    "en": "Standard Dimensions",
+    "ar": "Standard Dimensions"
+  },
+  {
+    "key": "print.studioSubtitle",
+    "en": "Physical label & cardstock calibration",
+    "ar": "Physical label & cardstock calibration"
+  },
+  {
+    "key": "print.studioTitle",
+    "en": "Print Layout Studio",
+    "ar": "Print Layout Studio"
+  },
+  {
+    "key": "print.subtextLabel",
+    "en": "Secondary Subtext",
+    "ar": "Secondary Subtext"
+  },
+  {
+    "key": "print.topMarginMm",
+    "en": "Top Margin",
+    "ar": "Top Margin"
+  },
+  {
+    "key": "print.triggerPrintNow",
+    "en": "PRINT SHEET NOW",
+    "ar": "PRINT SHEET NOW"
+  },
+  {
+    "key": "preview.qualityCheck",
+    "en": "Quality Aspect Ratio Check",
+    "ar": "Quality Aspect Ratio Check"
+  },
+  {
+    "key": "preview.readyToScan",
+    "en": "READY TO SCAN",
+    "ar": "READY TO SCAN"
+  },
+  {
+    "key": "preview.right",
+    "en": "Right",
+    "ar": "Right"
+  },
+  {
+    "key": "preview.saveBtn",
+    "en": "Save Current Design",
+    "ar": "Save Current Design"
+  },
+  {
+    "key": "preview.saveCancelBtn",
+    "en": "Cancel Compositions",
+    "ar": "Cancel Compositions"
+  },
+  {
+    "key": "preview.saveCompleted",
+    "en": "Compositions Saved Successfully!",
+    "ar": "Compositions Saved Successfully!"
+  },
+  {
+    "key": "preview.saveConfirmBtn",
+    "en": "Confirm Save Compositions",
+    "ar": "Confirm Save Compositions"
+  },
+  {
+    "key": "preview.saveDialogDesc",
+    "en": "Input the unique layout details to register inside your creative station dashboard folders.",
+    "ar": "Input the unique layout details to register inside your creative station لوحة التحكم folders."
+  },
+  {
+    "key": "preview.saveDialogTitle",
+    "en": "Save Design Compositions",
+    "ar": "Save Design Compositions"
+  },
+  {
+    "key": "preview.saveFolderLabel",
+    "en": "Select Folder Category",
+    "ar": "Select Folder Category"
+  },
+  {
+    "key": "preview.saveLabel",
+    "en": "Design Asset Label name",
+    "ar": "Design Asset Label name"
+  },
+  {
+    "key": "preview.saveNewFolderPrompt",
+    "en": "Add into New Folder...",
+    "ar": "Add into New Folder..."
+  },
+  {
+    "key": "preview.savedToCloud",
+    "en": "Saved to Secure Cloud",
+    "ar": "Saved to Secure Cloud"
+  },
+  {
+    "key": "preview.scanSuccess",
+    "en": "✓ QR Scan Success",
+    "ar": "✓ QR Scan Success"
+  },
+  {
+    "key": "preview.scannabilityGrade",
+    "en": "Scannability Grade",
+    "ar": "Scannability Grade"
+  },
+  {
+    "key": "preview.scannabilityInspector",
+    "en": "Scannability Inspector",
+    "ar": "Scannability Inspector"
+  },
+  {
+    "key": "preview.sendToPrintBtn",
+    "en": "Send to Print Device",
+    "ar": "Send to Print Device"
+  },
+  {
+    "key": "preview.shareQrDesign",
+    "en": "Share QR Design",
+    "ar": "Share QR Design"
+  },
+  {
+    "key": "preview.showCropMarks",
+    "en": "Show Crop Marks",
+    "ar": "Show Crop Marks"
+  },
+  {
+    "key": "preview.showFootnote",
+    "en": "Show Footnote / Label",
+    "ar": "Show Footnote / Label"
+  },
+  {
+    "key": "preview.simplyScanLearn",
+    "en": "Simply Scan & Learn • No registration",
+    "ar": "Simply Scan & Learn • No registration"
+  },
+  {
+    "key": "preview.singleQr",
+    "en": "Single QR",
+    "ar": "Single QR"
+  },
+  {
+    "key": "preview.size140mm",
+    "en": "140mm (Poster)",
+    "ar": "140mm (Poster)"
+  },
+  {
+    "key": "preview.size15mm",
+    "en": "15mm (Sticker)",
+    "ar": "15mm (Sticker)"
+  },
+  {
+    "key": "preview.size65mm",
+    "en": "65mm (Recommended)",
+    "ar": "65mm (Recommended)"
+  },
+  {
+    "key": "preview.smartphoneSimulator",
+    "en": "Smartphone Simulator",
+    "ar": "Smartphone Simulator"
+  },
+  {
+    "key": "preview.stepBrandText",
+    "en": "2. Brand Text Customization",
+    "ar": "2. Brand Text التخصيص"
+  },
+  {
+    "key": "preview.stepColorAccent",
+    "en": "3. Layout Color Accent",
+    "ar": "3. Layout Color Accent"
+  },
+  {
+    "key": "preview.stepSelectLayout",
+    "en": "1. Select Layout Template",
+    "ar": "1. Select Layout القالب"
+  },
+  {
+    "key": "preview.stickerSheetDesc",
+    "en": "Multi-Sticker Sheet: 12 stickers with clean cutting guides",
+    "ar": "Multi-Sticker Sheet: 12 stickers with clean cutting guides"
+  },
+  {
+    "key": "preview.tableTentDesc",
+    "en": "Foldable Table Tent Template - Includes fold guides",
+    "ar": "Foldable Table Tent القالب - Includes fold guides"
+  },
+  {
+    "key": "preview.thankYou",
+    "en": "Thank You!",
+    "ar": "Thank You!"
+  },
+  {
+    "key": "preview.thankYouScanning",
+    "en": "Thank You For scanning!",
+    "ar": "Thank You For scanning!"
+  },
+  {
+    "key": "preview.title",
+    "en": "Live Interactive Canvas Output",
+    "ar": "Live Interactive Canvas Output"
+  },
+  {
+    "key": "preview.tooltip.copyLink",
+    "en": "Copy link",
+    "ar": "Copy link"
+  },
+  {
+    "key": "preview.tooltip.diagnostics",
+    "en": "Click for Scannability Diagnostics",
+    "ar": "Click for Scannability Diagnostics"
+  },
+  {
+    "key": "preview.tooltip.shareBuilder",
+    "en": "Share the link to QR Studio builder",
+    "ar": "Share the link to QR Studio builder"
+  },
+  {
+    "key": "preview.tooltip.shareEmbed",
+    "en": "Share the link embedded inside the QR",
+    "ar": "Share the link embedded inside the QR"
+  },
+  {
+    "key": "preview.tooltip.testScan",
+    "en": "Test scan redirect",
+    "ar": "Test scan redirect"
+  },
+  {
+    "key": "preview.tooltip.toggleGrid",
+    "en": "Toggle Grid Lines",
+    "ar": "Toggle Grid Lines"
+  },
+  {
+    "key": "preview.tooltip.toggleRulers",
+    "en": "Toggle Rulers",
+    "ar": "Toggle Rulers"
+  },
+  {
+    "key": "preview.tooltip.zoomIn",
+    "en": "Zoom In",
+    "ar": "Zoom In"
+  },
+  {
+    "key": "preview.tooltip.zoomOut",
+    "en": "Zoom Out",
+    "ar": "Zoom Out"
+  },
+  {
+    "key": "preview.trackingShortUrl",
+    "en": "Tracking Short URL",
+    "ar": "Tracking Short URL"
+  },
+  {
+    "key": "preview.usLetter",
+    "en": "US Letter",
+    "ar": "US Letter"
+  },
+  {
+    "key": "preview.viewfinderReady",
+    "en": "Viewfinder ready.",
+    "ar": "Viewfinder ready."
+  },
+  {
+    "key": "preview.shortUrlTrackingActive",
+    "en": "🚀 Short Url Tracking Active",
+    "ar": "🚀 Short Url Tracking Active"
+  },
+  {
+    "key": "preview.directQrCode",
+    "en": "💾 Direct QR Code",
+    "ar": "💾 Direct رمز QR"
+  },
+  {
+    "key": "preview.printAction",
+    "en": "Print",
+    "ar": "Print"
+  },
+  {
+    "key": "preview.liveScanTest",
+    "en": "Live Viewfinder Scan Test",
+    "ar": "Live Viewfinder Scan Test"
+  },
+  {
+    "key": "preview.destinationTab",
+    "en": "Destination",
+    "ar": "Destination"
+  },
+  {
+    "key": "preview.appLinkTab",
+    "en": "App Link",
+    "ar": "App Link"
+  },
+  {
+    "key": "preview.shareTwitter",
+    "en": "Twitter / X",
+    "ar": "Twitter / X"
+  },
+  {
+    "key": "preview.shareLinkedin",
+    "en": "LinkedIn",
+    "ar": "LinkedIn"
+  },
+  {
+    "key": "preview.shareFacebook",
+    "en": "Facebook",
+    "ar": "Facebook"
+  },
+  {
+    "key": "preview.expiredState",
+    "en": "Expired ⚠️",
+    "ar": "Expired ⚠️"
+  },
+  {
+    "key": "preview.expiresState",
+    "en": "Expires ⏳",
+    "ar": "Expires ⏳"
+  },
+  {
+    "key": "preview.riskLabel",
+    "en": "Risk:",
+    "ar": "Risk:"
+  },
+  {
+    "key": "preview.riskHigh",
+    "en": "High",
+    "ar": "High"
+  },
+  {
+    "key": "preview.riskMedium",
+    "en": "Medium",
+    "ar": "Medium"
+  },
+  {
+    "key": "preview.formatPngLabel",
+    "en": "PNG Image",
+    "ar": "PNG Image"
+  },
+  {
+    "key": "preview.formatPngDesc",
+    "en": "Standard raster, perfect for web & screen",
+    "ar": "Standard raster, perfect for web & screen"
+  },
+  {
+    "key": "preview.formatSvgDesc",
+    "en": "Infinitely scalable vector format for print",
+    "ar": "Infinitely scalable متجه format for print"
+  },
+  {
+    "key": "preview.formatPdfLabel",
+    "en": "PDF Document",
+    "ar": "PDF Document"
+  },
+  {
+    "key": "preview.formatPdfDesc",
+    "en": "High-resolution print-ready A4 document",
+    "ar": "High-resolution print-ready A4 document"
+  },
+  {
+    "key": "programmatic.authorName",
+    "en": "FreeQRGen.pro Editorial Board",
+    "ar": "هيئة تحرير FreeQRGen.pro"
+  },
+  {
+    "key": "programmatic.caseStudyMetricSolutions",
+    "en": "41% increase in visitor conversions",
+    "ar": "41% increase in visitor conversions"
+  },
+  {
+    "key": "programmatic.caseStudyResultSolutions",
+    "en": "Replacing old offline friction steps with responsive barcode shortcuts automated onboarding, raising client metrics.",
+    "ar": "Replacing old offline friction steps with responsive الباركود shortcuts automated onboarding, raising client metrics."
+  },
+  {
+    "key": "programmatic.caseStudyTitleSolutions",
+    "en": "{{name}} Enterprise Deployment",
+    "ar": "{{name}} المؤسسات Deployment"
+  },
+  {
+    "key": "programmatic.challenge1",
+    "en": "Organizations struggle with manual process handovers, paper waste, and data transcription errors.",
+    "ar": "Organizations struggle with manual process handovers, paper waste, and data transcription errors."
+  },
+  {
+    "key": "programmatic.challenge2",
+    "en": "Physical customer interaction barriers that slow down checkouts and digital sign-ups.",
+    "ar": "Physical customer interaction barriers that slow down checkouts and digital sign-ups."
+  },
+  {
+    "key": "programmatic.challenge3",
+    "en": "Zero analytics coverage or user-consent triggers on physical print media.",
+    "ar": "Zero التحليلات coverage or user-consent triggers on physical print media."
+  },
+  {
+    "key": "programmatic.challengesFacedBy",
+    "en": "The Challenges Faced by Modern {{name}} Administrations",
+    "ar": "The Challenges Faced by Modern {{name}} Administrations"
+  },
+  {
+    "key": "programmatic.colorContrastRules",
+    "en": "Color Contrast rules",
+    "ar": "Color Contrast rules"
+  },
+  {
+    "key": "programmatic.colorContrastRulesDesc",
+    "en": "Keep the barcode module dark (#000000 or deep indigo) printed on pristine white backdrops.",
+    "ar": "Keep the الباركود module dark (#000000 or deep indigo) printed on pristine white backdrops."
+  },
+  {
+    "key": "programmatic.commonPitfallsAvoid",
+    "en": "Common Pitfalls (Avoid)",
+    "ar": "Common Pitfalls (Avoid)"
+  },
+  {
+    "key": "programmatic.customCenterpieceLogo",
+    "en": "Custom Centerpiece Logo",
+    "ar": "Custom Centerpiece Logo"
+  },
+  {
+    "key": "programmatic.customCenterpieceLogoDesc",
+    "en": "Build user-trust by overlaying a branded logo inside the center of the barcode grid layout.",
+    "ar": "Build user-trust by overlaying a branded logo inside the center of the الباركود grid layout."
+  },
+  {
+    "key": "programmatic.directorySubtitle",
+    "en": "Browse highly authoritative, technical frameworks and physical printing guides designed to eliminate contactless service friction.",
+    "ar": "Browse highly authoritative, technical frameworks and physical printing guides designed to eliminate contactless service friction."
+  },
+  {
+    "key": "programmatic.discoveryPhase",
+    "en": "Discovery Phase",
+    "ar": "Discovery Phase"
+  },
+  {
+    "key": "programmatic.dynamicUrlBarcode",
+    "en": "Dynamic URL Barcode",
+    "ar": "Dynamic URL الباركود"
+  },
+  {
+    "key": "programmatic.dynamicUrlBarcodeDesc",
+    "en": "Enables price editing, metrics telemetry tracking, and dynamic link expirations instantly.",
+    "ar": "Enables price editing, metrics telemetry tracking, and dynamic link expirations instantly."
+  },
+  {
+    "key": "programmatic.exploreAuthorityFile",
+    "en": "Explore Authority File",
+    "ar": "Explore Authority File"
+  },
+  {
+    "key": "programmatic.faqA1Solutions",
+    "en": "All QR codes generated on FreeQRGen.pro feature infinite scans and do not carry hidden expirations or click caps.",
+    "ar": "All رموز QR generated on FreeQRGen.pro feature infinite scans and do not carry hidden expirations or click caps."
+  },
+  {
+    "key": "programmatic.faqA2Solutions",
+    "en": "Yes. If you save the design with dynamic tracking active, you can redirect visitors to updated links instantly without changing the matrix layout.",
+    "ar": "Yes. If you save the design with dynamic tracking active, you can redirect visitors to updated links instantly without changing the matrix layout."
+  },
+  {
+    "key": "programmatic.faqQ1Solutions",
+    "en": "What is the scanning limit for this {{name}} QR code?",
+    "ar": "What is the scanning limit for this {{name}} رمز QR?"
+  },
+  {
+    "key": "programmatic.faqQ2Solutions",
+    "en": "Can I swap the target URL after printing the code?",
+    "ar": "Can I swap the target URL after printing the code?"
+  },
+  {
+    "key": "programmatic.frequentlyAskedQuestions",
+    "en": "Frequently Asked Questions",
+    "ar": "Frequently Asked Questions"
+  },
+  {
+    "key": "programmatic.guidesTag",
+    "en": "GUIDES",
+    "ar": "GUIDES"
+  },
+  {
+    "key": "programmatic.guidesTagWithTime",
+    "en": "GUIDES // {{time}}",
+    "ar": "GUIDES // {{time}}"
+  },
+  {
+    "key": "programmatic.home",
+    "en": "Home",
+    "ar": "Home"
+  },
+  {
+    "key": "programmatic.howToSetupTitle",
+    "en": "How to Setup a QR Code for {{name}}",
+    "ar": "How to Setup a رمز QR for {{name}}"
+  },
+  {
+    "key": "programmatic.hubBadge",
+    "en": "Programmatic Hub // Topical Network",
+    "ar": "Programmatic Hub // Topical Network"
+  },
+  {
+    "key": "programmatic.industries",
+    "en": "Industries",
+    "ar": "Industries"
+  },
+  {
+    "key": "programmatic.industriesDirectory",
+    "en": "Industries Directory",
+    "ar": "Industries Directory"
+  },
+  {
+    "key": "programmatic.instantAction",
+    "en": "Instant Action",
+    "ar": "فوري Action"
+  },
+  {
+    "key": "programmatic.interactiveWorkflowDiagram",
+    "en": "Interactive Workflow Diagram",
+    "ar": "Interactive Workflow Diagram"
+  },
+  {
+    "key": "programmatic.keyOperationalBottlenecks",
+    "en": "Key Operational Bottlenecks",
+    "ar": "Key Operational Bottlenecks"
+  },
+  {
+    "key": "programmatic.launchCreator",
+    "en": "Launch {{name}} Creator",
+    "ar": "Launch {{name}} Creator"
+  },
+  {
+    "key": "programmatic.mistakesStep1",
+    "en": "Relying on direct heavy PDF files instead of smart dynamic redirects.",
+    "ar": "Relying on direct heavy PDF files instead of smart dynamic redirects."
+  },
+  {
+    "key": "programmatic.mistakesStep2",
+    "en": "Using low-contrast light foreground colors like yellow or silver.",
+    "ar": "Using low-contrast light foreground colors like yellow or silver."
+  },
+  {
+    "key": "programmatic.mistakesStep3",
+    "en": "Placing printed codes in low-lighting or highly reflective areas.",
+    "ar": "Placing printed codes in low-lighting or highly reflective areas."
+  },
+  {
+    "key": "programmatic.noDirectoryItemFound",
+    "en": "No directory item found",
+    "ar": "No directory item found"
+  },
+  {
+    "key": "programmatic.noMatchesFound",
+    "en": "We couldn't find matches for \"{{query}}\". Try searching general keywords like \"Hospitality\" or \"Retail\".",
+    "ar": "We couldn't find matches for \"{{query}}\". Try searching general keywords like \"Hospitality\" or \"Retail\"."
+  },
+  {
+    "key": "programmatic.opticalScan",
+    "en": "Optical Scan",
+    "ar": "Optical Scan"
+  },
+  {
+    "key": "programmatic.physicalPrintingAndMediaGuidelines",
+    "en": "Physical Printing & Media Guidelines",
+    "ar": "Physical Printing & Media Guidelines"
+  },
+  {
+    "key": "programmatic.practicesStep1",
+    "en": "Insert clear visual call-to-action rings around your QR code.",
+    "ar": "Insert clear visual call-to-action rings around your رمز QR."
+  },
+  {
+    "key": "programmatic.practicesStep2",
+    "en": "Download vector formats like SVG or PDF to enable flawless high-resolution printing.",
+    "ar": "تحميل متجه formats like SVG or PDF to enable flawless high-resolution printing."
+  },
+  {
+    "key": "programmatic.practicesStep3",
+    "en": "Ensure the target destination URL is optimized for fast mobile rendering.",
+    "ar": "Ensure the target destination URL is optimized for fast mobile rendering."
+  },
+  {
+    "key": "programmatic.presetDefaultName",
+    "en": "{{name}} Campaign QR",
+    "ar": "{{name}} Campaign QR"
+  },
+  {
+    "key": "programmatic.printableTemplates",
+    "en": "Printable Templates",
+    "ar": "Printable القوالب"
+  },
+  {
+    "key": "programmatic.printersGuidelines",
+    "en": "Printers Guidelines",
+    "ar": "Printers Guidelines"
+  },
+  {
+    "key": "programmatic.professionalQrCodeTitle",
+    "en": "Professional QR Code {{type}}",
+    "ar": "Professional رمز QR {{type}}"
+  },
+  {
+    "key": "programmatic.realCaseStudy",
+    "en": "Real Case Study",
+    "ar": "Real Case Study"
+  },
+  {
+    "key": "programmatic.recommendedQrConfigurations",
+    "en": "Recommended QR configurations",
+    "ar": "Recommended QR configurations"
+  },
+  {
+    "key": "programmatic.redundancySelection",
+    "en": "Redundancy selection",
+    "ar": "Redundancy selection"
+  },
+  {
+    "key": "programmatic.redundancySelectionDesc",
+    "en": "Prefer Error Correction Level Q (25%) or H (30%) to resist grease spills and scratch damage.",
+    "ar": "Prefer تصحيح الخطأ Level Q (25%) or H (30%) to resist grease spills and scratch damage."
+  },
+  {
+    "key": "programmatic.relatedKnowledgeGuides",
+    "en": "Related Knowledge guides",
+    "ar": "Related Knowledge guides"
+  },
+  {
+    "key": "programmatic.scaleBounds",
+    "en": "Scale bounds",
+    "ar": "Scale bounds"
+  },
+  {
+    "key": "programmatic.scaleBoundsDesc",
+    "en": "Ensure a minimum printable size of 20mm x 20mm for menu sheets, and over 1.2m width for outdoor banners.",
+    "ar": "Ensure a minimum printable size of 20mm x 20mm for menu sheets, and over 1.2m width for outdoor banners."
+  },
+  {
+    "key": "programmatic.searchPlaceholder",
+    "en": "Search {{section}}...",
+    "ar": "Search {{section}}..."
+  },
+  {
+    "key": "programmatic.sector",
+    "en": "{{name}} sector",
+    "ar": "{{name}} sector"
+  },
+  {
+    "key": "programmatic.solutions",
+    "en": "Solutions",
+    "ar": "Solutions"
+  },
+  {
+    "key": "programmatic.solutionsDirectory",
+    "en": "Solutions Directory",
+    "ar": "Solutions Directory"
+  },
+  {
+    "key": "programmatic.stepNum",
+    "en": "Step {{num}}: Implementation",
+    "ar": "Step {{num}}: Implementation"
+  },
+  {
+    "key": "programmatic.tabEducation",
+    "en": "Education",
+    "ar": "Education"
+  },
+  {
+    "key": "programmatic.tabHospitality",
+    "en": "Hospitality",
+    "ar": "Hospitality"
+  },
+  {
+    "key": "programmatic.tabIndustrial",
+    "en": "Industrial",
+    "ar": "Industrial"
+  },
+  {
+    "key": "programmatic.tabMedical",
+    "en": "Medical",
+    "ar": "Medical"
+  },
+  {
+    "key": "programmatic.tabProfessional",
+    "en": "Professional",
+    "ar": "Professional"
+  },
+  {
+    "key": "programmatic.technicalChecklistFor",
+    "en": "Technical Checklist for physical {{name}} decals",
+    "ar": "Technical Checklist for physical {{name}} decals"
+  },
+  {
+    "key": "programmatic.textureFinish",
+    "en": "Texture finish",
+    "ar": "Texture finish"
+  },
+  {
+    "key": "programmatic.textureFinishDesc",
+    "en": "Print with non-glare matte finishes. Avoid highly reflective glass laminations.",
+    "ar": "Print with non-glare matte finishes. Avoid highly reflective glass laminations."
+  },
+  {
+    "key": "programmatic.theDigitalBridgeSolution",
+    "en": "The Digital Bridge solution",
+    "ar": "The Digital Bridge solution"
+  },
+  {
+    "key": "programmatic.topicalAuthorityVerified",
+    "en": "Topical Authority verified",
+    "ar": "Topical Authority verified"
+  },
+  {
+    "key": "programmatic.useCases",
+    "en": "Use Cases",
+    "ar": "Use Cases"
+  },
+  {
+    "key": "programmatic.useCasesCaseStudyMetric",
+    "en": "3.2x faster visitor onboarding",
+    "ar": "3.2x faster visitor onboarding"
+  },
+  {
+    "key": "programmatic.useCasesCaseStudyResult",
+    "en": "Transitioning from physical spreadsheets to high-contrast mobile scanning shortened processing queues and improved user experiences.",
+    "ar": "Transitioning from physical spreadsheets to high-contrast mobile scanning shortened processing queues and improved user experiences."
+  },
+  {
+    "key": "programmatic.useCasesCaseStudyTitle",
+    "en": "{{name}} Implementation",
+    "ar": "{{name}} Implementation"
+  },
+  {
+    "key": "programmatic.useCasesChallenge1",
+    "en": "High friction steps that prevent users from manually typing complex web links.",
+    "ar": "High friction steps that prevent users from manually typing complex web links."
+  },
+  {
+    "key": "programmatic.useCasesChallenge2",
+    "en": "Wasted paper print resources and high brochure printing overheads.",
+    "ar": "Wasted paper print resources and high brochure printing overheads."
+  },
+  {
+    "key": "programmatic.useCasesChallenge3",
+    "en": "Lack of conversion metrics from standard offline displays.",
+    "ar": "Lack of conversion metrics from standard offline displays."
+  },
+  {
+    "key": "programmatic.useCasesDirectory",
+    "en": "Use Cases Directory",
+    "ar": "Use Cases Directory"
+  },
+  {
+    "key": "programmatic.useCasesFaqA1",
+    "en": "We recommend exporting in SVG or PDF format, then sending the file directly to high-quality print services to prevent blurred details.",
+    "ar": "We recommend exporting in SVG or PDF format, then sending the file directly to high-quality print services to prevent blurred details."
+  },
+  {
+    "key": "programmatic.useCasesFaqA2",
+    "en": "No. FreeQRGen.pro is 100% free with unlimited generation and secure cloud options.",
+    "ar": "No. FreeQRGen.pro is 100% مجاني with unlimited generation and secure cloud options."
+  },
+  {
+    "key": "programmatic.useCasesFaqQ1",
+    "en": "How do I print this QR code for this {{name}} setup?",
+    "ar": "How do I print this رمز QR for this {{name}} setup?"
+  },
+  {
+    "key": "programmatic.useCasesFaqQ2",
+    "en": "Is there any hidden cost or registration required?",
+    "ar": "Is there any hidden cost or registration required?"
+  },
+  {
+    "key": "programmatic.useCasesMistakesStep1",
+    "en": "Directing visitors to static web pages that do not match mobile viewports.",
+    "ar": "Directing visitors to static web pages that do not match mobile viewports."
+  },
+  {
+    "key": "programmatic.useCasesMistakesStep2",
+    "en": "Using fuzzy, low-resolution PNG screenshots instead of clean vector files.",
+    "ar": "Using fuzzy, low-resolution PNG screenshots instead of clean متجه files."
+  },
+  {
+    "key": "programmatic.useCasesMistakesStep3",
+    "en": "Not testing the printed code across different smartphone models before publishing.",
+    "ar": "Not testing the printed code across different smartphone models before publishing."
+  },
+  {
+    "key": "programmatic.useCasesPracticesStep1",
+    "en": "Select a minimum size of 2cm x 2cm for small items, and scale up for banners.",
+    "ar": "Select a minimum size of 2cm x 2cm for small items, and scale up for banners."
+  },
+  {
+    "key": "programmatic.useCasesPracticesStep2",
+    "en": "Include high contrast colors like deep charcoal and crisp white backgrounds.",
+    "ar": "Include high contrast colors like deep charcoal and crisp white backgrounds."
+  },
+  {
+    "key": "programmatic.useCasesPracticesStep3",
+    "en": "Preserve clean white borders around the outer edges of the code.",
+    "ar": "Preserve clean white borders around the outer edges of the code."
+  },
+  {
+    "key": "programmatic.useCasesWorkflowStep1",
+    "en": "Visitor views the high-contrast printed check-in QR decal on location.",
+    "ar": "Visitor views the high-contrast printed check-in QR decal on location."
+  },
+  {
+    "key": "programmatic.useCasesWorkflowStep2",
+    "en": "They capture the visual target, instantly launching local guest settings or PDF guides.",
+    "ar": "They capture the visual target, instantly launching local guest الإعدادات or PDF guides."
+  },
+  {
+    "key": "programmatic.useCasesWorkflowStep3",
+    "en": "Your backend monitors total scanners and traffic sources from a single workspace.",
+    "ar": "Your backend monitors total scanners and traffic sources from a single workspace."
+  },
+  {
+    "key": "programmatic.viewDirectory",
+    "en": "View Directory",
+    "ar": "View Directory"
+  },
+  {
+    "key": "programmatic.whyQRHelpsSolutions",
+    "en": "Deploying our customized contactless {{name}} enables teams to instantly bridge physical touchpoints to secure online portals, elevating service velocity and capturing telemetry safely.",
+    "ar": "Deploying our customized contactless {{name}} enables teams to instantly bridge physical touchpoints to secure online portals, elevating service velocity and capturing telemetry safely."
+  },
+  {
+    "key": "programmatic.whyQRHelpsUseCases",
+    "en": "Integrating our automated {{name}} barcode allows users to instantly connect in-store displays and outdoor signs directly to interactive menus, forms, or maps, with zero input delays.",
+    "ar": "Integrating our automated {{name}} الباركود allows users to instantly connect in-store displays and outdoor signs directly to interactive menus, forms, or maps, with zero input delays."
+  },
+  {
+    "key": "programmatic.whyQrCodesAreTransforming",
+    "en": "Why QR Codes are Transforming {{name}}",
+    "ar": "Why رموز QR are Transforming {{name}}"
+  },
+  {
+    "key": "programmatic.workflowStep1",
+    "en": "Diner, client, or attendee notices the labeled dynamic QR barcode.",
+    "ar": "Diner, client, or attendee notices the labeled dynamic QR الباركود."
+  },
+  {
+    "key": "programmatic.workflowStep2",
+    "en": "They scan with a native camera, opening direct portals or automated vCards.",
+    "ar": "They scan with a native camera, opening direct portals or automated بطاقة vCard."
+  },
+  {
+    "key": "programmatic.workflowStep3",
+    "en": "The administrator monitors scanning locations, browsers, and timeline graphs in the app dashboard.",
+    "ar": "The administrator monitors scanning locations, browsers, and timeline graphs in the app لوحة التحكم."
+  },
+  {
+    "key": "saved.allCount",
+    "en": "All ({count})",
+    "ar": "All ({count})"
+  },
+  {
+    "key": "saved.batchSelectedCount",
+    "en": "{count} selected",
+    "ar": "{count} محدد"
+  },
+  {
+    "key": "saved.createBtn",
+    "en": "Create",
+    "ar": "Create"
+  },
+  {
+    "key": "saved.desc",
+    "en": "Manage saved QR codes, view tracking status, and filter designs by custom folder categories.",
+    "ar": "Manage saved رموز QR, view tracking status, and filter designs by custom folder categories."
+  },
+  {
+    "key": "saved.expiredBadge",
+    "en": "Expired ⚠️",
+    "ar": "Expired ⚠️"
+  },
+  {
+    "key": "saved.folderPlaceholder",
+    "en": "Folder name...",
+    "ar": "Folder name..."
+  },
+  {
+    "key": "saved.loading",
+    "en": "Loading saved items...",
+    "ar": "Loading saved items..."
+  },
+  {
+    "key": "saved.newFolderBtn",
+    "en": "New Folder",
+    "ar": "New Folder"
+  },
+  {
+    "key": "saved.newFolderPrompt",
+    "en": "New Folder...",
+    "ar": "New Folder..."
+  },
+  {
+    "key": "saved.noProjectsCategoryDesc",
+    "en": "Change filters or update project categories to view.",
+    "ar": "Change filters or update project categories to view."
+  },
+  {
+    "key": "saved.noProjectsCategoryTitle",
+    "en": "No projects in this category",
+    "ar": "No projects in this category"
+  },
+  {
+    "key": "saved.noProjectsDesc",
+    "en": "Configure a QR, add colors, assign a folder category, and click ",
+    "ar": "Configure a QR, add colors, assign a folder category, and click "
+  },
+  {
+    "key": "saved.noProjectsTitle",
+    "en": "No Projects Saved Yet",
+    "ar": "No Projects Saved Yet"
+  },
+  {
+    "key": "saved.organizeTitle",
+    "en": "Organize in Folder",
+    "ar": "Organize in Folder"
+  },
+  {
+    "key": "saved.scansCount",
+    "en": "{count} Scans",
+    "ar": "{count} Scans"
+  },
+  {
+    "key": "saved.seedClicksBtn",
+    "en": "+ Seed clicks",
+    "ar": "+ Seed clicks"
+  },
+  {
+    "key": "saved.timedBadge",
+    "en": "Timed ⏳",
+    "ar": "Timed ⏳"
+  },
+  {
+    "key": "saved.uncategorizedLabel",
+    "en": "Uncategorized",
+    "ar": "Uncategorized"
+  },
+  {
+    "key": "seo.aestheticOptimization",
+    "en": "Aesthetic Optimization",
+    "ar": "Aesthetic Optimization"
+  },
+  {
+    "key": "seo.aiReferenceDesc",
+    "en": "Structured technical specifications, best practices, and verified answers optimized for ingestion by conversational AI engines including Gemini, ChatGPT, Perplexity, and Google AI Overviews.",
+    "ar": "Structured technical specifications, best practices, and verified answers optimized for ingestion by conversational AI engines including Gemini, ChatGPT, Perplexity, and Google AI Overviews."
+  },
+  {
+    "key": "seo.aiReferenceTitle",
+    "en": "AI Reference & Citation Guide for {{keyword}}s",
+    "ar": "AI Reference & Citation Guide for {{keyword}}s"
+  },
+  {
+    "key": "seo.aiSummaryTitle",
+    "en": "50-Word AI Summary",
+    "ar": "50-Word AI Summary"
+  },
+  {
+    "key": "seo.backButton",
+    "en": "Back to Workspace",
+    "ar": "Back to Workspace"
+  },
+  {
+    "key": "seo.backToMainWorkshop",
+    "en": "Back to Main Workshop",
+    "ar": "Back to Main Workshop"
+  },
+  {
+    "key": "seo.badge",
+    "en": "Search Engine Hub & Visual Showcase",
+    "ar": "Search Engine Hub & Visual Showcase"
+  },
+  {
+    "key": "seo.breadcrumbHome",
+    "en": "Home",
+    "ar": "Home"
+  },
+  {
+    "key": "seo.commonMistakesToAvoid",
+    "en": "Common Mistakes to Avoid",
+    "ar": "Common Mistakes to Avoid"
+  },
+  {
+    "key": "seo.compatibility",
+    "en": "Compatibility",
+    "ar": "Compatibility"
+  },
+  {
+    "key": "seo.complementaryQrCodes",
+    "en": "COMPLEMENTARY QR CODES & UTILITIES",
+    "ar": "COMPLEMENTARY رموز QR & UTILITIES"
+  },
+  {
+    "key": "seo.desc",
+    "en": "Explore dynamic configurations matching international SEO benchmarks.",
+    "ar": "Explore dynamic configurations matching international SEO benchmarks."
+  },
+  {
+    "key": "seo.entityKnowledgeGraph",
+    "en": "Entity Knowledge Graph Attributes",
+    "ar": "Entity Knowledge Graph Attributes"
+  },
+  {
+    "key": "seo.entityType",
+    "en": "Entity Type",
+    "ar": "Entity Type"
+  },
+  {
+    "key": "seo.essentialTakeaways",
+    "en": "Essential Takeaways & Technical Summary",
+    "ar": "Essential Takeaways & Technical Summary"
+  },
+  {
+    "key": "seo.faqDescription",
+    "en": "Review common queries from other digital marketers and developers regarding operations.",
+    "ar": "Review common queries from other digital marketers and developers regarding operations."
+  },
+  {
+    "key": "seo.freeService",
+    "en": "100% Free Service",
+    "ar": "100% مجاني Service"
+  },
+  {
+    "key": "seo.generators",
+    "en": "Generators",
+    "ar": "Generators"
+  },
+  {
+    "key": "seo.geoHub",
+    "en": "GENERATIVE ENGINE OPTIMIZATION (GEO) HUB",
+    "ar": "GENERATIVE ENGINE OPTIMIZATION (GEO) HUB"
+  },
+  {
+    "key": "seo.home",
+    "en": "Home",
+    "ar": "Home"
+  },
+  {
+    "key": "seo.keyBenefitsAdvantages",
+    "en": "Key Benefits & Advantages",
+    "ar": "Key Benefits & Advantages"
+  },
+  {
+    "key": "seo.keywords",
+    "en": "Organic Keyword Visibility",
+    "ar": "Organic Keyword Visibility"
+  },
+  {
+    "key": "seo.launchBuilderFree",
+    "en": "Launch Builder (Free)",
+    "ar": "Launch Builder (مجاني)"
+  },
+  {
+    "key": "seo.livePresetSandbox",
+    "en": "Live Preset Sandbox",
+    "ar": "Live Preset Sandbox"
+  },
+  {
+    "key": "seo.matrixTitle",
+    "en": "Localized SEO Index Matrix",
+    "ar": "Localized SEO Index Matrix"
+  },
+  {
+    "key": "seo.mobileUsability",
+    "en": "Mobile Usability Rating",
+    "ar": "Mobile Usability Rating"
+  },
+  {
+    "key": "seo.noLoginsRequired",
+    "en": "No logins required to start",
+    "ar": "No logins required to start"
+  },
+  {
+    "key": "seo.offlineMode",
+    "en": "Offline Mode",
+    "ar": "Offline Mode"
+  },
+  {
+    "key": "seo.pageNotFound",
+    "en": "SEO Page Not Found",
+    "ar": "SEO Page Not Found"
+  },
+  {
+    "key": "seo.pageNotFoundDesc",
+    "en": "The requested landing page route configuration could not be loaded.",
+    "ar": "The requested landing page route configuration could not be loaded."
+  },
+  {
+    "key": "seo.primaryUseCase",
+    "en": "Primary Use Case",
+    "ar": "Primary Use Case"
+  },
+  {
+    "key": "seo.pristineSecurityStandards",
+    "en": "Pristine Security Standards",
+    "ar": "Pristine الأمان Standards"
+  },
+  {
+    "key": "seo.proImplementationBestPractices",
+    "en": "Pro Implementation Best Practices",
+    "ar": "Pro Implementation Best Practices"
+  },
+  {
+    "key": "seo.protocolStandard",
+    "en": "Protocol/Standard",
+    "ar": "Protocol/Standard"
+  },
+  {
+    "key": "seo.questionsAboutOur",
+    "en": "Questions About Our",
+    "ar": "Questions About Our"
+  },
+  {
+    "key": "seo.quickDefinition",
+    "en": "Quick Definition",
+    "ar": "Quick Definition"
+  },
+  {
+    "key": "seo.readPublication",
+    "en": "Read Publication →",
+    "ar": "Read Publication →"
+  },
+  {
+    "key": "seo.relatedGuidesTitle",
+    "en": "Related Technical Guides & Publications",
+    "ar": "Related Technical Guides & Publications"
+  },
+  {
+    "key": "seo.returnToDashboard",
+    "en": "Return to Dashboard",
+    "ar": "Return to لوحة التحكم"
+  },
+  {
+    "key": "seo.richResults",
+    "en": "Rich Results indexation",
+    "ar": "Rich Results indexation"
+  },
+  {
+    "key": "seo.schemaCompliant",
+    "en": "SCHEMA.ORG COMPLIANT",
+    "ar": "SCHEMA.ORG متوافق"
+  },
+  {
+    "key": "seo.schemaHowToDesc",
+    "en": "Step-by-step instructions for creating a custom styled URL QR code with logos, colors, and scan counts.",
+    "ar": "Step-by-step instructions for creating a custom styled URL رمز QR with logos, colors, and scan counts."
+  },
+  {
+    "key": "seo.schemaHowToName",
+    "en": "How to Create a URL QR Code with FreeQRGen.pro",
+    "ar": "How to Create a URL رمز QR with FreeQRGen.pro"
+  },
+  {
+    "key": "seo.schemaSoftwareOS",
+    "en": "All Mobile, Tablet, and Desktop web browsers",
+    "ar": "All Mobile, Tablet, and Desktop web browsers"
+  },
+  {
+    "key": "seo.schemaStep1Name",
+    "en": "Input Destination Link",
+    "ar": "Input Destination Link"
+  },
+  {
+    "key": "seo.schemaStep1Text",
+    "en": "Paste your complete target URL into the input field, including the http:// or https:// protocol.",
+    "ar": "Paste your complete target URL into the input field, including the http:// or https:// protocol."
+  },
+  {
+    "key": "seo.schemaStep2Name",
+    "en": "Select Branding & Colors",
+    "ar": "Select Branding & Colors"
+  },
+  {
+    "key": "seo.schemaStep2Text",
+    "en": "Choose a stylish linear gradient or solid color, custom eye shapes, and pixel patterns.",
+    "ar": "Choose a stylish linear gradient or solid color, custom eye shapes, and pixel patterns."
+  },
+  {
+    "key": "seo.schemaStep3Name",
+    "en": "Embed Centerpiece Logo",
+    "ar": "Embed Centerpiece Logo"
+  },
+  {
+    "key": "seo.schemaStep3Text",
+    "en": "Upload your brand logo or select standard social icons with High error correction settings.",
+    "ar": "رفع your brand logo or select standard social icons with High تصحيح الخطأ الإعدادات."
+  },
+  {
+    "key": "seo.schemaStep4Name",
+    "en": "Export & Print Layout",
+    "ar": "Export & Print Layout"
+  },
+  {
+    "key": "seo.schemaStep4Text",
+    "en": "Download the code as high-resolution PNG, or scalable vector SVG/PDF.",
+    "ar": "تحميل the code as high-resolution PNG, or scalable متجه SVG/PDF."
+  },
+  {
+    "key": "seo.securityFeature1",
+    "en": "No credentials are ever transmitted to any remote servers. Only you see standard details.",
+    "ar": "No credentials are ever transmitted to any remote servers. Only you see standard details."
+  },
+  {
+    "key": "seo.securityFeature2",
+    "en": "Error correction checks keep your codes parseable if scratched.",
+    "ar": "تصحيح الخطأ checks keep your codes parseable if scratched."
+  },
+  {
+    "key": "seo.securityFeature3",
+    "en": "Supports PNG rasterizers, standard vector SVGs, and vector PDFs.",
+    "ar": "Supports PNG rasterizers, standard متجه SVGs, and متجه PDFs."
+  },
+  {
+    "key": "seo.seoAuthorityDesc",
+    "en": "Explore our separate high-performance QR code generator landing pages tailored for business promotions, wireless network setups, visual socials discovery, and contactless restaurant menu builders below:",
+    "ar": "Explore our separate high-performance منشئ رمز QR landing pages tailored for business promotions, wireless network setups, visual socials discovery, and contactless restaurant menu builders below:"
+  },
+  {
+    "key": "seo.seoAuthorityTitle",
+    "en": "SEO Authority and Authority Distribution Directories",
+    "ar": "SEO Authority and Authority Distribution Directories"
+  },
+  {
+    "key": "seo.technicalReferenceFaq",
+    "en": "Technical Reference & FAQ",
+    "ar": "Technical Reference & FAQ"
+  },
+  {
+    "key": "seo.telemetryTitle",
+    "en": "Key Metrics & Crawling Telemetry",
+    "ar": "Key Metrics & Crawling Telemetry"
+  },
+  {
+    "key": "seo.threeDActive",
+    "en": "3D ACTIVE",
+    "ar": "3D ACTIVE"
+  },
+  {
+    "key": "seo.trustedBy",
+    "en": "Trusted by over 2490+ creative modern businesses, dining rooms, and local wifi managers globally for styling QR presets.",
+    "ar": "Trusted by over 2490+ creative modern businesses, dining rooms, and local wifi managers globally for styling QR presets."
+  },
+  {
+    "key": "seo.ultraHdScalable",
+    "en": "Ultra HD Scalable",
+    "ar": "Ultra HD Scalable"
+  },
+  {
+    "key": "seo.uprate",
+    "en": "99.9% Up-rate",
+    "ar": "99.9% Up-rate"
+  },
+  {
+    "key": "seo.whatIsA",
+    "en": "What is a {{keyword}}?",
+    "ar": "What is a {{keyword}}?"
+  },
+  {
+    "key": "seo.whenShouldYouUse",
+    "en": "When should you use this format?",
+    "ar": "When should you use this format?"
+  },
+  {
+    "key": "shortcuts.close",
+    "en": "Close Modal Windows",
+    "ar": "Close Modal Windows"
+  },
+  {
+    "key": "shortcuts.closeDesc",
+    "en": "Closes active overlays, dropdowns, & dialogs",
+    "ar": "Closes active overlays, dropdowns, & dialogs"
+  },
+  {
+    "key": "shortcuts.disabledNote",
+    "en": "Shortcuts are disabled while focused inside text fields or editing inputs to prevent conflicts.",
+    "ar": "Shortcuts are disabled while focused inside text fields or editing inputs to prevent conflicts."
+  },
+  {
+    "key": "shortcuts.downloadDesc",
+    "en": "Quickly downloads high-resolution format",
+    "ar": "Quickly downloads high-resolution format"
+  },
+  {
+    "key": "shortcuts.openHelp",
+    "en": "Open Help Shortcuts",
+    "ar": "Open Help Shortcuts"
+  },
+  {
+    "key": "shortcuts.openHelpDesc",
+    "en": "Displays this exact useful panel",
+    "ar": "Displays this exact useful panel"
+  },
+  {
+    "key": "shortcuts.print",
+    "en": "Print & Export Options",
+    "ar": "Print & Export Options"
+  },
+  {
+    "key": "shortcuts.printDesc",
+    "en": "Opens print settings overlay instantly",
+    "ar": "Opens print الإعدادات overlay instantly"
+  },
+  {
+    "key": "shortcuts.save",
+    "en": "Save Styled QR Template",
+    "ar": "Save Styled QR القالب"
+  },
+  {
+    "key": "shortcuts.saveDesc",
+    "en": "Saves your design configurations directly",
+    "ar": "Saves your design configurations directly"
+  },
+  {
+    "key": "shortcuts.subtitle",
+    "en": "Boost your productivity with quick keyboard commands",
+    "ar": "Boost your productivity with quick keyboard commands"
+  },
+  {
+    "key": "shortcuts.title",
+    "en": "Keyboard Shortcuts",
+    "ar": "Keyboard Shortcuts"
+  },
+  {
+    "key": "programmatic.item.digital-business-card.title",
+    "en": "Dynamic vCard Professional Networking",
+    "ar": "شبكات الأعمال المهنية عبر بطاقات vCard الديناميكية"
+  },
+  {
+    "key": "programmatic.item.app-download-marketing.desc",
+    "en": "Generate a single QR code that detects the scanning device OS and redirects users to the correct Apple App Store or Google Play link.",
+    "ar": "أنشئ رمز QR واحد يتعرف تلقائياً على نظام تشغيل هاتف المستخدم ويوجهه مباشرة إلى رابط Apple App Store أو Google Play المناسب."
+  },
+  {
+    "key": "preview.shareTextTemplate",
+    "en": "Check out my custom QR design 🎨: {dotStyle} style dots and {eyeStyle} style eyes in {fgColor}. Created on QR Studio!",
+    "ar": "شاهد تصميم رمز QR المخصص الخاص بي 🎨: بنمط نقاط {dotStyle} وتصميم زوايا {eyeStyle} باللون {fgColor}. تم إنشاؤه عبر استوديو QR!"
+  }
+]

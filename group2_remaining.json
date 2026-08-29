@@ -1,0 +1,1542 @@
+[
+  {
+    "key": "i18n.coverage",
+    "en": "Coverage",
+    "ar": "Coverage"
+  },
+  {
+    "key": "i18n.coverageDescriptionPart1",
+    "en": "Evaluates core keys against 14 critical regions. Target enterprise benchmark is",
+    "ar": "Evaluates core keys against 14 critical regions. Target المؤسسات benchmark is"
+  },
+  {
+    "key": "i18n.coverageDescriptionPart2",
+    "en": "or higher. If some locales show lower coverage, download translations in the",
+    "ar": "or higher. If some locales show lower coverage, تحميل translations in the"
+  },
+  {
+    "key": "i18n.coverageOverview",
+    "en": "Coverage Overview",
+    "ar": "Coverage نظرة عامة"
+  },
+  {
+    "key": "i18n.currency",
+    "en": "Currency",
+    "ar": "Currency"
+  },
+  {
+    "key": "i18n.currencyLabel",
+    "en": "Currency",
+    "ar": "Currency"
+  },
+  {
+    "key": "i18n.customDynamicGrids",
+    "en": "Custom Dynamic Grids",
+    "ar": "Custom Dynamic Grids"
+  },
+  {
+    "key": "i18n.date",
+    "en": "Date",
+    "ar": "Date"
+  },
+  {
+    "key": "i18n.dateLabel",
+    "en": "Date",
+    "ar": "Date"
+  },
+  {
+    "key": "i18n.developerExporter",
+    "en": "Developer Exporter",
+    "ar": "Developer Exporter"
+  },
+  {
+    "key": "i18n.developerExporterDesc",
+    "en": "Extract all currently active and expected translation keys as localized JSON blueprints for standard outsourcing or deployment.",
+    "ar": "Extract all currently active and expected translation keys as localized JSON blueprints for standard outsourcing or deployment."
+  },
+  {
+    "key": "i18n.developerExporterTitle",
+    "en": "Developer Translation Key Exporter",
+    "ar": "Developer Translation Key Exporter"
+  },
+  {
+    "key": "i18n.diagnosticsDesc",
+    "en": "Scan loaded files and evaluate missing, unused, duplicate, and malformed ICU strings.",
+    "ar": "Scan loaded files and evaluate missing, unused, duplicate, and malformed ICU strings."
+  },
+  {
+    "key": "i18n.diagnosticsLogsConsole",
+    "en": "DIAGNOSTICS LOGS Console v1.4",
+    "ar": "DIAGNOSTICS LOGS Console v1.4"
+  },
+  {
+    "key": "i18n.diagnosticsTitle",
+    "en": "Translation Diagnostics & ICU Auditing",
+    "ar": "Translation Diagnostics & ICU Auditing"
+  },
+  {
+    "key": "i18n.downloadCatalog",
+    "en": "Download Key Catalog for Translation",
+    "ar": "تحميل Key Catalog for Translation"
+  },
+  {
+    "key": "i18n.downloadKeyCatalog",
+    "en": "Download Key Catalog for Translation",
+    "ar": "تحميل Key Catalog for Translation"
+  },
+  {
+    "key": "i18n.drawerMenu",
+    "en": "DRAWER MENU",
+    "ar": "DRAWER MENU"
+  },
+  {
+    "key": "i18n.dropdownDesc",
+    "en": "Notice how the arrow icon and dropdown panel dynamically adjust alignment.",
+    "ar": "Notice how the arrow icon and dropdown panel dynamically adjust alignment."
+  },
+  {
+    "key": "i18n.dropdownTitle",
+    "en": "1. Dropdown & Placement Mirror",
+    "ar": "1. Dropdown & Placement Mirror"
+  },
+  {
+    "key": "i18n.englishSource",
+    "en": "English (Source)",
+    "ar": "English (Source)"
+  },
+  {
+    "key": "i18n.enterpriseCore",
+    "en": "ENTERPRISE CORE",
+    "ar": "المؤسسات CORE"
+  },
+  {
+    "key": "i18n.errors",
+    "en": "errors",
+    "ar": "errors"
+  },
+  {
+    "key": "i18n.errorsOnly",
+    "en": "Errors Only",
+    "ar": "Errors Only"
+  },
+  {
+    "key": "i18n.evaluatesCoreKeys",
+    "en": "Evaluates core keys against 14 critical regions. Target enterprise benchmark is ",
+    "ar": "Evaluates core keys against 14 critical regions. Target المؤسسات benchmark is "
+  },
+  {
+    "key": "i18n.exportAllExpectedDesc1",
+    "en": "Creates a standardized dictionary skeleton containing all ",
+    "ar": "Creates a standardized dictionary skeleton containing all "
+  },
+  {
+    "key": "i18n.exportAllExpectedDesc2",
+    "en": " registered system keys pre-filled with English defaults.",
+    "ar": " registered system keys pre-filled with English defaults."
+  },
+  {
+    "key": "i18n.exportAllExpectedKeys",
+    "en": "Export All Expected Keys",
+    "ar": "Export All Expected Keys"
+  },
+  {
+    "key": "i18n.exportAllKeysDescPart1",
+    "en": "Creates a standardized dictionary skeleton containing all",
+    "ar": "Creates a standardized dictionary skeleton containing all"
+  },
+  {
+    "key": "i18n.exportAllKeysDescPart2",
+    "en": "registered system keys pre-filled with English defaults.",
+    "ar": "registered system keys pre-filled with English defaults."
+  },
+  {
+    "key": "i18n.exportAllKeysTitle",
+    "en": "Export All Expected Keys",
+    "ar": "Export All Expected Keys"
+  },
+  {
+    "key": "i18n.exportEnglishMasterJson",
+    "en": "Export English Master JSON",
+    "ar": "Export English Master JSON"
+  },
+  {
+    "key": "i18n.exportJsonButton",
+    "en": "Export JSON",
+    "ar": "Export JSON"
+  },
+  {
+    "key": "i18n.exportPartialLocaleDesc",
+    "en": "Export translation blueprints pre-populated with keys that have already been translated in our local file cache.",
+    "ar": "Export translation blueprints pre-populated with keys that have already been translated in our local file cache."
+  },
+  {
+    "key": "i18n.exportPartialLocaleTemplate",
+    "en": "Export Partial Locale Template",
+    "ar": "Export Partial Locale القالب"
+  },
+  {
+    "key": "i18n.exportPartialTemplateDesc",
+    "en": "Export translation blueprints pre-populated with keys that have already been translated in our local file cache.",
+    "ar": "Export translation blueprints pre-populated with keys that have already been translated in our local file cache."
+  },
+  {
+    "key": "i18n.exportPartialTemplateTitle",
+    "en": "Export Partial Locale Template",
+    "ar": "Export Partial Locale القالب"
+  },
+  {
+    "key": "i18n.exporter",
+    "en": "Exporter",
+    "ar": "Exporter"
+  },
+  {
+    "key": "i18n.exporterDesc",
+    "en": "Extract all currently active and expected translation keys as localized JSON blueprints for standard outsourcing or deployment.",
+    "ar": "Extract all currently active and expected translation keys as localized JSON blueprints for standard outsourcing or deployment."
+  },
+  {
+    "key": "i18n.exporterTabBold",
+    "en": "Exporter",
+    "ar": "Exporter"
+  },
+  {
+    "key": "i18n.exporterTitle",
+    "en": "Developer Translation Key Exporter",
+    "ar": "Developer Translation Key Exporter"
+  },
+  {
+    "key": "i18n.footerText",
+    "en": "FreeQRGen.pro Internationalization Framework © 2026. Constructed in full conformance with SEO-localized JSON-LD and ICU standards.",
+    "ar": "FreeQRGen.pro Internationalization Framework © 2026. Constructed in full conformance with SEO-localized JSON-LD and ICU standards."
+  },
+  {
+    "key": "i18n.fourteenLocales",
+    "en": "14 Locales Connected",
+    "ar": "14 Locales Connected"
+  },
+  {
+    "key": "i18n.fourteenTargetRegions",
+    "en": "14 target regions",
+    "ar": "14 target regions"
+  },
+  {
+    "key": "i18n.fourteenTargets",
+    "en": "14 localization targets",
+    "ar": "14 localization targets"
+  },
+  {
+    "key": "i18n.globalAlignmentScore",
+    "en": "Global Translation Alignment Score",
+    "ar": "Global Translation Alignment Score"
+  },
+  {
+    "key": "i18n.globalCov",
+    "en": "GLOBAL COV",
+    "ar": "GLOBAL COV"
+  },
+  {
+    "key": "i18n.hubViews",
+    "en": "HUB VIEWS",
+    "ar": "HUB VIEWS"
+  },
+  {
+    "key": "i18n.icuEngineOk",
+    "en": "ICU Engine OK",
+    "ar": "ICU Engine OK"
+  },
+  {
+    "key": "i18n.incomplete",
+    "en": "Incomplete",
+    "ar": "Incomplete"
+  },
+  {
+    "key": "i18n.infoDuplicatesOnly",
+    "en": "Info/Duplicates Only",
+    "ar": "Info/Duplicates Only"
+  },
+  {
+    "key": "i18n.initialized",
+    "en": "Initialized",
+    "ar": "Initialized"
+  },
+  {
+    "key": "i18n.invokedKeys",
+    "en": "Invoked Keys (Runtime)",
+    "ar": "Invoked Keys (Runtime)"
+  },
+  {
+    "key": "i18n.invokedKeysRuntime",
+    "en": "Invoked Keys (Runtime)",
+    "ar": "Invoked Keys (Runtime)"
+  },
+  {
+    "key": "i18n.keys",
+    "en": "keys",
+    "ar": "keys"
+  },
+  {
+    "key": "i18n.keysCount",
+    "en": "keys",
+    "ar": "keys"
+  },
+  {
+    "key": "i18n.keysLabel",
+    "en": "keys",
+    "ar": "keys"
+  },
+  {
+    "key": "i18n.langAr",
+    "en": "Arabic",
+    "ar": "Arabic"
+  },
+  {
+    "key": "i18n.langDe",
+    "en": "German",
+    "ar": "German"
+  },
+  {
+    "key": "i18n.langEn",
+    "en": "English (Source)",
+    "ar": "English (Source)"
+  },
+  {
+    "key": "i18n.langEs",
+    "en": "Spanish",
+    "ar": "Spanish"
+  },
+  {
+    "key": "i18n.langFr",
+    "en": "French",
+    "ar": "French"
+  },
+  {
+    "key": "i18n.langHi",
+    "en": "Hindi",
+    "ar": "Hindi"
+  },
+  {
+    "key": "i18n.langId",
+    "en": "Indonesian",
+    "ar": "Indonesian"
+  },
+  {
+    "key": "i18n.langIt",
+    "en": "Italian",
+    "ar": "Italian"
+  },
+  {
+    "key": "i18n.langJa",
+    "en": "Japanese",
+    "ar": "Japanese"
+  },
+  {
+    "key": "i18n.langKo",
+    "en": "Korean",
+    "ar": "Korean"
+  },
+  {
+    "key": "i18n.langPt",
+    "en": "Portuguese",
+    "ar": "Portuguese"
+  },
+  {
+    "key": "i18n.langTr",
+    "en": "Turkish",
+    "ar": "Turkish"
+  },
+  {
+    "key": "i18n.langUr",
+    "en": "Urdu",
+    "ar": "Urdu"
+  },
+  {
+    "key": "i18n.langZh",
+    "en": "Chinese",
+    "ar": "Chinese"
+  },
+  {
+    "key": "i18n.languageCode",
+    "en": "Language Code",
+    "ar": "Language Code"
+  },
+  {
+    "key": "i18n.languageCoveragePercentages",
+    "en": "Language Coverage Percentages",
+    "ar": "Language Coverage Percentages"
+  },
+  {
+    "key": "i18n.lazyLoadLatency",
+    "en": "LAZY LOAD LATENCY",
+    "ar": "LAZY LOAD LATENCY"
+  },
+  {
+    "key": "i18n.leftToRight",
+    "en": "Left-To-Right",
+    "ar": "Left-To-Right"
+  },
+  {
+    "key": "i18n.loaded",
+    "en": "loaded",
+    "ar": "loaded"
+  },
+  {
+    "key": "i18n.loadedLabel",
+    "en": "loaded",
+    "ar": "loaded"
+  },
+  {
+    "key": "i18n.localDataFootprint",
+    "en": "LOCAL DATA FOOTPRINT",
+    "ar": "LOCAL DATA FOOTPRINT"
+  },
+  {
+    "key": "i18n.localeFormatSample",
+    "en": "LOCALE FORMAT SAMPLE",
+    "ar": "LOCALE FORMAT SAMPLE"
+  },
+  {
+    "key": "i18n.localesConnected",
+    "en": "14 Locales Connected",
+    "ar": "14 Locales Connected"
+  },
+  {
+    "key": "i18n.localizationTargets",
+    "en": "14 localization targets",
+    "ar": "14 localization targets"
+  },
+  {
+    "key": "i18n.localizedDynamically",
+    "en": "Localized dynamically according to:",
+    "ar": "Localized dynamically according to:"
+  },
+  {
+    "key": "i18n.logAllChecksPassed",
+    "en": "ALL ENTERPRISE I18N CHECKS PASSED SUCCESSFULLY.",
+    "ar": "ALL المؤسسات I18N CHECKS PASSED SUCCESSFULLY."
+  },
+  {
+    "key": "i18n.logAuditingRtl",
+    "en": "Auditing RTL layout container mirrors for Arabic & Urdu...",
+    "ar": "Auditing RTL layout container mirrors for Arabic & Urdu..."
+  },
+  {
+    "key": "i18n.logComparingCodebasePrefix",
+    "en": "Comparing codebase calls against",
+    "ar": "Comparing codebase calls against"
+  },
+  {
+    "key": "i18n.logComparingCodebaseSuffix",
+    "en": "registered keys.",
+    "ar": "registered keys."
+  },
+  {
+    "key": "i18n.logExecutingIcu",
+    "en": "Executing ICU Message Plural-Choice evaluations...",
+    "ar": "Executing ICU Message Plural-Choice evaluations..."
+  },
+  {
+    "key": "i18n.logInitiatingSuite",
+    "en": "Initiating Regression Test Suite v1.4...",
+    "ar": "Initiating Regression Test Suite v1.4..."
+  },
+  {
+    "key": "i18n.logInterpolationCheck",
+    "en": "✓ Interpolation check passed.",
+    "ar": "✓ Interpolation check passed."
+  },
+  {
+    "key": "i18n.logMissingTranslation",
+    "en": "✓ Missing translation file handling: gracefully defaulted to fallback translations.",
+    "ar": "✓ Missing translation file handling: gracefully defaulted to fallback translations."
+  },
+  {
+    "key": "i18n.logPluralsEvaluator",
+    "en": "✓ Plurals evaluator resolving cardinal plural rules.",
+    "ar": "✓ Plurals evaluator resolving cardinal plural rules."
+  },
+  {
+    "key": "i18n.logRtlTransforms",
+    "en": "✓ RTL transforms match CSS logical properties.",
+    "ar": "✓ RTL transforms match CSS logical properties."
+  },
+  {
+    "key": "i18n.logSliderIndex",
+    "en": "✓ Slider index alignment validated.",
+    "ar": "✓ Slider index alignment validated."
+  },
+  {
+    "key": "i18n.logTestingLazy",
+    "en": "Testing Lazy Loaded Bundle network fallbacks...",
+    "ar": "Testing Lazy Loaded Bundle network fallbacks..."
+  },
+  {
+    "key": "i18n.logVerifyingAlignment",
+    "en": "Verifying Master Key Alignment with 14 supported locales...",
+    "ar": "Verifying Master Key Alignment with 14 supported locales..."
+  },
+  {
+    "key": "i18n.ltrDirection",
+    "en": "Left-To-Right",
+    "ar": "Left-To-Right"
+  },
+  {
+    "key": "i18n.ltrEnglishStyle",
+    "en": "LTR (English style)",
+    "ar": "LTR (English style)"
+  },
+  {
+    "key": "i18n.ltrStyle",
+    "en": "LTR (English style)",
+    "ar": "LTR (English style)"
+  },
+  {
+    "key": "i18n.masterKeyCatalog",
+    "en": "Master Key Catalog",
+    "ar": "Master Key Catalog"
+  },
+  {
+    "key": "i18n.networkSimulated",
+    "en": "Network simulated",
+    "ar": "Network simulated"
+  },
+  {
+    "key": "i18n.optimalActiveCaching",
+    "en": "Optimal (Active Caching)",
+    "ar": "Optimal (Active Caching)"
+  },
+  {
+    "key": "i18n.orHigher",
+    "en": " or higher. If some locales show lower coverage, download translations in the ",
+    "ar": " or higher. If some locales show lower coverage, تحميل translations in the "
+  },
+  {
+    "key": "i18n.percentage",
+    "en": "Percentage",
+    "ar": "Percentage"
+  },
+  {
+    "key": "i18n.percentageLabel",
+    "en": "Percentage",
+    "ar": "Percentage"
+  },
+  {
+    "key": "i18n.perfSuiteDesc",
+    "en": "Run automated end-to-end integration verifications to ensure all features work correctly.",
+    "ar": "Run automated end-to-end integration verifications to ensure all المميزات work correctly."
+  },
+  {
+    "key": "i18n.perfSuiteTitle",
+    "en": "Regression and Performance Auditing Suite",
+    "ar": "Regression and Performance Auditing Suite"
+  },
+  {
+    "key": "i18n.performanceAudit",
+    "en": "Performance Audit",
+    "ar": "Performance Audit"
+  },
+  {
+    "key": "i18n.performanceSuiteDesc",
+    "en": "Run automated end-to-end integration verifications to ensure all features work correctly.",
+    "ar": "Run automated end-to-end integration verifications to ensure all المميزات work correctly."
+  },
+  {
+    "key": "i18n.performanceSuiteTitle",
+    "en": "Regression and Performance Auditing Suite",
+    "ar": "Regression and Performance Auditing Suite"
+  },
+  {
+    "key": "i18n.platformLocale",
+    "en": "PLATFORM LOCALE",
+    "ar": "PLATFORM LOCALE"
+  },
+  {
+    "key": "i18n.platformTitle",
+    "en": "FreeQRGen.pro Translation Platform & Visual RTL QA Suite",
+    "ar": "FreeQRGen.pro Translation Platform & Visual RTL QA Suite"
+  },
+  {
+    "key": "i18n.qaLogComparing",
+    "en": "Comparing codebase calls against",
+    "ar": "Comparing codebase calls against"
+  },
+  {
+    "key": "i18n.qaLogIcu",
+    "en": "Executing ICU Message Plural-Choice evaluations...",
+    "ar": "Executing ICU Message Plural-Choice evaluations..."
+  },
+  {
+    "key": "i18n.qaLogInit",
+    "en": "Initiating Regression Test Suite v1.4...",
+    "ar": "Initiating Regression Test Suite v1.4..."
+  },
+  {
+    "key": "i18n.qaLogInterpolation",
+    "en": "✓ Interpolation check passed.",
+    "ar": "✓ Interpolation check passed."
+  },
+  {
+    "key": "i18n.qaLogLazy",
+    "en": "Testing Lazy Loaded Bundle network fallbacks...",
+    "ar": "Testing Lazy Loaded Bundle network fallbacks..."
+  },
+  {
+    "key": "i18n.qaLogMissing",
+    "en": "✓ Missing translation file handling: gracefully defaulted to fallback translations.",
+    "ar": "✓ Missing translation file handling: gracefully defaulted to fallback translations."
+  },
+  {
+    "key": "i18n.qaLogPlurals",
+    "en": "✓ Plurals evaluator resolving cardinal plural rules.",
+    "ar": "✓ Plurals evaluator resolving cardinal plural rules."
+  },
+  {
+    "key": "i18n.qaLogRegistered",
+    "en": "registered keys.",
+    "ar": "registered keys."
+  },
+  {
+    "key": "i18n.qaLogRtl",
+    "en": "Auditing RTL layout container mirrors for Arabic & Urdu...",
+    "ar": "Auditing RTL layout container mirrors for Arabic & Urdu..."
+  },
+  {
+    "key": "i18n.qaLogRtlTransforms",
+    "en": "✓ RTL transforms match CSS logical properties.",
+    "ar": "✓ RTL transforms match CSS logical properties."
+  },
+  {
+    "key": "i18n.qaLogSlider",
+    "en": "✓ Slider index alignment validated.",
+    "ar": "✓ Slider index alignment validated."
+  },
+  {
+    "key": "i18n.qaLogSuccess",
+    "en": "ALL ENTERPRISE I18N CHECKS PASSED SUCCESSFULLY.",
+    "ar": "ALL المؤسسات I18N CHECKS PASSED SUCCESSFULLY."
+  },
+  {
+    "key": "i18n.qaLogVerify",
+    "en": "Verifying Master Key Alignment with 14 supported locales...",
+    "ar": "Verifying Master Key Alignment with 14 supported locales..."
+  },
+  {
+    "key": "i18n.qaSuccessMessage",
+    "en": "Platform Regression Test Suite successful. Alignment with ICU and RTL modules fully validated.",
+    "ar": "Platform Regression Test Suite successful. Alignment with ICU and RTL modules fully validated."
+  },
+  {
+    "key": "i18n.reflectsDirection",
+    "en": "Reflects direction!",
+    "ar": "Reflects direction!"
+  },
+  {
+    "key": "i18n.regressionSuiteSuccess",
+    "en": "Platform Regression Test Suite successful. Alignment with ICU and RTL modules fully validated.",
+    "ar": "Platform Regression Test Suite successful. Alignment with ICU and RTL modules fully validated."
+  },
+  {
+    "key": "i18n.requested",
+    "en": "requested",
+    "ar": "requested"
+  },
+  {
+    "key": "i18n.requestedLabel",
+    "en": "requested",
+    "ar": "requested"
+  },
+  {
+    "key": "i18n.rightToLeft",
+    "en": "Right-To-Left",
+    "ar": "Right-To-Left"
+  },
+  {
+    "key": "i18n.rtlArabicStyle",
+    "en": "RTL (Arabic style)",
+    "ar": "RTL (Arabic style)"
+  },
+  {
+    "key": "i18n.rtlDesc",
+    "en": "Toggle container direction and test component mirroring, sidebars, drawer overlays, carousels, and dropdowns.",
+    "ar": "Toggle container direction and test component mirroring, sidebars, drawer overlays, carousels, and dropdowns."
+  },
+  {
+    "key": "i18n.rtlDirection",
+    "en": "Right-To-Left",
+    "ar": "Right-To-Left"
+  },
+  {
+    "key": "i18n.rtlSandbox",
+    "en": "RTL Animation Sandbox",
+    "ar": "RTL Animation Sandbox"
+  },
+  {
+    "key": "i18n.rtlSandboxDesc",
+    "en": "Toggle container direction and test component mirroring, sidebars, drawer overlays, carousels, and dropdowns.",
+    "ar": "Toggle container direction and test component mirroring, sidebars, drawer overlays, carousels, and dropdowns."
+  },
+  {
+    "key": "i18n.rtlSandboxTitle",
+    "en": "RTL Visual Layout & Micro-Interactions Testbed",
+    "ar": "RTL Visual Layout & Micro-Interactions Testbed"
+  },
+  {
+    "key": "i18n.rtlStyle",
+    "en": "RTL (Arabic style)",
+    "ar": "RTL (Arabic style)"
+  },
+  {
+    "key": "i18n.rtlTitle",
+    "en": "RTL Visual Layout & Micro-Interactions Testbed",
+    "ar": "RTL Visual Layout & Micro-Interactions Testbed"
+  },
+  {
+    "key": "i18n.runningE2ETests",
+    "en": "Running E2E tests...",
+    "ar": "Running E2E tests..."
+  },
+  {
+    "key": "i18n.runningE2eTests",
+    "en": "Running E2E tests...",
+    "ar": "Running E2E tests..."
+  },
+  {
+    "key": "i18n.runningValidator",
+    "en": "Running Validator...",
+    "ar": "Running Validator..."
+  },
+  {
+    "key": "i18n.sandboxConsole",
+    "en": "SANDBOX CONSOLE",
+    "ar": "SANDBOX CONSOLE"
+  },
+  {
+    "key": "i18n.searchPlaceholder",
+    "en": "Search issues or keys...",
+    "ar": "Search issues or keys..."
+  },
+  {
+    "key": "i18n.securedDataboxPresets",
+    "en": "Secured Databox Presets",
+    "ar": "Secured Databox Presets"
+  },
+  {
+    "key": "i18n.selectCategoryOptions",
+    "en": "Select Category Options",
+    "ar": "Select Category Options"
+  },
+  {
+    "key": "i18n.sessionEngine",
+    "en": "SESSION ENGINE",
+    "ar": "SESSION ENGINE"
+  },
+  {
+    "key": "i18n.severityLabel",
+    "en": "Severity:",
+    "ar": "Severity:"
+  },
+  {
+    "key": "i18n.sideDrawerSlides",
+    "en": "2. Side Drawer Slides",
+    "ar": "2. Side Drawer Slides"
+  },
+  {
+    "key": "i18n.source",
+    "en": "Source",
+    "ar": "Source"
+  },
+  {
+    "key": "i18n.staleWhileRevalidate",
+    "en": "Stale-While-Revalidate",
+    "ar": "Stale-While-Revalidate"
+  },
+  {
+    "key": "i18n.statusAlerts",
+    "en": "Status / Alerts",
+    "ar": "Status / Alerts"
+  },
+  {
+    "key": "i18n.step1Desc",
+    "en": "Configure size, design borders and matrix colors.",
+    "ar": "Configure size, design borders and matrix colors."
+  },
+  {
+    "key": "i18n.step1Title",
+    "en": "Step 1: Setup Grids",
+    "ar": "Step 1: Setup Grids"
+  },
+  {
+    "key": "i18n.step2Desc",
+    "en": "Add centerpiece branding logs & background.",
+    "ar": "Add centerpiece branding logs & background."
+  },
+  {
+    "key": "i18n.step2Title",
+    "en": "Step 2: Brand Identity",
+    "ar": "Step 2: Brand Identity"
+  },
+  {
+    "key": "i18n.step3Desc",
+    "en": "Sync redirection links and export templates.",
+    "ar": "Sync redirection links and export القوالب."
+  },
+  {
+    "key": "i18n.step3Title",
+    "en": "Step 3: Track Metrics",
+    "ar": "Step 3: Track Metrics"
+  },
+  {
+    "key": "i18n.stepCarouselAlignment",
+    "en": "3. Step Carousel Alignment",
+    "ar": "3. Step Carousel Alignment"
+  },
+  {
+    "key": "i18n.systemIdleDesc",
+    "en": "System idle. Click \"Trigger QA Suite\" above to run diagnostic tests.",
+    "ar": "System idle. Click \"Trigger QA Suite\" above to run diagnostic tests."
+  },
+  {
+    "key": "i18n.tabCoverageOverview",
+    "en": "Coverage Overview",
+    "ar": "Coverage نظرة عامة"
+  },
+  {
+    "key": "i18n.tabDeveloperExporter",
+    "en": "Developer Exporter",
+    "ar": "Developer Exporter"
+  },
+  {
+    "key": "i18n.tabPerformanceAudit",
+    "en": "Performance Audit",
+    "ar": "Performance Audit"
+  },
+  {
+    "key": "i18n.tabRtlAnimationSandbox",
+    "en": "RTL Animation Sandbox",
+    "ar": "RTL Animation Sandbox"
+  },
+  {
+    "key": "i18n.tabTranslationValidator",
+    "en": "Translation Validator",
+    "ar": "Translation Validator"
+  },
+  {
+    "key": "i18n.tableHeaderAlignment",
+    "en": "Alignment",
+    "ar": "Alignment"
+  },
+  {
+    "key": "i18n.tableHeaderLanguageCode",
+    "en": "Language Code",
+    "ar": "Language Code"
+  },
+  {
+    "key": "i18n.tableHeaderStatusAlerts",
+    "en": "Status / Alerts",
+    "ar": "Status / Alerts"
+  },
+  {
+    "key": "i18n.tableHeaderTranslatedKeys",
+    "en": "Translated Keys",
+    "ar": "Translated Keys"
+  },
+  {
+    "key": "i18n.tableHeaderUnusedKeys",
+    "en": "Unused Keys",
+    "ar": "Unused Keys"
+  },
+  {
+    "key": "i18n.target",
+    "en": "Target:",
+    "ar": "Target:"
+  },
+  {
+    "key": "i18n.targetLabel",
+    "en": "Target:",
+    "ar": "Target:"
+  },
+  {
+    "key": "i18n.targetRegions",
+    "en": "14 target regions",
+    "ar": "14 target regions"
+  },
+  {
+    "key": "i18n.textDirectionIs",
+    "en": "Text direction is:",
+    "ar": "Text direction is:"
+  },
+  {
+    "key": "i18n.toggleDrawer",
+    "en": "Toggle Side Drawer Layout",
+    "ar": "Toggle Side Drawer Layout"
+  },
+  {
+    "key": "i18n.toggleSideDrawerLayout",
+    "en": "Toggle Side Drawer Layout",
+    "ar": "Toggle Side Drawer Layout"
+  },
+  {
+    "key": "i18n.translateMePlaceholder",
+    "en": "[TRANSLATE ME: Default text is same as key name or source code placeholder]",
+    "ar": "[TRANSLATE ME: Default text is same as key name or source code placeholder]"
+  },
+  {
+    "key": "i18n.translatedKeys",
+    "en": "Translated Keys",
+    "ar": "Translated Keys"
+  },
+  {
+    "key": "i18n.translationCoverageMatrix",
+    "en": "Translation Coverage Matrix",
+    "ar": "Translation Coverage Matrix"
+  },
+  {
+    "key": "i18n.translationDiagnosticsDesc",
+    "en": "Scan loaded files and evaluate missing, unused, duplicate, and malformed ICU strings.",
+    "ar": "Scan loaded files and evaluate missing, unused, duplicate, and malformed ICU strings."
+  },
+  {
+    "key": "i18n.translationDiagnosticsTitle",
+    "en": "Translation Diagnostics & ICU Auditing",
+    "ar": "Translation Diagnostics & ICU Auditing"
+  },
+  {
+    "key": "i18n.translationValidator",
+    "en": "Translation Validator",
+    "ar": "Translation Validator"
+  },
+  {
+    "key": "i18n.triggerDiagnostics",
+    "en": "Trigger Diagnostics",
+    "ar": "Trigger Diagnostics"
+  },
+  {
+    "key": "i18n.triggerQASuite",
+    "en": "Trigger QA Suite",
+    "ar": "Trigger QA Suite"
+  },
+  {
+    "key": "i18n.triggerQaSuite",
+    "en": "Trigger QA Suite",
+    "ar": "Trigger QA Suite"
+  },
+  {
+    "key": "i18n.unused",
+    "en": "unused",
+    "ar": "unused"
+  },
+  {
+    "key": "i18n.unusedKeys",
+    "en": "Unused Keys",
+    "ar": "Unused Keys"
+  },
+  {
+    "key": "i18n.warningsOnly",
+    "en": "Warnings Only",
+    "ar": "Warnings Only"
+  },
+  {
+    "key": "i18n.zeroIssuesDesc1",
+    "en": "Excellent! Locale ",
+    "ar": "Excellent! Locale "
+  },
+  {
+    "key": "i18n.zeroIssuesDesc2",
+    "en": " matches standard expectations perfectly. ICU patterns and brackets are secure.",
+    "ar": " matches standard expectations perfectly. ICU patterns and brackets are secure."
+  },
+  {
+    "key": "i18n.zeroIssuesDescPart1",
+    "en": "Excellent! Locale",
+    "ar": "Excellent! Locale"
+  },
+  {
+    "key": "i18n.zeroIssuesDescPart2",
+    "en": "matches standard expectations perfectly. ICU patterns and brackets are secure.",
+    "ar": "matches standard expectations perfectly. ICU patterns and brackets are secure."
+  },
+  {
+    "key": "i18n.zeroIssuesFound",
+    "en": "Zero Validation Issues Found!",
+    "ar": "Zero Validation Issues Found!"
+  },
+  {
+    "key": "i18n.zeroIssuesTitle",
+    "en": "Zero Validation Issues Found!",
+    "ar": "Zero Validation Issues Found!"
+  },
+  {
+    "key": "kb.authorityDesc",
+    "en": "Explore dynamic deep dives, tutorials, size requirements, printing principles, and absolute security best practices to maximize your QR marketing ROI.",
+    "ar": "Explore dynamic deep dives, tutorials, size requirements, printing principles, and absolute الأمان best practices to maximize your QR marketing ROI."
+  },
+  {
+    "key": "kb.authorityHub",
+    "en": "Authority {section} Hub",
+    "ar": "Authority {section} Hub"
+  },
+  {
+    "key": "kb.backTo",
+    "en": "Back to {section}",
+    "ar": "Back to {section}"
+  },
+  {
+    "key": "kb.by",
+    "en": "by {author}",
+    "ar": "by {author}"
+  },
+  {
+    "key": "kb.clearFilters",
+    "en": "Clear Search & Filters",
+    "ar": "Clear Search & Filters"
+  },
+  {
+    "key": "kb.filter",
+    "en": "Filter:",
+    "ar": "Filter:"
+  },
+  {
+    "key": "kb.goToGenerator",
+    "en": "Go to QR Generator",
+    "ar": "Go to QR Generator"
+  },
+  {
+    "key": "kb.home",
+    "en": "Home",
+    "ar": "Home"
+  },
+  {
+    "key": "kb.needCustomQr",
+    "en": "Need a custom QR Code for your campaign?",
+    "ar": "Need a custom رمز QR for your campaign?"
+  },
+  {
+    "key": "kb.needCustomQrDesc",
+    "en": "Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRGen.pro. No credit card required.",
+    "ar": "توليد unlimited, fully stylized static and tracking dynamic رموز QR with logos, custom gradients, and التحليلات on FreeQRGen.pro. No credit card required."
+  },
+  {
+    "key": "kb.noArticles",
+    "en": "No articles match your search parameters.",
+    "ar": "No articles match your search parameters."
+  },
+  {
+    "key": "kb.popularTags",
+    "en": "Popular Tags:",
+    "ar": "Popular Tags:"
+  },
+  {
+    "key": "kb.readFullGuide",
+    "en": "Read Full Guide",
+    "ar": "Read Full Guide"
+  },
+  {
+    "key": "kb.recommendedTools",
+    "en": "Recommended Creator Tools",
+    "ar": "Recommended Creator Tools"
+  },
+  {
+    "key": "kb.relatedFaqs",
+    "en": "Related Frequently Asked Questions",
+    "ar": "Related Frequently Asked Questions"
+  },
+  {
+    "key": "kb.share",
+    "en": "Share",
+    "ar": "Share"
+  },
+  {
+    "key": "kb.spreadWord",
+    "en": "Spread the Word",
+    "ar": "Spread the Word"
+  },
+  {
+    "key": "kb.tableOfContents",
+    "en": "Table of Contents",
+    "ar": "Table of Contents"
+  },
+  {
+    "key": "knowledge.aiSummaryTitle",
+    "en": "AI Search Engine Core Synthesis Box",
+    "ar": "AI Search Engine Core Synthesis Box"
+  },
+  {
+    "key": "knowledge.allCategories",
+    "en": "All Categories",
+    "ar": "All Categories"
+  },
+  {
+    "key": "knowledge.allTags",
+    "en": "All Tags",
+    "ar": "All Tags"
+  },
+  {
+    "key": "knowledge.authorityBlock",
+    "en": "FreeQRGen Authority Block",
+    "ar": "FreeQRGen Authority Block"
+  },
+  {
+    "key": "knowledge.authorityDesc",
+    "en": "Explore dynamic deep dives, tutorials, size requirements, printing principles, and absolute security best practices to maximize your QR marketing ROI.",
+    "ar": "Explore dynamic deep dives, tutorials, size requirements, printing principles, and absolute الأمان best practices to maximize your QR marketing ROI."
+  },
+  {
+    "key": "knowledge.authorityHub",
+    "en": "Authority {section} Hub",
+    "ar": "Authority {section} Hub"
+  },
+  {
+    "key": "knowledge.backTo",
+    "en": "Back to {section}",
+    "ar": "Back to {section}"
+  },
+  {
+    "key": "knowledge.by",
+    "en": "by {author}",
+    "ar": "by {author}"
+  },
+  {
+    "key": "knowledge.clearFilters",
+    "en": "Clear Search & Filters",
+    "ar": "Clear Search & Filters"
+  },
+  {
+    "key": "knowledge.clientCompatibility",
+    "en": "Client Compatibility:",
+    "ar": "Client Compatibility:"
+  },
+  {
+    "key": "knowledge.editorialTeam",
+    "en": "FreeQRGen.pro Editorial Team",
+    "ar": "FreeQRGen.pro Editorial Team"
+  },
+  {
+    "key": "knowledge.entityType",
+    "en": "Entity Type:",
+    "ar": "Entity Type:"
+  },
+  {
+    "key": "knowledge.filter",
+    "en": "Filter:",
+    "ar": "Filter:"
+  },
+  {
+    "key": "knowledge.goToGenerator",
+    "en": "Go to QR Generator",
+    "ar": "Go to QR Generator"
+  },
+  {
+    "key": "knowledge.home",
+    "en": "Home",
+    "ar": "Home"
+  },
+  {
+    "key": "knowledge.hubSub",
+    "en": "FreeQRGen.pro {section}",
+    "ar": "FreeQRGen.pro {section}"
+  },
+  {
+    "key": "knowledge.needCustomQr",
+    "en": "Need a custom QR Code for your campaign?",
+    "ar": "Need a custom رمز QR for your campaign?"
+  },
+  {
+    "key": "knowledge.needCustomQrDesc",
+    "en": "Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRGen.pro. No credit card required.",
+    "ar": "توليد unlimited, fully stylized static and tracking dynamic رموز QR with logos, custom gradients, and التحليلات on FreeQRGen.pro. No credit card required."
+  },
+  {
+    "key": "knowledge.noArticles",
+    "en": "No articles match your search parameters.",
+    "ar": "No articles match your search parameters."
+  },
+  {
+    "key": "knowledge.offlineCapabilityIndex",
+    "en": "Offline Capability Index:",
+    "ar": "Offline Capability Index:"
+  },
+  {
+    "key": "knowledge.popularTags",
+    "en": "Popular Tags:",
+    "ar": "Popular Tags:"
+  },
+  {
+    "key": "knowledge.primaryUseCase",
+    "en": "Primary Target Use Case:",
+    "ar": "Primary Target Use Case:"
+  },
+  {
+    "key": "knowledge.protocolStandard",
+    "en": "Protocol Standard:",
+    "ar": "Protocol Standard:"
+  },
+  {
+    "key": "knowledge.publisherName",
+    "en": "FreeQRGen.pro",
+    "ar": "FreeQRGen.pro"
+  },
+  {
+    "key": "knowledge.readFullGuide",
+    "en": "Read Full Guide",
+    "ar": "Read Full Guide"
+  },
+  {
+    "key": "knowledge.recommendedTools",
+    "en": "Recommended Creator Tools",
+    "ar": "Recommended Creator Tools"
+  },
+  {
+    "key": "knowledge.relatedArticles",
+    "en": "Related Articles You May Enjoy",
+    "ar": "Related Articles You May Enjoy"
+  },
+  {
+    "key": "knowledge.relatedFaqs",
+    "en": "Related Frequently Asked Questions",
+    "ar": "Related Frequently Asked Questions"
+  },
+  {
+    "key": "knowledge.searchPlaceholder",
+    "en": "Search articles by title, keywords, categories or tags...",
+    "ar": "Search articles by title, keywords, categories or tags..."
+  },
+  {
+    "key": "knowledge.sections.academy",
+    "en": "Academy",
+    "ar": "Academy"
+  },
+  {
+    "key": "knowledge.sections.blog",
+    "en": "Blog",
+    "ar": "Blog"
+  },
+  {
+    "key": "knowledge.sections.glossary",
+    "en": "Glossary",
+    "ar": "Glossary"
+  },
+  {
+    "key": "knowledge.sections.guides",
+    "en": "Guides",
+    "ar": "Guides"
+  },
+  {
+    "key": "knowledge.sections.resources",
+    "en": "Resources",
+    "ar": "Resources"
+  },
+  {
+    "key": "knowledge.sections.tutorials",
+    "en": "Tutorials",
+    "ar": "Tutorials"
+  },
+  {
+    "key": "knowledge.share",
+    "en": "Share",
+    "ar": "Share"
+  },
+  {
+    "key": "knowledge.spreadWord",
+    "en": "Spread the Word",
+    "ar": "Spread the Word"
+  },
+  {
+    "key": "knowledge.tagsLabel",
+    "en": "Tags:",
+    "ar": "Tags:"
+  },
+  {
+    "key": "knowledge.updated",
+    "en": "Updated:",
+    "ar": "Updated:"
+  },
+  {
+    "key": "mockup.activeScanning",
+    "en": "Scanning Camera Active",
+    "ar": "Scanning Camera Active"
+  },
+  {
+    "key": "mockup.readyScan",
+    "en": "Ready to scan and parse customized styled QR vector outputs instantly.",
+    "ar": "Ready to scan and parse customized styled QR متجه outputs instantly."
+  },
+  {
+    "key": "mockup.scanApp",
+    "en": "Scan App",
+    "ar": "Scan App"
+  },
+  {
+    "key": "nav.analyticsTab",
+    "en": "Scan Analytics",
+    "ar": "Scan التحليلات"
+  },
+  {
+    "key": "nav.animationsTab",
+    "en": "Animations",
+    "ar": "Animations"
+  },
+  {
+    "key": "nav.blogTitle",
+    "en": "Blog",
+    "ar": "Blog"
+  },
+  {
+    "key": "nav.comparisons",
+    "en": "Comparisons",
+    "ar": "Comparisons"
+  },
+  {
+    "key": "nav.comparisonsDir",
+    "en": "Comparisons Directory",
+    "ar": "Comparisons Directory"
+  },
+  {
+    "key": "nav.connectAccount",
+    "en": "Connect Account",
+    "ar": "Connect Account"
+  },
+  {
+    "key": "nav.creativeStation",
+    "en": "Creative Station",
+    "ar": "Creative Station"
+  },
+  {
+    "key": "nav.creativeStationTab",
+    "en": "Creative Station",
+    "ar": "Creative Station"
+  },
+  {
+    "key": "nav.designStudio",
+    "en": "Design Studio",
+    "ar": "Design Studio"
+  },
+  {
+    "key": "nav.expertPresets",
+    "en": "Expert Presets",
+    "ar": "Expert Presets"
+  },
+  {
+    "key": "nav.channelsCount",
+    "en": "Channels Count",
+    "ar": "Channels Count"
+  },
+  {
+    "key": "status.connected",
+    "en": "CONNECTED",
+    "ar": "CONNECTED"
+  },
+  {
+    "key": "auth.accessRestricted",
+    "en": "Access Restricted",
+    "ar": "Access Restricted"
+  },
+  {
+    "key": "nav.freeQrTools",
+    "en": "Free QR Tools",
+    "ar": "مجاني QR Tools"
+  },
+  {
+    "key": "nav.industries",
+    "en": "Industries",
+    "ar": "Industries"
+  },
+  {
+    "key": "nav.industriesDir",
+    "en": "Industries Directory",
+    "ar": "Industries Directory"
+  },
+  {
+    "key": "nav.mobilePackagesTab",
+    "en": "Mobile Packages",
+    "ar": "Mobile Packages"
+  },
+  {
+    "key": "nav.scanAnalytics",
+    "en": "Scan Analytics",
+    "ar": "Scan التحليلات"
+  },
+  {
+    "key": "nav.secureDatabox",
+    "en": "SECURE DATABOX",
+    "ar": "SECURE DATABOX"
+  },
+  {
+    "key": "nav.selectLanguage",
+    "en": "Select Language",
+    "ar": "Select Language"
+  },
+  {
+    "key": "nav.shortcuts",
+    "en": "Shortcuts",
+    "ar": "Shortcuts"
+  },
+  {
+    "key": "nav.workspaces",
+    "en": "Workspaces",
+    "ar": "Workspaces"
+  },
+  {
+    "key": "nav.solutions",
+    "en": "Solutions",
+    "ar": "Solutions"
+  },
+  {
+    "key": "nav.solutionsDir",
+    "en": "Solutions Directory",
+    "ar": "Solutions Directory"
+  },
+  {
+    "key": "nav.tour",
+    "en": "Tour",
+    "ar": "Tour"
+  },
+  {
+    "key": "nav.useCases",
+    "en": "Use Cases",
+    "ar": "Use Cases"
+  },
+  {
+    "key": "nav.useCasesDir",
+    "en": "Use Cases Directory",
+    "ar": "Use Cases Directory"
+  },
+  {
+    "key": "palette.bgColorLabel",
+    "en": "Background Canvas Color",
+    "ar": "Background Canvas Color"
+  },
+  {
+    "key": "palette.desc",
+    "en": "Configure foreground solid fills, choose custom radial/linear gradients, or match pre-compiled high-contrast brand palettes.",
+    "ar": "Configure foreground solid fills, choose custom radial/linear gradients, or match pre-compiled high-contrast brand palettes."
+  },
+  {
+    "key": "palette.eyeColorsDesc",
+    "en": "Override specific corner color nodes to match your brand requirements.",
+    "ar": "Override specific corner color nodes to match your brand requirements."
+  },
+  {
+    "key": "palette.eyeColorsTitle",
+    "en": "Eye Frame Bespoke Colors",
+    "ar": "إطار الزاوية Bespoke Colors"
+  },
+  {
+    "key": "palette.fgLabel",
+    "en": "Primary Foreground Color",
+    "ar": "Primary لون الرمز"
+  },
+  {
+    "key": "palette.gradientColorLabel",
+    "en": "Gradient Endpoint Color",
+    "ar": "Gradient Endpoint Color"
+  },
+  {
+    "key": "palette.linearGradient",
+    "en": "Linear Gradient",
+    "ar": "Linear Gradient"
+  },
+  {
+    "key": "palette.presetsDesc",
+    "en": "Quick apply high-contrast aesthetic coordinate pairings.",
+    "ar": "Quick apply high-contrast aesthetic coordinate pairings."
+  },
+  {
+    "key": "palette.presetsTitle",
+    "en": "Pre-Compiled Visual Palettes",
+    "ar": "Pre-Compiled Visual Palettes"
+  },
+  {
+    "key": "palette.radialGradient",
+    "en": "Radial Gradient",
+    "ar": "Radial Gradient"
+  },
+  {
+    "key": "palette.solidFill",
+    "en": "Solid Fill",
+    "ar": "Solid Fill"
+  },
+  {
+    "key": "palette.syncBottomLeft",
+    "en": "Sync Bottom-Left Eye",
+    "ar": "Sync Bottom-Left Eye"
+  },
+  {
+    "key": "palette.syncTopLeft",
+    "en": "Sync Top-Left Eye",
+    "ar": "Sync Top-Left Eye"
+  },
+  {
+    "key": "palette.syncTopRight",
+    "en": "Sync Top-Right Eye",
+    "ar": "Sync Top-Right Eye"
+  },
+  {
+    "key": "tour.highlight1Desc",
+    "en": "Custom eye borders, gradients, dot styles, and centerpiece logo overlays.",
+    "ar": "Custom eye borders, gradients, dot styles, and centerpiece logo overlays."
+  },
+  {
+    "key": "tour.highlight1Title",
+    "en": "Learn Visual Branding",
+    "ar": "Learn Visual Branding"
+  },
+  {
+    "key": "tour.highlight2Desc",
+    "en": "Let our AI instantly style QR grids perfectly tailored to your business description.",
+    "ar": "Let our AI instantly style QR grids perfectly tailored to your business description."
+  },
+  {
+    "key": "tour.highlight2Title",
+    "en": "Meet Gemini AI Design Co-Pilot",
+    "ar": "Meet Gemini AI Design Co-Pilot"
+  },
+  {
+    "key": "tour.highlight3Desc",
+    "en": "Configure link shortener tracking, scan logs, and custom redirects.",
+    "ar": "Configure link shortener tracking, scan logs, and custom redirects."
+  },
+  {
+    "key": "tour.highlight3Title",
+    "en": "Analytics & Tracking",
+    "ar": "التحليلات & Tracking"
+  },
+  {
+    "key": "tour.maybeLater",
+    "en": "Maybe Later",
+    "ar": "Maybe Later"
+  },
+  {
+    "key": "tour.startTour",
+    "en": "Start Tour",
+    "ar": "Start Tour"
+  },
+  {
+    "key": "tour.welcomeBody",
+    "en": "Welcome! In this 1-minute guided tour, we will walk you through the custom design, tracking, and folder management capabilities of our modern QR station.",
+    "ar": "Welcome! In this 1-minute guided tour, we will walk you through the custom design, tracking, and folder management capabilities of our modern QR station."
+  },
+  {
+    "key": "tour.welcomeSubtitle",
+    "en": "Let's quickly explore the Free QR Generator features",
+    "ar": "Let's quickly explore the مجاني QR Generator المميزات"
+  },
+  {
+    "key": "tour.welcomeTitle",
+    "en": "Interactive Workspace Tour",
+    "ar": "Interactive Workspace Tour"
+  },
+  {
+    "key": "auth.googleFailed",
+    "en": "Google Sign-In failed",
+    "ar": "فشل تسجيل الدخول باستخدام حساب Google"
+  },
+  {
+    "key": "auth.continueWithGoogle",
+    "en": "Continue with Google",
+    "ar": "المتابعة باستخدام Google"
+  },
+  {
+    "key": "auth.googleAccountNotice",
+    "en": "This email is connected to Google. Click below to sign in with Google.",
+    "ar": "استخدم حساب Google الخاص بك لتسجيل الدخول السريع."
+  }
+]
