@@ -178,7 +178,7 @@ export default function SEOPage({
     return {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      "name": "How to Create a URL QR Code with FreeQRGen.pro",
+      "name": "How to Create a URL QR Code with FreeQRBarcodes.com",
       "description": "Step-by-step instructions for creating a custom styled URL QR code with logos, colors, and scan counts.",
       "step": [
         {

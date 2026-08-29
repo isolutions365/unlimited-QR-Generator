@@ -77,9 +77,10 @@ export function shouldSkipTranslation(text: any): boolean {
   // 2. Brand names (case insensitive checks)
   const lower = trimmed.toLowerCase();
   if (
+    lower === 'freeqrbarcodes.com' ||
+    lower === 'freeqrbarcodes' ||
     lower === 'free qr generator' ||
     lower === 'freeqrgen' ||
-    lower === 'freeqrbarcodes.com' ||
     lower === 'isolutions' ||
     lower === 'isolutions ico' ||
     lower === 'reed-solomon' ||

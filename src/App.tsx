@@ -301,7 +301,7 @@ function RollingNumber({ value, duration = 1200 }: { value: number; duration?: n
 }
 
 function AnimatedHeaderTitle() {
-  const letters = Array.from("Free QR Generator");
+  const letters = Array.from("FreeQRBarcodes.com");
   
   const containerVariants: any = {
     initial: {},
@@ -733,7 +733,7 @@ export default function App() {
     {
       target: 'body',
       placement: 'center',
-      title: '✨ Welcome to Free QR Generator!',
+      title: '✨ Welcome to FreeQRBarcodes.com!',
       content: 'Let\'s take a 1-minute guided tour to show you how easy it is to create, brand-customize, and track scannable QR codes for your projects.',
     },
     {
@@ -4474,7 +4474,7 @@ export default function App() {
             <button 
               onClick={() => navigateTo('/')} 
               className="flex items-center text-left focus:outline-hidden hover:opacity-95 active:scale-98 transition-all cursor-pointer"
-              aria-label="Free QR Generator Home"
+              aria-label="FreeQRBarcodes.com Home"
             >
               <Logo size={42} />
             </button>
@@ -4483,7 +4483,7 @@ export default function App() {
             </p>
             <div className="pt-4">
               <a href="https://www.producthunt.com/posts/free-qr-generator-4" target="_blank" rel="noopener noreferrer" className="inline-block transition-transform hover:scale-102 duration-300">
-                <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=free-qr-generator-4&theme=light" alt="Free QR Generator on Product Hunt" width="250" height="54" />
+                <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=free-qr-generator-4&theme=light" alt="FreeQRBarcodes.com on Product Hunt" width="250" height="54" />
               </a>
             </div>
           </div>

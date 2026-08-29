@@ -1043,7 +1043,7 @@ export const landingPages: Record<string, LandingPageData> = {
       ]
     },
     faqs: [
-      { q: 'Is this digital business card generator free?', a: 'Yes! Generating static vCard QR codes on FreeQRGen.pro is 100% free with zero scan limits.' },
+      { q: 'Is this digital business card generator free?', a: 'Yes! Generating static vCard QR codes on FreeQRBarcodes.com is 100% free with zero scan limits.' },
       { q: 'Do people need a special app to scan the card?', a: 'No, default smartphone cameras read and parse vCard data automatically.' },
       { q: 'Can I add social media links?', a: 'Yes! You can put your main profiles or portfolio page URL in the website fields.' }
     ],
@@ -1179,7 +1179,7 @@ export const landingPages: Record<string, LandingPageData> = {
       ]
     },
     faqs: [
-      { q: 'Is this barcode generator tool free?', a: 'Yes! FreeQRGen.pro offers this tool 100% free of charge with no hidden cost or watermarks.' },
+      { q: 'Is this barcode generator tool free?', a: 'Yes! FreeQRBarcodes.com offers this tool 100% free of charge with no hidden cost or watermarks.' },
       { q: 'Which barcode format should I choose?', a: 'Choose Code 128 for general alphanumeric tracking, EAN-13 or UPC-A for retail, and PDF417 for larger density data.' },
       { q: 'Do these barcodes work on physical thermal printers?', a: 'Yes, download the SVG file and scale it to your label size. It will print with crisp, pixel-perfect contrast.' }
     ],
@@ -1384,7 +1384,7 @@ export const landingPages: Record<string, LandingPageData> = {
     },
     faqs: [
       { q: 'Is this payment generator secure?', a: 'Yes! All encoding happens locally inside your browser. We never transmit or store your financial details.' },
-      { q: 'Do you charge transaction fees?', a: 'No, FreeQRGen.pro is 100% free with no transaction fees or recurring subscriptions.' },
+      { q: 'Do you charge transaction fees?', a: 'No, FreeQRBarcodes.com is 100% free with no transaction fees or recurring subscriptions.' },
       { q: 'Does this work for international customers?', a: 'Yes, international payment networks like PayPal and bank IBAN standards are fully supported.' }
     ],
     cta: {
@@ -1520,7 +1520,7 @@ export const landingPages: Record<string, LandingPageData> = {
     },
     faqs: [
       { q: 'How does the device redirection work?', a: 'Our smart tracking server detects the scanner user-agent and automatically forwards them to the correct store.' },
-      { q: 'Is this app store QR generator free?', a: 'Yes! Generating static and dynamic app store redirects on FreeQRGen.pro is completely free.' },
+      { q: 'Is this app store QR generator free?', a: 'Yes! Generating static and dynamic app store redirects on FreeQRBarcodes.com is completely free.' },
       { q: 'Can I track how many people downloaded?', a: 'Yes, save the configuration in your account to monitor scan rates and device breakdowns.' }
     ],
     cta: {
@@ -1588,7 +1588,7 @@ export const landingPages: Record<string, LandingPageData> = {
     },
     faqs: [
       { q: 'Do readers need special apps to navigate?', a: 'No, default smartphone cameras open standard mapping services like Google Maps or Apple Maps natively.' },
-      { q: 'Is this location generator free?', a: 'Yes! Creating geo or location QR codes on FreeQRGen.pro is completely free.' },
+      { q: 'Is this location generator free?', a: 'Yes! Creating geo or location QR codes on FreeQRBarcodes.com is completely free.' },
       { q: 'How do I get my exact coordinates?', a: 'Search for your location on Google Maps, right-click, and copy the latitude and longitude numbers.' }
     ],
     cta: {

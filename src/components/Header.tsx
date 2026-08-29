@@ -127,7 +127,7 @@ export default function Header({
       <button 
         onClick={() => navigateTo('/')} 
         className="flex items-center gap-2 shrink-0 cursor-pointer focus:outline-hidden hover:opacity-95 active:scale-98 transition-all"
-        aria-label="Free QR Generator Home"
+        aria-label="FreeQRBarcodes.com Home"
       >
         <Logo size={48} />
       </button>

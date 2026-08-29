@@ -571,7 +571,7 @@ export default function DigitalBusinessCard() {
       passTypeIdentifier: "pass.com.freeqrgen.digitalcard",
       serialNumber: cardData.id,
       teamIdentifier: "ABC123XYZ7",
-      organizationName: cardData.company || "FreeQRGen Ltd",
+      organizationName: cardData.company || "FreeQRBarcodes.com Ltd",
       description: `Digital Business Card for ${cardData.name}`,
       foregroundColor: cardData.theme === 'obsidian' ? "rgb(245, 158, 11)" : "rgb(15, 23, 42)",
       backgroundColor: cardData.theme === 'obsidian' ? "rgb(15, 23, 42)" : "rgb(255, 255, 255)",

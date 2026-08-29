@@ -1170,7 +1170,7 @@ const [savedMenus, setSavedMenus] = useState<RestaurantMenuConfig[]>([]);
               <img src="${qrUrl}" alt="Menu QR Code" />
             </div>
             <div class="scan-text">📱 Scan to View Touchless Menu</div>
-            <div class="footer-text">Powered by FreeQRGen Platform</div>
+            <div class="footer-text">Powered by FreeQRBarcodes.com Platform</div>
           </div>
           <script>
             window.onload = function() {

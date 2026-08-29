@@ -67,17 +67,15 @@ export default function Logo({ size = 52, hideText = false, className = '' }: Lo
       </div>
 
       {!hideText && (
-        <div className="flex items-center gap-1.5 font-sans text-lg sm:text-xl font-black tracking-tight leading-none">
-          {/* "Free" plain color text adapting to theme */}
+        <div className="flex items-center gap-1 font-sans text-lg sm:text-xl font-black tracking-tight leading-none">
           <span className="text-slate-900 dark:text-white transition-colors duration-300">
             Free
           </span>
-          {/* "QR Generator" rainbow gradient animated text */}
           <span
             className="animate-huewave transition-all duration-300"
             style={textGradientStyle}
           >
-            QR Generator
+            QRBarcodes.com
           </span>
         </div>
       )}

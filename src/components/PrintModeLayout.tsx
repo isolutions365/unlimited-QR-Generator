@@ -252,7 +252,7 @@ export default function PrintModeLayout({
               type="button"
               onClick={onBack}
               className="flex items-center gap-1.5 cursor-pointer hover:opacity-90 transition-opacity"
-              title="Free QR Generator Home"
+              title="FreeQRBarcodes.com Home"
             >
               <Logo size={28} />
             </button>
@@ -481,7 +481,7 @@ export default function PrintModeLayout({
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 maxLength={40}
-                placeholder="e.g. FreeQRGen Corp"
+                placeholder="e.g. FreeQRBarcodes.com Corp"
                 className="w-full p-2.5 bg-slate-50 hover:bg-white border border-slate-200 focus:border-indigo-500 rounded-xl text-xs font-semibold focus:outline-hidden transition-all shadow-2xs"
               />
             </div>

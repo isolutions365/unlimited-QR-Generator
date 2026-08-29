@@ -1,4 +1,4 @@
-// FreeQRGen.pro - Enterprise AI Platform Core Architecture Layer
+// FreeQRBarcodes.com - Enterprise AI Platform Core Architecture Layer
 // Reusable, modular, robust TypeScript structures for enterprise scale.
 
 export type AIProvider = 'gemini' | 'openai' | 'claude' | 'perplexity' | 'local' | 'custom';

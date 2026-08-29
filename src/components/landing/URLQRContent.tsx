@@ -36,8 +36,8 @@ export const urlQrFaqs = [
     a: "A URL QR Code (Quick Response Code) is a specialized two-dimensional optical barcode that encapsulates a web address or hyperlink protocol (such as HTTP or HTTPS). When scanned by a smart device’s built-in optical sensor or camera, the device decodes the static black-and-white pixel grid, extracts the target web string, and automatically redirects the user's mobile browser to the specified landing page. It acts as a frictionless physical-to-digital link, eliminating the need for manual typing."
   },
   {
-    q: "Is generating a URL QR Code on FreeQRGen.pro completely free?",
-    a: "Yes, 100% free. The static URL QR codes created on FreeQRGen.pro are free forever, have no scanning limitations, and will never expire. We do not insert any hidden watermarks, and there are absolutely no premium sign-up requirements or trial periods."
+    q: "Is generating a URL QR Code on FreeQRBarcodes.com completely free?",
+    a: "Yes, 100% free. The static URL QR codes created on FreeQRBarcodes.com are free forever, have no scanning limitations, and will never expire. We do not insert any hidden watermarks, and there are absolutely no premium sign-up requirements or trial periods."
   },
   {
     q: "What is the difference between a static and a dynamic URL QR Code?",
@@ -80,7 +80,7 @@ export const urlQrFaqs = [
     a: "Yes. Our platform supports exporting in infinitely scalable vector formats like SVG and print-ready PDF, as well as high-resolution PNG raster files. This ensures your code remains razor-sharp when printed on giant billboards or tiny product packages."
   },
   {
-    q: "Does FreeQRGen.pro insert watermarks or branding on my QR code?",
+    q: "Does FreeQRBarcodes.com insert watermarks or branding on my QR code?",
     a: "Never. We believe in providing a clean, professional, and completely unbranded utility. All generated files are 100% watermark-free, giving your brand complete creative control."
   },
   {
@@ -135,7 +135,7 @@ export default function URLQRContent({
           Pristine Quality & Trust Security Standard
         </h3>
         <p className="text-xs text-slate-600">
-          Unlike other online generators that redirect your traffic through third-party domains, insert unsolicited ads, or add annoying watermarks, <strong>FreeQRGen.pro</strong> provides a fully transparent, browser-based service.
+          Unlike other online generators that redirect your traffic through third-party domains, insert unsolicited ads, or add annoying watermarks, <strong>FreeQRBarcodes.com</strong> provides a fully transparent, browser-based service.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium">
           <div className="flex items-center gap-2">
@@ -361,7 +361,7 @@ export default function URLQRContent({
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
           <h2 className="text-2xl font-extrabold tracking-tight text-slate-950">
-            How to Create a URL QR Code with FreeQRGen.pro (Step-by-Step)
+            How to Create a URL QR Code with FreeQRBarcodes.com (Step-by-Step)
           </h2>
         </div>
         <p className="text-sm text-slate-600">

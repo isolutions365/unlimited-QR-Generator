@@ -91,7 +91,7 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart, onOpenWelco
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-400 font-medium mt-0.5">
-                    {t('tour.welcomeSubtitle', "Let's quickly explore the Free QR Generator features")}
+                    {t('tour.welcomeSubtitle', "Let's quickly explore the FreeQRBarcodes.com features")}
                   </p>
                 </div>
               </div>
