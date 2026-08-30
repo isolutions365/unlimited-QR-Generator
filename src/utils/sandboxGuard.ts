@@ -58,9 +58,12 @@
   try {
     const storage = window.localStorage;
     if (storage) {
+      const keysToScan: string[] = [];
       for (let i = 0; i < storage.length; i++) {
         const key = storage.key(i);
-        if (!key) continue;
+        if (key) keysToScan.push(key);
+      }
+      keysToScan.forEach((key) => {
         if (key.startsWith('qr_') || key.startsWith('app_') || key.startsWith('user_') || key.includes('state') || key.includes('project')) {
           const val = storage.getItem(key);
           if (val && (val.startsWith('{') || val.startsWith('['))) {
@@ -72,7 +75,7 @@
             }
           }
         }
-      }
+      });
     }
   } catch (e) {
     console.warn('[State Guard] Error validating application state integrity:', e);

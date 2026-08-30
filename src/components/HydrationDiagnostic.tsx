@@ -21,6 +21,12 @@ export const HydrationDiagnostic: React.FC<{ children: React.ReactNode }> = ({ c
     const initialHtml = document.body.innerHTML;
     const hadFallbackAtStart = initialHtml.includes('app-loading-fallback') || initialHtml.includes('Loading QR Studio');
 
+    // Clean up loading fallback element on React mount
+    const fallbackNode = document.getElementById('app-loading-fallback');
+    if (fallbackNode && fallbackNode.parentNode) {
+      fallbackNode.parentNode.removeChild(fallbackNode);
+    }
+
     // Run hydration check after microtask & layout frame to allow initial DOM paint
     const checkTimer = setTimeout(() => {
       const currentHtml = document.body.innerHTML;

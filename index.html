@@ -316,6 +316,15 @@
         </div>
       </div>
     </div>
+    <script>
+      // 3.5-second safety timeout to ensure the static fallback never freezes the UI indefinitely
+      setTimeout(function() {
+        var fb = document.getElementById('app-loading-fallback');
+        if (fb && fb.parentNode) {
+          fb.parentNode.removeChild(fb);
+        }
+      }, 3500);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
