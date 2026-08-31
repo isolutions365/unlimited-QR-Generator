@@ -2634,6 +2634,7 @@ Generate the 'payload' matching the precise data schema for the selected categor
   // Handler for QR Redirection & Telemetry Tracking
   const handleQRRedirect = async (req: express.Request, res: express.Response) => {
     const { trackingId } = req.params;
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, private');
     console.log(`[Short-Link Redirect] Request received for shortCode/trackingId: "${trackingId}"`);
 
     const escapeHtml = (str: string) => {

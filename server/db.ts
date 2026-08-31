@@ -215,10 +215,10 @@ export function getDb() {
   return db;
 }
 
-// Validate Connection on Boot asynchronously with a fast 1.2s circuit breaker to guarantee instant boots
+// Validate Connection on Boot asynchronously without breaking live DB queries
 async function testConnection() {
   const timeoutPromise = new Promise((_, reject) => 
-    setTimeout(() => reject(new Error('Firebase connection check timed out')), 1200)
+    setTimeout(() => reject(new Error('Firebase connection check timed out')), 2500)
   );
 
   try {
@@ -231,8 +231,8 @@ async function testConnection() {
       console.log("Firebase connection verified and fully operational.");
     }
   } catch (error: any) {
-    console.log("Firebase initialization completed cleanly (latency-saver mode enabled).");
-    isFallbackMode = true;
+    console.log("Firebase startup health check notice:", error?.message || error);
+    // Note: Do NOT set isFallbackMode = true here so live database queries are always attempted
   }
 }
 // In-memory user fallback store for resilience
@@ -353,79 +353,84 @@ class FirestoreDatabase {
     }
   }
 
-  public async getProjectByTrackingId(trackingId: string): Promise<DbProject | undefined> {
-    console.log(`[getProjectByTrackingId] Starting lookup for trackingId/shortCode: "${trackingId}"`);
-    if (isFallbackMode) {
-      console.log(`[getProjectByTrackingId] Firebase is in fallback/offline mode. Skipping lookups.`);
-      return undefined;
-    }
+  public async getProjectByTrackingId(rawTrackingId: string): Promise<DbProject | undefined> {
+    const trackingId = (rawTrackingId || '').trim();
+    console.log(`[getProjectByTrackingId] Starting lookup for trackingId/shortCode: "${trackingId}" (raw input: "${rawTrackingId}")`);
     try {
       const activeDb = getDb();
 
       // Step 0a: Search qr_codes collection directly by document ID (which matches trackingId/shortCode)
-      console.log(`[getProjectByTrackingId] [Step 0a] Fetching from qr_codes collection by ID "${trackingId}"...`);
+      console.log(`[getProjectByTrackingId] [Step 0a] Querying collection "qr_codes", doc ID: "${trackingId}"`);
       try {
         const docQrCode = await getDoc(doc(activeDb, 'qr_codes', trackingId));
         if (docQrCode.exists()) {
           const d = docQrCode.data() as any;
-          console.log(`[getProjectByTrackingId] [Step 0a SUCCESS] Found matching document in qr_codes collection for ID: "${trackingId}"`);
+          console.log(`[getProjectByTrackingId] [Step 0a SUCCESS] Found doc in "qr_codes" by ID "${trackingId}". Raw data:`, JSON.stringify(d));
           return {
             id: d.trackingId || docQrCode.id,
             userId: d.userId || 'anonymous',
-            name: d.name || 'Dynamic QR Link',
+            name: d.name || d.title || 'Dynamic QR Link',
             type: 'url',
-            content: d.originalUrl || d.content || '',
-            design: {},
+            content: d.originalUrl || d.destinationUrl || d.targetUrl || d.content || d.url || '',
+            design: d.design || {},
             createdAt: d.createdAt || new Date().toISOString(),
             scanCount: d.scanCount || 0,
             trackingEnabled: d.trackingEnabled !== false,
-            trackingId: d.trackingId || docQrCode.id
+            trackingId: d.trackingId || docQrCode.id,
+            expiryDate: d.expiryDate || d.expiryAt,
+            expiryRedirectType: d.expiryRedirectType,
+            expiryRedirectUrl: d.expiryRedirectUrl,
+            expiryMessage: d.expiryMessage
           } as DbProject;
         }
-        console.log(`[getProjectByTrackingId] [Step 0a] No document exists in qr_codes collection with ID "${trackingId}"`);
+        console.log(`[getProjectByTrackingId] [Step 0a] Result: empty (No doc in "qr_codes" with ID "${trackingId}")`);
       } catch (err: any) {
-        console.warn(`[getProjectByTrackingId] [Step 0a NOTICE] Fetching from qr_codes collection failed:`, err?.message || err);
+        console.warn(`[getProjectByTrackingId] [Step 0a NOTICE] Fetching from "qr_codes" by ID failed:`, err?.message || err);
       }
 
       // Step 0b: Search qr_codes collection by trackingId field
-      console.log(`[getProjectByTrackingId] [Step 0b] Querying qr_codes collection where trackingId == "${trackingId}"...`);
+      console.log(`[getProjectByTrackingId] [Step 0b] Querying collection "qr_codes", field "trackingId" == "${trackingId}"`);
       try {
         const qQrCodes = query(collection(activeDb, 'qr_codes'), where('trackingId', '==', trackingId));
         const snapQrCodes = await getDocs(qQrCodes);
         if (!snapQrCodes.empty) {
           const d = snapQrCodes.docs[0].data() as any;
-          console.log(`[getProjectByTrackingId] [Step 0b SUCCESS] Found matching document in qr_codes collection with trackingId: "${trackingId}"`);
+          console.log(`[getProjectByTrackingId] [Step 0b SUCCESS] Found doc in "qr_codes" where trackingId == "${trackingId}". Doc ID: "${snapQrCodes.docs[0].id}". Raw data:`, JSON.stringify(d));
           return {
             id: d.trackingId || snapQrCodes.docs[0].id,
             userId: d.userId || 'anonymous',
-            name: d.name || 'Dynamic QR Link',
+            name: d.name || d.title || 'Dynamic QR Link',
             type: 'url',
-            content: d.originalUrl || d.content || '',
-            design: {},
+            content: d.originalUrl || d.destinationUrl || d.targetUrl || d.content || d.url || '',
+            design: d.design || {},
             createdAt: d.createdAt || new Date().toISOString(),
             scanCount: d.scanCount || 0,
             trackingEnabled: d.trackingEnabled !== false,
-            trackingId: d.trackingId || snapQrCodes.docs[0].id
+            trackingId: d.trackingId || snapQrCodes.docs[0].id,
+            expiryDate: d.expiryDate || d.expiryAt,
+            expiryRedirectType: d.expiryRedirectType,
+            expiryRedirectUrl: d.expiryRedirectUrl,
+            expiryMessage: d.expiryMessage
           } as DbProject;
         }
-        console.log(`[getProjectByTrackingId] [Step 0b] No qr_codes found with trackingId field == "${trackingId}"`);
+        console.log(`[getProjectByTrackingId] [Step 0b] Result: empty (No docs in "qr_codes" with trackingId == "${trackingId}")`);
       } catch (err: any) {
-        console.warn(`[getProjectByTrackingId] [Step 0b NOTICE] Querying qr_codes by trackingId failed:`, err?.message || err);
+        console.warn(`[getProjectByTrackingId] [Step 0b NOTICE] Querying "qr_codes" by field "trackingId" failed:`, err?.message || err);
       }
       
       // 1. Search projects collection by trackingId field
-      console.log(`[getProjectByTrackingId] [Step 1] Querying projects collection where trackingId == "${trackingId}"...`);
+      console.log(`[getProjectByTrackingId] [Step 1] Querying collection "projects", field "trackingId" == "${trackingId}"`);
       try {
         const qProjects = query(collection(activeDb, 'projects'), where('trackingId', '==', trackingId));
         const snapProjects = await getDocs(qProjects);
         if (!snapProjects.empty) {
           const d = snapProjects.docs[0].data() as any;
-          console.log(`[getProjectByTrackingId] [Step 1 SUCCESS] Found matching project in projects collection with trackingId: "${trackingId}"`);
+          console.log(`[getProjectByTrackingId] [Step 1 SUCCESS] Found doc in "projects" where trackingId == "${trackingId}". Raw data:`, JSON.stringify(d));
           return d as DbProject;
         }
-        console.log(`[getProjectByTrackingId] [Step 1] No projects found with trackingId field == "${trackingId}"`);
+        console.log(`[getProjectByTrackingId] [Step 1] Result: empty (No docs in "projects" with trackingId == "${trackingId}")`);
       } catch (err: any) {
-        console.warn(`[getProjectByTrackingId] [Step 1 NOTICE] Querying projects by trackingId failed:`, err?.message || err);
+        console.warn(`[getProjectByTrackingId] [Step 1 NOTICE] Querying "projects" by trackingId failed:`, err?.message || err);
       }
 
       // 2. Search projects collection by document ID

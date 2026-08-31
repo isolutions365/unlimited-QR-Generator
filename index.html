@@ -59,7 +59,19 @@
             str.indexOf('database is closing') !== -1 ||
             str.indexOf('closing/hidden') !== -1 ||
             str.indexOf('app-check') !== -1 ||
-            str.indexOf('appcheck') !== -1
+            str.indexOf('appcheck') !== -1 ||
+            str.indexOf('play() failed') !== -1 ||
+            str.indexOf('audiocontext') !== -1 ||
+            str.indexOf('user didn\'t interact') !== -1 ||
+            str.indexOf('resizeobserver') !== -1 ||
+            str.indexOf('abort') !== -1 ||
+            str.indexOf('canceled') !== -1 ||
+            str.indexOf('clipboard') !== -1 ||
+            str.indexOf('networkerror') !== -1 ||
+            str.indexOf('firebaseerror') !== -1 ||
+            str.indexOf('auth/network-request-failed') !== -1 ||
+            str.indexOf('auth/popup-closed-by-user') !== -1 ||
+            str.indexOf('auth/cancelled-popup-request') !== -1
           );
         }
 
@@ -91,11 +103,11 @@
           };
 
           window.__RUNTIME_ERROR_LOGS__.push(logEntry);
-          console.error('[Runtime Error Diagnostic - ' + category + ']', logEntry);
+          console.warn('[Runtime Diagnostic - ' + category + ']', logEntry);
 
           // Update loading fallback screen if present so exact runtime error path is visible
           var fallbackText = document.getElementById('app-loading-text');
-          if (fallbackText) {
+          if (fallbackText && (category === 'DYNAMIC_IMPORT_FAILURE' || category === 'MIME_TYPE_ERROR' || category === 'CORS_POLICY_ERROR')) {
             fallbackText.innerHTML = '<span style="color:#dc2626; font-weight:700;">' + category + ':</span> ' +
               (logEntry.message.length > 150 ? logEntry.message.substring(0, 150) + '...' : logEntry.message) +
               '<br/><span style="font-size:11px; color:#64748b;">Source: ' + logEntry.source + ' (' + logEntry.line + ':' + logEntry.column + ')</span>';
@@ -136,7 +148,7 @@
           }
           if (isIgnorableError(reasonMsg)) {
             console.warn('[Global Interceptor] Handled background rejection:', reasonMsg);
-            if (e.preventDefault) e.preventDefault();
+            if (e && e.preventDefault) e.preventDefault();
             return;
           }
 
@@ -147,6 +159,11 @@
             stack: stack,
             error: e.reason
           });
+
+          // Prevent unhandled rejection propagation for benign or non-fatal async background calls
+          if (e && e.preventDefault) {
+            e.preventDefault();
+          }
         });
 
         // 3. Capture asset script & stylesheet load failures (CORS, 404, MIME errors on tags)
