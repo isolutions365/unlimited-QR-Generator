@@ -3786,14 +3786,36 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
       app.get('*', serveHtmlWithSeoAndSchema);
     } else {
       const distPath = path.join(process.cwd(), 'dist');
+
+      // Global CORS and Header middleware for static assets
+      app.use((req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+        if (req.method === 'OPTIONS') {
+          return res.sendStatus(204);
+        }
+        next();
+      });
+
       app.use(express.static(distPath, {
         setHeaders: (res, filePath) => {
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+          res.setHeader('Access-Control-Allow-Headers', '*');
           if (filePath.endsWith('.html')) {
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
-          } else if (filePath.endsWith('.webmanifest')) {
-            res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');
+          } else if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
+            res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+          } else if (filePath.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css; charset=utf-8');
+            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+          } else if (filePath.endsWith('.webmanifest') || filePath.endsWith('.json')) {
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
             res.setHeader('Cache-Control', 'public, max-age=86400');
           } else if (filePath.includes('/assets/')) {
             res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');

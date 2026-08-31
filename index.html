@@ -44,8 +44,10 @@
       })();
     </script>
     <script>
-      // Global Interceptor to prevent reCAPTCHA / App Check key-validation domain restrictions and background rejections from causing unhandled exceptions
+      // Global Comprehensive Error Interceptor & Diagnostic Logger
       (function() {
+        window.__RUNTIME_ERROR_LOGS__ = window.__RUNTIME_ERROR_LOGS__ || [];
+
         function isIgnorableError(msg) {
           if (!msg) return false;
           var str = String(msg).toLowerCase();
@@ -61,41 +63,107 @@
           );
         }
 
-        window.addEventListener('error', function(e) {
-          var msg = (e && e.message) ? String(e.message) : '';
-          if (isIgnorableError(msg)) {
-            console.warn('[Global Interceptor] Handled background error gracefully:', msg);
-            if (e.preventDefault) e.preventDefault();
-            if (e.stopPropagation) e.stopPropagation();
+        function categorizeError(msg, source) {
+          var str = (String(msg) + ' ' + String(source)).toLowerCase();
+          if (str.indexOf('cors') !== -1 || str.indexOf('access-control-allow-origin') !== -1 || str.indexOf('cross-origin') !== -1) {
+            return 'CORS_POLICY_ERROR';
           }
-        }, true);
+          if (str.indexOf('mime') !== -1 || str.indexOf('strict mime type') !== -1 || str.indexOf('not a valid javascript') !== -1) {
+            return 'MIME_TYPE_ERROR';
+          }
+          if (str.indexOf('fetch') !== -1 || str.indexOf('import') !== -1 || str.indexOf('chunk') !== -1 || str.indexOf('loading module') !== -1) {
+            return 'DYNAMIC_IMPORT_FAILURE';
+          }
+          return 'RUNTIME_EXECUTION_ERROR';
+        }
 
+        function logDiagnosticError(category, details) {
+          var logEntry = {
+            timestamp: new Date().toISOString(),
+            category: category,
+            message: details.message || 'Unknown error',
+            source: details.source || 'N/A',
+            line: details.lineno || details.line || 0,
+            column: details.colno || details.column || 0,
+            stack: details.stack || (details.error && details.error.stack) || null,
+            url: window.location.href,
+            userAgent: navigator.userAgent
+          };
+
+          window.__RUNTIME_ERROR_LOGS__.push(logEntry);
+          console.error('[Runtime Error Diagnostic - ' + category + ']', logEntry);
+
+          // Update loading fallback screen if present so exact runtime error path is visible
+          var fallbackText = document.getElementById('app-loading-text');
+          if (fallbackText) {
+            fallbackText.innerHTML = '<span style="color:#dc2626; font-weight:700;">' + category + ':</span> ' +
+              (logEntry.message.length > 150 ? logEntry.message.substring(0, 150) + '...' : logEntry.message) +
+              '<br/><span style="font-size:11px; color:#64748b;">Source: ' + logEntry.source + ' (' + logEntry.line + ':' + logEntry.column + ')</span>';
+          }
+        }
+
+        // 1. Comprehensive window.onerror handler
         var originalOnError = window.onerror;
         window.onerror = function(message, source, lineno, colno, error) {
           var msg = String(message || '');
           if (isIgnorableError(msg)) {
-            console.warn('[Global Interceptor] Handled background error via onerror:', message);
+            console.warn('[Global Interceptor] Handled background notice via onerror:', message);
             return true;
           }
+
+          var category = categorizeError(msg, source);
+          logDiagnosticError(category, {
+            message: msg,
+            source: source,
+            lineno: lineno,
+            colno: colno,
+            error: error
+          });
+
           if (originalOnError) {
-            return originalOnError.apply(this, arguments);
+            try { return originalOnError.apply(this, arguments); } catch(e) {}
           }
           return false;
         };
 
+        // 2. Comprehensive unhandledrejection handler (captures dynamic import & async promise rejections)
         window.addEventListener('unhandledrejection', function(e) {
-          var reason = '';
+          var reasonMsg = '';
+          var stack = null;
           if (e && e.reason) {
-            reason = e.reason.message || String(e.reason);
+            reasonMsg = e.reason.message || String(e.reason);
+            stack = e.reason.stack || null;
           }
-          console.warn('[Global Interceptor] Silenced unhandled rejection:', reason);
-          if (e && e.preventDefault) {
-            e.preventDefault();
+          if (isIgnorableError(reasonMsg)) {
+            console.warn('[Global Interceptor] Handled background rejection:', reasonMsg);
+            if (e.preventDefault) e.preventDefault();
+            return;
           }
-          if (e && e.stopPropagation) {
-            e.stopPropagation();
-          }
+
+          var category = categorizeError(reasonMsg, '');
+          logDiagnosticError(category === 'RUNTIME_EXECUTION_ERROR' ? 'UNHANDLED_REJECTION' : category, {
+            message: reasonMsg,
+            source: 'Promise Rejection',
+            stack: stack,
+            error: e.reason
+          });
         });
+
+        // 3. Capture asset script & stylesheet load failures (CORS, 404, MIME errors on tags)
+        window.addEventListener('error', function(e) {
+          if (e && e.target && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
+            var src = e.target.src || e.target.href || '';
+            if (isIgnorableError(src)) return;
+
+            var category = 'RESOURCE_LOAD_FAILURE';
+            logDiagnosticError(category, {
+              message: 'Failed to load ' + e.target.tagName.toLowerCase() + ' resource: ' + src,
+              source: src,
+              lineno: 0,
+              colno: 0
+            });
+          }
+        }, true);
       })();
     </script>
     <script>
@@ -317,13 +385,22 @@
       </div>
     </div>
     <script>
-      // 3.5-second safety timeout to ensure the static fallback never freezes the UI indefinitely
-      setTimeout(function() {
-        var fb = document.getElementById('app-loading-fallback');
-        if (fb && fb.parentNode) {
-          fb.parentNode.removeChild(fb);
+      // Immediate auto-dismiss timer to ensure static loading fallback is NEVER stuck on screen
+      (function() {
+        function removeFallback() {
+          var fb = document.getElementById('app-loading-fallback');
+          if (fb && fb.parentNode) {
+            fb.parentNode.removeChild(fb);
+          }
         }
-      }, 3500);
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          setTimeout(removeFallback, 800);
+        } else {
+          document.addEventListener('DOMContentLoaded', function() { setTimeout(removeFallback, 800); });
+          window.addEventListener('load', function() { setTimeout(removeFallback, 500); });
+        }
+        setTimeout(removeFallback, 1500);
+      })();
     </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>

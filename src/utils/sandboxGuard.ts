@@ -82,16 +82,32 @@
   }
 
   // 3. Service Worker auto-cleanup & global error handlers
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      registrations.forEach((reg) => reg.unregister());
-    }).catch(() => {});
+  try {
+    if ('serviceWorker' in navigator && navigator.serviceWorker && typeof navigator.serviceWorker.getRegistrations === 'function') {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        if (Array.isArray(registrations)) {
+          registrations.forEach((reg) => {
+            try { reg.unregister(); } catch {}
+          });
+        }
+      }).catch(() => {});
+    }
+  } catch (swErr) {
+    console.warn('[Sandbox Guard] ServiceWorker check notice:', swErr);
   }
 
-  if ('caches' in window) {
-    caches.keys().then((keys) => {
-      keys.forEach((key) => caches.delete(key));
-    }).catch(() => {});
+  try {
+    if (typeof window !== 'undefined' && 'caches' in window && window.caches && typeof window.caches.keys === 'function') {
+      window.caches.keys().then((keys) => {
+        if (Array.isArray(keys)) {
+          keys.forEach((key) => {
+            try { window.caches.delete(key); } catch {}
+          });
+        }
+      }).catch(() => {});
+    }
+  } catch (cacheErr) {
+    console.warn('[Sandbox Guard] Cache Storage check notice:', cacheErr);
   }
 
   // Handle dynamic import chunk loading errors gracefully

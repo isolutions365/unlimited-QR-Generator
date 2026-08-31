@@ -4,7 +4,7 @@ import { getProductionBaseUrl } from '../config/siteConfig';
 
 import { QRProject } from '../types';
 import { renderStyledQR, generateStyledSVG, getEmblemFontSize } from '../utils/qrRenderer';
-import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle, Share2, Twitter, Linkedin, Facebook, ChevronDown, FileText, Scale, Sliders, Contrast, Eye, Layers, Maximize, Volume2, VolumeX } from 'lucide-react';
+import { Download, Copy, ExternalLink, Printer, Smartphone, Camera, Check, FileType, X, Layout, Palette, Grid, AlertTriangle, RefreshCw, Share2, Twitter, Linkedin, Facebook, ChevronDown, FileText, Scale, Sliders, Contrast, Eye, Layers, Maximize, Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import qrcode from 'qrcode';
 import { MemoizedQRCanvas } from './MemoizedQRCanvas';
@@ -26,6 +26,27 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const [isCopied, setIsCopied] = useState(false);
   const [simulatedScanResult, setSimulatedScanResult] = useState<string | null>(null);
   const [isScanningSim, setIsScanningSim] = useState(false);
+
+  // QR Canvas Retry & Regeneration state
+  const [retryNonce, setRetryNonce] = useState(0);
+  const [canvasRenderError, setCanvasRenderError] = useState<string | null>(null);
+
+  const handleRegenerateCanvas = () => {
+    setCanvasRenderError(null);
+    if (canvasRef.current) {
+      try {
+        const ctx = canvasRef.current.getContext('2d');
+        if (ctx) {
+          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        }
+        canvasRef.current.width = 450;
+        canvasRef.current.height = 450;
+      } catch (err) {
+        console.warn('[PreviewPanel] Context reset notice:', err);
+      }
+    }
+    setRetryNonce((prev) => prev + 1);
+  };
 
   // Dynamic color-shifting save glow state
   const [showSaveGlow, setShowSaveGlow] = useState(false);
@@ -1270,6 +1291,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               frameTextColor={frameTextColor || undefined}
               frameFontSize={frameFontSize}
               frameTextPosition={frameTextPosition}
+              onDrawComplete={() => setCanvasRenderError(null)}
+              onDrawError={(err) => setCanvasRenderError(err)}
+              retryNonce={retryNonce}
             />
 
             {/* Elegant overlay logo with smooth scaling on change */}
@@ -1423,6 +1447,27 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           </div>
         </div>
 
+        {/* QR Render Error Banner with Regenerate Action */}
+        {canvasRenderError && (
+          <div className="w-full p-3.5 rounded-xl border bg-rose-50/90 border-rose-200 text-rose-950 flex items-center justify-between gap-3 shadow-3xs animate-fade-in">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="text-left min-w-0">
+                <div className="text-[11px] font-black uppercase tracking-wider text-rose-700">QR Canvas Render Error</div>
+                <div className="text-[11px] text-rose-800 truncate">{canvasRenderError}</div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleRegenerateCanvas}
+              className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold rounded-lg shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer transition-all hover:scale-105"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Regenerate</span>
+            </button>
+          </div>
+        )}
+
         {/* Real-time Scannability Alert Banner */}
         {(hasUnreadableIssue || hasWarningIssue) && (
           <div className={`w-full p-3.5 rounded-xl border flex gap-3 transition-all ${
@@ -1487,13 +1532,22 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         )}
 
         {/* Informative metadata text */}
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center gap-1">
           <p className="text-xs font-semibold text-gray-800">
             {trackingEnabled ? t('preview.shortUrlTrackingActive', '🚀 Short Url Tracking Active') : t('preview.directQrCode', '💾 Direct QR Code')}
           </p>
           <span className="text-[10px] text-slate-600 font-mono select-all truncate max-w-[260px] block mt-0.5">
             {textToEncode}
           </span>
+          <button
+            type="button"
+            onClick={handleRegenerateCanvas}
+            className="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-extrabold text-slate-600 hover:text-indigo-600 bg-slate-100 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-lg transition-all cursor-pointer shadow-3xs"
+            title="Clear stale canvas state and re-initialize drawing context"
+          >
+            <RefreshCw className="w-3 h-3" />
+            <span>Regenerate Canvas</span>
+          </button>
           {currentProject.expiryDate && (() => {
             const isExpired = new Date() > new Date(currentProject.expiryDate);
             return (
