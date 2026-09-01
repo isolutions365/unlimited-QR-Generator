@@ -3300,6 +3300,58 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
 
     schemaObjects.push(orgSchema, webSiteSchema);
 
+    let prerenderedHtml = '';
+    const homeUrl = locale === 'en' ? '/' : `/${locale}`;
+    const baseNavUrl = homeUrl === '/' ? '' : homeUrl;
+
+    const renderHeader = `
+<header style="background: #0f172a; color: #ffffff; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1e293b; font-family: system-ui, -apple-system, sans-serif;">
+  <div style="display: flex; align-items: center; gap: 0.75rem;">
+    <div style="width: 2.25rem; height: 2.25rem; background: linear-gradient(135deg, #4f46e5, #06b6d4); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff;">QR</div>
+    <a href="${homeUrl}" style="font-size: 1.25rem; font-weight: 700; color: #ffffff; text-decoration: none;">Free QR Code Generator</a>
+  </div>
+  <nav style="display: flex; gap: 1.25rem; font-size: 0.9rem; font-weight: 500;">
+    <a href="${homeUrl}" style="color: #cbd5e1; text-decoration: none;">Home</a>
+    <a href="${baseNavUrl}/vcard-qr-generator" style="color: #cbd5e1; text-decoration: none;">vCard QR</a>
+    <a href="${baseNavUrl}/wifi-qr-code" style="color: #cbd5e1; text-decoration: none;">WiFi QR</a>
+    <a href="${baseNavUrl}/barcode-generator" style="color: #cbd5e1; text-decoration: none;">Barcode Studio</a>
+    <a href="${baseNavUrl}/restaurant-menu-qr-code" style="color: #cbd5e1; text-decoration: none;">Menu QR</a>
+    <a href="${baseNavUrl}/blog" style="color: #cbd5e1; text-decoration: none;">Blog</a>
+    <a href="${baseNavUrl}/faq" style="color: #cbd5e1; text-decoration: none;">FAQ</a>
+  </nav>
+</header>`;
+
+    const renderFooter = `
+<footer style="background: #0f172a; color: #94a3b8; padding: 3rem 1.5rem; margin-top: 4rem; font-family: system-ui, -apple-system, sans-serif;">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+    <div>
+      <h3 style="color: #ffffff; font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">Free QR Code Generator</h3>
+      <p style="font-size: 0.875rem; line-height: 1.5;">The ultimate studio for dynamic QR code generation, custom vector styling, barcode creation, and scan analytics.</p>
+    </div>
+    <div>
+      <h4 style="color: #ffffff; font-size: 0.875rem; font-weight: 700; margin-bottom: 1rem;">Popular Generators</h4>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.5rem;">
+        <li><a href="${baseNavUrl}/vcard-qr-generator" style="color: #cbd5e1; text-decoration: none;">vCard Digital Contact QR</a></li>
+        <li><a href="${baseNavUrl}/wifi-qr-code" style="color: #cbd5e1; text-decoration: none;">WiFi Password QR Code</a></li>
+        <li><a href="${baseNavUrl}/barcode-generator" style="color: #cbd5e1; text-decoration: none;">Barcode Generator Studio</a></li>
+        <li><a href="${baseNavUrl}/restaurant-menu-qr-code" style="color: #cbd5e1; text-decoration: none;">Restaurant Menu QR</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="color: #ffffff; font-size: 0.875rem; font-weight: 700; margin-bottom: 1rem;">Resources & Legal</h4>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.5rem;">
+        <li><a href="${baseNavUrl}/blog" style="color: #cbd5e1; text-decoration: none;">Guides & Tutorials Blog</a></li>
+        <li><a href="${baseNavUrl}/faq" style="color: #cbd5e1; text-decoration: none;">Frequently Asked Questions</a></li>
+        <li><a href="${baseNavUrl}/privacy-policy" style="color: #cbd5e1; text-decoration: none;">Privacy Policy</a></li>
+        <li><a href="${baseNavUrl}/terms" style="color: #cbd5e1; text-decoration: none;">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="max-width: 1200px; margin: 2rem auto 0 auto; padding-top: 1.5rem; border-top: 1px solid #1e293b; text-align: center; font-size: 0.8125rem;">
+    &copy; 2026 Free QR Code Generator. All rights reserved.
+  </div>
+</footer>`;
+
     if (route === "" || route === "/") {
       const features = presetToolsTranslations[locale] || presetToolsTranslations['en'] || [];
       const featureList = features.map((f: any) => `${f.name}: ${f.desc}`);
@@ -3324,6 +3376,76 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
         }
       };
       schemaObjects.push(webAppSchema);
+
+      prerenderedHtml = `
+${renderHeader}
+<main style="max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
+  <section style="text-align: center; margin-bottom: 4rem;">
+    <span style="display: inline-block; padding: 0.35rem 1rem; background: #eff6ff; color: #2563eb; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem;">100% Free & Unlimited • Vector SVG & High-Res PNG Exports</span>
+    <h1 style="font-size: 2.75rem; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 1.25rem;">${meta.title}</h1>
+    <p style="font-size: 1.25rem; color: #475569; max-width: 800px; margin: 0 auto 2rem auto; line-height: 1.6;">${meta.description}</p>
+    
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <a href="#generator-studio" style="background: #2563eb; color: #ffffff; padding: 0.875rem 1.75rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; font-size: 1rem;">Create QR Code Now</a>
+      <a href="${baseNavUrl}/blog" style="background: #f1f5f9; color: #334155; padding: 0.875rem 1.75rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; font-size: 1rem;">Read QR Guides & Tutorials</a>
+    </div>
+  </section>
+
+  <section id="generator-studio" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 2rem; margin-bottom: 4rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+    <h2 style="font-size: 1.75rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">Professional QR & Barcode Creator Tools</h2>
+    <p style="color: #64748b; margin-bottom: 1.5rem; line-height: 1.5;">Select a tool category below to generate custom high-resolution QR codes and barcodes for web links, business contacts, WiFi credentials, restaurant menus, or social profiles.</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem;">
+      ${features.map((f: any) => `
+        <div style="border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0.75rem; padding: 1.25rem;">
+          <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">${f.name}</h3>
+          <p style="font-size: 0.875rem; color: #475569; line-height: 1.5; margin-bottom: 0.75rem;">${f.desc}</p>
+          ${f.slug ? `<a href="${baseNavUrl}/${f.slug}" style="color: #2563eb; font-size: 0.875rem; font-weight: 600; text-decoration: none;">Open Generator &rarr;</a>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  </section>
+
+  <section style="margin-bottom: 4rem;">
+    <h2 style="font-size: 1.875rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">Why Choose Our Free QR Code Studio?</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Dynamic Link Tracking & Real-Time Analytics</h3>
+        <p style="color: #475569; line-height: 1.6;">Create dynamic QR codes where destination URLs can be updated anytime after printing without re-printing physical materials. Monitor scan counts, geographic locations, and device types in real time.</p>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">High-Resolution Vector SVG, EPS & Print-Ready Exports</h3>
+        <p style="color: #475569; line-height: 1.6;">Export your QR codes and 1D/2D barcodes in sharp vector formats (SVG, EPS) or ultra-high-definition PNG images suitable for large-format billboards, product packaging, and business cards.</p>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Complete Visual Styling & Brand Logo Embedding</h3>
+        <p style="color: #475569; line-height: 1.6;">Customize module colors, background gradients, eye patterns, and embed your custom company logo or icon directly into the center of the QR code with automatic error correction.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #f8fafc; border-radius: 1rem; padding: 2.5rem; margin-bottom: 4rem; border: 1px solid #e2e8f0;">
+    <h2 style="font-size: 1.75rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem;">How to Create a Custom QR Code in 3 Simple Steps</h2>
+    <ol style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; padding: 0; list-style: none;">
+      <li style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+        <span style="display: inline-block; width: 2rem; height: 2rem; background: #2563eb; color: #fff; border-radius: 50%; text-align: center; line-height: 2rem; font-weight: 700; margin-bottom: 0.75rem;">1</span>
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Select Your Content Type</h3>
+        <p style="font-size: 0.9375rem; color: #475569; line-height: 1.5;">Choose from URL, vCard contact, WiFi password, plain text, SMS, WhatsApp link, or digital restaurant menu.</p>
+      </li>
+      <li style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+        <span style="display: inline-block; width: 2rem; height: 2rem; background: #2563eb; color: #fff; border-radius: 50%; text-align: center; line-height: 2rem; font-weight: 700; margin-bottom: 0.75rem;">2</span>
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Customize Design & Branding</h3>
+        <p style="font-size: 0.9375rem; color: #475569; line-height: 1.5;">Apply custom brand colors, linear gradients, unique corner eye shapes, and upload your central brand logo.</p>
+      </li>
+      <li style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+        <span style="display: inline-block; width: 2rem; height: 2rem; background: #2563eb; color: #fff; border-radius: 50%; text-align: center; line-height: 2rem; font-weight: 700; margin-bottom: 0.75rem;">3</span>
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Download & Track Scans</h3>
+        <p style="font-size: 0.9375rem; color: #475569; line-height: 1.5;">Export print-ready SVG or PNG files immediately and enable dynamic short-link scan tracking analytics.</p>
+      </li>
+    </ol>
+  </section>
+</main>
+${renderFooter}`;
 
       noscriptHtml = `
 <noscript>
@@ -3377,6 +3499,23 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
       };
 
       schemaObjects.push(faqSchema, breadcrumbSchema);
+
+      prerenderedHtml = `
+${renderHeader}
+<main style="max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
+  <h1 style="font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">${title}</h1>
+  <p style="font-size: 1.2rem; color: #475569; margin-bottom: 2.5rem; line-height: 1.6;">${description}</p>
+  
+  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    ${faqItems.map((item: any) => `
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">${item.question}</h2>
+        <p style="color: #334155; line-height: 1.6; font-size: 1rem;">${item.answer}</p>
+      </div>
+    `).join('')}
+  </div>
+</main>
+${renderFooter}`;
 
       noscriptHtml = `
 <noscript>
@@ -3433,6 +3572,31 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
       };
 
       schemaObjects.push(itemListSchema, breadcrumbSchema);
+
+      prerenderedHtml = `
+${renderHeader}
+<main style="max-width: 1000px; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
+  <h1 style="font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">${title}</h1>
+  <p style="font-size: 1.2rem; color: #475569; margin-bottom: 2.5rem; line-height: 1.6;">${description}</p>
+  
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+    ${articles.map((art: any) => `
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; justify-space-between;">
+        <div>
+          <span style="font-size: 0.8125rem; color: #64748b;">${art.date} &bull; ${art.readingTime}</span>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0.5rem 0 0.75rem 0; line-height: 1.4;">
+            <a href="${baseNavUrl}/blog/${art.slug}" style="color: #0f172a; text-decoration: none;">${art.title}</a>
+          </h2>
+          <p style="color: #475569; font-size: 0.9375rem; line-height: 1.5; margin-bottom: 1rem;">${art.intro}</p>
+        </div>
+        <div>
+          <a href="${baseNavUrl}/blog/${art.slug}" style="color: #2563eb; font-weight: 600; font-size: 0.875rem; text-decoration: none;">Read Full Guide &rarr;</a>
+        </div>
+      </article>
+    `).join('')}
+  </div>
+</main>
+${renderFooter}`;
 
       noscriptHtml = `
 <noscript>
@@ -3508,11 +3672,44 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
 
         schemaObjects.push(breadcrumbSchema);
 
-        // Confirm translation status before attaching BlogPosting schema to prevent indexing incomplete content
         const translationStatus = checkArticleTranslationStatus(article, locale);
         if (translationStatus.isComplete || locale === 'en') {
           schemaObjects.push(blogPostingSchema);
         }
+
+        const formattedArticleBody = article.contentMarkdown.split('\n\n').map((p: string) => {
+          const trimmed = p.trim();
+          if (trimmed.startsWith('### ')) {
+            return `<h3 style="font-size: 1.35rem; font-weight: 700; color: #0f172a; margin-top: 1.75rem; margin-bottom: 0.75rem;">${trimmed.substring(4)}</h3>`;
+          }
+          if (trimmed.startsWith('## ')) {
+            return `<h2 style="font-size: 1.65rem; font-weight: 800; color: #0f172a; margin-top: 2rem; margin-bottom: 1rem;">${trimmed.substring(3)}</h2>`;
+          }
+          if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+            const items = trimmed.split(/\n[\*\-]\s+/);
+            return `<ul style="margin-bottom: 1.25rem; padding-left: 1.5rem; color: #334155;">${items.map(item => `<li style="margin-bottom: 0.5rem; line-height: 1.6;">${item.replace(/^[\*\-]\s+/, '')}</li>`).join('')}</ul>`;
+          }
+          return `<p style="margin-bottom: 1.25rem; color: #334155; line-height: 1.7; font-size: 1.05rem;">${trimmed}</p>`;
+        }).join('\n');
+
+        prerenderedHtml = `
+${renderHeader}
+<main style="max-width: 800px; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
+  <p style="margin-bottom: 1.5rem;"><a href="${baseNavUrl}/blog" style="color: #2563eb; text-decoration: none; font-weight: 600;">&larr; Back to Blog Index</a></p>
+  <article>
+    <header style="margin-bottom: 2rem;">
+      <h1 style="font-size: 2.5rem; font-weight: 800; color: #0f172a; line-height: 1.25; margin-bottom: 0.75rem;">${article.title}</h1>
+      <div style="color: #64748b; font-size: 0.9375rem;">
+        Published on ${article.date} by ${article.author} &bull; ${article.readingTime}
+      </div>
+    </header>
+    <p style="font-size: 1.25rem; color: #1e293b; font-style: italic; line-height: 1.6; margin-bottom: 2rem; padding-left: 1rem; border-left: 4px solid #2563eb;">${article.intro}</p>
+    <div class="article-body">
+      ${formattedArticleBody}
+    </div>
+  </article>
+</main>
+${renderFooter}`;
 
         noscriptHtml = `
 <noscript>
@@ -3525,21 +3722,8 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
       </div>
     </header>
     <p style="font-size: 1.2rem; color: #333; font-style: italic; margin-bottom: 2rem;">${article.intro}</p>
-    <div class="article-content" style="color: #222; font-size: 1.1rem;">
-      ${article.contentMarkdown.split('\n\n').map((p: string) => {
-        const trimmed = p.trim();
-        if (trimmed.startsWith('### ')) {
-          return `<h3 style="font-size: 1.4rem; margin-top: 1.8rem; margin-bottom: 0.8rem;">${trimmed.substring(4)}</h3>`;
-        }
-        if (trimmed.startsWith('## ')) {
-          return `<h2 style="font-size: 1.7rem; margin-top: 2rem; margin-bottom: 1rem;">${trimmed.substring(3)}</h2>`;
-        }
-        if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
-          const items = trimmed.split(/\n[\*\-]\s+/);
-          return `<ul style="margin-bottom: 1.2rem; padding-left: 1.5rem;">${items.map(item => `<li>${item.replace(/^[\*\-]\s+/, '')}</li>`).join('')}</ul>`;
-        }
-        return `<p style="margin-bottom: 1.2rem;">${trimmed}</p>`;
-      }).join('\n')}
+    <div class="article-content">
+      ${formattedArticleBody}
     </div>
   </article>
 </noscript>`;
@@ -3573,6 +3757,20 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
         };
         schemaObjects.push(breadcrumbSchema);
 
+        prerenderedHtml = `
+${renderHeader}
+<main style="max-width: 1000px; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
+  <h1 style="font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">${title}</h1>
+  <p style="font-size: 1.25rem; color: #475569; margin-bottom: 2rem; line-height: 1.6;">${description}</p>
+  
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 2rem; margin-bottom: 3rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+    <h2 style="font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">Generator Studio Specs & Instructions</h2>
+    <p style="color: #334155; line-height: 1.6; margin-bottom: 1.5rem;">Use our free online studio to generate high-precision ${matchedTool.name} codes. Supports custom colors, central brand logo embedding, error correction levels (L, M, Q, H), and instant high-resolution PNG or vector SVG exports.</p>
+    <a href="${homeUrl}" style="background: #2563eb; color: #ffffff; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; display: inline-block;">Open Generator Studio &rarr;</a>
+  </div>
+</main>
+${renderFooter}`;
+
         noscriptHtml = `
 <noscript>
   <div style="padding: 2rem; max-width: 800px; margin: 0 auto; font-family: sans-serif; line-height: 1.6;">
@@ -3581,6 +3779,16 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
     <p><a href="/${locale === 'en' ? '' : locale}" style="color: #0066cc;">&larr; Return to main QR/Barcode designer</a></p>
   </div>
 </noscript>`;
+      } else {
+        // Default generic page fallback pre-render
+        prerenderedHtml = `
+${renderHeader}
+<main style="max-width: 1000px; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
+  <h1 style="font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">${title}</h1>
+  <p style="font-size: 1.2rem; color: #475569; margin-bottom: 2rem; line-height: 1.6;">${description}</p>
+  <a href="${homeUrl}" style="background: #2563eb; color: #ffffff; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; display: inline-block;">Return to Home Studio &rarr;</a>
+</main>
+${renderFooter}`;
       }
     }
 
@@ -3595,7 +3803,8 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
       title,
       description,
       schemaHtml,
-      noscriptHtml
+      noscriptHtml,
+      prerenderedHtml
     };
   }
 
@@ -3667,6 +3876,14 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
                          injectedHtml.substring(endIndex + endMarker.length);
         } else {
           injectedHtml = injectedHtml.replace('<!-- DYNAMIC_SCHEMA_PLACEHOLDER -->', seoData.schemaHtml);
+        }
+      }
+
+      if (seoData.prerenderedHtml) {
+        if (injectedHtml.includes('<!-- PRERENDERED_HTML_PLACEHOLDER -->')) {
+          injectedHtml = injectedHtml.replace('<!-- PRERENDERED_HTML_PLACEHOLDER -->', seoData.prerenderedHtml);
+        } else {
+          injectedHtml = injectedHtml.replace(/<div id="root">[\s\S]*?<\/div>/i, `<div id="root">${seoData.prerenderedHtml}</div>`);
         }
       }
 
@@ -3783,6 +4000,7 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
         appType: 'spa',
       });
       (global as any).viteInstance = vite;
+      app.use(serveHtmlWithSeoAndSchema);
       app.use(vite.middlewares);
       app.get('*', serveHtmlWithSeoAndSchema);
     } else {
@@ -3800,6 +4018,7 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
       });
 
       app.use(express.static(distPath, {
+        index: false,
         setHeaders: (res, filePath) => {
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');

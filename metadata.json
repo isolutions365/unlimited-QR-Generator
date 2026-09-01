@@ -1,5 +1,5 @@
 {
-  "name": "FreeQRBarcodes.com",
+  "name": "Free QR Code Generator",
   "description": "A production-ready QR and Barcodes generator with options to customize colors, inner dots, shapes, add custom brand logos, save projects to history with real-time analytics dashboards.",
   "requestFramePermissions": ["camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
