@@ -19,6 +19,7 @@ import QRRedirector from './components/QRRedirector';
 import AppLayoutShell from './components/AppLayoutShell';
 import MobileQRWorkspace from './components/MobileQRWorkspace';
 import ScrollableTabContainer from './components/ScrollableTabContainer';
+import BulkFormatHelpModal from './components/BulkFormatHelpModal';
 import { usePlatformLayout } from './hooks/usePlatformLayout';
 import { MobileTabType } from './components/MobileBottomNav';
 import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/audioFeedback';
@@ -817,6 +818,7 @@ export default function App() {
 
   // Active Tab
   const [activeTab, setActiveTab ] = useState<AppTab>('create');
+  const [isBulkHelpModalOpen, setIsBulkHelpModalOpen] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'zatca' && locale !== 'ar') {
@@ -3280,27 +3282,56 @@ export default function App() {
               }
 
               return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id as AppTab)}
-                  className={`flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer shrink-0 select-none ${
-                    isActive 
-                      ? activeClass 
-                      : 'text-slate-600 hover:text-indigo-600 hover:bg-white bg-transparent'
-                  }`}
-                >
-                  <IconComponent 
-                    className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                <div key={tab.id} className="relative group/tab flex items-center shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab(tab.id as AppTab)}
+                    title={tab.id === 'bulk' ? t('bulk.tabTitleAttr', 'Bulk QR Generator - Batch process CSV & Excel files') : undefined}
+                    className={`flex items-center justify-center gap-1.5 ${tab.id === 'bulk' ? 'pe-2.5 ps-3.5' : 'px-4'} py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer shrink-0 select-none ${
                       isActive 
-                        ? 'text-white' 
-                        : tab.id === 'animations' 
-                          ? 'text-purple-500 animate-pulse' 
-                          : tab.iconColor
-                    }`} 
-                  />
-                  <span>{tab.name}</span>
-                </button>
+                        ? activeClass 
+                        : 'text-slate-600 hover:text-indigo-600 hover:bg-white bg-transparent'
+                    }`}
+                  >
+                    <IconComponent 
+                      className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                        isActive 
+                          ? 'text-white' 
+                          : tab.id === 'animations' 
+                            ? 'text-purple-500 animate-pulse' 
+                            : tab.iconColor
+                      }`} 
+                    />
+                    <span>{tab.name}</span>
+
+                    {tab.id === 'bulk' && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsBulkHelpModalOpen(true);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setIsBulkHelpModalOpen(true);
+                          }
+                        }}
+                        title={t('bulk.formatTooltipHint', 'Format guide: CSV with "name" and "url" columns. Click for full guide & sample file.')}
+                        className={`inline-flex items-center justify-center w-4 h-4 rounded-full transition-all cursor-pointer ms-0.5 ${
+                          isActive 
+                            ? 'bg-white/25 hover:bg-white/40 text-white' 
+                            : 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700'
+                        }`}
+                        aria-label={t('bulk.formatGuideTitle', 'CSV & Excel Formatting Guide')}
+                      >
+                        <HelpCircle className="w-2.5 h-2.5" />
+                      </span>
+                    )}
+                  </button>
+                </div>
               );
             })}
           </ScrollableTabContainer>
@@ -5047,6 +5078,13 @@ export default function App() {
         onClose={() => setIsSettingsModalOpen(false)}
         soundSettings={soundSettings}
         onUpdateSoundSettings={setSoundSettings}
+      />
+
+      {/* CSV & Excel File Format Instructions Modal for Bulk QR Generator */}
+      <BulkFormatHelpModal
+        isOpen={isBulkHelpModalOpen}
+        onClose={() => setIsBulkHelpModalOpen(false)}
+        onGoToBulkTab={() => setActiveTab('bulk')}
       />
 
       {/* Campaign AI Assistant Widget */}

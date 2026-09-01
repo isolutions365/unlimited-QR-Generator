@@ -20,6 +20,7 @@ import { useTranslation } from '../utils/i18n';
 import { isRtlLocale } from '../utils/translations';
 import { renderStyledQR } from '../utils/qrRenderer';
 import { FrameStyle } from '../types';
+import BulkFormatHelpModal from './BulkFormatHelpModal';
 
 interface BulkEntry {
   id: string;
@@ -38,6 +39,7 @@ export default function BulkQRGenerator() {
   const [status, setStatus] = useState<'idle' | 'generating' | 'success' | 'error'>('idle');
   const [progress, setProgress] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   
   // Custom manual insertion input
   const [manualName, setManualName] = useState('');
@@ -372,6 +374,15 @@ export default function BulkQRGenerator() {
         <div className="flex flex-wrap gap-2 shrink-0">
           <button
             type="button"
+            onClick={() => setIsHelpModalOpen(true)}
+            className="px-3 py-1.5 text-[11px] font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-xl transition-all border border-slate-200 shadow-2xs flex items-center gap-1.5 cursor-pointer"
+          >
+            <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
+            {t('bulk.formatGuideBtn', 'CSV & Excel Format Guide')}
+          </button>
+
+          <button
+            type="button"
             onClick={downloadSampleTemplate}
             className="px-3 py-1.5 text-[11px] font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 rounded-xl transition-all border border-indigo-200/50 flex items-center gap-1.5 cursor-pointer"
           >
@@ -390,6 +401,43 @@ export default function BulkQRGenerator() {
               {t('bulk.clearAll', 'Reset Batch')}
             </button>
           )}
+        </div>
+      </div>
+
+      {/* CSV / Excel Formatting Quick Hint Card */}
+      <div className="bg-linear-to-r from-indigo-50/80 via-blue-50/50 to-slate-50 border border-indigo-100/80 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+            <FileSpreadsheet className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+              <span>{t('bulk.quickHintTitle', 'File Formatting Requirements')}</span>
+              <span className="px-1.5 py-0.2 bg-indigo-100 text-indigo-800 text-[10px] rounded-md font-mono">.csv</span>
+            </h3>
+            <p className="text-[11px] text-slate-600 mt-0.5">
+              {t('bulk.quickHintDesc', 'Your spreadsheet must include 2 columns: ')}
+              <code className="font-mono font-bold text-indigo-700 bg-indigo-100/60 px-1 py-0.2 rounded">name</code> ({t('bulk.hintName', 'file name')}) {t('common.and', 'and')} <code className="font-mono font-bold text-indigo-700 bg-indigo-100/60 px-1 py-0.2 rounded">url</code> ({t('bulk.hintUrl', 'destination link / content')}).
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+          <button
+            type="button"
+            onClick={() => setIsHelpModalOpen(true)}
+            className="px-3 py-1.5 text-[11px] font-bold text-indigo-700 hover:text-indigo-800 bg-white hover:bg-indigo-50/80 border border-indigo-200/80 rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-2xs"
+          >
+            <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
+            <span>{t('bulk.viewFullGuide', 'View Instructions')}</span>
+          </button>
+          <button
+            type="button"
+            onClick={downloadSampleTemplate}
+            className="px-3 py-1.5 text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-2xs"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>{t('bulk.sampleCsv', 'Sample CSV')}</span>
+          </button>
         </div>
       </div>
 
@@ -766,6 +814,13 @@ export default function BulkQRGenerator() {
       <div className="hidden">
         <canvas ref={hiddenCanvasRef} />
       </div>
+
+      {/* CSV & Excel File Format Instructions Modal */}
+      <BulkFormatHelpModal 
+        isOpen={isHelpModalOpen} 
+        onClose={() => setIsHelpModalOpen(false)} 
+        onDownloadTemplate={downloadSampleTemplate} 
+      />
     </div>
   );
 }

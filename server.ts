@@ -3160,6 +3160,23 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
     res.send(robots);
   });
 
+  // Google Search Console Site Verification Static Route
+  app.get('/google50a29f713551bfd0.html', (req, res) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
+    res.send('google-site-verification: google50a29f713551bfd0.html');
+  });
+
+  app.get('/google:code.html', (req, res, next) => {
+    const code = req.params.code;
+    if (/^[a-zA-Z0-9_-]+$/.test(code)) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
+      return res.send(`google-site-verification: google${code}.html`);
+    }
+    next();
+  });
+
 
   app.use('/api/*', (req, res) => {
     res.status(404).json({
@@ -3811,7 +3828,8 @@ ${renderFooter}`;
   async function serveHtmlWithSeoAndSchema(req: express.Request, res: express.Response, next: express.NextFunction) {
     const isFile = req.path.includes('.') && !req.path.endsWith('.html');
     const isViteInternal = req.path.startsWith('/@') || req.path.startsWith('/node_modules/') || req.path.startsWith('/src/');
-    if (req.method !== 'GET' || req.path.startsWith('/api/') || req.path.startsWith('/ws') || req.path === '/sitemap.xml' || req.path === '/robots.txt' || isFile || isViteInternal) {
+    const isGoogleVerification = req.path.startsWith('/google') && req.path.endsWith('.html');
+    if (req.method !== 'GET' || req.path.startsWith('/api/') || req.path.startsWith('/ws') || req.path === '/sitemap.xml' || req.path === '/robots.txt' || isGoogleVerification || isFile || isViteInternal) {
       return next();
     }
 
@@ -3892,7 +3910,9 @@ ${renderFooter}`;
       }
 
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
+      res.setHeader('CDN-Cache-Control', 'no-store');
+      res.setHeader('Surrogate-Control', 'no-store');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');
       res.status(200).send(injectedHtml);
@@ -4025,7 +4045,9 @@ ${renderFooter}`;
           res.setHeader('Access-Control-Allow-Headers', '*');
           if (filePath.endsWith('.html')) {
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
+            res.setHeader('CDN-Cache-Control', 'no-store');
+            res.setHeader('Surrogate-Control', 'no-store');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
           } else if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
