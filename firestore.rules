@@ -21,6 +21,12 @@ service cloud.firestore {
 
 
 
+    // --- STARTUP HEALTH CHECK COLLECTION ---
+    match /test/{testId} {
+      allow get: if true;
+      allow list, write: if false;
+    }
+
     // --- USERS COLLECTION ---
     match /users/{userId} {
       allow get: if isSignedIn() && request.auth.uid == userId;

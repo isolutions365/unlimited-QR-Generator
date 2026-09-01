@@ -207,7 +207,36 @@ const formRateLimiter = createRateLimiter({
 });
 
 export const app = express();
-app.use(express.json());
+
+  // --- TOP-LEVEL STATIC VERIFICATION & PUBLIC ASSETS (Highest Priority) ---
+  // Google Search Console Site Verification Static Route (served immediately with no wrappers or React interception)
+  app.get('/google50a29f713551bfd0.html', (req, res) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
+    res.status(200).send('google-site-verification: google50a29f713551bfd0.html');
+  });
+
+  app.get('/google:code.html', (req, res, next) => {
+    const code = req.params.code;
+    if (/^[a-zA-Z0-9_-]+$/.test(code)) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
+      return res.status(200).send(`google-site-verification: google${code}.html`);
+    }
+    next();
+  });
+
+  // Serve static files from public folder before any rate-limiting, CORS or API routing
+  app.use(express.static(path.join(process.cwd(), 'public'), {
+    index: false,
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      }
+    }
+  }));
+
+  app.use(express.json());
 
   // Tight and Strict CORS policy configuration
   const allowedOrigins = [
