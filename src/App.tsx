@@ -1658,10 +1658,37 @@ export default function App() {
           }
         },
         {
+          "@type": "WebPage",
+          "@id": `${rootUrl}/#webpage`,
+          "url": rootUrl,
+          "name": "Free QR Code Generator - Dynamic QR Codes & Custom Creator",
+          "description": "Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Custom styled QR generator template for your brand.",
+          "isPartOf": {
+            "@id": `${rootUrl}/#website`
+          },
+          "about": {
+            "@id": `${rootUrl}/#organization`
+          },
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "cssSelector": [
+              "#studio-main-heading",
+              "#studio-direct-answer-summary"
+            ]
+          }
+        },
+        {
           "@type": "WebApplication",
           "@id": `${rootUrl}/#webapplication`,
           "name": "Free QR Code Generator & Analytics Platform",
           "url": rootUrl,
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "cssSelector": [
+              "#studio-main-heading",
+              "#studio-direct-answer-summary"
+            ]
+          },
           "operatingSystem": "All Mobile, Tablet, and Desktop web browsers",
           "applicationCategory": "DesignApplication, UtilitiesApplication",
           "browserRequirements": "Requires JavaScript. Supports HTML5 Canvas.",
@@ -1669,14 +1696,6 @@ export default function App() {
             "@type": "Offer",
             "price": "0.00",
             "priceCurrency": "USD"
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingCount": "1280",
-            "reviewCount": "1280"
           },
           "featureList": [
             "Dynamic QR Code Generation",
@@ -1700,11 +1719,6 @@ export default function App() {
             "@type": "Offer",
             "price": "0.00",
             "priceCurrency": "USD"
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.96",
-            "reviewCount": "5840"
           }
         },
         {
@@ -1716,6 +1730,36 @@ export default function App() {
               "position": 1,
               "name": "Home",
               "item": rootUrl
+            }
+          ]
+        },
+        {
+          "@type": "HowTo",
+          "@id": `${rootUrl}/#howto`,
+          "name": "How to Create a Custom QR Code in 3 Simple Steps",
+          "description": "Follow these 3 simple steps to create, customize, and download a free high-resolution QR code with vector SVG or PNG export.",
+          "totalTime": "PT1M",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "Select Your Content Type",
+              "text": "Choose from URL, vCard contact, WiFi password, plain text, SMS, WhatsApp link, or digital restaurant menu.",
+              "url": `${rootUrl}/#step-1`
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "Customize Design & Branding",
+              "text": "Apply custom brand colors, linear gradients, unique corner eye shapes, and upload your central brand logo.",
+              "url": `${rootUrl}/#step-2`
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "Download & Track Scans",
+              "text": "Export print-ready SVG or PNG files immediately and enable dynamic short-link scan tracking analytics.",
+              "url": `${rootUrl}/#step-3`
             }
           ]
         }
@@ -3251,7 +3295,28 @@ export default function App() {
         />
       ) : (
         <main id="generator-studio" className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-6 w-full relative z-10 min-h-screen">
-            <h1 className="sr-only">Free QR Code Generator - Custom Dynamic QR Codes with Analytics</h1>
+          {/* Visible SEO-Optimized Studio Header */}
+          <header id="studio-header" className="space-y-1.5 pb-1">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <h1 id="studio-main-heading" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Free QR Code Generator
+                  <span className="text-indigo-600 block sm:inline sm:ml-2 font-bold text-xl sm:text-2xl">
+                    — Custom Dynamic QR Codes with Analytics
+                  </span>
+                </h1>
+                <p id="studio-direct-answer-summary" className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
+                  Design high-resolution dynamic and static QR codes with embedded logos, custom color gradients, error correction, and real-time scan analytics. 100% free with unlimited vector SVG and PNG exports.
+                </p>
+              </div>
+              <div className="hidden md:flex items-center gap-2 shrink-0">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  100% Free & Unlimited
+                </span>
+              </div>
+            </div>
+          </header>
 
           {/* Dynamic Sub-Navigation Bar with Responsive Fade Indicator & Scroll Controls */}
           <ScrollableTabContainer

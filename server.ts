@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { dbInstance, hashPassword, verifyPassword, getDb, isFallbackMode, DbScan, DbProject } from './server/db';
@@ -3179,14 +3180,68 @@ ${urlXmls}
   });
 
   app.get('/robots.txt', (req, res) => {
-    res.header('Content-Type', 'text/plain');
-    const robots = `User-agent: *
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
+    const robotsPath = path.join(process.cwd(), 'public', 'robots.txt');
+    if (fs.existsSync(robotsPath)) {
+      return res.sendFile(robotsPath);
+    }
+    const robots = `# Standard Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+
+# AI & LLM Crawlers
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+
+User-agent: CCBot
+Allow: /
+Disallow: /api/
+
+# Default Rules for All Other Crawlers
+User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /profile
 
 Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
     res.send(robots);
+  });
+
+  app.get('/llms.txt', (req, res) => {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
+    const llmsPath = path.join(process.cwd(), 'public', 'llms.txt');
+    if (fs.existsSync(llmsPath)) {
+      return res.sendFile(llmsPath);
+    }
+    res.status(404).send('File not found');
   });
 
   // Google Search Console Site Verification Static Route
@@ -3411,6 +3466,13 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any",
         "browserRequirements": "Requires JavaScript",
+        "speakable": {
+          "@type": "SpeakableSpecification",
+          "cssSelector": [
+            "#studio-main-heading",
+            "#studio-direct-answer-summary"
+          ]
+        },
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -3421,15 +3483,70 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
           "@id": "https://www.freeqrbarcodes.com/#organization"
         }
       };
-      schemaObjects.push(webAppSchema);
+      const canonicalPageUrl = `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale}`;
+
+      const webPageSchema = {
+        "@type": "WebPage",
+        "@id": `${canonicalPageUrl}#webpage`,
+        "url": canonicalPageUrl,
+        "name": meta.title,
+        "description": meta.description,
+        "isPartOf": {
+          "@id": "https://www.freeqrbarcodes.com/#website"
+        },
+        "about": {
+          "@id": "https://www.freeqrbarcodes.com/#organization"
+        },
+        "speakable": {
+          "@type": "SpeakableSpecification",
+          "cssSelector": [
+            "#studio-main-heading",
+            "#studio-direct-answer-summary"
+          ]
+        }
+      };
+
+      const howToSchema = {
+        "@type": "HowTo",
+        "@id": `${canonicalPageUrl}#howto`,
+        "name": "How to Create a Custom QR Code in 3 Simple Steps",
+        "description": "Follow these 3 simple steps to create, customize, and download a free high-resolution QR code with vector SVG or PNG export.",
+        "totalTime": "PT1M",
+        "inLanguage": locale,
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Select Your Content Type",
+            "text": "Choose from URL, vCard contact, WiFi password, plain text, SMS, WhatsApp link, or digital restaurant menu.",
+            "url": `${canonicalPageUrl}#step-1`
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Customize Design & Branding",
+            "text": "Apply custom brand colors, linear gradients, unique corner eye shapes, and upload your central brand logo.",
+            "url": `${canonicalPageUrl}#step-2`
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Download & Track Scans",
+            "text": "Export print-ready SVG or PNG files immediately and enable dynamic short-link scan tracking analytics.",
+            "url": `${canonicalPageUrl}#step-3`
+          }
+        ]
+      };
+
+      schemaObjects.push(webPageSchema, webAppSchema, howToSchema);
 
       prerenderedHtml = `
 ${renderHeader}
 <main style="max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
   <section style="text-align: center; margin-bottom: 4rem;">
     <span style="display: inline-block; padding: 0.35rem 1rem; background: #eff6ff; color: #2563eb; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem;">100% Free & Unlimited • Vector SVG & High-Res PNG Exports</span>
-    <h1 style="font-size: 2.75rem; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 1.25rem;">${meta.title}</h1>
-    <p style="font-size: 1.25rem; color: #475569; max-width: 800px; margin: 0 auto 2rem auto; line-height: 1.6;">${meta.description}</p>
+    <h1 id="studio-main-heading" style="font-size: 2.75rem; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 1.25rem;">${meta.title}</h1>
+    <p id="studio-direct-answer-summary" style="font-size: 1.25rem; color: #475569; max-width: 800px; margin: 0 auto 2rem auto; line-height: 1.6;">${meta.description}</p>
     
     <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
       <a href="#generator-studio" style="background: #2563eb; color: #ffffff; padding: 0.875rem 1.75rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; font-size: 1rem;">Create QR Code Now</a>
@@ -3461,11 +3578,11 @@ ${renderHeader}
       </div>
       <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
         <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">High-Resolution Vector SVG, EPS & Print-Ready Exports</h3>
-        <p style="color: #475569; line-height: 1.6;">Export your QR codes and 1D/2D barcodes in sharp vector formats (SVG, EPS) or ultra-high-definition PNG images suitable for large-format billboards, product packaging, and business cards.</p>
+        <p style="color: #475569; line-height: 1.6;">Export your QR codes and 1D/2D barcodes in sharp vector formats (SVG, EPS) compliant with the <a href="https://www.iso.org/standard/62021.html" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">ISO/IEC 18004 specification</a> or ultra-high-definition PNG images suitable for large-format billboards, product packaging, and business cards.</p>
       </div>
       <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
         <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Complete Visual Styling & Brand Logo Embedding</h3>
-        <p style="color: #475569; line-height: 1.6;">Customize module colors, background gradients, eye patterns, and embed your custom company logo or icon directly into the center of the QR code with automatic error correction.</p>
+        <p style="color: #475569; line-height: 1.6;">Customize module colors, background gradients, eye patterns, and embed your custom company logo directly into the center of the <a href="https://en.wikipedia.org/wiki/QR_code" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">two-dimensional QR code matrix</a> with automatic Reed-Solomon error correction.</p>
       </div>
     </div>
   </section>
@@ -3473,17 +3590,17 @@ ${renderHeader}
   <section style="background: #f8fafc; border-radius: 1rem; padding: 2.5rem; margin-bottom: 4rem; border: 1px solid #e2e8f0;">
     <h2 style="font-size: 1.75rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem;">How to Create a Custom QR Code in 3 Simple Steps</h2>
     <ol style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; padding: 0; list-style: none;">
-      <li style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+      <li id="step-1" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
         <span style="display: inline-block; width: 2rem; height: 2rem; background: #2563eb; color: #fff; border-radius: 50%; text-align: center; line-height: 2rem; font-weight: 700; margin-bottom: 0.75rem;">1</span>
         <h3 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Select Your Content Type</h3>
         <p style="font-size: 0.9375rem; color: #475569; line-height: 1.5;">Choose from URL, vCard contact, WiFi password, plain text, SMS, WhatsApp link, or digital restaurant menu.</p>
       </li>
-      <li style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+      <li id="step-2" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
         <span style="display: inline-block; width: 2rem; height: 2rem; background: #2563eb; color: #fff; border-radius: 50%; text-align: center; line-height: 2rem; font-weight: 700; margin-bottom: 0.75rem;">2</span>
         <h3 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Customize Design & Branding</h3>
         <p style="font-size: 0.9375rem; color: #475569; line-height: 1.5;">Apply custom brand colors, linear gradients, unique corner eye shapes, and upload your central brand logo.</p>
       </li>
-      <li style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
+      <li id="step-3" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem;">
         <span style="display: inline-block; width: 2rem; height: 2rem; background: #2563eb; color: #fff; border-radius: 50%; text-align: center; line-height: 2rem; font-weight: 700; margin-bottom: 0.75rem;">3</span>
         <h3 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Download & Track Scans</h3>
         <p style="font-size: 0.9375rem; color: #475569; line-height: 1.5;">Export print-ready SVG or PNG files immediately and enable dynamic short-link scan tracking analytics.</p>
@@ -3522,6 +3639,15 @@ ${renderFooter}`;
       const faqSchema = {
         "@type": "FAQPage",
         "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}faq/#faqpage`,
+        "name": title,
+        "description": description,
+        "speakable": {
+          "@type": "SpeakableSpecification",
+          "cssSelector": [
+            "#faq-main-heading",
+            "#faq-direct-answer-summary"
+          ]
+        },
         "mainEntity": mainEntity
       };
 
@@ -3549,8 +3675,8 @@ ${renderFooter}`;
       prerenderedHtml = `
 ${renderHeader}
 <main style="max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
-  <h1 style="font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">${title}</h1>
-  <p style="font-size: 1.2rem; color: #475569; margin-bottom: 2.5rem; line-height: 1.6;">${description}</p>
+  <h1 id="faq-main-heading" style="font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">${title}</h1>
+  <p id="faq-direct-answer-summary" style="font-size: 1.2rem; color: #475569; margin-bottom: 2.5rem; line-height: 1.6;">${description}</p>
   
   <div style="display: flex; flex-direction: column; gap: 1.5rem;">
     ${faqItems.map((item: any) => `
@@ -3672,17 +3798,45 @@ ${renderFooter}`;
         description = article.metaDescription || article.intro;
 
         const cleanBody = article.contentMarkdown.replace(/[#*`>_\-]/g, ' ').substring(0, 10000);
+        const rawAuthor = article.author || "iSolutions Specialist";
+        const authorHasComma = rawAuthor.includes(',');
+        const authorName = authorHasComma ? rawAuthor.split(',')[0].trim() : rawAuthor.trim();
+        const authorJobTitle = authorHasComma ? rawAuthor.split(',')[1].trim() : undefined;
+        const authorProfileUrl = `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}about`;
+
+        const parseToISODate = (dateStr?: string): string => {
+          if (!dateStr) return "2026-06-02T08:00:00+00:00";
+          if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            return `${dateStr}T08:00:00+00:00`;
+          }
+          const parsed = Date.parse(dateStr);
+          if (!isNaN(parsed)) {
+            return new Date(parsed).toISOString();
+          }
+          return "2026-06-02T08:00:00+00:00";
+        };
+
+        const pubIsoDate = parseToISODate(article.date);
+        const modIsoDate = parseToISODate(article.dateModified || article.date);
 
         const blogPostingSchema = {
           "@type": "BlogPosting",
           "@id": `https://www.freeqrbarcodes.com/${locale === 'en' ? '' : locale + '/'}blog/${slug}/#blogposting`,
           "headline": article.title,
           "description": article.metaDescription || article.intro,
-          "datePublished": "2026-06-02T08:00:00+00:00",
-          "dateModified": "2026-06-02T08:00:00+00:00",
+          "datePublished": pubIsoDate,
+          "dateModified": modIsoDate,
           "author": {
             "@type": "Person",
-            "name": article.author || "I-Solutions Specialist"
+            "name": authorName,
+            ...(authorJobTitle ? { "jobTitle": authorJobTitle } : {}),
+            "url": authorProfileUrl,
+            "sameAs": authorProfileUrl,
+            "worksFor": {
+              "@type": "Organization",
+              "@id": "https://www.freeqrbarcodes.com/#organization",
+              "name": "Free QR Code Generator"
+            }
           },
           "publisher": {
             "@id": "https://www.freeqrbarcodes.com/#organization"

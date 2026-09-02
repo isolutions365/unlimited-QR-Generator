@@ -37,6 +37,7 @@ export interface BlogArticle {
   metaDescription: string;
   category: string;
   date: string;
+  dateModified?: string;
   readingTime: string;
   author: string;
   intro: string;

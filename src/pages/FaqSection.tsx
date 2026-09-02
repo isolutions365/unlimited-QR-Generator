@@ -64,9 +64,19 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
     return {
       "@context": "https://schema.org",
       "@type": "FAQPage",
+      "@id": `${buildProductionUrl('/faq')}#faqpage`,
+      "name": t('faq.title', 'Frequently Asked Questions'),
+      "description": t('faq.description', 'Unlock maximum scannability and build better brand experiences with our 25+ detailed guides, hardware compatibility logs, and legal disclaimers.'),
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [
+          "#faq-main-heading",
+          "#faq-direct-answer-summary"
+        ]
+      },
       "mainEntity": list,
     };
-  }, [filteredFAQs]);
+  }, [filteredFAQs, t]);
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 animate-fade-in text-slate-800">
@@ -97,10 +107,10 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
         <span className="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 bg-opacity-70 border border-indigo-100 rounded-full font-extrabold uppercase tracking-widest inline-block">
           {t('faq.subTitle', 'Universal Knowledge Base')}
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-none">
+        <h1 id="faq-main-heading" className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-none">
           {t('faq.title', 'Frequently Asked Questions')}
         </h1>
-        <p className="text-sm text-slate-500 max-w-xl leading-relaxed">
+        <p id="faq-direct-answer-summary" className="text-sm text-slate-500 max-w-xl leading-relaxed">
           {t('faq.description', 'Unlock maximum scannability and build better brand experiences with our 25+ detailed guides, hardware compatibility logs, and legal disclaimers.')}
         </p>
       </div>

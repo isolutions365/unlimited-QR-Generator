@@ -74,6 +74,13 @@ export default function FaqSection({
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    'speakable': {
+      '@type': 'SpeakableSpecification',
+      'cssSelector': [
+        '#faq-section-heading',
+        '#faq-section-summary'
+      ]
+    },
     'mainEntity': faqs.map((faq) => ({
       '@type': 'Question',
       'name': t(faq.question, faq.question),
@@ -101,10 +108,10 @@ export default function FaqSection({
             <HelpCircle className="w-3.5 h-3.5" />
             <span>{t('faq.badge', 'Frequently Asked Questions')}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h2 id="faq-section-heading" className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {title || t('faq.sectionTitle', 'Everything You Need to Know About Free QR Codes')}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          <p id="faq-section-summary" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             {subtitle || t('faq.sectionSubtitle', 'Learn how our enterprise generator ensures 100% commercial freedom, vector quality, and flawless camera readability.')}
           </p>
         </header>

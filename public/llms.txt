@@ -1,0 +1,74 @@
+# Free QR Code & Barcode Generator
+
+> Free, privacy-first online QR code and barcode generator studio. Create dynamic and static QR codes, 1D/2D barcodes, custom vector designs with logos, real-time scan analytics, and digital landing pages with zero registration required.
+
+FreeQRBarcodes (https://www.freeqrbarcodes.com) provides 100% free, unlimited tools for generating production-ready QR codes and barcodes for personal, commercial, and enterprise applications. All core tools operate without watermarks, paywalls, or account requirements.
+
+## Core QR Code Generators
+
+- [URL QR Code Generator](https://www.freeqrbarcodes.com/url-qr-generator): Create static and dynamic QR codes for website URLs and marketing campaigns with destination management and scan tracking.
+- [vCard Digital Contact QR](https://www.freeqrbarcodes.com/vcard-qr-generator): Generate vCard 3.0/4.0 contact QR codes and digital business cards for instant address book import.
+- [WiFi QR Code Generator](https://www.freeqrbarcodes.com/wifi-qr-generator): Generate WiFi network access QR codes for WPA/WPA2/WPA3 and WEP protocols to connect devices without typing passwords.
+- [PDF QR Code Generator](https://www.freeqrbarcodes.com/pdf-qr-generator): Distribute downloadable documents, restaurant menus, product catalogs, and whitepapers via mobile-optimized QR links.
+- [WhatsApp QR Code Generator](https://www.freeqrbarcodes.com/whatsapp-qr-generator): Direct customers to initiate WhatsApp conversations with pre-filled support or inquiry messages.
+- [Email QR Code Generator](https://www.freeqrbarcodes.com/email-qr-generator): Pre-compose emails with pre-set recipient addresses, subject lines, and message body text.
+- [SMS QR Code Generator](https://www.freeqrbarcodes.com/sms-qr-generator): Trigger direct SMS text messages with predefined phone numbers and text prompts.
+- [Restaurant Menu QR Generator](https://www.freeqrbarcodes.com/restaurant-qr-generator): Contactless digital dining menus with instant menu item updating and allergen filtering.
+- [Social Media QR Codes](https://www.freeqrbarcodes.com/instagram-qr-generator): Bio-link hubs consolidating Instagram, Facebook, YouTube, TikTok, and multi-channel social links into a single scan.
+- [App Store & Play Store QR](https://www.freeqrbarcodes.com/app-store-qr-generator): Smart app download QR codes that automatically detect mobile operating systems (iOS vs. Android) and redirect to the correct store.
+- [Location & GPS QR](https://www.freeqrbarcodes.com/location-qr-generator): Encode geographic coordinates and direct map links for store locators, event venues, and tourism spots.
+- [Bulk QR Generator](https://www.freeqrbarcodes.com/bulk-qr-generator): Batch generation of hundreds or thousands of unique QR codes via CSV/Excel upload with ZIP vector export.
+
+## Barcode Generator Studio
+
+- [Barcode Generator Studio](https://www.freeqrbarcodes.com/barcode-generator): Create standard 1D linear and 2D matrix barcodes for retail, inventory, shipping, and publishing:
+  - Code 128 (High-density alphanumeric logistics barcode)
+  - EAN-13 & EAN-8 (International retail product packaging)
+  - UPC-A & UPC-E (North American retail standard)
+  - Code 39 (Industrial, automotive, and defense inventory)
+  - ITF-14 (Carton and corrugated case shipping barcode)
+  - ISBN (Book publishing barcode with optional EAN-5 price extension)
+  - Data Matrix (High-density 2D matrix barcode for small components)
+  - PDF417 & Aztec Code (Transport tickets and boarding passes)
+
+## Key Features & Platform Capabilities
+
+- **Dynamic QR Code Redirection**: Update the target URL or payload at any time after printing without replacing physical marketing materials, signs, or packaging.
+- **Real-Time Scan Analytics**: Track total scans, unique visitors, scan timestamps, geographic locations (country/city), operating systems, and device types.
+- **Visual Design & Custom Styling**: Customize pixel module patterns, corner eye frame styles, background colors, linear gradients, and quiet-zone padding.
+- **Custom Logo Embedding**: Embed your brand icon or logo directly in the center of the QR code with automatic aspect ratio scaling and contrast preservation.
+- **Print-Ready Vector Exports**: Download in high-resolution vector SVG, EPS, and PDF formats for large-scale billboard and offset printing, or crystal-clear PNG up to 4096px.
+- **Reed-Solomon Error Correction**: Select between Level L (7%), Level M (15%), Level Q (25%), and Level H (30%) error correction for optimal scanning reliability even when partially obscured.
+- **Zero Registration & Privacy-First**: Completely free to use with no account sign-up required. Static QR codes are generated directly client-side, ensuring complete data privacy.
+
+## Industry Solutions & Use Cases
+
+- [Contactless Restaurant Menus](https://www.freeqrbarcodes.com/solutions/contactless-menu): Digital dining menus and tableside ordering solutions.
+- [Digital Business Cards](https://www.freeqrbarcodes.com/solutions/digital-business-card): Modern professional networking with instant contact downloads.
+- [Google Review Booster](https://www.freeqrbarcodes.com/solutions/google-review-booster): Countertop review prompt QR codes that accelerate 5-star Google Business ratings.
+- [Guest WiFi Onboarding](https://www.freeqrbarcodes.com/solutions/wifi-guest-onboarding): Seamless guest wireless connectivity for hotels, offices, and cafes.
+- [Event Ticketing & Access](https://www.freeqrbarcodes.com/solutions/event-ticket-qr-code): Fast attendee validation and badge scanning for conferences and concerts.
+
+## Frequently Asked Questions (FAQ)
+
+### Are the QR codes and barcodes truly free for commercial use?
+Yes. All QR codes and barcodes generated on FreeQRBarcodes are 100% free for personal, non-profit, and commercial use. There are no licensing fees, watermarks, or scan limits.
+
+### Do static QR codes ever expire?
+No. Static QR codes encode the data directly into the black-and-white pattern itself. They function indefinitely and will never expire because they do not rely on an intermediate server.
+
+### Can I change the destination of a dynamic QR code after printing?
+Yes. Dynamic QR codes route through a shortened redirect URL. You can edit the destination URL anytime through your platform dashboard, and all previously printed physical materials will immediately route to the new target.
+
+### What export file formats are best for commercial printing?
+For physical printing (brochures, business cards, merchandise, billboards), vector SVG or EPS is recommended because vector graphics scale infinitely without any pixelation or loss of clarity. High-resolution PNG (300+ DPI) is also supported.
+
+### Do smartphone users need a dedicated scanner app?
+No. Almost all modern iOS (iPhone Camera) and Android smartphones feature native QR code scanning built into the default camera application. Users simply point their camera at the code to open the link.
+
+## Additional Resources
+
+- [Sitemap Index](https://www.freeqrbarcodes.com/sitemap.xml): Complete XML sitemap of all routes, tools, and guides.
+- [Knowledge Academy](https://www.freeqrbarcodes.com/academy): Comprehensive guides on QR specifications, error correction, scannability standards, and cybersecurity.
+- [Developer API Platform](https://www.freeqrbarcodes.com/platform/api-platform): Programmatic QR code and barcode generation integration details.
+- [System Status](https://www.freeqrbarcodes.com/system-status): Service uptime and availability monitoring.

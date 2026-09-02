@@ -69,7 +69,14 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
     }
 
     const articleUrl = buildProductionUrl(`/${locale === 'en' ? '' : locale + '/'}blog/${activeArticle.slug}`);
+    const authorUrl = buildProductionUrl(`/${locale === 'en' ? '' : locale + '/'}about`);
     const isoDate = formatDateToISO(activeArticle.date);
+    const isoModifiedDate = formatDateToISO(activeArticle.dateModified || activeArticle.date);
+
+    const rawAuthor = activeArticle.author || 'iSolutions Specialist';
+    const authorHasComma = rawAuthor.includes(',');
+    const authorName = authorHasComma ? rawAuthor.split(',')[0].trim() : rawAuthor.trim();
+    const authorJobTitle = authorHasComma ? rawAuthor.split(',')[1].trim() : undefined;
 
     return {
       '@context': 'https://schema.org',
@@ -78,10 +85,18 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
       'headline': activeArticle.title,
       'description': activeArticle.metaDescription || activeArticle.intro,
       'datePublished': isoDate,
-      'dateModified': isoDate,
+      'dateModified': isoModifiedDate,
       'author': {
         '@type': 'Person',
-        'name': activeArticle.author || 'I-Solutions Specialist'
+        'name': authorName,
+        ...(authorJobTitle ? { 'jobTitle': authorJobTitle } : {}),
+        'url': authorUrl,
+        'sameAs': authorUrl,
+        'worksFor': {
+          '@type': 'Organization',
+          '@id': 'https://www.freeqrbarcodes.com/#organization',
+          'name': 'Free QR Code Generator'
+        }
       },
       'publisher': {
         '@type': 'Organization',

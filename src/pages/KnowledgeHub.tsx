@@ -146,9 +146,15 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
       "description": activeArticle.metaDescription,
       "image": "https://www.freeqrbarcodes.com/og-image.jpg",
       "author": {
-        "@type": "Organization",
-        "name": String(t('knowledge.editorialTeam', 'FreeQRGen.pro Editorial Team')),
-        "url": rootUrl
+        "@type": "Person",
+        "name": activeArticle.author || String(t('knowledge.editorialTeam', 'Muhammad Mubeen, Lead Developer')),
+        "url": `${rootUrl}/about`,
+        "sameAs": `${rootUrl}/about`,
+        "worksFor": {
+          "@type": "Organization",
+          "@id": `${rootUrl}/#organization`,
+          "name": "Free QR Code Generator"
+        }
       },
       "publisher": {
         "@type": "Organization",

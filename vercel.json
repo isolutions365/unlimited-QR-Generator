@@ -6,7 +6,7 @@
       "destination": "/api/index"
     },
     {
-      "source": "/((?!assets/|favicon\\.ico|robots\\.txt|sitemap\\.xml|site\\.webmanifest|manifest\\.json|google[a-zA-Z0-9_-]+\\.html|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|css|js|woff|woff2|ttf|eot)).*)",
+      "source": "/((?!assets/|favicon\\.ico|robots\\.txt|llms\\.txt|sitemap\\.xml|site\\.webmanifest|manifest\\.json|google[a-zA-Z0-9_-]+\\.html|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|css|js|woff|woff2|ttf|eot|txt)).*)",
       "destination": "/api/index"
     }
   ],
