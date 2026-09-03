@@ -69,14 +69,8 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
     }
 
     const articleUrl = buildProductionUrl(`/${locale === 'en' ? '' : locale + '/'}blog/${activeArticle.slug}`);
-    const authorUrl = buildProductionUrl(`/${locale === 'en' ? '' : locale + '/'}about`);
+    const authorUrl = 'https://www.freeqrbarcodes.com/about';
     const isoDate = formatDateToISO(activeArticle.date);
-    const isoModifiedDate = formatDateToISO(activeArticle.dateModified || activeArticle.date);
-
-    const rawAuthor = activeArticle.author || 'iSolutions Specialist';
-    const authorHasComma = rawAuthor.includes(',');
-    const authorName = authorHasComma ? rawAuthor.split(',')[0].trim() : rawAuthor.trim();
-    const authorJobTitle = authorHasComma ? rawAuthor.split(',')[1].trim() : undefined;
 
     return {
       '@context': 'https://schema.org',
@@ -85,17 +79,16 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
       'headline': activeArticle.title,
       'description': activeArticle.metaDescription || activeArticle.intro,
       'datePublished': isoDate,
-      'dateModified': isoModifiedDate,
+      'dateModified': activeArticle.dateModified ? formatDateToISO(activeArticle.dateModified) : isoDate,
       'author': {
         '@type': 'Person',
-        'name': authorName,
-        ...(authorJobTitle ? { 'jobTitle': authorJobTitle } : {}),
+        'name': activeArticle.author || 'I-Solutions Specialist',
         'url': authorUrl,
-        'sameAs': authorUrl,
+        'jobTitle': 'QR Code Technology Specialist',
         'worksFor': {
           '@type': 'Organization',
-          '@id': 'https://www.freeqrbarcodes.com/#organization',
-          'name': 'Free QR Code Generator'
+          'name': 'Free QR Code Generator',
+          '@id': 'https://www.freeqrbarcodes.com/#organization'
         }
       },
       'publisher': {
@@ -115,6 +108,11 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
       },
       'url': articleUrl,
       'inLanguage': locale,
+      'articleSection': activeArticle.category,
+      'speakable': {
+        '@type': 'SpeakableSpecification',
+        'cssSelector': ['#article-intro-text', '#article-main-body']
+      },
       'articleBody': activeArticle.contentMarkdown ? activeArticle.contentMarkdown.replace(/[#*`>_\-]/g, ' ').substring(0, 5000) : undefined
     };
   }, [activeArticle, locale]);

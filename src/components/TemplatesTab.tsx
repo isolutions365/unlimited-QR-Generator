@@ -23,7 +23,7 @@ export interface QRTemplate {
     bgColor: string;
     gradientType: 'none' | 'linear' | 'radial';
     gradientColor: string;
-    dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+    dotStyle: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
     eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
     eyeColorTopLeft?: string;
     eyeColorTopRight?: string;

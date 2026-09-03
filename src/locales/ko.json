@@ -561,6 +561,8 @@
   "control.smartOptDesc": "오류 수정 및 모듈 간격을 자동으로 조정합니다.",
   "control.smartOptimization": "스마트 최적화",
   "control.smartOptimizeEccDesc": "콘텐츠 깊이와 브랜드 로고를 기반으로 최적의 복구 범위를 확보하기 위해 스마트 최적화가 자동으로 관리합니다.",
+  "control.diamondShape": "다이아몬드",
+  "control.leafShape": "리프",
   "control.smoothCircles": "부드러운 원형",
   "control.smoothRounded": "부드러운 둥근 형태",
   "control.smsText": "사전 작성된 SMS 텍스트",

@@ -387,14 +387,14 @@ class ApiClient {
   }
 
   async suggestStyles(vibe: string, locale?: string): Promise<{
-    dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+    dotStyle: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
     eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
     errorCorrectionLevel: 'L' | 'M' | 'Q' | 'H';
     logoScale: number;
     description: string;
   }> {
     return this.requestBackend<{
-      dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+      dotStyle: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
       eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
       errorCorrectionLevel: 'L' | 'M' | 'Q' | 'H';
       logoScale: number;
@@ -410,7 +410,7 @@ class ApiClient {
     gradientType: 'none' | 'linear' | 'radial';
     gradientColor: string;
     bgColor: string;
-    dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+    dotStyle: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
     eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
     logoScale: number;
     explanation: string;
@@ -420,7 +420,7 @@ class ApiClient {
       gradientType: 'none' | 'linear' | 'radial';
       gradientColor: string;
       bgColor: string;
-      dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+      dotStyle: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
       eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
       logoScale: number;
       explanation: string;

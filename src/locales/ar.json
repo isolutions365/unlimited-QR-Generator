@@ -549,6 +549,8 @@
   "control.smartOptDesc": "موازنة تلقائية لمستوى تصحيح الأخطاء وتباعد النقاط.",
   "control.smartOptimization": "التحسين الذكي التلقائي",
   "control.smartOptimizeEccDesc": "تتم إدارته تلقائياً بواسطة التحسين الذكي لضمان أعلى مستوى استعادة بناءً على حجم البيانات والشعار المضاف.",
+  "control.diamondShape": "ألماسي",
+  "control.leafShape": "ورقة شجر",
   "control.smoothCircles": "دوائر انسيابية ناعمة",
   "control.smoothRounded": "حواف مستديرة ناعمة",
   "control.smsText": "نص الرسالة القصيرة (SMS)",

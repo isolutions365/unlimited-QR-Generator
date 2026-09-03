@@ -549,6 +549,8 @@
   "control.smartOptDesc": "Auto-balances خرابی correction & module spacing.",
   "control.smartOptimization": "Smart Optimization",
   "control.smartOptimizeEccDesc": "Managed automatically by Smart Optimization to secure optimal recovery budget based on content depth and brand لوگو.",
+  "control.diamondShape": "Diamond",
+  "control.leafShape": "Leaf",
   "control.smoothCircles": "Smooth Circles",
   "control.smoothRounded": "Smooth Rounded",
   "control.smsText": "Pre-composed SMS Text",

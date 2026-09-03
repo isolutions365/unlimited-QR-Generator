@@ -54,7 +54,7 @@ export default function BulkQRGenerator() {
   const [bulkDesign, setBulkDesign] = useState<{
     fgColor: string;
     bgColor: string;
-    dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+    dotStyle: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
     eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
     frameStyle: FrameStyle;
     frameText: string;
@@ -702,6 +702,8 @@ export default function BulkQRGenerator() {
                   <option value="square">{t('bulk.dotSquare', 'Square')}</option>
                   <option value="rounded">{t('bulk.dotRounded', 'Rounded Blocks')}</option>
                   <option value="dots">{t('bulk.dotDots', 'Circular Dots')}</option>
+                  <option value="leaf">{t('bulk.dotLeaf', 'Organic Leaf')}</option>
+                  <option value="diamond">{t('bulk.dotDiamond', 'Crisp Diamond')}</option>
                   <option value="classy">{t('bulk.dotClassy', 'Classy Retro')}</option>
                 </select>
               </div>

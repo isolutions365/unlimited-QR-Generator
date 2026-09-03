@@ -561,6 +561,8 @@
   "control.smartOptDesc": "Bilancia automaticamente la correzione degli errori e la spaziatura dei moduli.",
   "control.smartOptimization": "Ottimizzazione Intelligente",
   "control.smartOptimizeEccDesc": "Gestito automaticamente dall'Ottimizzazione Intelligente per garantire un budget di recupero ottimale basato sulla profondità del contenuto e sul logo del brand.",
+  "control.diamondShape": "Diamante",
+  "control.leafShape": "Foglia",
   "control.smoothCircles": "Cerchi Morbidi",
   "control.smoothRounded": "Arrotondato Morbido",
   "control.smsText": "Testo SMS Pre-composto",

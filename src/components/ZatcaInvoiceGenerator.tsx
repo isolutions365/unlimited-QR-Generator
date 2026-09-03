@@ -187,7 +187,7 @@ export default function ZatcaInvoiceGenerator({
   const [qrSize, setQrSize] = useState(400);
   const [fgColor, setFgColor] = useState('#0f172a');
   const [bgColor, setBgColor] = useState('#ffffff');
-  const [dotStyle, setDotStyle] = useState<'square' | 'rounded' | 'dots' | 'classy'>('rounded');
+  const [dotStyle, setDotStyle] = useState<'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond'>('rounded');
   const [eyeStyle, setEyeStyle] = useState<'square' | 'rounded' | 'circle' | 'leaf'>('rounded');
   const [frameText, setFrameText] = useState('فاتورة ضريبية مبسطة');
   const [showFrame, setShowFrame] = useState(true);
@@ -902,6 +902,8 @@ export default function ZatcaInvoiceGenerator({
                     <option value="rounded">كتل مستديرة</option>
                     <option value="square">مربعات قياسية</option>
                     <option value="dots">نقاط دائرية</option>
+                    <option value="leaf">ورقة نبات</option>
+                    <option value="diamond">ألماسي</option>
                     <option value="classy">كلاسيكي</option>
                   </select>
                 </div>

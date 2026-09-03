@@ -266,6 +266,7 @@ export interface BlogArticleMeta {
   title: string;
   description: string;
   date: string;
+  dateModified?: string;
   author: string;
   category: string;
 }
@@ -694,8 +695,8 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta) {
         "headline": article.title,
         "description": article.description,
         "url": articleUrl,
-        "datePublished": `${article.date}T08:00:00+00:00`,
-        "dateModified": `${article.date}T08:00:00+00:00`,
+        "datePublished": article.date.includes('T') ? article.date : `${article.date}T08:00:00+00:00`,
+        "dateModified": article.dateModified ? (article.dateModified.includes('T') ? article.dateModified : `${article.dateModified}T08:00:00+00:00`) : (article.date.includes('T') ? article.date : `${article.date}T08:00:00+00:00`),
         "author": {
           "@type": "Person",
           "name": article.author,
@@ -1185,20 +1186,17 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       html = html.replace('</head>', `${schemaScript}\n</head>`);
     }
     
-    // Replace sr-only H1 with visible H1 in prerendered HTML or inject
-    if (prerenderedH1) {
-      if (html.includes('<h1 class="sr-only">')) {
-        html = html.replace(/<h1 class="sr-only">.*?<\/h1>/i, prerenderedH1);
-      }
+    // Replace sr-only H1 if present to avoid hidden duplicate tags
+    if (html.includes('<h1 class="sr-only">')) {
+      html = html.replace(/<h1 class="sr-only">.*?<\/h1>/gi, '');
     }
     
-    // Inject noscript content for crawlers
-    if (noscriptHtml) {
-      if (html.includes('<noscript>')) {
-        html = html.replace('<noscript>', `<noscript>\n${noscriptHtml}`);
-      } else {
-        html = html.replace('</body>', `<noscript>\n${noscriptHtml}\n</noscript>\n</body>`);
-      }
+    // Inject visible prerendered HTML directly inside #root
+    // When React mounts on the client (createRoot.render), React cleanly replaces #root contents
+    if (html.includes('<!-- PRERENDERED_HTML_PLACEHOLDER -->')) {
+      html = html.replace('<!-- PRERENDERED_HTML_PLACEHOLDER -->', noscriptHtml);
+    } else if (html.includes('<div id="root"></div>')) {
+      html = html.replace('<div id="root"></div>', `<div id="root">${noscriptHtml}</div>`);
     }
 
     // Set high performance non-stale headers

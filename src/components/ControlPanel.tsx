@@ -3,12 +3,13 @@ import { useTranslation } from '../utils/i18n';
 import { getProductionBaseUrl } from '../config/siteConfig';
 
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Zap, Paintbrush, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp, UtensilsCrossed, Star, UserCheck, X } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Zap, Paintbrush, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp, UtensilsCrossed, Star, UserCheck, X, Square, Circle, Leaf, Diamond, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
 import PaymentWalletPanel from './PaymentWalletPanel';
 import { getEmblemFontSize } from '../utils/qrRenderer';
+import { playAudioSound } from '../utils/audioFeedback';
 import qrcode from 'qrcode';
 
 interface ControlPanelProps {
@@ -170,8 +171,25 @@ export default function ControlPanel({ currentProject,
   const [showEccTooltip, setShowEccTooltip] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [logoInputMode, setLogoInputMode] = useState<'upload' | 'url' | 'presets'>('upload');
+  const [isDotDropdownOpen, setIsDotDropdownOpen] = useState(false);
+  const [isEyeDropdownOpen, setIsEyeDropdownOpen] = useState(false);
+  const dotDropdownRef = useRef<HTMLDivElement>(null);
+  const eyeDropdownRef = useRef<HTMLDivElement>(null);
   const lastPropagatedProjectRef = useRef<Partial<QRProject>>(currentProject);
   const isDebouncingRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dotDropdownRef.current && !dotDropdownRef.current.contains(event.target as Node)) {
+        setIsDotDropdownOpen(false);
+      }
+      if (eyeDropdownRef.current && !eyeDropdownRef.current.contains(event.target as Node)) {
+        setIsEyeDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (JSON.stringify(currentProject) !== JSON.stringify(lastPropagatedProjectRef.current)) {
@@ -1230,36 +1248,190 @@ export default function ControlPanel({ currentProject,
           boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
         }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm grid grid-cols-2 gap-4"
+        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-4"
       >
-       <div>
-          <label htmlFor="eye-style-select" className="text-xs font-semibold text-slate-800 tracking-wider uppercase block mb-2">{t('control.cornerEyes', 'Corner Eyes')}</label>
-          <select
+        {/* Corner Eyes Custom Dropdown */}
+        <div className="relative" ref={eyeDropdownRef}>
+          <label id="eye-style-label" className="text-xs font-semibold text-slate-800 tracking-wider uppercase block mb-2">{t('control.cornerEyes', 'Corner Eyes')}</label>
+          <button
+            type="button"
             id="eye-style-select"
-            className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
-            value={localProject.design?.eyeStyle || 'square'}
-            onChange={e => setDesignField('eyeStyle', e.target.value)}
+            aria-haspopup="listbox"
+            aria-expanded={isEyeDropdownOpen}
+            onClick={() => {
+              setIsEyeDropdownOpen(!isEyeDropdownOpen);
+              setIsDotDropdownOpen(false);
+            }}
+            className="w-full text-xs px-3 py-2.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium flex items-center justify-between shadow-xs hover:border-indigo-300 transition-all cursor-pointer"
           >
-            <option value="square">{t('control.squareFrame', 'Square Frame')}</option>
-            <option value="rounded">{t('control.roundedFrame', 'Rounded Frame')}</option>
-            <option value="circle">{t('control.smoothCircles', 'Smooth Circles')}</option>
-            <option value="leaf">{t('control.elegantLeaf', 'Elegant Leaf')}</option>
-          </select>
+            <div className="flex items-center gap-2 truncate">
+              {(() => {
+                const currentEye = localProject.design?.eyeStyle || 'square';
+                const eyeOptions = [
+                  { id: 'square', label: t('control.squareFrame', 'Square Frame'), icon: Square },
+                  { id: 'rounded', label: t('control.roundedFrame', 'Rounded Frame'), icon: SquareDot },
+                  { id: 'circle', label: t('control.smoothCircles', 'Smooth Circles'), icon: Circle },
+                  { id: 'leaf', label: t('control.elegantLeaf', 'Elegant Leaf'), icon: Leaf }
+                ];
+                const opt = eyeOptions.find(o => o.id === currentEye) || eyeOptions[0];
+                const IconComp = opt.icon;
+                return (
+                  <>
+                    <span className="p-1 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                      <IconComp className="w-3.5 h-3.5" />
+                    </span>
+                    <span className="truncate">{opt.label}</span>
+                  </>
+                );
+              })()}
+            </div>
+            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-200 ${isEyeDropdownOpen ? 'rotate-180 text-indigo-600' : ''}`} />
+          </button>
+
+          <AnimatePresence>
+            {isEyeDropdownOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                transition={{ duration: 0.15 }}
+                className="absolute z-30 left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden p-1 space-y-0.5"
+                role="listbox"
+              >
+                {[
+                  { id: 'square', label: t('control.squareFrame', 'Square Frame'), icon: Square },
+                  { id: 'rounded', label: t('control.roundedFrame', 'Rounded Frame'), icon: SquareDot },
+                  { id: 'circle', label: t('control.smoothCircles', 'Smooth Circles'), icon: Circle },
+                  { id: 'leaf', label: t('control.elegantLeaf', 'Elegant Leaf'), icon: Leaf }
+                ].map(opt => {
+                  const IconComp = opt.icon;
+                  const isSelected = (localProject.design?.eyeStyle || 'square') === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => {
+                        setDesignField('eyeStyle', opt.id);
+                        setIsEyeDropdownOpen(false);
+                        playAudioSound('click');
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs transition-colors text-left cursor-pointer group ${
+                        isSelected
+                          ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                          : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <span className={`p-1 rounded-md transition-colors shrink-0 ${
+                          isSelected ? 'bg-indigo-100/80 text-indigo-600' : 'bg-slate-100 text-slate-500 group-hover:bg-indigo-50 group-hover:text-indigo-600'
+                        }`}>
+                          <IconComp className="w-3.5 h-3.5" />
+                        </span>
+                        <span className="truncate">{opt.label}</span>
+                      </div>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 stroke-[2.5]" />}
+                    </button>
+                  );
+                })}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <div>
-          <label htmlFor="dot-style-select" className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-2">{t('control.internalDots', 'Internal Dots')}</label>
-          <select
+        {/* QR Module Shapes Custom Dropdown with Icons */}
+        <div className="relative" ref={dotDropdownRef}>
+          <label id="dot-style-label" className="text-xs font-semibold text-gray-900 tracking-wider uppercase block mb-2">{t('control.internalDots', 'QR Module Shapes')}</label>
+          <button
+            type="button"
             id="dot-style-select"
-            className="w-full text-xs px-3 py-2 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
-            value={localProject.design?.dotStyle || 'square'}
-            onChange={e => setDesignField('dotStyle', e.target.value)}
+            aria-haspopup="listbox"
+            aria-expanded={isDotDropdownOpen}
+            onClick={() => {
+              setIsDotDropdownOpen(!isDotDropdownOpen);
+              setIsEyeDropdownOpen(false);
+            }}
+            className="w-full text-xs px-3 py-2.5 rounded-xl bg-white border border-gray-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium flex items-center justify-between shadow-xs hover:border-indigo-300 transition-all cursor-pointer"
           >
-            <option value="square">{t('control.standardSquare', 'Standard Square')}</option>
-            <option value="rounded">{t('control.smoothRounded', 'Smooth Rounded')}</option>
-            <option value="dots">{t('control.circularDots', 'Circular Dots')}</option>
-            <option value="classy">{t('control.classyStarbursts', 'Classy Starbursts')}</option>
-          </select>
+            <div className="flex items-center gap-2 truncate">
+              {(() => {
+                const currentDot = localProject.design?.dotStyle || 'square';
+                const dotOptions = [
+                  { id: 'square', label: t('control.standardSquare', 'Square'), icon: Square },
+                  { id: 'rounded', label: t('control.smoothRounded', 'Rounded'), icon: SquareDot },
+                  { id: 'leaf', label: t('control.leafShape', 'Leaf'), icon: Leaf },
+                  { id: 'diamond', label: t('control.diamondShape', 'Diamond'), icon: Diamond },
+                  { id: 'dots', label: t('control.circularDots', 'Circular Dots'), icon: Circle },
+                  { id: 'classy', label: t('control.classyStarbursts', 'Classy Starbursts'), icon: Sparkles }
+                ];
+                const opt = dotOptions.find(o => o.id === currentDot) || dotOptions[0];
+                const IconComp = opt.icon;
+                return (
+                  <>
+                    <span className="p-1 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                      <IconComp className="w-3.5 h-3.5" />
+                    </span>
+                    <span className="truncate">{opt.label}</span>
+                  </>
+                );
+              })()}
+            </div>
+            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-200 ${isDotDropdownOpen ? 'rotate-180 text-indigo-600' : ''}`} />
+          </button>
+
+          <AnimatePresence>
+            {isDotDropdownOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                transition={{ duration: 0.15 }}
+                className="absolute z-30 left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden p-1 space-y-0.5"
+                role="listbox"
+              >
+                {[
+                  { id: 'square', label: t('control.standardSquare', 'Square'), icon: Square },
+                  { id: 'rounded', label: t('control.smoothRounded', 'Rounded'), icon: SquareDot },
+                  { id: 'leaf', label: t('control.leafShape', 'Leaf'), icon: Leaf },
+                  { id: 'diamond', label: t('control.diamondShape', 'Diamond'), icon: Diamond },
+                  { id: 'dots', label: t('control.circularDots', 'Circular Dots'), icon: Circle },
+                  { id: 'classy', label: t('control.classyStarbursts', 'Classy Starbursts'), icon: Sparkles }
+                ].map(opt => {
+                  const IconComp = opt.icon;
+                  const isSelected = (localProject.design?.dotStyle || 'square') === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => {
+                        setDesignField('dotStyle', opt.id);
+                        setIsDotDropdownOpen(false);
+                        playAudioSound('click');
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs transition-colors text-left cursor-pointer group ${
+                        isSelected
+                          ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                          : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <span className={`p-1 rounded-md transition-colors shrink-0 ${
+                          isSelected ? 'bg-indigo-100/80 text-indigo-600' : 'bg-slate-100 text-slate-500 group-hover:bg-indigo-50 group-hover:text-indigo-600'
+                        }`}>
+                          <IconComp className="w-3.5 h-3.5" />
+                        </span>
+                        <span className="truncate">{opt.label}</span>
+                      </div>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 stroke-[2.5]" />}
+                    </button>
+                  );
+                })}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
 

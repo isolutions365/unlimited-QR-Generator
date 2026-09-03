@@ -55,7 +55,7 @@ export default function Generator({ initialProject, onProjectChange, className =
   const [bgColor, setBgColor] = useState(initialProject?.bgColor || '#ffffff');
   const [gradientType, setGradientType] = useState<'none' | 'linear' | 'radial'>(initialProject?.gradientType || 'none');
   const [gradientColor, setGradientColor] = useState(initialProject?.gradientColor || '#4f46e5');
-  const [dotStyle, setDotStyle] = useState<'square' | 'rounded' | 'dots' | 'classy'>(initialProject?.dotStyle || 'square');
+  const [dotStyle, setDotStyle] = useState<'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond'>(initialProject?.dotStyle || 'square');
   const [eyeStyle, setEyeStyle] = useState<'square' | 'rounded' | 'circle' | 'leaf'>(initialProject?.eyeStyle || 'square');
   
   // Logo State
@@ -564,7 +564,9 @@ export default function Generator({ initialProject, onProjectChange, className =
                   <option value="square">Standard Square</option>
                   <option value="rounded">Smooth Rounded</option>
                   <option value="dots">Circular Dots</option>
-                  <option value="classy">Classy Diamond</option>
+                  <option value="leaf">Organic Leaf</option>
+                  <option value="diamond">Crisp Diamond</option>
+                  <option value="classy">Classy Starburst</option>
                 </select>
               </div>
 

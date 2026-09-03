@@ -28,7 +28,7 @@ export interface QRProject {
   bgColor?: string;
   gradientType?: 'none' | 'linear' | 'radial';
   gradientColor?: string;
-  dotStyle?: 'square' | 'rounded' | 'dots' | 'classy';
+  dotStyle?: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
   eyeStyle?: 'square' | 'rounded' | 'circle' | 'leaf';
   logoUrl?: string;
   logoScale?: number;
@@ -52,7 +52,7 @@ export interface QRProject {
     bgColor: string;
     gradientType: 'none' | 'linear' | 'radial';
     gradientColor: string;
-    dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+    dotStyle: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
     eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
     logoUrl?: string; // Data URI, text logo, or emoji
     logoScale?: number; // 0.05 to 0.3

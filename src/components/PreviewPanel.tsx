@@ -315,6 +315,8 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
       case 'square': return t('control.standardSquare', 'Standard Square');
       case 'rounded': return t('control.smoothRounded', 'Smooth Rounded');
       case 'dots': return t('control.circularDots', 'Circular Dots');
+      case 'leaf': return t('control.leafShape', 'Organic Leaf');
+      case 'diamond': return t('control.diamondShape', 'Crisp Diamond');
       case 'classy': return t('control.classyStarbursts', 'Classy Starbursts');
       default: return style;
     }

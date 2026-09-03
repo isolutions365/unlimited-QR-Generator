@@ -6,7 +6,7 @@ interface DrawOptions {
   bgColor: string;
   gradientType: 'none' | 'linear' | 'radial';
   gradientColor: string;
-  dotStyle: 'square' | 'rounded' | 'dots' | 'classy';
+  dotStyle: 'square' | 'rounded' | 'dots' | 'classy' | 'leaf' | 'diamond';
   eyeStyle: 'square' | 'rounded' | 'circle' | 'leaf';
   logoUrl?: string;
   logoScale?: number;
@@ -198,6 +198,30 @@ export async function renderStyledQR(
         const padding = cellSize * 0.05;
         const radius = cellSize * 0.4;
         roundRect(ctx, x + padding, y + padding, cellSize - padding * 2, cellSize - padding * 2, radius);
+        ctx.fill();
+      } else if (options.dotStyle === 'leaf') {
+        const pad = cellSize * 0.04;
+        const lx = x + pad;
+        const ly = y + pad;
+        const w = cellSize - pad * 2;
+        const r = w * 0.55;
+        ctx.moveTo(lx, ly + r);
+        ctx.arcTo(lx, ly, lx + r, ly, r);
+        ctx.lineTo(lx + w, ly);
+        ctx.lineTo(lx + w, ly + w - r);
+        ctx.arcTo(lx + w, ly + w, lx + w - r, ly + w, r);
+        ctx.lineTo(lx, ly + w);
+        ctx.closePath();
+        ctx.fill();
+      } else if (options.dotStyle === 'diamond') {
+        const pad = cellSize * 0.06;
+        const cx = x + cellSize / 2;
+        const cy = y + cellSize / 2;
+        ctx.moveTo(cx, y + pad);
+        ctx.lineTo(x + cellSize - pad, cy);
+        ctx.lineTo(cx, y + cellSize - pad);
+        ctx.lineTo(x + pad, cy);
+        ctx.closePath();
         ctx.fill();
       } else if (options.dotStyle === 'classy') {
         // Starry cross elegant shape
@@ -579,6 +603,18 @@ export function generateStyledSVG(
         const width = cellSize - padding * 2;
         const radius = cellSize * 0.4;
         paths += `    <rect x="${x + padding}" y="${y + padding}" width="${width}" height="${width}" rx="${radius}" ry="${radius}" fill="${fillStyle}"${transformAttr} />\n`;
+      } else if (options.dotStyle === 'leaf') {
+        const pad = cellSize * 0.04;
+        const lx = x + pad;
+        const ly = y + pad;
+        const w = cellSize - pad * 2;
+        const r = w * 0.55;
+        const leafPath = `M ${lx + r} ${ly} L ${lx + w} ${ly} L ${lx + w} ${ly + w - r} A ${r} ${r} 0 0 1 ${lx + w - r} ${ly + w} L ${lx} ${ly + w} L ${lx} ${ly + r} A ${r} ${r} 0 0 1 ${lx + r} ${ly} Z`;
+        paths += `    <path d="${leafPath}" fill="${fillStyle}"${transformAttr} />\n`;
+      } else if (options.dotStyle === 'diamond') {
+        const pad = cellSize * 0.06;
+        const diamondPath = `M ${cx} ${y + pad} L ${x + cellSize - pad} ${cy} L ${cx} ${y + cellSize - pad} L ${x + pad} ${cy} Z`;
+        paths += `    <path d="${diamondPath}" fill="${fillStyle}"${transformAttr} />\n`;
       } else if (options.dotStyle === 'classy') {
         const classyPath = `M ${cx} ${y + cellSize * 0.1} Q ${cx} ${cy} ${x + cellSize * 0.9} ${cy} Q ${cx} ${cy} ${cx} ${y + cellSize * 0.9} Q ${cx} ${cy} ${x + cellSize * 0.1} ${cy} Q ${cx} ${cy} ${cx} ${y + cellSize * 0.1} Z`;
         paths += `    <path d="${classyPath}" fill="${fillStyle}"${transformAttr} />\n`;
