@@ -1177,19 +1177,58 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
     };
   };
 
+  // Track design signature for smooth transitions and visual undo/redo feedback
+  const designSignature = `${fgColor}_${bgColor}_${gradientType}_${gradientColor}_${dotStyle}_${eyeStyle}_${margin}_${logoUrl}_${logoScale}_${frameStyle}_${frameColor}_${frameText}_${eyeColorTopLeft}_${eyeColorTopRight}_${eyeColorBottomLeft}`;
+  const [designChangeKey, setDesignChangeKey] = useState(0);
+  const prevDesignSigRef = useRef(designSignature);
+
+  useEffect(() => {
+    if (prevDesignSigRef.current !== designSignature) {
+      prevDesignSigRef.current = designSignature;
+      setDesignChangeKey((prev) => prev + 1);
+    }
+  }, [designSignature]);
+
   const { offsetX: onScreenOffsetX, offsetY: onScreenOffsetY } = getScaleFactorAndOffsets();
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6">
+    <motion.div
+      key="preview-panel-motion-container"
+      className="flex flex-col gap-4 sm:gap-6 relative rounded-2xl transition-all"
+      animate={{
+        backgroundColor: bgColor === '#ffffff' || bgColor === '#FFF' || !bgColor ? 'transparent' : `${bgColor}0f`,
+      }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
       {/* QR Board Canvas */}
-      <div 
+      <motion.div 
         id="tour-qr-preview" 
-        className={`rounded-2xl border p-4 sm:p-6 shadow-xs flex flex-col items-center justify-center gap-3 sm:gap-4 relative overflow-hidden transition-all duration-1000 ${
-          showSaveGlow 
-            ? 'border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.15)] bg-emerald-50/5' 
-            : 'border-gray-200/80 bg-white'
-        }`}
+        animate={{
+          borderColor: fgColor ? `${fgColor}30` : 'rgba(229, 231, 235, 0.8)',
+          boxShadow: showSaveGlow 
+            ? '0 0 30px rgba(16,185,129,0.15)' 
+            : `0 4px 20px -2px ${fgColor}12`,
+        }}
+        transition={{ duration: 0.4, ease: 'easeInOut' }}
+        className={`rounded-2xl border p-4 sm:p-6 shadow-xs flex flex-col items-center justify-center gap-3 sm:gap-4 relative overflow-hidden bg-white`}
       >
+        {/* Undo/Redo & Design Property Shift Visual Feedback Ring */}
+        <AnimatePresence mode="wait">
+          {designChangeKey > 0 && (
+            <motion.div
+              key={`design-feedback-ring-${designChangeKey}`}
+              initial={{ opacity: 0.7, scale: 0.98 }}
+              animate={{ opacity: 0, scale: 1.02 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="absolute inset-0 pointer-events-none z-10 rounded-2xl border-2"
+              style={{
+                borderColor: fgColor || '#4f46e5',
+                boxShadow: `inset 0 0 15px ${fgColor}25, 0 0 20px ${fgColor}30`,
+              }}
+            />
+          )}
+        </AnimatePresence>
         {/* Dynamic color-shifting cloud-save glow indicator */}
         <AnimatePresence>
           {showSaveGlow && (
@@ -1264,7 +1303,15 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           )}
         </AnimatePresence>
 
-        <div className="p-3 sm:p-4 bg-gray-50/50 rounded-2xl border border-gray-250 shadow-inner flex items-center justify-center relative z-5">
+        <motion.div 
+          key={`qr-canvas-card-${designChangeKey}`} 
+          animate={{ 
+            backgroundColor: bgColor === '#ffffff' || bgColor === '#FFF' || !bgColor ? 'rgba(249, 250, 251, 0.8)' : `${bgColor}1a`,
+            borderColor: fgColor ? `${fgColor}20` : 'rgba(229, 231, 235, 0.8)'
+          }} 
+          transition={{ duration: 0.35, ease: 'easeOut' }} 
+          className="p-3 sm:p-4 rounded-2xl border shadow-inner flex items-center justify-center relative z-5 transition-colors duration-300"
+        >
           <div className="relative bg-white p-2 rounded-xl shadow-xs group cursor-pointer overflow-hidden animate-fade-in" style={{ width: '280px', height: '280px' }}>
             <MemoizedQRCanvas
               ref={canvasRef}
@@ -1447,7 +1494,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               )}
             </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
 
         {/* QR Render Error Banner with Regenerate Action */}
         {canvasRenderError && (
@@ -1809,7 +1856,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Simulator Device Widget */}
       <div className="bg-slate-950 text-slate-100 rounded-3xl p-5 shadow-xl border border-slate-800 relative flex flex-col gap-4">
@@ -3288,6 +3335,6 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           );
         })()}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

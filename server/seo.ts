@@ -266,7 +266,7 @@ export interface BlogArticleMeta {
   title: string;
   description: string;
   date: string;
-  dateModified?: string;
+  dateModified: string;
   author: string;
   category: string;
 }
@@ -276,6 +276,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'What Is a QR Code and How Does It Work? Complete Guide',
     description: 'Discover the math, science, and practical mechanics behind QR codes. From automotive tracking in 1994 to universal digital convenience today.',
     date: '2026-06-02',
+    dateModified: '2026-08-28',
     author: 'I-Solutions Specialist',
     category: 'QR Code Guides'
   },
@@ -283,6 +284,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Static vs. Dynamic QR Codes: Complete Architectural Guide',
     description: 'Choosing between static and dynamic QR codes is critical. Learn how payload immutability, server redirects, and real-time telemetry dictate the ideal solution.',
     date: '2026-06-14',
+    dateModified: '2026-08-30',
     author: 'I-Solutions Specialist',
     category: 'QR Code Guides'
   },
@@ -290,6 +292,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'What is a Dynamic QR Code? Complete Guide',
     description: 'Learn what dynamic QR codes are, how they differ from static codes, and why they are essential for modern marketing campaigns.',
     date: '2026-08-07',
+    dateModified: '2026-09-01',
     author: 'I-Solutions Specialist',
     category: 'QR Code Guides'
   },
@@ -297,6 +300,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'QR Code Restaurant Menu Guide: Setup & Best Practices',
     description: 'Step-by-step guide to implementing digital QR menus for restaurants. Reduce costs, update instantly, and enhance guest dining experience.',
     date: '2026-08-07',
+    dateModified: '2026-09-02',
     author: 'I-Solutions Specialist',
     category: 'Restaurant QR Menus'
   },
@@ -304,6 +308,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'What Is a QR Code & How Does It Work? The Definitive Guide',
     description: 'Discover the math, science, and practical mechanics behind QR codes. From automotive tracking in 1994 to universal digital convenience today.',
     date: '2026-06-02',
+    dateModified: '2026-08-28',
     author: 'Marcus Vance, Lead Systems Architect',
     category: 'QR Code Fundamentals'
   },
@@ -311,6 +316,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Static vs. Dynamic QR Codes: Complete Architectural Guide',
     description: 'Choosing between static and dynamic QR codes is critical. Learn how payload immutability, server redirects, and real-time telemetry dictate the ideal solution.',
     date: '2026-06-14',
+    dateModified: '2026-08-30',
     author: 'Marcus Vance, Lead Systems Architect',
     category: 'QR Code Fundamentals'
   },
@@ -318,6 +324,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'QR Error Correction Explained: L, M, Q, and H Comparison',
     description: 'Master Reed-Solomon error correction algorithms in QR codes. Learn how 7% to 30% recovery thresholds enable custom logos without scan failures.',
     date: '2026-07-02',
+    dateModified: '2026-08-25',
     author: 'Marcus Vance, Lead Systems Architect',
     category: 'QR Code Fundamentals'
   },
@@ -325,6 +332,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Omnichannel Retail: Converting In-Store Footfall into Digital Sales',
     description: 'Discover how modern retail stores use smart QR window decals and shelf-talkers to capture lost revenue and sync offline visitors with e-commerce.',
     date: '2026-06-18',
+    dateModified: '2026-08-22',
     author: 'Sarah Jenkins, Retail Marketing Strategist',
     category: 'Marketing Strategies'
   },
@@ -332,6 +340,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'B2B Lead Generation: High-Converting Trade Show QR Strategies',
     description: 'Learn how enterprise sales teams replace generic brochures with personalized dynamic QR codes to track booth visits and score prospects in real-time.',
     date: '2026-07-11',
+    dateModified: '2026-08-26',
     author: 'Sarah Jenkins, Retail Marketing Strategist',
     category: 'Marketing Strategies'
   },
@@ -339,6 +348,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Smart Product Packaging: Driving Customer Engagement & Authenticity',
     description: 'Explore how FMCG and luxury brands print dynamic QR codes on packaging for serial verification, ingredient transparency, and loyalty rewards.',
     date: '2026-08-01',
+    dateModified: '2026-08-29',
     author: 'Sarah Jenkins, Retail Marketing Strategist',
     category: 'Marketing Strategies'
   },
@@ -346,6 +356,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'UTM Tracking & GA4: Measuring Exact Offline Print Campaign ROI',
     description: 'A step-by-step masterclass on structuring UTM campaign tags for QR codes to track billboard, direct mail, and magazine conversions in Google Analytics 4.',
     date: '2026-06-10',
+    dateModified: '2026-08-20',
     author: 'David Chen, Performance Analytics Lead',
     category: 'Analytics & Tracking'
   },
@@ -353,6 +364,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Offline-to-Online Retargeting: Building Audiences from Physical Scans',
     description: 'Learn how dynamic QR redirect servers trigger Meta Pixels, Google Tag Manager events, and TikTok remarketing tags upon physical scan interactions.',
     date: '2026-07-08',
+    dateModified: '2026-08-24',
     author: 'David Chen, Performance Analytics Lead',
     category: 'Analytics & Tracking'
   },
@@ -360,6 +372,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'A/B Testing Physical Print Ads with Dynamic QR Short Links',
     description: 'Discover how growth marketers run split tests on print fliers, flyers, and direct mailers by routing alternating QR scans to different landing pages.',
     date: '2026-08-05',
+    dateModified: '2026-08-31',
     author: 'David Chen, Performance Analytics Lead',
     category: 'Analytics & Tracking'
   },
@@ -367,6 +380,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'The Small Business QR Playbook: 10 High-Impact Use Cases',
     description: 'Ten cost-effective, frictionless QR code implementations that neighborhood cafes, salons, auto shops, and boutiques can deploy in under 5 minutes.',
     date: '2026-06-05',
+    dateModified: '2026-08-18',
     author: 'Hannah Brooks, Local Commerce Consultant',
     category: 'Small Business Tools'
   },
@@ -374,6 +388,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'How to 10x Google Reviews with Countertop QR Display Stands',
     description: 'Learn the exact psychological triggers and technical setup to get satisfied customers to leave 5-star Google Business ratings right at checkout.',
     date: '2026-07-15',
+    dateModified: '2026-08-27',
     author: 'Hannah Brooks, Local Commerce Consultant',
     category: 'Small Business Tools'
   },
@@ -381,6 +396,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Contactless Invoicing: Adding Instant Payment QR Codes to Bills',
     description: 'Discover how freelancers, service contractors, and pop-up vendors generate instant payment QR codes on invoices for zero-fee rapid settlement.',
     date: '2026-08-06',
+    dateModified: '2026-09-01',
     author: 'Hannah Brooks, Local Commerce Consultant',
     category: 'Small Business Tools'
   },
@@ -388,6 +404,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'The Technical Architecture of 2D Matrix Codes: Micro QR, iQR, and Standard Models',
     description: 'An in-depth technical analysis of 2D barcode variants, module capacities, coordinate encoding, and specialized industrial matrix standards.',
     date: '2026-06-22',
+    dateModified: '2026-08-21',
     author: 'Dr. Elena Rostova, Cryptography & Signals Specialist',
     category: 'Technology'
   },
@@ -395,6 +412,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Cybersecurity in QR Systems: Preventing Qshing & Malicious URL Redirection',
     description: 'Learn how cybercriminals exploit physical QR codes through QR phishing (Qshing) and how enterprise security protocols safeguard user scans.',
     date: '2026-07-19',
+    dateModified: '2026-08-28',
     author: 'Dr. Elena Rostova, Cryptography & Signals Specialist',
     category: 'Technology'
   },
@@ -402,6 +420,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'GS1 Digital Link Transition: The 2027 Barcode Revolution Explained',
     description: 'Discover how the global retail industry is transitioning from legacy 1D UPC barcodes to 2D QR codes powered by the GS1 Digital Link standard.',
     date: '2026-08-10',
+    dateModified: '2026-09-02',
     author: 'Marcus Vance, Lead Systems Architect',
     category: 'Technology'
   },
@@ -409,6 +428,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Frictionless Hotel Check-Ins: Keyless Room Access & Concierge Web Apps',
     description: 'Learn how boutique and luxury hotels use contactless QR codes in lobbies and guest rooms to streamline check-ins, room service orders, and amenities booking.',
     date: '2026-06-25',
+    dateModified: '2026-08-19',
     author: 'Elena Rossi, Hospitality Technology Specialist',
     category: 'Contactless Solutions'
   },
@@ -416,6 +436,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Touchless Patient Registration: Modernizing Clinic Waiting Rooms with QR Forms',
     description: 'Explore how medical clinics, dental practices, and diagnostic centers streamline patient check-in and medical history intake using hygienic QR forms.',
     date: '2026-07-14',
+    dateModified: '2026-08-23',
     author: 'Dr. Aris Thorne, Healthcare Systems Consultant',
     category: 'Contactless Solutions'
   },
@@ -423,6 +444,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Smart Facilities & Equipment Management: Instant Maintenance Ticketing',
     description: 'Discover how facility managers track HVAC units, elevators, and office assets with rugged industrial QR code decals linking to instant service logs.',
     date: '2026-08-04',
+    dateModified: '2026-08-30',
     author: 'Marcus Vance, Lead Systems Architect',
     category: 'Contactless Solutions'
   },
@@ -430,6 +452,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Modernizing the Dining Experience: Digital QR Menus vs Physical Laminates',
     description: 'Everything restaurateurs need to know about designing, printing, and optimizing contactless digital QR menus to increase average order values.',
     date: '2026-06-08',
+    dateModified: '2026-08-17',
     author: 'Marco Delvecchio, Culinary Technology Director',
     category: 'Restaurant QR Menus'
   },
@@ -437,6 +460,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Dynamic Pricing & Real-Time Item Disabling: Running Lean Kitchen Operations',
     description: 'Learn how high-volume bars and restaurants implement happy hour specials, surge pricing, and live 86-lists without reprinting tabletop QR stands.',
     date: '2026-07-06',
+    dateModified: '2026-08-25',
     author: 'Marco Delvecchio, Culinary Technology Director',
     category: 'Restaurant QR Menus'
   },
@@ -444,6 +468,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Table-Side Ordering & Self-Checkout: Increasing Table Turnaround by 30%',
     description: 'Explore how fast-casual and high-volume dining establishments boost table turnover rates and staff tips using tableside QR ordering and payments.',
     date: '2026-07-29',
+    dateModified: '2026-08-31',
     author: 'Marco Delvecchio, Culinary Technology Director',
     category: 'Restaurant QR Menus'
   },
@@ -451,6 +476,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'High-Throughput Ticketing: Scanning 1,000+ Attendees per Minute at Festivals',
     description: 'Learn how music festivals, stadiums, and conferences deploy high-speed QR barcode scanners, cryptographic validation, and offline turnstiles.',
     date: '2026-06-16',
+    dateModified: '2026-08-22',
     author: 'Julian Sterling, Event Operations Director',
     category: 'Event QR Codes'
   },
@@ -458,6 +484,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Interactive Conference Badges: Frictionless Digital Business Card Networking',
     description: 'Discover how corporate summit organizers replace paper business cards with dynamic vCard QR badges for instant contact exchange and lead scoring.',
     date: '2026-07-10',
+    dateModified: '2026-08-27',
     author: 'Julian Sterling, Event Operations Director',
     category: 'Event QR Codes'
   },
@@ -465,6 +492,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Live Audience Polls & Stage Q&A: Engaging Hybrid Summit Attendees in Real-Time',
     description: 'Learn how keynote speakers and event producers drive 80%+ audience participation using giant stage-screen QR codes for live voting and anonymous Q&A.',
     date: '2026-08-08',
+    dateModified: '2026-09-02',
     author: 'Julian Sterling, Event Operations Director',
     category: 'Event QR Codes'
   },
@@ -472,6 +500,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Interactive Textbooks: Linking Static Classroom Handouts to 3D Models & Video Lectures',
     description: 'Explore how K-12 educators and university professors transform static worksheets into dynamic learning portals with video solutions and 3D AR models.',
     date: '2026-06-12',
+    dateModified: '2026-08-19',
     author: 'Prof. Arthur Vance, EdTech Research Fellow',
     category: 'Education QR Codes'
   },
@@ -479,6 +508,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Campus Navigation & Building Directories: Guiding Freshmen with Geo-Tagged QRs',
     description: 'Learn how modern universities and hospital complexes place scannable QR signs at campus intersections to provide interactive 3D wayfinding maps.',
     date: '2026-07-21',
+    dateModified: '2026-08-28',
     author: 'Prof. Arthur Vance, EdTech Research Fellow',
     category: 'Education QR Codes'
   },
@@ -486,6 +516,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Automated Attendance Systems: QR-Based Lecture Hall Check-In Best Practices',
     description: 'Discover how university lecture halls automate roll call for 300+ students in under two minutes using rotating dynamic QR codes and geofencing.',
     date: '2026-08-12',
+    dateModified: '2026-09-03',
     author: 'Prof. Arthur Vance, EdTech Research Fellow',
     category: 'Education QR Codes'
   },
@@ -493,6 +524,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Multi-Link Bio QR Codes: Unifying Instagram, TikTok, YouTube & Spotify in One Scan',
     description: 'Learn how content creators, musicians, and influencers design aesthetic multi-link landing pages connected to a single scannable QR code.',
     date: '2026-06-20',
+    dateModified: '2026-08-24',
     author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
     category: 'Social Media Marketing'
   },
@@ -500,6 +532,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Interactive Pop-Up Store Activations: Turning Foot Traffic into Viral Social Followers',
     description: 'Discover how direct-to-consumer (DTC) fashion and beauty brands turn temporary pop-up shops into viral TikTok and Instagram follower magnets.',
     date: '2026-07-18',
+    dateModified: '2026-08-29',
     author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
     category: 'Social Media Marketing'
   },
@@ -507,6 +540,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     title: 'Influencer Merch & Unboxing Campaigns: Driving Direct Engagement from Product Tags',
     description: 'Learn how top creators design custom hangtags and packaging inserts with QR codes to trigger viral unboxing videos and community hashtag growth.',
     date: '2026-08-14',
+    dateModified: '2026-09-03',
     author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
     category: 'Social Media Marketing'
   }
