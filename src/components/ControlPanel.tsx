@@ -169,6 +169,7 @@ export default function ControlPanel({ currentProject,
   const [localProject, setLocalProject] = useState<Partial<QRProject>>(currentProject);
   const [showEccTooltip, setShowEccTooltip] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [logoInputMode, setLogoInputMode] = useState<'upload' | 'url' | 'presets'>('upload');
   const lastPropagatedProjectRef = useRef<Partial<QRProject>>(currentProject);
   const isDebouncingRef = useRef<boolean>(false);
 
@@ -2013,95 +2014,231 @@ export default function ControlPanel({ currentProject,
         className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-3"
       >
         <div className="flex justify-between items-center">
-          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-gray-900 tracking-wider uppercase">{t('control.emblemCenterLogo', 'Emblem Center Logo')}</label>
+          <label htmlFor="emblem-url-input" className="text-xs font-semibold text-gray-900 tracking-wider uppercase flex items-center gap-1.5">
+            <QrCode className="w-3.5 h-3.5 text-indigo-600" />
+            <span>{t('control.emblemCenterLogo', 'Emblem Center Logo')}</span>
+          </label>
           {localProject.design?.logoUrl && (
             <button
               type="button"
               onClick={clearLogo}
-              className="text-[10px] text-red-600 hover:text-red-800 font-semibold transition-colors cursor-pointer"
+              className="text-[10px] text-red-600 hover:text-red-800 font-semibold transition-colors cursor-pointer flex items-center gap-1 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded-md"
             >
-              {t('control.clearEmblem', 'Clear Emblem')}
+              <X className="w-3 h-3" />
+              <span>{t('control.clearEmblem', 'Clear Emblem')}</span>
             </button>
           )}
         </div>
 
-        {/* Text/Emoji custom word input */}
-        <div>
-          <input
-            id="emblem-url-input"
-            type="text"
-            className="w-full text-xs px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800 placeholder:text-slate-400"
-            placeholder={t('control.placeholder.logoText', 'e.g. Google, QR, or text/emoji')}
-            value={localProject.design?.logoUrl || ''}
-            onChange={e => {
-              setUploadError(null);
-              setDesignField('logoUrl', e.target.value, true);
-            }}
-          />
-          <p className="text-[10px] text-gray-600 mt-1">{t('control.logoUrlDesc', 'Accepts short words, emojis, or external secure image URLs.')}</p>
+        {/* Input Mode Selector Tabs */}
+        <div className="flex bg-gray-100 p-1 rounded-xl gap-1">
+          <button
+            type="button"
+            onClick={() => setLogoInputMode('upload')}
+            className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+              logoInputMode === 'upload' ? 'bg-white text-indigo-600 shadow-2xs font-bold' : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <UploadCloud className="w-3.5 h-3.5" />
+            <span>{t('control.tabUpload', 'Upload File')}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setLogoInputMode('url')}
+            className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+              logoInputMode === 'url' ? 'bg-white text-indigo-600 shadow-2xs font-bold' : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Link2 className="w-3.5 h-3.5" />
+            <span>{t('control.tabUrl', 'Image URL')}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setLogoInputMode('presets')}
+            className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+              logoInputMode === 'presets' ? 'bg-white text-indigo-600 shadow-2xs font-bold' : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Star className="w-3.5 h-3.5" />
+            <span>{t('control.tabPresets', 'Presets')}</span>
+          </button>
         </div>
 
-        {/* Drag and Drop Upload Area */}
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${ isDragging ? 'border-indigo-500 bg-indigo-50/40 scale-[1.01]' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/50 bg-white' }`}
-        >
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="image/*"
-            aria-label="Upload custom center emblem image file"
-            className="hidden"
-          />
-          
-          <UploadCloud className={`w-6 h-6 ${isDragging ? 'text-indigo-600 animate-pulse' : 'text-gray-400'}`} />
-          <div className="text-center">
-            <span className="text-xs font-medium text-gray-700 block">
-              {t('control.dragDropLogo', 'Drag & drop logo image, or')} <span className="text-indigo-600 font-semibold">{t('control.browse', 'browse')}</span>
-            </span>
-            <span className="text-[9px] text-gray-400 block mt-0.5">{t('control.logoUploadLimits', 'Supports PNG, JPG, SVG, WebP up to 2MB')}</span>
+        {/* Tab Content: Upload File */}
+        {logoInputMode === 'upload' && (
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={`border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${ isDragging ? 'border-indigo-500 bg-indigo-50/40 scale-[1.01]' : 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50/50 bg-white' }`}
+          >
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              aria-label="Upload custom center emblem image file"
+              className="hidden"
+            />
+            
+            <div className={`p-2.5 rounded-full ${isDragging ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-50 text-indigo-600'}`}>
+              <UploadCloud className={`w-6 h-6 ${isDragging ? 'animate-pulse' : ''}`} />
+            </div>
+            <div className="text-center">
+              <span className="text-xs font-semibold text-gray-800 block">
+                {t('control.dragDropLogo', 'Drag & drop logo image, or')} <span className="text-indigo-600 font-bold underline">{t('control.browse', 'browse file')}</span>
+              </span>
+              <span className="text-[9px] text-gray-500 block mt-0.5">{t('control.logoUploadLimits', 'Supports PNG, JPG, SVG, WebP up to 2MB')}</span>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Tab Content: Image URL / Text Emblem */}
+        {logoInputMode === 'url' && (
+          <div className="space-y-2">
+            <div className="relative">
+              <input
+                id="emblem-url-input"
+                type="text"
+                className="w-full text-xs pl-8 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800 placeholder:text-slate-400 font-mono"
+                placeholder={t('control.placeholder.logoText', 'https://domain.com/logo.png or text/emoji')}
+                value={localProject.design?.logoUrl || ''}
+                onChange={e => {
+                  setUploadError(null);
+                  setDesignField('logoUrl', e.target.value, true);
+                }}
+              />
+              <Globe className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-3" />
+            </div>
+            <div className="flex items-center justify-between text-[10px] text-gray-500 px-0.5">
+              <span>{t('control.logoUrlDesc', 'Accepts HTTPS image URLs, base64, or short text/emojis.')}</span>
+              {navigator.clipboard && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      const text = await navigator.clipboard.readText();
+                      if (text) {
+                        setUploadError(null);
+                        setDesignField('logoUrl', text, true);
+                      }
+                    } catch (e) {
+                      // ignore clipboard permission error
+                    }
+                  }}
+                  className="text-indigo-600 font-semibold hover:underline cursor-pointer"
+                >
+                  {t('control.pasteUrl', 'Paste URL')}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab Content: Brand Presets */}
+        {logoInputMode === 'presets' && (
+          <div className="grid grid-cols-4 gap-1.5 bg-white p-2 rounded-xl border border-gray-200">
+            {[
+              {
+                name: 'Google',
+                url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg',
+              },
+              {
+                name: 'WhatsApp',
+                url: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
+              },
+              {
+                name: 'Instagram',
+                url: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg',
+              },
+              {
+                name: 'Wi-Fi',
+                url: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="%234f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.85a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/></svg>',
+              },
+              {
+                name: 'Globe',
+                url: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="%232563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
+              },
+              {
+                name: 'QR Badge',
+                url: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="%234f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>',
+              },
+              {
+                name: 'Star',
+                url: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="%23eab308" stroke="%23ca8a04" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+              },
+              {
+                name: 'Heart',
+                url: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="%23ef4444" stroke="%23dc2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
+              }
+            ].map((preset) => {
+              const isActive = localProject.design?.logoUrl === preset.url;
+              return (
+                <button
+                  key={preset.name}
+                  type="button"
+                  onClick={() => {
+                    setUploadError(null);
+                    setDesignField('logoUrl', preset.url, true);
+                  }}
+                  className={`p-2 rounded-lg flex flex-col items-center gap-1 border transition-all cursor-pointer ${
+                    isActive ? 'border-indigo-600 bg-indigo-50/60 ring-2 ring-indigo-500/20' : 'border-gray-100 hover:border-indigo-200 hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="w-6 h-6 flex items-center justify-center overflow-hidden">
+                    <img src={preset.url} alt={preset.name} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                  </div>
+                  <span className="text-[9px] font-semibold text-gray-700 truncate w-full text-center">{preset.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {uploadError && (
           <p className="text-[10px] text-red-500 font-medium mt-1 bg-red-50/50 p-2 rounded-lg border border-red-100">{uploadError}</p>
         )}
 
         {localProject.design?.logoUrl && (
-          <div className="mt-3 space-y-3 bg-slate-50/50 p-3 rounded-2xl border border-slate-100">
+          <div className="mt-3 space-y-3 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
             {/* Show a small thumbnail preview of the logo */}
-            <div className="flex items-center gap-2.5 bg-white p-2 rounded-xl border border-slate-100">
-              <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 overflow-hidden shrink-0">
+            <div className="flex items-center gap-2.5 bg-white p-2.5 rounded-xl border border-slate-200/60 shadow-2xs">
+              <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-200/80 overflow-hidden shrink-0 shadow-inner">
                 {localProject.design.logoUrl.startsWith('data:image') || localProject.design.logoUrl.startsWith('http') ? (
                   <img
                     src={localProject.design.logoUrl}
                     alt="Logo Preview"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain p-0.5"
                     referrerPolicy="no-referrer"
                   />
                 ) : (
                   <span 
                     className="font-bold text-indigo-600 text-center overflow-hidden whitespace-nowrap px-0.5 select-none"
                     dir="auto"
-                    style={{ fontSize: `${getEmblemFontSize(localProject.design.logoUrl, 40)}px` }}
+                    style={{ fontSize: `${getEmblemFontSize(localProject.design.logoUrl, 44)}px` }}
                   >
                     {localProject.design.logoUrl}
                   </span>
                 )}
               </div>
-              <div className="overflow-hidden">
-                <span className="text-xs font-medium text-gray-800 block truncate">
-                  {localProject.design.logoUrl.startsWith('data:image') 
-                    ? t('control.uploadedBase64Emblem', 'Uploaded Base64 Emblem Image') 
-                    : localProject.design.logoUrl.startsWith('http') 
-                      ? t('control.externalImageUrl', 'External Image URL') 
-                      : t('control.textEmblemLabel', 'Text Emblem: "{logoUrl}"', { logoUrl: localProject.design.logoUrl })}
-                </span>
-                <span className="text-[9px] font-mono text-gray-400 block truncate max-w-[180px]">
+              <div className="overflow-hidden flex-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100/80">
+                    {localProject.design.logoUrl.startsWith('data:image') 
+                      ? t('control.badgeFile', 'Uploaded File') 
+                      : localProject.design.logoUrl.startsWith('http') 
+                        ? t('control.badgeUrl', 'Image URL') 
+                        : t('control.badgeText', 'Text Emblem')}
+                  </span>
+                  <span className="text-[9px] text-emerald-600 font-semibold flex items-center gap-0.5">
+                    <Check className="w-3 h-3" />
+                    <span>{t('control.activeInQr', 'Active in QR Preview')}</span>
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-gray-500 block truncate max-w-[200px] mt-1">
                   {localProject.design.logoUrl}
                 </span>
               </div>
