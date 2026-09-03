@@ -3,7 +3,7 @@ import { useTranslation } from '../utils/i18n';
 import { getProductionBaseUrl } from '../config/siteConfig';
 
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Zap, Paintbrush, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp, UtensilsCrossed, Star, UserCheck, X, Square, Circle, Leaf, Diamond, Sparkles } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Zap, Paintbrush, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp, UtensilsCrossed, Star, UserCheck, X, Square, Circle, Leaf, Diamond, Sparkles, Undo2, Redo2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
@@ -178,6 +178,156 @@ export default function ControlPanel({ currentProject,
   const lastPropagatedProjectRef = useRef<Partial<QRProject>>(currentProject);
   const isDebouncingRef = useRef<boolean>(false);
 
+  // Undo / Redo History State for QR Design Properties (colors, dots, eye styles, gradients, margins)
+  const defaultDesignFallback: NonNullable<QRProject['design']> = {
+    fgColor: '#0f172a',
+    bgColor: '#ffffff',
+    gradientType: 'none',
+    gradientColor: '#4f46e5',
+    dotStyle: 'square',
+    eyeStyle: 'square',
+    margin: 20
+  };
+
+  const [history, setHistory] = useState<{
+    stack: Array<NonNullable<QRProject['design']>>;
+    index: number;
+  }>(() => ({
+    stack: [currentProject.design ? JSON.parse(JSON.stringify(currentProject.design)) : defaultDesignFallback],
+    index: 0
+  }));
+
+  const isPerformingHistoryActionRef = useRef<boolean>(false);
+  const historyDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const canUndo = history.index > 0;
+  const canRedo = history.index < history.stack.length - 1;
+
+  const handleUndo = () => {
+    if (history.index <= 0) return;
+    const newIndex = history.index - 1;
+    const targetDesign = history.stack[newIndex];
+    if (!targetDesign) return;
+
+    isPerformingHistoryActionRef.current = true;
+    setHistory(prev => ({
+      ...prev,
+      index: newIndex
+    }));
+
+    const updated = {
+      ...localProject,
+      design: JSON.parse(JSON.stringify(targetDesign))
+    };
+    setLocalProject(updated);
+    lastPropagatedProjectRef.current = updated;
+    parentOnChange(updated);
+    playAudioSound('click');
+
+    setTimeout(() => {
+      isPerformingHistoryActionRef.current = false;
+    }, 60);
+  };
+
+  const handleRedo = () => {
+    if (history.index >= history.stack.length - 1) return;
+    const newIndex = history.index + 1;
+    const targetDesign = history.stack[newIndex];
+    if (!targetDesign) return;
+
+    isPerformingHistoryActionRef.current = true;
+    setHistory(prev => ({
+      ...prev,
+      index: newIndex
+    }));
+
+    const updated = {
+      ...localProject,
+      design: JSON.parse(JSON.stringify(targetDesign))
+    };
+    setLocalProject(updated);
+    lastPropagatedProjectRef.current = updated;
+    parentOnChange(updated);
+    playAudioSound('click');
+
+    setTimeout(() => {
+      isPerformingHistoryActionRef.current = false;
+    }, 60);
+  };
+
+  const recordDesignChange = (newDesign: NonNullable<QRProject['design']>, debounce = false) => {
+    if (isPerformingHistoryActionRef.current) return;
+
+    if (historyDebounceTimerRef.current) {
+      clearTimeout(historyDebounceTimerRef.current);
+      historyDebounceTimerRef.current = null;
+    }
+
+    const pushState = () => {
+      setHistory(prev => {
+        const currentHead = prev.stack[prev.index];
+        if (currentHead && JSON.stringify(currentHead) === JSON.stringify(newDesign)) {
+          return prev;
+        }
+        const newStack = prev.stack.slice(0, prev.index + 1);
+        newStack.push(JSON.parse(JSON.stringify(newDesign)));
+        if (newStack.length > 50) {
+          newStack.shift();
+          return {
+            stack: newStack,
+            index: newStack.length - 1
+          };
+        }
+        return {
+          stack: newStack,
+          index: newStack.length - 1
+        };
+      });
+    };
+
+    if (debounce) {
+      historyDebounceTimerRef.current = setTimeout(pushState, 350);
+    } else {
+      pushState();
+    }
+  };
+
+  // Keyboard shortcut listener for Undo (Ctrl+Z / Cmd+Z) and Redo (Ctrl+Y / Cmd+Shift+Z)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+      const isCtrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+
+      if (isCtrlOrCmd && !e.altKey) {
+        if (e.key === 'z' || e.key === 'Z') {
+          if (e.shiftKey) {
+            e.preventDefault();
+            handleRedo();
+          } else {
+            e.preventDefault();
+            handleUndo();
+          }
+        } else if ((e.key === 'y' || e.key === 'Y') && !isMac) {
+          e.preventDefault();
+          handleRedo();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [history, localProject]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dotDropdownRef.current && !dotDropdownRef.current.contains(event.target as Node)) {
@@ -196,6 +346,12 @@ export default function ControlPanel({ currentProject,
       setLocalProject(currentProject);
       lastPropagatedProjectRef.current = currentProject;
       isDebouncingRef.current = false;
+      if (currentProject.design && !isPerformingHistoryActionRef.current) {
+        setHistory({
+          stack: [JSON.parse(JSON.stringify(currentProject.design))],
+          index: 0
+        });
+      }
     }
   }, [currentProject]);
 
@@ -221,6 +377,11 @@ export default function ControlPanel({ currentProject,
         ...updatedProject,
         design: optimizedDesign
       };
+      design = optimizedDesign;
+    }
+
+    if (design) {
+      recordDesignChange(design, debounce);
     }
 
     setLocalProject(updatedProject);
@@ -465,13 +626,52 @@ export default function ControlPanel({ currentProject,
       animate="show"
       className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-4 sm:p-6 shadow-sm flex flex-col gap-4 sm:gap-6"
     >
-      {/* Scope Title */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-lg font-semibold tracking-tight text-gray-900 flex items-center gap-2">
-          <Paintbrush className="w-5 h-5 text-indigo-600" />
-          {t('control.customizeTitle', 'Customize Your QR Code')}
-        </h2>
-        <p className="text-xs text-gray-500 mt-1">{t('control.desc', 'Configure type, contents, custom styles, and centerpiece tags.')}</p>
+      {/* Scope Title & Undo/Redo Action Toolbar */}
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-gray-100">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight text-gray-900 flex items-center gap-2">
+            <Paintbrush className="w-5 h-5 text-indigo-600" />
+            {t('control.customizeTitle', 'Customize Your QR Code')}
+          </h2>
+          <p className="text-xs text-gray-500 mt-0.5">{t('control.desc', 'Configure type, contents, custom styles, and centerpiece tags.')}</p>
+        </div>
+
+        {/* Undo / Redo Control Bar */}
+        <div id="design-undo-redo-toolbar" className="flex items-center gap-1.5 self-start sm:self-auto bg-slate-50 border border-slate-200/80 p-1 rounded-xl shadow-xs">
+          <button
+            type="button"
+            id="btn-undo-design"
+            disabled={!canUndo}
+            onClick={handleUndo}
+            title={t('control.undoTooltip', 'Undo design change (Ctrl+Z / ⌘Z)')}
+            aria-label="Undo design change"
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all select-none ${
+              canUndo
+                ? 'bg-white text-slate-700 shadow-xs border border-slate-200/70 hover:bg-slate-50 hover:text-indigo-600 active:scale-95 cursor-pointer'
+                : 'text-slate-300 border border-transparent cursor-not-allowed opacity-40'
+            }`}
+          >
+            <Undo2 className="w-3.5 h-3.5 shrink-0" />
+            <span>{t('control.undo', 'Undo')}</span>
+          </button>
+          
+          <button
+            type="button"
+            id="btn-redo-design"
+            disabled={!canRedo}
+            onClick={handleRedo}
+            title={t('control.redoTooltip', 'Redo design change (Ctrl+Y / ⌘⇧Z)')}
+            aria-label="Redo design change"
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all select-none ${
+              canRedo
+                ? 'bg-white text-slate-700 shadow-xs border border-slate-200/70 hover:bg-slate-50 hover:text-indigo-600 active:scale-95 cursor-pointer'
+                : 'text-slate-300 border border-transparent cursor-not-allowed opacity-40'
+            }`}
+          >
+            <Redo2 className="w-3.5 h-3.5 shrink-0" />
+            <span>{t('control.redo', 'Redo')}</span>
+          </button>
+        </div>
       </motion.div>
 
       {/* Target Content Types */}

@@ -220,6 +220,16 @@ const formRateLimiter = createRateLimiter({
 
 export const app = express();
 
+// Security Headers Middleware
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  next();
+});
+
   // --- TOP-LEVEL STATIC VERIFICATION & PUBLIC ASSETS (Highest Priority) ---
   // Google Search Console Site Verification Static Route (served immediately with no wrappers or React interception)
   app.get('/google50a29f713551bfd0.html', (req, res) => {
