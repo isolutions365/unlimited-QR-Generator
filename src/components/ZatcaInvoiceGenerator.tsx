@@ -195,6 +195,7 @@ export default function ZatcaInvoiceGenerator({
   // Inspector State
   const [inspectorInput, setInspectorInput] = useState('');
   const [copied, setCopied] = useState(false);
+  const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null);
 
   // Canvas Ref
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -401,20 +402,24 @@ export default function ZatcaInvoiceGenerator({
         </div>
       </div>
 
-      {/* Legal Disclaimer & Data Privacy Notice (Arabic Only) */}
-      <div className="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4 sm:p-5 flex items-start gap-3.5 shadow-xs">
-        <div className="p-2 bg-emerald-600 text-white rounded-xl shrink-0 mt-0.5 shadow-xs">
+      {/* Legal Disclaimer & Data Privacy Notice */}
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5 flex items-start gap-3.5 shadow-xs">
+        <div className="p-2 bg-amber-600 text-white rounded-xl shrink-0 mt-0.5 shadow-xs">
           <ShieldCheck className="w-5 h-5" />
         </div>
-        <div className="space-y-1">
-          <h4 className="text-xs sm:text-sm font-bold text-emerald-900 flex items-center gap-2">
-            تنبيه قانوني ومعالجة البيانات
-            <span className="px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded-full">
-              معالجة آمنة 100% داخل المتصفح
+        <div className="space-y-2 w-full text-right" style={{ direction: 'rtl' }}>
+          <h4 className="text-xs sm:text-sm font-bold text-amber-900 flex flex-wrap items-center gap-2">
+            تنبيه قانوني هام وإخلاء مسؤولية | Important Legal Disclaimer
+            <span className="px-2 py-0.5 bg-amber-600 text-white text-[9px] font-bold rounded-full">
+              المرحلة الأولى فقط (Phase 1 Only)
             </span>
           </h4>
-          <p className="text-xs text-emerald-800 leading-relaxed">
-            تنبيه قانوني: يقوم هذا المولد بإنشاء رمز QR بتنسيق Base64 TLV وفقاً للمواصفات الفنية لهيئة الزكاة والضريبة والجمارك (ZATCA). المعالجة تتم داخل متصفحك مباشرة ولا يتم تخزين أي بيانات ضريبية على خوادمنا.
+          <p className="text-xs text-amber-800 leading-relaxed font-sans">
+            <strong>بالعربية:</strong> تم تصميم هذه الأداة لأغراض المرحلة الأولى (مرحلة الإصدار والحفظ) والأغراض التعليمية والتجريبية فقط. إن الفواتير التجارية بين المنشآت (B2B) التي تتطلب الالتزام بمتطلبات المرحلة الثانية (مرحلة الربط والتكامل) تطلب تقنياً الربط المباشر والنشط مع أنظمة هيئة الزكاة والضريبة والجمارك (ZATCA) عبر حلول فوترة إلكترونية معتمدة ومرخصة رسمياً من الهيئة. لا تعد هذه الأداة حلاً مستقلاً معتمداً للمرحلة الثانية. لا تتحمل المنشأة (iSolutions) أي مسؤولية عن الغرامات أو العقوبات الناتجة عن أي إساءة استخدام للأداة أو استخدامها بشكل يخالف اللوائح الرسمية للهيئة.
+          </p>
+          <div className="h-px bg-amber-200/60 my-1.5" />
+          <p className="text-xs text-amber-800 leading-relaxed font-sans text-left" style={{ direction: 'ltr' }}>
+            <strong>In English:</strong> This tool is designed strictly for **Phase 1 (Generation & Storage)**, testing, and educational purposes. Commercial B2B invoicing requiring **Phase 2 compliance (Integration Phase)** must utilize a ZATCA-certified e-invoicing solution integrated directly with official systems. Standalone generators cannot satisfy Phase 2 compliance mandates. iSolutions is not liable for any regulatory audits, compliance failures, or penalties resulting from misuse of this tool.
           </p>
         </div>
       </div>
@@ -760,6 +765,11 @@ export default function ZatcaInvoiceGenerator({
 
               {isPhase2 && (
                 <div className="space-y-3 pt-2">
+                  <div className="p-2.5 bg-amber-50 border border-amber-150 rounded-xl text-[10px] text-amber-800 leading-normal" style={{ direction: 'rtl' }}>
+                    تنبيه: يجب حساب هذه القيم وتوقيعها مشفراً مسبقاً خارجياً من خلال حل فوترة متكامل معتمد من الهيئة. لا تقوم هذه المنصة بإنشاء توقيعات رقمية أو حساب هاش الفواتير تلقائياً.
+                    <br />
+                    <span className="font-semibold" style={{ direction: 'ltr' }}>Note:</span> These values must be pre-computed and cryptographically signed externally via a certified system. This tool does not sign XML invoices or calculate hashes.
+                  </div>
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 mb-1">
                       هاش الفاتورة الإلكترونية المشفر (Invoice SHA-256 Hash - Tag 6)
@@ -1195,6 +1205,123 @@ export default function ZatcaInvoiceGenerator({
           )}
         </div>
       )}
+
+      {/* FAQ & ZATCA Portal Authority Section */}
+      <div className="mt-12 pt-10 border-t border-slate-200 w-full max-w-4xl mx-auto space-y-8">
+        <div className="text-center space-y-2">
+          <HelpCircle className="w-8 h-8 text-indigo-600 mx-auto" />
+          <h3 className="text-xl font-extrabold text-slate-900">
+            Frequently Asked Questions & Compliance Guidance
+          </h3>
+          <p className="text-sm text-slate-500 max-w-xl mx-auto">
+            Get clear, honest answers on ZATCA requirements, data safety, and phase specifications.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {[
+            {
+              q: "What is ZATCA Phase 1 vs Phase 2?",
+              a: "Phase 1 (Generation Phase) requires KSA businesses to issue simplified tax invoices and simplified credit/debit notes with a compliant QR code containing the Seller Name, VAT Number, Timestamp, Grand Total, and VAT Total in TLV format. Phase 2 (Integration Phase) introduces advanced cryptographic requirements (XML signing, SHA-256 hashing) and requires direct live integration with ZATCA's servers."
+            },
+            {
+              q: "Is this tool ZATCA certified for Phase 2?",
+              a: "No. This tool is designed strictly for Phase 1 (Generation & Storage), testing, and educational purposes. Standalone client-side generators cannot satisfy Phase 2 compliance mandates, which require direct, active API integration with official ZATCA systems via certified e-invoicing software."
+            },
+            {
+              q: "Does this tool store or transmit my invoice data?",
+              a: "No. All processing, including TLV encoding, Base64 conversion, and QR code generation, is performed 100% locally inside your web browser. No invoice or tax data is ever stored, saved, or transmitted to any external servers. Your privacy is fully preserved."
+            }
+          ].map((faq, idx) => {
+            const isOpen = activeFaqIndex === idx;
+            return (
+              <div key={idx} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+                <button
+                  type="button"
+                  onClick={() => setActiveFaqIndex(isOpen ? null : idx)}
+                  className="w-full text-left px-5 py-4 flex items-center justify-between font-bold text-slate-800 hover:bg-slate-50 transition-colors gap-4"
+                >
+                  <span className="text-sm sm:text-base text-left">{faq.q}</span>
+                  <span className="text-indigo-600 shrink-0 text-base font-bold">
+                    {isOpen ? '−' : '+'}
+                  </span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: "auto" }}
+                      exit={{ height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100 text-left">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Outbound link to ZATCA official portal */}
+        <div className="p-5 bg-indigo-50/60 rounded-2xl border border-indigo-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div className="space-y-1">
+            <h4 className="text-sm font-bold text-indigo-950">Official ZATCA Compliance Portal</h4>
+            <p className="text-xs text-indigo-800">
+              Access the official KSA regulations, integration guidelines, developer sandboxes, and list of certified solutions directly.
+            </p>
+          </div>
+          <a
+            href="https://zatca.gov.sa"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all shadow-xs shrink-0 cursor-pointer"
+          >
+            <span>Visit ZATCA Portal</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        {/* Schema injection */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What is ZATCA Phase 1 vs Phase 2?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Phase 1 (Generation Phase) requires KSA businesses to issue simplified tax invoices with a compliant QR code containing the Seller Name, VAT Registration Number, Timestamp, Grand Total, and VAT Total in TLV format. Phase 2 (Integration Phase) introduces advanced cryptographic requirements (XML signing, SHA-256 hashing) and requires direct live integration with ZATCA's servers."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is this tool ZATCA certified for Phase 2?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. This tool is designed strictly for Phase 1 (Generation & Storage), testing, and educational purposes. Standalone client-side generators cannot satisfy Phase 2 compliance mandates, which require direct, active API integration with official ZATCA systems via certified e-invoicing software."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does this tool store or transmit my invoice data?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. All processing, including TLV encoding, Base64 conversion, and QR code generation, is performed 100% locally inside your web browser. No invoice or tax data is ever stored, saved, or transmitted to any external servers. Your privacy is fully preserved."
+                  }
+                }
+              ]
+            })
+          }}
+        />
+      </div>
     </div>
   );
 }

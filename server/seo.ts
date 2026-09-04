@@ -93,6 +93,14 @@ export const sitemapRoutes: SitemapRoute[] = [
     seoTitle: 'Bulk QR Code Generator - Create 1000s via CSV/Excel',
     seoDescription: 'Upload CSV or Excel files to generate hundreds or thousands of unique QR codes in bulk. Download ZIP with high-resolution branded codes.' 
   },
+  { 
+    path: '/zatca-invoice', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free ZATCA Phase 1 QR Code Generator (TLV) | FreeQRBarcodes',
+    seoDescription: 'Generate ZATCA Phase 1 compliant TLV/Base64 QR codes for Simplified Tax Invoices instantly. Free, browser-based, no signup. Includes TLV inspector for Phase 2 verification.'
+  },
   
   // Landing pages
   { 

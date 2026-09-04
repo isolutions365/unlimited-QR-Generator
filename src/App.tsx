@@ -170,7 +170,8 @@ export function validateSitemapRoutes(landingPageSlugs: string[], trustCenterPat
     '/compare',
     '/solutions',
     '/industries',
-    '/use-cases'
+    '/use-cases',
+    '/zatca-invoice'
   ];
   customStaticRoutes.forEach(route => {
     expectedRoutes.add(route);
@@ -819,12 +820,6 @@ export default function App() {
   // Active Tab
   const [activeTab, setActiveTab ] = useState<AppTab>('create');
   const [isBulkHelpModalOpen, setIsBulkHelpModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (activeTab === 'zatca' && locale !== 'ar') {
-      setActiveTab('create');
-    }
-  }, [locale, activeTab]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -1822,6 +1817,8 @@ export default function App() {
       setActiveTab('barcode');
     } else if (currentSlug === 'bulk-qr-generator') {
       setActiveTab('bulk');
+    } else if (currentSlug === 'zatca-invoice') {
+      setActiveTab('zatca');
     } else if (currentSlug === 'animated-qr-generator') {
       setActiveTab('animations');
     } else if (currentSlug === 'payment-qr-generator') {
@@ -3398,7 +3395,7 @@ export default function App() {
               { id: 'analytics', name: t('nav.analyticsTab', 'Scan Analytics'), icon: BarChart3, iconColor: 'text-indigo-500' },
               { id: 'templates', name: t('nav.templatesTab', 'Templates'), icon: LayoutTemplate, iconColor: 'text-indigo-500' },
               { id: 'print', name: t('nav.printModeTab', 'Print Studio'), icon: Printer, iconColor: 'text-emerald-500' },
-              ...(locale === 'ar' ? [{ id: 'zatca', name: 'فاتورة ZATCA', icon: FileCheck2, iconColor: 'text-emerald-600', isSpecial: true }] : []),
+              { id: 'zatca', name: t('nav.zatcaTab', 'ZATCA Invoice'), icon: FileCheck2, iconColor: 'text-emerald-600', isSpecial: true },
             ].map((tab) => {
               const isActive = activeTab === tab.id;
               const IconComponent = tab.icon;
@@ -3656,7 +3653,7 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'zatca' && locale === 'ar' && (
+        {activeTab === 'zatca' && (
           <div className="w-full">
             <ErrorBoundary isInline>
               <React.Suspense fallback={<LazyLoader />}>
@@ -4744,6 +4741,7 @@ export default function App() {
                 { name: '🏷️ Digital Card QR', path: '/digital-card-qr-generator' },
                 { name: '📁 PDF Sharing QR', path: '/pdf-sharing-qr-generator' },
                 { name: '📄 PDF QR Code', path: '/pdf-qr-generator' },
+                { name: '🧾 ZATCA Invoice QR', path: '/zatca-invoice' },
               ].map((item) => (
                 <a 
                   key={item.path}
