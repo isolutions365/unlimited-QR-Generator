@@ -142,7 +142,7 @@ function injectJsonLd(config: LocalizedSEOConfig, locale: Locale, doc: Document)
   const webSiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "FreeQRGen.pro",
+    "name": "FreeQRBarcodes.com",
     "url": canonicalUrl,
     "description": config.description,
     "inLanguage": locale,

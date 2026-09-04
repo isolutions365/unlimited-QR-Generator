@@ -261,7 +261,7 @@ export default function TemplatesHub({
                       <div className="absolute inset-0 bg-indigo-600/5 group-hover:bg-indigo-600/10 transition-colors" />
                       <div className="w-40 h-40 bg-slate-950 rounded p-2 flex flex-col justify-between text-white text-left select-none shadow-inner">
                         <div className="flex items-center justify-between text-[10px] opacity-70">
-                          <span>{t('templates.brandName', 'FreeQRGen')}</span>
+                          <span>{t('templates.brandName', 'FreeQRBarcodes')}</span>
                           <span className="px-1 bg-white/20 rounded font-mono uppercase text-[8px] tracking-widest font-bold">{t('templates.twoD', '2D')}</span>
                         </div>
                         <div className="font-mono text-center text-xs font-bold my-2 tracking-widest break-all px-1 bg-white/10 py-1 rounded">

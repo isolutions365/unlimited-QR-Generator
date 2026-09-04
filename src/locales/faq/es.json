@@ -21,7 +21,7 @@
     "id": "do-qr-codes-expire",
     "category": "general",
     "question": "¿Los códigos QR caducan alguna vez?",
-    "answer": "Los códigos QR estáticos creados en FreeQRGen.pro nunca caducan porque sus datos están permanentemente codificados en el diseño y funcionarán indefinidamente mientras el gráfico sea legible."
+    "answer": "Los códigos QR estáticos creados en FreeQRBarcodes.com nunca caducan porque sus datos están permanentemente codificados en el diseño y funcionarán indefinidamente mientras el gráfico sea legible."
   },
   {
     "id": "qr-code-data-capacity",
@@ -38,7 +38,7 @@
   {
     "id": "how-to-generate-free-qr",
     "category": "creation",
-    "question": "¿Cómo creo un código QR gratuito en FreeQRGen.pro?",
+    "question": "¿Cómo creo un código QR gratuito en FreeQRBarcodes.com?",
     "answer": "1) Seleccione el tipo de contenido (URL, texto, Wi-Fi, vCard, PDF, WhatsApp); 2) Ingrese sus datos; 3) Personalice colores, marcos y logotipo; 4) Descargue gratis en PNG, SVG o PDF."
   },
   {
@@ -69,7 +69,7 @@
     "id": "generate-vector-svg-pdf-qr",
     "category": "creation",
     "question": "¿Puedo exportar formatos vectoriales de alta resolución como SVG y PDF para imprimir?",
-    "answer": "¡Sí! FreeQRGen ofrece exportaciones en SVG vectorial y PDF listos para imprenta que se pueden escalar infinitamente sin perder calidad para vallas publicitarias y empaques."
+    "answer": "¡Sí! FreeQRBarcodes ofrece exportaciones en SVG vectorial y PDF listos para imprenta que se pueden escalar infinitamente sin perder calidad para vallas publicitarias y empaques."
   },
   {
     "id": "can-i-add-logo-to-qr",
@@ -105,7 +105,7 @@
     "id": "custom-eyes-shapes-impact",
     "category": "customization",
     "question": "¿Personalizar la forma de los ojos o puntos afecta la lectura?",
-    "answer": "FreeQRGen utiliza fórmulas geométricas certificadas que garantizan que los patrones de búsqueda sigan siendo reconocibles al instante por cualquier cámara."
+    "answer": "FreeQRBarcodes utiliza fórmulas geométricas certificadas que garantizan que los patrones de búsqueda sigan siendo reconocibles al instante por cualquier cámara."
   },
   {
     "id": "are-qr-codes-safe-to-scan",
@@ -116,7 +116,7 @@
   {
     "id": "does-freeqrgen-track-user-data",
     "category": "security",
-    "question": "¿FreeQRGen recopila o vende datos de los usuarios?",
+    "question": "¿FreeQRBarcodes recopila o vende datos de los usuarios?",
     "answer": "No. La generación estática se realiza 100% en su navegador local con total privacidad. Nunca almacenamos ni vendemos sus datos personales a terceros."
   },
   {
@@ -158,7 +158,7 @@
   {
     "id": "commercial-use-licensing",
     "category": "business",
-    "question": "¿Los códigos QR creados en FreeQRGen son gratuitos para uso comercial?",
+    "question": "¿Los códigos QR creados en FreeQRBarcodes son gratuitos para uso comercial?",
     "answer": "Sí, todos los códigos QR generados son 100% gratuitos para uso comercial y personal en empaques, productos, vallas y televisión sin regalías."
   },
   {

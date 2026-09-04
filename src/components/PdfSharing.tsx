@@ -805,8 +805,9 @@ export default function PdfSharing() {
               {/* Form Metadata fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Document Title")}</label>
+                  <label htmlFor="pdf-doc-title-input" className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Document Title")}</label>
                   <input
+                    id="pdf-doc-title-input"
                     type="text"
                     value={newTitle}
                     onChange={e => setNewTitle(e.target.value)}
@@ -817,8 +818,9 @@ export default function PdfSharing() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Brand Styling Palette")}</label>
+                  <label htmlFor="pdf-palette-select" className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Brand Styling Palette")}</label>
                   <select
+                    id="pdf-palette-select"
                     value={pdfThemeColor}
                     onChange={e => setPdfThemeColor(e.target.value as any)}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
@@ -831,8 +833,9 @@ export default function PdfSharing() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Short Description / Subtitle")}</label>
+                  <label htmlFor="pdf-subtitle-input" className="block text-xs font-bold text-slate-700 mb-1">{tPdf("Short Description / Subtitle")}</label>
                   <input
+                    id="pdf-subtitle-input"
                     type="text"
                     value={newDescription}
                     onChange={e => setNewDescription(e.target.value)}
@@ -851,10 +854,11 @@ export default function PdfSharing() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Set Password Protection")}</label>
+                    <label htmlFor="pdf-password-input" className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Set Password Protection")}</label>
                     <div className="relative">
                       <Key className="absolute inset-y-0 start-2.5 my-auto w-3.5 h-3.5 text-slate-400" />
                       <input
+                        id="pdf-password-input"
                         type="password"
                         value={pdfPassword}
                         onChange={e => setPdfPassword(e.target.value)}
@@ -865,10 +869,11 @@ export default function PdfSharing() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Expiration Date")}</label>
+                    <label htmlFor="pdf-expiry-date-input" className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Expiration Date")}</label>
                     <div className="relative">
                       <Calendar className="absolute inset-y-0 start-2.5 my-auto w-3.5 h-3.5 text-slate-400" />
                       <input
+                        id="pdf-expiry-date-input"
                         type="date"
                         value={pdfExpiry}
                         onChange={e => setPdfExpiry(e.target.value)}
@@ -878,10 +883,11 @@ export default function PdfSharing() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Max Download Limit")}</label>
+                    <label htmlFor="pdf-max-downloads-input" className="block text-[10px] font-bold text-slate-600 mb-1">{tPdf("Max Download Limit")}</label>
                     <div className="relative">
                       <Download className="absolute inset-y-0 start-2.5 my-auto w-3.5 h-3.5 text-slate-400" />
                       <input
+                        id="pdf-max-downloads-input"
                         type="number"
                         value={pdfMaxDownloads}
                         onChange={e => setPdfMaxDownloads(e.target.value)}

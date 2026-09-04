@@ -685,8 +685,9 @@ export default function AIAssistantWidget({
 
                             <div className="grid grid-cols-2 gap-2 text-xs">
                               <div>
-                                <label className="text-[10px] font-bold text-slate-500 block mb-0.5">UTM Source</label>
+                                <label htmlFor="utm-source-input" className="text-[10px] font-bold text-slate-500 block mb-0.5">UTM Source</label>
                                 <input
+                                  id="utm-source-input"
                                   type="text"
                                   value={utmSource}
                                   onChange={e => setUtmSource(e.target.value)}
@@ -694,8 +695,9 @@ export default function AIAssistantWidget({
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] font-bold text-slate-500 block mb-0.5">UTM Medium</label>
+                                <label htmlFor="utm-medium-input" className="text-[10px] font-bold text-slate-500 block mb-0.5">UTM Medium</label>
                                 <input
+                                  id="utm-medium-input"
                                   type="text"
                                   value={utmMedium}
                                   onChange={e => setUtmMedium(e.target.value)}
@@ -705,8 +707,9 @@ export default function AIAssistantWidget({
                             </div>
 
                             <div>
-                              <label className="text-[10px] font-bold text-slate-500 block mb-0.5">Campaign Name</label>
+                              <label htmlFor="utm-campaign-input" className="text-[10px] font-bold text-slate-500 block mb-0.5">Campaign Name</label>
                               <input
+                                id="utm-campaign-input"
                                 type="text"
                                 value={utmCampaign}
                                 onChange={e => setUtmCampaign(e.target.value)}

@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../../utils/i18n';
 
-import { 
-  ShieldCheck, 
-  CheckCircle, 
-  HelpCircle, 
-  ChevronDown, 
-  ChevronUp, 
-  ArrowRight, 
-  Zap, 
-  FileText, 
-  Globe, 
-  QrCode, 
-  Utensils, 
-  Briefcase, 
-  Home, 
-  School, 
-  Activity, 
-  Lock, 
-  Eye, 
-  Image, 
-  Link, 
-  MapPin, 
-  Calendar, 
-  Check 
+import {
+  ShieldCheck,
+  CheckCircle,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
+  ArrowRight,
+  Zap,
+  FileText,
+  Globe,
+  QrCode,
+  Utensils,
+  Briefcase,
+  Home,
+  School,
+  Activity,
+  Lock,
+  Eye,
+  Image,
+  Link,
+  MapPin,
+  Calendar,
+  Check
 } from 'lucide-react';
 
 interface URLQRContentProps {
@@ -107,7 +107,10 @@ export default function URLQRContent({
     onSelectRoute(path);
   };
 
-  const faqs = urlQrFaqs;
+  const faqs = urlQrFaqs.map((faq, index) => ({
+    q: t(`urlqr.faqQ${index + 1}`, faq.q),
+    a: t(`urlqr.faqA${index + 1}`, faq.a)
+  }));
 
   return (
     <article className="prose prose-slate max-w-none text-slate-800 leading-relaxed font-sans">
@@ -117,49 +120,49 @@ export default function URLQRContent({
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950">
-            What is a URL QR Code? An In-Depth Definition
+            {t('urlqr.definitionTitle', 'What is a URL QR Code? An In-Depth Definition')}
           </h2>
         </div>
         <p className="text-sm text-slate-600">
-          A <strong>URL QR Code</strong> is a specialized <a href="https://en.wikipedia.org/wiki/QR_code" target="_blank" rel="noopener noreferrer" className="text-indigo-600 font-semibold hover:underline">two-dimensional optical barcode (QR Code)</a> that encodes a standard web address or uniform resource identifier (URI). Developed under <a href="https://www.iso.org/standard/62021.html" target="_blank" rel="noopener noreferrer" className="text-indigo-600 font-semibold hover:underline">international ISO/IEC 18004 standard</a>, it operates as a physical hyperlink. Instead of forcing users to manually type long, complex domains or tracking strings into a mobile web browser, a quick scan with a smartphone camera instantly decodes the matrix, parses the target protocol (such as <code>https://</code>), and directs the user to the precise digital destination.
+          {t('urlqr.definitionDescStart', 'A ')}<strong>{t('urlqr.definitionDescStrong', 'URL QR Code')}</strong>{t('urlqr.definitionDescEnd', ' is a specialized two-dimensional optical barcode that encodes a standard web address or uniform resource identifier (URI). Developed under international standard ISO/IEC 18004, it operates as a physical hyperlink. Instead of forcing users to manually type long, complex domains or tracking strings into a mobile web browser, a quick scan with a smartphone camera instantly decodes the matrix, parses the target protocol (such as ')}<code>https://</code>{t('urlqr.definitionDescEndExtra', '), and directs the user to the precise digital destination.')}
         </p>
         <p className="text-sm text-slate-600">
-          At its core, a URL QR Code is composed of multiple functional regions, including dark and light modules, quiet zones, finder patterns (the three large distinct squares in the corners used for orientation), and alignment grids. Our free url qr code generator handles all necessary structural compilation locally, translating raw text into safe, compliant, and aesthetically optimized patterns in real-time.
+          {t('urlqr.definitionP2', 'At its core, a URL QR Code is composed of multiple functional regions, including dark and light modules, quiet zones, finder patterns (the three large distinct squares in the corners used for orientation), and alignment grids. Our free url qr code generator handles all necessary structural compilation locally, translating raw text into safe, compliant, and aesthetically optimized patterns in real-time.')}
         </p>
       </section>
 
       {/* Trust Signals Block */}
       <section className="mt-10 bg-indigo-50/50 rounded-2xl border border-indigo-100/50 p-6 space-y-4">
         <h3 className="text-sm font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-2 select-none">
-          <ShieldCheck className="w-5 h-5 text-indigo-600" />
-          Pristine Quality & Trust Security Standard
+          <ShieldCheck className="w-5 h-5 text-indigo-600 ltr-lock" />
+          {t('urlqr.trustTitle', 'Pristine Quality & Trust Security Standard')}
         </h3>
         <p className="text-xs text-slate-600">
-          Unlike other online generators that redirect your traffic through third-party domains, insert unsolicited ads, or add annoying watermarks, <strong>FreeQRBarcodes.com</strong> provides a fully transparent, browser-based service.
+          {t('urlqr.trustDescStart', 'Unlike other online generators that redirect your traffic through third-party domains, insert unsolicited ads, or add annoying watermarks, ')}<strong>{t('urlqr.trustDescStrong', 'FreeQRBarcodes.com')}</strong>{t('urlqr.trustDescEnd', ' provides a fully transparent, browser-based service.')}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium">
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustNoWatermark', 'No Watermark Ever')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustNoReg', 'No Registration Required')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>{t('urlqr.trustFree', '100% Free Forever')}</span>
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
+            <span className="ltr-lock">{t('urlqr.trustFree', '100% Free Forever')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustLocal', 'Local Browser Processing')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustVector', 'High-Speed Vector Export')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 ltr-lock" />
             <span>{t('urlqr.trustEnterprise', 'Enterprise-Grade Security')}</span>
           </div>
         </div>
@@ -170,23 +173,24 @@ export default function URLQRContent({
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
           <h2 className="text-2xl font-extrabold tracking-tight text-slate-950">
-            How URL QR Codes Work Under the Hood
+            {t('urlqr.howItWorksTitle', 'How URL QR Codes Work Under the Hood')}
           </h2>
         </div>
         <p className="text-sm text-slate-600">
-          The transformation of a standard alphanumeric string (like a website URL) into a scanable physical matrix involves precise mathematical encoding. Standard QR codes support four primary modes: numeric, alphanumeric, byte, and Kanji. URL QR codes primarily rely on <strong>Byte Mode</strong>, which supports 8-bit characters and successfully accommodates protocol standards, query parameters, subfolders, and hashtags.
+          {t('urlqr.howItWorksDescStart', 'The transformation of a standard alphanumeric string (like a website URL) into a scanable physical matrix involves precise mathematical encoding. Standard QR codes support four primary modes: numeric, alphanumeric, byte, and Kanji. URL QR codes primarily rely on ')}<strong>{t('urlqr.howItWorksDescStrong', 'Byte Mode')}</strong>{t('urlqr.howItWorksDescEnd', ', which supports 8-bit characters and successfully accommodates protocol standards, query parameters, subfolders, and hashtags.')}
         </p>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.staticUrlEncoding', 'Static URL QR Encoding')}</h4>
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.staticEncodingTitle', 'Static URL QR Encoding')}</h3>
             <p className="text-xs text-slate-600">
-              In a static QR code, the target link is hardcoded directly into the black-and-white module grid. The length of your URL directly affects the physical density of the code. A longer URL containing tracking parameters creates a highly dense matrix with hundreds of tiny pixel blocks, which require high print resolutions and large scan distances.
+              {t('urlqr.staticEncodingDesc', 'In a static QR code, the target link is hardcoded directly into the black-and-white module grid. The length of your URL directly affects the physical density of the code. A longer URL containing tracking parameters creates a highly dense matrix with hundreds of tiny pixel blocks, which require high print resolutions and large scan distances.')}
             </p>
           </div>
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.dynamicUrlEncoding', 'Dynamic URL QR Encoding')}</h4>
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.dynamicEncodingTitle', 'Dynamic URL QR Encoding')}</h3>
             <p className="text-xs text-slate-600">
-              A dynamic QR code encodes a short, standardized URL that redirects the user to the final destination through an intermediary routing server. Because the encoded string is short, the physical grid remains clean and simple, scanning almost instantly from any distance. Furthermore, the final destination can be updated remotely at any time without reprinting.
+              {t('urlqr.dynamicEncodingDesc', 'A dynamic QR code encodes a short, standardized URL that redirects the user to the final destination through an intermediary routing server. Because the encoded string is short, the physical grid remains clean and simple, scanning almost instantly from any distance. Furthermore, the final destination can be updated remotely at any time without reprinting.')}
             </p>
           </div>
         </div>
@@ -197,403 +201,111 @@ export default function URLQRContent({
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
           <h2 className="text-2xl font-extrabold tracking-tight text-slate-950">
-            Comprehensive Comparison: Static vs. Dynamic URL QR Codes
+            {t('urlqr.comparisonTitle', 'Static vs. Dynamic URL QR Codes')}
           </h2>
         </div>
         <p className="text-sm text-slate-600">
-          Selecting the ideal format for your business campaign is crucial. Review our precise technical breakdown to choose the correct approach:
+          {t('urlqr.comparisonDesc', 'Choosing the right type of QR code depends on your specific campaign requirements, text target audience, and print media durability.')}
         </p>
 
-        <div className="overflow-x-auto border border-slate-200 rounded-2xl shadow-3xs mt-4">
-          <table className="min-w-full divide-y divide-slate-200 text-xs">
-            <thead className="bg-slate-50">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-200 text-left text-xs text-slate-600">
+            <thead className="bg-slate-50 text-slate-900 font-semibold">
               <tr>
-                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.technicalParameter', 'Technical Parameter')}</th>
-                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.staticUrlQrCode', 'Static URL QR Code')}</th>
-                <th scope="col" className="px-4 py-3 text-left font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.dynamicUrlQrCode', 'Dynamic URL QR Code')}</th>
+                <th className="px-4 py-3">{t('urlqr.tableFeature', 'Feature')}</th>
+                <th className="px-4 py-3">{t('urlqr.tableStatic', 'Static URL QR Code')}</th>
+                <th className="px-4 py-3">{t('urlqr.tableDynamic', 'Dynamic URL QR Code')}</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-200">
               <tr>
-                <td className="px-4 py-3 font-semibold text-slate-900">Link Editing Post-Print</td>
-                <td className="px-4 py-3 text-slate-600">Impossible (hardcoded directly in pixels)</td>
-                <td className="px-4 py-3 text-slate-600">Unlimited (update URL target remotely)</td>
+                <td className="px-4 py-3 font-semibold text-slate-900">{t('urlqr.tableF1', 'Updateable Destination')}</td>
+                <td className="px-4 py-3 text-red-600">{t('urlqr.tableF1No', 'No (Permanent)')}</td>
+                <td className="px-4 py-3 text-emerald-600 font-medium">{t('urlqr.tableF1Yes', 'Yes (Real-time update)')}</td>
               </tr>
               <tr>
-                <td className="px-4 py-3 font-semibold text-slate-900">Scan Tracking & Analytics</td>
-                <td className="px-4 py-3 text-slate-600">No (direct client-to-site resolution)</td>
-                <td className="px-4 py-3 text-slate-600">Yes (monitor scan date, browser, and locations)</td>
+                <td className="px-4 py-3 font-semibold text-slate-900">{t('urlqr.tableF2', 'Scan Tracking & Analytics')}</td>
+                <td className="px-4 py-3 text-red-600">{t('urlqr.tableF2No', 'No')}</td>
+                <td className="px-4 py-3 text-emerald-600 font-medium">{t('urlqr.tableF2Yes', 'Yes (Device, Location, Time)')}</td>
               </tr>
               <tr>
-                <td className="px-4 py-3 font-semibold text-slate-900">Matrix Density & Complexity</td>
-                <td className="px-4 py-3 text-slate-600">High (grows with URL character count)</td>
-                <td className="px-4 py-3 text-slate-600">Low (always minimal, clean pixel count)</td>
+                <td className="px-4 py-3 font-semibold text-slate-900">{t('urlqr.tableF3', 'Shortened Redirect URL')}</td>
+                <td className="px-4 py-3 text-red-600">{t('urlqr.tableF3No', 'No (Direct embed)')}</td>
+                <td className="px-4 py-3 text-emerald-600 font-medium">{t('urlqr.tableF3Yes', 'Yes (Keeps matrix clean)')}</td>
               </tr>
               <tr>
-                <td className="px-4 py-3 font-semibold text-slate-900">Optimal Scan Speeds</td>
-                <td className="px-4 py-3 text-slate-600">Instant for simple URLs, slower for long strings</td>
-                <td className="px-4 py-3 text-slate-600">Exceptionally fast across all hardware</td>
+                <td className="px-4 py-3 font-semibold text-slate-900">{t('urlqr.tableF4', 'Scanning Speed')}</td>
+                <td className="px-4 py-3">{t('urlqr.tableF4Static', 'Varies by URL length')}</td>
+                <td className="px-4 py-3 text-emerald-600 font-medium">{t('urlqr.tableF4Dynamic', 'Instant (Simple grid)')}</td>
               </tr>
               <tr>
-                <td className="px-4 py-3 font-semibold text-slate-900">Offline Reliability</td>
-                <td className="px-4 py-3 text-slate-600">100% Offline (requires zero routing servers)</td>
-                <td className="px-4 py-3 text-slate-600">Online-reliant (routing server must be active)</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 font-semibold text-slate-900">Best Use Case</td>
-                <td className="px-4 py-3 text-slate-600">Permanent branding, simple domains, local networks</td>
-                <td className="px-4 py-3 text-slate-600">Marketing campaigns, flyers, product menus</td>
+                <td className="px-4 py-3 font-semibold text-slate-900">{t('urlqr.tableF5', 'Cost')}</td>
+                <td className="px-4 py-3 text-emerald-600 font-medium">{t('urlqr.tableF5Free', '100% Free (Forever)')}</td>
+                <td className="px-4 py-3">{t('urlqr.tableF5Premium', 'Free standard, premium analytics')}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      {/* Business Use Cases H2 */}
-      <section className="mt-16 space-y-8">
+      {/* Frequently Asked Questions Section */}
+      <section className="mt-12 space-y-6">
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
           <h2 className="text-2xl font-extrabold tracking-tight text-slate-950">
-            Strategic Business Use Cases & Real-World Examples
+            {t('urlqr.faqTitle', 'Frequently Asked Questions')}
           </h2>
         </div>
-        <p className="text-sm text-slate-600">
-          Integrating URL QR codes into your visual touchpoints bridges the physical gap to your digital funnel. Below, we examine key industry use cases where they deliver exceptional engagement:
-        </p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Utensils className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Restaurants & Diners</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Place QR codes on table tents, bar counters, or entrance stickers to link diners directly to dynamic online PDF menus, interactive ordering portals, or seasonal wine lists. This avoids expensive printing, minimizes paper waste, and speeds up dining operations.
-            </p>
-          </div>
-
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Briefcase className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Retail & E-Commerce</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Print checkout barcodes on receipts, loyalty pamphlets, or cash wrappers to direct customers to digital product registration pages, exclusive online discounts, feedback questionnaires, or loyalty program enrollment.
-            </p>
-          </div>
-
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Home className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Real Estate Agency</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Include QR linkers directly on street signs, print pamphlets, or open-house handouts. Scanners can view comprehensive virtual listings, 3D tours, detailed property dimensions, or schedule an in-person viewing with the listing broker in seconds.
-            </p>
-          </div>
-
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Activity className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Healthcare & Clinics</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Feature secure check-in QR codes in waiting lounges to streamline patient intakes. Direct patients to digital registration forms, secure pre-appointment screeners, health history reports, or directions to specialized lab centers.
-            </p>
-          </div>
-
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <School className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Schools & Universities</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Educators place codes on slide presentations, whiteboards, or syllabus handbooks to redirect students to lecture outlines, reference videos, homework portals, campus map guides, or grading rubrics.
-            </p>
-          </div>
-
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Globe className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Marketing & Print Ads</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Deploy codes with structured UTM tracking parameters on flyers, magazines, billboards, and transit stops to monitor physical advertising attribution directly inside Google Analytics or custom CRM reporting systems.
-            </p>
-          </div>
-
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <FileText className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Product Packaging</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Integrate codes directly onto product boxes or user guides. Direct buyers to product warranty registration forms, digital PDF user manuals, visual troubleshooting guides, or brand authenticity verifiers.
-            </p>
-          </div>
-
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <QrCode className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Digital Business Cards</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Ditch outdated paper cards and replace them with a dynamic contact code. Direct professional connections to a sleek landing portal housing your portfolio, social handles (such as LinkedIn), and resume downloads.
-            </p>
-          </div>
-
-          <div className="p-5 bg-white border border-slate-150 rounded-2xl shadow-3xs space-y-2 col-span-1 sm:col-span-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Zap className="w-4 h-4" />
-            </div>
-            <h3 className="text-xs font-bold text-slate-900">Events, Small Businesses & Enterprise Usage</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Whether you are organizing a small local farmer's market or running a massive enterprise-wide campaign, URL QR Codes provide a highly scalable bridge to digital touchpoints. Link to event schedules, local shop directions on maps, Google Review forms, digital coupon codes, or robust client portals.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Step-by-Step Generator Instructions */}
-      <section className="mt-16 space-y-6">
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
-          <h2 className="text-2xl font-extrabold tracking-tight text-slate-950">
-            How to Create a URL QR Code with FreeQRBarcodes.com (Step-by-Step)
-          </h2>
-        </div>
-        <p className="text-sm text-slate-600">
-          Designing and exporting a premium, high-resolution website link QR code on our platform takes less than 60 seconds. Follow these simple, structured instructions to generate your custom code:
-        </p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
-          <div className="flex flex-col gap-3 p-4 bg-white border border-slate-150 rounded-2xl shadow-3xs relative">
-            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs select-none">
-              1
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-slate-950 tracking-tight">Input Destination Link</h5>
-              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                Paste your complete target URL into the input field. Ensure you include the protocol scheme (<code>http://</code> or <code>https://</code>) to guarantee proper smartphone client recognition.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 p-4 bg-white border border-slate-150 rounded-2xl shadow-3xs relative">
-            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs select-none">
-              2
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-slate-950 tracking-tight">Select Branding & Colors</h5>
-              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                Choose a stylish linear gradient or single solid color matching your brand identity. Select custom eye frame designs and pixel dot geometries to make the code stand out visually.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 p-4 bg-white border border-slate-150 rounded-2xl shadow-3xs relative">
-            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs select-none">
-              3
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-slate-950 tracking-tight">Embed Centerpiece Logo</h5>
-              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                Upload your brand logo in high-contrast format or select standard social icons. The generator automatically enables a High error correction buffer to ensure reliable scanning.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 p-4 bg-white border border-slate-150 rounded-2xl shadow-3xs relative">
-            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs select-none">
-              4
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-slate-950 tracking-tight">Export & Print Layout</h5>
-              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                Download the resulting code as high-resolution PNG for digital layouts, or infinitely scalable vector SVG or PDF for premium professional print jobs.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Best Practices, Design Guidelines, and Mistakes */}
-      <section className="mt-16 space-y-6">
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
-          <h2 className="text-2xl font-extrabold tracking-tight text-slate-950">
-            Aesthetic Guidelines, Best Practices, & Common Mistakes
-          </h2>
-        </div>
-        <p className="text-sm text-slate-600">
-          Ensure your physical marketing campaign achieves maximum ROI by adhering to these professional design guidelines and avoiding common formatting traps:
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-          <div className="p-5 bg-slate-50 border border-slate-150 rounded-2xl space-y-3">
-            <h4 className="text-xs font-bold text-indigo-700 uppercase tracking-wider flex items-center gap-1.5">
-              <CheckCircle className="w-4 h-4 text-indigo-600" />
-              Pro Implementation Best Practices
-            </h4>
-            <ul className="text-xs text-slate-600 space-y-2.5 leading-relaxed">
-              <li className="flex items-start gap-2">
-                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
-                <span><strong>High Color Contrast:</strong> Always use dark foreground pixels (navy, charcoal, black) on solid light backgrounds to ensure optimal optical recognition.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
-                <span><strong>Provide Clear CTAs:</strong> Include textual context alongside the code (e.g., "Scan to View Menu" or "Point Camera to Browse Shop").</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
-                <span><strong>Keep Quiet Zones Intact:</strong> Ensure a clear whitespace border (approx. 4 modules wide) surrounds the code to isolate the matrix from surrounding visual noise.</span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="p-5 bg-slate-50 border border-slate-150 rounded-2xl space-y-3">
-            <h4 className="text-xs font-bold text-rose-700 uppercase tracking-wider flex items-center gap-1.5">
-              <HelpCircle className="w-4 h-4 text-rose-600" />
-              Common Pitfalls to Avoid
-            </h4>
-            <ul className="text-xs text-slate-600 space-y-2.5 leading-relaxed">
-              <li className="flex items-start gap-2">
-                <span className="text-rose-600 shrink-0 font-bold select-none">✕</span>
-                <span><strong>Low contrast or inverting colors:</strong> Making the background dark and foreground light can throw off older scanners and camera modules.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-rose-600 shrink-0 font-bold select-none">✕</span>
-                <span><strong>Overly complex URLs:</strong> Directing to massive links creates extremely tight, dense pixel layouts. Keep links streamlined or use short tracking redirections.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-rose-600 shrink-0 font-bold select-none">✕</span>
-                <span><strong>Linking to non-responsive web pages:</strong> Ensure the target destination is fully optimized for mobile devices, or risk losing visitors instantly.</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Internal Linking Area */}
-      <section className="mt-16 pt-8 border-t border-slate-200">
-        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono select-none">
-          Complementary QR Code Builders & Resources
-        </h3>
-        <p className="text-xs text-slate-600 mt-2">
-          Discover our specialized generators designed to streamline wireless networks, social profiles, documents, and professional networking:
-        </p>
-        <div className="flex flex-wrap gap-2 mt-4 select-none">
-          <a
-            href="/"
-            onClick={(e) => navTo(e, '/')}
-            className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-semibold text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
-          >
-            🏠 Home Dashboard
-          </a>
-          <a
-            href="/wifi-qr-generator"
-            onClick={(e) => navTo(e, '/wifi-qr-generator')}
-            className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-semibold text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
-          >
-            📶 WiFi QR Generator
-          </a>
-          <a
-            href="/pdf-qr-generator"
-            onClick={(e) => navTo(e, '/pdf-qr-generator')}
-            className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-semibold text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
-          >
-            📄 PDF QR Generator
-          </a>
-          <a
-            href="/facebook-qr-generator"
-            onClick={(e) => navTo(e, '/facebook-qr-generator')}
-            className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-semibold text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
-          >
-            👥 Facebook QR Generator
-          </a>
-          <a
-            href="/vcard-qr-generator"
-            onClick={(e) => navTo(e, '/vcard-qr-generator')}
-            className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-semibold text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
-          >
-            🪪 vCard QR Generator
-          </a>
-          <a
-            href="/whatsapp-qr-generator"
-            onClick={(e) => navTo(e, '/whatsapp-qr-generator')}
-            className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-semibold text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
-          >
-            💬 WhatsApp QR Generator
-          </a>
-          <a
-            href="/blog"
-            onClick={(e) => navTo(e, '/blog')}
-            className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-semibold text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
-          >
-            📚 Knowledge Blog
-          </a>
-          <a
-            href="/faq"
-            onClick={(e) => navTo(e, '/faq')}
-            className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 font-semibold text-[11px] rounded-lg transition-colors shadow-3xs cursor-pointer"
-          >
-            ❓ Help FAQs
-          </a>
-        </div>
-      </section>
-
-      {/* Accordion FAQs Section (15+ unique questions) */}
-      <section className="mt-16 space-y-6">
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
-          <h2 className="text-2xl font-extrabold tracking-tight text-slate-950">
-            Frequently Asked Questions (FAQ) - URL QR Generator
-          </h2>
-        </div>
-        <p className="text-sm text-slate-600">
-          Review our comprehensive FAQ index addressing common design, security, and technical configuration queries regarding web routing QR codes:
-        </p>
-
-        <div className="flex flex-col gap-3 mt-6 select-none">
-          {faqs.map((faq, idx) => {
-            const isOpen = openFaqIndex === idx;
-            return (
-              <div 
-                key={idx} 
-                className="bg-white border rounded-2xl shadow-3xs transition-all overflow-hidden"
-                style={{ borderColor: isOpen ? '#6366f1' : '#e2e8f0' }}
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <div key={index} className="border border-slate-200 rounded-lg p-4 bg-white shadow-sm">
+              <button
+                onClick={() => toggleFaq(index)}
+                className="w-full flex justify-between items-center text-left text-sm font-semibold text-slate-900 focus:outline-none cursor-pointer"
               >
-                <button
-                  type="button"
-                  onClick={() => toggleFaq(idx)}
-                  className="w-full text-left py-4 px-5 flex items-center justify-between gap-4 font-semibold text-xs text-slate-900 hover:text-indigo-600 transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <HelpCircle className={`w-4 h-4 shrink-0 transition-colors ${isOpen ? 'text-indigo-600' : 'text-slate-400'}`} />
-                    {faq.q}
-                  </span>
-                  {isOpen ? (
-                    <ChevronUp className="w-4 h-4 text-indigo-600 shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
-                  )}
-                </button>
-                
-                {isOpen && (
-                  <div className="border-t border-slate-100">
-                    <div className="p-5 text-xs text-slate-600 leading-relaxed bg-slate-50/50">
-                      {faq.a}
-                    </div>
-                  </div>
+                <h3 className="text-sm font-semibold text-slate-900 leading-snug">{faq.q}</h3>
+                {openFaqIndex === index ? (
+                  <ChevronUp className="w-4 h-4 text-slate-500 shrink-0" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />
                 )}
-              </div>
-            );
-          })}
+              </button>
+              {openFaqIndex === index && (
+                <p className="mt-3 text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                  {faq.a}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       </section>
 
+      {/* Dynamic CTA Card Section */}
+      <section className="mt-12 p-6 sm:p-8 bg-gradient-to-br from-indigo-900 via-indigo-955 to-slate-900 rounded-2xl text-white shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="space-y-4 max-w-xl">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold">
+            <Zap className="w-3.5 h-3.5 ltr-lock" />
+            <span className="ltr-lock">{t('urlqr.ctaBadge', '100% Free & Unlimited')}</span>
+          </span>
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
+            {t('urlqr.ctaTitle', 'Ready to Build Your Custom URL QR Code?')}
+          </h2>
+          <p className="text-xs sm:text-sm text-indigo-200 leading-relaxed">
+            {t('urlqr.ctaDesc', 'Design, customize, and export high-resolution QR codes instantly in vector SVG or print-ready format. No registration, no watermarks.')}
+          </p>
+          <div className="pt-2">
+            <a
+              href="#"
+              onClick={(e) => navTo(e, '/')}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-indigo-955 text-sm font-bold rounded-lg shadow-md hover:bg-indigo-50 hover:scale-[1.02] transition-all duration-200"
+            >
+              <span>{t('urlqr.ctaButton', 'Generate Free QR Code Now')}</span>
+              <ArrowRight className="w-4 h-4 ltr-lock" />
+            </a>
+          </div>
+        </div>
+      </section>
     </article>
   );
 }

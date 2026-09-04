@@ -22,21 +22,21 @@ export default function CompanyPages({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    let title = 'Terms & Conditions | FreeQRGen.pro Service Agreement';
-    let description = 'Review the Terms & Conditions of FreeQRGen.pro. Understand the user guidelines, fair use policy, and local data persistence rules of our free QR platform.';
+    let title = 'Terms & Conditions | FreeQRBarcodes.com Service Agreement';
+    let description = 'Review the Terms & Conditions of FreeQRBarcodes.com. Understand the user guidelines, fair use policy, and local data persistence rules of our free QR platform.';
     
     if (view === 'terms') {
-      title = 'Terms & Conditions | FreeQRGen.pro Service Agreement';
-      description = 'Review the Terms & Conditions of FreeQRGen.pro. Understand the user guidelines, fair use policy, and local data persistence rules of our free QR platform.';
+      title = 'Terms & Conditions | FreeQRBarcodes.com Service Agreement';
+      description = 'Review the Terms & Conditions of FreeQRBarcodes.com. Understand the user guidelines, fair use policy, and local data persistence rules of our free QR platform.';
     } else if (view === 'about') {
-      title = 'About FreeQRGen.pro | Leaders in Dynamic QR Code Technology';
-      description = 'Learn about FreeQRGen.pro (freeqrbarcodes.com), our mission, technology stack, security architectures, and core team behind the advanced QR code design platform.';
+      title = 'About FreeQRBarcodes.com | Leaders in Dynamic QR Code Technology';
+      description = 'Learn about FreeQRBarcodes.com, our mission, technology stack, security architectures, and core team behind the advanced QR code design platform.';
     } else if (view === 'contact') {
-      title = 'Contact Us | FreeQRGen.pro Support & Compliance Hub';
-      description = 'Get in touch with the FreeQRGen.pro technical team or our compliance officers for questions, enterprise integration inquiries, or support.';
+      title = 'Contact Us | FreeQRBarcodes.com Support & Compliance Hub';
+      description = 'Get in touch with the FreeQRBarcodes.com technical team or our compliance officers for questions, enterprise integration inquiries, or support.';
     } else if (view === 'privacy') {
-      title = 'Privacy Policy | FreeQRGen.pro - Secure, Offline-First QR Generation';
-      description = 'Read the FreeQRGen.pro privacy policy. Learn how we utilize offline-first browser rendering to protect your network passwords, URLs, and vCards.';
+      title = 'Privacy Policy | FreeQRBarcodes.com - Secure, Offline-First QR Generation';
+      description = 'Read the FreeQRBarcodes.com privacy policy. Learn how we utilize offline-first browser rendering to protect your network passwords, URLs, and vCards.';
     }
 
     document.title = title;
@@ -80,8 +80,8 @@ export default function CompanyPages({
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": view === 'terms' ? 'Terms & Conditions - FreeQRGen.pro' : view === 'about' ? 'About Us - FreeQRGen.pro' : view === 'contact' ? 'Contact Us - FreeQRGen.pro' : 'Privacy Policy - FreeQRGen.pro',
-    "description": view === 'terms' ? 'Review the Terms & Conditions of FreeQRGen.pro. Understand the user guidelines, fair use policy, and local data persistence rules.' : 'Corporate policy and structural content.',
+    "name": view === 'terms' ? 'Terms & Conditions - FreeQRBarcodes.com' : view === 'about' ? 'About Us - FreeQRBarcodes.com' : view === 'contact' ? 'Contact Us - FreeQRBarcodes.com' : 'Privacy Policy - FreeQRBarcodes.com',
+    "description": view === 'terms' ? 'Review the Terms & Conditions of FreeQRBarcodes.com. Understand the user guidelines, fair use policy, and local data persistence rules.' : 'Corporate policy and structural content.',
     "url": `https://www.freeqrbarcodes.com/${view}`
   };
 
@@ -140,28 +140,33 @@ export default function CompanyPages({
             </p>
           </div>
 
-          {/* Key Metrics Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-              <span className="block text-3xl font-black text-indigo-600 font-bold">14K+</span>
-              <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">{t('company.metric1Title', 'Monthly Campaigns')}</span>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                {t('company.metric1Desc', 'Businesses trust us to build high-performance vector schemas monthly.')}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-              <span className="block text-3xl font-black text-indigo-600 font-bold">99.9%</span>
-              <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">{t('company.metric2Title', 'Scan Accuracy')}</span>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                {t('company.metric2Desc', 'Robust Reed-Solomon error correction keeps high scan-rates on all devices.')}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-              <span className="block text-3xl font-black text-indigo-600 font-bold">100%</span>
-              <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">{t('company.metric3Title', 'Local Encryption')}</span>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                {t('company.metric3Desc', 'Your credentials are kept safely encrypted and never leave your sandbox.')}
-              </p>
+          {/* Key Metrics & Offerings Section */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              {t('company.metricsTitle', 'What We Offer & Platform Performance')}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
+                <span className="block text-3xl font-black text-indigo-600 font-bold">14K+</span>
+                <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">{t('company.metric1Title', 'Monthly Campaigns')}</span>
+                <p className="text-[11px] text-slate-500 leading-normal">
+                  {t('company.metric1Desc', 'Businesses trust us to build high-performance vector schemas monthly.')}
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
+                <span className="block text-3xl font-black text-indigo-600 font-bold">99.9%</span>
+                <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">{t('company.metric2Title', 'Scan Accuracy')}</span>
+                <p className="text-[11px] text-slate-500 leading-normal">
+                  {t('company.metric2Desc', 'Robust Reed-Solomon error correction keeps high scan-rates on all devices.')}
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
+                <span className="block text-3xl font-black text-indigo-600 font-bold">100%</span>
+                <span className="block text-xs font-extrabold text-slate-800 tracking-wide uppercase font-mono">{t('company.metric3Title', 'Local Encryption')}</span>
+                <p className="text-[11px] text-slate-500 leading-normal">
+                  {t('company.metric3Desc', 'Your credentials are kept safely encrypted and never leave your sandbox.')}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -223,7 +228,7 @@ export default function CompanyPages({
           <div className="bg-slate-900 text-white rounded-3xl p-8 relative overflow-hidden shadow-xl space-y-4">
             <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
             <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest font-mono">{t('company.operationsBadge', 'Our Operations')}</span>
-            <h3 className="text-lg font-extrabold">{t('company.operationsTitle', 'Powered by iSolutions ICo')}</h3>
+            <h2 className="text-lg font-extrabold text-white tracking-tight">{t('company.operationsTitle', 'Powered by iSolutions ICo')}</h2>
             <p className="text-xs text-slate-300 leading-relaxed max-w-xl">
               {t('company.operationsDesc', 'iSolutions QR Generator is designed and developed by <strong>iSolutions ICo</strong>. We specialize in high-availability web tools, responsive UX designs, and robust systems aimed at making marketing technology accessible to everyone.', { strong: (chunks) => <strong>{chunks}</strong> })}
             </p>

@@ -21,7 +21,7 @@
     "id": "do-qr-codes-expire",
     "category": "general",
     "question": "Les codes QR expirent-ils un jour ?",
-    "answer": "Les codes QR statiques générés sur FreeQRGen.pro n'expirent jamais car leurs données sont définitivement encodées dans le motif matriciel. Ils fonctionneront indéfiniment tant que le code reste net et lisible."
+    "answer": "Les codes QR statiques générés sur FreeQRBarcodes.com n'expirent jamais car leurs données sont définitivement encodées dans le motif matriciel. Ils fonctionneront indéfiniment tant que le code reste net et lisible."
   },
   {
     "id": "qr-code-data-capacity",
@@ -38,7 +38,7 @@
   {
     "id": "how-to-generate-free-qr",
     "category": "creation",
-    "question": "Comment créer un code QR gratuit sur FreeQRGen.pro ?",
+    "question": "Comment créer un code QR gratuit sur FreeQRBarcodes.com ?",
     "answer": "1) Choisissez le type de contenu (URL, texte, Wi-Fi, vCard, PDF, WhatsApp) ; 2) Entrez vos informations ; 3) Personnalisez les couleurs, le logo et les angles ; 4) Téléchargez gratuitement en PNG, SVG ou PDF."
   },
   {
@@ -69,7 +69,7 @@
     "id": "generate-vector-svg-pdf-qr",
     "category": "creation",
     "question": "Puis-je exporter en format vectoriel haute résolution comme SVG et PDF pour l'impression ?",
-    "answer": "Oui ! FreeQRGen propose des exports vectoriels SVG et PDF prêts pour l'impression haute définition, qui peuvent être agrandis à l'infini sans aucune perte de qualité pour les panneaux d'affichage et emballages."
+    "answer": "Oui ! FreeQRBarcodes propose des exports vectoriels SVG et PDF prêts pour l'impression haute définition, qui peuvent être agrandis à l'infini sans aucune perte de qualité pour les panneaux d'affichage et emballages."
   },
   {
     "id": "can-i-add-logo-to-qr",
@@ -105,7 +105,7 @@
     "id": "custom-eyes-shapes-impact",
     "category": "customization",
     "question": "La personnalisation des yeux et des points affecte-t-elle la lisibilité ?",
-    "answer": "FreeQRGen utilise des règles géométriques certifiées garantissant que les formes personnalisées restent lisibles instantanément par tous les smartphones."
+    "answer": "FreeQRBarcodes utilise des règles géométriques certifiées garantissant que les formes personnalisées restent lisibles instantanément par tous les smartphones."
   },
   {
     "id": "are-qr-codes-safe-to-scan",
@@ -116,7 +116,7 @@
   {
     "id": "does-freeqrgen-track-user-data",
     "category": "security",
-    "question": "FreeQRGen stocke-t-il ou vend-il les données des utilisateurs ?",
+    "question": "FreeQRBarcodes stocke-t-il ou vend-il les données des utilisateurs ?",
     "answer": "Non. La génération de codes statiques s'exécute à 100% dans votre navigateur en totale confidentialité. Nous ne vendons jamais vos données personnelles."
   },
   {
@@ -158,7 +158,7 @@
   {
     "id": "commercial-use-licensing",
     "category": "business",
-    "question": "Les codes QR créés sur FreeQRGen sont-ils gratuits pour un usage commercial ?",
+    "question": "Les codes QR créés sur FreeQRBarcodes sont-ils gratuits pour un usage commercial ?",
     "answer": "Oui, tous les codes générés sont 100% gratuits pour un usage commercial et personnel, sans redevance, sur les emballages, affiches et supports marketing."
   },
   {

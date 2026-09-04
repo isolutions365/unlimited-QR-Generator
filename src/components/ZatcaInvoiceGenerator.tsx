@@ -482,10 +482,11 @@ export default function ZatcaInvoiceGenerator({
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label htmlFor="zatca-seller-name-input" className="block text-xs font-bold text-slate-700 mb-1">
                     اسم المنشأة / المورّد (Seller Name)
                   </label>
                   <input
+                    id="zatca-seller-name-input"
                     type="text"
                     value={sellerName}
                     onChange={e => setSellerName(e.target.value)}
@@ -496,7 +497,7 @@ export default function ZatcaInvoiceGenerator({
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-bold text-slate-700">
+                    <label htmlFor="zatca-vat-number-input" className="block text-xs font-bold text-slate-700">
                       الرقم الضريبي (VAT Number)
                     </label>
                     <span className={`text-[10px] font-mono font-bold ${isVatValid ? 'text-emerald-600' : 'text-rose-600'}`}>
@@ -504,6 +505,7 @@ export default function ZatcaInvoiceGenerator({
                     </span>
                   </div>
                   <input
+                    id="zatca-vat-number-input"
                     type="text"
                     maxLength={15}
                     value={vatNumber}
@@ -524,7 +526,7 @@ export default function ZatcaInvoiceGenerator({
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-bold text-slate-700">
+                    <label htmlFor="zatca-timestamp-input" className="block text-xs font-bold text-slate-700">
                       تاريخ ووقت الفاتورة (Timestamp)
                     </label>
                     <button
@@ -537,6 +539,7 @@ export default function ZatcaInvoiceGenerator({
                     </button>
                   </div>
                   <input
+                    id="zatca-timestamp-input"
                     type="text"
                     value={timestamp}
                     onChange={e => setTimestamp(e.target.value)}
@@ -546,10 +549,11 @@ export default function ZatcaInvoiceGenerator({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label htmlFor="zatca-invoice-number-input" className="block text-xs font-bold text-slate-700 mb-1">
                     رقم الفاتورة المرجعي (Invoice #)
                   </label>
                   <input
+                    id="zatca-invoice-number-input"
                     type="text"
                     value={invoiceNumber}
                     onChange={e => setInvoiceNumber(e.target.value)}
@@ -560,7 +564,7 @@ export default function ZatcaInvoiceGenerator({
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-bold text-slate-700">
+                    <label htmlFor="zatca-customer-name-input" className="block text-xs font-bold text-slate-700">
                       اسم العميل / المشتري (Buyer Name) <span className="text-rose-500">*</span>
                     </label>
                     <span className={`text-[10px] font-bold ${isCustomerNameValid ? 'text-emerald-600' : 'text-rose-600'}`}>
@@ -568,6 +572,7 @@ export default function ZatcaInvoiceGenerator({
                     </span>
                   </div>
                   <input
+                    id="zatca-customer-name-input"
                     type="text"
                     value={customerName}
                     onChange={e => setCustomerName(e.target.value)}

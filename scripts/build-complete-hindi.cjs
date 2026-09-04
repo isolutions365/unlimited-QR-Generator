@@ -301,7 +301,9 @@ const dict = {
 
 // Common terms and domain translation rules for systematic Hindi coverage
 const phraseMap = [
-  [/^FreeQRGen\.pro$/g, "FreeQRGen.pro"],
+  [/^FreeQRBarcodes\.com$/g, "FreeQRBarcodes.com"],
+  [/^FreeQRBarcodes$/g, "FreeQRBarcodes"],
+  [/^FreeQRGen\.pro$/g, "FreeQRBarcodes.com"],
   [/^Free QR Generator$/g, "Free QR Generator"],
   [/^iSolutions ICo$/g, "iSolutions ICo"],
   [/^QR Code$/g, "QR कोड"],
@@ -487,8 +489,8 @@ function translatePalette(key, text) {
 }
 
 function translateTrust(key, text) {
-  if (text.includes("FreeQRGen.pro represents the next paradigm")) {
-    return "FreeQRGen.pro संपर्क रहित लिंक और स्थिर वेक्टर वितरण प्रणालियों के अगले प्रतिमान का प्रतिनिधित्व करता है। हम आमतौर पर बारकोड जनरेशन से जुड़े संचालन पेवॉल, धीमे सर्वर और ट्रैकिंग सिस्टम को समाप्त करते हैं।";
+  if (text.includes("FreeQRBarcodes.com represents the next paradigm") || text.includes("FreeQRGen.pro represents the next paradigm")) {
+    return "FreeQRBarcodes.com संपर्क रहित लिंक और स्थिर वेक्टर वितरण प्रणालियों के अगले प्रतिमान का प्रतिनिधित्व करता है। हम आमतौर पर बारकोड जनरेशन से जुड़े संचालन पेवॉल, धीमे सर्वर और ट्रैकिंग सिस्टम को समाप्त करते हैं।";
   }
   if (text.includes("Our system is engineered to satisfy the demands")) {
     return "हमारा सिस्टम आधुनिक पैकेजिंग डिजाइनरों, फुल-स्टैक डेवलपर्स और उच्च मात्रा वाले मार्केटिंग निदेशकों की मांगों को पूरा करने के लिए बनाया गया है। यहां उत्पन्न स्थिर बारकोड ब्राउज़र कैनवास बफ़र के अंदर पूरी तरह से ऑफ़लाइन चलते हैं और ISO/IEC 18004 मानकों के अनुपालन को सुनिश्चित करते हैं। गोपनीयता बनाए रखने के लिए कोई भी पैरामीटर या पता केंद्रीय सर्वर पर नहीं भेजा जाता है।";
@@ -581,7 +583,8 @@ function translateAnalytics(key, text) {
 
 function translateProgrammaticSeo(key, text) {
   const map = {
-    "FreeQRGen.pro Editorial Board": "FreeQRGen.pro संपादकीय बोर्ड",
+    "FreeQRBarcodes.com Editorial Board": "FreeQRBarcodes.com संपादकीय बोर्ड",
+    "FreeQRGen.pro Editorial Board": "FreeQRBarcodes.com संपादकीय बोर्ड",
     "AUTO": "ऑटो",
     "Best Practices (Do This)": "सर्वोत्तम प्रथाएं (यह करें)",
     "Common Mistakes (Avoid This)": "सामान्य गलतियां (इससे बचें)",
@@ -600,7 +603,8 @@ function translateKnowledgeCompany(key, text) {
   const map = {
     "Knowledge Base & Technical Guides": "ज्ञान केंद्र और तकनीकी गाइड",
     "Frequently Asked Questions": "अक्सर पूछे जाने वाले प्रश्न",
-    "About FreeQRGen.pro": "FreeQRGen.pro के बारे में",
+    "About FreeQRBarcodes.com": "FreeQRBarcodes.com के बारे में",
+    "About FreeQRGen.pro": "FreeQRBarcodes.com के बारे में",
     "Privacy Policy & Data Security": "गोपनीयता नीति और डेटा सुरक्षा",
     "Terms of Service & Licensing": "सेवा की शर्तें और लाइसेंसिंग",
     "Comparison & Benchmarks": "तुलना और बेंचमार्क",

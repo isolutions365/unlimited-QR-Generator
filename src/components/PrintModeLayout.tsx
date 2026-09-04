@@ -195,7 +195,7 @@ export default function PrintModeLayout({
   const [isRendered, setIsRendered] = useState(false);
 
   // Editable label details (initialized from current project frame or fallback default values)
-  const [companyName, setCompanyName] = useState(currentProject?.name || safeT('print.defaultBrand', 'FREEQRGEN CORP'));
+  const [companyName, setCompanyName] = useState(currentProject?.name || safeT('print.defaultBrand', 'FREEQRBARCODES CORP'));
   const [headingText, setHeadingText] = useState(currentProject?.design?.frameText || safeT('print.defaultHeading', 'SCAN TO LEARN MORE'));
   const [subText, setSubText] = useState(safeT('print.defaultSubtext', 'Simply scan with your camera'));
   const [badgeText, setBadgeText] = useState(safeT('print.defaultBadge', 'WEBSITE'));

@@ -527,7 +527,7 @@ export default function GrowthSuite({
                 </div>
                 <h3 className="text-lg font-black uppercase text-slate-800 tracking-tight">{t('growth.profileHeader', 'Enterprise User Profiles')}</h3>
                 <p className="text-xs text-slate-500 mt-2 mb-6 leading-relaxed">
-                  {t('growth.profileDesc', 'Join FreeQRGen Pro! Connect your secure cloud account to establish custom defaults, unlock real-world gamification XP, collect verified designer badges, and earn referral commissions.')}
+                  {t('growth.profileDesc', 'Join FreeQRBarcodes Pro! Connect your secure cloud account to establish custom defaults, unlock real-world gamification XP, collect verified designer badges, and earn referral commissions.')}
                 </p>
                 <button
                   onClick={onSignInClick}
@@ -607,7 +607,7 @@ export default function GrowthSuite({
                             value={companyInput}
                             onChange={(e) => setCompanyInput(e.target.value)}
                             className="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:border-indigo-500 focus:outline-none bg-white font-sans"
-                            placeholder={t('growth.companyPlaceholder', 'e.g. FreeQRGen Tech')}
+                            placeholder={t('growth.companyPlaceholder', 'e.g. FreeQRBarcodes Tech')}
                           />
                         </div>
                       </div>
@@ -728,7 +728,7 @@ export default function GrowthSuite({
                   </div>
 
                   <p className="text-xs text-slate-500 leading-relaxed mb-6">
-                    {t('growth.referralsDesc', 'Invite colleagues, developers, and designers to FreeQRGen.pro! Share your unique referral link to unlock enterprise designer features, high-resolution vector exports, and advanced brand styling matrices.')}
+                    {t('growth.referralsDesc', 'Invite colleagues, developers, and designers to FreeQRBarcodes.com! Share your unique referral link to unlock enterprise designer features, high-resolution vector exports, and advanced brand styling matrices.')}
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -1095,7 +1095,7 @@ export default function GrowthSuite({
             <div className="border-b border-slate-100 pb-4 mb-8">
               <h2 className="text-xl font-black text-slate-800 tracking-tight uppercase">{t('growth.roadmapTitle', 'Public Product Roadmap')}</h2>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                {t('growth.roadmapDesc', "Real-time transparency of FreeQRGen's product planning. Check which requests have been categorized and are actively in production.")}
+                {t('growth.roadmapDesc', "Real-time transparency of FreeQRBarcodes's product planning. Check which requests have been categorized and are actively in production.")}
               </p>
             </div>
 
@@ -1192,7 +1192,7 @@ export default function GrowthSuite({
             <div className="border-b border-slate-100 pb-4 mb-8">
               <h2 className="text-xl font-black text-slate-800 tracking-tight uppercase">{t('growth.testimonialsTitle', 'Customer Testimonial & Case Studies')}</h2>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                {t('growth.testimonialsDesc', "Discover how leading brands utilize FreeQRGen's high-fidelity designer codes to increase campaign interaction levels.")}
+                {t('growth.testimonialsDesc', "Discover how leading brands utilize FreeQRBarcodes's high-fidelity designer codes to increase campaign interaction levels.")}
               </p>
             </div>
 
@@ -1200,7 +1200,7 @@ export default function GrowthSuite({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               {[
                 {
-                  quote: t('growth.testimonial1Quote', "We replaced our standard static QR codes with FreeQRGen's rounded classy templates, which resulted in a massive 42% increase in our store app downloads."),
+                  quote: t('growth.testimonial1Quote', "We replaced our standard static QR codes with FreeQRBarcodes's rounded classy templates, which resulted in a massive 42% increase in our store app downloads."),
                   author: t('growth.testimonial1Author', "Marcus Aurel"),
                   role: t('growth.testimonial1Role', "Head of Marketing, Velox Retail"),
                   stats: t('growth.testimonial1Stats', "+42% Scan Engagement")
@@ -1240,7 +1240,7 @@ export default function GrowthSuite({
                 {t('growth.caseStudyTitle', 'Global Event QR Integration: Elevating Ticket Verification and Customer Retention')}
               </h3>
               <p className="text-xs text-slate-300 mt-3 mb-6 leading-relaxed max-w-2xl">
-                {t('growth.caseStudyDesc', 'FreeQRGen collaborated with Horizon Logistics to generate over 120,000 localized ticket codes with integrated error recovery algorithms. Using dynamic routing, planners could alter destination itineraries live during schedules without reprinting.')}
+                {t('growth.caseStudyDesc', 'FreeQRBarcodes collaborated with Horizon Logistics to generate over 120,000 localized ticket codes with integrated error recovery algorithms. Using dynamic routing, planners could alter destination itineraries live during schedules without reprinting.')}
               </p>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-slate-850">
@@ -1371,7 +1371,7 @@ export default function GrowthSuite({
             <div className="border-b border-slate-100 pb-4 mb-8">
               <h2 className="text-xl font-black text-slate-800 tracking-tight uppercase">{t('growth.csatTitle', 'Customer Satisfaction (CSAT) feedback')}</h2>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                {t('growth.csatDesc', "Your direct advisory line to FreeQRGen's core team. Let us know what you think of our designs, rendering speed, and usability.")}
+                {t('growth.csatDesc', "Your direct advisory line to FreeQRBarcodes's core team. Let us know what you think of our designs, rendering speed, and usability.")}
               </p>
             </div>
 
@@ -1382,7 +1382,7 @@ export default function GrowthSuite({
                 </div>
                 <h3 className="text-sm font-black uppercase text-emerald-900">{t('growth.feedbackSuccessTitle', 'Feedback Submitted Successfully!')}</h3>
                 <p className="text-xs text-emerald-700 mt-2 leading-relaxed">
-                  {t('growth.feedbackSuccessDescPrefix', 'Thank you for contributing to FreeQRGen. Your advisory score has been registered. If you are signed in, check your notifications drawer to collect your ')}<strong>{t('growth.feedbackSuccessDescXp', '+15 XP')}</strong>{t('growth.feedbackSuccessDescAnd', ' and the ')}<strong>{t('growth.feedbackSuccessDescBadge', 'Product Advisory')}</strong>{t('growth.feedbackSuccessDescSuffix', ' badge.')}
+                  {t('growth.feedbackSuccessDescPrefix', 'Thank you for contributing to FreeQRBarcodes. Your advisory score has been registered. If you are signed in, check your notifications drawer to collect your ')}<strong>{t('growth.feedbackSuccessDescXp', '+15 XP')}</strong>{t('growth.feedbackSuccessDescAnd', ' and the ')}<strong>{t('growth.feedbackSuccessDescBadge', 'Product Advisory')}</strong>{t('growth.feedbackSuccessDescSuffix', ' badge.')}
                 </p>
                 <button 
                   onClick={() => setFeedbackSuccess(false)}

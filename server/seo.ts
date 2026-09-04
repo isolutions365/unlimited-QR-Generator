@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import { getFaqData } from '../src/data/faqData';
 
 // ============================================
 // ENHANCED SITEMAP ROUTES WITH UNIQUE SEO DATA
@@ -912,6 +913,250 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute) {
   };
 }
 
+export function buildAboutPageSchema(route: SitemapRoute) {
+  const pageUrl = `https://www.freeqrbarcodes.com${route.path}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.freeqrbarcodes.com/#organization",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://www.freeqrbarcodes.com/#logo",
+          "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
+        },
+        "description": "Provider of 100% free dynamic QR codes, high-density matrix symbology generators, and real-time scan analytics tools."
+      },
+      {
+        "@type": "AboutPage",
+        "@id": `${pageUrl}#aboutpage`,
+        "url": pageUrl,
+        "name": route.seoTitle || "About Free QR Code Generator",
+        "description": route.seoDescription || "Learn about Free QR Code Generator, the free tool for creating dynamic QR codes with custom branding, real-time analytics, and no signup required.",
+        "mainEntity": {
+          "@id": "https://www.freeqrbarcodes.com/#organization"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.freeqrbarcodes.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "About Us",
+            "item": pageUrl
+          }
+        ]
+      }
+    ]
+  };
+}
+
+export function buildFaqPageSchema(route: SitemapRoute) {
+  const pageUrl = `https://www.freeqrbarcodes.com${route.path}`;
+  const rawFaqs = getFaqData('en');
+  const mainEntity = rawFaqs.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }));
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.freeqrbarcodes.com/#organization",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://www.freeqrbarcodes.com/#logo",
+          "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${pageUrl}#webpage`,
+        "url": pageUrl,
+        "name": route.seoTitle || "FAQ - Free QR Code Generator | Common Questions Answered",
+        "description": route.seoDescription || "Find answers to 25+ common questions about QR codes, static vs dynamic codes, error correction levels, customization, and how to create them."
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#faqpage`,
+        "name": "Free QR Code Generator FAQ",
+        "description": route.seoDescription || "Frequently asked questions about QR code generation, error correction, analytics, and security.",
+        "mainEntity": mainEntity
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.freeqrbarcodes.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "FAQ",
+            "item": pageUrl
+          }
+        ]
+      }
+    ]
+  };
+}
+
+export function buildBlogListingSchema() {
+  const pageUrl = 'https://www.freeqrbarcodes.com/blog';
+  const articleKeys = Object.keys(blogArticles);
+  const itemListElements = articleKeys.map((slug, idx) => {
+    const article = blogArticles[slug];
+    return {
+      "@type": "ListItem",
+      "position": idx + 1,
+      "name": article.title,
+      "url": `https://www.freeqrbarcodes.com/blog/${slug}`
+    };
+  });
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.freeqrbarcodes.com/#organization",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://www.freeqrbarcodes.com/#logo",
+          "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
+        }
+      },
+      {
+        "@type": "Blog",
+        "@id": `${pageUrl}#blog`,
+        "url": pageUrl,
+        "name": "Guides, Tutorials & Marketing Blog - Free QR Code Generator",
+        "description": "Read our technical and strategic guides on QR codes, dynamic redirects, QR codes for restaurant menus, business networking, and contactless services.",
+        "publisher": {
+          "@id": "https://www.freeqrbarcodes.com/#organization"
+        }
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${pageUrl}#itemlist`,
+        "name": "Free QR Code Generator Blog Articles & Guides",
+        "itemListOrder": "https://schema.org/ItemListOrderDescending",
+        "numberOfItems": itemListElements.length,
+        "itemListElement": itemListElements
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.freeqrbarcodes.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": pageUrl
+          }
+        ]
+      }
+    ]
+  };
+}
+
+export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTitle?: string; seoDescription?: string }) {
+  const pageUrl = `https://www.freeqrbarcodes.com${route.path}`;
+  const solutionSlug = route.path.replace('/solutions/', '').replace(/-/g, ' ');
+  const solutionName = route.seoTitle ? route.seoTitle.split(' - ')[0] : (solutionSlug.replace(/\b\w/g, l => l.toUpperCase()) + ' QR Solution');
+  const solutionDesc = route.seoDescription || `Custom enterprise-grade ${solutionName} designed for high-density matrix scanning, vector exports, and real-time telemetry.`;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.freeqrbarcodes.com/#organization",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://www.freeqrbarcodes.com/#logo",
+          "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${pageUrl}#webpage`,
+        "url": pageUrl,
+        "name": route.seoTitle || solutionName,
+        "description": solutionDesc
+      },
+      {
+        "@type": "Service",
+        "@id": `${pageUrl}#service`,
+        "name": solutionName,
+        "serviceType": "QR Code Generation & Matrix Symbology Solutions",
+        "description": solutionDesc,
+        "provider": {
+          "@id": "https://www.freeqrbarcodes.com/#organization"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.freeqrbarcodes.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Solutions",
+            "item": "https://www.freeqrbarcodes.com/solutions"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": solutionName,
+            "item": pageUrl
+          }
+        ]
+      }
+    ]
+  };
+}
+
 export function buildGenericPageSchema(route: SitemapRoute) {
   const pageUrl = `https://www.freeqrbarcodes.com${route.path}`;
   return {
@@ -1064,7 +1309,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     }
 
     // ============================================
-    // SEO DATA GENERATION
+    // SEO DATA & SCHEMA GENERATION
     // ============================================
     
     let pageTitle = 'Free QR Code Generator - Dynamic QR Codes & Custom Creator';
@@ -1085,6 +1330,22 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
         <div class="max-w-5xl mx-auto px-6 py-16">
           ${prerenderedH1}
           <p class="text-base text-slate-700 leading-relaxed max-w-3xl mt-4">${pageDescription}</p>
+          
+          <div class="mt-12 space-y-8">
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Professional QR & Barcode Creator Tools</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                Generate high-resolution vector QR codes for websites, WiFi networks, vCard business profiles, social media hubs, and multi-format linear barcodes (UPC-A, EAN-13, Code 128) with custom artistic patterns, hex gradients, and embedded company logos.
+              </p>
+            </section>
+            
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Why Choose Our Free QR Code Studio</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                Enjoy 100% free unlimited vector exports in SVG, PDF, and PNG formats. Our client-side privacy-first architecture guarantees that your private WiFi credentials, contacts, and sensitive links are encoded locally in your browser with zero data harvesting.
+              </p>
+            </section>
+          </div>
         </div>
       `;
     }
@@ -1104,9 +1365,154 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
             <time datetime="${article.date}">${article.date}</time> | 
             <span>Category: ${article.category}</span>
           </div>
-          <p class="text-base text-slate-700 leading-relaxed mb-6">${article.description}</p>
-          <p><a href="/blog">← Back to Blog</a></p>
+          
+          <section class="mb-8">
+            <h2 class="text-2xl font-bold text-slate-900 tracking-tight mb-3">Article Overview</h2>
+            <p class="text-base text-slate-700 leading-relaxed">${article.description}</p>
+          </section>
+          
+          <p><a href="/blog" class="text-indigo-600 font-bold hover:underline">← Back to Blog Articles</a></p>
         </article>
+      `;
+    }
+    // --- BLOG INDEX / LISTING SEO ---
+    else if (cleanPath === '/blog') {
+      pageTitle = matchedRoute?.seoTitle || 'QR Code Guides, Tutorials & Marketing Insights | FreeQRBarcodes.com';
+      pageDescription = matchedRoute?.seoDescription || 'Explore in-depth technical guides, dynamic QR best practices, contactless menu strategies, and barcode industry tutorials.';
+      schemaJson = buildBlogListingSchema();
+      
+      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">QR Code Guides & Marketing Blog</h1>`;
+      noscriptHtml = `
+        <div class="max-w-4xl mx-auto py-10 px-4">
+          ${prerenderedH1}
+          <p class="text-base text-slate-700 leading-relaxed mb-8">${pageDescription}</p>
+          
+          <section class="space-y-6">
+            <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Featured Articles & Implementation Guides</h2>
+            <ul class="space-y-4">
+              ${Object.keys(blogArticles).map(slug => {
+                const art = blogArticles[slug];
+                return `
+                  <li class="border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-bold text-slate-900"><a href="/blog/${slug}" class="text-indigo-600 hover:underline">${art.title}</a></h3>
+                    <p class="text-sm text-slate-600 mt-1">${art.description}</p>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </section>
+        </div>
+      `;
+    }
+    // --- ABOUT PAGE SEO ---
+    else if (cleanPath === '/about') {
+      pageTitle = matchedRoute?.seoTitle || 'About Free QR Code Generator - 100% Free Dynamic QR Tool';
+      pageDescription = matchedRoute?.seoDescription || 'Learn about Free QR Code Generator, the free tool for creating dynamic QR codes with custom branding, real-time analytics, and no signup required.';
+      schemaJson = buildAboutPageSchema(matchedRoute || {
+        path: '/about',
+        changefreq: 'monthly',
+        priority: '0.6',
+        seoTitle: pageTitle,
+        seoDescription: pageDescription
+      });
+      
+      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">About Free QR Code Generator</h1>`;
+      noscriptHtml = `
+        <div class="max-w-4xl mx-auto py-10 px-4">
+          ${prerenderedH1}
+          <p class="text-base text-slate-700 leading-relaxed mb-8">${pageDescription}</p>
+          
+          <div class="space-y-8">
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Our Mission & Platform Architecture</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                We started with a simple belief: QR codes don't have to be boring black-and-white grids or locked behind costly enterprise subscriptions. We deliver industrial-strength dynamic vector generation directly in your browser.
+              </p>
+            </section>
+            
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Privacy-First Local Encoding</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                All matrix calculations, logo centerpieces, and vector renderings are computed client-side in your device's sandbox. Your private passwords and payload strings remain secure.
+              </p>
+            </section>
+          </div>
+        </div>
+      `;
+    }
+    // --- FAQ PAGE SEO ---
+    else if (cleanPath === '/faq') {
+      pageTitle = matchedRoute?.seoTitle || 'FAQ - Free QR Code Generator | Common Questions Answered';
+      pageDescription = matchedRoute?.seoDescription || 'Find answers to 25+ common questions about QR codes, static vs dynamic codes, error correction levels, customization, and how to create them.';
+      schemaJson = buildFaqPageSchema(matchedRoute || {
+        path: '/faq',
+        changefreq: 'monthly',
+        priority: '0.6',
+        seoTitle: pageTitle,
+        seoDescription: pageDescription
+      });
+      
+      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">Frequently Asked Questions</h1>`;
+      noscriptHtml = `
+        <div class="max-w-4xl mx-auto py-10 px-4">
+          ${prerenderedH1}
+          <p class="text-base text-slate-700 leading-relaxed mb-8">${pageDescription}</p>
+          
+          <section class="space-y-6">
+            <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Universal Knowledge Base & Common Questions</h2>
+            <div class="space-y-4">
+              ${getFaqData('en').slice(0, 10).map(faq => `
+                <div class="border-b border-slate-100 pb-4">
+                  <h3 class="text-base font-bold text-slate-900">${faq.question}</h3>
+                  <p class="text-sm text-slate-600 mt-1">${faq.answer}</p>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+        </div>
+      `;
+    }
+    // --- SOLUTIONS PAGES ---
+    else if (isSolution || cleanPath.startsWith('/solutions/')) {
+      const solutionSlug = cleanPath.replace('/solutions/', '').replace(/-/g, ' ');
+      const solutionName = matchedRoute?.seoTitle ? matchedRoute.seoTitle.split(' - ')[0] : (solutionSlug.replace(/\b\w/g, l => l.toUpperCase()) + ' QR Solution');
+      pageTitle = matchedRoute?.seoTitle || `${solutionName} QR Solution - Free QR Code Generator`;
+      pageDescription = matchedRoute?.seoDescription || `Implement ${solutionName} with QR codes. Free tool with dynamic updates, analytics, and vector exports. No signup required.`;
+      
+      schemaJson = buildSolutionSchema(matchedRoute || {
+        path: cleanPath,
+        changefreq: 'weekly',
+        priority: '0.8',
+        seoTitle: pageTitle,
+        seoDescription: pageDescription
+      });
+      
+      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">${solutionName}</h1>`;
+      noscriptHtml = `
+        <div class="max-w-5xl mx-auto px-6 py-16">
+          ${prerenderedH1}
+          <p class="text-base text-slate-700 leading-relaxed max-w-3xl mt-4">${pageDescription}</p>
+          
+          <div class="mt-12 space-y-8">
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Solution Features & Capabilities</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                Streamline workflows with high-density barcode rendering, instant error-correction level adjustments (L, M, Q, H), and bespoke styling to elevate your brand presence.
+              </p>
+            </section>
+            
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Implementation & Deployment</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                Deploy dynamic QR codes across printed signage, digital menus, packaging decals, and point-of-sale systems with guaranteed high scan rates.
+              </p>
+            </section>
+          </div>
+          
+          <div class="mt-8">
+            <a href="/" class="text-indigo-600 font-bold hover:underline">← Back to Creative Station</a>
+          </div>
+        </div>
       `;
     }
     // --- LANDING PAGE SEO ---
@@ -1120,8 +1526,25 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
         <div class="max-w-5xl mx-auto px-6 py-16">
           ${prerenderedH1}
           <p class="text-base text-slate-700 leading-relaxed max-w-3xl mt-4">${pageDescription}</p>
+          
+          <div class="mt-12 space-y-8">
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">How It Works</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                Enter your target link or payload, customize eye styles and hex gradients, embed your brand logo with high-density Reed-Solomon error correction, and download instant vector files (SVG/PDF/PNG).
+              </p>
+            </section>
+            
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Frequently Asked Questions</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                Our free generator creates both static and dynamic QR codes that never expire, support unlimited scans, and work seamlessly across iOS, Android, and industrial scanners.
+              </p>
+            </section>
+          </div>
+          
           <div class="mt-8">
-            <a href="/" class="text-indigo-600 font-bold">← Back to Home</a>
+            <a href="/" class="text-indigo-600 font-bold hover:underline">← Back to Home</a>
           </div>
         </div>
       `;
@@ -1132,34 +1555,23 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       pageDescription = matchedRoute.seoDescription || pageDescription;
       schemaJson = buildGenericPageSchema(matchedRoute);
       
-      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">${pageTitle.split(' - ')[0]}</h1>`;
+      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">${pageTitle.split(' - ')[0]}</h1>`;
       noscriptHtml = `
         <div class="max-w-4xl mx-auto py-10 px-4">
           ${prerenderedH1}
           <p class="text-base text-slate-700 leading-relaxed mt-4">${pageDescription}</p>
-        </div>
-      `;
-    }
-    // --- SOLUTIONS PAGES (fallback pattern) ---
-    else if (isSolution) {
-      const solutionName = cleanPath.replace('/solutions/', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-      pageTitle = `${solutionName} QR Solution - Free QR Code Generator`;
-      pageDescription = `Implement ${solutionName} with QR codes. Free tool with dynamic updates, analytics, and vector exports. No signup required.`;
-      schemaJson = buildGenericPageSchema({
-        path: cleanPath,
-        changefreq: 'weekly',
-        priority: '0.8',
-        seoTitle: pageTitle,
-        seoDescription: pageDescription
-      });
-      
-      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">${solutionName} QR Solution</h1>`;
-      noscriptHtml = `
-        <div class="max-w-5xl mx-auto px-6 py-16">
-          ${prerenderedH1}
-          <p class="text-base text-slate-700 leading-relaxed max-w-3xl mt-4">${pageDescription}</p>
+          
+          <div class="mt-8 space-y-6">
+            <section>
+              <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Overview & Technical Specifications</h2>
+              <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                Explore our comprehensive documentation, configuration options, and privacy standards engineered for seamless digital-to-physical connectivity.
+              </p>
+            </section>
+          </div>
+          
           <div class="mt-8">
-            <a href="/" class="text-indigo-600 font-bold">← Back to Home</a>
+            <a href="/" class="text-indigo-600 font-bold hover:underline">← Back to Creative Station</a>
           </div>
         </div>
       `;
@@ -1184,6 +1596,15 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       html = html.replace(/<link[^>]*rel=["']canonical["'][^>]*>/i, `<link rel="canonical" href="${pageUrl}" />`);
     } else {
       html = html.replace('</head>', `<link rel="canonical" href="${pageUrl}" />\n</head>`);
+    }
+
+    // Inject Hreflang Tags (self-referencing en and x-default)
+    const hreflangTags = `<link rel="alternate" hreflang="en" href="${pageUrl}" />\n    <link rel="alternate" hreflang="x-default" href="${pageUrl}" />`;
+    html = html.replace(/<link[^>]*hreflang=["'][^"']*["'][^>]*>\s*/gi, '');
+    if (html.includes('rel="canonical"')) {
+      html = html.replace(/(<link[^>]*rel=["']canonical["'][^>]*>)/i, `$1\n    ${hreflangTags}`);
+    } else {
+      html = html.replace('</head>', `    ${hreflangTags}\n</head>`);
     }
     
     // Inject OpenGraph Tags

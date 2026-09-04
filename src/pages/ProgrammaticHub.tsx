@@ -111,7 +111,7 @@ export default function ProgrammaticHub({
             t('programmatic.mistakesStep3', 'Placing printed codes in low-lighting or highly reflective areas.')
           ],
           faq: [
-            { q: t('programmatic.faqQ1Solutions', 'What is the scanning limit for this {{name}} QR code?', { name: sol.name }), a: t('programmatic.faqA1Solutions', 'All QR codes generated on FreeQRGen.pro feature infinite scans and do not carry hidden expirations or click caps.') },
+            { q: t('programmatic.faqQ1Solutions', 'What is the scanning limit for this {{name}} QR code?', { name: sol.name }), a: t('programmatic.faqA1Solutions', 'All QR codes generated on FreeQRBarcodes.com feature infinite scans and do not carry hidden expirations or click caps.') },
             { q: t('programmatic.faqQ2Solutions', 'Can I swap the target URL after printing the code?'), a: t('programmatic.faqA2Solutions', 'Yes. If you save the design with dynamic tracking active, you can redirect visitors to updated links instantly without changing the matrix layout.') }
           ],
           caseStudy: {
@@ -157,7 +157,7 @@ export default function ProgrammaticHub({
           ],
           faq: [
             { q: t('programmatic.useCasesFaqQ1', 'How do I print this QR code for this {{name}} setup?', { name: uc.name }), a: t('programmatic.useCasesFaqA1', 'We recommend exporting in SVG or PDF format, then sending the file directly to high-quality print services to prevent blurred details.') },
-            { q: t('programmatic.useCasesFaqQ2', 'Is there any hidden cost or registration required?'), a: t('programmatic.useCasesFaqA2', 'No. FreeQRGen.pro is 100% free with unlimited generation and secure cloud options.') }
+            { q: t('programmatic.useCasesFaqQ2', 'Is there any hidden cost or registration required?'), a: t('programmatic.useCasesFaqA2', 'No. FreeQRBarcodes.com is 100% free with unlimited generation and secure cloud options.') }
           ],
           caseStudy: {
             title: t('programmatic.useCasesCaseStudyTitle', '{{name}} Implementation', { name: uc.name }),
@@ -246,7 +246,7 @@ export default function ProgrammaticHub({
       "image": "https://www.freeqrbarcodes.com/og-image.jpg",
       "author": {
         "@type": "Organization",
-        "name": t('programmatic.authorName', 'FreeQRGen.pro Editorial Board')
+        "name": t('programmatic.authorName', 'FreeQRBarcodes.com Editorial Board')
       },
       "publisher": {
         "@type": "Organization",

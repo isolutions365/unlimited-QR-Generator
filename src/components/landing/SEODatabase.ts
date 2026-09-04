@@ -1188,7 +1188,7 @@ export const landingPages: Record<string, LandingPageData> = {
       subtitle: 'Streamline warehouse processing, reduce retail checkout friction, and organize logistics.',
       buttonText: 'Initialize Barcode',
       typePreset: 'text',
-      defaultContent: 'FREEQRGEN12345',
+      defaultContent: 'FREEQRBARCODES12345',
       defaultName: 'My Product Code'
     }
   },

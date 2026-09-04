@@ -1181,8 +1181,9 @@ export default function FormBuilder() {
                     {/* Title & Desc Fields */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left rtl:text-right">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">{tForm("Form Header Title")}</label>
+                        <label htmlFor="form-header-title-input" className="block text-xs font-bold text-slate-700 mb-1">{tForm("Form Header Title")}</label>
                         <input
+                          id="form-header-title-input"
                           type="text"
                           value={formTitle}
                           onChange={e => setFormTitle(e.target.value)}
@@ -1193,8 +1194,9 @@ export default function FormBuilder() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">{tForm("Form Color Theme")}</label>
+                        <label htmlFor="form-color-theme-select" className="block text-xs font-bold text-slate-700 mb-1">{tForm("Form Color Theme")}</label>
                         <select
+                          id="form-color-theme-select"
                           value={formTheme}
                           onChange={e => setFormTheme(e.target.value as any)}
                           className="w-full px-3 py-2 rounded-xl border border-slate-200 text-slate-800 text-xs bg-white focus:ring-1 focus:ring-indigo-400 outline-none"
@@ -1209,8 +1211,9 @@ export default function FormBuilder() {
                       </div>
 
                       <div className="sm:col-span-2">
-                        <label className="block text-xs font-bold text-slate-700 mb-1">{tForm("Subtext / Explanatory Description")}</label>
+                        <label htmlFor="form-subtext-desc-input" className="block text-xs font-bold text-slate-700 mb-1">{tForm("Subtext / Explanatory Description")}</label>
                         <input
+                          id="form-subtext-desc-input"
                           type="text"
                           value={formDesc}
                           onChange={e => setFormDesc(e.target.value)}
@@ -1275,8 +1278,9 @@ export default function FormBuilder() {
                                   >
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                                       <div>
-                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Field Type")}</label>
+                                        <label htmlFor={`field-type-select-${field.id}`} className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Field Type")}</label>
                                         <select
+                                          id={`field-type-select-${field.id}`}
                                           value={field.type}
                                           onChange={e => updateFieldProperty(field.id, 'type', e.target.value)}
                                           className="w-full p-1.5 rounded-lg border border-slate-200 bg-white text-slate-800"
@@ -1293,8 +1297,9 @@ export default function FormBuilder() {
                                       </div>
 
                                       <div className="sm:col-span-2">
-                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Question / Field Label")}</label>
+                                        <label htmlFor={`field-label-input-${field.id}`} className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Question / Field Label")}</label>
                                         <input
+                                          id={`field-label-input-${field.id}`}
                                           type="text"
                                           value={field.label}
                                           onChange={e => updateFieldProperty(field.id, 'label', e.target.value)}
@@ -1304,8 +1309,9 @@ export default function FormBuilder() {
                                       </div>
 
                                       <div className="sm:col-span-2">
-                                        <label className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Placeholder Guide")}</label>
+                                        <label htmlFor={`field-placeholder-input-${field.id}`} className="block text-[10px] font-bold text-slate-500 mb-0.5">{tForm("Placeholder Guide")}</label>
                                         <input
+                                          id={`field-placeholder-input-${field.id}`}
                                           type="text"
                                           value={field.placeholder}
                                           onChange={e => updateFieldProperty(field.id, 'placeholder', e.target.value)}

@@ -36,8 +36,8 @@ export const urlQrFaqs = [
     a: "A URL QR Code (Quick Response Code) is a specialized two-dimensional optical barcode that encapsulates a web address or hyperlink protocol (such as HTTP or HTTPS). When scanned by a smart device’s built-in optical sensor or camera, the device decodes the static black-and-white pixel grid, extracts the target web string, and automatically redirects the user's mobile browser to the specified landing page. It acts as a frictionless physical-to-digital link, eliminating the need for manual typing."
   },
   {
-    q: "Is generating a URL QR Code on FreeQRGen.pro completely free?",
-    a: "Yes, 100% free. The static URL QR codes created on FreeQRGen.pro are free forever, have no scanning limitations, and will never expire. We do not insert any hidden watermarks, and there are absolutely no premium sign-up requirements or trial periods."
+    q: "Is generating a URL QR Code on FreeQRBarcodes.com completely free?",
+    a: "Yes, 100% free. The static URL QR codes created on FreeQRBarcodes.com are free forever, have no scanning limitations, and will never expire. We do not insert any hidden watermarks, and there are absolutely no premium sign-up requirements or trial periods."
   },
   {
     q: "What is the difference between a static and a dynamic URL QR Code?",
@@ -80,7 +80,7 @@ export const urlQrFaqs = [
     a: "Yes. Our platform supports exporting in infinitely scalable vector formats like SVG and print-ready PDF, as well as high-resolution PNG raster files. This ensures your code remains razor-sharp when printed on giant billboards or tiny product packages."
   },
   {
-    q: "Does FreeQRGen.pro insert watermarks or branding on my QR code?",
+    q: "Does FreeQRBarcodes.com insert watermarks or branding on my QR code?",
     a: "Never. We believe in providing a clean, professional, and completely unbranded utility. All generated files are 100% watermark-free, giving your brand complete creative control."
   },
   {
@@ -138,7 +138,7 @@ export default function URLQRContent({
           {t('urlqr.trustTitle', 'Pristine Quality & Trust Security Standard')}
         </h3>
         <p className="text-xs text-slate-600">
-          {t('urlqr.trustDescStart', 'Unlike other online generators that redirect your traffic through third-party domains, insert unsolicited ads, or add annoying watermarks, ')}<strong>{t('urlqr.trustDescStrong', 'FreeQRGen.pro')}</strong>{t('urlqr.trustDescEnd', ' provides a fully transparent, browser-based service.')}
+          {t('urlqr.trustDescStart', 'Unlike other online generators that redirect your traffic through third-party domains, insert unsolicited ads, or add annoying watermarks, ')}<strong>{t('urlqr.trustDescStrong', 'FreeQRBarcodes.com')}</strong>{t('urlqr.trustDescEnd', ' provides a fully transparent, browser-based service.')}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium">
           <div className="flex items-center gap-2">
@@ -182,13 +182,13 @@ export default function URLQRContent({
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.staticEncodingTitle', 'Static URL QR Encoding')}</h4>
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.staticEncodingTitle', 'Static URL QR Encoding')}</h3>
             <p className="text-xs text-slate-600">
               {t('urlqr.staticEncodingDesc', 'In a static QR code, the target link is hardcoded directly into the black-and-white module grid. The length of your URL directly affects the physical density of the code. A longer URL containing tracking parameters creates a highly dense matrix with hundreds of tiny pixel blocks, which require high print resolutions and large scan distances.')}
             </p>
           </div>
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.dynamicEncodingTitle', 'Dynamic URL QR Encoding')}</h4>
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">{t('urlqr.dynamicEncodingTitle', 'Dynamic URL QR Encoding')}</h3>
             <p className="text-xs text-slate-600">
               {t('urlqr.dynamicEncodingDesc', 'A dynamic QR code encodes a short, standardized URL that redirects the user to the final destination through an intermediary routing server. Because the encoded string is short, the physical grid remains clean and simple, scanning almost instantly from any distance. Furthermore, the final destination can be updated remotely at any time without reprinting.')}
             </p>
@@ -261,9 +261,9 @@ export default function URLQRContent({
             <div key={index} className="border border-slate-200 rounded-lg p-4 bg-white shadow-sm">
               <button
                 onClick={() => toggleFaq(index)}
-                className="w-full flex justify-between items-center text-left text-sm font-semibold text-slate-900 focus:outline-none"
+                className="w-full flex justify-between items-center text-left text-sm font-semibold text-slate-900 focus:outline-none cursor-pointer"
               >
-                <span>{faq.q}</span>
+                <h3 className="text-sm font-semibold text-slate-900 leading-snug">{faq.q}</h3>
                 {openFaqIndex === index ? (
                   <ChevronUp className="w-4 h-4 text-slate-500 shrink-0" />
                 ) : (
@@ -278,7 +278,9 @@ export default function URLQRContent({
             </div>
           ))}
         </div>
-      </section>      {/* Dynamic CTA Card Section */}
+      </section>
+
+      {/* Dynamic CTA Card Section */}
       <section className="mt-12 p-6 sm:p-8 bg-gradient-to-br from-indigo-900 via-indigo-955 to-slate-900 rounded-2xl text-white shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="space-y-4 max-w-xl">
@@ -286,9 +288,9 @@ export default function URLQRContent({
             <Zap className="w-3.5 h-3.5 ltr-lock" />
             <span className="ltr-lock">{t('urlqr.ctaBadge', '100% Free & Unlimited')}</span>
           </span>
-          <h3 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
             {t('urlqr.ctaTitle', 'Ready to Build Your Custom URL QR Code?')}
-          </h3>
+          </h2>
           <p className="text-xs sm:text-sm text-indigo-200 leading-relaxed">
             {t('urlqr.ctaDesc', 'Design, customize, and export high-resolution QR codes instantly in vector SVG or print-ready format. No registration, no watermarks.')}
           </p>

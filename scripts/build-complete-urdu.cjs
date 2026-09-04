@@ -301,7 +301,9 @@ const dict = {
 
 // Common terms and domain translation rules for systematic Urdu coverage
 const phraseMap = [
-  [/^FreeQRGen\.pro$/g, "FreeQRGen.pro"],
+  [/^FreeQRBarcodes\.com$/g, "FreeQRBarcodes.com"],
+  [/^FreeQRBarcodes$/g, "FreeQRBarcodes"],
+  [/^FreeQRGen\.pro$/g, "FreeQRBarcodes.com"],
   [/^Free QR Generator$/g, "Free QR Generator"],
   [/^iSolutions ICo$/g, "iSolutions ICo"],
   [/^QR Code$/g, "QR کوڈ"],
@@ -487,8 +489,8 @@ function translatePalette(key, text) {
 }
 
 function translateTrust(key, text) {
-  if (text.includes("FreeQRGen.pro represents the next paradigm")) {
-    return "FreeQRGen.pro کنٹیکٹ لیس لنکس اور جامد ویکٹر ڈسٹری بیوشن سسٹمز کے اگلے دور کی نمائندگی کرتا ہے۔ ہم عام طور پر بارکوڈ جنریشن سے وابستہ آپریشنل پے والز، سست سرورز اور ٹریکنگ سسٹمز کو ختم کرتے ہیں۔";
+  if (text.includes("FreeQRBarcodes.com represents the next paradigm") || text.includes("FreeQRGen.pro represents the next paradigm")) {
+    return "FreeQRBarcodes.com کنٹیکٹ لیس لنکس اور جامد ویکٹر ڈسٹری بیوشن سسٹمز کے اگلے دور کی نمائندگی کرتا ہے۔ ہم عام طور پر بارکوڈ جنریشن سے وابستہ آپریشنل پے والز، سست سرورز اور ٹریکنگ سسٹمز کو ختم کرتے ہیں۔";
   }
   if (text.includes("Our system is engineered to satisfy the demands")) {
     return "ہمارا سسٹم جدید پیکیجنگ ڈیزائنرز، فل اسٹیک ڈویلپرز اور ہائی والیوم مارکیٹنگ ڈائریکٹرز کی ضروریات کو پورا کرنے کے لیے بنایا گیا ہے۔ یہاں پیدا ہونے والے جامد بارکوڈز براؤزر کینوس بفر کے اندر مکمل طور پر آف لائن کام کرتے ہیں اور ISO/IEC 18004 معیارات کی تعمیل کو یقینی بناتے ہیں۔ رازداری برقرار رکھنے کے لیے کوئی بھی پیرامیٹر مرکزی سرورز پر نہیں بھیجا جاتا۔";
@@ -581,7 +583,8 @@ function translateAnalytics(key, text) {
 
 function translateProgrammaticSeo(key, text) {
   const map = {
-    "FreeQRGen.pro Editorial Board": "FreeQRGen.pro ایڈیٹوریل بورڈ",
+    "FreeQRBarcodes.com Editorial Board": "FreeQRBarcodes.com ایڈیٹوریل بورڈ",
+    "FreeQRGen.pro Editorial Board": "FreeQRBarcodes.com ایڈیٹوریل بورڈ",
     "AUTO": "خودکار",
     "Best Practices (Do This)": "بہترین طریقے (یہ کریں)",
     "Common Mistakes (Avoid This)": "عام غلطیاں (اس سے بچیں)",
@@ -598,7 +601,8 @@ function translateProgrammaticSeo(key, text) {
 
 function translateKnowledgeCompany(key, text) {
   const map = {
-    "About FreeQRGen.pro": "FreeQRGen.pro کے بارے میں",
+    "About FreeQRBarcodes.com": "FreeQRBarcodes.com کے بارے میں",
+    "About FreeQRGen.pro": "FreeQRBarcodes.com کے بارے میں",
     "Our Mission & Architecture": "ہمارا مشن اور فن تعمیر",
     "Enterprise Security Whitepaper": "انٹرپرائز سیکیورٹی وائٹ پیپر",
     "Contact Engineering Support": "انجینئرنگ سپورٹ سے رابطہ کریں",
@@ -682,7 +686,9 @@ function fallbackTranslate(text) {
   let out = text;
 
   const replacements = [
-    [/FreeQRGen\.pro/g, "FreeQRGen.pro"],
+    [/FreeQRBarcodes\.com/g, "FreeQRBarcodes.com"],
+    [/FreeQRBarcodes/g, "FreeQRBarcodes"],
+    [/FreeQRGen\.pro/g, "FreeQRBarcodes.com"],
     [/iSolutions ICo/g, "iSolutions ICo"],
     [/ISO\/IEC 18004/g, "ISO/IEC 18004"],
     [/QR Codes?/gi, "QR کوڈز"],

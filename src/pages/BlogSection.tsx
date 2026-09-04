@@ -311,9 +311,9 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
           {/* Dynamic Article FAQ Accordion Area */}
           {activeArticle.relatedFAQs && activeArticle.relatedFAQs.length > 0 && (
             <div id="article-faq-container" className="pt-8 border-t border-slate-100 space-y-4">
-              <h3 className="text-sm font-extrabold text-slate-950 uppercase tracking-widest font-mono">
+              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
                 {t('blog.coreFaqs', 'Article Core FAQs')}
-              </h3>
+              </h2>
               <div className="space-y-3">
                 {activeArticle.relatedFAQs.map((faq, index) => {
                   const isExpanded = expandedFaqIndex === index;
@@ -323,10 +323,10 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
                         onClick={() => setExpandedFaqIndex(isExpanded ? null : index)}
                         className="w-full text-left p-4 flex justify-between items-center text-xs font-bold text-slate-900 cursor-pointer"
                       >
-                        <span className="flex items-center gap-2">
+                        <h3 className="flex items-center gap-2 text-xs font-bold text-slate-900">
                           <MessageSquare className="w-3.5 h-3.5 text-indigo-500" />
                           {faq.question}
-                        </span>
+                        </h3>
                         <ChevronRight className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isExpanded ? 'rotate-90 text-indigo-600 ' : ''}`} />
                       </button>
                       {isExpanded && (
@@ -344,9 +344,9 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
           {/* Recommendation internal linking triggers */}
           {activeArticle.internalLinks && activeArticle.internalLinks.length > 0 && (
             <div id="article-recommendations" className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+              <h2 className="text-sm font-extrabold text-slate-900 tracking-tight">
                 {t('blog.relatedTools', 'Related Workspace Tools')}
-              </span>
+              </h2>
               <div className="flex flex-wrap gap-2">
                 {activeArticle.internalLinks.map((link, index) => (
                   <button
@@ -434,8 +434,17 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
             </ScrollableTabContainer>
           </div>
 
+          {/* Articles Section Heading */}
+          <div className="pt-2">
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              {selectedCategory === 'all'
+                ? t('blog.latestArticles', 'Latest Articles & Tutorials')
+                : t('blog.categoryArticles', '{{category}} Articles', { category: getCategoryLabel(selectedCategory) })}
+            </h2>
+          </div>
+
           {/* Articles Render Matrix Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             {filteredArticles.map((art) => (
               <div
                 key={art.slug}
@@ -454,9 +463,9 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
                       <span>{art.readingTime}</span>
                     </div>
 
-                    <h2 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors leading-snug">
+                    <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors leading-snug">
                       {art.title}
-                    </h2>
+                    </h3>
 
                     <p className="text-xs text-slate-600 leading-relaxed line-clamp-3 font-sans">
                       {art.intro}

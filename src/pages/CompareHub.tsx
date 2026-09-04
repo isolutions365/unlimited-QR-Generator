@@ -55,7 +55,7 @@ export default function CompareHub({
             "@type": "CollectionPage",
             "@id": "https://www.freeqrbarcodes.com/compare#webpage",
             "url": "https://www.freeqrbarcodes.com/compare",
-            "name": "QR Code Technology Comparison Directory | FreeQRGen.pro",
+            "name": "QR Code Technology Comparison Directory | FreeQRBarcodes.com",
             "description": "High-fidelity, professional analytical comparisons between diverse 2D barcode schemas, formats, error levels, and marketing strategies.",
             "isPartOf": {
               "@type": "WebSite",

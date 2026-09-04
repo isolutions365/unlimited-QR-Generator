@@ -272,12 +272,13 @@ export default function Generator({ initialProject, onProjectChange, className =
             {/* URL Input Form */}
             {activeTab === 'url' && (
               <div className="space-y-2">
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                <label htmlFor="gen-target-url-input" className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                   Target Website URL
                 </label>
                 <div className="relative">
                   <Link2 className="absolute start-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
+                    id="gen-target-url-input"
                     type="url"
                     value={urlInput}
                     onChange={(e) => setUrlInput(e.target.value)}
@@ -296,10 +297,11 @@ export default function Generator({ initialProject, onProjectChange, className =
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
+                    <label htmlFor="gen-ssid-input" className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
                       Network Name (SSID) *
                     </label>
                     <input
+                      id="gen-ssid-input"
                       type="text"
                       value={wifiData.ssid}
                       onChange={(e) => setWifiData({ ...wifiData, ssid: e.target.value })}
@@ -309,10 +311,11 @@ export default function Generator({ initialProject, onProjectChange, className =
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
+                    <label htmlFor="gen-encryption-select" className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
                       Encryption Security
                     </label>
                     <select
+                      id="gen-encryption-select"
                       value={wifiData.encryption}
                       onChange={(e) => setWifiData({ ...wifiData, encryption: e.target.value as any })}
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -326,10 +329,11 @@ export default function Generator({ initialProject, onProjectChange, className =
 
                 {wifiData.encryption !== 'nopass' && (
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
+                    <label htmlFor="gen-wifi-password-input" className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
                       Wi-Fi Password
                     </label>
                     <input
+                      id="gen-wifi-password-input"
                       type="password"
                       value={wifiData.password || ''}
                       onChange={(e) => setWifiData({ ...wifiData, password: e.target.value })}
@@ -510,11 +514,12 @@ export default function Generator({ initialProject, onProjectChange, className =
             {/* Colors */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                <label htmlFor="gen-fg-color-picker" className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Foreground Color
                 </label>
                 <div className="flex items-center gap-2">
                   <input
+                    id="gen-fg-color-picker"
                     type="color"
                     value={fgColor}
                     onChange={(e) => setFgColor(e.target.value)}
@@ -530,11 +535,12 @@ export default function Generator({ initialProject, onProjectChange, className =
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                <label htmlFor="gen-bg-color-picker" className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Background Color
                 </label>
                 <div className="flex items-center gap-2">
                   <input
+                    id="gen-bg-color-picker"
                     type="color"
                     value={bgColor}
                     onChange={(e) => setBgColor(e.target.value)}
@@ -553,10 +559,11 @@ export default function Generator({ initialProject, onProjectChange, className =
             {/* Dot & Eye Pattern Styles */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                <label htmlFor="gen-matrix-style-select" className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Matrix Pattern Style
                 </label>
                 <select
+                  id="gen-matrix-style-select"
                   value={dotStyle}
                   onChange={(e) => setDotStyle(e.target.value as any)}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2 px-3 text-xs font-semibold text-slate-900 dark:text-white"
@@ -571,10 +578,11 @@ export default function Generator({ initialProject, onProjectChange, className =
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                <label htmlFor="gen-eye-style-select" className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Corner Eye Pattern
                 </label>
                 <select
+                  id="gen-eye-style-select"
                   value={eyeStyle}
                   onChange={(e) => setEyeStyle(e.target.value as any)}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2 px-3 text-xs font-semibold text-slate-900 dark:text-white"

@@ -135,7 +135,7 @@ async function generate() {
   
   console.log('Rendering text onto Open Graph template...');
   // Title
-  img.print({ font: font64, x: 610, y: 145, text: 'FreeQRGen' });
+  img.print({ font: font64, x: 610, y: 145, text: 'FreeQRBarcodes' });
   
   // Subtitle
   img.print({ font: font32, x: 610, y: 225, text: 'Free Unlimited QR Code Generator' });

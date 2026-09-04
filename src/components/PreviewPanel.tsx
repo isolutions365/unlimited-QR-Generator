@@ -3074,8 +3074,9 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         {/* Custom Footnote text input */}
                         {printReadyShowInfo && (
                           <div className="space-y-1 text-left animate-fadeIn">
-                            <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">{t('preview.customLabelString', 'Custom Label String')}</label>
+                            <label htmlFor="preview-custom-label-input" className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">{t('preview.customLabelString', 'Custom Label String')}</label>
                             <input
+                              id="preview-custom-label-input"
                               type="text"
                               value={printReadyInfoText}
                               onChange={(e) => setPrintReadyInfoText(e.target.value)}

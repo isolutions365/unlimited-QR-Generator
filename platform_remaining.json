@@ -325,7 +325,7 @@
   },
   {
     "key": "platform.developerApiDesc",
-    "en": "FreeQRGen.pro is designed to empower developers. Here are the technical specifications and code implementations for programmatic dynamic QR code generation."
+    "en": "FreeQRBarcodes.com is designed to empower developers. Here are the technical specifications and code implementations for programmatic dynamic QR code generation."
   },
   {
     "key": "platform.developerApiTitle",
@@ -421,11 +421,11 @@
   },
   {
     "key": "platform.headerBannerSub",
-    "en": "FreeQRGen.pro Platform"
+    "en": "FreeQRBarcodes.com Platform"
   },
   {
     "key": "platform.headerSub",
-    "en": "FreeQRGen.pro Platform"
+    "en": "FreeQRBarcodes.com Platform"
   },
   {
     "key": "platform.highAvailabilityDesc",
@@ -493,7 +493,7 @@
   },
   {
     "key": "platform.moduleExportCenterSeoTitle",
-    "en": "Vector Export Console & High-DPI Packaging Suite | FreeQRGen.pro"
+    "en": "Vector Export Console & High-DPI Packaging Suite | FreeQRBarcodes.com"
   },
   {
     "key": "platform.moduleFavoriteTemplatesCommonMistake1",
@@ -593,7 +593,7 @@
   },
   {
     "key": "platform.schema.appTitle",
-    "en": "FreeQRGen Platform - {{name}}"
+    "en": "FreeQRBarcodes Platform - {{name}}"
   },
   {
     "key": "platform.schema.home",

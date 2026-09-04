@@ -248,7 +248,9 @@ const dict = {
 // Common terms and domain translation rules for systematic coverage
 const phraseMap = [
   // Brand & Technical terms that stay as is or transliterated
-  [/^FreeQRGen\.pro$/g, "FreeQRGen.pro"],
+  [/^FreeQRBarcodes\.com$/g, "FreeQRBarcodes.com"],
+  [/^FreeQRBarcodes$/g, "FreeQRBarcodes"],
+  [/^FreeQRGen\.pro$/g, "FreeQRBarcodes.com"],
   [/^Free QR Generator$/g, "Free QR Generator"],
   [/^iSolutions ICo$/g, "iSolutions ICo"],
   [/^QR Code$/g, "رمز QR"],
@@ -439,8 +441,8 @@ function translatePalette(key, text) {
 }
 
 function translateTrust(key, text) {
-  if (text.includes("FreeQRGen.pro represents the next paradigm")) {
-    return "يمثل FreeQRGen.pro الجيل التالي من أنظمة إنشاء وتسليم رموز الاستجابة السريعة والمتجهات الثابتة بدون تلامس. نحن نزيل حواجز الدفع التشغيلية والخوادم البطيئة وأنظمة التتبع المرتبطة عادةً بتوليد الباركود.";
+  if (text.includes("FreeQRBarcodes.com represents the next paradigm") || text.includes("FreeQRGen.pro represents the next paradigm")) {
+    return "يمثل FreeQRBarcodes.com الجيل التالي من أنظمة إنشاء وتسليم رموز الاستجابة السريعة والمتجهات الثابتة بدون تلامس. نحن نزيل حواجز الدفع التشغيلية والخوادم البطيئة وأنظمة التتبع المرتبطة عادةً بتوليد الباركود.";
   }
   if (text.includes("Our system is engineered to satisfy the demands")) {
     return "تم تصميم نظامنا لتلبية متطلبات مصممي التغليف والمطورين ومديري التسويق ذوي الأحجام الكبيرة. يتم إنشاء رموز الباركود الثابتة هنا دون اتصال بالإنترنت تمامًا داخل متصفحك وفق معايير ISO/IEC 18004 دون إرسال بياناتك لخوادم خارجية لحماية خصوصيتك.";
@@ -533,7 +535,8 @@ function translateAnalytics(key, text) {
 
 function translateProgrammaticSeo(key, text) {
   const map = {
-    "FreeQRGen.pro Editorial Board": "هيئة تحرير FreeQRGen.pro",
+    "FreeQRBarcodes.com Editorial Board": "هيئة تحرير FreeQRBarcodes.com",
+    "FreeQRGen.pro Editorial Board": "هيئة تحرير FreeQRBarcodes.com",
     "AUTO": "تلقائي",
     "Best Practices (Do This)": "أفضل الممارسات (افعل هذا)",
     "Common Mistakes (Avoid This)": "الأخطاء الشائعة (تجنب هذا)",
@@ -552,7 +555,8 @@ function translateKnowledgeCompany(key, text) {
   const map = {
     "Knowledge Base & Technical Guides": "قاعدة المعرفة والأدلة الفنية",
     "Frequently Asked Questions": "الأسئلة الشائعة",
-    "About FreeQRGen.pro": "عن FreeQRGen.pro",
+    "About FreeQRBarcodes.com": "عن FreeQRBarcodes.com",
+    "About FreeQRGen.pro": "عن FreeQRBarcodes.com",
     "Privacy Policy & Data Security": "سياسة الخصوصية وأمان البيانات",
     "Terms of Service & Licensing": "شروط الخدمة والترخيص",
     "Comparison & Benchmarks": "المقارنات ومعايير الأداء",

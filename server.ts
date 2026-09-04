@@ -18,6 +18,10 @@ import {
   landingPageFaqs,
   buildHomepageSchema,
   buildBlogSchema,
+  buildAboutPageSchema,
+  buildFaqPageSchema,
+  buildBlogListingSchema,
+  buildSolutionSchema,
   buildLandingPageSchema,
   buildGenericPageSchema,
   buildSitemapXml,
@@ -962,7 +966,7 @@ English text: "${text}"`;
     inMemoryProfiles.set(userId, newProfile);
     
     // Trigger Welcome notification
-    await triggerNotification(userId, '👋 Welcome to FreeQRGen.pro!', 'Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.', 'alert');
+    await triggerNotification(userId, '👋 Welcome to FreeQRBarcodes.com!', 'Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.', 'alert');
 
     return newProfile;
   }
@@ -1093,7 +1097,7 @@ English text: "${text}"`;
             userId: 'usr-seeded2',
             authorName: 'Elena Rostova',
             title: 'Enable interactive NFC chip tag writing and linking',
-            content: 'Since we already support physical scanning parameters, combining QR codes with custom NFC triggers would make FreeQRGen the ultimate contact points management suite.',
+            content: 'Since we already support physical scanning parameters, combining QR codes with custom NFC triggers would make FreeQRBarcodes the ultimate contact points management suite.',
             category: 'discussion',
             upvotes: ['usr-seeded1', 'usr-seeded3'],
             comments: [],
@@ -1386,7 +1390,7 @@ English text: "${text}"`;
         inMemoryNewsletter.set(email.toLowerCase(), sub);
       }
 
-      res.json({ success: true, message: 'Subscribed to FreeQRGen.pro Gazette successfully!' });
+      res.json({ success: true, message: 'Subscribed to FreeQRBarcodes.com Gazette successfully!' });
     } catch (err) {
       console.error('Newsletter subscribe error:', err);
       res.status(500).json({ error: 'Failed to record subscription.' });
@@ -2544,7 +2548,7 @@ Generate the 'payload' matching the precise data schema for the selected categor
 
       const res = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
         signal: controller.signal,
-        headers: { 'User-Agent': 'FreeQRGen-Telemetry/1.0' }
+        headers: { 'User-Agent': 'FreeQRBarcodes-Telemetry/1.0' }
       });
       clearTimeout(timer);
 
@@ -2577,7 +2581,7 @@ Generate the 'payload' matching the precise data schema for the selected categor
 
       const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(ip)}`, {
         signal: controller.signal,
-        headers: { 'User-Agent': 'FreeQRGen-Telemetry/1.0' }
+        headers: { 'User-Agent': 'FreeQRBarcodes-Telemetry/1.0' }
       });
       clearTimeout(timer);
 
@@ -2709,7 +2713,7 @@ Generate the 'payload' matching the precise data schema for the selected categor
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Link Not Found - FreeQRGen</title>
+            <title>Link Not Found - FreeQRBarcodes</title>
             <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
             <style>
               body {

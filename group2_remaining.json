@@ -206,8 +206,8 @@
   },
   {
     "key": "i18n.footerText",
-    "en": "FreeQRGen.pro Internationalization Framework © 2026. Constructed in full conformance with SEO-localized JSON-LD and ICU standards.",
-    "ar": "FreeQRGen.pro Internationalization Framework © 2026. Constructed in full conformance with SEO-localized JSON-LD and ICU standards."
+    "en": "FreeQRBarcodes.com Internationalization Framework © 2026. Constructed in full conformance with SEO-localized JSON-LD and ICU standards.",
+    "ar": "FreeQRBarcodes.com Internationalization Framework © 2026. Constructed in full conformance with SEO-localized JSON-LD and ICU standards."
   },
   {
     "key": "i18n.fourteenLocales",
@@ -551,8 +551,8 @@
   },
   {
     "key": "i18n.platformTitle",
-    "en": "FreeQRGen.pro Translation Platform & Visual RTL QA Suite",
-    "ar": "FreeQRGen.pro Translation Platform & Visual RTL QA Suite"
+    "en": "FreeQRBarcodes.com Translation Platform & Visual RTL QA Suite",
+    "ar": "FreeQRBarcodes.com Translation Platform & Visual RTL QA Suite"
   },
   {
     "key": "i18n.qaLogComparing",
@@ -1011,8 +1011,8 @@
   },
   {
     "key": "kb.needCustomQrDesc",
-    "en": "Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRGen.pro. No credit card required.",
-    "ar": "توليد unlimited, fully stylized static and tracking dynamic رموز QR with logos, custom gradients, and التحليلات on FreeQRGen.pro. No credit card required."
+    "en": "Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRBarcodes.com. No credit card required.",
+    "ar": "توليد unlimited, fully stylized static and tracking dynamic رموز QR with logos, custom gradients, and التحليلات on FreeQRBarcodes.com. No credit card required."
   },
   {
     "key": "kb.noArticles",
@@ -1071,8 +1071,8 @@
   },
   {
     "key": "knowledge.authorityBlock",
-    "en": "FreeQRGen Authority Block",
-    "ar": "FreeQRGen Authority Block"
+    "en": "FreeQRBarcodes Authority Block",
+    "ar": "FreeQRBarcodes Authority Block"
   },
   {
     "key": "knowledge.authorityDesc",
@@ -1106,8 +1106,8 @@
   },
   {
     "key": "knowledge.editorialTeam",
-    "en": "FreeQRGen.pro Editorial Team",
-    "ar": "FreeQRGen.pro Editorial Team"
+    "en": "FreeQRBarcodes.com Editorial Team",
+    "ar": "FreeQRBarcodes.com Editorial Team"
   },
   {
     "key": "knowledge.entityType",
@@ -1131,8 +1131,8 @@
   },
   {
     "key": "knowledge.hubSub",
-    "en": "FreeQRGen.pro {section}",
-    "ar": "FreeQRGen.pro {section}"
+    "en": "FreeQRBarcodes.com {section}",
+    "ar": "FreeQRBarcodes.com {section}"
   },
   {
     "key": "knowledge.needCustomQr",
@@ -1141,8 +1141,8 @@
   },
   {
     "key": "knowledge.needCustomQrDesc",
-    "en": "Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRGen.pro. No credit card required.",
-    "ar": "توليد unlimited, fully stylized static and tracking dynamic رموز QR with logos, custom gradients, and التحليلات on FreeQRGen.pro. No credit card required."
+    "en": "Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRBarcodes.com. No credit card required.",
+    "ar": "توليد unlimited, fully stylized static and tracking dynamic رموز QR with logos, custom gradients, and التحليلات on FreeQRBarcodes.com. No credit card required."
   },
   {
     "key": "knowledge.noArticles",
@@ -1171,8 +1171,8 @@
   },
   {
     "key": "knowledge.publisherName",
-    "en": "FreeQRGen.pro",
-    "ar": "FreeQRGen.pro"
+    "en": "FreeQRBarcodes.com",
+    "ar": "FreeQRBarcodes.com"
   },
   {
     "key": "knowledge.readFullGuide",

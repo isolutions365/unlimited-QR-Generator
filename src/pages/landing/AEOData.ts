@@ -327,7 +327,7 @@ export const aeoDatabase: Record<string, AEORecord> = {
     ],
     faqs: [
       { q: 'Is a digital business card better than a standard vCard QR?', a: 'A digital landing page is generally superior because it can host rich interactive buttons, media, and social links that do not fit inside a static offline vCard.' },
-      { q: 'How many times can my business card QR code be scanned?', a: 'FreeQRGen.pro provides unlimited scans, allowing you to hand out cards with complete confidence.' },
+      { q: 'How many times can my business card QR code be scanned?', a: 'FreeQRBarcodes.com provides unlimited scans, allowing you to hand out cards with complete confidence.' },
       { q: 'Can I track which networking event generated the most leads?', a: 'Yes, if you use a dynamic tracking link, you can track the date, time, and general location of each scan.' }
     ],
     relatedGuides: [

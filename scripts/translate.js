@@ -34,7 +34,7 @@ const LANGUAGE_NAMES = {
   zh: 'Simplified Chinese'
 };
 
-const EXCLUDED_BRANDS = ['FreeQRGen.pro', 'Free QR Generator', 'iSolutions', 'QR Code'];
+const EXCLUDED_BRANDS = ['FreeQRBarcodes.com', 'FreeQRBarcodes', 'FreeQRGen.pro', 'Free QR Generator', 'iSolutions', 'QR Code'];
 
 // Simple check to identify if a value is a URL, hex color, or something that shouldn't be translated
 function shouldSkipTranslation(key, val) {
@@ -77,7 +77,7 @@ async function translateBatch(locale, langName, keysAndValues) {
 
 Rules:
 1. Translate EVERY "english" value professionally and naturally into the "translation" field.
-2. Do NOT translate or modify these brand/product names: "FreeQRGen.pro", "Free QR Generator", "iSolutions", "QR Code".
+2. Do NOT translate or modify these brand/product names: "FreeQRBarcodes.com", "FreeQRBarcodes", "Free QR Generator", "iSolutions", "QR Code".
 3. Preserve all ICU variables and curly braces exactly as they are in the original string: e.g. {count}, {name}, {{variable}}, {speed}, {speed_label}, {speed_value}, {plural}, {select}, etc.
 4. Keep all HTML tags (like <strong>, <em>, <span>, <code>, <br>) and Markdown unchanged.
 5. Keep URLs, email addresses, and hex colors unchanged.

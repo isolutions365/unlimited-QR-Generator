@@ -183,7 +183,7 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
       routeList.push({
         path,
         category: 'Templates & Compare',
-        defaultTitle: tpl.seoTitle || `${tpl.title} Template | FreeQRGen.pro`,
+        defaultTitle: tpl.seoTitle || `${tpl.title} Template | FreeQRBarcodes.com`,
         defaultDesc: tpl.metaDescription || tpl.subheading
       });
     }
@@ -196,7 +196,7 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
       routeList.push({
         path,
         category: 'Knowledge & Blog',
-        defaultTitle: art.seoTitle || `${art.title} | FreeQRGen.pro Guide`,
+        defaultTitle: art.seoTitle || `${art.title} | FreeQRBarcodes.com Guide`,
         defaultDesc: art.metaDescription || art.intro
       });
     }
@@ -209,7 +209,7 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
       routeList.push({
         path,
         category: 'Solutions & Industries',
-        defaultTitle: sol.metaTitle || `${sol.name} Solution | FreeQRGen.pro`,
+        defaultTitle: sol.metaTitle || `${sol.name} Solution | FreeQRBarcodes.com`,
         defaultDesc: sol.metaDesc || sol.desc
       });
     }
@@ -222,7 +222,7 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
       routeList.push({
         path,
         category: 'Solutions & Industries',
-        defaultTitle: uc.metaTitle || `${uc.name} Use Case | FreeQRGen.pro`,
+        defaultTitle: uc.metaTitle || `${uc.name} Use Case | FreeQRBarcodes.com`,
         defaultDesc: uc.metaDesc || uc.desc
       });
     }

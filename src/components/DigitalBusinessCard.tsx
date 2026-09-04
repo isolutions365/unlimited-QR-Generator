@@ -568,7 +568,7 @@ export default function DigitalBusinessCard() {
   const getAppleWalletPassJSON = () => {
     return JSON.stringify({
       formatVersion: 1,
-      passTypeIdentifier: "pass.com.freeqrgen.digitalcard",
+      passTypeIdentifier: "pass.com.freeqrbarcodes.digitalcard",
       serialNumber: cardData.id,
       teamIdentifier: "ABC123XYZ7",
       organizationName: cardData.company || "FreeQRBarcodes.com Ltd",
@@ -802,8 +802,9 @@ export default function DigitalBusinessCard() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Full Name")}</label>
+              <label htmlFor="vcard-name-input" className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Full Name")}</label>
               <input
+                id="vcard-name-input"
                 type="text"
                 value={cardData.name}
                 onChange={e => setCardData(prev => ({ ...prev, name: e.target.value }))}
@@ -813,8 +814,9 @@ export default function DigitalBusinessCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Job Title / Designation")}</label>
+              <label htmlFor="vcard-title-input" className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Job Title / Designation")}</label>
               <input
+                id="vcard-title-input"
                 type="text"
                 value={cardData.title}
                 onChange={e => setCardData(prev => ({ ...prev, title: e.target.value }))}
@@ -824,8 +826,9 @@ export default function DigitalBusinessCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Company Name")}</label>
+              <label htmlFor="vcard-company-input" className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Company Name")}</label>
               <input
+                id="vcard-company-input"
                 type="text"
                 value={cardData.company}
                 onChange={e => setCardData(prev => ({ ...prev, company: e.target.value }))}
@@ -835,8 +838,9 @@ export default function DigitalBusinessCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Official Website")}</label>
+              <label htmlFor="vcard-website-input" className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Official Website")}</label>
               <input
+                id="vcard-website-input"
                 type="text"
                 value={cardData.website}
                 onChange={e => setCardData(prev => ({ ...prev, website: e.target.value }))}
@@ -846,8 +850,9 @@ export default function DigitalBusinessCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Email Address")}</label>
+              <label htmlFor="vcard-email-input" className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Email Address")}</label>
               <input
+                id="vcard-email-input"
                 type="email"
                 value={cardData.email}
                 onChange={e => setCardData(prev => ({ ...prev, email: e.target.value }))}
@@ -857,8 +862,9 @@ export default function DigitalBusinessCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Phone Number")}</label>
+              <label htmlFor="vcard-phone-input" className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Phone Number")}</label>
               <input
+                id="vcard-phone-input"
                 type="text"
                 value={cardData.phone}
                 onChange={e => setCardData(prev => ({ ...prev, phone: e.target.value }))}
@@ -868,8 +874,9 @@ export default function DigitalBusinessCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("WhatsApp Chat Link (Or Number)")}</label>
+              <label htmlFor="vcard-whatsapp-input" className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("WhatsApp Chat Link (Or Number)")}</label>
               <input
+                id="vcard-whatsapp-input"
                 type="text"
                 value={cardData.whatsApp}
                 onChange={e => setCardData(prev => ({ ...prev, whatsApp: e.target.value }))}
@@ -879,8 +886,9 @@ export default function DigitalBusinessCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Office/Postal Address")}</label>
+              <label htmlFor="vcard-address-input" className="block text-xs font-bold text-slate-700 mb-1.5">{tCard("Office/Postal Address")}</label>
               <input
+                id="vcard-address-input"
                 type="text"
                 value={cardData.address}
                 onChange={e => setCardData(prev => ({ ...prev, address: e.target.value }))}

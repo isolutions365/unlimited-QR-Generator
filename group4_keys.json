@@ -373,7 +373,7 @@
   },
   {
     "key": "print.defaultBrand",
-    "en": "FREEQRGEN CORP"
+    "en": "FREEQRBARCODES CORP"
   },
   {
     "key": "print.defaultHeading",
@@ -797,7 +797,7 @@
   },
   {
     "key": "programmatic.authorName",
-    "en": "FreeQRGen.pro Editorial Board"
+    "en": "FreeQRBarcodes.com Editorial Board"
   },
   {
     "key": "programmatic.auto",
@@ -877,7 +877,7 @@
   },
   {
     "key": "programmatic.faqA1Solutions",
-    "en": "All QR codes generated on FreeQRGen.pro feature infinite scans and do not carry hidden expirations or click caps."
+    "en": "All QR codes generated on FreeQRBarcodes.com feature infinite scans and do not carry hidden expirations or click caps."
   },
   {
     "key": "programmatic.faqA2Solutions",
@@ -1133,7 +1133,7 @@
   },
   {
     "key": "programmatic.useCasesFaqA2",
-    "en": "No. FreeQRGen.pro is 100% free with unlimited generation and secure cloud options."
+    "en": "No. FreeQRBarcodes.com is 100% free with unlimited generation and secure cloud options."
   },
   {
     "key": "programmatic.useCasesFaqQ1",
@@ -1481,7 +1481,7 @@
   },
   {
     "key": "seo.schemaHowToName",
-    "en": "How to Create a URL QR Code with FreeQRGen.pro"
+    "en": "How to Create a URL QR Code with FreeQRBarcodes.com"
   },
   {
     "key": "seo.schemaSoftwareAppName",

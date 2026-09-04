@@ -157,6 +157,13 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
         ))} 
       </ScrollableTabContainer>
 
+      {/* Active Category Heading */}
+      <div className="mb-4">
+        <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+          {faqCategoryLabels[locale][selectedCategory] || (selectedCategory === 'all' ? t('faq.allQuestions', 'All Frequently Asked Questions') : selectedCategory)}
+        </h2>
+      </div>
+
       {/* Render FAQs Accordion system */}
       {filteredFAQs.length > 0 ? (
         <div className="space-y-4">
@@ -176,9 +183,9 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
                     <span className="mt-0.5 w-5 h-5 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
                       <HelpCircle className="w-3.5 h-3.5" />
                     </span>
-                    <h2 className="text-sm font-extrabold text-slate-900 leading-tight">
+                    <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
                       {faq.question}
-                    </h2>
+                    </h3>
                   </div>
                   <div className="text-slate-400 shrink-0">
                     {isExpanded ? (
@@ -227,9 +234,9 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
             <ShieldAlert className="w-5 h-5" />
           </div>
           <div className="space-y-1">
-            <h2 className="text-sm font-extrabold text-slate-900">
+            <h3 className="text-sm font-extrabold text-slate-900">
               {t('faq.noQuestions', 'No matching questions found')}
-            </h2>
+            </h3>
             <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
               {t('faq.noQuestionsDesc', 'We couldn\'t locate anything matching "{query}". Try searching general keywords like "expire", "printing", or "WiFi".', { query: searchQuery })}
             </p>

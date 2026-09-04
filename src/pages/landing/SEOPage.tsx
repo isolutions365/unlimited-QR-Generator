@@ -187,7 +187,7 @@ export default function SEOPage({
     return {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      "name": t('seo.schemaHowToName', 'How to Create a URL QR Code with FreeQRGen.pro'),
+      "name": t('seo.schemaHowToName', 'How to Create a URL QR Code with FreeQRBarcodes.com'),
       "description": t('seo.schemaHowToDesc', 'Step-by-step instructions for creating a custom styled URL QR code with logos, colors, and scan counts.'),
       "step": [
         {
@@ -337,7 +337,7 @@ export default function SEOPage({
                   <Flame className="w-5 h-5 text-yellow-300" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-widest">{t('seo.aestheticOptimization', 'Aesthetic Optimization')}</h4>
+                  <p className="text-xs font-bold text-slate-200 uppercase tracking-widest">{t('seo.aestheticOptimization', 'Aesthetic Optimization')}</p>
                   <p className="text-xs text-slate-400 mt-0.5">{getLocalized(`seo.landing.${pageData.slug}.intro.highlight`, pageData.intro.highlight)}</p>
                 </div>
               </div>
@@ -388,7 +388,7 @@ export default function SEOPage({
                         <CheckCircle className="w-4 h-4 ltr-lock" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900">{getLocalized(`seo.landing.${pageData.slug}.benefits.items.${i}.title`, benefit.title)}</h4>
+                        <h3 className="text-sm font-bold text-slate-900">{getLocalized(`seo.landing.${pageData.slug}.benefits.items.${i}.title`, benefit.title)}</h3>
                         <p className="text-xs text-slate-600 mt-1 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.benefits.items.${i}.desc`, benefit.desc)}</p>
                       </div>
                     </div>
@@ -400,16 +400,16 @@ export default function SEOPage({
               <section className="space-y-6">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
-                  <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
+                  <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
                     {getLocalized(`seo.landing.${pageData.slug}.features.title`, pageData.features.title)}
-                  </h3>
+                  </h2>
                 </div>
                 <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.features.desc`, pageData.features.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   {pageData.features.items.map((feat, i) => (
                     <div key={i} className={`p-5 bg-slate-50 border border-slate-200/60 rounded-2xl relative overflow-hidden shadow-xs hover:bg-white transition-colors duration-200 ${isRtl ? 'rtl-active' : ''}`}>
                       <div className="w-1.5 h-full bg-indigo-500 absolute left-0 top-0" />
-                      <h4 className="text-xs font-bold text-slate-900 pl-1">{getLocalized(`seo.landing.${pageData.slug}.features.items.${i}.title`, feat.title)}</h4>
+                      <h3 className="text-xs font-bold text-slate-900 pl-1">{getLocalized(`seo.landing.${pageData.slug}.features.items.${i}.title`, feat.title)}</h3>
                       <p className="text-[11px] text-slate-600 mt-2 pl-1 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.features.items.${i}.desc`, feat.desc)}</p>
                     </div>
                   ))}
@@ -420,9 +420,9 @@ export default function SEOPage({
               <section className="space-y-6">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
-                  <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
+                  <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
                     {getLocalized(`seo.landing.${pageData.slug}.howItWorks.title`, pageData.howItWorks.title)}
-                  </h3>
+                  </h2>
                 </div>
                 <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.howItWorks.desc`, pageData.howItWorks.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
@@ -432,7 +432,7 @@ export default function SEOPage({
                         {step.step}
                       </div>
                       <div>
-                        <h5 className="text-xs font-bold text-slate-955 tracking-tight">{getLocalized(`seo.landing.${pageData.slug}.howItWorks.steps.${i}.title`, step.title)}</h5>
+                        <h3 className="text-xs font-bold text-slate-955 tracking-tight">{getLocalized(`seo.landing.${pageData.slug}.howItWorks.steps.${i}.title`, step.title)}</h3>
                         <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.howItWorks.steps.${i}.desc`, step.desc)}</p>
                       </div>
                     </div>
@@ -444,9 +444,9 @@ export default function SEOPage({
               <section className="space-y-6">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
-                  <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
+                  <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-950">
                     {getLocalized(`seo.landing.${pageData.slug}.useCases.title`, pageData.useCases.title)}
-                  </h3>
+                  </h2>
                 </div>
                 <p className="text-xs text-slate-500 -mt-2">{getLocalized(`seo.landing.${pageData.slug}.useCases.desc`, pageData.useCases.desc)}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
@@ -455,7 +455,7 @@ export default function SEOPage({
                       <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3 ltr-lock">
                         <Activity className="w-4 h-4 ltr-lock" />
                       </div>
-                      <h4 className="text-xs font-bold text-slate-900">{getLocalized(`seo.landing.${pageData.slug}.useCases.items.${i}.title`, use.title)}</h4>
+                      <h3 className="text-xs font-bold text-slate-900">{getLocalized(`seo.landing.${pageData.slug}.useCases.items.${i}.title`, use.title)}</h3>
                       <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.useCases.items.${i}.desc`, use.desc)}</p>
                     </div>
                   ))}
@@ -486,10 +486,10 @@ export default function SEOPage({
                           onClick={() => toggleFaq(idx)}
                           className="w-full text-left py-4 px-5 flex items-center justify-between gap-4 font-semibold text-xs text-slate-900 hover:text-indigo-600 transition-colors cursor-pointer select-none"
                         >
-                          <span className="flex items-center gap-2">
+                          <h3 className="flex items-center gap-2 text-xs font-bold text-slate-900">
                             <HelpCircle className={`w-4 h-4 shrink-0 transition-colors ${isOpen ? 'text-indigo-600' : 'text-slate-400'}`} />
                             {getLocalized(`seo.landing.${pageData.slug}.faqs.${idx}.q`, faq.q)}
-                          </span>
+                          </h3>
                           {isOpen ? (
                             <ChevronUp className="w-4 h-4 text-indigo-600 shrink-0" />
                           ) : (
@@ -621,10 +621,10 @@ export default function SEOPage({
                 
                 {/* Benefits */}
                 <div id="aeo-benefits" className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <CheckCircle className="w-4 h-4 text-emerald-500 ltr-lock" />
                     {t('seo.keyBenefitsAdvantages', 'Key Benefits & Advantages')}
-                  </h4>
+                  </h3>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.benefits.map((benefit, i) => (
                       <li key={i} className="flex items-start gap-2">
@@ -637,10 +637,10 @@ export default function SEOPage({
 
                 {/* Common mistakes */}
                 <div id="aeo-mistakes" className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <Flame className="w-4 h-4 text-rose-500 ltr-lock" />
                     {t('seo.commonMistakesToAvoid', 'Common Mistakes to Avoid')}
-                  </h4>
+                  </h3>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.commonMistakes.map((mistake, i) => (
                       <li key={i} className="flex items-start gap-2">
@@ -653,10 +653,10 @@ export default function SEOPage({
 
                 {/* Best practices */}
                 <div id="aeo-best-practices" className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-indigo-500 ltr-lock" />
                     {t('seo.proImplementationBestPractices', 'Pro Implementation Best Practices')}
-                  </h4>
+                  </h3>
                   <ul className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                     {aeoData.bestPractices.map((practice, i) => (
                       <li key={i} className="flex items-start gap-2">
@@ -671,9 +671,9 @@ export default function SEOPage({
 
               {/* 11. Key Takeaways Card */}
               <div id="key-takeaways" className={`p-5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-4 ${isRtl ? 'rtl-active' : ''}`}>
-                <h4 className="text-xs font-bold text-slate-955 uppercase tracking-widest font-mono">
+                <h3 className="text-xs font-bold text-slate-955 uppercase tracking-widest font-mono">
                   {t('seo.essentialTakeaways', 'Essential Takeaways & Technical Summary')}
-                </h4>
+                </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {aeoData.keyTakeaways.map((takeaway, i) => (
                     <div key={i} className={`p-4 bg-white rounded-xl border border-slate-150/60 shadow-3xs ${isRtl ? 'rtl-active' : ''}`}>
@@ -753,9 +753,9 @@ export default function SEOPage({
           <section className="bg-slate-900 text-white rounded-3xl p-6 shadow-md border border-slate-800 space-y-4">
             <div className="flex items-center gap-2 select-none">
               <QrCode className="w-4 h-4 text-indigo-400" />
-              <h4 className="text-[11px] uppercase tracking-widest font-black text-slate-200">
+              <h2 className="text-xs uppercase tracking-widest font-black text-slate-200">
                 {t('seo.seoAuthorityTitle', 'SEO Authority and Authority Distribution Directories')}
-              </h4>
+              </h2>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
               {t('seo.seoAuthorityDesc', 'Explore our separate high-performance QR code generator landing pages tailored for business promotions, wireless network setups, visual socials discovery, and contactless restaurant menu builders below:')}
@@ -809,7 +809,7 @@ export default function SEOPage({
           {/* Sidebar convert widget */}
           <div className="bg-linear-to-br from-indigo-900 to-purple-950 text-white p-6 rounded-3xl shadow-xl flex flex-col gap-4 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full filter blur-2xl" />
-            <h4 className="text-lg font-black tracking-tight">{getLocalized(`seo.landing.${pageData.slug}.cta.title`, pageData.cta.title)}</h4>
+            <p className="text-lg font-black tracking-tight">{getLocalized(`seo.landing.${pageData.slug}.cta.title`, pageData.cta.title)}</p>
             <p className="text-xs text-indigo-200 leading-relaxed">{getLocalized(`seo.landing.${pageData.slug}.cta.subtitle`, pageData.cta.subtitle)}</p>
             
             <button 

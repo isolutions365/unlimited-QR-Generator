@@ -216,7 +216,7 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
                 </span>
               </div>
               <h1 className="text-xl font-extrabold tracking-tight mt-0.5">
-                {t('i18n.platformTitle', 'FreeQRGen.pro Translation Platform & Visual RTL QA Suite')}
+                {t('i18n.platformTitle', 'FreeQRBarcodes.com Translation Platform & Visual RTL QA Suite')}
               </h1>
             </div>
           </div>
@@ -1060,7 +1060,7 @@ export default function I18nDashboard({ onBack }: I18nDashboardProps) {
       </main>
 
       <footer className="bg-white border-t border-slate-200 py-6 px-6 text-center text-xs text-slate-400 mt-auto font-mono">
-        {t('i18n.footerText', 'FreeQRGen.pro Internationalization Framework © 2026. Constructed in full conformance with SEO-localized JSON-LD and ICU standards.')}
+        {t('i18n.footerText', 'FreeQRBarcodes.com Internationalization Framework © 2026. Constructed in full conformance with SEO-localized JSON-LD and ICU standards.')}
       </footer>
     </div>
   );

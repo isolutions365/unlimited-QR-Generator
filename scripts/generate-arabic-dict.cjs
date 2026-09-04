@@ -275,7 +275,7 @@ function translateEnglishText(key, text) {
   // Specific patterns
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
   if (/^#[0-9a-fA-F]{3,6}$/.test(trimmed)) return trimmed;
-  if (trimmed === 'FreeQRGen.pro' || trimmed === 'Free QR Generator' || trimmed === 'iSolutions' || trimmed === 'QR Code') return trimmed;
+  if (trimmed === 'FreeQRBarcodes.com' || trimmed === 'FreeQRBarcodes' || trimmed === 'FreeQRGen.pro' || trimmed === 'Free QR Generator' || trimmed === 'iSolutions' || trimmed === 'QR Code') return trimmed;
 
   // Let's handle variables like {count}, {name}, etc.
   return null;

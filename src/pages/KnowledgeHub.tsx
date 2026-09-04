@@ -158,7 +158,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
       },
       "publisher": {
         "@type": "Organization",
-        "name": String(t('knowledge.publisherName', 'FreeQRGen.pro')),
+        "name": String(t('knowledge.publisherName', 'FreeQRBarcodes.com')),
         "logo": {
           "@type": "ImageObject",
           "url": `${rootUrl}/favicon-32x32.png`
@@ -293,7 +293,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
             <div className={`h-32 sm:h-44 w-full bg-gradient-to-r ${getGradient(activeArticle.featuredImage)} rounded-2xl shadow-xs relative overflow-hidden flex items-center p-8`}>
               <div className="absolute inset-0 bg-slate-900/10 pointer-events-none" />
               <div className="relative z-10 text-white space-y-1">
-                <span className="text-xs font-bold uppercase tracking-widest text-white/80 font-mono">{t('knowledge.authorityBlock', 'FreeQRGen Authority Block')}</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-white/80 font-mono">{t('knowledge.authorityBlock', 'FreeQRBarcodes Authority Block')}</span>
                 <h2 className="text-lg sm:text-2xl font-bold tracking-tight">{activeArticle.seoTitle}</h2>
               </div>
               <Zap className="absolute right-6 bottom-6 w-16 h-16 text-white/10" />
@@ -472,7 +472,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
               <div className="relative z-10 space-y-2 max-w-lg">
                 <h3 className="text-lg font-extrabold tracking-tight">{t('knowledge.needCustomQr', 'Need a custom QR Code for your campaign?')}</h3>
                 <p className="text-xs text-indigo-100 leading-relaxed">
-                  {t('knowledge.needCustomQrDesc', 'Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRGen.pro. No credit card required.')}
+                  {t('knowledge.needCustomQrDesc', 'Generate unlimited, fully stylized static and tracking dynamic QR codes with logos, custom gradients, and analytics on FreeQRBarcodes.com. No credit card required.')}
                 </p>
               </div>
               <button
@@ -598,7 +598,7 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
           {/* Header section with description */}
           <div className="space-y-3 text-center max-w-2xl mx-auto">
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
-              {t('knowledge.hubSub', 'FreeQRGen.pro {section}', { section: t(`knowledge.sections.${section}`, section) })}
+              {t('knowledge.hubSub', 'FreeQRBarcodes.com {section}', { section: t(`knowledge.sections.${section}`, section) })}
             </span>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight capitalize">
               {t('knowledge.authorityHub', 'Authority {section} Hub', { section: t(`knowledge.sections.${section}`, section) })}

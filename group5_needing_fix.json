@@ -21,8 +21,8 @@
   },
   {
     "key": "templates.brandName",
-    "en": "FreeQRGen",
-    "ar": "FreeQRGen"
+    "en": "FreeQRBarcodes",
+    "ar": "FreeQRBarcodes"
   },
   {
     "key": "templates.breadcrumbHome",
@@ -336,8 +336,8 @@
   },
   {
     "key": "trust.aboutP1",
-    "en": "FreeQRGen.pro represents the next paradigm of contactless link and static vector delivery systems. We remove the operational paywalls, slow servers, and tracking systems typically associated with barcode generation.",
-    "ar": "يمثل FreeQRGen.pro الجيل التالي من أنظمة إنشاء وتسليم رموز الاستجابة السريعة والمتجهات الثابتة بدون تلامس. نحن نزيل حواجز الدفع التشغيلية والخوادم البطيئة وأنظمة التتبع المرتبطة عادةً بتوليد الباركود."
+    "en": "FreeQRBarcodes.com represents the next paradigm of contactless link and static vector delivery systems. We remove the operational paywalls, slow servers, and tracking systems typically associated with barcode generation.",
+    "ar": "يمثل FreeQRBarcodes.com الجيل التالي من أنظمة إنشاء وتسليم رموز الاستجابة السريعة والمتجهات الثابتة بدون تلامس. نحن نزيل حواجز الدفع التشغيلية والخوادم البطيئة وأنظمة التتبع المرتبطة عادةً بتوليد الباركود."
   },
   {
     "key": "trust.aboutP3Brand",
@@ -551,8 +551,8 @@
   },
   {
     "key": "trust.dataProcessingP1",
-    "en": "FreeQRGen.pro offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates.",
-    "ar": "FreeQRGen.pro offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates."
+    "en": "FreeQRBarcodes.com offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates.",
+    "ar": "FreeQRBarcodes.com offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates."
   },
   {
     "key": "trust.dataProcessingP2",
@@ -576,8 +576,8 @@
   },
   {
     "key": "trust.dpaP1",
-    "en": "FreeQRGen.pro offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates.",
-    "ar": "FreeQRGen.pro offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates."
+    "en": "FreeQRBarcodes.com offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates.",
+    "ar": "FreeQRBarcodes.com offers a legally binding Data Processing Addendum (DPA) to align with GDPR Article 28 processor mandates."
   },
   {
     "key": "trust.dpaP2",
@@ -596,8 +596,8 @@
   },
   {
     "key": "trust.editorialP2",
-    "en": "All tutorials, placement guides, and documentation hosted on FreeQRGen.pro are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases.",
-    "ar": "All tutorials, placement guides, and documentation hosted on FreeQRGen.pro are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases."
+    "en": "All tutorials, placement guides, and documentation hosted on FreeQRBarcodes.com are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases.",
+    "ar": "All tutorials, placement guides, and documentation hosted on FreeQRBarcodes.com are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases."
   },
   {
     "key": "trust.editorialP3",
@@ -611,8 +611,8 @@
   },
   {
     "key": "trust.editorialPolicyP2",
-    "en": "All tutorials, placement guides, and documentation hosted on FreeQRGen.pro are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases.",
-    "ar": "All tutorials, placement guides, and documentation hosted on FreeQRGen.pro are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases."
+    "en": "All tutorials, placement guides, and documentation hosted on FreeQRBarcodes.com are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases.",
+    "ar": "All tutorials, placement guides, and documentation hosted on FreeQRBarcodes.com are written by recognized industry experts in optical data rendering and certified software engineers. We enforce a double-blind peer-review system, requiring every draft to pass verification against physical testing databases."
   },
   {
     "key": "trust.editorialPolicyP3",
@@ -621,8 +621,8 @@
   },
   {
     "key": "trust.eeatCertText",
-    "en": "FreeQRGen.pro is continuously optimized to guarantee the highest level of optical security, compliance safety, and data accuracy.",
-    "ar": "FreeQRGen.pro is continuously optimized to guarantee the highest level of optical الأمان, الامتثال safety, and data accuracy."
+    "en": "FreeQRBarcodes.com is continuously optimized to guarantee the highest level of optical security, compliance safety, and data accuracy.",
+    "ar": "FreeQRBarcodes.com is continuously optimized to guarantee the highest level of optical الأمان, الامتثال safety, and data accuracy."
   },
   {
     "key": "trust.eeatCertification",
@@ -631,8 +631,8 @@
   },
   {
     "key": "trust.eeatDesc",
-    "en": "FreeQRGen.pro is continuously optimized to guarantee the highest level of optical security, compliance safety, and data accuracy.",
-    "ar": "FreeQRGen.pro is continuously optimized to guarantee the highest level of optical الأمان, الامتثال safety, and data accuracy."
+    "en": "FreeQRBarcodes.com is continuously optimized to guarantee the highest level of optical security, compliance safety, and data accuracy.",
+    "ar": "FreeQRBarcodes.com is continuously optimized to guarantee the highest level of optical الأمان, الامتثال safety, and data accuracy."
   },
   {
     "key": "trust.expertCitation",
@@ -726,8 +726,8 @@
   },
   {
     "key": "trust.mediaKitP1",
-    "en": "Access official resources and press releases to cover FreeQRGen.pro and iSolutions ICo accurately.",
-    "ar": "Access official resources and press releases to cover FreeQRGen.pro and iSolutions ICo accurately."
+    "en": "Access official resources and press releases to cover FreeQRBarcodes.com and iSolutions ICo accurately.",
+    "ar": "Access official resources and press releases to cover FreeQRBarcodes.com and iSolutions ICo accurately."
   },
   {
     "key": "trust.mediaKitP2",
@@ -851,8 +851,8 @@
   },
   {
     "key": "trust.portalTitle",
-    "en": "FreeQRGen Trust Center",
-    "ar": "FreeQRGen Trust Center"
+    "en": "FreeQRBarcodes Trust Center",
+    "ar": "FreeQRBarcodes Trust Center"
   },
   {
     "key": "trust.pressP1",
@@ -941,8 +941,8 @@
   },
   {
     "key": "trust.releaseNotesP3",
-    "en": "These improvements ensure that FreeQRGen.pro remains the most performant, secure, and accurate 2D barcode rendering platform on the web.",
-    "ar": "These improvements ensure that FreeQRGen.pro remains the most performant, secure, and accurate 2D الباركود rendering platform on the web."
+    "en": "These improvements ensure that FreeQRBarcodes.com remains the most performant, secure, and accurate 2D barcode rendering platform on the web.",
+    "ar": "These improvements ensure that FreeQRBarcodes.com remains the most performant, secure, and accurate 2D الباركود rendering platform on the web."
   },
   {
     "key": "trust.researchMethodologyP1",
@@ -1086,13 +1086,13 @@
   },
   {
     "key": "trust.whyFreeqrgenP1",
-    "en": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRGen.pro to offer an open, secure alternative.",
-    "ar": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRGen.pro to offer an open, secure alternative."
+    "en": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRBarcodes.com to offer an open, secure alternative.",
+    "ar": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRBarcodes.com to offer an open, secure alternative."
   },
   {
     "key": "trust.whyFreeqrgenP2",
-    "en": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static QR codes created on FreeQRGen.pro contain direct destination payloads, making them forever independent of our infrastructure.",
-    "ar": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static رموز QR created on FreeQRGen.pro contain direct destination payloads, making them forever independent of our infrastructure."
+    "en": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static QR codes created on FreeQRBarcodes.com contain direct destination payloads, making them forever independent of our infrastructure.",
+    "ar": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static رموز QR created on FreeQRBarcodes.com contain direct destination payloads, making them forever independent of our infrastructure."
   },
   {
     "key": "trust.whyFreeqrgenP3",
@@ -1101,13 +1101,13 @@
   },
   {
     "key": "trust.whyP1",
-    "en": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRGen.pro to offer an open, secure alternative.",
-    "ar": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRGen.pro to offer an open, secure alternative."
+    "en": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRBarcodes.com to offer an open, secure alternative.",
+    "ar": "The QR generator market is full of deceptive billing architectures, short link hijackers, and un-optimized raster layouts. We built FreeQRBarcodes.com to offer an open, secure alternative."
   },
   {
     "key": "trust.whyP2",
-    "en": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static QR codes created on FreeQRGen.pro contain direct destination payloads, making them forever independent of our infrastructure.",
-    "ar": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static رموز QR created on FreeQRGen.pro contain direct destination payloads, making them forever independent of our infrastructure."
+    "en": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static QR codes created on FreeQRBarcodes.com contain direct destination payloads, making them forever independent of our infrastructure.",
+    "ar": "Most generators function by routing all static codes through hidden redirect domains. After a brief promotional period (usually 14 days), they redirect users to a billing paywall, breaking printed packaging. We guarantee that all static رموز QR created on FreeQRBarcodes.com contain direct destination payloads, making them forever independent of our infrastructure."
   },
   {
     "key": "trust.whyP3",

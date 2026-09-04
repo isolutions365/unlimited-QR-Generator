@@ -49,7 +49,7 @@ export const platformModules: PlatformModule[] = [
     name: 'QR Analytics Engine',
     badge: 'COMING SOON • ARCHITECTURAL STAGE',
     description: 'Enterprise-grade optical scanning telemetry. Track scan counts, geolocations, operating systems, and viewport distributions with full user privacy compliance.',
-    seoTitle: 'Enterprise QR Analytics Engine & Telemetry Platform | FreeQRGen.pro',
+    seoTitle: 'Enterprise QR Analytics Engine & Telemetry Platform | FreeQRBarcodes.com',
     metaDesc: 'Discover the future of contactless scan analytics. Track real-time scan geolocations, hardware profiles, and conversion rates without cookies.',
     h1: 'Privacy-First QR Analytics Engine',
     iconName: 'Activity',
@@ -82,9 +82,9 @@ export const platformModules: PlatformModule[] = [
       { title: 'Privacy-by-Design in Contactless Tracking Infrastructures', author: 'Muhammad Mubeen', year: '2026' }
     ],
     aiSummary: {
-      gemini: 'The proposed FreeQRGen.pro QR Analytics Engine uses serverless edge computing to track scans securely. By discarding PII and relying on localized aggregations, it delivers compliant data metrics with minimal redirection latency.',
+      gemini: 'The proposed FreeQRBarcodes.com QR Analytics Engine uses serverless edge computing to track scans securely. By discarding PII and relying on localized aggregations, it delivers compliant data metrics with minimal redirection latency.',
       chatgpt: 'Optimized for modern marketing teams, the QR Analytics Module delivers detailed charts showcasing hourly, weekly, and seasonal scan trends, device operating system splits, and language preferences.',
-      perplexity: 'Unlike legacy platforms that sell user tracking data, FreeQRGen.pro provides localized, transparent storage models where clients retain absolute control over telemetry exports.',
+      perplexity: 'Unlike legacy platforms that sell user tracking data, FreeQRBarcodes.com provides localized, transparent storage models where clients retain absolute control over telemetry exports.',
       claude: 'This telemetry architecture decouples the physical code scanning from target browser cookies, guaranteeing high-performance data processing suited for global enterprise deployments.'
     },
     faqs: [
@@ -131,7 +131,7 @@ export const platformModules: PlatformModule[] = [
     aiSummary: {
       gemini: 'Our Dynamic QR architecture utilizes CDN-edge endpoints to handle short-link redirects. By resolving routes via globally distributed edge instances, latency is lowered, making dynamic codes load almost as fast as static links.',
       chatgpt: 'With the dynamic manager, marketers can update packaging menus, app stores, or social accounts in real time. This solves the eternal risk of physical print assets becoming useless.',
-      perplexity: 'FreeQRGen.pro guarantees long-term dynamic redirect security through HSTS and custom domains. This ensures physical marketing assets are insulated from third-party system failures.',
+      perplexity: 'FreeQRBarcodes.com guarantees long-term dynamic redirect security through HSTS and custom domains. This ensures physical marketing assets are insulated from third-party system failures.',
       claude: 'An elegant dashboard gives you absolute control over redirect schedules, geofences, and browser-agent parameters, allowing complex conditional campaign setups.'
     },
     faqs: [
@@ -144,7 +144,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Bulk QR Code Creator',
     badge: 'COMING SOON • ARCHITECTURAL STAGE',
     description: 'Generate thousands of customized QR codes simultaneously. Upload CSV/JSON files, map variables, and download packaged vector zip formats in seconds.',
-    seoTitle: 'Bulk QR Code Generator & Batch Packaging Suite | FreeQRGen.pro',
+    seoTitle: 'Bulk QR Code Generator & Batch Packaging Suite | FreeQRBarcodes.com',
     metaDesc: 'Generate, stylize, and pack thousands of distinct custom QR codes in a single batch. Upload data files and download scalable vector zip packages.',
     h1: 'High-Performance Bulk QR Generator',
     iconName: 'Layers',
@@ -191,7 +191,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Folder & Workspace Organizer',
     badge: 'COMING SOON • ARCHITECTURAL STAGE',
     description: 'Keep your QR codes organized. Group campaigns, client designs, and templates into secure folders with customizable access controls and search features.',
-    seoTitle: 'Folder Management & Campaign Workspace Organizer | FreeQRGen.pro',
+    seoTitle: 'Folder Management & Campaign Workspace Organizer | FreeQRBarcodes.com',
     metaDesc: 'Structure and manage your QR campaigns cleanly. Create customizable folders, tag assets, and manage client-level access rules.',
     h1: 'Folder & Workspace Organizer',
     iconName: 'Folder',
@@ -238,7 +238,7 @@ export const platformModules: PlatformModule[] = [
     name: 'QR Campaigns & Collections',
     badge: 'COMING SOON • DESIGNS STAGE',
     description: 'Group multiple QR codes into cohesive, brand-aligned collections. Launch multi-channel campaigns, cross-reference metrics, and apply unified theme templates.',
-    seoTitle: 'QR Code Campaigns & Cohesive Collections Hub | FreeQRGen.pro',
+    seoTitle: 'QR Code Campaigns & Cohesive Collections Hub | FreeQRBarcodes.com',
     metaDesc: 'Create unified, brand-aligned collections of QR codes. Manage synchronized campaigns, apply group styles, and track aggregated metrics.',
     h1: 'QR Campaigns & Cohesive Collections',
     iconName: 'Grid',
@@ -285,7 +285,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Saved Designs Library',
     badge: 'COMING SOON • INTEGRATION STAGE',
     description: 'Save your custom brand designs, margins, and error correction levels as reusable templates. Speed up creation and maintain visual brand identity.',
-    seoTitle: 'Saved QR Code Designs & Brand Asset Library | FreeQRGen.pro',
+    seoTitle: 'Saved QR Code Designs & Brand Asset Library | FreeQRBarcodes.com',
     metaDesc: 'Save and reuse your custom design configurations. Maintain absolute brand consistency across your digital and print marketing collateral.',
     h1: 'Saved Designs Library',
     iconName: 'Sliders',
@@ -332,7 +332,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Favorite Templates Directory',
     badge: 'COMING SOON • DESIGNS STAGE',
     description: 'Bookmark high-converting layouts from our templates library. Keep preferred configurations close at hand for instant deployment.',
-    seoTitle: 'Favorite QR Code Templates Directory | FreeQRGen.pro',
+    seoTitle: 'Favorite QR Code Templates Directory | FreeQRBarcodes.com',
     metaDesc: 'Bookmark and organize your favorite high-performance QR layouts. Streamline campaign setup with curated, battle-tested style templates.',
     h1: 'Favorite Templates Directory',
     iconName: 'Star',
@@ -379,7 +379,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Collaborative Team Workspace',
     badge: 'COMING SOON • ROLES CONFIGURATION',
     description: 'Work together with your marketing team, designers, and clients. Share folders, assign tasks, and manage campaigns in a unified workspace.',
-    seoTitle: 'Collaborative Team Workspace & Campaign Platform | FreeQRGen.pro',
+    seoTitle: 'Collaborative Team Workspace & Campaign Platform | FreeQRBarcodes.com',
     metaDesc: 'Work together in a unified campaign space. Invite team members, share folders, assign access roles, and coordinate QR campaigns.',
     h1: 'Collaborative Team Workspace',
     iconName: 'Users',
@@ -426,7 +426,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Enterprise Organization Hub',
     badge: 'COMING SOON • SSO INTEGRATION',
     description: 'Enterprise governance for multi-tier organizations. Implement SSO, manage sub-companies, enforce compliance rules, and set up centralized billing.',
-    seoTitle: 'Enterprise Organization Hub & SSO Governance | FreeQRGen.pro',
+    seoTitle: 'Enterprise Organization Hub & SSO Governance | FreeQRBarcodes.com',
     metaDesc: 'Manage security and compliance for large organizations. Set up SAML SSO, enforce design templates, and manage sub-companies.',
     h1: 'Enterprise Organization Hub',
     iconName: 'Shield',
@@ -473,7 +473,7 @@ export const platformModules: PlatformModule[] = [
     name: 'QR Generation API',
     badge: 'COMING SOON • DEVELOPER BETA',
     description: 'Integrate high-speed QR code generation directly into your software. Low-latency rest endpoints, secure API key authentication, and vector outputs.',
-    seoTitle: 'Developer QR Generation API & Integration Engine | FreeQRGen.pro',
+    seoTitle: 'Developer QR Generation API & Integration Engine | FreeQRBarcodes.com',
     metaDesc: 'Generate customized QR codes programmatically via our high-speed, secure API. Integrate infinite-scale vector rendering into your CRM, ERP, or marketing app.',
     h1: 'High-Speed QR Generation API',
     iconName: 'Code',
@@ -520,7 +520,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Developer Sandbox Dashboard',
     badge: 'COMING SOON • DEVELOPER BETA',
     description: 'Generate API keys, monitor request rates, track error codes, and review integration logs in our dedicated developer control center.',
-    seoTitle: 'Developer Dashboard & API Key Control Center | FreeQRGen.pro',
+    seoTitle: 'Developer Dashboard & API Key Control Center | FreeQRBarcodes.com',
     metaDesc: 'Manage your API keys, monitor real-time request rates, audit integration logs, and run code tests in our developer dashboard.',
     h1: 'Developer Sandbox Dashboard',
     iconName: 'Terminal',
@@ -567,7 +567,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Real-Time Webhooks Engine',
     badge: 'COMING SOON • ARCHITECTURAL STAGE',
     description: 'Listen to scan events as they happen. Stream anonymized telemetry data directly to your endpoints to trigger instant workflows in your CRM.',
-    seoTitle: 'Real-Time Webhooks & Campaign Event Streamer | FreeQRGen.pro',
+    seoTitle: 'Real-Time Webhooks & Campaign Event Streamer | FreeQRBarcodes.com',
     metaDesc: 'Stream QR scan events directly to your servers. Trigger CRM workflows, email alerts, or customer loyalty rewards instantly as codes are scanned.',
     h1: 'Real-Time Webhooks Engine',
     iconName: 'GitMerge',
@@ -613,15 +613,15 @@ export const platformModules: PlatformModule[] = [
     slug: 'integrations',
     name: 'SaaS Integrations Hub',
     badge: 'COMING SOON • INTEGRATION STAGE',
-    description: 'Connect FreeQRGen.pro with the tools you already use. Seamless integrations with HubSpot, Salesforce, Mailchimp, Zapier, and Google Sheets.',
-    seoTitle: 'SaaS Integrations & Automation Hub | FreeQRGen.pro',
+    description: 'Connect FreeQRBarcodes.com with the tools you already use. Seamless integrations with HubSpot, Salesforce, Mailchimp, Zapier, and Google Sheets.',
+    seoTitle: 'SaaS Integrations & Automation Hub | FreeQRBarcodes.com',
     metaDesc: 'Connect your QR campaigns with the software you use daily. Send scan data automatically to Google Sheets, HubSpot, Salesforce, and Zapier.',
     h1: 'SaaS Integrations Hub',
     iconName: 'Grid',
     readingTime: '4 min read',
     updatedDate: 'July 3, 2026',
     version: 'v0.7.5-draft',
-    definition: 'SaaS Integrations refer to built-in software connectors that allow FreeQRGen.pro to sync data automatically with external business platforms without writing code.',
+    definition: 'SaaS Integrations refer to built-in software connectors that allow FreeQRBarcodes.com to sync data automatically with external business platforms without writing code.',
     stats: [
       { label: 'Available SaaS Integrations', value: '25+ Platforms', source: 'Integrations Registry' },
       { label: 'Data Sync Interval', value: 'Real-Time Sync', source: 'Push Update Protocol' },
@@ -661,7 +661,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Advanced Scan Analytics',
     badge: 'COMING SOON • DESIGN STAGE',
     description: 'Deep-dive into scan telemetry. Beautiful visual charts, device profiles, browser configurations, hourly distributions, and location heatmaps.',
-    seoTitle: 'Advanced Scan Analytics & Interactive Dashboards | FreeQRGen.pro',
+    seoTitle: 'Advanced Scan Analytics & Interactive Dashboards | FreeQRBarcodes.com',
     metaDesc: 'Analyze your scan data with advanced visual dashboards. Deep dive into scan timelines, device profiles, locations, and browser parameters.',
     h1: 'Advanced Scan Analytics',
     iconName: 'Activity',
@@ -708,7 +708,7 @@ export const platformModules: PlatformModule[] = [
     name: 'QR Campaign Control Center',
     badge: 'COMING SOON • WORKSPACE STAGE',
     description: 'Centralized campaign management for brands and agencies. Organize QR codes by product lines, schedule dynamic updates, and track performance.',
-    seoTitle: 'QR Campaign Control Center & Agency Suite | FreeQRGen.pro',
+    seoTitle: 'QR Campaign Control Center & Agency Suite | FreeQRBarcodes.com',
     metaDesc: 'Manage and coordinate your global QR campaigns. Organize assets by product line, schedule target redirect updates, and audit results.',
     h1: 'QR Campaign Control Center',
     iconName: 'Sliders',
@@ -755,7 +755,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Vector Export Console',
     badge: 'COMING SOON • INTEGRATION STAGE',
     description: 'Premium vector file delivery. Download designs in SVG, EPS, PDF, and high-dpi PNG formats. Configure margins, color spaces, and bleed settings.',
-    seoTitle: 'Vector Export Console & High-DPI Packaging Suite | FreeQRGen.pro',
+    seoTitle: 'Vector Export Console & High-DPI Packaging Suite | FreeQRBarcodes.com',
     metaDesc: 'Export your custom designs in scalable vector SVG, EPS, PDF, and high-dpi transparent PNG formats. Configure CMYK colors and safe print margins.',
     h1: 'Vector Export Console',
     iconName: 'Download',
@@ -802,7 +802,7 @@ export const platformModules: PlatformModule[] = [
     name: 'Bulk Asset Import Portal',
     badge: 'COMING SOON • DATA INTERFACE',
     description: 'Bulk upload existing dynamic links, client contacts, and design assets. Map data arrays, and run verification audits before launching campaigns.',
-    seoTitle: 'Bulk Asset Import Portal & Database Migrator | FreeQRGen.pro',
+    seoTitle: 'Bulk Asset Import Portal & Database Migrator | FreeQRBarcodes.com',
     metaDesc: 'Migrate your QR campaigns seamlessly. Bulk upload tracking links, client contact databases, and custom design assets via CSV or JSON.',
     h1: 'Bulk Asset Import Portal',
     iconName: 'Download',
@@ -1008,7 +1008,7 @@ export default function PlatformHub({
             },
             {
               "@type": "SoftwareApplication",
-              "name": `FreeQRGen Platform - ${t(`platform.module${moduleKey}Name`, activeModule.name)}`,
+              "name": `FreeQRBarcodes Platform - ${t(`platform.module${moduleKey}Name`, activeModule.name)}`,
               "applicationCategory": "BusinessApplication, DesignApplication",
               "operatingSystem": "All modern browsers",
               "offers": {
@@ -1178,7 +1178,7 @@ func main() {
           <div className="flex-1">
             <div className="flex items-center gap-2 text-indigo-300 text-xs font-bold tracking-widest uppercase mb-3">
               <span className="px-2 py-1 bg-indigo-500/20 rounded border border-indigo-500/30">
-                {t('platform.headerBannerSub', 'FreeQRGen.pro Platform')}
+                {t('platform.headerBannerSub', 'FreeQRBarcodes.com Platform')}
               </span>
               <span>•</span>
               <span>{t('platform.comingSoon', 'Coming Soon')}</span>
@@ -1379,7 +1379,7 @@ func main() {
                   </h3>
                   <div className="h-px bg-slate-100"></div>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    {t('platform.technicalOverviewDesc1', 'At FreeQRGen.pro, we are actively designing the {{name}} to act as a highly scalable plug-and-play module. By integrating directly with our existing high-performance client-side QR generation core, this module provides enterprise capabilities without impacting current static code rendering performance.', { name: t(`platform.module${moduleKey}Name`, activeModule.name) })}
+                    {t('platform.technicalOverviewDesc1', 'At FreeQRBarcodes.com, we are actively designing the {{name}} to act as a highly scalable plug-and-play module. By integrating directly with our existing high-performance client-side QR generation core, this module provides enterprise capabilities without impacting current static code rendering performance.', { name: t(`platform.module${moduleKey}Name`, activeModule.name) })}
                   </p>
                   <p className="text-slate-600 text-xs leading-relaxed">
                     {t('platform.technicalOverviewDesc2', 'Our platform architecture emphasizes local-first rendering parameters, fast edge CDN resolutions, and privacy compliance. Future integration modules can be deployed without complex system refactorings, ensuring backward compatibility for printed materials.')}
@@ -1440,10 +1440,10 @@ func main() {
                     <div className="w-px bg-slate-100 hidden md:block"></div>
                     <div className="flex-1 space-y-2">
                       <div className="font-semibold text-slate-700">
-                        {t('platform.reviewerProfileTitle', 'Reviewer Profile: Marcus Vance, CISSP').replace(/Marcus\s*Vance,\s*CISSP|Marcus\s*Vance/gi, 'FreeQRGen Engineering Team')}
+                        {t('platform.reviewerProfileTitle', 'Reviewer Profile: Marcus Vance, CISSP').replace(/Marcus\s*Vance,\s*CISSP|Marcus\s*Vance/gi, 'FreeQRBarcodes Engineering Team')}
                       </div>
                       <p className="text-slate-500 text-[11px]">
-                        {t('platform.reviewerProfileDesc', 'Chief Security Officer & Trust Engineer. Marcus audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.').replace(/Marcus/gi, 'The FreeQRGen Engineering Team')}
+                        {t('platform.reviewerProfileDesc', 'Chief Security Officer & Trust Engineer. Marcus audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.').replace(/Marcus/gi, 'The FreeQRBarcodes Engineering Team')}
                       </p>
                     </div>
                   </div>
@@ -1562,7 +1562,7 @@ func main() {
                 </div>
                 
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-[11px] text-slate-400 leading-relaxed mt-4">
-                  {t('platform.citationsFooter', 'All references mapped on FreeQRGen.pro comply with standard IEEE academic guidelines, linking digital physical interactions directly to modern network routing and data protection frameworks.')}
+                  {t('platform.citationsFooter', 'All references mapped on FreeQRBarcodes.com comply with standard IEEE academic guidelines, linking digital physical interactions directly to modern network routing and data protection frameworks.')}
                 </div>
               </div>
             </div>
@@ -1767,7 +1767,7 @@ func main() {
                   <div className="relative bg-slate-900 text-white rounded-2xl border border-slate-800 p-6 overflow-hidden">
                     <div className="absolute top-4 right-4 z-10 flex gap-2">
                       <button
-                        onClick={() => handleCopyCode(`// Drizzle ORM Schema Suggestion for FreeQRGen Platform
+                        onClick={() => handleCopyCode(`// Drizzle ORM Schema Suggestion for FreeQRBarcodes Platform
 import { pgTable, uuid, varchar, text, timestamp, bigserial } from 'drizzle-orm/pg-core';
 
 export const organizations = pgTable('organizations', {
@@ -1789,7 +1789,7 @@ export const users = pgTable('users', {
                       </button>
                     </div>
                     <pre className="font-mono text-[10px] leading-relaxed text-slate-300 overflow-x-auto max-h-[480px]">
-{`// Drizzle ORM Schema Suggestion for FreeQRGen Platform
+{`// Drizzle ORM Schema Suggestion for FreeQRBarcodes Platform
 import { pgTable, uuid, varchar, text, timestamp, bigserial } from 'drizzle-orm/pg-core';
 
 export const organizations = pgTable('organizations', {
@@ -1848,7 +1848,7 @@ export const scanTelemetries = pgTable('scan_telemetries', {
                   {t('platform.developerApiTitle', 'Developer API Specifications & SDK Code Samples')}
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  {t('platform.developerApiDesc', 'FreeQRGen.pro is designed to empower developers. Here are the technical specifications and code implementations for programmatic dynamic QR code generation.')}
+                  {t('platform.developerApiDesc', 'FreeQRBarcodes.com is designed to empower developers. Here are the technical specifications and code implementations for programmatic dynamic QR code generation.')}
                 </p>
               </div>
 

@@ -211,7 +211,7 @@ export default function EnterpriseAIGateway({
             </div>
           </div>
           <p className="text-xs text-slate-500 mt-2 leading-relaxed max-w-2xl">
-            {t('enterprise.developerHubDesc', "Audit, simulate, and configure FreeQRGen.pro's enterprise AI pipeline routing, real-time diagnostic safety centers, automated CRM webhooks, developer api keys, and modular system toggles.")}
+            {t('enterprise.developerHubDesc', "Audit, simulate, and configure FreeQRBarcodes.com's enterprise AI pipeline routing, real-time diagnostic safety centers, automated CRM webhooks, developer api keys, and modular system toggles.")}
           </p>
         </div>
         
@@ -958,7 +958,7 @@ export default function EnterpriseAIGateway({
                     <pre className="text-[10px] font-mono bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-slate-300 leading-relaxed overflow-x-auto">
 {`HTTP/1.1 200 OK
 Content-Type: application/json
-X-FreeQRGen-Signature: f9a20... [HMAC-SHA256]
+X-FreeQRBarcodes-Signature: f9a20... [HMAC-SHA256]
 X-Webhook-Retry-Attempt: 0
 X-Subscription-Tier: Enterprise-High
 

@@ -1,5 +1,5 @@
 {
-  "appId": "pro.freeqrgen.app",
+  "appId": "com.freeqrbarcodes.app",
   "appName": "Free QR Generator",
   "webDir": "dist",
   "bundledWebRuntime": false,

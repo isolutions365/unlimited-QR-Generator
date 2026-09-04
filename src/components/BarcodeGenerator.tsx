@@ -447,8 +447,9 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
         {/* Format Selection & Layout Options */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-800">{t('barcode.symbologyFormat', 'Symbology Format')}</label>
+            <label htmlFor="barcode-symbology-select" className="text-xs font-bold text-slate-800">{t('barcode.symbologyFormat', 'Symbology Format')}</label>
             <select
+              id="barcode-symbology-select"
               value={format}
               onChange={(e) => {
                 const newFmt = e.target.value;
@@ -473,8 +474,9 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-800">{t('barcode.margin', 'Margin Whitespace (px)')}</label>
+            <label htmlFor="barcode-margin-input" className="text-xs font-bold text-slate-800">{t('barcode.margin', 'Margin Whitespace (px)')}</label>
             <input
+              id="barcode-margin-input"
               type="number"
               min="0"
               max="50"
@@ -490,12 +492,13 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-100 pt-5">
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-bold text-slate-800 flex items-center gap-1">
+              <label htmlFor="barcode-height-range" className="text-xs font-bold text-slate-800 flex items-center gap-1">
                 <Sliders className="w-3.5 h-3.5 text-slate-400" />
                 {t('barcode.barHeight', 'Bar Height ({height}px)', { height })}
               </label>
             </div>
             <input
+              id="barcode-height-range"
               type="range"
               min="30"
               max="200"
@@ -508,12 +511,13 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
 
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-bold text-slate-800 flex items-center gap-1">
+              <label htmlFor="barcode-width-range" className="text-xs font-bold text-slate-800 flex items-center gap-1">
                 <Sliders className="w-3.5 h-3.5 text-slate-400" />
                 {t('barcode.lineThickness', 'Line Thickness ({width}px)', { width })}
               </label>
             </div>
             <input
+              id="barcode-width-range"
               type="range"
               min="1"
               max="5"
@@ -529,12 +533,13 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
         {/* Color controls */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-5">
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-800 flex items-center gap-1">
+            <label htmlFor="barcode-linecolor-picker" className="text-xs font-bold text-slate-800 flex items-center gap-1">
               <Palette className="w-3.5 h-3.5 text-slate-400" />
               {t('barcode.lineColor', 'Line Color')}
             </label>
             <div className="flex gap-2">
               <input
+                id="barcode-linecolor-picker"
                 type="color"
                 value={lineColor}
                 onChange={(e) => setLineColor(e.target.value)}
@@ -552,7 +557,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-800 flex items-center gap-1">
+            <label htmlFor="barcode-bg-picker" className="text-xs font-bold text-slate-800 flex items-center gap-1">
               <Palette className="w-3.5 h-3.5 text-slate-400" />
               {t('barcode.backgroundColor', 'Background Color')}
             </label>

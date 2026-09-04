@@ -3589,7 +3589,7 @@ export const EXPECTED_KEYS = [
   "vision.title",
   "vision.tlsSecured",
   "🎉 Referral Signup Bonus!",
-  "👋 Welcome to FreeQRGen.pro!",
+  "👋 Welcome to FreeQRBarcodes.com!",
   "💬 Feedback Submitted!",
 ] as const;
 
