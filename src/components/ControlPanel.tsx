@@ -2283,7 +2283,7 @@ export default function ControlPanel({ currentProject,
                             <div className="space-y-3 pointer-events-none">
                               <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
                                 <span className="font-bold text-[11px] text-indigo-400 uppercase tracking-wider">
-                                  Level {ec}: {detail.title}
+                                  Level {ec}: {t('control.ecc.title.' + ec, detail.title)}
                                 </span>
                                 {localProject.design?.smartOptimize && (
                                   <span className="text-[9px] bg-indigo-950 text-indigo-300 border border-indigo-800/80 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
@@ -2296,8 +2296,8 @@ export default function ControlPanel({ currentProject,
                               <div className="space-y-2.5">
                                 <div>
                                   <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
-                                    <span>Scan Reliability</span>
-                                    <span className="font-semibold text-slate-200">{detail.damageLabel}</span>
+                                    <span>{t('control.ecc.scanReliability', 'Scan Reliability')}</span>
+                                    <span className="font-semibold text-slate-200">{t('control.ecc.damageLabel.' + ec, detail.damageLabel)}</span>
                                   </div>
                                   <div className="flex gap-1">
                                     {[1, 2, 3, 4].map((step) => (
@@ -2315,8 +2315,8 @@ export default function ControlPanel({ currentProject,
 
                                 <div>
                                   <div className="flex justify-between text-[10px] text-slate-400 mb-0.5">
-                                    <span>Data Capacity</span>
-                                    <span className="font-semibold text-slate-205">{detail.capacityLabel}</span>
+                                    <span>{t('control.ecc.dataCapacity', 'Data Capacity')}</span>
+                                    <span className="font-semibold text-slate-205">{t('control.ecc.capacityLabel.' + ec, detail.capacityLabel)}</span>
                                   </div>
                                   <div className="flex gap-1">
                                     {[1, 2, 3, 4].map((step) => (
@@ -2335,12 +2335,12 @@ export default function ControlPanel({ currentProject,
 
                               {/* Description */}
                               <p className="text-[10px] text-slate-300 leading-relaxed font-normal">
-                                {detail.desc}
+                                {t('control.ecc.desc.' + ec, detail.desc)}
                               </p>
 
                               {/* Practical recommendation */}
                               <div className="border-t border-slate-800/80 pt-2 text-[9px] text-slate-400 leading-relaxed">
-                                <strong className="text-indigo-300">Recommendation:</strong> {detail.recommendation}
+                                <strong className="text-indigo-300">{t('control.ecc.recommendationLabel', 'Recommendation:')}</strong> {t('control.ecc.recommendation.' + ec, detail.recommendation)}
                               </div>
                             </div>
                           );

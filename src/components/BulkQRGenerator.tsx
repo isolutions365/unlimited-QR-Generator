@@ -823,6 +823,121 @@ export default function BulkQRGenerator() {
         onClose={() => setIsHelpModalOpen(false)} 
         onDownloadTemplate={downloadSampleTemplate} 
       />
+
+      {/* Genuinely Helpful Educational Guide (Anti-Slop, Clean, Non-Nested layout) */}
+      <div className="mt-12 border-t border-slate-200/80 pt-10 space-y-12 select-none">
+        {/* Section 1: How to Use */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+            <h3 className="text-xl font-extrabold tracking-tight text-slate-900">
+              {t('bulk.guide.howToTitle', 'How to Use the Bulk QR Code Generator')}
+            </h3>
+          </div>
+          <p className="text-sm text-slate-600 max-w-3xl leading-relaxed">
+            Generating hundreds of customized QR codes at once doesn\'t require complex programming. Follow our professional, browser-based pipeline to compile your custom package:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-2">
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">Step 01</span>
+              <h4 className="text-sm font-bold text-slate-900">{t('bulk.guide.step1Title', 'Prepare Spreadsheet')}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Create a spreadsheet (using Excel or Google Sheets) with exactly two headers in the first row: "name" and "url". Fill in your target filenames and links, then export as a .CSV file.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">Step 02</span>
+              <h4 className="text-sm font-bold text-slate-900">{t('bulk.guide.step2Title', 'Upload or Paste')}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Drag and drop your exported .CSV file into our secure container, or paste rows manually into the input sandbox. The system parses and displays each record instantly.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">Step 03</span>
+              <h4 className="text-sm font-bold text-slate-900">{t('bulk.guide.step3Title', 'Design Template')}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Select your global visual style—including colors, pixel patterns, and optional framing accents. Every code in the batch inherits these brand assets seamlessly.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">Step 04</span>
+              <h4 className="text-sm font-bold text-slate-900">{t('bulk.guide.step4Title', 'Export ZIP Archive')}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Click "Generate & Download ZIP". Our client-side rendering engine packages each styled code as a crisp, individually named PNG file into a single structured ZIP directory.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Best Practices */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+            <h3 className="text-xl font-extrabold tracking-tight text-slate-900">
+              {t('bulk.guide.practicesTitle', 'Spreadsheet Formatting & Best Practices')}
+            </h3>
+          </div>
+          <p className="text-sm text-slate-600 max-w-3xl leading-relaxed">
+            Maintain compliance and prevent formatting anomalies by executing these clean preparation workflows:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+              <h4 className="text-sm font-bold text-slate-900">Ensure Valid URL Protocols</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Every destination link in your sheet must begin with either "https://" or "http://" to ensure standard web redirect compliance across all smartphone models and legacy camera systems.
+              </p>
+            </div>
+            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+              <h4 className="text-sm font-bold text-slate-900">Sanitize Filenames</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Keep "name" cells alphanumeric. Avoid complex special characters (like /, \, :, *, ?, ", &lt;, &gt;, |) which can cause file extraction errors or operating system folder compliance flags.
+              </p>
+            </div>
+            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+              <h4 className="text-sm font-bold text-slate-900">Maintain Contrast Standards</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                When batch printing hundreds of codes (such as product hang-tags or inventory badges), preserve high contrast (like dark navy or black on a white background) to guarantee fast read rates.
+              </p>
+            </div>
+            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+              <h4 className="text-sm font-bold text-slate-900">Run a Single-Item Scan Test</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Prior to printing massive batch runs, extract your downloaded ZIP folder, print a single representative physical sample, and verify that your target scanner hardware decodes the matrix correctly.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: FAQs */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+            <h3 className="text-xl font-extrabold tracking-tight text-slate-900">
+              {t('bulk.guide.faqsTitle', 'Bulk QR Code Generation FAQs')}
+            </h3>
+          </div>
+          <div className="divide-y divide-slate-150 text-sm">
+            <div className="py-4 space-y-1.5">
+              <h4 className="font-bold text-slate-900">Is there an upload limit to the number of rows I can process?</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                To guarantee optimal browser performance, we limit bulk batches to 50 active items per session. This prevents client-side tab freezes and allows instant rendering without sending sensitive customer links to remote servers.
+              </p>
+            </div>
+            <div className="py-4 space-y-1.5">
+              <h4 className="font-bold text-slate-900">Are the generated bulk QR codes static or dynamic?</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                The bulk tool generates standard static web QR codes by default. This means the target links are encoded directly inside the matrix, ensuring they remain active forever with zero subscription fees or expiration dates.
+              </p>
+            </div>
+            <div className="py-4 space-y-1.5">
+              <h4 className="font-bold text-slate-900">How are the output files organized inside the downloaded ZIP package?</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Each file is named precisely according to the matching value in your "name" column (e.g., "Product-A.png", "Table-12.png"). This makes physical matching and sticker application extremely simple.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

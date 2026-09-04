@@ -671,6 +671,121 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
           </p>
         </div>
       </div>
+
+      {/* Genuinely Helpful Educational Guide (Anti-Slop, Clean, Non-Nested layout) */}
+      <div className="lg:col-span-12 mt-10 border-t border-slate-200/80 pt-10 space-y-12 select-none">
+        {/* Section 1: How to Use */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+            <h3 className="text-xl font-extrabold tracking-tight text-slate-900">
+              {t('barcode.guide.howToTitle', 'How to Generate and Use Barcodes')}
+            </h3>
+          </div>
+          <p className="text-sm text-slate-600 max-w-3xl leading-relaxed">
+            Creating high-quality barcodes for retail, inventory, or asset tracking is straightforward with our station. Follow these four professional steps to output compliant designs:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-2">
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">Step 01</span>
+              <h4 className="text-sm font-bold text-slate-900">{t('barcode.guide.step1Title', 'Select Symbology')}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Choose the correct format (such as Code 128 for general alphanumerics, or EAN-13/UPC-A for retail retail items) from the dropdown list.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">Step 02</span>
+              <h4 className="text-sm font-bold text-slate-900">{t('barcode.guide.step2Title', 'Input Payload')}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Enter your numeric or alphanumeric sequence. The tool validates character compatibility and checksum requirements in real-time.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">Step 03</span>
+              <h4 className="text-sm font-bold text-slate-900">{t('barcode.guide.step3Title', 'Customize Style')}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Configure visual dimensions, line thickness, background margins, colors, and toggle human-readable labels below the matrix.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">Step 04</span>
+              <h4 className="text-sm font-bold text-slate-900">{t('barcode.guide.step4Title', 'Export Vector')}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Download your custom barcode as a PNG for quick digital sharing or high-resolution vector SVG for professional offset printing.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Symbologies Guide */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+            <h3 className="text-xl font-extrabold tracking-tight text-slate-900">
+              {t('barcode.guide.symbologiesTitle', 'Understanding Barcode Symbologies')}
+            </h3>
+          </div>
+          <p className="text-sm text-slate-600 max-w-3xl leading-relaxed">
+            Selecting the wrong symbology can cause legacy scanners to fail. Review this structural framework to match your business requirements:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+              <h4 className="text-sm font-bold text-slate-900">Code 128 (High Density Alphanumeric)</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                The most modern 1D linear standard. Supports all 128 ASCII characters, including digits, letters, and control characters. Ideal for shipping labels, serial numbers, and general internal stock control.
+              </p>
+            </div>
+            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+              <h4 className="text-sm font-bold text-slate-900">EAN-13 & UPC-A (Point-of-Sale Retail Standards)</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Global commercial retail standards. UPC-A is standard in North America (12 digits), while EAN-13 is standard globally (13 digits). Designed specifically for checkout registers to trigger price lookups.
+              </p>
+            </div>
+            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+              <h4 className="text-sm font-bold text-slate-900">Code 39 (Industrial & Military)</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Self-checking linear symbology designed to encode alphanumeric text. Supports letters (uppercase A-Z), digits, and limited symbols (- . $ / + % space). Frequently used in automotive manufacturing and defense logistics.
+              </p>
+            </div>
+            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+              <h4 className="text-sm font-bold text-slate-900">MSI Plessey & ITF-14</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                MSI Plessey is highly localized for grocery supermarket shelving codes. ITF-14 is standard for outer corrugated shipping containers, featuring thick bearer boundaries to prevent misreads under pressure.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: FAQs */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+            <h3 className="text-xl font-extrabold tracking-tight text-slate-900">
+              {t('barcode.guide.faqsTitle', 'Barcode Scanning & Printing FAQs')}
+            </h3>
+          </div>
+          <div className="divide-y divide-slate-150 text-sm">
+            <div className="py-4 space-y-1.5">
+              <h4 className="font-bold text-slate-900">What color schemes are safe for barcode lines?</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Legacy laser scanners use red light to detect bars. This means lines must absorb red light (such as black, dark blue, dark brown, or dark green), while backgrounds must reflect red light (such as white, yellow, orange, or red). Avoid printing red lines or utilizing dark background cardboards.
+              </p>
+            </div>
+            <div className="py-4 space-y-1.5">
+              <h4 className="font-bold text-slate-900">Are these generated barcodes free for commercial use?</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Yes! Every barcode vector SVG and PNG file generated on FreeQRBarcodes.com is 100% free with unlimited usage rights, allowing commercial retail printing, warehouse tagging, and product distribution.
+              </p>
+            </div>
+            <div className="py-4 space-y-1.5">
+              <h4 className="font-bold text-slate-900">Why does my phone scan my QR code but struggles with 1D linear barcodes?</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                QR codes are 2D matrix symbologies containing high fallback error correction and orientation markers. 1D barcodes rely strictly on precise line spacing and relative widths. Standard smartphone cameras need proper alignment, sharp focus, and high-resolution screens to decode linear 1D bars correctly compared to legacy omnidirectional POS laser beams.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

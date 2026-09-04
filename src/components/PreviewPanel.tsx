@@ -1511,7 +1511,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             <div className="flex items-center gap-2.5 min-w-0">
               <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
               <div className="text-left min-w-0">
-                <div className="text-[11px] font-black uppercase tracking-wider text-rose-700">QR Canvas Render Error</div>
+                <div className="text-[11px] font-black uppercase tracking-wider text-rose-700">{t('preview.canvasRenderErrorTitle', 'QR Canvas Render Error')}</div>
                 <div className="text-[11px] text-rose-800 truncate">{canvasRenderError}</div>
               </div>
             </div>
@@ -1521,7 +1521,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold rounded-lg shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer transition-all hover:scale-105"
             >
               <RefreshCw className="w-3.5 h-3.5" />
-              <span>Regenerate</span>
+              <span>{t('preview.regenerateAction', 'Regenerate')}</span>
             </button>
           </div>
         )}
@@ -1604,7 +1604,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
             title="Clear stale canvas state and re-initialize drawing context"
           >
             <RefreshCw className="w-3 h-3" />
-            <span>Regenerate Canvas</span>
+            <span>{t('preview.regenerateCanvas', 'Regenerate Canvas')}</span>
           </button>
           {currentProject.expiryDate && (() => {
             const isExpired = new Date() > new Date(currentProject.expiryDate);
@@ -2871,12 +2871,12 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                         {/* Custom Margin Cross Controls */}
                         <div className="space-y-4">
                           <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-                            Physical Paper Margins (mm)
+                            {t('preview.physicalPaperMargins', 'Physical Paper Margins (mm)')}
                           </label>
                           <div className="grid grid-cols-3 gap-2 max-w-[240px] mx-auto text-center border border-slate-100 bg-white p-4 rounded-2xl shadow-xs">
                             <div></div>
                             <div>
-                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">Top</span>
+                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">{t('preview.top', 'Top')}</span>
                               <input 
                                 type="number" 
                                 value={printReadyMarginTop} 
@@ -2915,7 +2915,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                             
                             <div></div>
                             <div>
-                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">Bottom</span>
+                              <span className="text-[8px] font-bold text-slate-400 uppercase block mb-1">{t('preview.bottom', 'Bottom')}</span>
                               <input 
                                 type="number" 
                                 value={printReadyMarginBottom} 
@@ -2927,7 +2927,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                             <div></div>
                           </div>
                           <p className="text-[9px] text-slate-400 text-center">
-                            Standard paper margins are 15mm. Adjust them to match your custom printer boundaries.
+                            {t('preview.paperMarginsDesc', 'Standard paper margins are 15mm. Adjust them to match your custom printer boundaries.')}
                           </p>
                         </div>
 

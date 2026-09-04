@@ -237,13 +237,13 @@ export default function Generator({ initialProject, onProjectChange, className =
           <div className="bg-white dark:bg-slate-800 p-2 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-xs">
             <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar p-1">
               {[
-                { id: 'url', label: 'URL / Web', icon: Link2 },
-                { id: 'wifi', label: 'Wi-Fi Network', icon: Wifi },
-                { id: 'vcard', label: 'Digital vCard', icon: Contact },
-                { id: 'email', label: 'Email', icon: Mail },
-                { id: 'text', label: 'Plain Text', icon: AlignLeft },
-                { id: 'sms', label: 'SMS Message', icon: MessageSquare },
-                { id: 'whatsapp', label: 'WhatsApp', icon: Phone }
+                { id: 'url', label: t('control.type.url', 'URL / Web'), icon: Link2 },
+                { id: 'wifi', label: t('control.type.wifi', 'Wi-Fi Network'), icon: Wifi },
+                { id: 'vcard', label: t('control.tab.vcard', 'Digital vCard'), icon: Contact },
+                { id: 'email', label: t('control.type.email', 'Email'), icon: Mail },
+                { id: 'text', label: t('control.plainText', 'Plain Text'), icon: AlignLeft },
+                { id: 'sms', label: t('control.type.sms', 'SMS Message'), icon: MessageSquare },
+                { id: 'whatsapp', label: t('control.type.social', 'WhatsApp'), icon: Phone }
               ].map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -273,7 +273,7 @@ export default function Generator({ initialProject, onProjectChange, className =
             {activeTab === 'url' && (
               <div className="space-y-2">
                 <label htmlFor="gen-target-url-input" className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
-                  Target Website URL
+                  {t('control.targetWebsiteUrl', 'Target Website URL')}
                 </label>
                 <div className="relative">
                   <Link2 className="absolute start-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -287,7 +287,7 @@ export default function Generator({ initialProject, onProjectChange, className =
                   />
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Auto-prepends <code className="text-indigo-600 font-bold">https://</code> if missing.
+                  {t('control.fixAddHttps', 'Auto-prepends https:// if missing.')}
                 </p>
               </div>
             )}
@@ -298,21 +298,21 @@ export default function Generator({ initialProject, onProjectChange, className =
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="gen-ssid-input" className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
-                      Network Name (SSID) *
+                      {t('control.label.ssid', 'Network Name (SSID) *')}
                     </label>
                     <input
                       id="gen-ssid-input"
                       type="text"
                       value={wifiData.ssid}
                       onChange={(e) => setWifiData({ ...wifiData, ssid: e.target.value })}
-                      placeholder="e.g. MyOffice_5G"
+                      placeholder={t('control.placeholder.ssid', 'e.g. MyOffice_5G')}
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="gen-encryption-select" className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
-                      Encryption Security
+                      {t('control.label.security', 'Encryption Security')}
                     </label>
                     <select
                       id="gen-encryption-select"
@@ -320,9 +320,9 @@ export default function Generator({ initialProject, onProjectChange, className =
                       onChange={(e) => setWifiData({ ...wifiData, encryption: e.target.value as any })}
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
                     >
-                      <option value="WPA">WPA / WPA2 / WPA3 (Recommended)</option>
-                      <option value="WEP">WEP</option>
-                      <option value="nopass">Unencrypted (Open Network)</option>
+                      <option value="WPA">{t('generator.wifi_wpa', 'WPA / WPA2 / WPA3 (Recommended)')}</option>
+                      <option value="WEP">{t('generator.wifi_wep', 'WEP')}</option>
+                      <option value="nopass">{t('generator.wifi_open', 'Unencrypted (Open Network)')}</option>
                     </select>
                   </div>
                 </div>
@@ -330,14 +330,14 @@ export default function Generator({ initialProject, onProjectChange, className =
                 {wifiData.encryption !== 'nopass' && (
                   <div>
                     <label htmlFor="gen-wifi-password-input" className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1">
-                      Wi-Fi Password
+                      {t('control.label.password', 'Wi-Fi Password')}
                     </label>
                     <input
                       id="gen-wifi-password-input"
                       type="password"
                       value={wifiData.password || ''}
                       onChange={(e) => setWifiData({ ...wifiData, password: e.target.value })}
-                      placeholder="Enter network password"
+                      placeholder={t('control.placeholder.password', 'Enter network password')}
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
@@ -351,7 +351,7 @@ export default function Generator({ initialProject, onProjectChange, className =
                     className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
                   />
                   <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Hidden Wi-Fi SSID Network
+                    {t('generator.wifi_hidden', 'Hidden Wi-Fi SSID Network')}
                   </span>
                 </label>
               </div>
@@ -363,14 +363,14 @@ export default function Generator({ initialProject, onProjectChange, className =
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="text"
-                    placeholder="First Name *"
+                    placeholder={t('generator.vcard_first_name', 'First Name *')}
                     value={vcardData.firstName}
                     onChange={(e) => setVcardData({ ...vcardData, firstName: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                   />
                   <input
                     type="text"
-                    placeholder="Last Name"
+                    placeholder={t('generator.vcard_last_name', 'Last Name')}
                     value={vcardData.lastName}
                     onChange={(e) => setVcardData({ ...vcardData, lastName: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
@@ -380,14 +380,14 @@ export default function Generator({ initialProject, onProjectChange, className =
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="text"
-                    placeholder="Organization / Company"
+                    placeholder={t('control.label.vcardOrg', 'Organization / Company')}
                     value={vcardData.organization}
                     onChange={(e) => setVcardData({ ...vcardData, organization: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                   />
                   <input
                     type="text"
-                    placeholder="Job Title / Position"
+                    placeholder={t('generator.vcard_title', 'Job Title / Position')}
                     value={vcardData.title}
                     onChange={(e) => setVcardData({ ...vcardData, title: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
@@ -397,14 +397,14 @@ export default function Generator({ initialProject, onProjectChange, className =
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="tel"
-                    placeholder="Phone Number (e.g. +1234567890)"
+                    placeholder={t('control.label.vcardPhone', 'Phone Number (e.g. +1234567890)')}
                     value={vcardData.phone}
                     onChange={(e) => setVcardData({ ...vcardData, phone: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                   />
                   <input
                     type="email"
-                    placeholder="Email Address"
+                    placeholder={t('control.label.vcardEmail', 'Email Address')}
                     value={vcardData.email}
                     onChange={(e) => setVcardData({ ...vcardData, email: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
@@ -418,21 +418,21 @@ export default function Generator({ initialProject, onProjectChange, className =
               <div className="space-y-3">
                 <input
                   type="email"
-                  placeholder="Recipient Email *"
+                  placeholder={t('generator.email_recipient', 'Recipient Email *')}
                   value={emailData.email}
                   onChange={(e) => setEmailData({ ...emailData, email: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                 />
                 <input
                   type="text"
-                  placeholder="Subject Line"
+                  placeholder={t('generator.email_subject', 'Subject Line')}
                   value={emailData.subject}
                   onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                 />
                 <textarea
                   rows={3}
-                  placeholder="Email Message Body..."
+                  placeholder={t('generator.email_body', 'Email Message Body...')}
                   value={emailData.body}
                   onChange={(e) => setEmailData({ ...emailData, body: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-xs font-semibold text-slate-900 dark:text-white"
@@ -445,7 +445,7 @@ export default function Generator({ initialProject, onProjectChange, className =
               <div className="space-y-2">
                 <textarea
                   rows={4}
-                  placeholder="Type plain text message, note, or code payload..."
+                  placeholder={t('control.placeholder.rawText', 'Type plain text message, note, or code payload...')}
                   value={textInput}
                   onChange={(e) => setTextInput(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-xs font-semibold text-slate-900 dark:text-white"
@@ -458,14 +458,14 @@ export default function Generator({ initialProject, onProjectChange, className =
               <div className="space-y-3">
                 <input
                   type="tel"
-                  placeholder="Phone Number *"
+                  placeholder={t('control.phoneNumberLabel', 'Phone Number *')}
                   value={smsData.phone}
                   onChange={(e) => setSmsData({ ...smsData, phone: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                 />
                 <textarea
                   rows={2}
-                  placeholder="SMS Message Text"
+                  placeholder={t('control.smsText', 'SMS Message Text')}
                   value={smsData.message}
                   onChange={(e) => setSmsData({ ...smsData, message: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-xs font-semibold text-slate-900 dark:text-white"
@@ -478,14 +478,14 @@ export default function Generator({ initialProject, onProjectChange, className =
               <div className="space-y-3">
                 <input
                   type="tel"
-                  placeholder="WhatsApp Number with Country Code (e.g. +14155552671) *"
+                  placeholder={t('generator.whatsapp_phone', 'WhatsApp Number with Country Code (e.g. +14155552671) *')}
                   value={whatsAppData.phone}
                   onChange={(e) => setWhatsAppData({ ...whatsAppData, phone: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                 />
                 <textarea
                   rows={2}
-                  placeholder="Pre-filled Message Text"
+                  placeholder={t('control.prefilledMessage', 'Pre-filled Message Text')}
                   value={whatsAppData.message}
                   onChange={(e) => setWhatsAppData({ ...whatsAppData, message: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-xs font-semibold text-slate-900 dark:text-white"
@@ -507,7 +507,7 @@ export default function Generator({ initialProject, onProjectChange, className =
             <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700/60 pb-3">
               <Paintbrush className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
-                Design & Brand Styling
+                {t('control.customizeTitle', 'Design & Brand Styling')}
               </h3>
             </div>
 
@@ -515,7 +515,7 @@ export default function Generator({ initialProject, onProjectChange, className =
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="gen-fg-color-picker" className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-                  Foreground Color
+                  {t('generator.fg_color', 'Foreground Color')}
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -536,7 +536,7 @@ export default function Generator({ initialProject, onProjectChange, className =
 
               <div>
                 <label htmlFor="gen-bg-color-picker" className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-                  Background Color
+                  {t('generator.bg_color', 'Background Color')}
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -560,7 +560,7 @@ export default function Generator({ initialProject, onProjectChange, className =
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div>
                 <label htmlFor="gen-matrix-style-select" className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-                  Matrix Pattern Style
+                  {t('control.label.dotStyle', 'Matrix Pattern Style')}
                 </label>
                 <select
                   id="gen-matrix-style-select"
@@ -568,18 +568,18 @@ export default function Generator({ initialProject, onProjectChange, className =
                   onChange={(e) => setDotStyle(e.target.value as any)}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                 >
-                  <option value="square">Standard Square</option>
-                  <option value="rounded">Smooth Rounded</option>
-                  <option value="dots">Circular Dots</option>
-                  <option value="leaf">Organic Leaf</option>
-                  <option value="diamond">Crisp Diamond</option>
-                  <option value="classy">Classy Starburst</option>
+                  <option value="square">{t('control.standardSquare', 'Standard Square')}</option>
+                  <option value="rounded">{t('control.smoothRounded', 'Smooth Rounded')}</option>
+                  <option value="dots">{t('control.circularDots', 'Circular Dots')}</option>
+                  <option value="leaf">{t('control.elegantLeaf', 'Organic Leaf')}</option>
+                  <option value="diamond">{t('control.diamondShape', 'Crisp Diamond')}</option>
+                  <option value="classy">{t('control.classyStarbursts', 'Classy Starburst')}</option>
                 </select>
               </div>
 
               <div>
                 <label htmlFor="gen-eye-style-select" className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-                  Corner Eye Pattern
+                  {t('control.label.eyeStyle', 'Corner Eye Pattern')}
                 </label>
                 <select
                   id="gen-eye-style-select"
@@ -587,10 +587,10 @@ export default function Generator({ initialProject, onProjectChange, className =
                   onChange={(e) => setEyeStyle(e.target.value as any)}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2 px-3 text-xs font-semibold text-slate-900 dark:text-white"
                 >
-                  <option value="square">Square Finder</option>
-                  <option value="rounded">Rounded Finder</option>
-                  <option value="circle">Circle Finder</option>
-                  <option value="leaf">Leaf organic</option>
+                  <option value="square">{t('control.eyeStyleSquare', 'Square Finder')}</option>
+                  <option value="rounded">{t('control.eyeStyleRounded', 'Rounded Finder')}</option>
+                  <option value="circle">{t('control.eyeStyleCircle', 'Circle Finder')}</option>
+                  <option value="leaf">{t('control.eyeStyleLeaf', 'Leaf organic')}</option>
                 </select>
               </div>
             </div>
@@ -598,13 +598,13 @@ export default function Generator({ initialProject, onProjectChange, className =
             {/* Logo Upload with 2MB validation */}
             <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60 space-y-2">
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                Center Brand Emblem / Logo (Max 2MB)
+                {t('control.logoTitle', 'Center Brand Emblem / Logo (Max 2MB)')}
               </label>
 
               <div className="flex items-center gap-3">
                 <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-600 hover:border-indigo-500 rounded-2xl text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer transition-colors">
                   <UploadCloud className="w-4 h-4 text-indigo-600" />
-                  <span>Upload Logo (.png, .jpg, .svg)</span>
+                  <span>{t('control.logoUploadBtn', 'Upload Logo (.png, .jpg, .svg)')}</span>
                   <input
                     type="file"
                     accept="image/png,image/jpeg,image/jpg,image/svg+xml"
@@ -631,7 +631,7 @@ export default function Generator({ initialProject, onProjectChange, className =
 
               {logoUrl && (
                 <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5" /> High Error Correction Level (H) automatically enabled for 100% camera readability.
+                  <ShieldCheck className="w-3.5 h-3.5" /> {t('control.eccHBudget', 'High Error Correction Level (H) automatically enabled for 100% camera readability.')}
                 </p>
               )}
             </div>

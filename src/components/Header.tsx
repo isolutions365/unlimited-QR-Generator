@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { QrCode, Zap, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, Barcode, FileSpreadsheet, BarChart3, User, LogOut, Sparkles } from 'lucide-react';
+import { 
+  QrCode, Zap, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, 
+  LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, 
+  Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, 
+  Barcode, FileSpreadsheet, BarChart3, User, LogOut, Sparkles, ArrowRight, 
+  Wallet, Bitcoin, MapPin, Smartphone, Share2 
+} from 'lucide-react';
 import Navigation from './Navigation';
 import LanguageSelector from './LanguageSelector';
 import { Locale } from '../utils/translations';
@@ -66,6 +72,7 @@ export default function Header({
     }
   };
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const isRtl = ['ar', 'ur'].includes(locale);
 
   const safeT = (key: string, fallback: string) => {
@@ -132,9 +139,263 @@ export default function Header({
         <Logo size={48} />
       </button>
 
-      {/* CENTER: Navigation */}
-      <div className="hidden xl:flex flex-1 justify-center min-w-0 px-4">
-         <Navigation links={navLinks} currentPath={currentPath} activeTab={activeTab} onLinkClick={handleLinkClick} isRtl={isRtl} />
+      {/* CENTER: Navigation with Premium Hover Dropdowns */}
+      <div 
+        className="hidden xl:flex items-center justify-center gap-1 px-4"
+        onMouseLeave={() => setActiveDropdown(null)}
+      >
+        {/* QR Generators Dropdown */}
+        <div 
+          className="relative py-2 px-1"
+          onMouseEnter={() => setActiveDropdown('generators')}
+        >
+          <button className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${activeDropdown === 'generators' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}>
+            <QrCode className="w-3.5 h-3.5" />
+            <span>QR Generators</span>
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'generators' ? 'rotate-180' : ''}`} />
+          </button>
+          
+          <AnimatePresence>
+            {activeDropdown === 'generators' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.15 }}
+                className="absolute left-1/2 -translate-x-1/2 mt-3 w-[780px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 z-50 grid grid-cols-4 gap-6 text-left"
+              >
+                {/* Column 1: Popular */}
+                <div className="space-y-4">
+                  <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider font-mono">Popular Creators</span>
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { name: 'URL QR', path: '/url-qr-generator', desc: 'Convert links to QR', icon: Globe },
+                      { name: 'WiFi QR', path: '/wifi-qr-generator', desc: 'Instant lobby onboarding', icon: Compass },
+                      { name: 'WhatsApp QR', path: '/whatsapp-qr-generator', desc: 'Pre-typed chat triggers', icon: Smartphone },
+                      { name: 'vCard QR', path: '/vcard-qr-generator', desc: 'Rich digital contact cards', icon: Contact },
+                    ].map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
+                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-indigo-50/50 transition-colors text-left"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                          <item.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{item.name}</span>
+                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Column 2: Business & Dining */}
+                <div className="space-y-4">
+                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider font-mono">Dining & Business</span>
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { name: 'Restaurant Menu', path: '/restaurant-menu-qr-generator', desc: 'Digital menus for diners', icon: Utensils },
+                      { name: 'Business Card', path: '/business-card-qr-generator', desc: 'Corporate identity nodes', icon: Wand2 },
+                      { name: 'Digital Profile', path: '/digital-card-qr-generator', desc: 'Custom personal bio links', icon: LayoutTemplate },
+                      { name: 'PDF Sharing QR', path: '/pdf-sharing-qr-generator', desc: 'Distribute documents', icon: FileText },
+                    ].map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
+                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-amber-50/40 transition-colors text-left"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                          <item.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="block text-xs font-bold text-slate-800 group-hover:text-amber-700 transition-colors">{item.name}</span>
+                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Column 3: Social Media */}
+                <div className="space-y-4">
+                  <span className="text-[10px] font-bold text-pink-600 uppercase tracking-wider font-mono">Social Media</span>
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { name: 'Instagram Profile', path: '/instagram-qr-generator', desc: 'Grow followers organic', icon: Play },
+                      { name: 'Facebook Page', path: '/facebook-qr-generator', desc: 'Boost likes & engagement', icon: Megaphone },
+                      { name: 'YouTube Video', path: '/youtube-qr-generator', desc: 'Direct views count boost', icon: Play },
+                      { name: 'Location Map', path: '/location-qr-generator', desc: 'Embed coordinates point', icon: MapPin },
+                    ].map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
+                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-pink-50/40 transition-colors text-left"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-600 group-hover:text-white transition-colors">
+                          <item.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="block text-xs font-bold text-slate-800 group-hover:text-pink-600 transition-colors">{item.name}</span>
+                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Column 4: Professional & Advanced */}
+                <div className="space-y-4">
+                  <span className="text-[10px] font-bold text-purple-600 uppercase tracking-wider font-mono">Advanced & Pro</span>
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { name: 'Animated QR', path: '/animated-qr-generator', desc: 'Creative motion scanning', icon: Palette },
+                      { name: 'Payment QR', path: '/payment-qr-generator', desc: 'Receive digital wallet pays', icon: Wallet },
+                      { name: 'Crypto QR', path: '/crypto-qr-generator', desc: 'Secure blockchain wallet', icon: Bitcoin },
+                      { name: 'App Store QR', path: '/app-store-qr-generator', desc: 'Dual OS smart download', icon: Bot },
+                    ].map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
+                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-purple-50/40 transition-colors text-left"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                          <item.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="block text-xs font-bold text-slate-800 group-hover:text-purple-600 transition-colors">{item.name}</span>
+                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Barcode Studio Link */}
+        <button 
+          onClick={() => { setActiveDropdown(null); navigateTo('/barcode-generator'); }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${currentPath === '/barcode-generator' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}
+        >
+          <Barcode className="w-3.5 h-3.5" />
+          <span>Barcode Studio</span>
+        </button>
+
+        {/* Bulk QR Link */}
+        <button 
+          onClick={() => { setActiveDropdown(null); navigateTo('/bulk-qr-generator'); }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${currentPath === '/bulk-qr-generator' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}
+        >
+          <FileSpreadsheet className="w-3.5 h-3.5" />
+          <span>Bulk QR</span>
+        </button>
+
+        {/* Enterprise Solutions Dropdown */}
+        <div 
+          className="relative py-2 px-1"
+          onMouseEnter={() => setActiveDropdown('solutions')}
+        >
+          <button className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${activeDropdown === 'solutions' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}>
+            <Zap className="w-3.5 h-3.5" />
+            <span>Solutions</span>
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'solutions' ? 'rotate-180' : ''}`} />
+          </button>
+          
+          <AnimatePresence>
+            {activeDropdown === 'solutions' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.15 }}
+                className="absolute left-1/2 -translate-x-1/2 mt-3 w-[420px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 text-left flex flex-col gap-1"
+              >
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono px-3 py-1.5">Enterprise Solutions</span>
+                {[
+                  { name: 'Contactless Digital Menu', path: '/solutions/contactless-menu', desc: 'Paperless dining lists for diners', icon: Utensils },
+                  { name: 'NFC vCard Networking', path: '/solutions/digital-business-card', desc: 'Seamless high-grade corporate profiles', icon: Contact },
+                  { name: 'Google Review Booster', path: '/solutions/google-review-booster', desc: 'Boost organic localized stars count', icon: Sparkles },
+                  { name: 'WiFi Guest Onboarding', path: '/solutions/wifi-guest-onboarding', desc: 'No-password lobby network pairing', icon: Compass },
+                  { name: 'Event Gate Tickets Pass', path: '/solutions/event-ticketing-checkin', desc: 'Secure barcode/QR checks at door', icon: LayoutTemplate },
+                  { name: 'Unified App Marketing', path: '/solutions/app-download-marketing', desc: 'Smart OS download router page', icon: Bot },
+                ].map((item) => (
+                  <button
+                    key={item.path}
+                    onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
+                    className="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-indigo-50/50 transition-colors text-left"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                      <item.icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{item.name}</span>
+                      <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                    </div>
+                  </button>
+                ))}
+                
+                <div className="border-t border-slate-100 mt-2 pt-2 px-1">
+                  <button
+                    onClick={() => { setActiveDropdown(null); navigateTo('/solutions'); }}
+                    className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-indigo-600 hover:text-indigo-700 text-xs font-extrabold transition-colors text-left"
+                  >
+                    <span>Explore All Industry Solutions</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Resources Dropdown */}
+        <div 
+          className="relative py-2 px-1"
+          onMouseEnter={() => setActiveDropdown('resources')}
+        >
+          <button className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${activeDropdown === 'resources' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}>
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>Resources</span>
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'resources' ? 'rotate-180' : ''}`} />
+          </button>
+          
+          <AnimatePresence>
+            {activeDropdown === 'resources' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.15 }}
+                className="absolute right-0 mt-3 w-[260px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-3.5 z-50 text-left flex flex-col gap-1"
+              >
+                {[
+                  { name: 'FAQ & Help Center', path: '/faq', desc: 'Answers to common queries', icon: HelpCircle },
+                  { name: 'Guides & Blog', path: '/blog', desc: 'Tutorials & news', icon: BookOpen },
+                  { name: 'Product Comparisons', path: '/compare', desc: 'Side-by-side matrices', icon: Scale },
+                  { name: 'AI QR Generator', path: '/ai-gateway', desc: 'Artistic generative models', icon: Bot },
+                ].map((item) => (
+                  <button
+                    key={item.path}
+                    onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
+                    className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-indigo-50/50 transition-colors text-left"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                      <item.icon className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{item.name}</span>
+                      <span className="block text-[10px] text-slate-400 mt-0.5">{item.desc}</span>
+                    </div>
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* RIGHT: Buttons */}
