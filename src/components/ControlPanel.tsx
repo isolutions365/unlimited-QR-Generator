@@ -3,7 +3,7 @@ import { useTranslation } from '../utils/i18n';
 import { getProductionBaseUrl } from '../config/siteConfig';
 
 import { QRProject } from '../types';
-import { Link2, AlignLeft, Wifi, Mail, ScanFace, Zap, Paintbrush, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp, UtensilsCrossed, Star, UserCheck, X, Square, Circle, Leaf, Diamond, Sparkles, Undo2, Redo2 } from 'lucide-react';
+import { Link2, AlignLeft, Wifi, Mail, ScanFace, Zap, Paintbrush, Check, UploadCloud, Phone, MessageSquare, Share2, Coins, MapPin, Calendar, Folder, Wand2, SquareDot, AlertTriangle, Info, Layers, Maximize, Smartphone, Wallet, CreditCard, DollarSign, Globe, QrCode, LayoutTemplate, Download, ShoppingBag, Settings, ChevronDown, ChevronUp, UtensilsCrossed, Star, UserCheck, X, Square, Circle, Leaf, Diamond, Sparkles, Undo2, Redo2, RotateCw, RotateCcw, Compass, RefreshCcw, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ColorPalette from './ColorPalette';
 import AICoPilot from './AICoPilot';
@@ -459,6 +459,24 @@ export default function ControlPanel({ currentProject,
           margin: 20
         }),
         [field]: value
+      }
+    } as Partial<QRProject>, debounce);
+  };
+
+  const setDesignFields = (fields: Record<string, any>, debounce = false) => {
+    onChange({
+      ...localProject,
+      design: {
+        ...(localProject.design || {
+          fgColor: '#0f172a',
+          bgColor: '#ffffff',
+          gradientType: 'none',
+          gradientColor: '#4f46e5',
+          dotStyle: 'square',
+          eyeStyle: 'square',
+          margin: 20
+        }),
+        ...fields
       }
     } as Partial<QRProject>, debounce);
   };
@@ -2392,12 +2410,13 @@ export default function ControlPanel({ currentProject,
           </label>
           {localProject.design?.logoUrl && (
             <button
+              id="remove-logo-header-btn"
               type="button"
               onClick={clearLogo}
-              className="text-[10px] text-red-600 hover:text-red-800 font-semibold transition-colors cursor-pointer flex items-center gap-1 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded-md"
+              className="text-[11px] text-rose-600 hover:text-rose-700 font-bold transition-colors cursor-pointer flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-lg border border-rose-200/80 shadow-2xs"
             >
-              <X className="w-3 h-3" />
-              <span>{t('control.clearEmblem', 'Clear Emblem')}</span>
+              <Trash2 className="w-3 h-3" />
+              <span>{t('control.removeLogo', 'Remove Logo')}</span>
             </button>
           )}
         </div>
@@ -2575,44 +2594,161 @@ export default function ControlPanel({ currentProject,
         )}
 
         {localProject.design?.logoUrl && (
-          <div className="mt-3 space-y-3 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
-            {/* Show a small thumbnail preview of the logo */}
-            <div className="flex items-center gap-2.5 bg-white p-2.5 rounded-xl border border-slate-200/60 shadow-2xs">
-              <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-200/80 overflow-hidden shrink-0 shadow-inner">
-                {localProject.design.logoUrl.startsWith('data:image') || localProject.design.logoUrl.startsWith('http') ? (
-                  <img
-                    src={localProject.design.logoUrl}
-                    alt="Logo Preview"
-                    className="w-full h-full object-contain p-0.5"
-                    referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  <span 
-                    className="font-bold text-indigo-600 text-center overflow-hidden whitespace-nowrap px-0.5 select-none"
-                    dir="auto"
-                    style={{ fontSize: `${getEmblemFontSize(localProject.design.logoUrl, 44)}px` }}
-                  >
-                    {localProject.design.logoUrl}
-                  </span>
-                )}
-              </div>
-              <div className="overflow-hidden flex-1">
+          <div className="mt-3 space-y-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+            {/* Real-time Thumbnail Preview Container */}
+            <div 
+              id="logo-thumbnail-preview-container" 
+              className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3"
+            >
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100/80">
-                    {localProject.design.logoUrl.startsWith('data:image') 
-                      ? t('control.badgeFile', 'Uploaded File') 
-                      : localProject.design.logoUrl.startsWith('http') 
-                        ? t('control.badgeUrl', 'Image URL') 
-                        : t('control.badgeText', 'Text Emblem')}
+                  <span className="p-1 bg-indigo-50 text-indigo-600 rounded-md border border-indigo-100">
+                    <Compass className="w-3.5 h-3.5" />
                   </span>
-                  <span className="text-[9px] text-emerald-600 font-semibold flex items-center gap-0.5">
-                    <Check className="w-3 h-3" />
-                    <span>{t('control.activeInQr', 'Active in QR Preview')}</span>
+                  <span className="text-xs font-bold text-slate-900">
+                    {t('control.thumbnailPreviewTitle', 'Real-Time Logo Preview')}
                   </span>
                 </div>
-                <span className="text-[10px] font-mono text-gray-500 block truncate max-w-[200px] mt-1">
-                  {localProject.design.logoUrl}
-                </span>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-mono font-black text-indigo-600 bg-indigo-50 border border-indigo-100/80 px-2 py-0.5 rounded-full">
+                      {localProject.design?.logoRotation ?? 0}°
+                    </span>
+                    <span className="text-[9px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                      {Math.round((localProject.design?.logoScale ?? 0.18) * 100)}% size
+                    </span>
+                  </div>
+                  <button
+                    id="remove-logo-btn"
+                    type="button"
+                    onClick={clearLogo}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/90 rounded-lg transition-colors cursor-pointer shadow-2xs"
+                    title={t('control.removeLogo', 'Remove Logo')}
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>{t('control.removeLogo', 'Remove Logo')}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Viewport with rotation preview, orientation compass ring and transparency grid */}
+              <div className="flex items-center gap-3.5 bg-slate-50/80 p-3 rounded-xl border border-slate-200/70">
+                {/* Visual Viewport Stage */}
+                <div 
+                  className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white flex items-center justify-center border border-slate-200 shadow-inner overflow-hidden shrink-0"
+                  style={{
+                    backgroundImage: 'linear-gradient(45deg, #f1f5f9 25%, transparent 25%), linear-gradient(-45deg, #f1f5f9 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f1f5f9 75%), linear-gradient(-45deg, transparent 75%, #f1f5f9 75%)',
+                    backgroundSize: '12px 12px',
+                    backgroundPosition: '0 0, 0 6px, 6px -6px, -6px 0px'
+                  }}
+                >
+                  {/* Subtle crosshair guide lines */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                    <div className="w-full h-px border-b border-dashed border-slate-500" />
+                    <div className="absolute h-full w-px border-l border-dashed border-slate-500" />
+                  </div>
+
+                  {/* Orientation Cardinal Markers (0°, 90°, 180°, 270°) */}
+                  <span className="absolute top-1 text-[7px] font-mono font-bold text-slate-400 select-none">0°</span>
+                  <span className="absolute right-1 text-[7px] font-mono font-bold text-slate-400 select-none">90°</span>
+                  <span className="absolute bottom-1 text-[7px] font-mono font-bold text-slate-400 select-none">180°</span>
+                  <span className="absolute left-1 text-[7px] font-mono font-bold text-slate-400 select-none">270°</span>
+
+                  {/* Live Rotating Logo Container */}
+                  <motion.div
+                    className={`relative flex items-center justify-center will-change-transform z-10 select-none ${
+                      localProject.design?.logoBackgroundMask 
+                        ? 'bg-white rounded-full p-2 shadow-sm ring-1 ring-black/10' 
+                        : ''
+                    }`}
+                    animate={{
+                      rotate: localProject.design?.logoRotation ?? 0
+                    }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                    style={{
+                      width: '64px',
+                      height: '64px'
+                    }}
+                  >
+                    {localProject.design.logoUrl.startsWith('data:image') || localProject.design.logoUrl.startsWith('http') ? (
+                      <img
+                        src={localProject.design.logoUrl}
+                        alt="Uploaded Logo Thumbnail Preview"
+                        className="w-full h-full object-contain filter drop-shadow-xs"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div 
+                        className="w-full h-full flex items-center justify-center font-black text-indigo-600 bg-indigo-50 border border-indigo-200/80 rounded-xl shadow-xs overflow-hidden whitespace-nowrap text-center px-1"
+                        dir="auto"
+                        style={{ fontSize: `${getEmblemFontSize(localProject.design.logoUrl, 56)}px` }}
+                      >
+                        {localProject.design.logoUrl}
+                      </div>
+                    )}
+                  </motion.div>
+                </div>
+
+                {/* Meta details, source badge, and quick rotation actions */}
+                <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-0.5">
+                  <div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100/80">
+                        {localProject.design.logoUrl.startsWith('data:image') 
+                          ? t('control.badgeFile', 'Uploaded File') 
+                          : localProject.design.logoUrl.startsWith('http') 
+                            ? t('control.badgeUrl', 'Image URL') 
+                            : t('control.badgeText', 'Text Emblem')}
+                      </span>
+                      <span className="text-[9px] text-emerald-600 font-semibold flex items-center gap-0.5">
+                        <Check className="w-3 h-3 stroke-[2.5]" />
+                        <span>{t('control.activeInQr', 'Live in Matrix')}</span>
+                      </span>
+                    </div>
+
+                    <span className="text-[10px] font-mono text-slate-500 block truncate max-w-[190px] mt-1.5" title={localProject.design.logoUrl}>
+                      {localProject.design.logoUrl}
+                    </span>
+                  </div>
+
+                  {/* Quick Preset Rotation Angle Buttons */}
+                  <div className="pt-2">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      {t('control.quickRotate', 'Quick Rotate:')}
+                    </span>
+                    <div className="flex items-center gap-1 flex-wrap">
+                      {[0, 90, 180, 270].map(angle => {
+                        const isCurrent = (localProject.design?.logoRotation ?? 0) === angle;
+                        return (
+                          <button
+                            key={angle}
+                            type="button"
+                            onClick={() => setDesignField('logoRotation', angle, true)}
+                            className={`px-2 py-1 text-[10px] font-bold font-mono rounded-md border transition-all cursor-pointer ${
+                              isCurrent
+                                ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
+                                : 'bg-white text-slate-700 border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200'
+                            }`}
+                          >
+                            {angle}°
+                          </button>
+                        );
+                      })}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = localProject.design?.logoRotation ?? 0;
+                          const next = (current + 90) % 360;
+                          setDesignField('logoRotation', next, true);
+                        }}
+                        title={t('control.rotateCw90', 'Rotate +90° Clockwise')}
+                        className="p-1 text-slate-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 rounded-md border border-slate-200 transition-colors"
+                      >
+                        <RotateCw className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -2652,27 +2788,225 @@ export default function ControlPanel({ currentProject,
               />
             </div>
 
-            {/* Logo Positioning & Auto-Center Toggle */}
+            {/* Logo Background Mask (White Circular Backplate) Toggle */}
             <div className="pt-3 border-t border-gray-200/50">
-              <div className="flex items-center justify-between">
+              <label 
+                htmlFor="logo-background-mask-toggle"
+                className="flex items-center justify-between cursor-pointer group"
+              >
                 <div>
-                  <span id="logo-autocenter-label" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">{t('control.logoAutoCenterLabel', 'Auto-Center Position')}</span>
-                  <p className="text-[9px] text-gray-600 leading-normal mt-0.5 max-w-[190px]">
-                    {t('control.autoCenterDesc', 'Maintains the correct offset relative to the finder eye frames automatically.')}
+                  <span id="logo-background-mask-label" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block group-hover:text-indigo-650 transition-colors">
+                    {t('control.logoBackgroundMaskLabel', 'Background Mask')}
+                  </span>
+                  <p className="text-[9px] text-gray-600 leading-normal mt-0.5 max-w-[210px]">
+                    {t('control.logoBackgroundMaskDesc', 'Applies a clean white circular mask behind the logo to improve contrast and scannability on dense patterns.')}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-labelledby="logo-autocenter-label"
-                  aria-checked={localProject.design?.logoAutoCenter !== false ? "true" : "false"}
-                  onClick={() => setDesignField('logoAutoCenter', localProject.design?.logoAutoCenter === false)}
-                  className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.design?.logoAutoCenter !== false ? 'bg-indigo-600' : 'bg-gray-300' }`}
-                >
-                  <span
-                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${ localProject.design?.logoAutoCenter !== false ? 'translate-x-4.5' : 'translate-x-1' }`}
+                <div className="flex items-center gap-2">
+                  <input
+                    id="logo-background-mask-toggle"
+                    type="checkbox"
+                    role="switch"
+                    aria-labelledby="logo-background-mask-label"
+                    checked={localProject.design?.logoBackgroundMask === true}
+                    onChange={e => setDesignField('logoBackgroundMask', e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                   />
-                </button>
+                </div>
+              </label>
+            </div>
+
+            {/* Logo Alignment & Safe Zone Radio Presets */}
+            <div className="pt-3.5 border-t border-gray-200/50">
+              <div className="flex items-center justify-between mb-1">
+                <div>
+                  <span id="logo-alignment-label" className="text-[10px] font-bold text-gray-900 uppercase tracking-wider block">
+                    {t('control.logoAlignment', 'Logo Alignment & Safe Zones')}
+                  </span>
+                  <p className="text-[9px] text-gray-600 leading-normal mt-0.5">
+                    {t('control.logoAlignmentDesc', 'Position the logo centered or specifically within non-interfering QR safe zones.')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Radio options grid */}
+              <div 
+                role="radiogroup" 
+                aria-labelledby="logo-alignment-label"
+                className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2.5"
+              >
+                {[
+                  {
+                    id: 'logo-align-center',
+                    key: 'center',
+                    name: t('control.alignCenter', 'Center (Core)'),
+                    badge: t('control.alignRec', 'Auto-Balanced'),
+                    badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+                    dotPosition: 'center',
+                  },
+                  {
+                    id: 'logo-align-bottom-right',
+                    key: 'bottom-right',
+                    name: t('control.alignBottomRight', 'Bottom-Right'),
+                    badge: t('control.alignSafe', 'No Finder Eye'),
+                    badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                    dotPosition: 'bottom-right',
+                  },
+                  {
+                    id: 'logo-align-top-center',
+                    key: 'top-center',
+                    name: t('control.alignTopCenter', 'Top Center'),
+                    badge: t('control.alignSafeZone', 'Upper Safe Zone'),
+                    badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
+                    dotPosition: 'top-center',
+                  },
+                  {
+                    id: 'logo-align-bottom-center',
+                    key: 'bottom-center',
+                    name: t('control.alignBottomCenter', 'Bottom Center'),
+                    badge: t('control.alignSafeZone', 'Lower Safe Zone'),
+                    badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
+                    dotPosition: 'bottom-center',
+                  },
+                  {
+                    id: 'logo-align-right-center',
+                    key: 'right-center',
+                    name: t('control.alignRightCenter', 'Right Center'),
+                    badge: t('control.alignSafeZone', 'East Corridor'),
+                    badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
+                    dotPosition: 'right-center',
+                  },
+                  {
+                    id: 'logo-align-custom',
+                    key: 'custom',
+                    name: t('control.alignCustom', 'Custom Offset'),
+                    badge: t('control.alignSliders', 'Manual X / Y'),
+                    badgeColor: 'bg-slate-100 text-slate-700 border-slate-200',
+                    dotPosition: 'custom',
+                  },
+                ].map((opt) => {
+                  const isSelected = (() => {
+                    const currentPos = localProject.design?.logoAlignment;
+                    if (currentPos) return currentPos === opt.key;
+                    
+                    const isAuto = localProject.design?.logoAutoCenter !== false;
+                    const ox = localProject.design?.logoOffsetX ?? 0;
+                    const oy = localProject.design?.logoOffsetY ?? 0;
+                    
+                    if (opt.key === 'center') return isAuto || (ox === 0 && oy === 0);
+                    if (opt.key === 'bottom-right') return !isAuto && ox === 65 && oy === 65;
+                    if (opt.key === 'top-center') return !isAuto && ox === 0 && oy === -65;
+                    if (opt.key === 'bottom-center') return !isAuto && ox === 0 && oy === 65;
+                    if (opt.key === 'right-center') return !isAuto && ox === 65 && oy === 0;
+                    if (opt.key === 'custom') return !isAuto && !(ox === 0 && oy === 0) && !(ox === 65 && oy === 65) && !(ox === 0 && oy === -65) && !(ox === 0 && oy === 65) && !(ox === 65 && oy === 0);
+                    return false;
+                  })();
+
+                  return (
+                    <label
+                      key={opt.key}
+                      htmlFor={opt.id}
+                      className={`relative flex flex-col p-2.5 rounded-xl border transition-all cursor-pointer select-none text-left ${
+                        isSelected
+                          ? 'bg-indigo-50/70 border-indigo-600 shadow-2xs ring-1 ring-indigo-600/20'
+                          : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50/60'
+                      }`}
+                    >
+                      <input
+                        id={opt.id}
+                        type="radio"
+                        name="logo-alignment-position"
+                        value={opt.key}
+                        checked={isSelected}
+                        onChange={() => {
+                          if (opt.key === 'center') {
+                            setDesignFields({
+                              logoAlignment: 'center',
+                              logoAutoCenter: true,
+                              logoOffsetX: 0,
+                              logoOffsetY: 0
+                            });
+                          } else if (opt.key === 'bottom-right') {
+                            setDesignFields({
+                              logoAlignment: 'bottom-right',
+                              logoAutoCenter: false,
+                              logoOffsetX: 65,
+                              logoOffsetY: 65
+                            });
+                          } else if (opt.key === 'top-center') {
+                            setDesignFields({
+                              logoAlignment: 'top-center',
+                              logoAutoCenter: false,
+                              logoOffsetX: 0,
+                              logoOffsetY: -65
+                            });
+                          } else if (opt.key === 'bottom-center') {
+                            setDesignFields({
+                              logoAlignment: 'bottom-center',
+                              logoAutoCenter: false,
+                              logoOffsetX: 0,
+                              logoOffsetY: 65
+                            });
+                          } else if (opt.key === 'right-center') {
+                            setDesignFields({
+                              logoAlignment: 'right-center',
+                              logoAutoCenter: false,
+                              logoOffsetX: 65,
+                              logoOffsetY: 0
+                            });
+                          } else if (opt.key === 'custom') {
+                            setDesignFields({
+                              logoAlignment: 'custom',
+                              logoAutoCenter: false,
+                              logoOffsetX: localProject.design?.logoOffsetX ?? 0,
+                              logoOffsetY: localProject.design?.logoOffsetY ?? 0
+                            });
+                          }
+                        }}
+                        className="sr-only"
+                      />
+
+                      {/* Top row with mini visual matrix & radio indicator */}
+                      <div className="flex items-center justify-between mb-1.5">
+                        {/* 3x3 Mini Matrix representation showing finder patterns and active logo position */}
+                        <div className="w-6 h-6 bg-slate-100 rounded-md p-0.5 grid grid-cols-3 grid-rows-3 gap-0.5 border border-slate-200">
+                          {/* (0,0) Top-Left Finder */}
+                          <div className="bg-slate-700 rounded-[1px]" />
+                          {/* (0,1) Top-Center */}
+                          <div className={`rounded-[1px] flex items-center justify-center ${opt.dotPosition === 'top-center' ? 'bg-indigo-600 ring-1 ring-indigo-400' : 'bg-transparent'}`} />
+                          {/* (0,2) Top-Right Finder */}
+                          <div className="bg-slate-700 rounded-[1px]" />
+                          {/* (1,0) Mid-Left */}
+                          <div className="bg-transparent" />
+                          {/* (1,1) Center */}
+                          <div className={`rounded-[1px] flex items-center justify-center ${opt.dotPosition === 'center' ? 'bg-indigo-600 ring-1 ring-indigo-400' : (opt.dotPosition === 'custom' ? 'bg-slate-400' : 'bg-transparent')}`} />
+                          {/* (1,2) Mid-Right */}
+                          <div className={`rounded-[1px] flex items-center justify-center ${opt.dotPosition === 'right-center' ? 'bg-indigo-600 ring-1 ring-indigo-400' : 'bg-transparent'}`} />
+                          {/* (2,0) Bottom-Left Finder */}
+                          <div className="bg-slate-700 rounded-[1px]" />
+                          {/* (2,1) Bottom-Center */}
+                          <div className={`rounded-[1px] flex items-center justify-center ${opt.dotPosition === 'bottom-center' ? 'bg-indigo-600 ring-1 ring-indigo-400' : 'bg-transparent'}`} />
+                          {/* (2,2) Bottom-Right Safe Zone */}
+                          <div className={`rounded-[1px] flex items-center justify-center ${opt.dotPosition === 'bottom-right' ? 'bg-emerald-600 ring-1 ring-emerald-400' : 'border border-dashed border-slate-300'}`} />
+                        </div>
+
+                        {/* Custom radio pill indicator */}
+                        <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+                          isSelected ? 'border-indigo-600 bg-indigo-600' : 'border-gray-300 bg-white'
+                        }`}>
+                          {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        </div>
+                      </div>
+
+                      <span className="text-[10px] font-bold text-gray-900 leading-tight">
+                        {opt.name}
+                      </span>
+                      <span className={`inline-block mt-1 text-[8px] font-semibold px-1 py-0.5 rounded border w-fit leading-none ${opt.badgeColor}`}>
+                        {opt.badge}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
 
               {/* Real-time Visual Alignment Preview Box */}
@@ -2730,7 +3064,8 @@ export default function ControlPanel({ currentProject,
                         style={{
                           width: `${112 * (localProject.design?.logoScale ?? 0.18)}px`,
                           height: `${112 * (localProject.design?.logoScale ?? 0.18)}px`,
-                          borderRadius: `${Math.max(2, 112 * (localProject.design?.logoScale ?? 0.18) * 0.22)}px`
+                          borderRadius: localProject.design?.logoBackgroundMask ? '9999px' : `${Math.max(2, 112 * (localProject.design?.logoScale ?? 0.18) * 0.22)}px`,
+                          padding: localProject.design?.logoBackgroundMask ? '2px' : '0.5px'
                         }}
                       >
                         {(() => {
@@ -2767,12 +3102,24 @@ export default function ControlPanel({ currentProject,
                   {/* Alignment description or status helper */}
                   <div className="flex-1 space-y-1">
                     <span className="text-[10px] font-bold text-slate-800 block">
-                      {localProject.design?.logoAutoCenter !== false ? t('control.opticalAutoBalanced', '✨ Optical Auto-Balanced') : t('control.manuallyAdjusted', '🔧 Manually Adjusted')}
+                      {localProject.design?.logoAutoCenter !== false 
+                        ? t('control.opticalAutoBalanced', '✨ Optical Auto-Balanced') 
+                        : (localProject.design?.logoOffsetX === 65 && localProject.design?.logoOffsetY === 65)
+                          ? t('control.bottomRightSafe', '🛡️ Bottom-Right Safe Zone')
+                          : (localProject.design?.logoOffsetX === 0 && localProject.design?.logoOffsetY === -65)
+                            ? t('control.topCenterSafe', '🛡️ Top Corridor Safe Zone')
+                            : (localProject.design?.logoOffsetX === 0 && localProject.design?.logoOffsetY === 65)
+                              ? t('control.bottomCenterSafe', '🛡️ Bottom Corridor Safe Zone')
+                              : (localProject.design?.logoOffsetX === 65 && localProject.design?.logoOffsetY === 0)
+                                ? t('control.rightCenterSafe', '🛡️ East Corridor Safe Zone')
+                                : t('control.manuallyAdjusted', '🔧 Custom Coordinates')}
                     </span>
                     <p className="text-[8.5px] text-slate-500 leading-normal">
                       {localProject.design?.logoAutoCenter !== false 
                         ? t('control.logoAutoCenterDescription', 'Logo shifted slightly top-left to achieve visual symmetry with asymmetric finder pattern count.') 
-                        : t('control.logoManualOffsetDescription', 'Custom offset coordinates applied over the physical grid coordinate origin.')}
+                        : (localProject.design?.logoOffsetX === 65 && localProject.design?.logoOffsetY === 65)
+                          ? t('control.bottomRightDesc', 'Positioned in the open bottom-right quadrant with no finder eye obstruction.')
+                          : t('control.logoManualOffsetDescription', 'Custom offset coordinates applied over the physical grid coordinate origin.')}
                     </p>
                     <div className="flex items-center gap-1.5 pt-0.5 text-[8px] text-slate-400 font-semibold uppercase tracking-wider">
                       <span className="inline-block w-1 h-1 rounded-full bg-slate-400" />
@@ -2782,31 +3129,16 @@ export default function ControlPanel({ currentProject,
                 </div>
               </div>
 
-                           {/* Conditionally show Manual Offset controls when Auto-Center is disabled or show dynamic calculation when active */}
-              {localProject.design?.logoAutoCenter !== false ? (
-                <div className="mt-3 p-3 bg-indigo-50/50 border border-indigo-100/60 rounded-xl space-y-2 text-slate-700 animate-in fade-in duration-200">
-                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block">{t('control.weightBalancing', 'Automatic Weight Balancing')}</span>
-                  <div className="grid grid-cols-2 gap-2 text-[10px]">
-                    <div className="bg-white/80 p-2 rounded-lg border border-indigo-50/50 flex flex-col justify-center">
-                      <span className="text-slate-500 text-[8.5px]">{t('control.offsetX', 'Offset X (Horizontal)')}</span>
-                      <span className="font-mono font-bold text-slate-800 text-[11px] mt-0.5">
-                        +{calculateAutoCenterOffsets().offsetX} px
-                      </span>
-                    </div>
-                    <div className="bg-white/80 p-2 rounded-lg border border-indigo-50/50 flex flex-col justify-center">
-                      <span className="text-slate-500 text-[8.5px]">{t('control.offsetY', 'Offset Y (Vertical)')}</span>
-                      <span className="font-mono font-bold text-slate-800 text-[11px] mt-0.5">
-                        +{calculateAutoCenterOffsets().offsetY} px
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-[8.5px] text-slate-500 leading-normal mt-1">
-                    {t('control.autoCenterOffsetFormulaDesc', 'Balanced calculated offset accounts for standard QR Code eye pattern asymmetry ({modulesCount}x{modulesCount} grid), automatically shifting the centerpiece slightly top-left by 4% of eye footprint size to ensure absolute visual/optical balance.', { modulesCount: calculateAutoCenterOffsets().modulesCount })}
-                  </p>
-                </div>
-              ) : (
+              {/* Fine-Tuning Coordinates (Available for custom adjustments and visible when offsets are active) */}
+              {localProject.design?.logoAutoCenter === false && (
                 <div className="mt-3.5 p-3 bg-white border border-gray-250/60 rounded-xl space-y-3 shadow-2xs animate-in fade-in duration-200">
-                  <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block mb-1">{t('control.manualFineTuning', 'Manual Center Fine-Tuning')}</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider block">{t('control.manualFineTuning', 'Coordinate Fine-Tuning')}</span>
+                    <span className="text-[8.5px] text-slate-500 font-mono">
+                      X: {(localProject.design?.logoOffsetX ?? 0) > 0 ? `+${localProject.design?.logoOffsetX ?? 0}` : localProject.design?.logoOffsetX ?? 0}px, 
+                      Y: {(localProject.design?.logoOffsetY ?? 0) > 0 ? `+${localProject.design?.logoOffsetY ?? 0}` : localProject.design?.logoOffsetY ?? 0}px
+                    </span>
+                  </div>
                   
                   {/* Manual X Offset slider */}
                   <div>
@@ -2824,7 +3156,14 @@ export default function ControlPanel({ currentProject,
                       step="1"
                       className="w-full min-h-[44px] h-11 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700 touch-manipulation"
                       value={localProject.design?.logoOffsetX ?? 0}
-                      onChange={e => setDesignField('logoOffsetX', parseInt(e.target.value, 10), true)}
+                      onChange={e => {
+                        const newX = parseInt(e.target.value, 10);
+                        setDesignFields({
+                          logoOffsetX: newX,
+                          logoAutoCenter: false,
+                          logoAlignment: 'custom'
+                        }, true);
+                      }}
                     />
                   </div>
 
@@ -2844,18 +3183,41 @@ export default function ControlPanel({ currentProject,
                       step="1"
                       className="w-full min-h-[44px] h-11 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-slate-700 touch-manipulation"
                       value={localProject.design?.logoOffsetY ?? 0}
-                      onChange={e => setDesignField('logoOffsetY', parseInt(e.target.value, 10), true)}
+                      onChange={e => {
+                        const newY = parseInt(e.target.value, 10);
+                        setDesignFields({
+                          logoOffsetY: newY,
+                          logoAutoCenter: false,
+                          logoAlignment: 'custom'
+                        }, true);
+                      }}
                     />
                   </div>
 
                   <div className="flex items-center gap-1.5 pt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse shrink-0" />
                     <p className="text-[8.5px] leading-relaxed text-slate-500 font-medium">
-                      {t('control.manualShiftLogoDesc', 'Manually shift logo placement in pixels relative to the physical center.')}
+                      {t('control.manualShiftLogoDesc', 'Fine-tune offset coordinates in pixels relative to the physical center.')}
                     </p>
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Revert / Remove Logo Action Bar */}
+            <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between gap-2">
+              <span className="text-[10px] text-slate-500 font-medium">
+                {t('control.revertStandardDesc', 'Revert to standard QR code without brand overlay')}
+              </span>
+              <button
+                id="remove-logo-footer-btn"
+                type="button"
+                onClick={clearLogo}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-600 hover:text-rose-700 bg-white hover:bg-rose-50 border border-rose-200 rounded-xl transition-all cursor-pointer shadow-2xs hover:shadow-xs shrink-0"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{t('control.removeLogo', 'Remove Logo')}</span>
+              </button>
             </div>
           </div>
         )}

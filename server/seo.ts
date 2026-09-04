@@ -1238,27 +1238,70 @@ export function buildSitemapXml(): string {
 }
 
 // ============================================
+// SUPPORTED LOCALES & HREFLANG GENERATOR
+// ============================================
+
+export const SUPPORTED_LOCALES = ['en', 'ar', 'ur', 'hi', 'fr', 'es', 'tr', 'id'] as const;
+export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
+
+/**
+ * Extracts the locale prefix (if any) and normalizes the canonical route path
+ */
+export function extractLocaleAndPath(pathname: string): { locale: SupportedLocale; cleanPath: string } {
+  const normalized = (pathname || '/').replace(/\/+$/, '') || '/';
+  const parts = normalized.split('/').filter(Boolean);
+  if (parts.length > 0 && (SUPPORTED_LOCALES as readonly string[]).includes(parts[0])) {
+    const locale = parts[0] as SupportedLocale;
+    const cleanPath = parts.length > 1 ? '/' + parts.slice(1).join('/') : '/';
+    return { locale, cleanPath };
+  }
+  return { locale: 'en', cleanPath: normalized };
+}
+
+/**
+ * Generates the full hreflang alternates link tags for all 8 supported languages + x-default
+ */
+export function buildHreflangTags(cleanPath: string, baseUrl = 'https://www.freeqrbarcodes.com'): string {
+  const normalizedPath = cleanPath === '/' ? '' : (cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`);
+  const enUrl = `${baseUrl}${normalizedPath || '/'}`;
+  
+  const entries: { hreflang: string; href: string }[] = [
+    { hreflang: 'en', href: enUrl },
+    { hreflang: 'ar', href: `${baseUrl}/ar${normalizedPath}` },
+    { hreflang: 'ur', href: `${baseUrl}/ur${normalizedPath}` },
+    { hreflang: 'hi', href: `${baseUrl}/hi${normalizedPath}` },
+    { hreflang: 'fr', href: `${baseUrl}/fr${normalizedPath}` },
+    { hreflang: 'es', href: `${baseUrl}/es${normalizedPath}` },
+    { hreflang: 'tr', href: `${baseUrl}/tr${normalizedPath}` },
+    { hreflang: 'id', href: `${baseUrl}/id${normalizedPath}` },
+    { hreflang: 'x-default', href: enUrl }
+  ];
+
+  return entries.map(e => `<link rel="alternate" hreflang="${e.hreflang}" href="${e.href}" />`).join('\n    ');
+}
+
+// ============================================
 // SERVE HTML WITH SEO AND SCHEMA MIDDLEWARE
 // ============================================
 
 export async function serveHtmlWithSeoAndSchema(req: express.Request, res: express.Response, next: express.NextFunction) {
   try {
-    const cleanPath = (req.path || '/').replace(/\/+$/, '') || '/';
+    const rawPath = (req.path || '/').replace(/\/+$/, '') || '/';
     
     // Skip API and static asset requests
     if (
-      cleanPath.startsWith('/api/') || 
-      cleanPath.startsWith('/ws') || 
-      cleanPath.startsWith('/@') || 
-      cleanPath.startsWith('/node_modules/') || 
-      cleanPath.startsWith('/src/') ||
-      cleanPath.match(/\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|xml|txt|webmanifest)$/)
+      rawPath.startsWith('/api/') || 
+      rawPath.startsWith('/ws') || 
+      rawPath.startsWith('/@') || 
+      rawPath.startsWith('/node_modules/') || 
+      rawPath.startsWith('/src/') ||
+      rawPath.match(/\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|xml|txt|webmanifest)$/)
     ) {
       return next();
     }
 
     // Serve sitemap.xml directly
-    if (cleanPath === '/sitemap.xml') {
+    if (rawPath === '/sitemap.xml') {
       res.setHeader('Content-Type', 'application/xml; charset=utf-8');
       res.setHeader('Cache-Control', 'public, max-age=3600');
       return res.status(200).send(buildSitemapXml());
@@ -1286,8 +1329,9 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     }
 
     // ============================================
-    // ROUTE MATCHING LOGIC (ENHANCED)
+    // ROUTE MATCHING LOGIC (ENHANCED WITH LOCALES)
     // ============================================
+    const { locale, cleanPath } = extractLocaleAndPath(rawPath);
     
     // 1. Exact match in sitemapRoutes
     let matchedRoute = sitemapRoutes.find(r => r.path === cleanPath);
@@ -1312,9 +1356,12 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     // SEO DATA & SCHEMA GENERATION
     // ============================================
     
+    const baseUrl = 'https://www.freeqrbarcodes.com';
     let pageTitle = 'Free QR Code Generator - Dynamic QR Codes & Custom Creator';
     let pageDescription = 'Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.';
-    let pageUrl = 'https://www.freeqrbarcodes.com' + (cleanPath === '/' ? '' : cleanPath);
+    let pageUrl = locale === 'en'
+      ? `${baseUrl}${cleanPath === '/' ? '/' : cleanPath}`
+      : `${baseUrl}/${locale}${cleanPath === '/' ? '' : cleanPath}`;
     let schemaJson: any = buildHomepageSchema();
     let prerenderedH1 = '';
     let noscriptHtml = '';
@@ -1591,6 +1638,16 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       html = html.replace('</head>', `<meta name="description" content="${pageDescription}" />\n</head>`);
     }
     
+    // Synchronize <html> lang and dir attributes based on request locale
+    html = html.replace(/<html[^>]*lang=["'][^"']*["']/i, `<html lang="${locale}"`);
+    if (locale === 'ar' || locale === 'ur') {
+      if (!html.includes('dir="rtl"')) {
+        html = html.replace(/<html([^>]*)>/i, '<html$1 dir="rtl">');
+      }
+    } else {
+      html = html.replace(/dir=["']rtl["']/gi, 'dir="ltr"');
+    }
+
     // Inject Canonical URL
     if (html.includes('rel="canonical"')) {
       html = html.replace(/<link[^>]*rel=["']canonical["'][^>]*>/i, `<link rel="canonical" href="${pageUrl}" />`);
@@ -1598,8 +1655,8 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       html = html.replace('</head>', `<link rel="canonical" href="${pageUrl}" />\n</head>`);
     }
 
-    // Inject Hreflang Tags (self-referencing en and x-default)
-    const hreflangTags = `<link rel="alternate" hreflang="en" href="${pageUrl}" />\n    <link rel="alternate" hreflang="x-default" href="${pageUrl}" />`;
+    // Inject Complete Hreflang Tags (en, ar, ur, hi, fr, es, tr, id — plus x-default)
+    const hreflangTags = buildHreflangTags(cleanPath, baseUrl);
     html = html.replace(/<link[^>]*hreflang=["'][^"']*["'][^>]*>\s*/gi, '');
     if (html.includes('rel="canonical"')) {
       html = html.replace(/(<link[^>]*rel=["']canonical["'][^>]*>)/i, `$1\n    ${hreflangTags}`);

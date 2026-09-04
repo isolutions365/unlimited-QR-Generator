@@ -3486,6 +3486,7 @@ export default function App() {
                   <TemplatesTab
                     currentProject={currentProject}
                     onChange={setCurrentProject}
+                    onNavigateToCustomize={() => setActiveTab('create')}
                   />
                 </React.Suspense>
               </ErrorBoundary>

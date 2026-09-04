@@ -16,6 +16,7 @@ export interface MemoizedQRCanvasProps {
   margin: number;
   logoRotation: number;
   logoAutoCenter: boolean;
+  logoBackgroundMask?: boolean;
   logoOffsetX: number;
   logoOffsetY: number;
   eyeColorTopLeft?: string;
@@ -49,6 +50,7 @@ export const MemoizedQRCanvas = memo(
       margin,
       logoRotation,
       logoAutoCenter,
+      logoBackgroundMask,
       logoOffsetX,
       logoOffsetY,
       eyeColorTopLeft,
@@ -103,6 +105,7 @@ export const MemoizedQRCanvas = memo(
         margin,
         logoRotation,
         logoAutoCenter,
+        logoBackgroundMask,
         logoOffsetX,
         logoOffsetY,
         eyeColorTopLeft: eyeColorTopLeft || undefined,
@@ -153,6 +156,7 @@ export const MemoizedQRCanvas = memo(
       margin,
       logoRotation,
       logoAutoCenter,
+      logoBackgroundMask,
       logoOffsetX,
       logoOffsetY,
       eyeColorTopLeft,

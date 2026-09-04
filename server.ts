@@ -25,7 +25,10 @@ import {
   buildLandingPageSchema,
   buildGenericPageSchema,
   buildSitemapXml,
-  serveHtmlWithSeoAndSchema
+  serveHtmlWithSeoAndSchema,
+  buildHreflangTags,
+  extractLocaleAndPath,
+  SUPPORTED_LOCALES
 } from './server/seo';
 
 // Global Process Exception Handlers to prevent Vercel Serverless Function container crashes
@@ -3091,7 +3094,10 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
     buildLandingPageSchema,
     buildGenericPageSchema,
     buildSitemapXml,
-    serveHtmlWithSeoAndSchema
+    serveHtmlWithSeoAndSchema,
+    buildHreflangTags,
+    extractLocaleAndPath,
+    SUPPORTED_LOCALES
   };
 
   // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---

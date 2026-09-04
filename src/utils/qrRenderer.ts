@@ -17,6 +17,7 @@ interface DrawOptions {
   eyeColorBottomLeft?: string;
   errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H';
   logoAutoCenter?: boolean;
+  logoBackgroundMask?: boolean;
   logoOffsetX?: number;
   logoOffsetY?: number;
   skipLogoImage?: boolean;
@@ -318,10 +319,24 @@ export async function renderStyledQR(
     ctx.rotate(angleInRadians);
 
     // Draw solid backplate behind the brand logo to optimize scan accuracy
-    ctx.fillStyle = options.bgColor;
+    const useCircularMask = options.logoBackgroundMask === true;
+    ctx.fillStyle = useCircularMask ? '#ffffff' : options.bgColor;
     ctx.beginPath();
-    roundRect(ctx, -halfSize - cellSize, -halfSize - cellSize, logoSize + cellSize * 2, logoSize + cellSize * 2, cellSize * 1.5);
+    if (useCircularMask) {
+      // Circular white badge mask extending slightly beyond the logo boundary
+      const maskRadius = (logoSize + cellSize * 2.2) / 2;
+      ctx.arc(0, 0, maskRadius, 0, Math.PI * 2);
+    } else {
+      roundRect(ctx, -halfSize - cellSize, -halfSize - cellSize, logoSize + cellSize * 2, logoSize + cellSize * 2, cellSize * 1.5);
+    }
     ctx.fill();
+
+    // Add subtle crisp border around the circular white mask for extra contrast on light/dark backgrounds
+    if (useCircularMask) {
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
 
     // Try rendering image logo
     try {
@@ -685,7 +700,13 @@ export function generateStyledSVG(
     // Apply matrix offsets
     logoSvg += `  <g transform="translate(${center_x + offsetX}, ${center_y + offsetY}) rotate(${angle})">\n`;
     logoSvg += `    <!-- Backplate boundary to preserve scan compatibility -->\n`;
-    logoSvg += `    <rect x="${-halfSize - cellSize}" y="${-halfSize - cellSize}" width="${logoSize + cellSize * 2}" height="${logoSize + cellSize * 2}" rx="${cellSize * 1.5}" ry="${cellSize * 1.5}" fill="${options.bgColor}" />\n`;
+    const useCircularMaskSvg = options.logoBackgroundMask === true;
+    if (useCircularMaskSvg) {
+      const maskRadius = (logoSize + cellSize * 2.2) / 2;
+      logoSvg += `    <circle cx="0" cy="0" r="${maskRadius}" fill="#ffffff" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" />\n`;
+    } else {
+      logoSvg += `    <rect x="${-halfSize - cellSize}" y="${-halfSize - cellSize}" width="${logoSize + cellSize * 2}" height="${logoSize + cellSize * 2}" rx="${cellSize * 1.5}" ry="${cellSize * 1.5}" fill="${options.bgColor}" />\n`;
+    }
 
     if (options.logoUrl.startsWith('http') || options.logoUrl.startsWith('data:image')) {
       logoSvg += `    <image href="${options.logoUrl}" x="${-halfSize}" y="${-halfSize}" width="${logoSize}" height="${logoSize}" />\n`;

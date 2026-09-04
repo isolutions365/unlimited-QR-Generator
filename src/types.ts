@@ -64,6 +64,8 @@ export interface QRProject {
     eyeColorBottomLeft?: string; // independent color for bottom-left finder eye (optional override)
     errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'; // error correction density (L=7%, M=15%, Q=25%, H=30%)
     logoAutoCenter?: boolean; // toggle automatic centering or offset
+    logoBackgroundMask?: boolean; // toggle white circular/rounded background mask behind logo
+    logoAlignment?: 'center' | 'bottom-right' | 'top-center' | 'bottom-center' | 'right-center' | 'custom'; // preset safe zone alignment
     logoOffsetX?: number; // logo offset adjustment X (-100 to 100)
     logoOffsetY?: number; // logo offset adjustment Y (-100 to 100)
     frameStyle?: FrameStyle;

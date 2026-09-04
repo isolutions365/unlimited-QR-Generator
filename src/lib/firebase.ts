@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, AppCheck, getToken } from 'firebase/app-check';
 import appletConfig from '../../firebase-applet-config.json';
@@ -173,25 +173,6 @@ try {
   authInstance = null;
 }
 export const auth = authInstance;
-
-// Validate Connection to Firestore at application boot
-async function testConnection() {
-  if (typeof window === 'undefined') return;
-  try {
-    if (db) {
-      await getDocFromServer(doc(db, 'test', 'connection'));
-      console.log('[Firebase Health] Startup Firestore connection verified.');
-    }
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.warn('[Firebase Health] Startup notice: Firebase client is operating with offline/local capabilities. Please check your network and Firebase configuration.');
-    } else {
-      // Any other startup ping response (e.g. document does not exist) confirms online connection
-      console.log('[Firebase Health] Startup Firestore connection check complete.');
-    }
-  }
-}
-testConnection();
 
 // Initialize and prepare Storage instance
 export const storage = getStorage(app);

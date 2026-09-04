@@ -132,6 +132,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
   const margin = typeof currentProject.design?.margin === 'number' ? currentProject.design?.margin : 20;
   const logoRotation = currentProject.design?.logoRotation || 0;
   const logoAutoCenter = currentProject.design?.logoAutoCenter !== false;
+  const logoBackgroundMask = currentProject.design?.logoBackgroundMask === true;
   const logoOffsetX = currentProject.design?.logoOffsetX || 0;
   const logoOffsetY = currentProject.design?.logoOffsetY || 0;
   const eyeColorTopLeft = currentProject.design?.eyeColorTopLeft || '';
@@ -383,6 +384,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           margin,
           logoRotation,
           logoAutoCenter,
+          logoBackgroundMask,
           logoOffsetX,
           logoOffsetY,
           eyeColorTopLeft: eyeColorTopLeft || undefined,
@@ -420,6 +422,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
         margin,
         logoRotation,
         logoAutoCenter,
+        logoBackgroundMask,
         logoOffsetX,
         logoOffsetY,
         eyeColorTopLeft: eyeColorTopLeft || undefined,
@@ -488,6 +491,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
           margin,
           logoRotation,
           logoAutoCenter,
+          logoBackgroundMask,
           logoOffsetX,
           logoOffsetY,
           eyeColorTopLeft: eyeColorTopLeft || undefined,
@@ -1327,6 +1331,7 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
               margin={margin}
               logoRotation={logoRotation}
               logoAutoCenter={logoAutoCenter}
+              logoBackgroundMask={logoBackgroundMask}
               logoOffsetX={logoOffsetX}
               logoOffsetY={logoOffsetY}
               eyeColorTopLeft={eyeColorTopLeft || undefined}
@@ -1364,20 +1369,24 @@ export default function PreviewPanel({ currentProject, onTestScan, onDownloadTri
                   }}
                   whileHover={{ scale: 1.15, rotate: logoRotation + 8 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center justify-center shadow-[0_3px_10px_rgba(0,0,0,0.1)] select-none"
+                  className={`flex items-center justify-center select-none ${
+                    logoBackgroundMask 
+                      ? 'shadow-[0_4px_14px_rgba(0,0,0,0.15)] ring-1 ring-black/10' 
+                      : 'shadow-[0_3px_10px_rgba(0,0,0,0.1)]'
+                  }`}
                   style={{
                     width: `${264 * logoScale}px`,
                     height: `${264 * logoScale}px`,
-                    backgroundColor: bgColor,
-                    borderRadius: `${Math.max(4, 264 * logoScale * 0.22)}px`,
-                    padding: '2.5px',
+                    backgroundColor: logoBackgroundMask ? '#ffffff' : bgColor,
+                    borderRadius: logoBackgroundMask ? '9999px' : `${Math.max(4, 264 * logoScale * 0.22)}px`,
+                    padding: logoBackgroundMask ? `${Math.max(4, 264 * logoScale * 0.12)}px` : '2.5px',
                     pointerEvents: 'auto', // Allow cursor interactions
                   }}
                 >
                   {(() => {
                     const isImg = logoUrl.startsWith('http') || logoUrl.startsWith('data:image');
                     const sizePx = 264 * logoScale;
-                    const borderRadiusVal = `${Math.max(2, sizePx * 0.16)}px`;
+                    const borderRadiusVal = logoBackgroundMask ? '9999px' : `${Math.max(2, sizePx * 0.16)}px`;
                     
                     if (isImg) {
                       return (
