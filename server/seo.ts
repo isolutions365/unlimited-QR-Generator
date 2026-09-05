@@ -3,6 +3,36 @@ import path from 'path';
 import fs from 'fs';
 import { getFaqData } from '../src/data/faqData';
 
+import enDict from '../src/locales/en.json';
+import arDict from '../src/locales/ar.json';
+import urDict from '../src/locales/ur.json';
+import deDict from '../src/locales/de.json';
+import frDict from '../src/locales/fr.json';
+import esDict from '../src/locales/es.json';
+import ptDict from '../src/locales/pt.json';
+import itDict from '../src/locales/it.json';
+import trDict from '../src/locales/tr.json';
+import idDict from '../src/locales/id.json';
+import hiDict from '../src/locales/hi.json';
+import zhDict from '../src/locales/zh.json';
+import jaDict from '../src/locales/ja.json';
+import koDict from '../src/locales/ko.json';
+
+import blogEn from '../src/locales/blog/en.json';
+import blogAr from '../src/locales/blog/ar.json';
+import blogUr from '../src/locales/blog/ur.json';
+import blogDe from '../src/locales/blog/de.json';
+import blogFr from '../src/locales/blog/fr.json';
+import blogEs from '../src/locales/blog/es.json';
+import blogPt from '../src/locales/blog/pt.json';
+import blogIt from '../src/locales/blog/it.json';
+import blogTr from '../src/locales/blog/tr.json';
+import blogId from '../src/locales/blog/id.json';
+import blogHi from '../src/locales/blog/hi.json';
+import blogZh from '../src/locales/blog/zh.json';
+import blogJa from '../src/locales/blog/ja.json';
+import blogKo from '../src/locales/blog/ko.json';
+
 // ============================================
 // ENHANCED SITEMAP ROUTES WITH UNIQUE SEO DATA
 // ============================================
@@ -1425,6 +1455,138 @@ export const LOCALE_HOME_NAMES: Record<SupportedLocale, string> = {
   ko: '홈'
 };
 
+const localeDicts: Record<SupportedLocale, Record<string, string>> = {
+  en: enDict,
+  ar: arDict,
+  ur: urDict,
+  de: deDict,
+  fr: frDict,
+  es: esDict,
+  pt: ptDict,
+  it: itDict,
+  tr: trDict,
+  id: idDict,
+  hi: hiDict,
+  zh: zhDict,
+  ja: jaDict,
+  ko: koDict,
+};
+
+const blogLocaleDicts: Record<SupportedLocale, any[]> = {
+  en: blogEn,
+  ar: blogAr,
+  ur: blogUr,
+  de: blogDe,
+  fr: blogFr,
+  es: blogEs,
+  pt: blogPt,
+  it: blogIt,
+  tr: blogTr,
+  id: blogId,
+  hi: blogHi,
+  zh: blogZh,
+  ja: blogJa,
+  ko: blogKo,
+};
+
+const legacyBlogMap: Record<string, string> = {
+  'what-is-a-qr-code-and-how-does-it-work': 'what-is-qr-code-how-it-works',
+  'static-vs-dynamic-qr-codes-complete-architectural-guide': 'static-vs-dynamic-qr-codes-guide',
+  'qr-code-restaurant-menu-guide': 'qr-code-restaurant-menu-guide',
+  'what-is-a-dynamic-qr-code': 'static-vs-dynamic-qr-codes-guide',
+};
+
+export function getLocalizedSeoMetadata(
+  cleanPath: string,
+  locale: SupportedLocale,
+  defaultTitle: string,
+  defaultDescription: string
+): { title: string; description: string } {
+  if (locale === 'en' || !(SUPPORTED_LOCALES as readonly string[]).includes(locale)) {
+    return { title: defaultTitle, description: defaultDescription };
+  }
+
+  const dict = localeDicts[locale];
+  if (!dict) {
+    return { title: defaultTitle, description: defaultDescription };
+  }
+
+  let title = '';
+  let description = '';
+
+  // 1. Homepage
+  if (cleanPath === '/' || cleanPath === '') {
+    title = dict['guides.item.url-qr-generator.title'] || dict['footer.brandName'] || '';
+    description = dict['footer.brandDesc'] || dict['guides.item.url-qr-generator.desc'] || '';
+  }
+
+  // 2. Landing / Tool Pages
+  const toolSlug = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
+  if (!title && dict[`guides.item.${toolSlug}.title`]) {
+    title = dict[`guides.item.${toolSlug}.title`];
+    description = dict[`guides.item.${toolSlug}.desc`] || '';
+  }
+
+  // 3. Solutions Pages
+  if (!title && cleanPath.startsWith('/solutions/')) {
+    const solSlug = cleanPath.replace('/solutions/', '');
+    if (dict[`programmatic.item.${solSlug}.title`]) {
+      title = dict[`programmatic.item.${solSlug}.title`];
+      description = dict[`programmatic.item.${solSlug}.desc`] || '';
+    }
+  }
+
+  // 4. Blog Index
+  if (!title && cleanPath === '/blog') {
+    if (dict['blog.blogTitle']) title = dict['blog.blogTitle'];
+    if (dict['blog.marketingGuidesDesc']) description = dict['blog.marketingGuidesDesc'];
+  }
+
+  // 5. Blog Posts
+  if (!title && cleanPath.startsWith('/blog/')) {
+    let postSlug = cleanPath.replace('/blog/', '').replace(/\/$/, '');
+    if (legacyBlogMap[postSlug]) {
+      postSlug = legacyBlogMap[postSlug];
+    }
+    const blogList = blogLocaleDicts[locale];
+    if (Array.isArray(blogList)) {
+      const post = blogList.find((p: any) => p && p.slug === postSlug);
+      if (post) {
+        title = post.metaTitle || post.title || '';
+        description = post.metaDescription || post.intro || '';
+      }
+    }
+  }
+
+  // 6. FAQ Page
+  if (!title && cleanPath === '/faq') {
+    if (dict['faq.title']) title = dict['faq.title'];
+    if (dict['faq.description']) description = dict['faq.description'];
+  }
+
+  // 7. Company / Static Pages
+  const staticMap: Record<string, { t: string; d: string }> = {
+    '/about': { t: 'company.aboutTitle', d: 'company.aboutDesc' },
+    '/contact': { t: 'company.contactTitle', d: 'company.contactDesc' },
+    '/privacy-policy': { t: 'company.privacyTitle', d: 'company.privacyDesc' },
+    '/terms': { t: 'company.termsTitle', d: 'company.termsDesc' },
+    '/solutions': { t: 'programmatic.title', d: 'programmatic.directorySubheading' },
+    '/templates': { t: 'templates.title', d: 'templates.directorySubheading' },
+    '/compare': { t: 'compare.title', d: 'compare.directorySubheading' },
+  };
+
+  if (!title && staticMap[cleanPath]) {
+    const { t, d } = staticMap[cleanPath];
+    if (dict[t]) title = dict[t];
+    if (dict[d]) description = dict[d];
+  }
+
+  return {
+    title: title || defaultTitle,
+    description: description || defaultDescription,
+  };
+}
+
 /**
  * Extracts the locale prefix (if any) and normalizes the canonical route path
  */
@@ -1937,6 +2099,15 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
           </div>
         </div>
       `;
+    }
+
+    // ============================================
+    // APPLY LOCALIZED SEO METADATA (P2 FIX)
+    // ============================================
+    if (locale !== 'en') {
+      const localized = getLocalizedSeoMetadata(cleanPath, locale, pageTitle, pageDescription);
+      pageTitle = localized.title;
+      pageDescription = localized.description;
     }
 
     // ============================================
