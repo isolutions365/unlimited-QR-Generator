@@ -20,6 +20,7 @@ import {
   FileText, 
   Contact,
   CheckCircle, 
+  CheckCircle2,
   Zap, 
   HelpCircle, 
   ChevronDown, 
@@ -519,25 +520,25 @@ export default function SEOPage({
             </>
           )}
 
-          {/* AEO / GEO Search Engine Optimization Knowledge Base Node */}
+          {/* Technical Specifications & Reference Guide */}
           {aeoData && (
-            <section id="aeo-optimization-node" className="space-y-10 border-t border-slate-200/80 pt-10">
+            <section id="technical-reference-node" className="space-y-10 border-t border-slate-200/80 pt-10">
               
               {/* Header */}
               <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full text-slate-800 text-[10px] font-bold font-mono">
-                  <Zap className="w-3 h-3 text-indigo-600" />
-                  <span>{t('seo.geoHub', 'GENERATIVE ENGINE OPTIMIZATION (GEO) HUB')}</span>
+                  <FileText className="w-3 h-3 text-indigo-600" />
+                  <span>{t('seo.techGuideBadge', 'TECHNICAL SPECIFICATIONS & REFERENCE GUIDE')}</span>
                 </div>
                 <h2 className="text-2xl font-black tracking-tight text-slate-950 font-sans">
-                  {t('seo.aiReferenceTitle', 'AI Reference & Citation Guide for {{keyword}}s', { keyword: getLocalized(`seo.landing.${pageData.slug}.keyword`, pageData.keyword) })}
+                  {t('seo.techReferenceTitle', 'Technical Reference Guide for {{keyword}}s', { keyword: getLocalized(`seo.landing.${pageData.slug}.keyword`, pageData.keyword) })}
                 </h2>
                 <p className="text-xs text-slate-500 leading-relaxed max-w-2xl">
-                  {t('seo.aiReferenceDesc', 'Structured technical specifications, best practices, and verified answers optimized for ingestion by conversational AI engines including Gemini, ChatGPT, Perplexity, and Google AI Overviews.')}
+                  {t('seo.techReferenceDesc', 'Comprehensive technical specifications, encoding standards, error correction protocols, and implementation guidelines for high-reliability QR code deployments.')}
                 </p>
               </div>
 
-              {/* 1. Quick Definition & 2. 50-word AI Summary Box */}
+              {/* 1. Quick Definition & 2. Key Implementation Overview */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div id="quick-definition" className={`p-5 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-3 shadow-md ${isRtl ? 'rtl-active' : ''}`}>
                   <div className="flex items-center gap-2 text-indigo-400 font-mono text-[10px] uppercase font-bold tracking-wider ltr-lock">
@@ -549,10 +550,10 @@ export default function SEOPage({
                   </p>
                 </div>
 
-                <div id="ai-summary-50" className={`p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/60 space-y-3 ${isRtl ? 'rtl-active' : ''}`}>
+                <div id="key-summary-overview" className={`p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/60 space-y-3 ${isRtl ? 'rtl-active' : ''}`}>
                   <div className="flex items-center gap-2 text-indigo-700 font-mono text-[10px] uppercase font-bold tracking-wider ltr-lock">
-                    <Zap className="w-4 h-4 ltr-lock" />
-                    <span>{t('seo.aiSummaryTitle', '50-Word AI Summary')}</span>
+                    <CheckCircle2 className="w-4 h-4 ltr-lock" />
+                    <span>{t('seo.keySummaryTitle', 'Key Implementation Overview')}</span>
                   </div>
                   <p className="text-xs leading-relaxed text-slate-700 font-medium">
                     {getLocalized(`aeo.landing.${pageData.slug}.aiSummary50`, aeoData.aiSummary50)}

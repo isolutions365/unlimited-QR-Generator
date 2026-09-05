@@ -483,6 +483,7 @@ export default function ControlPanel({ currentProject,
 
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [showTrackingComparison, setShowTrackingComparison] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getUrlError = (url: string): { type: 'error' | 'warning' | 'info'; message: string; action?: () => void } | null => {
@@ -3252,34 +3253,107 @@ export default function ControlPanel({ currentProject,
         </button>
       </motion.div>
 
-      {/* Analytics Tracking Flag toggle */}
+      {/* Analytics Tracking Flag toggle with Honest Static vs Dynamic Transparency */}
       <motion.div
         id="tour-analytics-toggle"
         variants={itemVariants}
-        whileHover={{
-          scale: 1.015,
-          y: -2,
-          boxShadow: '0 8px 20px -8px rgba(79, 70, 229, 0.06), 0 2px 6px -4px rgba(79, 70, 229, 0.04)'
-        }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="flex items-center justify-between bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50 transition-all duration-300"
+        className="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50 transition-all duration-300 space-y-3"
       >
-        <div>
-          <span className="text-xs font-semibold text-indigo-950 block">{t('control.enableShortUrl', 'Enable Short URL & Analytics')}</span>
-          <span className="text-[10px] text-indigo-700 block">{t('control.shortUrlDesc', 'Collects visitor scan location, hardware, and browser logs.')}</span>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-indigo-950 block">{t('control.enableShortUrl', 'Enable Short URL & Analytics')}</span>
+              {localProject.trackingEnabled ? (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">
+                  ⚡ {t('control.dynamicModePill', 'Dynamic QR')}
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  💾 {t('control.staticModePill', 'Static QR')}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] text-indigo-700 block mt-0.5">
+              {localProject.trackingEnabled
+                ? t('control.dynamicModeSummary', 'Dynamic: Free to try, live analytics & editable target. 180-day retention on free tier.')
+                : t('control.staticModeSummary', 'Static: 100% Free forever, no signup, never expires, zero analytics.')}
+            </span>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-label="Toggle short URL and analytics tracking"
+            aria-checked={localProject.trackingEnabled ? "true" : "false"}
+            onClick={() => onChange({ ...localProject, trackingEnabled: !localProject.trackingEnabled })}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer shrink-0 ${ localProject.trackingEnabled ? 'bg-indigo-600' : 'bg-gray-200 ' }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.trackingEnabled ? 'translate-x-6' : 'translate-x-1' }`}
+            />
+          </button>
         </div>
-        <button
-          type="button"
-          role="switch"
-          aria-label="Toggle short URL and analytics tracking"
-          aria-checked={localProject.trackingEnabled ? "true" : "false"}
-          onClick={() => onChange({ ...localProject, trackingEnabled: !localProject.trackingEnabled })}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.trackingEnabled ? 'bg-indigo-600' : 'bg-gray-200 ' }`}
-        >
-          <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.trackingEnabled ? 'translate-x-6' : 'translate-x-1' }`}
-          />
-        </button>
+
+        {/* Quick Transparency Info & Comparison Helper */}
+        <div className="pt-2 border-t border-indigo-100/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px]">
+          <div className="text-slate-600 flex items-center gap-1.5">
+            <Info className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+            <span>
+              {localProject.trackingEnabled
+                ? t('control.retentionNote', 'Free guest dynamic links retain logs for 180 days.')
+                : t('control.staticNeverExpiresNote', 'Static matrix never expires & requires no account.')}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowTrackingComparison(!showTrackingComparison)}
+            className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 underline underline-offset-2 flex items-center gap-1 cursor-pointer"
+          >
+            <span>{showTrackingComparison ? t('control.hideComparison', 'Hide Comparison') : t('control.viewComparison', 'Compare Static vs Dynamic')}</span>
+            {showTrackingComparison ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          </button>
+        </div>
+
+        {/* Expandable Comparison Panel */}
+        <AnimatePresence>
+          {showTrackingComparison && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="bg-white rounded-xl p-3 border border-indigo-200/80 space-y-2.5 mt-2 text-[11px] text-slate-700">
+                <div className="grid grid-cols-2 gap-2 pb-2 border-b border-slate-100">
+                  <div className="p-2 bg-emerald-50/60 rounded-lg border border-emerald-100 space-y-1">
+                    <span className="font-extrabold text-emerald-900 block text-xs">💾 Static QR</span>
+                    <ul className="space-y-0.5 text-[10px] text-slate-600">
+                      <li>• <strong>100% Free Forever</strong></li>
+                      <li>• <strong>No Sign-Up Needed</strong></li>
+                      <li>• <strong>Never Expires</strong></li>
+                      <li>• No Scan Analytics (100% Private)</li>
+                      <li>• Fixed destination URL</li>
+                    </ul>
+                  </div>
+
+                  <div className="p-2 bg-indigo-50/60 rounded-lg border border-indigo-100 space-y-1">
+                    <span className="font-extrabold text-indigo-900 block text-xs">⚡ Dynamic QR</span>
+                    <ul className="space-y-0.5 text-[10px] text-slate-600">
+                      <li>• <strong>Free to Try & Deploy</strong></li>
+                      <li>• <strong>No Upfront Sign-Up</strong></li>
+                      <li>• <strong>180-Day Free Retention</strong></li>
+                      <li>• Real-Time Scan Analytics</li>
+                      <li>• Editable URL anytime</li>
+                    </ul>
+                  </div>
+                </div>
+                <p className="text-[10px] text-slate-500 italic">
+                  {t('control.policyExplanation', 'Static QR data is etched into the image and runs offline. Dynamic QR routes via cloud servers to record scans and redirect visitors.')}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Dynamic Expiry Date & Redirection Settings */}

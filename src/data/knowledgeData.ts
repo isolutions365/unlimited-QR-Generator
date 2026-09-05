@@ -34,7 +34,7 @@ export const knowledgeArticles: KnowledgeArticle[] = [
     metaDescription: "Learn what a QR code is, how it differs from traditional barcodes, its history, and how modern smartphones scan 2D matrix symbols.",
     section: "academy",
     category: "Basics",
-    tags: ["AEO", "Standards", "2D Barcodes"],
+    tags: ["Technical Guide", "Standards", "2D Barcodes"],
     readingTime: "5 min read",
     author: "Technical Editorial Board",
     date: "July 7, 2026",

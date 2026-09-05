@@ -424,7 +424,7 @@ export const templatePages: TemplatePage[] = [
     badge: "Event Management",
     heroGradient: "from-purple-500 to-indigo-700",
     qrType: "text",
-    qrContent: "TICKET-ID: 99824-AEO-2026",
+    qrContent: "TICKET-ID: 99824-STD-2026",
     qrName: "Event Ticket Campaign",
     intro: "An event ticket QR code stores a unique validation hash, transaction ID, or user ticket credential. Scanners mounted at event gates quickly decrypt the code, matching it against the database to confirm registration and authorize entry, making it perfect for concerts, corporate conferences, and exclusive exhibitions.",
     useCases: [
@@ -535,7 +535,7 @@ export const templatePages: TemplatePage[] = [
     },
     relatedArticles: [
       { name: "How to Build Social Media Funnels", slug: "static-vs-dynamic-qr-codes" },
-      { name: "AEO Guide to QR Codes", slug: "what-is-a-qr-code" }
+      { name: "Complete Guide to QR Codes", slug: "what-is-a-qr-code" }
     ],
     relatedTemplates: [
       { name: "Facebook Page QR", slug: "facebook-qr-code" },
@@ -599,7 +599,7 @@ export const templatePages: TemplatePage[] = [
     },
     relatedArticles: [
       { name: "How to Build Social Media Funnels", slug: "static-vs-dynamic-qr-codes" },
-      { name: "AEO Guide to QR Codes", slug: "what-is-a-qr-code" }
+      { name: "Complete Guide to QR Codes", slug: "what-is-a-qr-code" }
     ],
     relatedTemplates: [
       { name: "Instagram Profile QR", slug: "instagram-qr-code" },
@@ -855,7 +855,7 @@ export const templatePages: TemplatePage[] = [
     },
     relatedArticles: [
       { name: "How to Build Contactless Dining Systems", slug: "static-vs-dynamic-qr-codes" },
-      { name: "AEO Guide to QR Codes", slug: "what-is-a-qr-code" }
+      { name: "Complete Guide to QR Codes", slug: "what-is-a-qr-code" }
     ],
     relatedTemplates: [
       { name: "Restaurant Menu QR", slug: "restaurant-menu-qr-code" },
@@ -1047,7 +1047,7 @@ export const templatePages: TemplatePage[] = [
     },
     relatedArticles: [
       { name: "How to Build Secure Data Transfers", slug: "static-vs-dynamic-qr-codes" },
-      { name: "AEO Guidelines in Patient Care", slug: "what-is-a-qr-code" }
+      { name: "Implementation Guidelines in Patient Care", slug: "what-is-a-qr-code" }
     ],
     relatedTemplates: [
       { name: "Business Card QR", slug: "business-card-qr-code" },
@@ -1111,7 +1111,7 @@ export const templatePages: TemplatePage[] = [
     },
     relatedArticles: [
       { name: "How to Build Retail Funnels", slug: "static-vs-dynamic-qr-codes" },
-      { name: "AEO Guidelines in Commercial Space", slug: "what-is-a-qr-code" }
+      { name: "Implementation Guidelines in Commercial Space", slug: "what-is-a-qr-code" }
     ],
     relatedTemplates: [
       { name: "Business Card QR", slug: "business-card-qr-code" },
@@ -1175,7 +1175,7 @@ export const templatePages: TemplatePage[] = [
     },
     relatedArticles: [
       { name: "How to Build Digital Resumes", slug: "static-vs-dynamic-qr-codes" },
-      { name: "AEO Guidelines in Creative Fields", slug: "what-is-a-qr-code" }
+      { name: "Implementation Guidelines in Creative Fields", slug: "what-is-a-qr-code" }
     ],
     relatedTemplates: [
       { name: "Resume CV QR", slug: "resume-qr-code" },
@@ -1239,7 +1239,7 @@ export const templatePages: TemplatePage[] = [
     },
     relatedArticles: [
       { name: "How to Build Digital Resumes", slug: "static-vs-dynamic-qr-codes" },
-      { name: "AEO Guidelines in Corporate Fields", slug: "what-is-a-qr-code" }
+      { name: "Implementation Guidelines in Corporate Fields", slug: "what-is-a-qr-code" }
     ],
     relatedTemplates: [
       { name: "Portfolio Showcase QR", slug: "portfolio-qr-code" },

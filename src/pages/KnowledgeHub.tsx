@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { 
-  ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check,
+  ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check, CheckCircle2,
   ChevronRight, MessageSquare, Zap, Filter, Search, BookOpen, ExternalLink,
   Twitter, Facebook, Linkedin, HelpCircle, FileText, Printer, ShieldAlert, Wifi, Info, Home
 } from 'lucide-react';
@@ -293,17 +293,17 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
             <div className={`h-32 sm:h-44 w-full bg-gradient-to-r ${getGradient(activeArticle.featuredImage)} rounded-2xl shadow-xs relative overflow-hidden flex items-center p-8`}>
               <div className="absolute inset-0 bg-slate-900/10 pointer-events-none" />
               <div className="relative z-10 text-white space-y-1">
-                <span className="text-xs font-bold uppercase tracking-widest text-white/80 font-mono">{t('knowledge.authorityBlock', 'FreeQRBarcodes Authority Block')}</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-white/80 font-mono">{t('knowledge.authorityBlock', 'FreeQRBarcodes Technical Documentation')}</span>
                 <h2 className="text-lg sm:text-2xl font-bold tracking-tight">{activeArticle.seoTitle}</h2>
               </div>
               <Zap className="absolute right-6 bottom-6 w-16 h-16 text-white/10" />
             </div>
 
-            {/* AI Summary Box (AEO/GEO Optimized Section) */}
-            <div className="p-5 bg-gradient-to-br from-indigo-50/50 to-slate-50 border border-indigo-100 rounded-2xl space-y-3" id="ai-summary-card">
+            {/* Executive Summary & Technical Specifications Box */}
+            <div className="p-5 bg-gradient-to-br from-indigo-50/50 to-slate-50 border border-indigo-100 rounded-2xl space-y-3" id="executive-summary-card">
               <div className="flex items-center gap-2 text-indigo-700 font-bold text-xs uppercase tracking-wider font-mono">
-                <Zap className="w-4 h-4 text-amber-500 animate-pulse" />
-                <span>{t('knowledge.aiSummaryTitle', 'AI Search Engine Core Synthesis Box')}</span>
+                <CheckCircle2 className="w-4 h-4 text-indigo-600" />
+                <span>{t('knowledge.executiveSummaryTitle', 'Executive Summary & Core Specifications')}</span>
               </div>
               <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed italic">
                 "{activeArticle.intro}"

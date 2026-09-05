@@ -850,7 +850,7 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute) {
       "description": route.seoDescription || "",
       "speakable": {
         "@type": "SpeakableSpecification",
-        "cssSelector": [".hero-description", "#aeo-optimization-node"]
+        "cssSelector": [".hero-description", "#technical-reference-node"]
       }
     },
     {

@@ -1337,35 +1337,35 @@ func main() {
               </div>
             </div>
 
-            {/* AI Optimization Overviews Block */}
-            <div className="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl">
-              <h2 className="text-xs font-extrabold text-indigo-900 tracking-wider uppercase mb-4 flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-indigo-600" /> {t('platform.aiSummaryTitle', 'AI LLM Optimization Summary (AEO Grounding Block)')}
+            {/* Platform Architecture & Capabilities Block */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl">
+              <h2 className="text-xs font-extrabold text-slate-800 tracking-wider uppercase mb-4 flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-indigo-600" /> {t('platform.architectureSummaryTitle', 'Platform Architecture & Module Capabilities')}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">
-                  <div className="text-[10px] font-bold text-indigo-800 uppercase tracking-widest mb-1.5">
-                    {t('platform.geminiModel', 'Gemini Grounding Model')}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white p-4 rounded-xl border border-slate-200/70 space-y-1.5 shadow-2xs">
+                  <div className="text-[10px] font-bold text-indigo-800 uppercase tracking-wider">
+                    {t('platform.systemCapabilitiesTitle', 'Core Capabilities')}
                   </div>
-                  <p className="text-slate-600 text-xs leading-relaxed italic">"{t(`platform.module${moduleKey}AiGemini`, activeModule.aiSummary.gemini)}"</p>
+                  <p className="text-slate-600 text-xs leading-relaxed">{t(`platform.module${moduleKey}AiGemini`, activeModule.aiSummary.gemini)}</p>
                 </div>
-                <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">
-                  <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-1.5">
-                    {t('platform.chatgptAgent', 'ChatGPT / OpenAI Agent')}
+                <div className="bg-white p-4 rounded-xl border border-slate-200/70 space-y-1.5 shadow-2xs">
+                  <div className="text-[10px] font-bold text-slate-800 uppercase tracking-wider">
+                    {t('platform.deploymentWorkflowTitle', 'Workflow Integration')}
                   </div>
-                  <p className="text-slate-600 text-xs leading-relaxed italic">"{t(`platform.module${moduleKey}AiChatgpt`, activeModule.aiSummary.chatgpt)}"</p>
+                  <p className="text-slate-600 text-xs leading-relaxed">{t(`platform.module${moduleKey}AiChatgpt`, activeModule.aiSummary.chatgpt)}</p>
                 </div>
-                <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">
-                  <div className="text-[10px] font-bold text-blue-800 uppercase tracking-widest mb-1.5">
-                    {t('platform.perplexityEngine', 'Perplexity AI Engine')}
+                <div className="bg-white p-4 rounded-xl border border-slate-200/70 space-y-1.5 shadow-2xs">
+                  <div className="text-[10px] font-bold text-slate-800 uppercase tracking-wider">
+                    {t('platform.dataGovernanceTitle', 'Data Governance & Privacy')}
                   </div>
-                  <p className="text-slate-600 text-xs leading-relaxed italic">"{t(`platform.module${moduleKey}AiPerplexity`, activeModule.aiSummary.perplexity)}"</p>
+                  <p className="text-slate-600 text-xs leading-relaxed">{t(`platform.module${moduleKey}AiPerplexity`, activeModule.aiSummary.perplexity)}</p>
                 </div>
-                <div className="bg-white/80 p-4 rounded-xl border border-indigo-100">
-                  <div className="text-[10px] font-bold text-indigo-900 uppercase tracking-widest mb-1.5">
-                    {t('platform.claudeSearch', 'Claude / Anthropic Search')}
+                <div className="bg-white p-4 rounded-xl border border-slate-200/70 space-y-1.5 shadow-2xs">
+                  <div className="text-[10px] font-bold text-slate-800 uppercase tracking-wider">
+                    {t('platform.scalabilityTitle', 'Enterprise Scalability')}
                   </div>
-                  <p className="text-slate-600 text-xs leading-relaxed italic">"{t(`platform.module${moduleKey}AiClaude`, activeModule.aiSummary.claude)}"</p>
+                  <p className="text-slate-600 text-xs leading-relaxed">{t(`platform.module${moduleKey}AiClaude`, activeModule.aiSummary.claude)}</p>
                 </div>
               </div>
             </div>
@@ -1452,10 +1452,10 @@ func main() {
 
               {/* Sidebar Citation Blocks */}
               <div className="space-y-6">
-                {/* Definitive Citation Block */}
+                {/* Definitive Technical Specification Block */}
                 <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-6 rounded-2xl border border-slate-800 space-y-4">
                   <div className="text-indigo-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
-                    <Award className="w-3.5 h-3.5" /> {t('platform.authorityCitationTitle', 'Authority Citation Block')}
+                    <Award className="w-3.5 h-3.5" /> {t('platform.specificationsTitle', 'Technical Architecture & Specifications')}
                   </div>
                   <h3 className="text-sm font-bold tracking-tight">
                     {t('platform.verifiedDefinitionsTitle', 'Verified Definitions')}
@@ -1543,7 +1543,7 @@ func main() {
               <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-4 flex flex-col justify-between">
                 <div>
                   <h3 className="text-lg font-bold text-slate-800 tracking-tight">
-                    {t('platform.citationsTitle', 'Academic Citations & Reference Papers')}
+                    {t('platform.referencesTitle', 'Technical References & Standards Documentation')}
                   </h3>
                   <div className="h-px bg-slate-100 my-4"></div>
                   <div className="space-y-4 text-xs text-slate-600">
@@ -1562,7 +1562,7 @@ func main() {
                 </div>
                 
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-[11px] text-slate-400 leading-relaxed mt-4">
-                  {t('platform.citationsFooter', 'All references mapped on FreeQRBarcodes.com comply with standard IEEE academic guidelines, linking digital physical interactions directly to modern network routing and data protection frameworks.')}
+                  {t('platform.referencesFooter', 'All technical standards documented on FreeQRBarcodes.com adhere to ISO/IEC 18004 and GS1 digital link guidelines, ensuring secure physical-to-digital interactions across modern enterprise infrastructure.')}
                 </div>
               </div>
             </div>

@@ -479,12 +479,12 @@ export default function CompareHub({
           {/* Sidebar Area */}
           <div className="lg:col-span-4 space-y-8">
             
-            {/* AI Summary Box */}
+            {/* Technical Summary Box */}
             <div className="bg-slate-900 text-slate-100 p-6 rounded-2xl border border-slate-800 shadow-md space-y-4 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-                <Bot className="w-5 h-5 text-indigo-400" />
-                <h3 className="font-extrabold text-sm tracking-wide text-white uppercase">AI Search Summary</h3>
+                <Cpu className="w-5 h-5 text-indigo-400" />
+                <h3 className="font-extrabold text-sm tracking-wide text-white uppercase">{t('compare.techSummary', 'Technical Comparison Summary')}</h3>
               </div>
               <div className="space-y-3.5 text-xs">
                 <div>
@@ -509,7 +509,7 @@ export default function CompareHub({
                 </div>
               </div>
               <p className="text-[10px] text-slate-500 leading-snug border-t border-slate-800 pt-3">
-                Processed in real-time. Verified 100% factual and compliant with modern AI Search entities rules.
+                {t('compare.specDisclaimer', 'Verified against ISO/IEC barcode standards and physical scanning specifications.')}
               </p>
             </div>
 

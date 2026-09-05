@@ -67,6 +67,7 @@ const EnterpriseAIGateway = lazyWithRetry(() => import('./pages/EnterpriseAIGate
 const QRMarketingPlatform = lazyWithRetry(() => import('./pages/marketing/QRMarketingPlatform'));
 import ErrorBoundary from './components/ErrorBoundary';
 import LandingPage from './components/LandingPage';
+import StaticVsDynamicComparison from './components/StaticVsDynamicComparison';
 
 
 // Non-blocking fallback skeleton loader
@@ -2711,7 +2712,7 @@ export default function App() {
               </div>
 
               {/* Staggered Navigation Items list with Accordions */}
-              <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3 scrollbar-thin">
+              <nav aria-label="Primary navigation - Mobile" className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3 scrollbar-thin">
                 
                 {/* 1. Creative Station Category Accordion */}
                 <div className={`rounded-2xl transition-all border ${
@@ -3345,6 +3346,16 @@ export default function App() {
             setActiveTab('print');
             navigateTo('/generator?tab=print');
           }}
+          onSelectStatic={() => {
+            setCurrentProject(prev => ({ ...prev, trackingEnabled: false }));
+            setActiveTab('create');
+            navigateTo('/generator?tab=create');
+          }}
+          onSelectDynamic={() => {
+            setCurrentProject(prev => ({ ...prev, trackingEnabled: true }));
+            setActiveTab('create');
+            navigateTo('/generator?tab=create');
+          }}
         />
       ) : (
         <main id="generator-studio" className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-6 w-full relative z-10 min-h-screen">
@@ -3755,6 +3766,22 @@ export default function App() {
           <div id="seo-homepage-directory" className="mt-16 border-t border-slate-200/60 pt-16 space-y-16 select-none bg-linear-to-b from-transparent to-slate-50/40 p-6 rounded-3xl">
             {/* JSON-LD Homepage Schema injection */}
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildHomepageSchema()) }} />
+
+            {/* Static vs Dynamic Honest Comparison Section */}
+            <StaticVsDynamicComparison
+              onSelectStatic={() => {
+                setCurrentProject(prev => ({ ...prev, trackingEnabled: false }));
+                setActiveTab('create');
+                const studioEl = document.getElementById('generator-studio');
+                if (studioEl) studioEl.scrollIntoView({ behavior: 'smooth' });
+              }}
+              onSelectDynamic={() => {
+                setCurrentProject(prev => ({ ...prev, trackingEnabled: true }));
+                setActiveTab('create');
+                const studioEl = document.getElementById('generator-studio');
+                if (studioEl) studioEl.scrollIntoView({ behavior: 'smooth' });
+              }}
+            />
 
             {/* Popular QR Tools Section */}
             <section className="space-y-6">

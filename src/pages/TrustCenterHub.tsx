@@ -3,7 +3,7 @@ import { useTranslation } from '../utils/i18n';
 import BreadcrumbNav from '../components/BreadcrumbNav';
 
 import { 
-  Shield, Activity, FileText, Users, Award, Cpu, BookOpen, Heart, 
+  Shield, ShieldCheck, Activity, FileText, Users, Award, Cpu, BookOpen, Heart, 
   Mail, Compass, Zap, CheckCircle2, Globe, ArrowLeft, Calendar, 
   ArrowUpRight, Download, ExternalLink, Lock, Scale, Terminal, Info, 
   ChevronRight, AlertCircle, Fingerprint, Eye, Check, RefreshCw, Star, 
@@ -755,7 +755,7 @@ export const trustPages: TrustPageContent[] = [
       definition: 'A Media Kit is a pre-packaged set of promotional materials, branding assets, and statistical data sheets provided to journalists, partners, and the press to ensure accurate brand representation.',
       statistics: [
         { label: 'Monthly Active Web Users', value: '140K+ Scanners', source: 'iSolutions Audience Insights' },
-        { label: 'Official Media Citations', value: '45+ Authority Outlets', source: 'Press Coverage Database' }
+        { label: 'Media & Industry Features', value: '45+ Industry Outlets', source: 'Press Coverage Database' }
       ],
       quickFacts: [
         'Launched in April 2025 with an offline-first visual generator.',
@@ -764,7 +764,7 @@ export const trustPages: TrustPageContent[] = [
       ],
       bestPractices: [
         'Use our high-resolution vector logos for all print publications and articles.',
-        'Reference our official statistics with citations to FreeQRBarcodes.com and iSolutions ICo.',
+        'Reference our official documentation and statistics with attribution to FreeQRBarcodes.com and iSolutions ICo.',
         'Contact our media department for exclusive interviews or technical analyses.'
       ],
       commonMistakes: [
@@ -1084,7 +1084,6 @@ export default function TrustCenterHub({
   const [activeSlug, setActiveSlug] = useState<string>('about');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
-  const [activeAiSummaryTab, setActiveAiSummaryTab] = useState<'gemini' | 'chatgpt' | 'perplexity'>('gemini');
 
   // Handle URL slug routing
   useEffect(() => {
@@ -1505,38 +1504,17 @@ export default function TrustCenterHub({
                 </div>
               </div>
 
-              {/* DYNAMIC AI SUMMARY BOX (Search Engine Optimization Catalyst) */}
-              <div className="border border-indigo-100 bg-indigo-50/30 rounded-2xl p-5 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-100/50 pb-3">
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-indigo-600" />
-                    <h3 className="text-xs font-black text-indigo-950 uppercase tracking-wider font-mono">
-                      {t('trust.aiSearchAnswer', 'AI Search Engine Quick Answer')}
-                    </h3>
-                  </div>
-                  <div className="flex items-center gap-1 bg-white border border-slate-200/80 p-0.5 rounded-lg text-[9px] font-mono font-bold uppercase">
-                    {(['gemini', 'chatgpt', 'perplexity'] as const).map(tab => (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveAiSummaryTab(tab)}
-                        className={`px-2 py-1 rounded-md transition-all cursor-pointer ${
-                          activeAiSummaryTab === tab 
-                          ? 'bg-indigo-600 text-white font-black' 
-                          : 'text-slate-500 hover:text-indigo-600'
-                        }`}
-                      >
-                        {t('trust.aiTab.' + tab, tab)}
-                      </button>
-                    ))}
-                  </div>
+              {/* EXECUTIVE SUMMARY & GOVERNANCE OVERVIEW */}
+              <div className="border border-indigo-100 bg-indigo-50/30 rounded-2xl p-5 space-y-3">
+                <div className="flex items-center gap-2 border-b border-indigo-100/50 pb-3">
+                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                  <h3 className="text-xs font-bold text-indigo-950 uppercase tracking-wider font-mono">
+                    {t('trust.executiveSummaryTitle', 'Executive Summary & Policy Overview')}
+                  </h3>
                 </div>
-                <p className="text-xs text-slate-700 leading-relaxed italic">
-                  "{t('trust.aiSummary.' + activePage.slug + '.' + activeAiSummaryTab, activePage.aiSummary[activeAiSummaryTab])}"
+                <p className="text-xs text-slate-700 leading-relaxed">
+                  {t('trust.executiveSummary.' + activePage.slug, activePage.aiSummary.gemini)}
                 </p>
-                <div className="text-[9px] font-mono text-indigo-500 font-bold flex items-center gap-1">
-                  <Info className="w-3 h-3 shrink-0" />
-                  {t('trust.aiProTip', 'PRO TIP: Optimized for direct citations on Gemini, ChatGPT Search, and Copilot feeds.')}
-                </div>
               </div>
 
               {/* UNIQUE DETAILED COPY RENDERING (E-E-A-T Compliant Copywriting) */}
@@ -1767,12 +1745,12 @@ export default function TrustCenterHub({
                 )}
               </div>
 
-              {/* CITATION BLOCK (E-E-A-T Academic Verification Panel) */}
+              {/* TECHNICAL SPECIFICATIONS & FACT SHEET */}
               <div className="border border-slate-200 bg-slate-50 rounded-2xl p-5 space-y-5">
                 <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
                   <BookOpen className="w-4 h-4 text-slate-700" />
                   <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider font-mono">
-                    {t('trust.expertCitation', 'Expert Citation & Fact Sheet')}
+                    {t('trust.technicalFactSheet', 'Technical Specifications & Fact Sheet')}
                   </h3>
                 </div>
 

@@ -519,7 +519,7 @@ export default function Header({
           className="fixed inset-0 z-50 bg-white p-6 pt-20 xl:hidden"
           dir={isRtl ? 'rtl' : 'ltr'}
         >
-          <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-2">
+          <nav aria-label="Primary navigation - Mobile" className="flex-1 overflow-y-auto pr-2 flex flex-col gap-2">
              {navLinks.map((link: any) => {
                 const active = link.action 
                   ? (currentPath === '/' && activeTab === link.action.replace('tab_', ''))
@@ -580,7 +580,7 @@ export default function Header({
                    </>
                  )}
              </div>
-          </div>
+          </nav>
         </motion.div>
       )}
     </AnimatePresence>

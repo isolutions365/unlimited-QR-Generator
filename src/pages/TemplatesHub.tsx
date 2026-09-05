@@ -6,7 +6,7 @@ import BreadcrumbNav from '../components/BreadcrumbNav';
 import { 
   ChevronRight, Home, Zap, ArrowRight, Check, HelpCircle, 
   ChevronDown, BookOpen, LayoutTemplate, Star, Info, Cpu, 
-  ShieldCheck, AlertTriangle, FileText, Bot, Search, Tag, ExternalLink, RefreshCw
+  ShieldCheck, AlertTriangle, FileText, Bot, Search, Tag, ExternalLink, RefreshCw, Sliders
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { templatePages, TemplatePage } from '../data/templatePagesData';
@@ -438,15 +438,15 @@ export default function TemplatesHub({
 
           </div>
 
-          {/* Sidebar Area: AI Summary, Key Takeaways, Connections */}
+          {/* Sidebar Area: Technical Summary, Key Takeaways, Connections */}
           <div className="lg:col-span-4 space-y-8">
             
-            {/* AI Summary Box */}
+            {/* Technical Specifications Box */}
             <div className="bg-slate-900 text-slate-100 p-6 rounded-2xl border border-slate-800 shadow-md space-y-4 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-                <Bot className="w-5 h-5 text-indigo-400" />
-                <h3 className="font-extrabold text-sm tracking-wide text-white uppercase">{t('templates.aiSearchSummary', 'AI Search Summary')}</h3>
+                <Sliders className="w-5 h-5 text-indigo-400" />
+                <h3 className="font-extrabold text-sm tracking-wide text-white uppercase">{t('templates.technicalSummary', 'Technical Specifications')}</h3>
               </div>
               <div className="space-y-3.5 text-xs">
                 <div>
@@ -481,7 +481,7 @@ export default function TemplatesHub({
                 </div>
               </div>
               <p className="text-[10px] text-slate-500 leading-snug border-t border-slate-800 pt-3">
-                {t('templates.aiNotice', 'Structured in compliance with Llama-3, Claude-3.5, and Gemini-Pro semantic retrieval constraints. Verified 100% factual.')}
+                {t('templates.specNotice', 'All template configurations are verified for ISO/IEC compliance, optimal contrast, and scan reliability.')}
               </p>
             </div>
 
