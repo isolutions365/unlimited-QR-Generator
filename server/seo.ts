@@ -1356,6 +1356,8 @@ export function buildHreflangTags(cleanPath: string, baseUrl = 'https://www.free
 // ============================================
 
 let cachedProdHtml: string | null = null;
+const seoResponseCache = new Map<string, { html: string; timestamp: number }>();
+const SEO_CACHE_TTL_MS = 60 * 1000;
 
 export async function serveHtmlWithSeoAndSchema(req: express.Request, res: express.Response, next: express.NextFunction) {
   try {
@@ -1368,9 +1370,24 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       rawPath.startsWith('/@') || 
       rawPath.startsWith('/node_modules/') || 
       rawPath.startsWith('/src/') ||
+      rawPath.startsWith('/assets/') ||
       rawPath.match(/\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|xml|txt|webmanifest)$/)
     ) {
       return next();
+    }
+
+    const cacheKey = `${rawPath}?${req.url.split('?')[1] || ''}`;
+    const cached = seoResponseCache.get(cacheKey);
+    const now = Date.now();
+    if (cached && (now - cached.timestamp) < SEO_CACHE_TTL_MS) {
+      res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
+      res.setHeader('CDN-Cache-Control', 'no-store');
+      res.setHeader('Surrogate-Control', 'no-store');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      return res.status(200).send(cached.html);
     }
 
     // Serve sitemap.xml directly
@@ -1885,21 +1902,29 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       html = html.replace(/<h1 class="sr-only">.*?<\/h1>/gi, '');
     }
     
+    const wrappedNoscriptHtml = `
+      <main id="main-content">
+        ${noscriptHtml}
+      </main>
+    `;
+
     // Inject visible prerendered HTML directly inside #root
     // When React mounts on the client (createRoot.render), React cleanly replaces #root contents
     if (html.includes('<!-- PRERENDERED_HTML_PLACEHOLDER -->')) {
-      html = html.replace('<!-- PRERENDERED_HTML_PLACEHOLDER -->', noscriptHtml);
+      html = html.replace('<!-- PRERENDERED_HTML_PLACEHOLDER -->', wrappedNoscriptHtml);
     } else if (html.includes('<div id="root"></div>')) {
-      html = html.replace('<div id="root"></div>', `<div id="root">${noscriptHtml}</div>`);
+      html = html.replace('<div id="root"></div>', `<div id="root">${wrappedNoscriptHtml}</div>`);
     }
 
-    // Set high performance non-stale headers
+    // Set high performance non-stale headers and CSP report-only header
+    res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
     res.setHeader('CDN-Cache-Control', 'no-store');
     res.setHeader('Surrogate-Control', 'no-store');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
+    seoResponseCache.set(cacheKey, { html, timestamp: Date.now() });
     res.status(200).send(html);
 
   } catch (err) {

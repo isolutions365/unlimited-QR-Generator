@@ -130,7 +130,8 @@ export const SITEMAP_ROUTES = [
   { path: '/payment-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8, isLanding: true },
   { path: '/crypto-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8, isLanding: true },
   { path: '/app-store-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8, isLanding: true },
-  { path: '/location-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8, isLanding: true }
+  { path: '/location-qr-generator', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8, isLanding: true },
+  { path: '/zatca-invoice', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.8, isLanding: true }
 ];
 
 /**
@@ -3172,6 +3173,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* Primary Container Grid */}
+      <main id="main-content" className="flex-1 w-full flex flex-col">
       {isSubpage ? (
         <ErrorBoundary isInline>
           {['/profile', '/community', '/roadmap', '/testimonials', '/case-studies', '/success-stories', '/feedback'].includes(cleanPath) ? (
@@ -4747,6 +4749,7 @@ export default function App() {
           }}
         />
       </React.Suspense>
+      </main>
 
       {/* Footer with rich SEO directory links */}
       <footer id="app-footer" dir="ltr" className="py-16 border-t border-slate-200 bg-slate-50/50 text-slate-600 mt-12">

@@ -234,7 +234,7 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
-  res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://adservice.google.com https://googleads.g.doubleclick.net https://www.google.com https://www.gstatic.com https://recaptcha.net https://www.recaptcha.net https://apis.google.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://*.google.com https://*.doubleclick.net https://*.g.doubleclick.net; frame-src 'self' https://www.google.com https://recaptcha.net https://www.recaptcha.net https://*.doubleclick.net https://accounts.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self' https://*.google.com https://*.google.dev https://ai.studio https://*.run.app;");
+  res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
   next();
 });
 
@@ -263,7 +263,7 @@ app.use((req, res, next) => {
       if (filePath.endsWith('.html')) {
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
-      } else if (filePath.endsWith('.js') || filePath.endsWith('.css') || filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.ico') || filePath.endsWith('.svg') || filePath.endsWith('.webp')) {
+      } else if (filePath.match(/\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$/i) || filePath.includes('/assets/')) {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       } else {
         res.setHeader('Cache-Control', 'public, max-age=86400');
@@ -3123,7 +3123,7 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
   // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---
   async function startServer() {
     console.log("Starting Express...");
-    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+    const PORT = 3000;
 
     console.log("Loading Firebase...");
     console.log("Loading Firestore...");
@@ -3247,17 +3247,18 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
             res.setHeader('Surrogate-Control', 'no-store');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
-          } else if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
-            res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-          } else if (filePath.endsWith('.css')) {
-            res.setHeader('Content-Type', 'text/css; charset=utf-8');
+          } else if (filePath.match(/\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$/i) || filePath.includes('/assets/')) {
+            if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
+              res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+            } else if (filePath.endsWith('.css')) {
+              res.setHeader('Content-Type', 'text/css; charset=utf-8');
+            }
             res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
           } else if (filePath.endsWith('.webmanifest') || filePath.endsWith('.json')) {
             res.setHeader('Content-Type', 'application/json; charset=utf-8');
             res.setHeader('Cache-Control', 'public, max-age=86400');
-          } else if (filePath.includes('/assets/')) {
-            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+          } else {
+            res.setHeader('Cache-Control', 'public, max-age=86400');
           }
         }
       }));
