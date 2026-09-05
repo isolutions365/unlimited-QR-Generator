@@ -3369,6 +3369,81 @@ export default function App() {
             </div>
           </header>
 
+          {/* Explicit 4-Step Core User Journey Guide */}
+          <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 text-white rounded-2xl p-4 sm:p-5 shadow-lg border border-indigo-500/20 my-2">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-3">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400 font-mono">
+                  EXPLICIT WORKFLOW GUIDE
+                </span>
+                <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight">
+                  Create Your Custom QR Code in 4 Simple Steps
+                </h3>
+              </div>
+              <span className="text-xs text-slate-300 font-medium">
+                No sign-up required • Instant browser generation
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/40 transition-all">
+                <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-black text-xs shrink-0 shadow-md">
+                  1
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                    <QrCode className="w-3.5 h-3.5 text-indigo-400" /> Choose QR Type
+                  </h4>
+                  <p className="text-[11px] text-slate-300 leading-tight">
+                    Select URL, vCard, Menu, Wi-Fi, or Barcode from the tabs below.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/40 transition-all">
+                <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-black text-xs shrink-0 shadow-md">
+                  2
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                    <FormInput className="w-3.5 h-3.5 text-indigo-400" /> Enter Content
+                  </h4>
+                  <p className="text-[11px] text-slate-300 leading-tight">
+                    Input your target link, text, contact details, or upload file data.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/40 transition-all">
+                <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-black text-xs shrink-0 shadow-md">
+                  3
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                    <Palette className="w-3.5 h-3.5 text-indigo-400" /> Customize Design
+                  </h4>
+                  <p className="text-[11px] text-slate-300 leading-tight">
+                    Style colors, dot patterns, frames, and add a brand logo.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/40 transition-all">
+                <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs shrink-0 shadow-md">
+                  4
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                    <Download className="w-3.5 h-3.5 text-emerald-400" /> Download & Print
+                  </h4>
+                  <p className="text-[11px] text-slate-300 leading-tight">
+                    Export high-res PNG, SVG vectors, or ready-to-print layouts.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Section Heading for Studio Creator Tools */}
           <div className="pt-1">
             <h2 className="text-xs sm:text-sm font-extrabold text-slate-800 tracking-wider uppercase font-mono">
@@ -4807,67 +4882,17 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 border-t border-slate-200 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono">
           <p>{t('footer.copyright', '© 2026 iSolutions QR Generator. Decoupled and fully verified local-cloud schema.')}</p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.aboutUs', 'About Us')}</a>
-            <span>•</span>
-            <a href="/why-freeqrgen" onClick={(e) => { e.preventDefault(); navigateTo('/why-freeqrgen'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.whyUs', 'Why Us')}</a>
-            <span>•</span>
-            <a href="/editorial-policy" onClick={(e) => { e.preventDefault(); navigateTo('/editorial-policy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.editorialPolicy', 'Editorial Policy')}</a>
-            <span>•</span>
-            <a href="/research-methodology" onClick={(e) => { e.preventDefault(); navigateTo('/research-methodology'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.researchMethodology', 'Research Methodology')}</a>
-            <span>•</span>
             <a href="/privacy-policy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy-policy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.privacyPolicy', 'Privacy Policy')}</a>
+            <span>•</span>
+            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.terms', 'Terms')}</a>
             <span>•</span>
             <a href="/security" onClick={(e) => { e.preventDefault(); navigateTo('/security'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.security', 'Security')}</a>
             <span>•</span>
-            <a href="/data-processing" onClick={(e) => { e.preventDefault(); navigateTo('/data-processing'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.dataProcessing', 'Data Processing')}</a>
-            <span>•</span>
             <a href="/accessibility" onClick={(e) => { e.preventDefault(); navigateTo('/accessibility'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.accessibility', 'Accessibility')}</a>
             <span>•</span>
-            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.contactUs', 'Contact Us')}</a>
+            <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('/contact'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.contactUs', 'Contact')}</a>
             <span>•</span>
-            <a href="/changelog" onClick={(e) => { e.preventDefault(); navigateTo('/changelog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.changelog', 'Changelog')}</a>
-            <span>•</span>
-            <a href="/release-notes" onClick={(e) => { e.preventDefault(); navigateTo('/release-notes'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.releaseNotes', 'Release Notes')}</a>
-            <span>•</span>
-            <a href="/system-status" onClick={(e) => { e.preventDefault(); navigateTo('/system-status'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.systemStatus', 'System Status')}</a>
-            <span>•</span>
-            <a href="/careers" onClick={(e) => { e.preventDefault(); navigateTo('/careers'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.careers', 'Careers')}</a>
-            <span>•</span>
-            <a href="/media-kit" onClick={(e) => { e.preventDefault(); navigateTo('/media-kit'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.mediaKit', 'Media Kit')}</a>
-            <span>•</span>
-            <a href="/brand-assets" onClick={(e) => { e.preventDefault(); navigateTo('/brand-assets'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.brandAssets', 'Brand Assets')}</a>
-            <span>•</span>
-            <a href="/press" onClick={(e) => { e.preventDefault(); navigateTo('/press'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.press', 'Press Center')}</a>
-            <span>•</span>
-            <a href="/terms" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.terms', 'Terms & Conditions')}</a>
-            <span>•</span>
-            <a href="/faq" onClick={(e) => { e.preventDefault(); navigateTo('/faq'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.faq', 'FAQ')}</a>
-            <span>•</span>
-            <a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.blog', 'Blog')}</a>
-            <span>•</span>
-            <a href="/templates" onClick={(e) => { e.preventDefault(); navigateTo('/templates'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.templates', 'Templates')}</a>
-            <span>•</span>
-            <a href="/compare" onClick={(e) => { e.preventDefault(); navigateTo('/compare'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.compare', 'Comparisons')}</a>
-            <span>•</span>
-            <a href="/solutions" onClick={(e) => { e.preventDefault(); navigateTo('/solutions'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.solutions', 'Solutions')}</a>
-            <span>•</span>
-            <a href="/industries" onClick={(e) => { e.preventDefault(); navigateTo('/industries'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.industries', 'Industries')}</a>
-            <span>•</span>
-            <a href="/use-cases" onClick={(e) => { e.preventDefault(); navigateTo('/use-cases'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.useCases', 'Use Cases')}</a>
-            <span>•</span>
-            <a href="/academy" onClick={(e) => { e.preventDefault(); navigateTo('/academy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.academy', 'Academy')}</a>
-            <span>•</span>
-            <a href="/guides" onClick={(e) => { e.preventDefault(); navigateTo('/guides'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.guides', 'Guides')}</a>
-            <span>•</span>
-            <a href="/tutorials" onClick={(e) => { e.preventDefault(); navigateTo('/tutorials'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.tutorials', 'Tutorials')}</a>
-            <span>•</span>
-            <a href="/resources" onClick={(e) => { e.preventDefault(); navigateTo('/resources'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.resources', 'Resources')}</a>
-            <span>•</span>
-            <a href="/glossary" onClick={(e) => { e.preventDefault(); navigateTo('/glossary'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.glossary', 'Glossary')}</a>
-            <span>•</span>
-            <a href="/embed" onClick={(e) => { e.preventDefault(); navigateTo('/embed'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.embed', 'Embed Badge')}</a>
-            <span>•</span>
-            <a href="/platform/qr-analytics" onClick={(e) => { e.preventDefault(); navigateTo('/platform/qr-analytics'); }} className="text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider font-bold">{t('footer.platformSuite', 'Platform Suite')}</a>
+            <a href="/system-status" onClick={(e) => { e.preventDefault(); navigateTo('/system-status'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.systemStatus', 'Status')}</a>
           </div>
         </div>
       </footer>

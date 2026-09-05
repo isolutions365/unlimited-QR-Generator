@@ -747,6 +747,13 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta) {
         }
       },
       {
+        "@type": "WebSite",
+        "@id": "https://www.freeqrbarcodes.com/#website",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
+      },
+      {
         "@type": "BlogPosting",
         "@id": `${articleUrl}#blogposting`,
         "headline": article.title,
@@ -827,6 +834,13 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute) {
         "@id": "https://www.freeqrbarcodes.com/#logo",
         "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
       }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.freeqrbarcodes.com/#website",
+      "name": "Free QR Code Generator",
+      "url": "https://www.freeqrbarcodes.com/",
+      "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
     },
     {
       "@type": "WebPage",
@@ -953,6 +967,13 @@ export function buildAboutPageSchema(route: SitemapRoute) {
         "description": "Provider of 100% free dynamic QR codes, high-density matrix symbology generators, and real-time scan analytics tools."
       },
       {
+        "@type": "WebSite",
+        "@id": "https://www.freeqrbarcodes.com/#website",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
+      },
+      {
         "@type": "AboutPage",
         "@id": `${pageUrl}#aboutpage`,
         "url": pageUrl,
@@ -1008,6 +1029,13 @@ export function buildFaqPageSchema(route: SitemapRoute) {
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
         }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.freeqrbarcodes.com/#website",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
       {
         "@type": "WebPage",
@@ -1072,6 +1100,13 @@ export function buildBlogListingSchema() {
         }
       },
       {
+        "@type": "WebSite",
+        "@id": "https://www.freeqrbarcodes.com/#website",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
+      },
+      {
         "@type": "Blog",
         "@id": `${pageUrl}#blog`,
         "url": pageUrl,
@@ -1129,6 +1164,13 @@ export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTit
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
         }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.freeqrbarcodes.com/#website",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
       {
         "@type": "WebPage",
@@ -1194,6 +1236,13 @@ export function buildGenericPageSchema(route: SitemapRoute) {
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
         }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.freeqrbarcodes.com/#website",
+        "name": "Free QR Code Generator",
+        "url": "https://www.freeqrbarcodes.com/",
+        "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
       {
         "@type": "WebPage",
