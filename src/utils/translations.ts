@@ -1,9 +1,11 @@
 import { getFaqData, FAQItem, faqCategories } from '../data/faqData';
 import { getBlogArticles, BlogArticle, blogCategories } from '../data/blogData';
 
-export type Locale = 'en' | 'ar' | 'ur' | 'hi' | 'fr' | 'es' | 'tr' | 'id';
+export type Locale = 'en' | 'ar' | 'ur' | 'de' | 'fr' | 'es' | 'pt' | 'it' | 'tr' | 'id' | 'hi' | 'zh' | 'ja' | 'ko';
 
-export const SUPPORTED_LOCALES: Locale[] = ['en', 'ar', 'ur', 'hi', 'fr', 'es', 'tr', 'id'];
+export const SUPPORTED_LOCALES: Locale[] = [
+  'en', 'ar', 'ur', 'de', 'fr', 'es', 'pt', 'it', 'tr', 'id', 'hi', 'zh', 'ja', 'ko'
+];
 
 export function isRtlLocale(locale: Locale): boolean {
   return locale === 'ar' || locale === 'ur';

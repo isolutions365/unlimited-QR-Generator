@@ -18,11 +18,17 @@ const LOCALE_NAMES: Record<Locale, string> = {
   en: 'English',
   ar: 'العربية',
   ur: 'اردو',
-  hi: 'हिन्दी',
+  de: 'Deutsch',
   fr: 'Français',
   es: 'Español',
+  pt: 'Português',
+  it: 'Italiano',
   tr: 'Türkçe',
   id: 'Bahasa Indonesia',
+  hi: 'हिन्दी',
+  zh: '中文',
+  ja: '日本語',
+  ko: '한국어',
 };
 
 interface SEOAuditTabProps {

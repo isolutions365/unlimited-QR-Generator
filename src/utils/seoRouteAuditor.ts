@@ -44,7 +44,7 @@ export interface SEOAuditSummary {
   warningCount: number;
   criticalCount: number;
   schemaCoverageRate: number; // Percentage of routes with > 1 schema
-  canonicalHealthRate: number; // Percentage with valid canonical & 8 hreflangs
+  canonicalHealthRate: number; // Percentage with valid canonical & hreflangs
   metaCompletionRate: number; // Percentage with valid title & description lengths
 }
 
@@ -54,11 +54,17 @@ const OG_LOCALE_MAP: Record<Locale, string> = {
   en: 'en_US',
   ar: 'ar_AR',
   ur: 'ur_PK',
-  hi: 'hi_IN',
+  de: 'de_DE',
   fr: 'fr_FR',
   es: 'es_ES',
+  pt: 'pt_BR',
+  it: 'it_IT',
   tr: 'tr_TR',
   id: 'id_ID',
+  hi: 'hi_IN',
+  zh: 'zh_CN',
+  ja: 'ja_JP',
+  ko: 'ko_KR',
 };
 
 /**
@@ -71,7 +77,7 @@ export function getCanonicalForPath(path: string, locale: Locale): string {
 }
 
 /**
- * Generate hreflang entries for all 8 supported locales
+ * Generate hreflang entries for all 14 supported locales + x-default
  */
 export function getHreflangsForPath(path: string): { lang: string; url: string }[] {
   const cleanPath = path === '/' ? '' : path.startsWith('/') ? path : `/${path}`;

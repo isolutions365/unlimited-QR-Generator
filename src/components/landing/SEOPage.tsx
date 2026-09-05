@@ -230,11 +230,6 @@ export default function SEOPage({
         "@type": "Offer",
         "price": "0.00",
         "priceCurrency": "USD"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.95",
-        "reviewCount": "2490"
       }
     };
   };

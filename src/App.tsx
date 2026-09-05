@@ -48,6 +48,43 @@ const SEOPage = lazyWithRetry(() => import('./pages/landing/SEOPage'));
 const BulkQRGenerator = lazyWithRetry(() => import('./components/BulkQRGenerator'));
 const AnimationsShowcase = lazyWithRetry(() => import('./components/AnimationsShowcase'));
 const CompanyPages = lazyWithRetry(() => import('./pages/CompanyPages'));
+
+// Organization Schema helper for footer entity graph
+export function getFooterOrganizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://www.freeqrbarcodes.com/#organization",
+    "name": "Free QR Code Generator",
+    "url": "https://www.freeqrbarcodes.com/",
+    "logo": {
+      "@type": "ImageObject",
+      "@id": "https://www.freeqrbarcodes.com/#logo",
+      "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png",
+      "caption": "Free QR Code Generator Logo"
+    },
+    "description": "Provider of 100% free dynamic QR codes, high-density matrix symbology generators, and real-time scan analytics tools.",
+    "knowsAbout": [
+      "QR Code Symbology",
+      "ISO/IEC 18004 Standard",
+      "GS1 Digital Link Syntax",
+      "Dynamic Short URL Routing",
+      "2D Barcode Matrices",
+      "Vector Graphics & SVG Generation"
+    ],
+    "sameAs": [
+      "https://www.producthunt.com/posts/free-qr-generator-4",
+      "https://www.freeqrbarcodes.com/about",
+      "https://www.freeqrbarcodes.com/why-freeqrgen",
+      "https://www.freeqrbarcodes.com/faq",
+      "https://www.freeqrbarcodes.com/blog",
+      "https://www.freeqrbarcodes.com/templates",
+      "https://www.freeqrbarcodes.com/compare",
+      "https://www.freeqrbarcodes.com/solutions",
+      "https://www.freeqrbarcodes.com/system-status"
+    ]
+  };
+}
 const TrustCenterHub = lazyWithRetry(() => import('./pages/TrustCenterHub'));
 const FaqSection = lazyWithRetry(() => import('./pages/FaqSection'));
 const BlogSection = lazyWithRetry(() => import('./pages/BlogSection'));
@@ -1550,11 +1587,11 @@ export default function App() {
       document.head.appendChild(geoRegion);
     }
     const regionMapping: Record<string, string> = {
-      en: 'US', ar: 'AE', ur: 'PK', hi: 'IN', fr: 'FR', es: 'ES', tr: 'TR', id: 'ID'
+      en: 'US', ar: 'AE', ur: 'PK', de: 'DE', fr: 'FR', es: 'ES', pt: 'BR', it: 'IT', tr: 'TR', id: 'ID', hi: 'IN', zh: 'CN', ja: 'JP', ko: 'KR'
     };
     geoRegion.setAttribute('content', regionMapping[locale] || 'US');
 
-    // Sync hreflang tags for all 8 supported languages to achieve ultimate Search Engine crawlers index visibility
+    // Sync hreflang tags for all 14 supported languages to achieve ultimate Search Engine crawlers index visibility
     document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
 
     SUPPORTED_LOCALES.forEach((loc) => {
@@ -4780,6 +4817,12 @@ export default function App() {
 
       {/* Footer with rich SEO directory links */}
       <footer id="app-footer" dir="ltr" className="py-16 border-t border-slate-200 bg-slate-50/50 text-slate-600 mt-12">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(getFooterOrganizationSchema())
+          }}
+        />
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
           {/* Column 1: Branding & Product Hunt */}
           <div id="footer-branding" className="sm:col-span-2 md:col-span-1 space-y-3 text-left">
@@ -4868,7 +4911,8 @@ export default function App() {
                 { name: '💼 Digital Business Card', path: '/solutions/digital-business-card' },
                 { name: '⭐ Review Booster', path: '/solutions/google-review-booster' },
                 { name: '📡 WiFi Guest Onboarding', path: '/solutions/wifi-guest-onboarding' },
-                { name: '🎟️ Event Ticketing', path: '/solutions/event-ticketing-checkin' },
+                { name: '🎟️ Event Ticketing Check-In', path: '/solutions/event-ticketing-checkin' },
+                { name: '🎟️ Event Ticket QR', path: '/solutions/event-ticket-qr-code' },
                 { name: '📈 App Download Marketing', path: '/solutions/app-download-marketing' },
                 { name: '⚡ All Enterprise Solutions', path: '/solutions' },
               ].map((item) => (

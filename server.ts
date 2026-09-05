@@ -256,6 +256,13 @@ app.use((req, res, next) => {
     next();
   });
 
+  // Dynamic Sitemap XML Generator - Served before static files to prevent stale public/sitemap.xml masking
+  app.get('/sitemap.xml', (req, res) => {
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.status(200).send(buildSitemapXml());
+  });
+
   // Serve static files from public folder before any rate-limiting, CORS or API routing
   app.use(express.static(path.join(process.cwd(), 'public'), {
     index: false,
@@ -346,8 +353,30 @@ app.use((req, res, next) => {
     }
 
     const parts = cleanPath.split('/').filter(Boolean);
-    if (parts.length === 2 && ['ar', 'ur', 'hi', 'fr', 'es', 'tr', 'id'].includes(parts[0]) && parts[1] === 'privacy') {
+    if (parts.length === 2 && (SUPPORTED_LOCALES as readonly string[]).includes(parts[0]) && parts[1] === 'privacy') {
       return res.redirect(301, `/${parts[0]}/privacy-policy`);
+    }
+
+    // 301 Redirect legacy/mismatched blog slugs to canonical blog URLs
+    const blogRedirects: Record<string, string> = {
+      'what-is-a-qr-code-and-how-does-it-work': 'what-is-qr-code-how-it-works',
+      'static-vs-dynamic-qr-codes-complete-architectural-guide': 'static-vs-dynamic-qr-codes-guide',
+      'what-is-a-dynamic-qr-code': 'static-vs-dynamic-qr-codes-guide',
+      'qr-code-restaurant-menu-guide': 'complete-guide-to-digital-qr-restaurant-menus'
+    };
+
+    if (parts.length >= 2) {
+      let localePrefix = '';
+      let blogSlug = '';
+      if (parts[0] === 'blog' && parts.length === 2) {
+        blogSlug = parts[1];
+      } else if ((SUPPORTED_LOCALES as readonly string[]).includes(parts[0]) && parts[1] === 'blog' && parts.length === 3) {
+        localePrefix = `/${parts[0]}`;
+        blogSlug = parts[2];
+      }
+      if (blogSlug && blogRedirects[blogSlug]) {
+        return res.redirect(301, `${localePrefix}/blog/${blogRedirects[blogSlug]}`);
+      }
     }
 
     next();

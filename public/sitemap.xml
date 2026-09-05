@@ -1,256 +1,393 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Core Main Page -->
   <url>
-    <loc>https://www.freeqrbarcodes.com/</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://www.freeqrbarcodes.com</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- Tools Pages -->
   <url>
-    <loc>https://www.freeqrbarcodes.com/url-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.freeqrbarcodes.com/about</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/pdf-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.freeqrbarcodes.com/contact</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/wifi-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/faq</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/vcard-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.freeqrbarcodes.com/blog</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/email-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.freeqrbarcodes.com/pricing</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/sms-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.freeqrbarcodes.com/privacy-policy</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/whatsapp-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.freeqrbarcodes.com/security</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/instagram-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.freeqrbarcodes.com/accessibility</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/business-card-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.freeqrbarcodes.com/terms</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/restaurant-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.freeqrbarcodes.com/facebook-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.freeqrbarcodes.com/youtube-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.freeqrbarcodes.com/restaurant-menu-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.freeqrbarcodes.com/digital-card-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.freeqrbarcodes.com/pdf-sharing-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/academy</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrbarcodes.com/barcode-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.freeqrbarcodes.com/bulk-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/animated-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/zatca-invoice</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/payment-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/url-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/crypto-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/pdf-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/wifi-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/vcard-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/email-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/sms-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/whatsapp-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/instagram-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/facebook-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/youtube-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/restaurant-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/business-card-qr-generator</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.freeqrbarcodes.com/app-store-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.freeqrbarcodes.com/location-qr-generator</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/solutions/contactless-menu</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Info Pages -->
   <url>
-    <loc>https://www.freeqrbarcodes.com/faq</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.freeqrbarcodes.com/blog</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/solutions/digital-business-card</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/about</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://www.freeqrbarcodes.com/solutions/google-review-booster</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/privacy</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://www.freeqrbarcodes.com/solutions/wifi-guest-onboarding</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/privacy-policy</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://www.freeqrbarcodes.com/solutions/event-ticket-qr-code</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/contact</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://www.freeqrbarcodes.com/solutions/event-ticketing-checkin</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/terms</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://www.freeqrbarcodes.com/solutions/app-download-marketing</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
-
-  <!-- Blog Articles -->
   <url>
     <loc>https://www.freeqrbarcodes.com/blog/what-is-qr-code-how-it-works</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/10-ways-businesses-use-qr-codes-increase-sales</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/static-vs-dynamic-qr-codes-guide</loc>
+    <lastmod>2026-06-14</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/how-to-create-wifi-qr-code</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/qr-code-error-correction-levels-explained</loc>
+    <lastmod>2026-07-02</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/qr-codes-restaurants-digital-menus</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/omnichannel-retail-qr-codes-footfall-to-sales</loc>
+    <lastmod>2026-06-18</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/best-qr-code-marketing-strategies</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/b2b-lead-generation-with-qr-landing-pages</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/qr-codes-events-conferences</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/smart-packaging-qr-codes-product-engagement</loc>
+    <lastmod>2026-08-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/qr-codes-in-education</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/utm-tracking-measuring-qr-code-roi-ga4</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/common-qr-code-mistakes-avoid</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/retargeting-offline-audiences-with-dynamic-qr</loc>
+    <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/how-qr-codes-improve-customer-experience</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/ab-testing-print-advertising-with-qr-codes</loc>
+    <lastmod>2026-08-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/future-of-qr-code-technology</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/small-business-qr-code-starter-playbook</loc>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.freeqrbarcodes.com/blog/qr-codes-inventory-management-asset-tracking</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://www.freeqrbarcodes.com/blog/how-to-boost-google-reviews-with-countertop-qr</loc>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/contactless-invoicing-qr-payment-receipts</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/anatomy-of-2d-matrix-grids-micro-qr-iqr</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/qr-code-cybersecurity-preventing-qshing-attacks</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/gs1-digital-link-2027-barcode-standards-transition</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/hotel-digital-checkin-guest-experience-qr</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/touchless-healthcare-clinic-patient-registration-qr</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/smart-facility-maintenance-ticketing-equipment-qr</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/complete-guide-to-digital-qr-restaurant-menus</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/dynamic-pricing-and-realtime-menu-updates-qr</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/tableside-ordering-and-speeding-up-table-turnover</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/high-speed-event-ticketing-and-access-control-qr</loc>
+    <lastmod>2026-06-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/smart-networking-vcard-badges-for-conferences</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/live-audience-polls-qa-interactive-event-qr</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/interactive-textbooks-and-classroom-handouts-qr</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/campus-navigation-and-smart-building-directories-qr</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/qr-based-automated-student-attendance-systems</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/multi-link-social-bio-qr-codes-one-scan</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/pop-up-store-activations-viral-social-qr-campaigns</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/influencer-merch-unboxing-direct-social-engagement</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

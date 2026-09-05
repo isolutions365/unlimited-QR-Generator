@@ -229,6 +229,54 @@ export const sitemapRoutes: SitemapRoute[] = [
     seoTitle: 'Free Location QR Code Generator - GPS & Map Links',
     seoDescription: 'Generate GPS QR codes for store locators, event venues, and tourism spots. Encode coordinates and map links for instant navigation.' 
   },
+  { 
+    path: '/restaurant-menu-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Restaurant Menu QR Code Generator | Contactless Dining Menus',
+    seoDescription: 'Generate customized restaurant menu QR codes. Let dining guests scan, view, and select dishes on their mobile phones safely without physical touch.' 
+  },
+  { 
+    path: '/digital-card-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Digital Card QR Code Generator | Contactless vCard Plus',
+    seoDescription: 'Generate dynamic digital business card QR codes. Let contacts save your phone, email, address, and social links with a simple scan.' 
+  },
+  { 
+    path: '/pdf-sharing-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free PDF Sharing QR Code Generator | Convert PDF to QR Codes',
+    seoDescription: 'Generate custom target links with our free PDF QR code generator. Allow readers to scan, view, and download PDF catalogs or documents.' 
+  },
+  { 
+    path: '/animated-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Animated QR Code Generator | Dynamic & Moving QR Codes',
+    seoDescription: 'Make your QR codes stand out with beautiful animated styles, loop transitions, custom GIF overlays, and eye-catching movement patterns.' 
+  },
+  { 
+    path: '/payment-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Payment QR Code Generator | PayPal, IBAN & UPI QR Codes',
+    seoDescription: 'Generate secure, customized payment QR codes. Accept PayPal, Venmo, Cash App, UPI, and bank IBAN transfers with a frictionless mobile scan.' 
+  },
+  { 
+    path: '/crypto-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Crypto QR Code Generator | Bitcoin & Ethereum Wallet QRs',
+    seoDescription: 'Generate secure, custom QR codes for cryptocurrency wallet addresses. Supports Bitcoin, Ethereum, Solana, and major crypto networks.' 
+  },
 
   // Solutions pages
   { 
@@ -282,6 +330,11 @@ export const sitemapRoutes: SitemapRoute[] = [
   }
 ];
 
+export const SEO_META_MAP: Record<string, SitemapRoute> = sitemapRoutes.reduce((acc, route) => {
+  acc[route.path] = route;
+  return acc;
+}, {} as Record<string, SitemapRoute>);
+
 // ============================================
 // BLOG DATA (for SSR prerendering & SEO)
 // ============================================
@@ -295,38 +348,6 @@ export interface BlogArticleMeta {
 }
 
 export const blogArticles: Record<string, BlogArticleMeta> = {
-  'what-is-a-qr-code-and-how-does-it-work': {
-    title: 'What Is a QR Code and How Does It Work? Complete Guide',
-    description: 'Discover the math, science, and practical mechanics behind QR codes. From automotive tracking in 1994 to universal digital convenience today.',
-    date: '2026-06-02',
-    dateModified: '2026-08-28',
-    author: 'I-Solutions Specialist',
-    category: 'QR Code Guides'
-  },
-  'static-vs-dynamic-qr-codes-complete-architectural-guide': {
-    title: 'Static vs. Dynamic QR Codes: Complete Architectural Guide',
-    description: 'Choosing between static and dynamic QR codes is critical. Learn how payload immutability, server redirects, and real-time telemetry dictate the ideal solution.',
-    date: '2026-06-14',
-    dateModified: '2026-08-30',
-    author: 'I-Solutions Specialist',
-    category: 'QR Code Guides'
-  },
-  'what-is-a-dynamic-qr-code': {
-    title: 'What is a Dynamic QR Code? Complete Guide',
-    description: 'Learn what dynamic QR codes are, how they differ from static codes, and why they are essential for modern marketing campaigns.',
-    date: '2026-08-07',
-    dateModified: '2026-09-01',
-    author: 'I-Solutions Specialist',
-    category: 'QR Code Guides'
-  },
-  'qr-code-restaurant-menu-guide': {
-    title: 'QR Code Restaurant Menu Guide: Setup & Best Practices',
-    description: 'Step-by-step guide to implementing digital QR menus for restaurants. Reduce costs, update instantly, and enhance guest dining experience.',
-    date: '2026-08-07',
-    dateModified: '2026-09-02',
-    author: 'I-Solutions Specialist',
-    category: 'Restaurant QR Menus'
-  },
   'what-is-qr-code-how-it-works': {
     title: 'What Is a QR Code & How Does It Work? The Definitive Guide',
     description: 'Discover the math, science, and practical mechanics behind QR codes. From automotive tracking in 1994 to universal digital convenience today.',
@@ -609,6 +630,35 @@ export const landingPageFaqs: Record<string, Array<{q: string; a: string}>> = {
   'restaurant-qr-generator': [
     { q: 'Why use a QR code for restaurant menus?', a: 'QR menus eliminate physical printing costs, enable instant price updates, and offer a touchless dining experience.' },
     { q: 'Can I update menu items without reprinting tableside QR stands?', a: 'Yes, dynamic menu QR codes update instantly in the cloud.' }
+  ],
+  'restaurant-menu-qr-generator': [
+    { q: 'Why use a QR code for restaurant menus?', a: 'QR menus eliminate physical printing costs, enable instant price updates, and offer a touchless dining experience.' },
+    { q: 'Can I update menu items without reprinting tableside QR stands?', a: 'Yes, dynamic menu QR codes update instantly in the cloud.' },
+    { q: 'Do guests need an app to scan the restaurant menu?', a: 'No, guests can scan the QR code with their native phone camera.' }
+  ],
+  'digital-card-qr-generator': [
+    { q: 'Is this digital business card generator free?', a: 'Yes! Generating static vCard QR codes on FreeQRBarcodes.com is 100% free with zero scan limits.' },
+    { q: 'Do people need a special app to scan the card?', a: 'No, default smartphone cameras read and parse vCard data automatically.' },
+    { q: 'Can I add social media links?', a: 'Yes! You can put your main profiles or portfolio page URL in the website fields.' }
+  ],
+  'pdf-sharing-qr-generator': [
+    { q: 'What is a PDF QR code?', a: 'A PDF QR code links to a downloadable PDF document, menu, catalog, or whitepaper.' },
+    { q: 'Can I update the PDF after printing?', a: 'Yes, dynamic PDF QR codes allow you to replace the document without reprinting the code.' }
+  ],
+  'animated-qr-generator': [
+    { q: 'Will animated QR codes scan properly?', a: 'Yes! As long as the central data modules and finder patterns maintain sufficient contrast, camera optics parse animated QRs reliably.' },
+    { q: 'What file formats can I download for animated QR codes?', a: 'You can export animated QR codes as GIF, MP4, WebM, or SVG.' },
+    { q: 'Is the animated QR generator free?', a: 'Yes, 100% free to design, preview, and export without watermarks.' }
+  ],
+  'payment-qr-generator': [
+    { q: 'Which payment platforms are supported?', a: 'We support PayPal, Venmo, Cash App, UPI, Bitcoin, Ethereum, and custom banking links.' },
+    { q: 'Are payment QR codes safe to display publicly?', a: 'Yes. Payment QR codes only contain public payment requests or wallet addresses. They cannot pull funds without user authentication.' },
+    { q: 'Is there a transaction fee for using payment QR codes?', a: 'No! FreeQRBarcodes charges zero fees. Standard platform fees from PayPal/Venmo still apply.' }
+  ],
+  'crypto-qr-generator': [
+    { q: 'Which cryptocurrencies are supported?', a: 'Supports Bitcoin (BTC), Ethereum (ETH), Solana (SOL), USDT, USDC, and all major blockchain networks.' },
+    { q: 'Are crypto wallet QR codes safe?', a: 'Yes, the QR code encodes only your public receive address. Your private keys are never exposed.' },
+    { q: 'Can I include an exact payment amount in the QR code?', a: 'Yes, you can specify an optional crypto amount to request precise transaction amounts.' }
   ]
 };
 
@@ -616,7 +666,23 @@ export const landingPageFaqs: Record<string, Array<{q: string; a: string}>> = {
 // SCHEMA BUILDERS
 // ============================================
 
-export function buildHomepageSchema() {
+export const ORGANIZATION_SAME_AS: string[] = [
+  "https://www.producthunt.com/posts/free-qr-generator-4",
+  "https://www.freeqrbarcodes.com/about",
+  "https://www.freeqrbarcodes.com/why-freeqrgen",
+  "https://www.freeqrbarcodes.com/faq",
+  "https://www.freeqrbarcodes.com/blog",
+  "https://www.freeqrbarcodes.com/templates",
+  "https://www.freeqrbarcodes.com/compare",
+  "https://www.freeqrbarcodes.com/solutions",
+  "https://www.freeqrbarcodes.com/system-status"
+];
+
+export function buildHomepageSchema(locale: SupportedLocale = 'en') {
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const pageUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
+  const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -632,15 +698,7 @@ export function buildHomepageSchema() {
           "caption": "Free QR Code Generator Logo"
         },
         "image": { "@id": "https://www.freeqrbarcodes.com/#logo" },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.95",
-          "reviewCount": "2490",
-          "bestRating": "5"
-        },
-        "sameAs": [
-          "https://www.freeqrbarcodes.com/about"
-        ]
+        "sameAs": ORGANIZATION_SAME_AS
       },
       {
         "@type": "WebSite",
@@ -659,8 +717,8 @@ export function buildHomepageSchema() {
       },
       {
         "@type": "WebPage",
-        "@id": "https://www.freeqrbarcodes.com/#webpage",
-        "url": "https://www.freeqrbarcodes.com/",
+        "@id": `${pageUrl}#webpage`,
+        "url": pageUrl,
         "name": "Free QR Code Generator - Dynamic QR Codes & Custom Creator",
         "speakable": {
           "@type": "SpeakableSpecification",
@@ -669,9 +727,9 @@ export function buildHomepageSchema() {
       },
       {
         "@type": "WebApplication",
-        "@id": "https://www.freeqrbarcodes.com/#webapplication",
+        "@id": `${pageUrl}#webapplication`,
         "name": "Free QR Code Generator - Dynamic QR Codes & Custom Creator",
-        "url": "https://www.freeqrbarcodes.com/",
+        "url": pageUrl,
         "description": "Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any",
@@ -680,11 +738,6 @@ export function buildHomepageSchema() {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.95",
-          "reviewCount": "2490"
         },
         "featureList": [
           "URL QR: Secure web redirects with live trackable shortened links.",
@@ -708,21 +761,32 @@ export function buildHomepageSchema() {
             "position": 1,
             "name": "Select Your Content Type",
             "text": "Choose from URL, vCard contact, WiFi password, plain text, SMS, WhatsApp link, or digital restaurant menu.",
-            "url": "https://www.freeqrbarcodes.com/#step1"
+            "url": `${pageUrl}#step1`
           },
           {
             "@type": "HowToStep",
             "position": 2,
             "name": "Customize Design & Branding",
             "text": "Apply custom brand colors, linear gradients, unique corner eye shapes, and upload your central brand logo.",
-            "url": "https://www.freeqrbarcodes.com/#step2"
+            "url": `${pageUrl}#step2`
           },
           {
             "@type": "HowToStep",
             "position": 3,
             "name": "Download & Track Scans",
             "text": "Export print-ready SVG or PNG files immediately and enable dynamic short-link scan tracking analytics.",
-            "url": "https://www.freeqrbarcodes.com/#step3"
+            "url": `${pageUrl}#step3`
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": homeName,
+            "item": pageUrl
           }
         ]
       }
@@ -730,8 +794,13 @@ export function buildHomepageSchema() {
   };
 }
 
-export function buildBlogSchema(slug: string, article: BlogArticleMeta) {
-  const articleUrl = `https://www.freeqrbarcodes.com/blog/${slug}`;
+export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: SupportedLocale = 'en') {
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const articleUrl = locale === 'en' ? `${baseUrl}/blog/${slug}` : `${baseUrl}/${locale}/blog/${slug}`;
+  const blogUrl = locale === 'en' ? `${baseUrl}/blog` : `${baseUrl}/${locale}/blog`;
+  const homeUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
+  const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -744,7 +813,8 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta) {
           "@type": "ImageObject",
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
-        }
+        },
+        "sameAs": ORGANIZATION_SAME_AS
       },
       {
         "@type": "WebSite",
@@ -785,7 +855,7 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta) {
           "@type": "WebPage",
           "@id": articleUrl
         },
-        "inLanguage": "en",
+        "inLanguage": locale,
         "articleSection": article.category,
         "speakable": {
           "@type": "SpeakableSpecification",
@@ -798,14 +868,14 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta) {
           {
             "@type": "ListItem",
             "position": 1,
-            "name": "Home",
-            "item": "https://www.freeqrbarcodes.com/"
+            "name": homeName,
+            "item": homeUrl
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Blog",
-            "item": "https://www.freeqrbarcodes.com/blog"
+            "item": blogUrl
           },
           {
             "@type": "ListItem",
@@ -819,8 +889,11 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta) {
   };
 }
 
-export function buildLandingPageSchema(slug: string, route: SitemapRoute) {
-  const pageUrl = `https://www.freeqrbarcodes.com/${slug}`;
+export function buildLandingPageSchema(slug: string, route: SitemapRoute, locale: SupportedLocale = 'en') {
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const pageUrl = locale === 'en' ? `${baseUrl}/${slug}` : `${baseUrl}/${locale}/${slug}`;
+  const homeUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
+  const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
   const faqs = landingPageFaqs[slug] || [];
   
   const schemas: any[] = [
@@ -833,7 +906,8 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute) {
         "@type": "ImageObject",
         "@id": "https://www.freeqrbarcodes.com/#logo",
         "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
-      }
+      },
+      "sameAs": ORGANIZATION_SAME_AS
     },
     {
       "@type": "WebSite",
@@ -862,11 +936,6 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute) {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.95",
-        "reviewCount": "2490"
       }
     },
     {
@@ -875,13 +944,13 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute) {
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Home",
-          "item": "https://www.freeqrbarcodes.com/"
+          "name": homeName,
+          "item": homeUrl
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": route.seoTitle || slug,
+          "name": route.seoTitle ? route.seoTitle.split(' - ')[0].split(' | ')[0] : slug,
           "item": pageUrl
         }
       ]
@@ -949,8 +1018,11 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute) {
   };
 }
 
-export function buildAboutPageSchema(route: SitemapRoute) {
-  const pageUrl = `https://www.freeqrbarcodes.com${route.path}`;
+export function buildAboutPageSchema(route: SitemapRoute, locale: SupportedLocale = 'en') {
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const pageUrl = locale === 'en' ? `${baseUrl}${route.path}` : `${baseUrl}/${locale}${route.path}`;
+  const homeUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
+  const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -964,7 +1036,8 @@ export function buildAboutPageSchema(route: SitemapRoute) {
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
         },
-        "description": "Provider of 100% free dynamic QR codes, high-density matrix symbology generators, and real-time scan analytics tools."
+        "description": "Provider of 100% free dynamic QR codes, high-density matrix symbology generators, and real-time scan analytics tools.",
+        "sameAs": ORGANIZATION_SAME_AS
       },
       {
         "@type": "WebSite",
@@ -989,8 +1062,8 @@ export function buildAboutPageSchema(route: SitemapRoute) {
           {
             "@type": "ListItem",
             "position": 1,
-            "name": "Home",
-            "item": "https://www.freeqrbarcodes.com/"
+            "name": homeName,
+            "item": homeUrl
           },
           {
             "@type": "ListItem",
@@ -1004,8 +1077,11 @@ export function buildAboutPageSchema(route: SitemapRoute) {
   };
 }
 
-export function buildFaqPageSchema(route: SitemapRoute) {
-  const pageUrl = `https://www.freeqrbarcodes.com${route.path}`;
+export function buildFaqPageSchema(route: SitemapRoute, locale: SupportedLocale = 'en') {
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const pageUrl = locale === 'en' ? `${baseUrl}${route.path}` : `${baseUrl}/${locale}${route.path}`;
+  const homeUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
+  const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
   const rawFaqs = getFaqData('en');
   const mainEntity = rawFaqs.map(item => ({
     "@type": "Question",
@@ -1028,7 +1104,8 @@ export function buildFaqPageSchema(route: SitemapRoute) {
           "@type": "ImageObject",
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
-        }
+        },
+        "sameAs": ORGANIZATION_SAME_AS
       },
       {
         "@type": "WebSite",
@@ -1057,8 +1134,8 @@ export function buildFaqPageSchema(route: SitemapRoute) {
           {
             "@type": "ListItem",
             "position": 1,
-            "name": "Home",
-            "item": "https://www.freeqrbarcodes.com/"
+            "name": homeName,
+            "item": homeUrl
           },
           {
             "@type": "ListItem",
@@ -1072,16 +1149,20 @@ export function buildFaqPageSchema(route: SitemapRoute) {
   };
 }
 
-export function buildBlogListingSchema() {
-  const pageUrl = 'https://www.freeqrbarcodes.com/blog';
+export function buildBlogListingSchema(locale: SupportedLocale = 'en') {
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const pageUrl = locale === 'en' ? `${baseUrl}/blog` : `${baseUrl}/${locale}/blog`;
+  const homeUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
+  const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
   const articleKeys = Object.keys(blogArticles);
   const itemListElements = articleKeys.map((slug, idx) => {
     const article = blogArticles[slug];
+    const itemUrl = locale === 'en' ? `${baseUrl}/blog/${slug}` : `${baseUrl}/${locale}/blog/${slug}`;
     return {
       "@type": "ListItem",
       "position": idx + 1,
       "name": article.title,
-      "url": `https://www.freeqrbarcodes.com/blog/${slug}`
+      "url": itemUrl
     };
   });
 
@@ -1097,7 +1178,8 @@ export function buildBlogListingSchema() {
           "@type": "ImageObject",
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
-        }
+        },
+        "sameAs": ORGANIZATION_SAME_AS
       },
       {
         "@type": "WebSite",
@@ -1130,8 +1212,8 @@ export function buildBlogListingSchema() {
           {
             "@type": "ListItem",
             "position": 1,
-            "name": "Home",
-            "item": "https://www.freeqrbarcodes.com/"
+            "name": homeName,
+            "item": homeUrl
           },
           {
             "@type": "ListItem",
@@ -1145,8 +1227,12 @@ export function buildBlogListingSchema() {
   };
 }
 
-export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTitle?: string; seoDescription?: string }) {
-  const pageUrl = `https://www.freeqrbarcodes.com${route.path}`;
+export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTitle?: string; seoDescription?: string }, locale: SupportedLocale = 'en') {
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const pageUrl = locale === 'en' ? `${baseUrl}${route.path}` : `${baseUrl}/${locale}${route.path}`;
+  const solutionsUrl = locale === 'en' ? `${baseUrl}/solutions` : `${baseUrl}/${locale}/solutions`;
+  const homeUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
+  const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
   const solutionSlug = route.path.replace('/solutions/', '').replace(/-/g, ' ');
   const solutionName = route.seoTitle ? route.seoTitle.split(' - ')[0] : (solutionSlug.replace(/\b\w/g, l => l.toUpperCase()) + ' QR Solution');
   const solutionDesc = route.seoDescription || `Custom enterprise-grade ${solutionName} designed for high-density matrix scanning, vector exports, and real-time telemetry.`;
@@ -1163,7 +1249,8 @@ export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTit
           "@type": "ImageObject",
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
-        }
+        },
+        "sameAs": ORGANIZATION_SAME_AS
       },
       {
         "@type": "WebSite",
@@ -1200,14 +1287,14 @@ export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTit
           {
             "@type": "ListItem",
             "position": 1,
-            "name": "Home",
-            "item": "https://www.freeqrbarcodes.com/"
+            "name": homeName,
+            "item": homeUrl
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Solutions",
-            "item": "https://www.freeqrbarcodes.com/solutions"
+            "item": solutionsUrl
           },
           {
             "@type": "ListItem",
@@ -1221,8 +1308,11 @@ export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTit
   };
 }
 
-export function buildGenericPageSchema(route: SitemapRoute) {
-  const pageUrl = `https://www.freeqrbarcodes.com${route.path}`;
+export function buildGenericPageSchema(route: SitemapRoute, locale: SupportedLocale = 'en') {
+  const baseUrl = 'https://www.freeqrbarcodes.com';
+  const pageUrl = locale === 'en' ? `${baseUrl}${route.path}` : `${baseUrl}/${locale}${route.path}`;
+  const homeUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
+  const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -1235,7 +1325,8 @@ export function buildGenericPageSchema(route: SitemapRoute) {
           "@type": "ImageObject",
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
-        }
+        },
+        "sameAs": ORGANIZATION_SAME_AS
       },
       {
         "@type": "WebSite",
@@ -1257,13 +1348,13 @@ export function buildGenericPageSchema(route: SitemapRoute) {
           {
             "@type": "ListItem",
             "position": 1,
-            "name": "Home",
-            "item": "https://www.freeqrbarcodes.com/"
+            "name": homeName,
+            "item": homeUrl
           },
           {
             "@type": "ListItem",
             "position": 2,
-            "name": route.seoTitle || route.path,
+            "name": route.seoTitle ? route.seoTitle.split(' - ')[0].split(' | ')[0] : route.path,
             "item": pageUrl
           }
         ]
@@ -1312,8 +1403,27 @@ export function buildSitemapXml(): string {
 // SUPPORTED LOCALES & HREFLANG GENERATOR
 // ============================================
 
-export const SUPPORTED_LOCALES = ['en', 'ar', 'ur', 'hi', 'fr', 'es', 'tr', 'id'] as const;
+export const SUPPORTED_LOCALES = [
+  'en', 'ar', 'ur', 'de', 'fr', 'es', 'pt', 'it', 'tr', 'id', 'hi', 'zh', 'ja', 'ko'
+] as const;
 export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
+
+export const LOCALE_HOME_NAMES: Record<SupportedLocale, string> = {
+  en: 'Home',
+  ar: 'الرئيسية',
+  ur: 'Home',
+  de: 'Startseite',
+  fr: 'Accueil',
+  es: 'Inicio',
+  pt: 'Início',
+  it: 'Home',
+  tr: 'Ana Sayfa',
+  id: 'Beranda',
+  hi: 'मुख्य पृष्ठ',
+  zh: '首页',
+  ja: 'ホーム',
+  ko: '홈'
+};
 
 /**
  * Extracts the locale prefix (if any) and normalizes the canonical route path
@@ -1330,7 +1440,7 @@ export function extractLocaleAndPath(pathname: string): { locale: SupportedLocal
 }
 
 /**
- * Generates the full hreflang alternates link tags for all 8 supported languages + x-default
+ * Generates the full hreflang alternates link tags for all 14 supported languages + x-default
  */
 export function buildHreflangTags(cleanPath: string, baseUrl = 'https://www.freeqrbarcodes.com'): string {
   const normalizedPath = cleanPath === '/' ? '' : (cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`);
@@ -1340,11 +1450,17 @@ export function buildHreflangTags(cleanPath: string, baseUrl = 'https://www.free
     { hreflang: 'en', href: enUrl },
     { hreflang: 'ar', href: `${baseUrl}/ar${normalizedPath}` },
     { hreflang: 'ur', href: `${baseUrl}/ur${normalizedPath}` },
-    { hreflang: 'hi', href: `${baseUrl}/hi${normalizedPath}` },
+    { hreflang: 'de', href: `${baseUrl}/de${normalizedPath}` },
     { hreflang: 'fr', href: `${baseUrl}/fr${normalizedPath}` },
     { hreflang: 'es', href: `${baseUrl}/es${normalizedPath}` },
+    { hreflang: 'pt', href: `${baseUrl}/pt${normalizedPath}` },
+    { hreflang: 'it', href: `${baseUrl}/it${normalizedPath}` },
     { hreflang: 'tr', href: `${baseUrl}/tr${normalizedPath}` },
     { hreflang: 'id', href: `${baseUrl}/id${normalizedPath}` },
+    { hreflang: 'hi', href: `${baseUrl}/hi${normalizedPath}` },
+    { hreflang: 'zh', href: `${baseUrl}/zh${normalizedPath}` },
+    { hreflang: 'ja', href: `${baseUrl}/ja${normalizedPath}` },
+    { hreflang: 'ko', href: `${baseUrl}/ko${normalizedPath}` },
     { hreflang: 'x-default', href: enUrl }
   ];
 
@@ -1461,7 +1577,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     let pageUrl = locale === 'en'
       ? `${baseUrl}${cleanPath === '/' ? '/' : cleanPath}`
       : `${baseUrl}/${locale}${cleanPath === '/' ? '' : cleanPath}`;
-    let schemaJson: any = buildHomepageSchema();
+    let schemaJson: any = buildHomepageSchema(locale);
     let prerenderedH1 = '';
     let noscriptHtml = '';
 
@@ -1469,7 +1585,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     if (cleanPath === '/' || matchedRoute?.path === '/') {
       pageTitle = matchedRoute?.seoTitle || pageTitle;
       pageDescription = matchedRoute?.seoDescription || pageDescription;
-      schemaJson = buildHomepageSchema();
+      schemaJson = buildHomepageSchema(locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950">Free QR Code Generator</h1>`;
       noscriptHtml = `
@@ -1500,7 +1616,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       const article = blogArticles[blogSlug];
       pageTitle = `${article.title} - Free QR Code Generator Blog`;
       pageDescription = article.description;
-      schemaJson = buildBlogSchema(blogSlug, article);
+      schemaJson = buildBlogSchema(blogSlug, article, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">${article.title}</h1>`;
       noscriptHtml = `
@@ -1525,7 +1641,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     else if (cleanPath === '/blog') {
       pageTitle = matchedRoute?.seoTitle || 'QR Code Guides, Tutorials & Marketing Insights | FreeQRBarcodes.com';
       pageDescription = matchedRoute?.seoDescription || 'Explore in-depth technical guides, dynamic QR best practices, contactless menu strategies, and barcode industry tutorials.';
-      schemaJson = buildBlogListingSchema();
+      schemaJson = buildBlogListingSchema(locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">QR Code Guides & Marketing Blog</h1>`;
       noscriptHtml = `
@@ -1560,7 +1676,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
         priority: '0.6',
         seoTitle: pageTitle,
         seoDescription: pageDescription
-      });
+      }, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">About Free QR Code Generator</h1>`;
       noscriptHtml = `
@@ -1596,7 +1712,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
         priority: '0.6',
         seoTitle: pageTitle,
         seoDescription: pageDescription
-      });
+      }, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">Frequently Asked Questions</h1>`;
       noscriptHtml = `
@@ -1631,7 +1747,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
         priority: '0.8',
         seoTitle: pageTitle,
         seoDescription: pageDescription
-      });
+      }, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">${solutionName}</h1>`;
       noscriptHtml = `
@@ -1665,7 +1781,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     else if (matchedRoute?.isLanding) {
       pageTitle = matchedRoute.seoTitle || pageTitle;
       pageDescription = matchedRoute.seoDescription || pageDescription;
-      schemaJson = buildLandingPageSchema(matchedRoute.path.replace('/', ''), matchedRoute);
+      schemaJson = buildLandingPageSchema(matchedRoute.path.replace('/', ''), matchedRoute, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950">${pageTitle.split(' - ')[0]}</h1>`;
       noscriptHtml = `
@@ -1699,7 +1815,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     else if (cleanPath === '/privacy-policy') {
       pageTitle = matchedRoute?.seoTitle || 'Privacy Policy & Data Security Compliance | FreeQRBarcodes.com';
       pageDescription = matchedRoute?.seoDescription || 'Review our strict privacy policy. Zero cloud databases for static codes, offline-first client-side storage, and fully GDPR/CCPA compliant metrics.';
-      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/privacy-policy', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription });
+      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/privacy-policy', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription }, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">Privacy Policy & Zero-Tracking Security Architecture</h1>`;
       noscriptHtml = `
@@ -1737,7 +1853,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     else if (cleanPath === '/security') {
       pageTitle = matchedRoute?.seoTitle || 'Security Standards & Phishing Prevention | FreeQRBarcodes.com';
       pageDescription = matchedRoute?.seoDescription || 'Review our advanced security architecture, including barcode input sanitization, defense against optical phishing (QRishing), and local encryption.';
-      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/security', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription });
+      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/security', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription }, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">Security Architecture & Input Sanitization</h1>`;
       noscriptHtml = `
@@ -1768,7 +1884,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     else if (cleanPath === '/accessibility') {
       pageTitle = matchedRoute?.seoTitle || 'WCAG 2.2 Accessibility Standards | FreeQRBarcodes.com';
       pageDescription = matchedRoute?.seoDescription || 'Explore our commitment to accessibility. Learn about tactile QR guidelines, contrast ratios, and screen-reader compatibility under WCAG 2.2 AA.';
-      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/accessibility', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription });
+      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/accessibility', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription }, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">Accessibility Statement & WCAG 2.2 Conformity</h1>`;
       noscriptHtml = `
@@ -1799,7 +1915,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     else if (matchedRoute && matchedRoute.seoTitle) {
       pageTitle = matchedRoute.seoTitle;
       pageDescription = matchedRoute.seoDescription || pageDescription;
-      schemaJson = buildGenericPageSchema(matchedRoute);
+      schemaJson = buildGenericPageSchema(matchedRoute, locale);
       
       prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">${pageTitle.split(' - ')[0]}</h1>`;
       noscriptHtml = `
