@@ -1404,6 +1404,8 @@ export function buildSitemapXml(): string {
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
   
+  let count = 0;
+  
   for (const route of sitemapRoutes) {
     xml += `  <url>\n`;
     xml += `    <loc>${baseUrl}${route.path === '/' ? '' : route.path}</loc>\n`;
@@ -1411,6 +1413,7 @@ export function buildSitemapXml(): string {
     xml += `    <changefreq>${route.changefreq}</changefreq>\n`;
     xml += `    <priority>${route.priority}</priority>\n`;
     xml += `  </url>\n`;
+    count++;
   }
   
   // Add blog articles
@@ -1423,9 +1426,18 @@ export function buildSitemapXml(): string {
     xml += `    <changefreq>monthly</changefreq>\n`;
     xml += `    <priority>0.7</priority>\n`;
     xml += `  </url>\n`;
+    count++;
   }
   
   xml += `</urlset>`;
+  
+  // Final route validation to ensure all 71 canonical URLs are present
+  if (count !== 71) {
+    console.warn(`Sitemap generation validation mismatch: expected 71 URLs, generated ${count}.`);
+  } else {
+    console.info(`Sitemap generation validated: successfully compiled exactly ${count} canonical URLs.`);
+  }
+  
   return xml;
 }
 
