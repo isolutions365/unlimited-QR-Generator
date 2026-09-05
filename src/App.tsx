@@ -2711,7 +2711,7 @@ export default function App() {
               </div>
 
               {/* Staggered Navigation Items list with Accordions */}
-              <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3 scrollbar-thin">
+              <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3 scrollbar-thin">
                 
                 {/* 1. Creative Station Category Accordion */}
                 <div className={`rounded-2xl transition-all border ${
@@ -3132,7 +3132,7 @@ export default function App() {
                   </select>
                 </div>
 
-              </div>
+              </nav>
 
               {/* Sticky bottom summary & Account profile state */}
               <div className="p-4 bg-slate-950/55 border-t border-slate-800/60">
