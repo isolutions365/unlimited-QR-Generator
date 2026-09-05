@@ -59,11 +59,25 @@ export const sitemapRoutes: SitemapRoute[] = [
     seoDescription: 'Free QR Code Generator is 100% free. No credit card, no signup, no watermarks. Create unlimited dynamic QR codes with full features.' 
   },
   { 
-    path: '/privacy', 
+    path: '/privacy-policy', 
     changefreq: 'yearly', 
     priority: '0.4',
-    seoTitle: 'Privacy Policy - Free QR Code Generator',
-    seoDescription: 'Our privacy-first policy ensures your QR code data stays private. Static codes are generated client-side. Read our full privacy policy.' 
+    seoTitle: 'Privacy Policy & Data Security Compliance | FreeQRBarcodes.com',
+    seoDescription: 'Review our strict privacy policy. Zero cloud databases for static codes, offline-first client-side storage, and fully GDPR/CCPA compliant metrics.' 
+  },
+  { 
+    path: '/security', 
+    changefreq: 'yearly', 
+    priority: '0.4',
+    seoTitle: 'Security Standards & Phishing Prevention | FreeQRBarcodes.com',
+    seoDescription: 'Review our advanced security architecture, including barcode input sanitization, defense against optical phishing (QRishing), and local encryption.' 
+  },
+  { 
+    path: '/accessibility', 
+    changefreq: 'yearly', 
+    priority: '0.4',
+    seoTitle: 'WCAG 2.2 Accessibility Standards | FreeQRBarcodes.com',
+    seoDescription: 'Explore our commitment to accessibility. Learn about tactile QR guidelines, contrast ratios, and screen-reader compatibility under WCAG 2.2 AA.' 
   },
   { 
     path: '/terms', 
@@ -1292,6 +1306,8 @@ export function buildHreflangTags(cleanPath: string, baseUrl = 'https://www.free
 // SERVE HTML WITH SEO AND SCHEMA MIDDLEWARE
 // ============================================
 
+let cachedProdHtml: string | null = null;
+
 export async function serveHtmlWithSeoAndSchema(req: express.Request, res: express.Response, next: express.NextFunction) {
   try {
     const rawPath = (req.path || '/').replace(/\/+$/, '') || '/';
@@ -1315,17 +1331,26 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       return res.status(200).send(buildSitemapXml());
     }
 
-    // Determine HTML template path
+    // Determine HTML template path with high-performance in-memory caching for production
     const isProd = process.env.NODE_ENV === 'production';
-    const indexPath = isProd
-      ? path.join(process.cwd(), 'dist', 'index.html')
-      : path.join(process.cwd(), 'index.html');
+    let html: string;
 
-    if (!fs.existsSync(indexPath)) {
-      return next();
+    if (isProd && cachedProdHtml) {
+      html = cachedProdHtml;
+    } else {
+      const indexPath = isProd
+        ? path.join(process.cwd(), 'dist', 'index.html')
+        : path.join(process.cwd(), 'index.html');
+
+      if (!fs.existsSync(indexPath)) {
+        return next();
+      }
+
+      html = fs.readFileSync(indexPath, 'utf-8');
+      if (isProd) {
+        cachedProdHtml = html;
+      }
     }
-
-    let html = fs.readFileSync(indexPath, 'utf-8');
 
     // Apply Vite transform in development mode
     if (!isProd && (global as any).viteInstance) {
@@ -1600,6 +1625,106 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
           
           <div class="mt-8">
             <a href="/" class="text-indigo-600 font-bold hover:underline">← Back to Home</a>
+          </div>
+        </div>
+      `;
+    }
+    // --- PRIVACY POLICY PAGE ---
+    else if (cleanPath === '/privacy-policy') {
+      pageTitle = matchedRoute?.seoTitle || 'Privacy Policy & Data Security Compliance | FreeQRBarcodes.com';
+      pageDescription = matchedRoute?.seoDescription || 'Review our strict privacy policy. Zero cloud databases for static codes, offline-first client-side storage, and fully GDPR/CCPA compliant metrics.';
+      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/privacy-policy', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription });
+      
+      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">Privacy Policy & Zero-Tracking Security Architecture</h1>`;
+      noscriptHtml = `
+        <div class="max-w-4xl mx-auto py-10 px-4">
+          ${prerenderedH1}
+          <div class="text-xs text-slate-500 mb-6 uppercase tracking-wider font-semibold">Last Updated: July 6, 2026 | Version v3.0.0</div>
+          <p class="text-base text-slate-700 leading-relaxed mb-6">${pageDescription}</p>
+          
+          <div class="space-y-8 mt-8">
+            <section class="border-t border-slate-100 pt-6">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-3">1. Client-Side Processing Strategy (Zero-Tracking)</h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                FreeQRBarcodes.com operates primarily as a client-side utility. Static QR codes are generated directly in your web browser memory using standard JavaScript canvas libraries. None of the data arrays, payloads, WiFi keys, or contact information are uploaded to our servers.
+              </p>
+            </section>
+            
+            <section class="border-t border-slate-100 pt-6">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-3">2. Dynamic Campaigns & Analytics Data Collection</h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                For dynamic campaign redirects, we act as a Data Processor. We collect anonymized redirection counts, date-time intervals, browser client agent details, and regional location hashes. This telemetry is stored in secure encrypted cloud containers and automatically purged after 180 days.
+              </p>
+            </section>
+
+            <section class="border-t border-slate-100 pt-6">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-3">3. GDPR & CCPA Compliance Rights</h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Under the European General Data Protection Regulation (GDPR) and California Consumer Privacy Act (CCPA), you retain the right to be forgotten, the right to data portability, and the right to restrict processing. You can manage or delete your campaign metrics instantly via our dashboard.
+              </p>
+            </section>
+          </div>
+        </div>
+      `;
+    }
+    // --- SECURITY ASSURANCE PAGE ---
+    else if (cleanPath === '/security') {
+      pageTitle = matchedRoute?.seoTitle || 'Security Standards & Phishing Prevention | FreeQRBarcodes.com';
+      pageDescription = matchedRoute?.seoDescription || 'Review our advanced security architecture, including barcode input sanitization, defense against optical phishing (QRishing), and local encryption.';
+      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/security', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription });
+      
+      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">Security Architecture & Input Sanitization</h1>`;
+      noscriptHtml = `
+        <div class="max-w-4xl mx-auto py-10 px-4">
+          ${prerenderedH1}
+          <div class="text-xs text-slate-500 mb-6 uppercase tracking-wider font-semibold">Last Updated: July 4, 2026 | Version v2.8.0</div>
+          <p class="text-base text-slate-700 leading-relaxed mb-6">${pageDescription}</p>
+          
+          <div class="space-y-8 mt-8">
+            <section class="border-t border-slate-100 pt-6">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-3">1. Mitigating QR Code Phishing ("QRishing")</h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Phishing attacks leveraging optical codes represent a severe vector. To mitigate this threat, FreeQRBarcodes.com parses and sanitizes all input matrices client-side. We filter strings against common injection expressions, preventing malicious SQL strings, scripts, and executable terminal vectors from being compiled.
+              </p>
+            </section>
+            
+            <section class="border-t border-slate-100 pt-6">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-3">2. Transit Cryptography and Infrastructure Hardening</h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                All external API calls, dynamic redirections, and system interfaces are encrypted in transit using Transport Layer Security (TLS 1.3) protocols. Automated firewalls detect and suppress Distributed Denial of Service (DDoS) attempts, while continuous static security analysis checks every deployment node.
+              </p>
+            </section>
+          </div>
+        </div>
+      `;
+    }
+    // --- ACCESSIBILITY STATEMENT PAGE ---
+    else if (cleanPath === '/accessibility') {
+      pageTitle = matchedRoute?.seoTitle || 'WCAG 2.2 Accessibility Standards | FreeQRBarcodes.com';
+      pageDescription = matchedRoute?.seoDescription || 'Explore our commitment to accessibility. Learn about tactile QR guidelines, contrast ratios, and screen-reader compatibility under WCAG 2.2 AA.';
+      schemaJson = buildGenericPageSchema(matchedRoute || { path: '/accessibility', changefreq: 'yearly', priority: '0.4', seoTitle: pageTitle, seoDescription: pageDescription });
+      
+      prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">Accessibility Statement & WCAG 2.2 Conformity</h1>`;
+      noscriptHtml = `
+        <div class="max-w-4xl mx-auto py-10 px-4">
+          ${prerenderedH1}
+          <div class="text-xs text-slate-500 mb-6 uppercase tracking-wider font-semibold">Last Updated: July 1, 2026 | Version v2.0.1</div>
+          <p class="text-base text-slate-700 leading-relaxed mb-6">${pageDescription}</p>
+          
+          <div class="space-y-8 mt-8">
+            <section class="border-t border-slate-100 pt-6">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-3">1. Digital Accessibility Standards</h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                We design and program our interfaces to conform rigorously with the Web Content Accessibility Guidelines (WCAG) 2.2 Level AA. Our digital workspace fully supports screen readers through standardized ARIA labeling, respects user-level contrast configurations, and features custom keyboard focus traps to ensure seamless navigation.
+              </p>
+            </section>
+            
+            <section class="border-t border-slate-100 pt-6">
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-3">2. Physical Accessibility Guidelines</h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                An accessibility gap exists between screen-based interactions and printed media. To resolve this, we provide guidance for tactile reliefs, textured boundary framing, and braille pairing options alongside public barcode targets, enabling visually impaired or blind operators to scan printed materials autonomously.
+              </p>
+            </section>
           </div>
         </div>
       `;

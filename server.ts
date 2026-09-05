@@ -234,6 +234,7 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://adservice.google.com https://googleads.g.doubleclick.net https://www.google.com https://www.gstatic.com https://recaptcha.net https://www.recaptcha.net https://apis.google.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://*.google.com https://*.doubleclick.net https://*.g.doubleclick.net; frame-src 'self' https://www.google.com https://recaptcha.net https://www.recaptcha.net https://*.doubleclick.net https://accounts.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self' https://*.google.com https://*.google.dev https://ai.studio https://*.run.app;");
   next();
 });
 
@@ -261,6 +262,11 @@ app.use((req, res, next) => {
     setHeaders: (res, filePath) => {
       if (filePath.endsWith('.html')) {
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+      } else if (filePath.endsWith('.js') || filePath.endsWith('.css') || filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.ico') || filePath.endsWith('.svg') || filePath.endsWith('.webp')) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      } else {
+        res.setHeader('Cache-Control', 'public, max-age=86400');
       }
     }
   }));
@@ -330,6 +336,20 @@ app.use((req, res, next) => {
     if (host === 'freeqrbarcodes.com' || host === 'freeqrgen.pro' || host === 'www.freeqrgen.pro' || host.includes('netlify.app') || host.includes('unlimitedqrgen.com')) {
       return res.redirect(301, `https://www.freeqrbarcodes.com${req.originalUrl}`);
     }
+
+    // 301 Redirect /privacy to /privacy-policy (including localized prefixes like /ar/privacy -> /ar/privacy-policy)
+    const rawPath = req.path || '/';
+    const cleanPath = rawPath.replace(/\/+$/, '') || '/';
+
+    if (cleanPath === '/privacy') {
+      return res.redirect(301, '/privacy-policy');
+    }
+
+    const parts = cleanPath.split('/').filter(Boolean);
+    if (parts.length === 2 && ['ar', 'ur', 'hi', 'fr', 'es', 'tr', 'id'].includes(parts[0]) && parts[1] === 'privacy') {
+      return res.redirect(301, `/${parts[0]}/privacy-policy`);
+    }
+
     next();
   });
 

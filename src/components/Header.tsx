@@ -140,10 +140,7 @@ export default function Header({
       </button>
 
       {/* CENTER: Navigation with Premium Hover Dropdowns */}
-      <div 
-        className="hidden xl:flex items-center justify-center gap-1 px-4"
-        onMouseLeave={() => setActiveDropdown(null)}
-      >
+      <nav aria-label="Primary navigation" className="hidden xl:flex items-center justify-center gap-1 px-4" onMouseLeave={() => setActiveDropdown(null)}>
         {/* QR Generators Dropdown */}
         <div 
           className="relative py-2 px-1"
@@ -396,7 +393,7 @@ export default function Header({
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </nav>
 
       {/* RIGHT: Buttons */}
       <div className="flex items-center gap-2 shrink-0">

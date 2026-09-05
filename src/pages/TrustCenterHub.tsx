@@ -303,50 +303,53 @@ export const trustPages: TrustPageContent[] = [
   },
   {
     slug: 'privacy',
-    title: 'Privacy Policy & Zero-Tracking Security Architecture',
-    metaTitle: 'Privacy Policy & Data Security Compliance | FreeQRBarcodes.com',
-    metaDesc: 'Review our strict privacy policy. Zero cloud databases for static codes, offline-first client-side storage, and fully GDPR/CCPA compliant metrics.',
-    badge: 'COMPLIANCE & PRIVACY',
+    title: 'Privacy Policy & Data Transparency Framework',
+    metaTitle: 'Privacy Policy & Data Transparency | FreeQRBarcodes.com',
+    metaDesc: 'Clear, transparent distinction between 100% client-side static QR codes and server-backed dynamic campaign analytics with Firestore retention policies.',
+    badge: 'COMPLIANCE & TRANSPARENCY',
     iconName: 'Shield',
-    lastUpdated: 'July 6, 2026',
-    version: 'v3.0.0',
+    lastUpdated: 'September 5, 2026',
+    version: 'v3.2.0',
     authorId: 'marcus-vance',
     reviewerId: 'sarah-chen',
-    readingTime: '5 min read',
+    readingTime: '6 min read',
     aiSummary: {
-      gemini: 'FreeQRBarcodes.com implements an offline-first privacy framework. Static QR creation occurs 100% locally in browser memory via Javascript. No content, links, or confidential values are sent to our servers, establishing absolute GDPR/CCPA compliance by design.',
-      chatgpt: 'For dynamic link tracking, we collect anonymized metadata (timestamps, browser user-agents, and general region locations) to render analytics. We do not store absolute IP addresses or use tracker cookies, keeping campaign tracking secure and transparent.',
-      perplexity: 'All optional user preferences are stored locally using standard browser localStorage. FreeQRBarcodes.com does not share, monetize, or transmit dataset fragments to third-party brokers, providing an optimal safe sandbox for enterprise marketing data.'
+      gemini: 'FreeQRBarcodes.com clearly distinguishes between Static and Dynamic modes. Static QR codes are generated 100% client-side in browser memory with zero data leaving your device. Dynamic QR codes and scan analytics utilize secure server infrastructure to process and store routing metadata.',
+      chatgpt: 'When you create dynamic QR campaigns, metadata (target destination URLs, scan counts, timestamps, truncated user-agents, and general region locations) is securely transmitted and stored in our Firestore database collections (projects, scans, qr_codes) via endpoints like /api/r/:trackingId. Anonymized logs are retained for up to 180 days.',
+      perplexity: 'We do not sell, rent, or lease any user data to third-party ad networks. Our sole cloud subprocessor is Google Cloud Platform (EU region). All cookie preferences and session states adhere strictly to GDPR/CCPA transparency standards.'
     },
     citationBlock: {
-      definition: 'Privacy-by-Design is an engineering approach that integrates privacy safeguards directly into the system architecture from the first line of code, rather than treating privacy as an administrative add-on.',
+      definition: 'Data Transparency Principle: Users must be explicitly informed when processing occurs locally in-browser versus when campaign telemetry is transmitted to remote cloud databases for analytics and redirection.',
       statistics: [
-        { label: 'Personal Identifiable Information (PII) Stored', value: '0 Bytes (Static Mode)', source: 'Compliance Privacy Audit' },
-        { label: 'Cookie Tracker Consent Actions', value: 'Not Required (Zero Trackers)', source: 'European Data Protection Board guidelines' }
+        { label: 'Static QR Data Sent to Server', value: '0 Bytes (100% Browser Local)', source: 'Compliance Architecture Audit' },
+        { label: 'Dynamic Scan Log Retention', value: '180 Days Max (Auto-Purged)', source: 'Firestore TTL Policy' },
+        { label: 'Third-Party Ad Brokers / Trackers', value: '0 (Zero Monetization)', source: 'Subprocessor Registry' }
       ],
       quickFacts: [
-        'GDPR, CCPA, and COPPA compliant since our core systems do not collect identifiable records.',
-        'Static generated QR codes can be exported and printed while fully disconnected from the internet.',
-        'All dynamic link redirection relies on secure, high-speed routing nodes without intermediate data brokers.'
+        'Static QR Codes (URL, Text, Email, Phone, SMS, Wi-Fi, vCard): Executed 100% client-side in browser memory. No data is transmitted to or stored on our servers.',
+        'Dynamic QR Codes & Scan Analytics: Transmit campaign destination URLs, tracking IDs, timestamps, and aggregate scan telemetry to our Google Cloud Firestore database.',
+        'Backend Endpoints: Dynamic redirect routing occurs via /api/r/:trackingId and scan events are recorded via /api/scans/record.',
+        'Data Retention: Scan logs and dynamic campaign projects are stored securely in Firestore collections and retained for up to 180 days unless deleted by the user or archived under an active account.'
       ],
       bestPractices: [
-        'Use static QR codes if you are transmitting sensitive personal, medical, or financial identifiers.',
-        'Verify your company\'s GDPR/CCPA obligations before enabling dynamic redirect tracking.',
-        'Do not embed unencrypted credentials directly in plain text barcodes.'
+        'Review whether your campaign requires real-time scan analytics (Dynamic Mode) or absolute local privacy (Static Mode).',
+        'Avoid encoding sensitive personal health or financial credentials into dynamic codes.',
+        'Exercise your GDPR rights at any time to export or purge your saved dynamic projects and scan logs.'
       ],
       commonMistakes: [
-        'Assuming all online generators keep your inputs private (many log text parameters in remote database systems).',
-        'Failing to secure target landing pages while focusing purely on QR-code level privacy.',
-        'Storing sensitive user authentication tokens inside static barcodes without symmetric encryption.'
+        'Assuming all QR generators operate locally without server logging.',
+        'Failing to recognize that dynamic redirects inherently require server-side routing infrastructure.',
+        'Neglecting to review third-party data collection policies on embedded external links.'
       ],
       references: [
-        { title: 'Regulation (EU) 2016/679 (General Data Protection Regulation - GDPR) Article 25: Data protection by design and by default', year: '2016' },
-        { title: 'The CCPA Compliance Guide for Automated Information Capture Systems', author: 'California Privacy Coalition', year: '2025' }
+        { title: 'GDPR Article 13: Information to be provided where personal data are collected from the data subject', year: '2016' },
+        { title: 'California Consumer Privacy Act (CCPA) Transparency Guidelines for SaaS and Utility Platforms', year: '2025' }
       ]
     },
     faqs: [
-      { q: 'Do you sell my email address or search query data?', a: 'Absolutely not. We do not sell, rent, or lease any data. Since static generation doesn\'t send inputs to our server, we don\'t even possess your search queries to begin with.' },
-      { q: 'How long are scan analytics kept for dynamic QRs?', a: 'Anonymized campaign logs are stored in our secure database for up to 180 days, after which they are automatically purged unless archived by an active account.' }
+      { q: 'Which QR types are generated 100% client-side?', a: 'All standard Static QR codes (Plain text, URLs, Phone, SMS, Email, Wi-Fi, vCard, Bitcoin, Event) are generated entirely in your browser memory using local JavaScript canvas rendering. Zero input data leaves your device or touches our server.' },
+      { q: 'What data do Dynamic QRs send to the server and where is it stored?', a: 'Dynamic QRs send target redirect URLs, campaign identifiers, timestamps, and anonymized scan telemetry (browser type, general region) to our secure Google Cloud Firestore database collections (projects, scans, qr_codes). These logs are processed via /api/r/:trackingId and retained for up to 180 days.' },
+      { q: 'Do you share my scan analytics with third parties?', a: 'Never. Your campaign analytics and project configurations are private to your session or account. We use no advertising trackers, and our sole infrastructure subprocessor is Google Cloud (EU region).' }
     ]
   },
   {

@@ -18,8 +18,15 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
   React.useEffect(() => {
     if (isOpen) {
       setActiveTab(initialTab);
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, initialTab]);
+  }, [isOpen, initialTab, onClose]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');

@@ -97,7 +97,6 @@ export const SITEMAP_ROUTES = [
   { path: '/faq', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.7 },
   { path: '/blog', lastmod: '2026-08-07', changefreq: 'weekly', priority: 0.7 },
   { path: '/about', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
-  { path: '/privacy', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
   { path: '/privacy-policy', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
   { path: '/contact', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
   { path: '/terms', lastmod: '2026-08-07', changefreq: 'monthly', priority: 0.5 },
@@ -1198,14 +1197,14 @@ export default function App() {
   
   const trustCenterPaths = [
     '/about', '/why-freeqrgen', '/editorial-policy', '/research-methodology', 
-    '/privacy', '/privacy-policy', '/security', '/data-processing', '/accessibility', 
+    '/privacy-policy', '/security', '/data-processing', '/accessibility', 
     '/contact', '/changelog', '/release-notes', '/system-status', 
     '/careers', '/media-kit', '/brand-assets', '/press'
   ];
   const isTrustCenterSection = trustCenterPaths.some(p => cleanPath === p || cleanPath.startsWith(p + '/'));
 
   const isFreeQrToolsActive = cleanPath !== '/' && cleanPath !== '' && 
-    !['/faq', '/about', '/privacy', '/privacy-policy', '/contact', '/terms', '/solutions', '/industries', '/use-cases', '/signup', '/signin', '/login', '/register', '/auth'].some(p => cleanPath === p || cleanPath.startsWith(p + '/')) && 
+    !['/faq', '/about', '/privacy-policy', '/contact', '/terms', '/solutions', '/industries', '/use-cases', '/signup', '/signin', '/login', '/register', '/auth'].some(p => cleanPath === p || cleanPath.startsWith(p + '/')) &&  
     !cleanPath.startsWith('/blog') &&
     !cleanPath.startsWith('/platform') &&
     !isKnowledgeSection &&
@@ -1229,7 +1228,7 @@ export default function App() {
   const isDirectoriesCategoryActive = isSolutionsSection || isIndustriesSection || isUseCasesSection || isCompareSection;
   const isResourcesCategoryActive = cleanPath === '/faq' || cleanPath.startsWith('/blog') || isKnowledgeSection;
   const isAnalyticsCategoryActive = cleanPath === '/analytics' || activeTab === 'analytics' || (typeof window !== 'undefined' && window.location.search.includes('tab=analytics'));
-  const isTrustCategoryActive = isTrustCenterSection || ['/about', '/contact', '/privacy', '/privacy-policy', '/terms', '/security'].includes(cleanPath);
+  const isTrustCategoryActive = isTrustCenterSection || ['/about', '/contact', '/privacy-policy', '/terms', '/security'].includes(cleanPath);
 
   // Active Category Key for the Mobile Navigation Drawer highlighting
   const activeMobileCategoryKey: 'creative' | 'tools' | 'directories' | 'resources' | 'analytics' | 'trust' | 'general' = (() => {
@@ -1501,7 +1500,7 @@ export default function App() {
     } else if (currentPath === '/about') {
       title = 'About Us | Free QR Code Generator Team';
       description = 'Learn about FreeQRBarcodes and the iSolutions team dedicated to building secure, beautiful, high-performance QR code creator utilities.';
-    } else if (currentPath === '/privacy' || currentPath === '/privacy-policy') {
+    } else if (currentPath === '/privacy-policy') {
       title = 'Privacy Policy | FreeQRBarcodes - Secure, Offline-First QR Generation';
       description = 'Read the FreeQRBarcodes privacy commitment. Learn how we utilize offline-first browser rendering to protect your network passwords, URLs, and vCards.';
     } else if (currentPath === '/contact') {
@@ -1766,7 +1765,7 @@ export default function App() {
     // Run sitemap integrity and timestamp validation
     validateSitemapRoutes(Object.keys(landingPages), [
       '/about', '/why-freeqrgen', '/editorial-policy', '/research-methodology', 
-      '/privacy', '/privacy-policy', '/security', '/data-processing', '/accessibility', 
+      '/privacy-policy', '/security', '/data-processing', '/accessibility', 
       '/contact', '/changelog', '/release-notes', '/system-status', 
       '/careers', '/media-kit', '/brand-assets', '/press'
     ]);
@@ -3097,13 +3096,13 @@ export default function App() {
                   <button
                     onClick={() => {
                       setIsMobileMenuOpen(false);
-                      navigateTo('/privacy');
+                      navigateTo('/privacy-policy');
                     }}
                     className={`w-full flex items-center gap-3 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
-                      cleanPath === '/privacy' || cleanPath === '/privacy-policy' ? 'bg-slate-800 text-white border border-slate-700' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                      cleanPath === '/privacy-policy' ? 'bg-slate-800 text-white border border-slate-700' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
                     }`}
                   >
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${cleanPath === '/privacy' || cleanPath === '/privacy-policy' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}>
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${cleanPath === '/privacy-policy' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}>
                       <Shield className="w-3.5 h-3.5" />
                     </div>
                     <span className="font-bold">{navTranslations[locale].privacyPolicy}</span>
@@ -4816,7 +4815,7 @@ export default function App() {
             <span>•</span>
             <a href="/research-methodology" onClick={(e) => { e.preventDefault(); navigateTo('/research-methodology'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.researchMethodology', 'Research Methodology')}</a>
             <span>•</span>
-            <a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.privacyPolicy', 'Privacy Policy')}</a>
+            <a href="/privacy-policy" onClick={(e) => { e.preventDefault(); navigateTo('/privacy-policy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.privacyPolicy', 'Privacy Policy')}</a>
             <span>•</span>
             <a href="/security" onClick={(e) => { e.preventDefault(); navigateTo('/security'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.security', 'Security')}</a>
             <span>•</span>

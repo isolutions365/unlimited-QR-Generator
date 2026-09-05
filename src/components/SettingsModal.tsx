@@ -23,12 +23,19 @@ export default function SettingsModal({
   const [isClearingCache, setIsClearingCache] = useState(false);
   const [cacheClearedSuccess, setCacheClearedSuccess] = useState(false);
 
-  // Sync state when modal opens
+  // Sync state when modal opens & handle Escape key
   React.useEffect(() => {
     if (isOpen) {
       setLocalSettings(soundSettings);
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, soundSettings]);
+  }, [isOpen, soundSettings, onClose]);
 
   if (!isOpen) return null;
 
