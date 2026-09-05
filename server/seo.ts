@@ -160,8 +160,8 @@ export const sitemapRoutes: SitemapRoute[] = [
     changefreq: 'weekly', 
     priority: '0.9', 
     isLanding: true,
-    seoTitle: 'Free PDF QR Code Generator - Share Documents',
-    seoDescription: 'Generate QR codes for PDF documents, restaurant menus, product catalogs. Dynamic updates without reprinting. Free vector exports.' 
+    seoTitle: 'Free PDF QR Code Generator - Create Document QR Codes',
+    seoDescription: 'Create custom QR codes that link directly to your online PDF documents, user manuals, catalogs, brochures, and reports. 100% free with vector export.' 
   },
   { 
     path: '/wifi-qr-generator', 
@@ -176,8 +176,8 @@ export const sitemapRoutes: SitemapRoute[] = [
     changefreq: 'weekly', 
     priority: '0.9', 
     isLanding: true,
-    seoTitle: 'Free vCard QR Code Generator - Digital Business Cards',
-    seoDescription: 'Generate vCard 3.0/4.0 QR codes for instant contact sharing. One-tap save to address book. Custom branding and vector exports.' 
+    seoTitle: 'Free vCard QR Code Generator - Create vCard 3.0 Contact Codes',
+    seoDescription: 'Create standard vCard 3.0 contact QR codes with your name, phone, email, job title, company, address, and website. 100% free with instant export.' 
   },
   { 
     path: '/email-qr-generator', 
@@ -232,16 +232,16 @@ export const sitemapRoutes: SitemapRoute[] = [
     changefreq: 'weekly', 
     priority: '0.9', 
     isLanding: true,
-    seoTitle: 'Free Restaurant QR Code Generator - Digital Menus',
-    seoDescription: 'Create digital restaurant menu QR codes. Update items, prices, and allergens instantly without reprinting. Contactless dining solution.' 
+    seoTitle: 'Free Restaurant QR Code Generator - Table & Venue QR Codes',
+    seoDescription: 'Create custom QR codes for your restaurant, cafe, or bar. Link diners to your restaurant website, table info, social pages, and guest links.' 
   },
   { 
     path: '/business-card-qr-generator', 
     changefreq: 'weekly', 
     priority: '0.9', 
     isLanding: true,
-    seoTitle: 'Free Business Card QR Code Generator',
-    seoDescription: 'Generate digital business card QR codes with vCard integration. Share contact details instantly with custom branded designs.' 
+    seoTitle: 'Free Business Card QR Code Generator - For Printed Business Cards',
+    seoDescription: 'Generate clean, scanable QR codes to print on paper business cards. Help contacts save your details directly to their phones at networking events.' 
   },
   { 
     path: '/app-store-qr-generator', 
@@ -264,24 +264,24 @@ export const sitemapRoutes: SitemapRoute[] = [
     changefreq: 'weekly', 
     priority: '0.9', 
     isLanding: true,
-    seoTitle: 'Free Restaurant Menu QR Code Generator | Contactless Dining Menus',
-    seoDescription: 'Generate customized restaurant menu QR codes. Let dining guests scan, view, and select dishes on their mobile phones safely without physical touch.' 
+    seoTitle: 'Free Restaurant Menu QR Code Generator - Digital Food & Drink Menus',
+    seoDescription: 'Create custom menu QR codes for dining tables. Link guests directly to your digital food and drink menu, wine list, or hosted PDF menu.' 
   },
   { 
     path: '/digital-card-qr-generator', 
     changefreq: 'weekly', 
     priority: '0.9', 
     isLanding: true,
-    seoTitle: 'Free Digital Card QR Code Generator | Contactless vCard Plus',
-    seoDescription: 'Generate dynamic digital business card QR codes. Let contacts save your phone, email, address, and social links with a simple scan.' 
+    seoTitle: 'Free Digital Card QR Code Generator - Paperless Contact Sharing',
+    seoDescription: 'Create digital contact QR codes for screen-based, paperless contact sharing. Display on your phone or device for seamless mobile-to-mobile networking.' 
   },
   { 
     path: '/pdf-sharing-qr-generator', 
     changefreq: 'weekly', 
     priority: '0.9', 
     isLanding: true,
-    seoTitle: 'Free PDF Sharing QR Code Generator | Convert PDF to QR Codes',
-    seoDescription: 'Generate custom target links with our free PDF QR code generator. Allow readers to scan, view, and download PDF catalogs or documents.' 
+    seoTitle: 'Free PDF Sharing QR Code Generator - Share Documents with Groups',
+    seoDescription: 'Create QR codes designed for sharing documents, event handouts, training materials, and presentation slides with groups and audiences effortlessly.' 
   },
   { 
     path: '/animated-qr-generator', 

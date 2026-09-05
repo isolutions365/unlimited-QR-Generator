@@ -269,43 +269,90 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
 
           {/* Process raw text rendering or structured HTML headers */}
           <div id="article-main-body" className="prose max-w-none text-slate-700 text-xs sm:text-sm leading-relaxed space-y-6">
-            {activeArticle.contentMarkdown.split('\n\n').map((para, idx) => {
-              if (para.startsWith('## ')) {
+            {(() => {
+              const renderFormattedInline = (text: string) => {
+                if (!text.includes('**')) return text;
+                const parts = text.split(/(\*\*.*?\*\*)/g);
+                return parts.map((part, i) => {
+                  if (part.startsWith('**') && part.endsWith('**')) {
+                    return <strong key={i} className="font-bold text-slate-900">{part.slice(2, -2)}</strong>;
+                  }
+                  return part;
+                });
+              };
+
+              return activeArticle.contentMarkdown.split('\n\n').map((para, idx) => {
+                const trimmed = para.trim();
+                const lines = trimmed.split('\n').map(l => l.trim()).filter(Boolean);
+
+                if (lines.length >= 3 && lines[0].startsWith('|') && lines[1].includes('---')) {
+                  const headers = lines[0].replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+                  const bodyRows = lines.slice(2).map(l => l.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim()));
+                  return (
+                    <div key={idx} className="overflow-x-auto my-6 rounded-xl border border-slate-200 shadow-xs">
+                      <table className="w-full text-xs sm:text-sm border-collapse text-start">
+                        <thead className="bg-slate-50 text-slate-900 border-b border-slate-200">
+                          <tr>
+                            {headers.map((h, hIdx) => (
+                              <th key={hIdx} scope="col" className="py-3 px-4 font-bold text-start whitespace-nowrap">
+                                {renderFormattedInline(h)}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white text-slate-700">
+                          {bodyRows.map((row, rIdx) => (
+                            <tr key={rIdx} className="hover:bg-slate-50/60 transition-colors">
+                              {row.map((cell, cIdx) => (
+                                <td key={cIdx} className={`py-3 px-4 ${cIdx === 0 ? 'font-semibold text-slate-900 text-start' : 'text-start'}`}>
+                                  {renderFormattedInline(cell)}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                }
+
+                if (para.startsWith('## ')) {
+                  return (
+                    <h2 key={idx} className="text-lg sm:text-xl font-extrabold text-slate-900 pt-4 border-b border-slate-100 pb-2">
+                      {para.substring(3)}
+                    </h2>
+                  );
+                }
+                if (para.startsWith('### ')) {
+                  return (
+                    <h3 key={idx} className="text-sm sm:text-base font-extrabold text-slate-900 pt-2">
+                      {para.substring(4)}
+                    </h3>
+                  );
+                }
+                if (para.startsWith('* ')) {
+                  return (
+                    <ul key={idx} className="list-disc pl-5 space-y-1.5 text-slate-650">
+                      {para.split('\n').map((li, lIdx) => (
+                        <li key={lIdx}>{renderFormattedInline(li.substring(2))}</li>
+                      ))}
+                    </ul>
+                  );
+                }
+                if (para.includes('WIFI:S:')) {
+                  return (
+                    <pre key={idx} className="bg-slate-950 text-slate-200 p-4 rounded-xl font-mono text-[10px] sm:text-xs overflow-x-auto whitespace-pre border border-slate-800">
+                      <code>{para}</code>
+                    </pre>
+                  );
+                }
                 return (
-                  <h2 key={idx} className="text-lg sm:text-xl font-extrabold text-slate-900 pt-4 border-b border-slate-100 pb-2">
-                    {para.substring(3)}
-                  </h2>
+                  <p key={idx} className="font-sans text-slate-650">
+                    {renderFormattedInline(para)}
+                  </p>
                 );
-              }
-              if (para.startsWith('### ')) {
-                return (
-                  <h3 key={idx} className="text-sm sm:text-base font-extrabold text-slate-900 pt-2">
-                    {para.substring(4)}
-                  </h3>
-                );
-              }
-              if (para.startsWith('* ')) {
-                return (
-                  <ul key={idx} className="list-disc pl-5 space-y-1.5 text-slate-650">
-                    {para.split('\n').map((li, lIdx) => (
-                      <li key={lIdx}>{li.substring(2)}</li>
-                    ))}
-                  </ul>
-                );
-              }
-              if (para.includes('WIFI:S:')) {
-                return (
-                  <pre key={idx} className="bg-slate-950 text-slate-200 p-4 rounded-xl font-mono text-[10px] sm:text-xs overflow-x-auto whitespace-pre border border-slate-800">
-                    <code>{para}</code>
-                  </pre>
-                );
-              }
-              return (
-                <p key={idx} className="font-sans text-slate-650">
-                  {para}
-                </p>
-              );
-            })}
+              });
+            })()}
           </div>
 
           {/* Dynamic Article FAQ Accordion Area */}

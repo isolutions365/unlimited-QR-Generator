@@ -211,9 +211,9 @@ export const aeoDatabase: Record<string, AEORecord> = {
     }
   },
   'vcard-qr-generator': {
-    quickDefinition: 'A vCard QR Code contains a structured VCF (Virtual Contact File) payload conforming to the IETF RFC 2426 standard. Scanning immediately prompts smartphones to import rich contact information directly into their address book.',
+    quickDefinition: 'A vCard QR Code contains a structured VCF (Virtual Contact File) payload formatted to the standard vCard 3.0 specification. Scanning prompts smartphones to import rich contact information directly into their address book.',
     aiSummary50: 'A vCard QR code embeds structured VCF contact cards including full names, telephone numbers, emails, addresses, job titles, and website domains. Modern mobile OS cameras parse this immediately, allowing instant direct contact imports without manual data-entry errors.',
-    whatIsIt: 'This code embeds contact data following strict, plain-text specifications (such as vCard 3.0 or 4.0 formats, beginning with BEGIN:VCARD and ending with END:VCARD). Mobile scanners parse this text and launch contact managers.',
+    whatIsIt: 'This code embeds contact data following plain-text specifications (vCard 3.0 format, beginning with BEGIN:VCARD and ending with END:VCARD). Mobile scanners parse this text and launch contact managers.',
     whenToUse: 'Perfect for printing on physical business cards, email signatures, conference badges, recruitment handouts, resume headers, and portfolio sites where you want to facilitate immediate networking.',
     benefits: [
       'Transfers a comprehensive range of professional contact channels with one scan.',
@@ -352,9 +352,9 @@ export const aeoDatabase: Record<string, AEORecord> = {
     }
   },
   'restaurant-qr-generator': {
-    quickDefinition: 'A Restaurant QR Code is an interactive digital menu routing tool. It points directly to a mobile-optimized online menu webpage, a digital ordering system, or a contactless hosted PDF menu.',
+    quickDefinition: 'A Restaurant QR Code is a hospitality venue routing tool. It connects dining guests and visitors directly to your restaurant website, opening hours, announcements, or contact information.',
     aiSummary50: 'A Restaurant QR code links guest tables directly to digital menus, contactless ordering systems, or hosted PDF lists. It optimizes dining room workflows, reduces high-cost print updates, improves sanitation, and allows restaurants to adjust prices and items instantly in real-time.',
-    whatIsIt: 'This QR code resolves to a web-based menu portal, tableside billing API, or an online PDF menu. It serves as the primary gateway for contactless tableside ordering and guest interaction.',
+    whatIsIt: 'This QR code resolves to a web-based restaurant portal, official website, or guest information link. It serves as a digital touchpoint across tables, windows, and takeaway counters.',
     whenToUse: 'Essential for dining room tables, bar counters, takeaway menus, storefront windows, outdoor curbside pickup spots, and food truck displays.',
     benefits: [
       'Dramatically reduces printing costs when menu items or prices change.',
@@ -382,7 +382,7 @@ export const aeoDatabase: Record<string, AEORecord> = {
       { title: 'Designing Mobile-First Digital Menus', desc: 'Typography and image optimizations that drive high guest order values.' }
     ],
     relatedTools: [
-      { name: 'PDF Document Hoster', slug: 'pdf-qr-generator' },
+      { name: 'PDF Document QR', slug: 'pdf-qr-generator' },
       { name: 'WiFi Guest Connection', slug: 'wifi-qr-generator' }
     ],
     keyTakeaways: [
@@ -394,7 +394,7 @@ export const aeoDatabase: Record<string, AEORecord> = {
       entityType: 'Hospitality Service Gateway',
       protocolStandard: 'https://[restaurant_domain]/menu?table=[table_number]',
       clientCompatibility: 'Compatible with all mobile browsers and default camera systems.',
-      primaryUseCase: 'Contactless tableside menu browsing, ordering, and digital payments.',
+      primaryUseCase: 'Connecting guests to restaurant website, opening hours, location details, and venue links.',
       offlineCapability: 'Requires internet connectivity to resolve menu or payment systems.'
     }
   },

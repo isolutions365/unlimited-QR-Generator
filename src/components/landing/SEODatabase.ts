@@ -338,77 +338,156 @@ export const landingPages: Record<string, LandingPageData> = {
   },
 
   'vcard-qr-generator': {
-    slug: 'vcard-qr-generator',
-    keyword: 'free vcard qr code generator',
-    seoTitle: 'Free vCard QR Code Generator | Share Digital Business Cards',
-    metaDescription: 'Generate custom digital business cards with our free vcard qr code generator. Scan to add professional contact details directly to smartphone address books.',
-    h1: 'Free vCard QR Code Generator',
-    intro: {
-      title: 'Upgrade Networking with Professional vCard QR Codes',
-      text1: 'Handing out paper business cards often leads to them being misplaced or forgotten. Our free vcard qr code generator makes exchanging contact details effortless. By organizing your name, role, email, phone, and company info into a single scan, anyone can save your details directly to their phone address book instantly.',
-      text2: 'Rather than typing detailed text manually, professional connections simply point their camera, tap, and save your contact card. Brand your matrix, add high-resolution logos, and upgrade your networking today.',
-      highlight: 'Exchange business details instantly without paper. Scan to save contacts.'
+      "slug": "vcard-qr-generator",
+      "keyword": "free vcard qr code generator",
+      "seoTitle": "Free vCard QR Code Generator - Create vCard 3.0 Contact Codes",
+      "metaDescription": "Create standard vCard 3.0 contact QR codes with your name, phone, email, job title, company, address, and website. 100% free with instant export.",
+      "h1": "Free vCard QR Code Generator",
+      "intro": {
+        "title": "Generate Standard vCard 3.0 Contact QR Codes",
+        "text1": "A vCard QR code encodes structured electronic business card data directly into a two-dimensional barcode. When scanned with a smartphone camera, the device reads the contact fields—including full name, phone number, email address, organization, job title, and website—allowing the recipient to save your contact information into their address book.",
+        "text2": "Our generator formats your contact details according to the standard vCard 3.0 specification. Customize colors, add your organization logo, and download print-ready vector or image files for any networking requirement.",
+        "highlight": "Standard vCard 3.0 data formatting. Encode your complete contact record into a clean scanable code."
+      },
+      "benefits": {
+        "title": "Benefits of Structured vCard Contact Codes",
+        "desc": "Pack complete, organized contact information into a single reliable format.",
+        "items": [
+          {
+            "title": "Accurate Field Organization",
+            "desc": "Stores first name, last name, phone, email, title, and organization in standard fields rather than unformatted plain text."
+          },
+          {
+            "title": "Self-Contained Contact Payload",
+            "desc": "The contact data is stored directly within the QR code itself, so scanners can read your details even without an active internet connection."
+          },
+          {
+            "title": "Direct Address Book Import",
+            "desc": "Smartphones prompt users to create a new contact card pre-populated with your verified details in a single tap."
+          },
+          {
+            "title": "Custom Visual Styling",
+            "desc": "Personalize eye shapes, dot patterns, and color schemes while keeping data density balanced for reliable scanning."
+          },
+          {
+            "title": "Scalable Vector Downloads",
+            "desc": "Download your finished vCard code in vector SVG, PDF, or high-resolution PNG for both digital and print production."
+          }
+        ]
+      },
+      "features": {
+        "title": "vCard Generator Features & Data Fields",
+        "desc": "Easily input your professional details to generate a clean vCard 3.0 payload.",
+        "items": [
+          {
+            "title": "Core Identity Fields",
+            "desc": "Include your full name (FN), organization (ORG), and professional job title (TITLE)."
+          },
+          {
+            "title": "Direct Communication Lines",
+            "desc": "Add primary mobile telephone (TEL) numbers and email addresses (EMAIL)."
+          },
+          {
+            "title": "Location & Web Links",
+            "desc": "Include your physical or postal address (ADR) and company or portfolio website URL (URL)."
+          },
+          {
+            "title": "Configurable Error Correction",
+            "desc": "Adjust Reed-Solomon error correction to balance visual custom styling with contact data density."
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "How to Generate a vCard QR Code in 4 Steps",
+        "desc": "Create your structured vCard QR code in just moments.",
+        "steps": [
+          {
+            "step": "1",
+            "title": "Enter Contact Details",
+            "desc": "Fill in your full name, phone number, email address, organization, and website."
+          },
+          {
+            "step": "2",
+            "title": "Review vCard Data",
+            "desc": "Verify that all field values are spelled accurately before generating the matrix."
+          },
+          {
+            "step": "3",
+            "title": "Customize Design",
+            "desc": "Adjust colors, select corner eye styles, or embed a brand logo if desired."
+          },
+          {
+            "step": "4",
+            "title": "Download & Test",
+            "desc": "Scan the on-screen preview with your smartphone camera and export in SVG, PDF, or PNG."
+          }
+        ]
+      },
+      "useCases": {
+        "title": "Where to Deploy vCard QR Codes",
+        "desc": "Standard vCard codes work across a wide variety of professional contact-sharing scenarios.",
+        "items": [
+          {
+            "title": "Professional Networking",
+            "desc": "Share your contact card quickly at business mixers, trade conferences, and corporate meetups."
+          },
+          {
+            "title": "Executive Resumes & CVs",
+            "desc": "Include a vCard QR code on your resume header so hiring managers can add your contact info instantly."
+          },
+          {
+            "title": "Printed Stationery & Letterheads",
+            "desc": "Add a contact code to corporate letters, folders, and invoices for effortless supplier contact."
+          },
+          {
+            "title": "Staff ID Badges & Lanyards",
+            "desc": "Equip team member identification cards with a scanable contact record for colleagues and clients."
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "q": "What is a vCard QR code?",
+          "a": "A vCard QR code encodes structured contact information (such as name, phone, email, company, and title) using the standard vCard format, prompting smartphones to import the details directly."
+        },
+        {
+          "q": "Which vCard version does this generator use?",
+          "a": "This generator formats contact data according to the widely adopted vCard 3.0 standard for broad device compatibility."
+        },
+        {
+          "q": "Which contact fields can I include?",
+          "a": "You can include your full name, organization, job title, mobile phone number, email address, postal address, and website URL."
+        },
+        {
+          "q": "Does a vCard QR code require internet to scan?",
+          "a": "Because all the contact text is encoded directly into the QR pattern itself, the phone can read and display your contact information without an active internet connection."
+        },
+        {
+          "q": "Do recipients need a special app to save my contact info?",
+          "a": "No. Standard smartphone camera apps automatically recognize the vCard format and offer to add the contact directly to the phone address book."
+        },
+        {
+          "q": "Can I add a company logo to the QR code?",
+          "a": "Yes. You can upload an image to appear in the center of the QR code, with error correction configured to preserve scan reliability."
+        },
+        {
+          "q": "Is there a scan limit on vCard QR codes?",
+          "a": "No. Static vCard QR codes have no scan limits and never expire because the data resides entirely within the code."
+        },
+        {
+          "q": "What file formats can I download?",
+          "a": "You can download your vCard QR code in vector SVG, PDF, or high-resolution PNG formats."
+        }
+      ],
+      "cta": {
+        "title": "Create Your vCard Contact QR Code",
+        "subtitle": "Encode your complete contact information into a standard vCard 3.0 code ready for instant saving.",
+        "buttonText": "Generate vCard Code",
+        "typePreset": "card",
+        "defaultContent": "BEGIN:VCARD\nVERSION:3.0\nN:Smith;John;;;\nFN:John Smith\nORG:Innovate LLC\nTITLE:Lead Designer\nTEL;TYPE=CELL:15555551234\nEMAIL:john.smith@example.com\nURL:https://example.com\nEND:VCARD",
+        "defaultName": "My Professional vCard"
+      }
     },
-    benefits: {
-      title: 'Key Benefits of Digital Business Card QR Codes',
-      desc: 'Discover why modern professionals are replacing traditional print cards with dynamic vCard solutions.',
-      items: [
-        { title: 'Zero Manual Entry Errors', desc: 'No more looking at printed cards to type long email addresses or complex job titles. Scanners import everything with one tap.' },
-        { title: 'Reduce Corporate Paper Waste', desc: 'Keep your team environmentally friendly. Use one persistent vCard QR code on your phone or lanyard rather than boxes of paper cards.' },
-        { title: 'Rich Contact Payload', desc: 'vCards store your name, title, cell number, email, company, office address, and social links in a single QR matrix.' },
-        { title: 'Universal Mobile Saving', desc: 'Works natively on Google Android and Apple iOS, launching the default Contacts manager without any extra apps.' },
-        { title: 'Always-On Access', desc: 'Perfect for placing on email signatures, virtual presentation backgrounds, corporate lanyards, or phone lockscreens.' }
-      ]
-    },
-    features: {
-      title: 'Robust Formatting Options for Modern Professionals',
-      desc: 'Our developer-grade platform ensures your physical contact details conform to universal vCard specifications.',
-      items: [
-        { title: 'Standard vCard 3.0 Protocol', desc: 'Guarantees compliance with international contact parsing systems, ensuring broad compatibility.' },
-        { title: 'Crisp Vector PDF Download', desc: 'Export high-fidelity SVG or PDF formats so your QR pattern remains scan-ready at any scale.' },
-        { title: 'Standout Color Palette Designs', desc: 'Apply professional gradient styles to match your corporate brand identity.' },
-        { title: 'Seamless Brand Overlays', desc: 'Embed high-contrast company logos, personal headshots, or custom icons in the center of the QR matrix.' }
-      ]
-    },
-    howItWorks: {
-      title: 'Exchanging Contacts Made Simple in 4 Easy Steps',
-      desc: 'Construct a shareable digital identity card in less than two minutes.',
-      steps: [
-        { step: '1', title: 'Fill in Contact Details', desc: 'Provide your name, title, organization, cell phone number, email address, website, and office location.' },
-        { step: '2', title: 'Adjust Styling Choices', desc: 'Select modern colors, choose elegant circular or classy dot shapes, and define quiet margins.' },
-        { step: '3', title: 'Verify Scanning in Real-Time', desc: 'Use our handy viewfinder tool to test scanning and check that details import perfectly on your phone.' },
-        { step: '4', title: 'Incorporate on Personal Assets', desc: 'Download as PNG or SVG and feature your QR code on lanyards, digital backgrounds, or lanyards.' }
-      ]
-    },
-    useCases: {
-      title: 'Clever Ways to Share Your Professional vCard QR',
-      desc: 'Make personal introductions memorable and effortless across a wide range of professional settings.',
-      items: [
-        { title: 'In-Person Conventions', desc: 'Keep your code on your smartphone lockscreen or the back of your badge/lanyard for lightning-fast sharing.' },
-        { title: 'Virtual Sales Presentations', desc: 'Show your contact QR code on the final slide of your webinar or pitch, letting the audience save your details instantly.' },
-        { title: 'Corporate Email Signatures', desc: 'Add a compact vCard barcode next to your name to make saving your details simple for email recipients.' },
-        { title: 'Resume Cover Letters', desc: 'Print a clean QR code in the header of your paper resume so recruiters can call or email you with a single scan.' }
-      ]
-    },
-    faqs: [
-      { q: 'Is this free vcard qr code generator completely free?', a: 'Yes! Static vCards generated on our platform are 100% free, work forever, and have absolutely no scan limits.' },
-      { q: 'Do readers need a specific app to parse a vCard QR?', a: 'No, default smartphone cameras parse vCards natively, automatically prompting users to save the contact card.' },
-      { q: 'What is the limit of text I can put on my card?', a: 'While you can include your address and social links, we recommend keeping fields slightly concise to avoid overly dense QR codes.' },
-      { q: 'Can I update my phone number without changing the QR code?', a: 'No, static vCard details are encoded directly inside the black-and-white patterns. A updated QR code is required if details change.' },
-      { q: 'Are my contact details kept private on your servers?', a: 'Absolutely. All contact fields are compiled directly in your browser. We never capture, index, or store your personal details.' },
-      { q: 'Which fields are supported in the standard vCard format?', a: 'Our code compiles Name, Title, Company, Work Phone, Cell, Email, Website Address, and Location fields safely.' },
-      { q: 'Is this compatible with Apple iOS Contacts?', a: 'Yes. The vCard format is the primary contact standard supported by both Apple iOS and Google Android systems.' },
-      { q: 'Can I add a custom photo to the center of the QR code?', a: 'Yes! Upload your corporate logo or personal professional headshot icon to display in the middle of your code.' }
-    ],
-    cta: {
-      title: 'Design Your Digital Business Card in Seconds',
-      subtitle: 'Stand out in professional settings, replace expensive paper cards, and share your contact details instantly.',
-      buttonText: 'Initialize vCard Code',
-      typePreset: 'card',
-      defaultContent: 'BEGIN:VCARD\nVERSION:3.0\nN:Smith;John;;;\nFN:John Smith\nORG:Innovate LLC\nTITLE:Lead Designer\nTEL;TYPE=CELL:15555551234\nEMAIL:john.smith@example.com\nURL:https://example.com\nEND:VCARD',
-      defaultName: 'My Professional Contact Card'
-    }
-  },
 
   'url-qr-generator': {
     slug: 'url-qr-generator',
@@ -484,150 +563,304 @@ export const landingPages: Record<string, LandingPageData> = {
   },
 
   'business-card-qr-generator': {
-    slug: 'business-card-qr-generator',
-    keyword: 'free business card qr code generator',
-    seoTitle: 'Free Business Card QR Code Generator | Upgrade Card Networking',
-    metaDescription: 'Create business card QRs with our free business card qr code generator. Scan to add professional contact details directly to mobile contacts.',
-    h1: 'Free Business Card QR Code Generator',
-    intro: {
-      title: 'Elevate Print Materials with Smart Business Card QR Codes',
-      text1: 'Traditional business cards often get misplaced or forgotten. Our free business card qr code generator transforms old-school cards into smart networking keys. By encoding your contact card details directly into a scanable pattern, anyone can save your details to their phone contacts in an instant.',
-      text2: 'Rather than typing titles and email addresses, connections can point, tap, and add you to their network. Personalize the look with modern colors, place your corporate logo, and stand out in professional settings.',
-      highlight: 'The modern way to share contacts. Scan to save details instantly.'
+      "slug": "business-card-qr-generator",
+      "keyword": "free business card qr code generator",
+      "seoTitle": "Free Business Card QR Code Generator - For Printed Business Cards",
+      "metaDescription": "Generate clean, scanable QR codes to print on paper business cards. Help contacts save your details directly to their phones at networking events.",
+      "h1": "Free Business Card QR Code Generator",
+      "intro": {
+        "title": "Add a Scannable Contact QR Code to Your Printed Business Cards",
+        "text1": "Physical business cards are a staple of in-person networking, but manually typing contact info from a card into a phone is tedious and often gets postponed. Adding a QR code to your printed business cards lets clients, partners, and prospects save your contact information into their mobile devices immediately.",
+        "text2": "Whether you are designing new cards for yourself or your whole team, our generator lets you encode contact details cleanly. Export crisp vector files that graphic designers and print shops can easily incorporate into card layouts.",
+        "highlight": "Bridge printed business cards to mobile contacts. Enable fast, accurate contact saving at every handshake."
+      },
+      "benefits": {
+        "title": "Why Add a QR Code to Your Printed Business Cards",
+        "desc": "Transform traditional paper cards into interactive networking tools.",
+        "items": [
+          {
+            "title": "Eliminates Manual Typing",
+            "desc": "Recipients scan your card with their phone camera instead of painstakingly typing out phone numbers and email addresses."
+          },
+          {
+            "title": "Keeps Card Layouts Clean",
+            "desc": "Include complete details without crowding your printed card layout with tiny, hard-to-read text."
+          },
+          {
+            "title": "Works at In-Person Meetings",
+            "desc": "Ideal for trade shows, client meetings, sales pitches, and industry conferences where quick exchanges matter."
+          },
+          {
+            "title": "Designer-Friendly Vector Formats",
+            "desc": "Download in SVG or PDF so graphic designers and print services can place your code at the exact size needed without pixelation."
+          },
+          {
+            "title": "Match Your Brand Identity",
+            "desc": "Customize colors to match your brand palette, card stock tone, or corporate style guide."
+          }
+        ]
+      },
+      "features": {
+        "title": "Features for Business Card Printing",
+        "desc": "Create QR codes formatted for clean reproduction on business cards.",
+        "items": [
+          {
+            "title": "Print-Ready Vector Exports",
+            "desc": "Export in scalable SVG and PDF vector formats that remain sharp at any print dimensions."
+          },
+          {
+            "title": "Custom Brand Colors",
+            "desc": "Select custom foreground and background colors to harmonize with your printed card design."
+          },
+          {
+            "title": "Adjustable Quiet Zone Margins",
+            "desc": "Control surrounding margins to ensure proper spacing between the code modules and card edges."
+          },
+          {
+            "title": "Center Logo Embedding",
+            "desc": "Place your company monogram or logo in the center of the code for immediate brand recognition."
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "How to Put a QR Code on Your Business Card in 4 Steps",
+        "desc": "From entering your details to handing the graphic to your printer.",
+        "steps": [
+          {
+            "step": "1",
+            "title": "Enter Contact Details",
+            "desc": "Input your name, job title, company, phone, email, and website into the generator."
+          },
+          {
+            "step": "2",
+            "title": "Customize to Match Card",
+            "desc": "Choose colors and styles that fit your business card template."
+          },
+          {
+            "step": "3",
+            "title": "Download Scalable Vector",
+            "desc": "Export your code as an SVG or PDF to ensure crisp, clean lines on paper."
+          },
+          {
+            "step": "4",
+            "title": "Place on Card Layout & Print",
+            "desc": "Insert the code into your business card design file and test a sample print with your phone."
+          }
+        ]
+      },
+      "useCases": {
+        "title": "Where Printed Business Card QR Codes Shine",
+        "desc": "Maximize the return on your printed business cards in common business settings.",
+        "items": [
+          {
+            "title": "Industry Conferences & Expos",
+            "desc": "Exchange cards quickly with prospective clients and ensure your contact details make it into their address book."
+          },
+          {
+            "title": "Sales Pitches & Client Consultations",
+            "desc": "Leave a physical card that lets prospects save your direct line and email on the spot."
+          },
+          {
+            "title": "Freelancers & Independent Consultants",
+            "desc": "Stand out with a modern card design that makes it effortless for new clients to contact you."
+          },
+          {
+            "title": "Corporate Team Standardization",
+            "desc": "Equip sales reps and account managers with consistent, easy-to-scan branded business cards."
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "q": "Why should I put a QR code on my printed business card?",
+          "a": "A QR code lets recipients scan your card with their smartphone camera and save your contact information into their address book immediately, avoiding lost cards and typing errors."
+        },
+        {
+          "q": "What file format should I download for printing on a business card?",
+          "a": "We recommend downloading vector SVG or PDF format because vector graphics scale cleanly without loss of quality during printing."
+        },
+        {
+          "q": "Can I match the QR code colors to my business card design?",
+          "a": "Yes. You can customize foreground and background colors. Always maintain strong contrast between dark code modules and light backgrounds for reliable scanning."
+        },
+        {
+          "q": "Will the QR code scan if it is printed small on the card?",
+          "a": "Keep the code at a reasonable size with clear contrast and an adequate quiet zone border so smartphone cameras can focus and read the modules easily."
+        },
+        {
+          "q": "Do recipients need an internet connection to scan the business card QR code?",
+          "a": "When encoding contact card information directly, smartphones can read the contact details without an active internet connection."
+        },
+        {
+          "q": "Can I include my company logo in the center of the code?",
+          "a": "Yes. You can upload your company logo to the center of the code with appropriate error correction to keep it scannable."
+        },
+        {
+          "q": "Can I update my phone number after the business card is printed?",
+          "a": "Because contact details are encoded directly into the printed pattern of static codes, changing details requires printing an updated code."
+        },
+        {
+          "q": "Is this business card QR code generator free to use?",
+          "a": "Yes. Generating business card QR codes is 100% free with no limits on usage."
+        }
+      ],
+      "cta": {
+        "title": "Design a QR Code for Your Printed Business Card",
+        "subtitle": "Create a clean, scanable contact code ready for card templates and print shops.",
+        "buttonText": "Create Business Card QR",
+        "typePreset": "card",
+        "defaultContent": "BEGIN:VCARD\nVERSION:3.0\nN:Smith;Sarah;;;\nFN:Sarah Smith\nORG:Build Corp\nTITLE:Marketing Officer\nTEL;TYPE=CELL:15550299999\nEMAIL:sarah.smith@example.com\nURL:https://example.com\nEND:VCARD",
+        "defaultName": "My Business Card QR"
+      }
     },
-    benefits: {
-      title: 'Top Advantages of Automated Business Card QR Links',
-      desc: 'Exchange professional details instantly and eliminate physical card limitations.',
-      items: [
-        { title: 'Zero Typing Errors', desc: 'Scanners read names, titles, cell numbers, emails, websites, and office locations perfectly without manual input.' },
-        { title: 'Eco-Friendly Exchanges', desc: 'Use smart codes on digital badges, phone lockscreens, lanyards, or reduce print quantities to lower paper waste.' },
-        { title: 'Exceed Paper Limitations', desc: 'Paper cards have limited space. vCard codes can share your website, address, social links, and bio in a single scan.' },
-        { title: 'Always Available', desc: 'Keep your QR card handy on your mobile phone to share contacts instantly at conferences, lunches, or meetings.' },
-        { title: 'Compatible with Active Directories', desc: 'Works natively on Google Android and Apple iOS, launching default contacts apps seamlessly.' }
-      ]
-    },
-    features: {
-      title: 'Comprehensive Configuration Settings for Professional Use',
-      desc: 'Our advanced tool ensures your physical contact credentials conform to universal vCard networking standards.',
-      items: [
-        { title: 'vCard v3.0 Packaging', desc: 'Guarantees broad compatibility with standard operating systems and email clients worldwide.' },
-        { title: 'Scalable Vector PDF Exports', desc: 'Download in infinitely scalable SVG and PDF formats, perfect for premium physical printing.' },
-        { title: 'Creative Gradients & Styling', desc: 'Stand out from plain cards with vibrant gradients, custom patterns, and refined quiet zones.' },
-        { title: 'High-Redundancy Safety (H)', desc: 'Apply high-redundancy error correction, letting you place personal logos or corporate emblems in the middle of the code' }
-      ]
-    },
-    howItWorks: {
-      title: 'Build Your Custom Contact Barcode in 4 Quick Steps',
-      desc: 'Exchanging contacts has never been simpler. Try it now.',
-      steps: [
-        { step: '1', title: 'Input Contact Credentials', desc: 'Provide your name, title, organization, cell phone number, email address, website, and office address.' },
-        { step: '2', title: 'Customize Layout Elements', desc: 'Select professional color palettes, select classy dot shapes, and adjust frame styles.' },
-        { step: '3', title: 'Verify Scanner Parsing', desc: 'Test scan your screen using our live viewfinder widget to ensure name fields parse correctly.' },
-        { step: '4', title: 'Export & Print Layout', desc: 'Download as high-res PNG, SVG, or printable PDF, then place your QR on physical card templates.' }
-      ]
-    },
-    useCases: {
-      title: 'Clever Ways to Share Your Contact Card QR',
-      desc: 'Bridge physical meetings with digital connection across all professional events.',
-      items: [
-        { title: 'Premium Print Business Cards', desc: 'Place a styled QR code on the back of your physical card to make importing contacts simple.' },
-        { title: 'Exhibitions & Conferences', desc: 'Feature your QR code on badges, lanyards, or folders to easily share contacts with delegates.' },
-        { title: 'E-mail Signatures', desc: 'Add a compact vCard barcode next to your name to make saving details simple for email recipients.' },
-        { title: 'Webinars & Pitch Slides', desc: 'Display your contact QR code on presentation screens to let live audiences save your details.' }
-      ]
-    },
-    faqs: [
-      { q: 'Is this free business card qr code generator completely free?', a: 'Yes! Static vCard codes generated on our platform are 100% free with no limits, scans, or expiration dates.' },
-      { q: 'Do scanners need to install special software?', a: 'No, modern smartphone cameras parse professional vCards natively, automatically launching default Contacts apps.' },
-      { q: 'Can I change my office phone number later without changing the QR?', a: 'No, static vCard details are encoded directly inside the black-and-white pixels. Updating details requires a new QR code.' },
-      { q: 'Which default contact fields are supported?', a: 'Our platform compiles Name, Title, Company, Work Phone, Cell, Email, Website Address, and Location fields safely.' },
-      { q: 'Are my contact details safe on your servers?', a: 'Absolutely, everything is parsed within your web browser. We never collect or store your private personal details.' },
-      { q: 'Is this system compatible with Apple iOS systems?', a: 'Yes! The vCard standard is fully compatible with Apple iOS Contacts, Google Android, and modern CRM systems.' },
-      { q: 'Can I add my profile image to the middle of the QR code?', a: 'Yes! Upload high-contrast brand logos or professional headshots to set as centerpiece motifs.' },
-      { q: 'How large should the printed business card QR code be?', a: 'To ensure fast scanning, we recommend a minimum paper print size of at least 2.5cm x 2.5cm with high contrast.' }
-    ],
-    cta: {
-      title: 'Create Your Professional Smart Business Card Now',
-      subtitle: 'Stand out in professional settings, replace outdated paper cards, and share your contact details instantly.',
-      buttonText: 'Initialize Contact Code',
-      typePreset: 'card',
-      defaultContent: 'BEGIN:VCARD\nVERSION:3.0\nN:Smith;Sarah;;;\nFN:Sarah Smith\nORG:Build Corp\nTITLE:Marketing Officer\nTEL;TYPE=CELL:15550299999\nEMAIL:sarah.smith@example.com\nURL:https://example.com\nEND:VCARD',
-      defaultName: 'My Corporate Business Card'
-    }
-  },
 
   'restaurant-qr-generator': {
-    slug: 'restaurant-qr-generator',
-    keyword: 'free restaurant qr code generator',
-    seoTitle: 'Free Restaurant QR Code Generator | Smart Digital Menus',
-    metaDescription: 'Create smart menu links with our free restaurant qr code generator. Scan to redirect diners instantly to your online menu without single-use papers.',
-    h1: 'Free Restaurant QR Code Generator',
-    intro: {
-      title: 'Streamline Dining Operations and Deliver Seamless Menus',
-      text1: 'Manually distributing paper menus to every table is time-consuming, expensive to reprint, and hard to sanitize. Our free restaurant qr code generator provides a smart, modern solution. By linking your online menus, drink options, or ordering portals to a clean scanable code, diners can access selections from their phones.',
-      text2: 'From small local diners to premium multi-course bistros, this platform makes menu access incredibly simple. Brand your QR codes, adjust colors to match your dining room decor, and display them on tables, windows, or counters.',
-      highlight: 'Keep dining experiences contactless and modern. Scan to browse food menus.'
+      "slug": "restaurant-qr-generator",
+      "keyword": "free restaurant qr code generator",
+      "seoTitle": "Free Restaurant QR Code Generator - Table & Venue QR Codes",
+      "metaDescription": "Create custom QR codes for your restaurant, cafe, or bar. Link diners to your restaurant website, table info, social pages, and guest links.",
+      "h1": "Free Restaurant QR Code Generator",
+      "intro": {
+        "title": "Connect Dining Guests to Your Restaurant Information via QR Codes",
+        "text1": "Hospitality venues rely on clear communication at every customer touchpoint. A restaurant QR code connects guests directly to your key digital destinations—from your restaurant website, catering information, and opening hours to event schedules and special announcements.",
+        "text2": "Place customized QR codes on dining tables, entrance window decals, takeout packaging, bar counters, or receipt slips. Guests scan with their mobile devices to access your restaurant web links instantly without searching.",
+        "highlight": "Enhance guest communication across your venue. Connect diners to your restaurant links with a quick scan."
+      },
+      "benefits": {
+        "title": "Benefits of QR Codes Across Your Restaurant Venue",
+        "desc": "Provide seamless customer access to restaurant information throughout your dining space.",
+        "items": [
+          {
+            "title": "Versatile Customer Touchpoints",
+            "desc": "Place codes across your dining room, bar counters, outdoor patio, entrance displays, and takeaway bags."
+          },
+          {
+            "title": "Instant Venue Information",
+            "desc": "Direct guests immediately to your official website, holiday hours, private dining booking links, or contact info."
+          },
+          {
+            "title": "Takeaway & Delivery Promotion",
+            "desc": "Add a QR code to takeout boxes and bags linking customers back to your online presence for future visits."
+          },
+          {
+            "title": "Reinforce Restaurant Branding",
+            "desc": "Customize colors and embed your dining logo so your table displays match your venue interior aesthetic."
+          },
+          {
+            "title": "Durable Print Materials",
+            "desc": "Export in vector formats suitable for acrylic table stands, durable coasters, window stickers, and wooden plaques."
+          }
+        ]
+      },
+      "features": {
+        "title": "Restaurant QR Code Design Features",
+        "desc": "Tailor your QR codes to fit your dining room atmosphere and signage.",
+        "items": [
+          {
+            "title": "Flexible URL Destination",
+            "desc": "Link directly to any web page, whether it is your restaurant home page, event schedule, or social profile."
+          },
+          {
+            "title": "Themed Color Customization",
+            "desc": "Select colors that complement your brand guidelines, table runners, and decor."
+          },
+          {
+            "title": "Restaurant Logo Integration",
+            "desc": "Upload your restaurant insignia or emblem to sit cleanly in the center of the code."
+          },
+          {
+            "title": "Multiple Download Formats",
+            "desc": "Export in SVG vector, print-ready PDF, or high-res PNG for signage fabricators and local printers."
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "How to Create a Restaurant QR Code in 4 Steps",
+        "desc": "Set up a branded QR code for your dining venue in under two minutes.",
+        "steps": [
+          {
+            "step": "1",
+            "title": "Select Your Target Web Link",
+            "desc": "Copy the web address of your restaurant website, announcements page, or booking portal."
+          },
+          {
+            "step": "2",
+            "title": "Enter Link in Generator",
+            "desc": "Paste your restaurant URL into the generator field."
+          },
+          {
+            "step": "3",
+            "title": "Style for Your Venue",
+            "desc": "Choose colors matching your restaurant branding and upload your venue logo."
+          },
+          {
+            "step": "4",
+            "title": "Download & Display",
+            "desc": "Export your graphic in SVG, PDF, or PNG and display on table stands, windows, or counters."
+          }
+        ]
+      },
+      "useCases": {
+        "title": "Where to Place Restaurant QR Codes",
+        "desc": "Deploy QR codes at strategic guest touchpoints throughout your hospitality establishment.",
+        "items": [
+          {
+            "title": "Entrance Windows & Host Stands",
+            "desc": "Let waiting guests or passersby scan to learn about your culinary offerings and opening hours."
+          },
+          {
+            "title": "Takeout Bags & Delivery Containers",
+            "desc": "Include a QR code on bags and receipts encouraging takeout customers to visit your website or social pages."
+          },
+          {
+            "title": "Bar Coasters & Counter Signs",
+            "desc": "Place branded QR codes on bar coasters to share daily happy hour schedules and upcoming events."
+          },
+          {
+            "title": "Outdoor Patios & Curbside Areas",
+            "desc": "Provide outdoor diners with quick access to venue information on durable weatherproof table signs."
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "q": "What is a restaurant QR code?",
+          "a": "A restaurant QR code is a scannable barcode placed in dining venues that directs guests smartphones to your restaurant website, hours, event announcements, or digital links."
+        },
+        {
+          "q": "Where can I place QR codes in my restaurant?",
+          "a": "You can display QR codes on dining tables, acrylic tabletop stands, entrance doors, host stands, bar coasters, takeout packaging, and promotional flyers."
+        },
+        {
+          "q": "Can I link to my restaurant social media or website?",
+          "a": "Yes. You can encode any public web address into the QR code, directing guests to your website, social media, or event page."
+        },
+        {
+          "q": "Can I add my restaurant logo to the QR code?",
+          "a": "Yes. You can upload your restaurant logo to the center of the code and customize colors to match your dining room decor."
+        },
+        {
+          "q": "Do diners need to download an app to scan the code?",
+          "a": "No. Diners scan the code using the standard camera app on their iPhone or Android phone."
+        },
+        {
+          "q": "What file format is best for printing on table stands?",
+          "a": "Vector formats like SVG and print-ready PDF are ideal because they can be scaled to any size for print fabrication without blurring."
+        },
+        {
+          "q": "Is this restaurant QR code generator free to use?",
+          "a": "Yes. Generating QR codes for your restaurant is completely free with no scan limits."
+        }
+      ],
+      "cta": {
+        "title": "Create a QR Code for Your Restaurant",
+        "subtitle": "Connect guests to your venue website, events, and announcements with custom table codes.",
+        "buttonText": "Generate Restaurant QR",
+        "typePreset": "url",
+        "defaultContent": "https://example.com/restaurant",
+        "defaultName": "My Restaurant Venue QR"
+      }
     },
-    benefits: {
-      title: 'Top Benefits of Menu QR Codes for Restaurants',
-      desc: 'Discover how digital coordinates reduce design reprint costs and improve service efficiency.',
-      items: [
-        { title: 'Instantly Update Dishes', desc: 'No need to reprint menus for daily specials or price adjustments. Simply update your online menu link without changing the printed QR code' },
-        { title: 'Substantially Reduce Printing Costs', desc: 'Stop spending money on printing paper menus that quickly get dirty, stained, or torn.' },
-        { title: 'Faster Table Turnaround', desc: 'Diners scan and browse menus the second they sit down. Waitstaff can focus on taking active orders immediately.' },
-        { title: 'Hygiene and Contactless Ease', desc: 'Diners scan on their personal devices, which is much more hygienic than handling shared paper menus.' },
-        { title: 'Promote Dining Specials', desc: 'Guide customers directly to social media review cards, online ordering platforms, or email signups.' }
-      ]
-    },
-    features: {
-      title: 'Top Visual Features Designed for Food Venues',
-      desc: 'Our enterprise-ready designer helps your menus look as appetizing as your dishes, right on the table.',
-      items: [
-        { title: 'Dynamic Link Management', desc: 'Optionally enable trackable dynamic links so you can update food files or redirect menu targets at any time.' },
-        { title: 'Scalable Vector PDF Formats', desc: 'Download in SVG, PDF, or high-res PNG formats, ready for high-fidelity professional printing on any medium.' },
-        { title: 'Themed Visual Customization', desc: 'Match your space\'s decoration with beautiful warm tones, slate shades, and rustic borders.' },
-        { title: 'Appetizing Brand Centerpieces', desc: 'Embed cooking logos, callouts like "MENU", or custom restaurant emblems safely in the center.' }
-      ]
-    },
-    howItWorks: {
-      title: 'Launch Your Smart Table Menus in 4 Quick Steps',
-      desc: 'Creating your digital menu qr codes takes less than two minutes of setup.',
-      steps: [
-        { step: '1', title: 'Input Menu Website Link', desc: 'Paste the destination URL of your online menu, digital PDF, or delivery portal.' },
-        { step: '2', title: 'Stylize Table Visuals', desc: 'Choose colors matching your restaurant\'s style, select classy dot shapes, and adjust quiet zone margins.' },
-        { step: '3', title: 'Verify Scan Compatibility', desc: 'Scan the live canvas using your smartphone camera to ensure it opens your menu link immediately.' },
-        { step: '4', title: 'Incorporate on Dining Tables', desc: 'Download as PNG or SVG, print, and display on tables, windows, or checkout counters.' }
-      ]
-    },
-    useCases: {
-      title: 'Frictionless Food Integration Across Diverse Hospitality Venues',
-      desc: 'Simplify ordering, streamline tables, and connect guests with online platforms seamlessly.',
-      items: [
-        { title: 'Table Menu Acrylic Stands', desc: 'Place a clean QR plaque on every table so guests can read menu options immediately when seated.' },
-        { title: 'Takeaway Counter & Window Decals', desc: 'Apply a large code on your window to let passersby browse dishes or order takeaway when closed.' },
-        { title: 'Bar & Cocktail Counter Coasters', desc: 'Print QRs on coasters for drink menus, specials, happy hours, and cocktail options.' },
-        { title: 'Hotel Dining Services', desc: 'Incorporate codes on in-room tables, allowing guests to scan and browse room service options.' }
-      ]
-    },
-    faqs: [
-      { q: 'Is this free restaurant qr code generator completely free?', a: 'Yes! Generating static menu QR codes on our platform is 100% free with no scanning limits or expiry dates.' },
-      { q: 'Can I link to a PDF menu?', a: 'Yes! Simply upload your menu PDF to your website or Google Drive and paste the shared link into our URL field.' },
-      { q: 'How can I change menu items without changing the printed code?', a: 'If you link your QR code to a web URL, you can edit your website menu anytime without needing to reprint the QR code.' },
-      { q: 'Do diners need an app to scan our menu?', a: 'No, standard iPhone and Android mobile cameras can read and parse digital menu links natively.' },
-      { q: 'Can I track scan statistics for table menu QRs?', a: 'Yes! Save your configurations and enable dynamic URL tracking to monitor daily scans and locate top hotspots.' },
-      { q: 'What is the best size for printed table QR codes?', a: 'We recommend a physical table print size of at least 3cm x 3cm so guests can scan from comfortable distances.' },
-      { q: 'Can I place my branding logo in the center of the QR?', a: 'Yes! Upload your dining logo or add a custom "MENU" centerpiece to make the code instantly recognizable.' },
-      { q: 'Does this work for home cooks and catering services too?', a: 'Broadly yes, anyone sharing links to online recipes or catering packages can generate these codes easily.' }
-    ],
-    cta: {
-      title: 'Upgrade Your Dining Experience with Digital Menu QRs',
-      subtitle: 'Lower printing costs, dynamic menus, and safer touchless ordering. Build table QRs for free now.',
-      buttonText: 'Initialize Menu Code',
-      typePreset: 'url',
-      defaultContent: 'https://example.com/menu',
-      defaultName: 'My Table Menu QR'
-    }
-  },
 
   'facebook-qr-generator': {
     slug: 'facebook-qr-generator',
@@ -849,281 +1082,608 @@ export const landingPages: Record<string, LandingPageData> = {
   },
 
   'pdf-qr-generator': {
-    slug: 'pdf-qr-generator',
-    keyword: 'free pdf qr code generator',
-    seoTitle: 'Free PDF QR Code Generator | Convert PDF to QR Codes',
-    metaDescription: 'Generate custom target links with our free PDF QR code generator. Allow readers to scan, view, and download PDF catalogs or documents.',
-    h1: 'Free PDF QR Code Generator',
-    intro: {
-      title: 'Bridge Print Materials and Document Delivery via Smart QRs',
-      text1: 'Manually typing long web links or search terms to locate menus, product catalogs, research papers, or floor guides on smartphones can frustrate users. Our free pdf qr code generator provides a clean, modern solution. By linking your web-hosted document URL to a scanable barcode, readers can view or download your PDF instantly.',
-      text2: 'From restaurant menus to architectural floor plans and product user manuals, this responsive generator makes document delivery incredibly simple. Customize standard grids, select elegant gradients, and place brand logos directly in the center of the key matrix.',
-      highlight: 'Make your physical manuals digital. Scan to view and download PDF documents.'
+      "slug": "pdf-qr-generator",
+      "keyword": "free pdf qr code generator",
+      "seoTitle": "Free PDF QR Code Generator - Create Document QR Codes",
+      "metaDescription": "Create custom QR codes that link directly to your online PDF documents, user manuals, catalogs, brochures, and reports. 100% free with vector export.",
+      "h1": "Free PDF QR Code Generator",
+      "intro": {
+        "title": "Convert Online PDF Documents and Manuals into Instant QR Codes",
+        "text1": "A PDF QR code connects printed materials directly to online documents. By encoding the web link to your hosted PDF file, readers can scan the code with their smartphone camera to open and view the document directly in their mobile browser without typing long web addresses.",
+        "text2": "Ideal for product packaging, user manuals, equipment spec sheets, academic syllabi, and multi-page brochures. Customize colors, eye shapes, and center logos to match your publication or brand.",
+        "highlight": "Bridge physical print and digital documents. Scan to open manuals, brochures, and reports instantly."
+      },
+      "benefits": {
+        "title": "Benefits of Converting Document Links into QR Codes",
+        "desc": "Give readers immediate access to detailed guides, catalogs, and documentation on any mobile device.",
+        "items": [
+          {
+            "title": "Instant Mobile Document Access",
+            "desc": "Eliminates the friction of typing complex web addresses. Readers scan to open the document link directly in their device browser."
+          },
+          {
+            "title": "Save on Print Page Volume",
+            "desc": "Print a compact QR code on product packaging or one-page summary sheets instead of printing bulky multi-page paper manuals."
+          },
+          {
+            "title": "Broad Document Compatibility",
+            "desc": "Works with any publicly accessible document URL, including specification sheets, whitepapers, guides, and corporate reports."
+          },
+          {
+            "title": "Native Camera Scanning",
+            "desc": "Built-in smartphone camera scanners read the QR code directly; no specialized reader software or third-party apps required."
+          },
+          {
+            "title": "High-Resolution Vector Formats",
+            "desc": "Export in scalable vector SVG, print-ready PDF, and high-resolution PNG formats suitable for crisp industrial labels, books, or posters."
+          }
+        ]
+      },
+      "features": {
+        "title": "Document QR Code Customization Features",
+        "desc": "Tailor the appearance of your document QR codes for clean reading and clear visual presentation.",
+        "items": [
+          {
+            "title": "URL Destination Encoding",
+            "desc": "Encodes your direct document link into standard QR matrix patterns readable by iOS and Android devices."
+          },
+          {
+            "title": "High Error Correction Density",
+            "desc": "Select error correction levels up to Level H (30%) to maintain scannability on printed surfaces."
+          },
+          {
+            "title": "Custom Color & Styling",
+            "desc": "Choose foreground colors, background colors, and eye styling patterns that complement your printed materials."
+          },
+          {
+            "title": "Logo & Centerpiece Placement",
+            "desc": "Embed document icons or company emblems in the center of the code for immediate visual recognition."
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "How to Create a PDF QR Code in 4 Steps",
+        "desc": "Turn your public document web address into a print-ready QR code in under a minute.",
+        "steps": [
+          {
+            "step": "1",
+            "title": "Copy Document Link",
+            "desc": "Ensure your PDF is accessible online and copy its public web address."
+          },
+          {
+            "step": "2",
+            "title": "Paste Link into Generator",
+            "desc": "Enter the complete document URL into the generator input field."
+          },
+          {
+            "step": "3",
+            "title": "Customize Appearance",
+            "desc": "Select dot shapes, custom colors, and center logo if desired."
+          },
+          {
+            "step": "4",
+            "title": "Test & Download",
+            "desc": "Test scan with your phone screen and download in SVG, PDF, or PNG format."
+          }
+        ]
+      },
+      "useCases": {
+        "title": "Common Applications for Document QR Codes",
+        "desc": "Where organizations and individuals use QR codes to link physical items to digital files.",
+        "items": [
+          {
+            "title": "Product Packaging & User Manuals",
+            "desc": "Place a QR code on hardware packaging to provide customers with full setup instructions and user guides."
+          },
+          {
+            "title": "Technical Spec Sheets & Equipment Labels",
+            "desc": "Affix codes to machinery or electrical boxes so field technicians can pull up schematics on site."
+          },
+          {
+            "title": "Academic Syllabi & Research Papers",
+            "desc": "Print codes on course materials, posters, or handouts linking to extended reading and lecture notes."
+          },
+          {
+            "title": "Corporate Brochures & Annual Reports",
+            "desc": "Add a compact code to printed summaries so stakeholders can view complete multi-page publications."
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "q": "What is a PDF QR code?",
+          "a": "A PDF QR code is a scannable barcode that encodes the direct web link to an online PDF document, allowing smartphone users to open the file in their browser."
+        },
+        {
+          "q": "How does a PDF QR code work?",
+          "a": "When a user points their smartphone camera at the code, the camera decodes the URL and prompts the user to open the link in their web browser."
+        },
+        {
+          "q": "Does this generator host my PDF file?",
+          "a": "No. You provide the public URL where your document is already hosted, and the generator creates a QR code encoding that link."
+        },
+        {
+          "q": "Where can I use a PDF QR code?",
+          "a": "You can print PDF QR codes on product packaging, user guides, brochures, banners, stickers, equipment labels, or book covers."
+        },
+        {
+          "q": "How do users access the document?",
+          "a": "Users scan the code with their default smartphone camera app, which displays a notification to open the document link in their web browser."
+        },
+        {
+          "q": "Do users need a special app to scan the code?",
+          "a": "No. Modern iOS and Android camera apps scan QR codes natively without requiring any third-party app."
+        },
+        {
+          "q": "What file formats can I download?",
+          "a": "You can download your generated QR code in scalable vector SVG, print-ready PDF, and high-resolution PNG formats."
+        },
+        {
+          "q": "Is this PDF QR code generator free?",
+          "a": "Yes. Creating document QR codes on this platform is completely free with no required signup."
+        }
+      ],
+      "cta": {
+        "title": "Generate a PDF Document QR Code Now",
+        "subtitle": "Turn any document web link into a scannable QR code for printed manuals, guides, and reports.",
+        "buttonText": "Create Document QR",
+        "typePreset": "url",
+        "defaultContent": "https://example.com/document.pdf",
+        "defaultName": "My PDF Document QR"
+      }
     },
-    benefits: {
-      title: 'Top Benefits of Using Document QR Codes',
-      desc: 'Discover why professional businesses and event planners choose PDF codes to distribute documents.',
-      items: [
-        { title: 'Frictionless Document Delivery', desc: 'No more searching through file directories or folders. Scanners open and download precise pdf documents with a single scan.' },
-        { title: 'Substantially Reduce Printing Costs', desc: 'Stop spending budget printing bulky product guidelines or brochures. Share digital pdf booklets on single paper sheets.' },
-        { title: 'Instantly Update PDF Content', desc: 'Update and replace files on your web host anytime without having to reprint and change the physical QR code on tables.' },
-        { title: 'Eco-Friendly Exchanges', desc: 'Exchange user materials cleanly and digitally. Eliminate unnecessary page trash from commercial spaces.' },
-        { title: 'Works Natively on Mobile Cameras', desc: 'No third-party app installations needed. Mobile browsers read, render, and download files natively.' }
-      ]
-    },
-    features: {
-      title: 'Smart Features for Document Distribution Campaigns',
-      desc: 'Our developer-ready platform gives you ultimate control over document delivery, styles, and scans.',
-      items: [
-        { title: 'Dynamic Trackable Framework', desc: 'Optionally translate your links to measure scans, assess device metrics, and monitor traffic over time.' },
-        { title: 'High-Resolution Vector exports', desc: 'Download in SVG, PDF, or high-res PNG formats, ready for high-fidelity professional printing on any medium.' },
-        { title: 'Standout Color Palette Designs', desc: 'Apply professional gradient styles to match your corporate brand identity.' },
-        { title: 'Logo and Brand Centering', desc: 'Embed official icons or custom text overlays in the center of the grid safely.' }
-      ]
-    },
-    howItWorks: {
-      title: 'Convert Your Documents to QR Codes in 4 Steps',
-      desc: 'Getting your custom QR code ready takes less than two minutes of setup.',
-      steps: [
-        { step: '1', title: 'Paste Hosted PDF Link', desc: 'Upload your PDF to Google Drive, Dropbox, or your website, and paste the shared link into our URL field.' },
-        { step: '2', title: 'Stylize Table Visuals', desc: 'Choose colors matching your restaurant\'s style, select classy dot shapes, and adjust quiet zone margins.' },
-        { step: '3', title: 'Verify Scan Compatibility', desc: 'Scan the live canvas using your smartphone camera to ensure it opens your PDF link immediately.' },
-        { step: '4', title: 'Display and Distribute Code', desc: 'Deploy on physical packaging, booklets, and materials.' }
-      ]
-    },
-    useCases: {
-      title: 'Smart PDF QR Code Integrations Across Industries',
-      desc: 'Simplify ordering, streamline tables, and connect guests with online platforms seamlessly.',
-      items: [
-        { title: 'Restaurant Table Plaque PDF', desc: 'Display code frames on tables to let dining guests read menu options directly on their mobile devices.' },
-        { title: 'Product Assembly Booklets', desc: 'Print directly on packaging to encourage customers to view complete installation manuals.' },
-        { title: 'Real Estate Listing Documents', desc: 'Keep codes on card tags to guide buyers directly to floor plans or virtual house tours.' },
-        { title: 'Business Conference Handouts', desc: 'Display core video guides on podium stands to let delegates watch introductions later.' }
-      ]
-    },
-    faqs: [
-      { q: 'Is this free pdf qr code generator completely free?', a: 'Yes! Generating static document QR codes on our platform is 100% free with no scanning limits or expiry dates.' },
-      { q: 'Can I upload files directly into the QR generator?', a: 'To maintain our light server-side performance, copy files into Google Drive or web hosts, and paste shared links here.' },
-      { q: 'Can I change my PDF content without changing the QR code?', a: 'Yes! Simply overwrite the PDF on your web host (maintaining the same link URL), and our code routes readers to the updated document.' },
-      { q: 'Do readers need special apps to browse the PDF?', a: 'No, default smartphone cameras read and open the link. Browsers render the document natively.' },
-      { q: 'Can I track scan statistics for document QRs?', a: 'Yes! Save your configurations and check the dynamic tracking option to record visitor logs.' },
-      { q: 'What is the optimal size for print card graphics?', a: 'We recommend at least 3cm x 3cm with high-contrast color balances for reliable parsing.' },
-      { q: 'Can I use custom icons in the grid center?', a: 'Yes! Upload high-contrast brand logos or professional headshots to set as centerpiece motifs.' },
-      { q: 'Why is my PDF link not opening on mobile?', a: 'Double-check that the link is correct and publicly accessible without login requirements.' }
-    ],
-    cta: {
-      title: 'Convert Your Documents to QR Codes Now',
-      subtitle: 'Stand out from plain cards, replace outdated paper guides, and deliver interactive digital documents.',
-      buttonText: 'Initialize PDF Code',
-      typePreset: 'url',
-      defaultContent: 'https://example.com/document.pdf',
-      defaultName: 'My Shared PDF'
-    }
-  },
 
   'restaurant-menu-qr-generator': {
-    slug: 'restaurant-menu-qr-generator',
-    keyword: 'free restaurant menu qr code generator',
-    seoTitle: 'Free Restaurant Menu QR Code Generator | Contactless Dining Menus',
-    metaDescription: 'Generate customized restaurant menu QR codes. Let dining guests scan, view, and select dishes on their mobile phones safely without physical touch.',
-    h1: 'Free Restaurant Menu QR Code Generator',
-    intro: {
-      title: 'Contactless Digital Menus for Modern Hospitality and Fine Dining',
-      text1: 'Ditch paper menus for a sleek digital alternative. Our restaurant menu QR generator lets you link your online menu directly to a scanable barcode. Customers point their phones and browse your offerings instantly.',
-      text2: 'Update prices or dishes at any time on your hosting platform without changing the physical QR code. Perfect for food truck owners, Michelin restaurants, bar managers, and cafes.',
-      highlight: 'Frictionless table ordering. Scan to browse high-resolution digital menus.'
+      "slug": "restaurant-menu-qr-generator",
+      "keyword": "free restaurant menu qr code generator",
+      "seoTitle": "Free Restaurant Menu QR Code Generator - Digital Food & Drink Menus",
+      "metaDescription": "Create custom menu QR codes for dining tables. Link guests directly to your digital food and drink menu, wine list, or hosted PDF menu.",
+      "h1": "Free Restaurant Menu QR Code Generator",
+      "intro": {
+        "title": "Put Your Food and Drink Menu on Every Dining Table with QR Codes",
+        "text1": "Printing and replacing paper menus whenever dishes change is costly and time-consuming. A dedicated restaurant menu QR code gives dining guests instant access to your food and drink offerings directly on their smartphones.",
+        "text2": "Link your table QR code to your online menu webpage or hosted digital menu document. Guests seated at tables, booths, or the bar can scan the code with their mobile cameras and browse appetizers, mains, beverages, and desserts comfortably.",
+        "highlight": "Tableside digital menu browsing. Let diners scan to view your food and beverage menu on their phones."
+      },
+      "benefits": {
+        "title": "Advantages of Digital Menu QR Codes",
+        "desc": "Simplify tableside menu presentation for your dining room staff and guests.",
+        "items": [
+          {
+            "title": "Instant Tableside Menu Access",
+            "desc": "Guests can browse your full menu as soon as they sit down, without waiting for physical menus to be brought over."
+          },
+          {
+            "title": "Reduces Menu Printing Overhead",
+            "desc": "Cut down on recurring paper and lamination costs by directing diners to your digital menu link."
+          },
+          {
+            "title": "Food & Beverage Variety",
+            "desc": "Link to comprehensive food menus, rotating craft beer and wine lists, cocktail specials, or dessert selections."
+          },
+          {
+            "title": "Cleaner Dining Tables",
+            "desc": "Eliminate worn, sticky, or damaged paper menus in favor of a clean, compact table display."
+          },
+          {
+            "title": "High-Resolution Display on Phones",
+            "desc": "Guests view your menu directly on their own high-resolution mobile screens for comfortable reading."
+          }
+        ]
+      },
+      "features": {
+        "title": "Features for Menu QR Code Creation",
+        "desc": "Design appetizing, easy-to-read menu codes tailored for your tables.",
+        "items": [
+          {
+            "title": "Web & Document Menu Linking",
+            "desc": "Paste the URL of your website menu or your hosted online menu document."
+          },
+          {
+            "title": "Dining Room Theming",
+            "desc": "Select warm, appetizing colors and eye patterns that match your restaurant tableware and decor."
+          },
+          {
+            "title": "High Error Correction Density",
+            "desc": "Choose up to 30% error correction so codes remain readable even if table cards encounter minor wear."
+          },
+          {
+            "title": "Crisp Vector Downloads",
+            "desc": "Download in vector SVG, PDF, or high-res PNG for acrylic table tents, wooden blocks, or menu cards."
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "How to Create a Menu QR Code in 4 Steps",
+        "desc": "Set up your tableside menu QR code in four simple steps.",
+        "steps": [
+          {
+            "step": "1",
+            "title": "Get Your Menu Web Link",
+            "desc": "Copy the public URL of your online menu webpage or hosted menu file."
+          },
+          {
+            "step": "2",
+            "title": "Paste Link in Generator",
+            "desc": "Enter the menu URL into the generator destination field."
+          },
+          {
+            "step": "3",
+            "title": "Style with Brand Colors",
+            "desc": "Customize the colors and add a menu icon or logo in the center."
+          },
+          {
+            "step": "4",
+            "title": "Print for Tables",
+            "desc": "Export your file in SVG or PDF and place on table tents, stands, or coasters."
+          }
+        ]
+      },
+      "useCases": {
+        "title": "Tableside Menu Placement Ideas",
+        "desc": "Where to place your digital menu codes for the best guest experience.",
+        "items": [
+          {
+            "title": "Dining Table Tents & Acrylic Stands",
+            "desc": "Place a freestanding QR stand at the center of each table so all guests can scan easily."
+          },
+          {
+            "title": "Bar Counters & Drink Coasters",
+            "desc": "Print codes on coasters or counter plaques to showcase your craft cocktail and beverage list."
+          },
+          {
+            "title": "Patio & Outdoor Seating",
+            "desc": "Use weatherproof table stickers so outdoor diners have instant menu access in all conditions."
+          },
+          {
+            "title": "Food Trucks & Counter Service",
+            "desc": "Display a large menu QR code by the ordering window so customers in line can decide ahead of time."
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "q": "What is a restaurant menu QR code?",
+          "a": "A restaurant menu QR code is a barcode placed on dining tables that links directly to your online food and drink menu, allowing guests to browse dishes on their smartphones."
+        },
+        {
+          "q": "How do diners access the menu using the QR code?",
+          "a": "Diners open their smartphone camera app, point it at the QR code on the table, and tap the link notification to view the menu in their mobile browser."
+        },
+        {
+          "q": "Can I link to a PDF menu or an online web page?",
+          "a": "Yes. You can paste the URL of an online webpage or a publicly hosted PDF document into the generator."
+        },
+        {
+          "q": "How do I update menu items or prices without changing the QR code?",
+          "a": "If you keep the destination URL the same and update the menu on your website or document host, the printed QR code remains the same."
+        },
+        {
+          "q": "Does this generator host my menu file?",
+          "a": "No. You host your menu on your own website or document storage and paste the public link into this generator."
+        },
+        {
+          "q": "Do diners need to install an app to view the menu?",
+          "a": "No. Modern smartphones scan QR codes natively through their default camera apps without requiring any extra downloads."
+        },
+        {
+          "q": "What is the best way to display menu QR codes on tables?",
+          "a": "Acrylic table tents, wooden blocks, and printed coasters with high-contrast codes are popular, durable display choices."
+        },
+        {
+          "q": "Is this restaurant menu QR code generator free?",
+          "a": "Yes. Creating menu QR codes on this platform is completely free with unlimited scans."
+        }
+      ],
+      "cta": {
+        "title": "Create Your Dining Menu QR Code",
+        "subtitle": "Put your food and beverage menu onto tables with an easy-to-scan digital code.",
+        "buttonText": "Generate Menu QR",
+        "typePreset": "url",
+        "defaultContent": "https://example.com/menu",
+        "defaultName": "Tableside Menu QR"
+      }
     },
-    benefits: {
-      title: 'Why Restaurants Love Our Menu QR Code Solutions',
-      desc: 'Simplify table turnaround and boost order value with smart qr cards.',
-      items: [
-        { title: 'Reduce Printing Budgets', desc: 'Stop throwing away outdated paper lists. Share updated menus digitally with one single printed card.' },
-        { title: 'Zero-Touch Dining Safety', desc: 'Promote a clean environment for both guests and service staff using interactive digital menus.' },
-        { title: 'Fast and Effortless Updates', desc: 'Modify your seasonal items, daily specials, and prices without reprinting anything.' },
-        { title: 'High Density Display Quality', desc: 'Clean vector graphics scale to any size, from small table tents to large entrance windows.' },
-        { title: 'No App Installations Required', desc: 'Default Android and iOS camera apps process the QR matrix natively and open menus immediately.' }
-      ]
-    },
-    features: {
-      title: 'Enterprise Features for Hospitality Teams',
-      desc: 'Configure stunning, durable qr menus optimized for visual design and fast scan performance.',
-      items: [
-        { title: 'Custom Brand Overlays', desc: 'Integrate custom brand colors or insert your logo directly in the center of the QR matrix.' },
-        { title: 'Dynamic Destination Routing', desc: 'Route customers to a clean PDF, a website menu page, or a mobile ordering application.' },
-        { title: 'High Error Correction Rates', desc: 'With up to 30% error correction, codes remain scanable even when coffee is spilled on them.' },
-        { title: 'Pristine Offline Rendering', desc: 'All visual customizations are rendered instantly and securely in your browser.' }
-      ]
-    },
-    howItWorks: {
-      title: 'Generate Your Restaurant Menu QR Code in 4 Easy Steps',
-      desc: 'Set up an interactive dining experience in less than 60 seconds.',
-      steps: [
-        { step: '1', title: 'Provide Menu URL', desc: 'Paste the direct web link of your online PDF menu, digital menu board, or ordering portal.' },
-        { step: '2', title: 'Stylize Grid Design', desc: 'Select warm colors, custom rounded eyes, and match the design aesthetic of your dining room.' },
-        { step: '3', title: 'Test Scan with Phone', desc: 'Verify connection stability by aiming your smartphone camera at the live generator preview.' },
-        { step: '4', title: 'Download and Display', desc: 'Export high-res vector files, print them, and place them on menu cards, table tents, or windows.' }
-      ]
-    },
-    useCases: {
-      title: 'Versatile Deployments Across the Hospitality Sector',
-      desc: 'Improve operational efficiency and elevate guest satisfaction in any dining setting.',
-      items: [
-        { title: 'Casual Dining Table Tents', desc: 'Display QR cards on tables to allow patrons to browse immediately upon seating.' },
-        { title: 'Hotel In-Room Dining Planners', desc: 'Leave code graphics in hotel rooms to stream ordering for room service or concierge.' },
-        { title: 'Bars & Craft Breweries', desc: 'Keep draft lists dynamic. Update rotating craft selections without printing new handouts.' },
-        { title: 'Food Trucks and Popups', desc: 'Post a massive QR poster on the vehicle exterior to let waiting queues browse early.' }
-      ]
-    },
-    faqs: [
-      { q: 'Is this menu QR code generator free to use?', a: 'Yes! Generating static QR codes for your restaurant menu is 100% free with unlimited scans.' },
-      { q: 'How do I update the menu without changing the QR code?', a: 'Keep the same URL on your web hosting or PDF share, update the actual content of the document, and the QR code stays identical.' },
-      { q: 'Can I upload a PDF directly?', a: 'Upload your menu PDF to a service like Google Drive, Dropbox, or your website, and paste that link here.' }
-    ],
-    cta: {
-      title: 'Create Your Restaurant Menu QR Now',
-      subtitle: 'Modernize your dining experience, lower print overheads, and streamline service.',
-      buttonText: 'Initialize Menu QR',
-      typePreset: 'url',
-      defaultContent: 'https://example.com/menu.pdf',
-      defaultName: 'My Restaurant Menu'
-    }
-  },
 
   'digital-card-qr-generator': {
-    slug: 'digital-card-qr-generator',
-    keyword: 'free digital business card qr code generator',
-    seoTitle: 'Free Digital Card QR Code Generator | Contactless vCard Plus',
-    metaDescription: 'Generate dynamic digital business card QR codes. Let contacts save your phone, email, address, and social links with a simple scan.',
-    h1: 'Free Digital Card QR Code Generator',
-    intro: {
-      title: 'Share Your Professional Identity Instantly and Securely',
-      text1: 'Traditional paper business cards are frequently lost, discarded, or contain outdated details. Our digital card QR generator bridges physical networking and virtual communication. Scanners can download your contact card directly to their device address book.',
-      text2: 'Include full contact fields such as emails, phone lines, job descriptions, websites, and custom social handles. Customize the visual matrix to stand out at networking events.',
-      highlight: 'Say goodbye to physical paper cards. Scan to save contacts instantly.'
+      "slug": "digital-card-qr-generator",
+      "keyword": "free digital card qr code generator",
+      "seoTitle": "Free Digital Card QR Code Generator - Paperless Contact Sharing",
+      "metaDescription": "Create digital contact QR codes for screen-based, paperless contact sharing. Display on your phone or device for seamless mobile-to-mobile networking.",
+      "h1": "Free Digital Card QR Code Generator",
+      "intro": {
+        "title": "Go Paperless with Screen-Based Digital Contact QR Codes",
+        "text1": "Networking no longer requires carrying physical paper cards that can be lost, damaged, or run out at the wrong time. A digital card QR code lets you share your contact information directly from the screen of your phone, tablet, or laptop.",
+        "text2": "Simply generate your contact code, save it to your photo gallery or files, and display it on screen whenever you meet someone new. The other person scans your screen with their phone camera to receive your contact details instantly.",
+        "highlight": "Paperless, screen-to-screen networking. Display your contact QR code on your device for fast mobile sharing."
+      },
+      "benefits": {
+        "title": "Advantages of Screen-Based Digital Contact Sharing",
+        "desc": "Enjoy frictionless, eco-friendly networking using your existing mobile devices.",
+        "items": [
+          {
+            "title": "Completely Paperless",
+            "desc": "Eliminate paper card printing, carrying physical cardholders, and discarding outdated cards."
+          },
+          {
+            "title": "Never Run Out of Cards",
+            "desc": "Your digital contact code is always stored on your phone, ready whenever an unexpected networking opportunity arises."
+          },
+          {
+            "title": "Direct Mobile-to-Mobile Sharing",
+            "desc": "Display your QR code on your device screen; the other person points their camera and saves your contact info."
+          },
+          {
+            "title": "Remote & Hybrid Networking",
+            "desc": "Display your contact QR code on screen during video calls, webinars, and virtual presentations."
+          },
+          {
+            "title": "Zero Production Costs",
+            "desc": "Create, update, and re-generate your digital contact code for free without paying for print runs."
+          }
+        ]
+      },
+      "features": {
+        "title": "Features for Digital Screen Display",
+        "desc": "Optimized for clean rendering on smartphone screens and digital displays.",
+        "items": [
+          {
+            "title": "High-Contrast Screen Rendering",
+            "desc": "Clear module contrast designed to be easily read by phone cameras scanning a lit device screen."
+          },
+          {
+            "title": "Fast Image Downloads",
+            "desc": "Download as a high-resolution PNG image that you can save straight to your phone photo library."
+          },
+          {
+            "title": "Custom Visual Identity",
+            "desc": "Personalize colors and eye designs to create a polished, distinctive digital contact card."
+          },
+          {
+            "title": "Comprehensive Contact Info",
+            "desc": "Pack your full name, phone number, email address, company name, and website into one screen-ready code."
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "How to Use a Digital Contact QR Code in 4 Steps",
+        "desc": "Set up your digital contact card on your smartphone in minutes.",
+        "steps": [
+          {
+            "step": "1",
+            "title": "Fill in Contact Info",
+            "desc": "Type your name, phone number, email, and other professional details into the generator."
+          },
+          {
+            "step": "2",
+            "title": "Stylize for Screen Display",
+            "desc": "Select distinct colors and patterns that stand out cleanly on your device display."
+          },
+          {
+            "step": "3",
+            "title": "Save Image to Your Device",
+            "desc": "Download the PNG image and save it into your phone camera roll or photos."
+          },
+          {
+            "step": "4",
+            "title": "Show Screen to Share",
+            "desc": "Open the saved QR image on your screen and let contacts scan it with their smartphone camera."
+          }
+        ]
+      },
+      "useCases": {
+        "title": "Ideal Situations for Digital Contact Sharing",
+        "desc": "Everyday moments where sharing your contact code on screen is faster than paper.",
+        "items": [
+          {
+            "title": "Spontaneous In-Person Encounters",
+            "desc": "Met a potential client at a coffee shop or airport? Pull up your saved QR code on your phone to exchange details."
+          },
+          {
+            "title": "Conferences & Meetups",
+            "desc": "Keep your contact code ready on your phone screen so you can connect with dozens of people without carrying paper stacks."
+          },
+          {
+            "title": "Virtual Meetings & Webinars",
+            "desc": "Display your digital card code on your screen during online presentations so remote attendees can connect."
+          },
+          {
+            "title": "Paperless Professionals & Freelancers",
+            "desc": "Adopt an eco-friendly approach to business networking with zero paper waste."
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "q": "What is a digital card QR code?",
+          "a": "A digital card QR code is a contact QR code meant to be displayed on the screen of your phone, tablet, or laptop, allowing others to scan and save your contact information without paper."
+        },
+        {
+          "q": "How do I share my digital contact QR code with someone?",
+          "a": "Save the generated QR code image to your smartphone photo gallery. When meeting someone, pull up the image on your screen and have them scan it with their camera."
+        },
+        {
+          "q": "Can phone cameras scan a QR code displayed on another phone screen?",
+          "a": "Yes. Modern smartphone cameras easily read QR codes displayed on phone screens as long as the screen brightness is adequate and there is sufficient contrast."
+        },
+        {
+          "q": "Does the recipient need a special app to scan my screen?",
+          "a": "No. The other person can scan your screen using their phone standard camera app."
+        },
+        {
+          "q": "What file format is best for saving to my phone?",
+          "a": "Download the high-resolution PNG image format, which saves directly to your phone photos or gallery for quick display."
+        },
+        {
+          "q": "Can I update my digital card when my information changes?",
+          "a": "Yes. Simply return to the generator, enter your updated details, download the new image to your phone, and replace the old image."
+        },
+        {
+          "q": "Is this digital contact card generator free?",
+          "a": "Yes. You can generate and download your digital contact QR code completely free with no subscription."
+        }
+      ],
+      "cta": {
+        "title": "Generate Your Digital Contact QR Code",
+        "subtitle": "Create a screen-ready contact code to save on your phone for fast, paperless networking.",
+        "buttonText": "Create Digital Card",
+        "typePreset": "card",
+        "defaultContent": "BEGIN:VCARD\nVERSION:3.0\nN:Doe;John;;;\nFN:John Doe\nORG:Digital Solutions\nTITLE:Product Specialist\nTEL;TYPE=CELL:15551234567\nEMAIL:john.doe@example.com\nURL:https://example.com\nEND:VCARD",
+        "defaultName": "My Digital Contact Card"
+      }
     },
-    benefits: {
-      title: 'Top Benefits of Digital vCard Plus QR Codes',
-      desc: 'Step up your networking game with scan-to-save convenience.',
-      items: [
-        { title: 'Zero Manual Typing Errors', desc: 'Clients add your exact details directly to their phones without misspelling your name or email.' },
-        { title: 'Eco-Friendly Exchanges', desc: 'Ditch physical paper card printing. Keep your environmental footprint small.' },
-        { title: 'Dynamic and Up-to-Date', desc: 'Link to an active profile or portal that you can adjust whenever your contacts change.' },
-        { title: 'Full Contact Properties', desc: 'Share your office address, LinkedIn URL, secondary numbers, and company info all in one code.' },
-        { title: 'Professional Aesthetic', desc: 'Personalize designs, import logos, and design custom grids to elevate your corporate identity.' }
-      ]
-    },
-    features: {
-      title: 'Sophisticated Features for Contact Sharing',
-      desc: 'Our developer-ready generator encodes high-density contact cards cleanly.',
-      items: [
-        { title: 'Standard vCard Format', desc: 'Encodes data using universal vCard (.vcf) specifications for flawless compatibility with iOS and Android.' },
-        { title: 'Infinite Scale Vectors', desc: 'Export in high-resolution SVG or PDF, suitable for name tags, phone backgrounds, or posters.' },
-        { title: 'Logo Centering options', desc: 'Place your professional headshot, company symbol, or custom brand icon directly in the grid.' },
-        { title: 'Secure Client-Side Packaging', desc: 'All your contact details are packed into the code matrix directly inside your local web browser.' }
-      ]
-    },
-    howItWorks: {
-      title: 'Generate Your Digital Business Card in 4 Steps',
-      desc: 'Craft a professional virtual contact card in under a minute.',
-      steps: [
-        { step: '1', title: 'Input Contact Details', desc: 'Type your full name, phone number, email, company, and job title.' },
-        { step: '2', title: 'Customize Layout Visuals', desc: 'Choose a corporate layout, align custom colors, and integrate your professional logo.' },
-        { step: '3', title: 'Verify and Scan Test', desc: 'Direct your phone camera to the live preview to confirm all fields populate your address book properly.' },
-        { step: '4', title: 'Download and Display', desc: 'Export the graphic as SVG or high-resolution PNG. Display on name badges, emails, or back of phones.' }
-      ]
-    },
-    useCases: {
-      title: 'Where to Use Your Digital Card QR Code',
-      desc: 'Unleash frictionless contact sharing across all physical and digital touchpoints.',
-      items: [
-        { title: 'Name Badges at Conferences', desc: 'Print the QR code directly on your event badge to let delegates save your details in seconds.' },
-        { title: 'Email Signature Footers', desc: 'Insert the graphic at the end of your corporate emails for quick smartphone imports.' },
-        { title: 'Mobile Device Lock Screen', desc: 'Save the card QR as your phone wallpaper to share credentials quickly anywhere.' },
-        { title: 'Back of Physical Cards', desc: 'Print a small code on physical cards to act as a permanent bridge to your digital portfolio.' }
-      ]
-    },
-    faqs: [
-      { q: 'Is this digital business card generator free?', a: 'Yes! Generating static vCard QR codes on FreeQRBarcodes.com is 100% free with zero scan limits.' },
-      { q: 'Do people need a special app to scan the card?', a: 'No, default smartphone cameras read and parse vCard data automatically.' },
-      { q: 'Can I add social media links?', a: 'Yes! You can put your main profiles or portfolio page URL in the website fields.' }
-    ],
-    cta: {
-      title: 'Generate Your Digital vCard QR Code Now',
-      subtitle: 'Stand out at your next event, reduce paper waste, and connect with people instantly.',
-      buttonText: 'Initialize Digital Card',
-      typePreset: 'card',
-      defaultContent: 'BEGIN:VCARD\nFN:John Doe\nTEL:123456789\nEND:VCARD',
-      defaultName: 'My Contact Details'
-    }
-  },
 
   'pdf-sharing-qr-generator': {
-    slug: 'pdf-sharing-qr-generator',
-    keyword: 'free pdf sharing qr code generator',
-    seoTitle: 'Free PDF Sharing QR Code Generator | Convert PDF to QR Codes',
-    metaDescription: 'Generate custom target links with our free PDF QR code generator. Allow readers to scan, view, and download PDF catalogs or documents.',
-    h1: 'Free PDF Sharing QR Code Generator',
-    intro: {
-      title: 'Bridge Print Materials and Document Delivery via Smart QRs',
-      text1: 'Manually typing long web links or search terms to locate menus, product catalogs, research papers, or floor guides on smartphones can frustrate users. Our free pdf qr code generator provides a clean, modern solution. By linking your web-hosted document URL to a scanable barcode, readers can view or download your PDF instantly.',
-      text2: 'From restaurant menus to architectural floor plans and product user manuals, this responsive generator makes document delivery incredibly simple. Customize standard grids, select elegant gradients, and place brand logos directly in the center of the key matrix.',
-      highlight: 'Make your physical manuals digital. Scan to view and download PDF documents.'
+      "slug": "pdf-sharing-qr-generator",
+      "keyword": "free pdf sharing qr code generator",
+      "seoTitle": "Free PDF Sharing QR Code Generator - Share Documents with Groups",
+      "metaDescription": "Create QR codes designed for sharing documents, event handouts, training materials, and presentation slides with groups and audiences effortlessly.",
+      "h1": "Free PDF Sharing QR Code Generator",
+      "intro": {
+        "title": "Share Documents and Handouts with Groups via Scannable QR Codes",
+        "text1": "Distributing paper copies of handouts, meeting agendas, presentation decks, or workshop materials to large groups can be slow, costly, and wasteful. A PDF sharing QR code allows presenters, organizers, and educators to share a document URL instantly with an entire room.",
+        "text2": "Display the sharing QR code on presentation slides, projector screens, event signage, or physical welcome tables. Attendees point their smartphone cameras to immediately load the shared materials on their personal devices.",
+        "highlight": "Streamline group document distribution. Let audiences scan from screens or signs to access shared materials."
+      },
+      "benefits": {
+        "title": "Advantages of QR Codes for Group Document Distribution",
+        "desc": "Replace bulky paper hand-outs and complex download links with single-scan access.",
+        "items": [
+          {
+            "title": "Frictionless Group Distribution",
+            "desc": "Dozens of attendees can access the same shared document simultaneously from their own devices in seconds."
+          },
+          {
+            "title": "Paperless Event & Meeting Workflows",
+            "desc": "Eliminate the need to print and transport heavy stacks of paper agendas, slide printouts, or workshop binders."
+          },
+          {
+            "title": "Display on Screen or in Print",
+            "desc": "Share materials by projecting the QR code onto presentation screens or printing it on registration desk signage."
+          },
+          {
+            "title": "Universal Attendee Access",
+            "desc": "Works across iOS and Android devices without requiring attendees to join a shared network folder or install new apps."
+          },
+          {
+            "title": "Last-Minute Document Revisions",
+            "desc": "If your hosted file link remains constant, updating the file on your server ensures everyone viewing the code receives the current version."
+          }
+        ]
+      },
+      "features": {
+        "title": "Features for Document Sharing Codes",
+        "desc": "Create clear, legible sharing codes suited for projection screens and event displays.",
+        "items": [
+          {
+            "title": "Screen-Friendly Display Styling",
+            "desc": "Adjust contrast and dot styles so the QR code remains readily scannable even from several rows back in a meeting room."
+          },
+          {
+            "title": "Custom Center Labels & Icons",
+            "desc": "Add descriptive text frames or insert an icon to signal the shared document type."
+          },
+          {
+            "title": "Multi-Format Vector Downloads",
+            "desc": "Export in SVG, PDF, and PNG formats for insertion into presentation decks, poster prints, or badge cards."
+          },
+          {
+            "title": "Zero-Friction Link Delivery",
+            "desc": "Directly encodes your public file URL so users open the shared file directly in their native browser."
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "How to Share Documents via QR Code in 4 Steps",
+        "desc": "Prepare your document for group sharing in a few straightforward steps.",
+        "steps": [
+          {
+            "step": "1",
+            "title": "Host Your Document",
+            "desc": "Upload your handout or presentation to your organization web server or document host and copy the sharing URL."
+          },
+          {
+            "step": "2",
+            "title": "Enter the Sharing URL",
+            "desc": "Paste the document link into the generator URL field."
+          },
+          {
+            "step": "3",
+            "title": "Customize for Visibility",
+            "desc": "Add a high-contrast theme and an optional label so audiences know what the code opens."
+          },
+          {
+            "step": "4",
+            "title": "Embed in Slides or Signage",
+            "desc": "Place the exported QR code on the opening or closing slide of your presentation or print it on event materials."
+          }
+        ]
+      },
+      "useCases": {
+        "title": "Popular Document Sharing Scenarios",
+        "desc": "Where group document sharing with QR codes makes information delivery seamless.",
+        "items": [
+          {
+            "title": "Conference Presentations & Keynotes",
+            "desc": "Display the QR code on your final slide so session attendees can access the slide deck or references."
+          },
+          {
+            "title": "Classroom & Training Workshops",
+            "desc": "Give students and workshop participants immediate access to worksheets, lab instructions, and reading materials."
+          },
+          {
+            "title": "Trade Shows & Marketing Booths",
+            "desc": "Let booth visitors scan a tabletop sign to take home product sheets and company collateral digitally."
+          },
+          {
+            "title": "Community Boards & Public Notices",
+            "desc": "Provide neighborhood groups or municipal visitors with instant access to minutes, agendas, and announcements."
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "q": "How does a PDF sharing QR code help at events and presentations?",
+          "a": "It allows all attendees in a room to scan the code from a screen or sign and open the presentation deck, agenda, or handout directly on their own devices."
+        },
+        {
+          "q": "Can multiple people scan the sharing QR code at the same time?",
+          "a": "Yes. Unlimited users can scan the QR code simultaneously because the code simply directs their browsers to your hosted document URL."
+        },
+        {
+          "q": "Where should I display a document sharing QR code?",
+          "a": "Common places include the first or last slide of a presentation, conference badges, registration tables, classroom boards, and event signage."
+        },
+        {
+          "q": "Does the app host my shared documents?",
+          "a": "No. You host your document on your own web server or document repository and paste the public link into our generator."
+        },
+        {
+          "q": "What happens if I update the document file on my host?",
+          "a": "As long as the URL remains identical, anyone scanning the QR code will open your updated document without needing a new code."
+        },
+        {
+          "q": "Do attendees need to install a special app to view the shared PDF?",
+          "a": "No. Attendees scan the QR code with their default smartphone camera and the document opens in their mobile browser."
+        },
+        {
+          "q": "What size should I make the QR code for presentation slides?",
+          "a": "For projection screens in large rooms, display the QR code prominently with generous margins and high contrast so attendees in the back rows can scan comfortably."
+        },
+        {
+          "q": "Is this document sharing QR generator free?",
+          "a": "Yes. Generating sharing QR codes is completely free with no usage limits or forced registration."
+        }
+      ],
+      "cta": {
+        "title": "Create a Group Document Sharing QR Code",
+        "subtitle": "Share event handouts, presentations, training materials, and company collateral effortlessly.",
+        "buttonText": "Generate Sharing QR",
+        "typePreset": "url",
+        "defaultContent": "https://example.com/shared-document.pdf",
+        "defaultName": "Group Handout Sharing QR"
+      }
     },
-    benefits: {
-      title: 'Top Benefits of Using Document QR Codes',
-      desc: 'Discover why professional businesses and event planners choose PDF codes to distribute documents.',
-      items: [
-        { title: 'Frictionless Document Delivery', desc: 'No more searching through file directories or folders. Scanners open and download precise pdf documents with a single scan.' },
-        { title: 'Substantially Reduce Printing Costs', desc: 'Stop spending budget printing bulky product guidelines or brochures. Share digital pdf booklets on single paper sheets.' },
-        { title: 'Instantly Update PDF Content', desc: 'Update and replace files on your web host anytime without having to reprint and change the physical QR code on tables.' },
-        { title: 'Eco-Friendly Exchanges', desc: 'Exchange user materials cleanly and digitally. Eliminate unnecessary page trash from commercial spaces.' },
-        { title: 'Works Natively on Mobile Cameras', desc: 'No third-party app installations needed. Mobile browsers read, render, and download files natively.' }
-      ]
-    },
-    features: {
-      title: 'Smart Features for Document Distribution Campaigns',
-      desc: 'Our developer-ready platform gives you ultimate control over document delivery, styles, and scans.',
-      items: [
-        { title: 'Dynamic Trackable Framework', desc: 'Optionally translate your links to measure scans, assess device metrics, and monitor traffic over time.' },
-        { title: 'High-Resolution Vector exports', desc: 'Download in SVG, PDF, or high-res PNG formats, ready for high-fidelity professional printing on any medium.' },
-        { title: 'Standout Color Palette Designs', desc: 'Apply professional gradient styles to match your corporate brand identity.' },
-        { title: 'Logo and Brand Centering', desc: 'Embed official icons or custom text overlays in the center of the grid safely.' }
-      ]
-    },
-    howItWorks: {
-      title: 'Convert Your Documents to QR Codes in 4 Steps',
-      desc: 'Getting your custom QR code ready takes less than two minutes of setup.',
-      steps: [
-        { step: '1', title: 'Paste Hosted PDF Link', desc: 'Upload your PDF to Google Drive, Dropbox, or your website, and paste the shared link into our URL field.' },
-        { step: '2', title: 'Stylize Table Visuals', desc: 'Choose colors matching your restaurant\'s style, select classy dot shapes, and adjust quiet zone margins.' },
-        { step: '3', title: 'Verify Scan Compatibility', desc: 'Scan the live canvas using your smartphone camera to ensure it opens your PDF link immediately.' },
-        { step: '4', title: 'Display and Distribute Code', desc: 'Deploy on physical packaging, booklets, and materials.' }
-      ]
-    },
-    useCases: {
-      title: 'Smart PDF QR Code Integrations Across Industries',
-      desc: 'Simplify ordering, streamline tables, and connect guests with online platforms seamlessly.',
-      items: [
-        { title: 'Restaurant Table Plaque PDF', desc: 'Display code frames on tables to let dining guests read menu options directly on their mobile devices.' },
-        { title: 'Product Assembly Booklets', desc: 'Print directly on packaging to encourage customers to view complete installation manuals.' },
-        { title: 'Real Estate Listing Documents', desc: 'Keep codes on card tags to guide buyers directly to floor plans or virtual house tours.' },
-        { title: 'Business Conference Handouts', desc: 'Display core video guides on podium stands to let delegates watch introductions later.' }
-      ]
-    },
-    faqs: [
-      { q: 'Is this free pdf qr code generator completely free?', a: 'Yes! Generating static document QR codes on our platform is 100% free with no scanning limits or expiry dates.' },
-      { q: 'Can I upload files directly into the QR generator?', a: 'To maintain our light server-side performance, copy files into Google Drive or web hosts, and paste shared links here.' },
-      { q: 'Can I change my PDF content without changing the QR code?', a: 'Yes! Simply overwrite the PDF on your web host (maintaining the same link URL), and our code routes readers to the updated document.' }
-    ],
-    cta: {
-      title: 'Convert Your Documents to QR Codes Now',
-      subtitle: 'Stand out from plain cards, replace outdated paper guides, and deliver interactive digital documents.',
-      buttonText: 'Initialize PDF Code',
-      typePreset: 'url',
-      defaultContent: 'https://example.com/document.pdf',
-      defaultName: 'My Shared PDF'
-    }
-  },
 
   'barcode-generator': {
     slug: 'barcode-generator',

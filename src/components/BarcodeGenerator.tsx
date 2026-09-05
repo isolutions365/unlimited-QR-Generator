@@ -718,7 +718,7 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
         </div>
 
         {/* Section 2: Symbologies Guide */}
-        <div className="space-y-4">
+        <div id="barcode-symbologies-guide" className="space-y-4">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
             <h3 className="text-xl font-extrabold tracking-tight text-slate-900">
@@ -726,33 +726,117 @@ export default function BarcodeGenerator({ locale: propLocale }: BarcodeGenerato
             </h3>
           </div>
           <p className="text-sm text-slate-600 max-w-3xl leading-relaxed">
-            Selecting the wrong symbology can cause legacy scanners to fail. Review this structural framework to match your business requirements:
+            {t('barcode.guide.symbologiesDesc', 'Selecting the wrong symbology can cause legacy scanners to fail. Review this structural framework to match your business requirements:')}
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
-              <h4 className="text-sm font-bold text-slate-900">Code 128 (High Density Alphanumeric)</h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                The most modern 1D linear standard. Supports all 128 ASCII characters, including digits, letters, and control characters. Ideal for shipping labels, serial numbers, and general internal stock control.
-              </p>
-            </div>
-            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
-              <h4 className="text-sm font-bold text-slate-900">EAN-13 & UPC-A (Point-of-Sale Retail Standards)</h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Global commercial retail standards. UPC-A is standard in North America (12 digits), while EAN-13 is standard globally (13 digits). Designed specifically for checkout registers to trigger price lookups.
-              </p>
-            </div>
-            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
-              <h4 className="text-sm font-bold text-slate-900">Code 39 (Industrial & Military)</h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Self-checking linear symbology designed to encode alphanumeric text. Supports letters (uppercase A-Z), digits, and limited symbols (- . $ / + % space). Frequently used in automotive manufacturing and defense logistics.
-              </p>
-            </div>
-            <div className="space-y-1 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
-              <h4 className="text-sm font-bold text-slate-900">MSI Plessey & ITF-14</h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                MSI Plessey is highly localized for grocery supermarket shelving codes. ITF-14 is standard for outer corrugated shipping containers, featuring thick bearer boundaries to prevent misreads under pressure.
-              </p>
-            </div>
+          <div id="barcode-symbologies-table-container" className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-xs">
+            <table id="barcode-symbologies-comparison-table" className="w-full text-xs sm:text-sm border-collapse text-start">
+              <thead className="bg-slate-50 text-slate-900 border-b border-slate-200">
+                <tr>
+                  <th scope="col" className="py-3 px-4 font-bold text-start whitespace-nowrap">
+                    {t('barcode.table.symbology', 'Symbology')}
+                  </th>
+                  <th scope="col" className="py-3 px-4 font-bold text-start whitespace-nowrap">
+                    {t('barcode.table.characterSet', 'Character Set')}
+                  </th>
+                  <th scope="col" className="py-3 px-4 font-bold text-start whitespace-nowrap">
+                    {t('barcode.table.payloadLength', 'Payload Length')}
+                  </th>
+                  <th scope="col" className="py-3 px-4 font-bold text-start whitespace-nowrap">
+                    {t('barcode.table.industry', 'Primary Industry')}
+                  </th>
+                  <th scope="col" className="py-3 px-4 font-bold text-start whitespace-nowrap">
+                    {t('barcode.table.scannerCompatibility', 'Scanner Compatibility')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-slate-900 text-start whitespace-nowrap">
+                    Code 128
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.c128Chars', 'Full 128 ASCII (Alphanumeric & Control)')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.c128Len', 'Variable (High density)')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.c128Ind', 'Logistics, Shipping & Asset Tracking')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.c128Scan', '1D Laser & 2D Optical Scanners')}
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-slate-900 text-start whitespace-nowrap">
+                    EAN-13 / UPC-A
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.eanChars', 'Numeric only (0–9)')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.eanLen', 'Fixed 12 (UPC-A) or 13 (EAN-13) digits')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.eanInd', 'Retail Point-of-Sale (POS) Checkout')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.eanScan', 'Standard Retail POS Cash Registers')}
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-slate-900 text-start whitespace-nowrap">
+                    Code 39
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.c39Chars', 'Uppercase (A–Z), Digits (0–9), 7 Symbols')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.c39Len', 'Variable (Low-to-medium density)')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.c39Ind', 'Automotive, Aerospace & Defense')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.c39Scan', 'All Standard 1D/2D Barcode Readers')}
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-slate-900 text-start whitespace-nowrap">
+                    ITF-14
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.itfChars', 'Numeric only (0–9)')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.itfLen', 'Fixed exactly 14 digits')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.itfInd', 'Corrugated Shipping Master Cartons')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.itfScan', 'Industrial Warehouse Laser Scanners')}
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-slate-900 text-start whitespace-nowrap">
+                    QR Code (2D)
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.qrChars', 'UTF-8, Alphanumeric, Binary, URLs')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.qrLen', 'Up to 7,089 numeric / 4,296 alphanumeric')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.qrInd', 'Mobile Marketing & Smart Packaging')}
+                  </td>
+                  <td className="py-3 px-4 text-start">
+                    {t('barcode.table.qrScan', 'Smartphone Cameras & 2D Area Imagers')}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
