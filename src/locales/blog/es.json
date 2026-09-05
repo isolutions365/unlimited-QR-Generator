@@ -22,8 +22,8 @@
     ],
     "internalLinks": [
       {
-        "label": "Create a Custom QR Code",
-        "url": "/"
+        "label": "Create a URL QR Code",
+        "url": "/url-qr-generator"
       },
       {
         "label": "Read Our FAQs",
@@ -54,12 +54,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Generate Dynamic QR Code",
-        "url": "/"
+        "label": "Create a Trackable URL QR Code",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "Explore Analytics Platform",
-        "url": "/platform/qr-analytics"
+        "label": "Compare Free vs Paid Features",
+        "url": "/pricing"
       }
     ]
   },
@@ -86,8 +86,8 @@
     ],
     "internalLinks": [
       {
-        "label": "Design QR with Logo",
-        "url": "/"
+        "label": "Create a Branded URL QR Code",
+        "url": "/url-qr-generator"
       },
       {
         "label": "View QR Generator FAQ",
@@ -114,11 +114,11 @@
     ],
     "internalLinks": [
       {
-        "label": "Generate Marketing QR Codes",
-        "url": "/"
+        "label": "Generate Retail QR Codes in Bulk",
+        "url": "/bulk-qr-generator"
       },
       {
-        "label": "Compare Dynamic Plans",
+        "label": "Compare Free Plans",
         "url": "/pricing"
       }
     ]
@@ -142,12 +142,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create vCard QR Code",
-        "url": "/"
+        "label": "Create a vCard QR Code",
+        "url": "/vcard-qr-generator"
       },
       {
-        "label": "Enterprise Solution Suite",
-        "url": "/platform/qr-analytics"
+        "label": "Explore Digital Business Card Solutions",
+        "url": "/solutions/digital-business-card"
       }
     ]
   },
@@ -170,12 +170,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Design Packaging QR Codes",
-        "url": "/"
+        "label": "Create a PDF QR Code",
+        "url": "/pdf-qr-generator"
       },
       {
-        "label": "Case Studies & Success Stories",
-        "url": "/testimonials"
+        "label": "Read Omnichannel Retail Guides",
+        "url": "/blog/omnichannel-retail-qr-codes-footfall-to-sales"
       }
     ]
   },
@@ -189,21 +189,25 @@
     "readingTime": "6 min read",
     "author": "Liam Gallagher, Performance Marketing Lead",
     "intro": "[Traducido] Print marketing without tracking is pure guesswork. Learn how to structure clean UTM parameters and configure Google Analytics 4 to measure offline campaign return on ad spend (ROAS).",
-    "contentMarkdown": "> **[ES Translation]** Print marketing without tracking is pure guesswork. Learn how to structure clean UTM parameters and configure Google Analytics 4 to measure offline campaign return on ad spend (ROAS).\n\n## The Golden Rules of Offline UTM Architecture\n\nTo understand exactly how physical billboards, flyers, and trade show stands drive website traffic, you must append consistent UTM parameters to every dynamic QR destination URL.\n\n### Standard UTM Parameter Taxonomy for QR Codes\n\n* **`utm_source`**: Identifies the physical channel or medium (e.g., `billboard_times_sq`, `magazine_vogue`, `mailer_spring2026`).\n* **`utm_medium`**: Categorizes the marketing format as physical (e.g., `qr_print`, `qr_outdoor`, `qr_packaging`).\n* **`utm_campaign`**: Denotes the broader marketing initiative (e.g., `summer_launch_2026`, `q3_vip_promo`).\n* **`utm_content`**: Differentiates specific placement variations or creative tests (e.g., `hero_banner_left`, `footer_badge`).\n\n### Step-by-Step GA4 Setup\n\n1. **Build Your Clean Target URL**: `https://example.com/promo?utm_source=flyer_downtown&utm_medium=qr_print&utm_campaign=summer_2026`\n2. **Generate a Dynamic QR Code**: Feed the tagged URL into our generator to create a high-contrast vector asset.\n3. **Set Up Custom Exploration Reports in GA4**: Filter traffic by `Session source / medium` matching `qr_print` to analyze user engagement, bounce rate, and e-commerce conversions.",
+    "contentMarkdown": "> **[ES Translation]** Print marketing without tracking is pure guesswork. Learn how to structure clean UTM parameters and configure Google Analytics 4 to measure offline campaign return on ad spend (ROAS).\n\n## The Golden Rules of Offline UTM Architecture\n\nTo understand exactly how physical billboards, flyers, and trade show stands drive website traffic, you must append consistent UTM parameters to every dynamic QR destination URL.\n\n### Standard UTM Parameter Taxonomy for QR Codes\n\n* **`utm_source`**: Identifies the physical channel or medium (e.g., `billboard_times_sq`, `magazine_vogue`, `mailer_spring2026`).\n* **`utm_medium`**: Categorizes the marketing format as physical (e.g., `qr_print`, `qr_outdoor`, `qr_packaging`).\n* **`utm_campaign`**: Denotes the broader marketing initiative (e.g., `summer_launch_2026`, `q3_vip_promo`).\n* **`utm_content`**: Differentiates specific placement variations or creative tests (e.g., `hero_banner_left`, `footer_badge`).\n\n### Step-by-Step GA4 Setup\n\n1. **Build Your Clean Target URL**: `https://example.com/promo?utm_source=flyer_downtown&utm_medium=qr_print&utm_campaign=summer_2026`\n2. **Generate a Dynamic QR Code**: Feed the tagged URL into our generator to create a high-contrast vector asset.\n3. **Set Up Custom Exploration Reports in GA4**: Filter traffic by `Session source / medium` matching `qr_print` to analyze user engagement, bounce rate, and e-commerce conversions.\n\n### Lista de verificación de configuración de GA4 para campañas de QR\n1. Utilice campos UTM estándar (`utm_source`, `utm_medium`, `utm_campaign`).\n2. Use etiquetas en minúsculas para evitar registros de tráfico fragmentados en GA4.\n3. Configure dimensiones personalizadas en Google Analytics 4 si realiza el seguimiento de variables de campaña personalizadas.\n4. Aproveche los códigos QR dinámicos para editar los parámetros después de la impresión física.",
     "relatedFAQs": [
       {
         "question": "Should I use static or dynamic QR codes for UTM tracking?",
         "answer": "Always use dynamic QR codes. If you need to fix a misspelled UTM tag after printing thousands of flyers, dynamic codes allow you to edit the destination URL instantly."
+      },
+      {
+        "question": "¿Puedo rastrear escaneos de QR sin un servicio de redirección de terceros?",
+        "answer": "Sí. Al integrar parámetros UTM estándar directamente en un código QR estático, los escaneos se registrarán directamente en Google Analytics 4 como referencias orgánicas o de campaña sin necesidad de redireccionamientos intermedios."
       }
     ],
     "internalLinks": [
       {
-        "label": "Build UTM-Tagged QR Code",
-        "url": "/"
+        "label": "Build URL QR Codes with Custom Parameters",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "Analytics Suite Details",
-        "url": "/platform/qr-analytics"
+        "label": "Check Platform Features",
+        "url": "/pricing"
       }
     ]
   },
@@ -226,11 +230,11 @@
     ],
     "internalLinks": [
       {
-        "label": "Generate Tracking QR Codes",
-        "url": "/"
+        "label": "Create a Trackable URL QR Code",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "Review Privacy Architecture",
+        "label": "Review Privacy Policies",
         "url": "/privacy-policy"
       }
     ]
@@ -254,12 +258,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Dynamic QR Split Tests",
-        "url": "/"
+        "label": "Generate URL QR Codes for Testing",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "Explore Marketing Platform",
-        "url": "/marketing-platform"
+        "label": "Explore Platform Capabilities",
+        "url": "/pricing"
       }
     ]
   },
@@ -282,11 +286,11 @@
     ],
     "internalLinks": [
       {
-        "label": "Generate Free WiFi QR Code",
-        "url": "/"
+        "label": "Generate a WiFi QR Code",
+        "url": "/wifi-qr-generator"
       },
       {
-        "label": "View All Generator Presets",
+        "label": "View All FAQs",
         "url": "/faq"
       }
     ]
@@ -310,12 +314,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Review QR Code",
-        "url": "/"
+        "label": "Create a Link to Your Review Page",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "Explore Print Templates",
-        "url": "/templates"
+        "label": "Explore Google Review Booster",
+        "url": "/solutions/google-review-booster"
       }
     ]
   },
@@ -338,8 +342,8 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Payment QR Code",
-        "url": "/"
+        "label": "Create a Payment QR Code",
+        "url": "/payment-qr-generator"
       },
       {
         "label": "Read Security Documentation",
@@ -366,12 +370,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Explore Technical Architecture",
+        "label": "Explore Technical Security Standards",
         "url": "/security"
       },
       {
-        "label": "View QR Code API Specs",
-        "url": "/platform/qr-analytics"
+        "label": "Visit QR Code Academy",
+        "url": "/academy"
       }
     ]
   },
@@ -385,11 +389,15 @@
     "readingTime": "6 min read",
     "author": "Dr. Elena Rostova, Cryptography & Signals Specialist",
     "intro": "[Traducido] As QR code adoption surges, so does QR phishing ('Qshing'). Learn the attack vectors used by malicious actors and the technical defenses protecting modern consumer scans.",
-    "contentMarkdown": "> **[ES Translation]** As QR code adoption surges, so does QR phishing ('Qshing'). Learn the attack vectors used by malicious actors and the technical defenses protecting modern consumer scans.\n\n## The Mechanics of QR Phishing (Qshing)\n\nBecause human eyes cannot visually decode the binary data stored within 2D matrix pixels, attackers sometimes stick malicious sticker overlays on genuine public parking meters, payment stands, or restaurant tables.\n\n### Common Attack Vectors\n\n* **Physical Sticker Tampering**: Overlapping fraudulent QR stickers on public transit hubs or parking payment kiosks that route victims to fake phishing login pages.\n* **Email PDF Quishing**: Embedding QR codes inside corporate phishing emails to bypass standard email text filter scanners.\n* **Malicious Wi-Fi Profiles**: Generating QR codes that attempt to connect victim devices to rogue evil-twin Wi-Fi access points.\n\n### Enterprise Defense Best Practices\n\n1. **Cryptographic URL Verification**: Modern dynamic QR engines screen destination URLs against real-time threat intelligence databases (Google Safe Browsing, VirusTotal) prior to executing redirects.\n2. **Custom Branded Domains**: Always use custom branded short domains (e.g., `qr.yourbrand.com`) so scanning previews immediately verify domain authenticity.\n3. **Physical Tamper-Evident Decals**: Use vinyl decals with void-if-removed adhesives on outdoor payment kiosks.",
+    "contentMarkdown": "> **[ES Translation]** As QR code adoption surges, so does QR phishing ('Qshing'). Learn the attack vectors used by malicious actors and the technical defenses protecting modern consumer scans.\n\n## The Mechanics of QR Phishing (Qshing)\n\nBecause human eyes cannot visually decode the binary data stored within 2D matrix pixels, attackers sometimes stick malicious sticker overlays on genuine public parking meters, payment stands, or restaurant tables.\n\n### Common Attack Vectors\n\n* **Physical Sticker Tampering**: Overlapping fraudulent QR stickers on public transit hubs or parking payment kiosks that route victims to fake phishing login pages.\n* **Email PDF Quishing**: Embedding QR codes inside corporate phishing emails to bypass standard email text filter scanners.\n* **Malicious Wi-Fi Profiles**: Generating QR codes that attempt to connect victim devices to rogue evil-twin Wi-Fi access points.\n\n### Enterprise Defense Best Practices\n\n1. **Cryptographic URL Verification**: Modern dynamic QR engines screen destination URLs against real-time threat intelligence databases (Google Safe Browsing, VirusTotal) prior to executing redirects.\n2. **Custom Branded Domains**: Always use custom branded short domains (e.g., `qr.yourbrand.com`) so scanning previews immediately verify domain authenticity.\n3. **Physical Tamper-Evident Decals**: Use vinyl decals with void-if-removed adhesives on outdoor payment kiosks.\n\n### Mecanismos cruciales de defensa contra Qshing\nPara prevenir amenazas de escaneo, los usuarios y operadores de marcas deben adoptar controles técnicos fundamentales: inspección HTTPS de la URL de destino, verificación visual del dominio antes de hacer clic, validación de seguridad de dominios QR dinámicos y habilitación de autenticación multifactor (MFA) para mitigar el robo de credenciales. FreeQRBarcodes.com verifica automáticamente las páginas de destino dinámicas contra bases de datos de amenazas, pero no proporciona análisis de malware en tiempo real con IA.",
     "relatedFAQs": [
       {
         "question": "Does this generator scan destination URLs for malware?",
         "answer": "Yes. Our dynamic gateway automatically inspects destination endpoints for known malicious domains and phishing patterns to protect end users."
+      },
+      {
+        "question": "¿Ofrece FreeQRBarcodes.com detección de amenazas con IA en tiempo real?",
+        "answer": "No. FreeQRBarcodes.com realiza comprobaciones automatizadas estándar contra bases de datos de amenazas para URLs de redireccionamiento dinámico. No ofrece análisis de amenazas activo con IA en tiempo real ni escaneo de seguridad de terminales."
       }
     ],
     "internalLinks": [
@@ -398,8 +406,8 @@
         "url": "/security"
       },
       {
-        "label": "Read Trust Center Overview",
-        "url": "/trust"
+        "label": "Read Security Policies",
+        "url": "/security"
       }
     ]
   },
@@ -413,21 +421,25 @@
     "readingTime": "6 min read",
     "author": "Marcus Vance, Lead Systems Architect",
     "intro": "[Traducido] By 2027, global retail point-of-sale scanners will transition from traditional 1D UPC barcodes to 2D QR codes powered by the GS1 Digital Link standard. Here is what your business needs to know.",
-    "contentMarkdown": "> **[ES Translation]** By 2027, global retail point-of-sale scanners will transition from traditional 1D UPC barcodes to 2D QR codes powered by the GS1 Digital Link standard. Here is what your business needs to know.\n\n## The End of the 50-Year-Old Linear Barcode\n\nSince 1974, the linear 1D UPC barcode has powered global commerce checkout lines. However, traditional barcodes are limited to encoding only a single Global Trade Item Number (GTIN). The **GS1 Digital Link standard** resolves this limitation.\n\n### What is GS1 Digital Link?\n\nGS1 Digital Link bridges physical products with web standards by embedding the GTIN directly into a standardized web URI structure:\n\n`https://id.brand.com/01/09521141742055/21/SERIAL123?10=BATCH456`\n\n### Comparativa: Código de barras clásico vs GS1 Digital Link\n\n| Aspecto | Código de barras tradicional | Estándar GS1 Digital Link | Impacto práctico |\n| --- | --- | --- | --- |\n| Identificación del producto | Codifica únicamente un número GTIN 1D (EAN/UPC) | URI web estandarizada que incorpora GTIN, número de serie y lote | Consolida múltiples etiquetas de embalaje en un único símbolo 2D |\n| Cobro en punto de venta (POS) | Lectura por láser lineal del precio de la referencia | El escáner óptico decodifica la matriz 2D en milisegundos | Cobro más ágil y control automatizado de fechas de caducidad en caja |\n| Cadena de suministro y logística | Precisa códigos secundarios para rastrear lotes y fechas | Incluye directamente fechas de caducidad, lotes y números de serie | Rotación automatizada de inventario y trazabilidad precisa en retiradas de producto |\n| Información para el consumidor | Incompatible con el escaneo directo de cámaras de smartphone | El escaneo móvil abre fichas de producto, alérgenos, reciclaje y manuales | Unifica el escaneo en caja y la interacción con el cliente en un solo código |\n\n### Why One Single 2D Code Replaces Multiple Packaging Symbols\n\n* **For Point-of-Sale (POS) Cashiers**: Modern optical cash registers scan the 2D matrix to ring up the item price in milliseconds.\n* **For Warehouse & Supply Chain Logistics**: Encodes expiration dates, lot numbers, and batch IDs for automated inventory rotation.\n* **For Consumers**: Scanning with a standard smartphone opens mobile product manuals, allergen info, recycling guidelines, and brand stories.",
+    "contentMarkdown": "> **[ES Translation]** By 2027, global retail point-of-sale scanners will transition from traditional 1D UPC barcodes to 2D QR codes powered by the GS1 Digital Link standard. Here is what your business needs to know.\n\n## The End of the 50-Year-Old Linear Barcode\n\nSince 1974, the linear 1D UPC barcode has powered global commerce checkout lines. However, traditional barcodes are limited to encoding only a single Global Trade Item Number (GTIN). The **GS1 Digital Link standard** resolves this limitation.\n\n### What is GS1 Digital Link?\n\nGS1 Digital Link bridges physical products with web standards by embedding the GTIN directly into a standardized web URI structure:\n\n`https://id.brand.com/01/09521141742055/21/SERIAL123?10=BATCH456`\n\n### Comparativa: Código de barras clásico vs GS1 Digital Link\n\n| Aspecto | Código de barras tradicional | Estándar GS1 Digital Link | Impacto práctico |\n| --- | --- | --- | --- |\n| Identificación del producto | Codifica únicamente un número GTIN 1D (EAN/UPC) | URI web estandarizada que incorpora GTIN, número de serie y lote | Consolida múltiples etiquetas de embalaje en un único símbolo 2D |\n| Cobro en punto de venta (POS) | Lectura por láser lineal del precio de la referencia | El escáner óptico decodifica la matriz 2D en milisegundos | Cobro más ágil y control automatizado de fechas de caducidad en caja |\n| Cadena de suministro y logística | Precisa códigos secundarios para rastrear lotes y fechas | Incluye directamente fechas de caducidad, lotes y números de serie | Rotación automatizada de inventario y trazabilidad precisa en retiradas de producto |\n| Información para el consumidor | Incompatible con el escaneo directo de cámaras de smartphone | El escaneo móvil abre fichas de producto, alérgenos, reciclaje y manuales | Unifica el escaneo en caja y la interacción con el cliente en un solo código |\n\n### Why One Single 2D Code Replaces Multiple Packaging Symbols\n\n* **For Point-of-Sale (POS) Cashiers**: Modern optical cash registers scan the 2D matrix to ring up the item price in milliseconds.\n* **For Warehouse & Supply Chain Logistics**: Encodes expiration dates, lot numbers, and batch IDs for automated inventory rotation.\n* **For Consumers**: Scanning with a standard smartphone opens mobile product manuals, allergen info, recycling guidelines, and brand stories.\n\n### Cumplimiento de la sintaxis URI de GS1 1.7.0\nEste artículo hace referencia al estándar oficial de GS1 Digital Link (URI Syntax 1.7.0, ratificado en agosto de 2026). Tenga en cuenta que FreeQRBarcodes.com es una plataforma de visualización y diseño; no sirve como un resolutor de GS1 Digital Link ni genera URIs de GS1 Digital Link válidos.",
     "relatedFAQs": [
       {
         "question": "When does the mandatory GS1 2D barcode transition take place?",
         "answer": "Global retail industry targets (Sunrise 2027) specify that point-of-sale systems worldwide must support 2D barcode scanning by the end of 2027."
+      },
+      {
+        "question": "¿Es FreeQRBarcodes.com un resolutor oficial de GS1 Digital Link?",
+        "answer": "No. FreeQRBarcodes.com es una herramienta de diseño y creación de códigos de barras personalizados. Para un enrutamiento de GS1 Digital Link compatible, validación de sintaxis de URI y resolución oficial, consulte con un resolutor certificado por GS1."
       }
     ],
     "internalLinks": [
       {
-        "label": "Create GS1-Ready Dynamic QR",
-        "url": "/"
+        "label": "Generate Standard Retail Barcodes",
+        "url": "/barcode-generator"
       },
       {
-        "label": "Explore Platform Suite",
-        "url": "/platform/qr-analytics"
+        "label": "Learn About Our Platform",
+        "url": "/about"
       }
     ]
   },
@@ -450,11 +462,11 @@
     ],
     "internalLinks": [
       {
-        "label": "Design Hospitality QR Signs",
-        "url": "/"
+        "label": "Generate Guest WiFi QR Codes",
+        "url": "/wifi-qr-generator"
       },
       {
-        "label": "Check Business Pricing",
+        "label": "Check Platform Features",
         "url": "/pricing"
       }
     ]
@@ -478,12 +490,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Encrypted QR Codes",
-        "url": "/"
+        "label": "Create a Registration vCard QR",
+        "url": "/vcard-qr-generator"
       },
       {
-        "label": "Review Trust & Compliance",
-        "url": "/trust"
+        "label": "Review Security & Compliance",
+        "url": "/security"
       }
     ]
   },
@@ -506,12 +518,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Generate Asset Tag QR Codes",
-        "url": "/"
+        "label": "Generate Asset Tag QR Codes in Bulk",
+        "url": "/bulk-qr-generator"
       },
       {
-        "label": "Explore High-Resolution Vectors",
-        "url": "/"
+        "label": "Generate Linear Barcodes",
+        "url": "/barcode-generator"
       }
     ]
   },
@@ -534,12 +546,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Restaurant Menu QR",
-        "url": "/"
+        "label": "Create a Restaurant Menu QR Code",
+        "url": "/restaurant-menu-qr-generator"
       },
       {
-        "label": "Explore Menu Design Templates",
-        "url": "/templates"
+        "label": "Explore Contactless Dining Solutions",
+        "url": "/solutions/contactless-menu"
       }
     ]
   },
@@ -562,11 +574,11 @@
     ],
     "internalLinks": [
       {
-        "label": "Set Up Dynamic Menu QR",
-        "url": "/"
+        "label": "Generate Menu QR Codes",
+        "url": "/restaurant-menu-qr-generator"
       },
       {
-        "label": "View Feature Comparisons",
+        "label": "Compare Features",
         "url": "/pricing"
       }
     ]
@@ -590,12 +602,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Design Tabletop QR Plaque",
-        "url": "/"
+        "label": "Create Tabletop Restaurant QR Codes",
+        "url": "/restaurant-qr-generator"
       },
       {
-        "label": "Explore Case Studies",
-        "url": "/case-studies"
+        "label": "View Digital Restaurant Guides",
+        "url": "/blog/complete-guide-to-digital-qr-restaurant-menus"
       }
     ]
   },
@@ -618,12 +630,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Event Ticket QR",
-        "url": "/"
+        "label": "Create standard URL QR codes",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "Review Platform Suite",
-        "url": "/platform/qr-analytics"
+        "label": "Explore Event Check-In Solutions",
+        "url": "/solutions/event-ticketing-checkin"
       }
     ]
   },
@@ -646,12 +658,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Generate vCard QR Code",
-        "url": "/"
+        "label": "Create Custom Contact vCards",
+        "url": "/vcard-qr-generator"
       },
       {
-        "label": "View Community & Roadmap",
-        "url": "/community"
+        "label": "Learn About FreeQRBarcodes",
+        "url": "/about"
       }
     ]
   },
@@ -675,7 +687,7 @@
     "internalLinks": [
       {
         "label": "Create Presentation QR Codes",
-        "url": "/"
+        "url": "/url-qr-generator"
       },
       {
         "label": "Read Design Best Practices",
@@ -702,12 +714,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Generate Education QR Codes",
-        "url": "/"
+        "label": "Create Handout Sharing PDF QR Codes",
+        "url": "/pdf-sharing-qr-generator"
       },
       {
-        "label": "Explore Student Pass Presets",
-        "url": "/"
+        "label": "Generate Educational URL QR Codes",
+        "url": "/url-qr-generator"
       }
     ]
   },
@@ -730,12 +742,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Location QR Code",
-        "url": "/"
+        "label": "Generate GPS QR Codes",
+        "url": "/location-qr-generator"
       },
       {
-        "label": "View Interactive Tools",
-        "url": "/"
+        "label": "Create Free Campus WiFi QR Codes",
+        "url": "/wifi-qr-generator"
       }
     ]
   },
@@ -758,8 +770,8 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Classroom Attendance QR",
-        "url": "/"
+        "label": "Create GPS QR Codes for Attendance",
+        "url": "/location-qr-generator"
       },
       {
         "label": "Explore Educational FAQs",
@@ -786,12 +798,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Social Bio QR Code",
-        "url": "/"
+        "label": "Generate Instagram Bio QR Codes",
+        "url": "/instagram-qr-generator"
       },
       {
-        "label": "Explore Color & Design Presets",
-        "url": "/"
+        "label": "Create Custom YouTube QR Codes",
+        "url": "/youtube-qr-generator"
       }
     ]
   },
@@ -814,12 +826,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Design Interactive QR Campaigns",
-        "url": "/"
+        "label": "Design QR Campaigns",
+        "url": "/animated-qr-generator"
       },
       {
-        "label": "Review Marketing Platform",
-        "url": "/marketing-platform"
+        "label": "Review Retail Marketing Guides",
+        "url": "/blog/omnichannel-retail-qr-codes-footfall-to-sales"
       }
     ]
   },
@@ -842,12 +854,12 @@
     ],
     "internalLinks": [
       {
-        "label": "Create Merch Hangtag QR",
-        "url": "/"
+        "label": "Create Social QR Codes",
+        "url": "/instagram-qr-generator"
       },
       {
-        "label": "Explore Design Templates",
-        "url": "/templates"
+        "label": "Explore App Download Solutions",
+        "url": "/solutions/app-download-marketing"
       }
     ]
   }

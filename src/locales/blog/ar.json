@@ -22,11 +22,11 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رمز QR مخصص مجاناً",
-        "url": "/"
+        "label": "Create a URL QR Code",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "قراءة الأسئلة الشائعة",
+        "label": "Read Our FAQs",
         "url": "/faq"
       }
     ]
@@ -54,12 +54,12 @@
     ],
     "internalLinks": [
       {
-        "label": "توليد رمز QR ديناميكي",
-        "url": "/"
+        "label": "Create a Trackable URL QR Code",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "استكشاف منصة التحليلات",
-        "url": "/analytics"
+        "label": "Compare Free vs Paid Features",
+        "url": "/pricing"
       }
     ]
   },
@@ -86,11 +86,11 @@
     ],
     "internalLinks": [
       {
-        "label": "تصميم رمز QR مع شعار مخصص",
-        "url": "/"
+        "label": "Create a Branded URL QR Code",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "عرض الأسئلة الشائعة حول المولد",
+        "label": "View QR Generator FAQ",
         "url": "/faq"
       }
     ]
@@ -114,12 +114,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR تسويقية",
-        "url": "/"
+        "label": "Generate Retail QR Codes in Bulk",
+        "url": "/bulk-qr-generator"
       },
       {
-        "label": "مقارنة المزايا والخطط",
-        "url": "/compare"
+        "label": "Compare Free Plans",
+        "url": "/pricing"
       }
     ]
   },
@@ -142,12 +142,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء بطاقة أعمال رقمية vCard QR",
-        "url": "/"
+        "label": "Create a vCard QR Code",
+        "url": "/vcard-qr-generator"
       },
       {
-        "label": "حلول المؤسسات والشركات",
-        "url": "/enterprise"
+        "label": "Explore Digital Business Card Solutions",
+        "url": "/solutions/digital-business-card"
       }
     ]
   },
@@ -170,12 +170,12 @@
     ],
     "internalLinks": [
       {
-        "label": "تصميم رموز QR للتغليف",
-        "url": "/"
+        "label": "Create a PDF QR Code",
+        "url": "/pdf-qr-generator"
       },
       {
-        "label": "قصص نجاح ودراسات حالة",
-        "url": "/testimonials"
+        "label": "Read Omnichannel Retail Guides",
+        "url": "/blog/omnichannel-retail-qr-codes-footfall-to-sales"
       }
     ]
   },
@@ -189,21 +189,25 @@
     "readingTime": "قراءة في 7 دقائق",
     "author": "فريق تحليلات التسويق الرقمي",
     "intro": "التسويق المطبوع دون تتبع وقياس هو مجرد تخمين وتكلفة مهدورة. تعلم كيفية هيكلة وسوم ومعلمات UTM بشكل احترافي وتهيئة Google Analytics 4 (GA4) لقياس العائد الحقيقي على الإنفاق الإعلاني للحملات الواقعية بدقة متناهية.",
-    "contentMarkdown": "## القواعد الذهبية لهيكلة وسوم UTM في الحملات الواقعية المطبوعة\n\nلمعرفة كيف تساهم اللوحات الإعلانية المطبوعة في الشوارع، والنشرات الترويجية، وأجنحة المعارض في جذب الزوار والعملاء إلى موقعك الإلكتروني، يجب عليك إرفاق وسوم UTM متناسقة بكل رابط لرمز QR ديناميكي.\n\n### التصنيف المعياري لوسوم UTM في رموز QR\n\n* **المصدر (`utm_source`)**: يحدد القناة المادية المحددة (مثل: `billboard`، `flyer`، `trade_show`، `magazine_ad`).\n* **الوسيط (`utm_medium`)**: يُضبط دائماً كـ `qr_code` أو `print_qr` لتسهيل فرز وتجميع قنوات الزيارات الواقعية في تقارير GA4.\n* **اسم الحملة (`utm_campaign`)**: الاسم الترويجي للمبادرة التسويقية (مثل: `summer_sale_2026`، `q3_product_launch`).\n* **المحتوى (`utm_content`)**: لتمييز مواضع الرموز المختلفة (مثل: `front_cover` مقابل `back_cover`، أو `table_stand_01`).\n\n### بناء لوحات قياس مخصصة في GA4 لحملات QR\n\n1. انتقل إلى قسم **الاستكشاف (Explorations)** في Google Analytics 4 وأنشئ تقريراً فارغاً.\n2. أضف أبعاد: **مصدر الجلسة / وسيط الجلسة (Session source / medium)** و **اسم الحملة (Campaign name)**.\n3. أضف مقاييس: **الجلسات المتفاعلة (Engaged sessions)**، و **أحداث التحويل (Conversions)**، و **إجمالي الإيرادات (Total Revenue)**.\n4. قم بتطبيق فلتر لعرض الجلسات التي تحتوي على وسيط `qr_code` فقط للحصول على رؤية شاملة لأداء مطبوعاتك.",
+    "contentMarkdown": "## القواعد الذهبية لهيكلة وسوم UTM في الحملات الواقعية المطبوعة\n\nلمعرفة كيف تساهم اللوحات الإعلانية المطبوعة في الشوارع، والنشرات الترويجية، وأجنحة المعارض في جذب الزوار والعملاء إلى موقعك الإلكتروني، يجب عليك إرفاق وسوم UTM متناسقة بكل رابط لرمز QR ديناميكي.\n\n### التصنيف المعياري لوسوم UTM في رموز QR\n\n* **المصدر (`utm_source`)**: يحدد القناة المادية المحددة (مثل: `billboard`، `flyer`، `trade_show`، `magazine_ad`).\n* **الوسيط (`utm_medium`)**: يُضبط دائماً كـ `qr_code` أو `print_qr` لتسهيل فرز وتجميع قنوات الزيارات الواقعية في تقارير GA4.\n* **اسم الحملة (`utm_campaign`)**: الاسم الترويجي للمبادرة التسويقية (مثل: `summer_sale_2026`، `q3_product_launch`).\n* **المحتوى (`utm_content`)**: لتمييز مواضع الرموز المختلفة (مثل: `front_cover` مقابل `back_cover`، أو `table_stand_01`).\n\n### بناء لوحات قياس مخصصة في GA4 لحملات QR\n\n1. انتقل إلى قسم **الاستكشاف (Explorations)** في Google Analytics 4 وأنشئ تقريراً فارغاً.\n2. أضف أبعاد: **مصدر الجلسة / وسيط الجلسة (Session source / medium)** و **اسم الحملة (Campaign name)**.\n3. أضف مقاييس: **الجلسات المتفاعلة (Engaged sessions)**، و **أحداث التحويل (Conversions)**، و **إجمالي الإيرادات (Total Revenue)**.\n4. قم بتطبيق فلتر لعرض الجلسات التي تحتوي على وسيط `qr_code` فقط للحصول على رؤية شاملة لأداء مطبوعاتك.\n\n### قائمة التحقق لتهيئة GA4 لحملات QR\n1. استخدم حقول UTM القياسية (`utm_source`، `utm_medium`، `utm_campaign`).\n2. حافظ على الأحرف الصغيرة في العلامات لمنع تشتت سجلات الحركة في GA4.\n3. قم بتهيئة الأبعاد المخصصة (Custom Dimensions) في Google Analytics 4 إذا كنت تتبع متغيرات حملة مخصصة.\n4. اعتمد على رموز QR الديناميكية لتتمكن من تعديل المعلمات بعد الطباعة الفعلية.",
     "relatedFAQs": [
       {
         "question": "هل يجب استخدام رموز QR ثابتة أم ديناميكية لتتبع وسوم UTM؟",
         "answer": "استخدم دائماً رموز QR الديناميكية؛ فإذا احتجت لتصحيح خطأ إملائي في وسم UTM بعد طباعة آلاف المنشورات، تتيح لك الرموز الديناميكية تعديل الرابط فوراً دون الحاجة لإعادة الطباعة."
+      },
+      {
+        "question": "هل يمكنني تتبع عمليات مسح QR بدون خدمة إعادة توجيه خارجية؟",
+        "answer": "نعم. من خلال دمج معلمات UTM القياسية مباشرة في رمز QR ثابت، سيتم تسجيل عمليات مسح مباشرة في Google Analytics 4 كإحالات طبيعية أو حملات دون الحاجة لإعادة توجيه وسيطة."
       }
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رمز QR مع وسوم UTM",
-        "url": "/"
+        "label": "Build URL QR Codes with Custom Parameters",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "تفاصيل لوحة التحليلات المتقدمة",
-        "url": "/analytics"
+        "label": "Check Platform Features",
+        "url": "/pricing"
       }
     ]
   },
@@ -226,11 +230,11 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR مع تتبع إعادة الاستهداف",
-        "url": "/"
+        "label": "Create a Trackable URL QR Code",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "مراجعة معايير الخصوصية والأمان",
+        "label": "Review Privacy Policies",
         "url": "/privacy-policy"
       }
     ]
@@ -254,12 +258,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء اختبارات A/B لرموز QR",
-        "url": "/"
+        "label": "Generate URL QR Codes for Testing",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "استكشاف منصة التسويق الذكية",
-        "url": "/compare"
+        "label": "Explore Platform Capabilities",
+        "url": "/pricing"
       }
     ]
   },
@@ -282,11 +286,11 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رمز WiFi QR مجاناً",
-        "url": "/"
+        "label": "Generate a WiFi QR Code",
+        "url": "/wifi-qr-generator"
       },
       {
-        "label": "عرض جميع النماذج والقوالب المجانية",
+        "label": "View All FAQs",
         "url": "/faq"
       }
     ]
@@ -310,12 +314,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رمز QR لتقييمات Google",
-        "url": "/"
+        "label": "Create a Link to Your Review Page",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "استعراض قوالب الطباعة",
-        "url": "/templates"
+        "label": "Explore Google Review Booster",
+        "url": "/solutions/google-review-booster"
       }
     ]
   },
@@ -338,11 +342,11 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رمز QR للدفع الفوري",
-        "url": "/"
+        "label": "Create a Payment QR Code",
+        "url": "/payment-qr-generator"
       },
       {
-        "label": "قراءة وثائق الأمان والامتثال",
+        "label": "Read Security Documentation",
         "url": "/security"
       }
     ]
@@ -366,12 +370,12 @@
     ],
     "internalLinks": [
       {
-        "label": "استكشاف البنية التقنية والأمان",
+        "label": "Explore Technical Security Standards",
         "url": "/security"
       },
       {
-        "label": "مواصفات واجهة برمجة التطبيقات API",
-        "url": "/enterprise"
+        "label": "Visit QR Code Academy",
+        "url": "/academy"
       }
     ]
   },
@@ -385,21 +389,25 @@
     "readingTime": "قراءة في 6 دقائق",
     "author": "فريق الأمن السيبراني وحماية البيانات",
     "intro": "مع الانتشار الهائل لرموز QR في المعاملات اليومية، ظهرت هجمات التصيد الاحتيالي الموجهة عبر الرموز ('Qshing'). تعرف على تكتيكات المهاجمين والحلول التقنية لحماية المستهلكين والمؤسسات.",
-    "contentMarkdown": "## آليات التصيد الاحتيالي عبر رموز QR (Qshing)\n\nنظراً لأن العين البشرية لا تستطيع فك تشفير وفحص البيانات الثنائية داخل مصفوفة البكسل بمجرد النظر، يقوم المهاجمون في بعض الأحيان بلصق ملصقات مزيفة فوق الرموز الحقيقية على عدادات مواقف السيارات أو لوحات الدفع أو طاولات المطاعم.\n\n### أبرز متجهات الهجوم الشائعة وكيفية مواجهتها\n\n1. **الملصقات المادية المتراكبة (Physical Sticker Overlays)**:\n   * وضع ملصق خبيث فوق الرمز الأصلي لتوجيه المستخدم لصفحة دفع مزيفة. الحل: استخدام طباعة ليزرية مدمجة أو فحص دوري للمطبوعات.\n2. **نطاقات التصيد المطابقة بصرياً (Typosquatting Domains)**:\n   * استخدام روابط تشبه النطاق الرسمي للبنك أو المتجر لخداع الزائر لسرقة بيانات الدخول.\n3. **طبقات الفحص والتحقق التلقائي في بوابتنا**:\n   * تقوم بوابة منصة FreeQRBarcodes بفحص الروابط المستهدفة في الوقت الفعلي ومطابقتها مع قواعد بيانات النطاقات الخبيثة والتصيد لحظر أي تحويلات مشبوهة فوراً.",
+    "contentMarkdown": "## آليات التصيد الاحتيالي عبر رموز QR (Qshing)\n\nنظراً لأن العين البشرية لا تستطيع فك تشفير وفحص البيانات الثنائية داخل مصفوفة البكسل بمجرد النظر، يقوم المهاجمون في بعض الأحيان بلصق ملصقات مزيفة فوق الرموز الحقيقية على عدادات مواقف السيارات أو لوحات الدفع أو طاولات المطاعم.\n\n### أبرز متجهات الهجوم الشائعة وكيفية مواجهتها\n\n1. **الملصقات المادية المتراكبة (Physical Sticker Overlays)**:\n   * وضع ملصق خبيث فوق الرمز الأصلي لتوجيه المستخدم لصفحة دفع مزيفة. الحل: استخدام طباعة ليزرية مدمجة أو فحص دوري للمطبوعات.\n2. **نطاقات التصيد المطابقة بصرياً (Typosquatting Domains)**:\n   * استخدام روابط تشبه النطاق الرسمي للبنك أو المتجر لخداع الزائر لسرقة بيانات الدخول.\n3. **طبقات الفحص والتحقق التلقائي في بوابتنا**:\n   * تقوم بوابة منصة FreeQRBarcodes بفحص الروابط المستهدفة في الوقت الفعلي ومطابقتها مع قواعد بيانات النطاقات الخبيثة والتصيد لحظر أي تحويلات مشبوهة فوراً.\n\n### آليات الدفاع الأساسية ضد هجمات Qshing\nلمنع تهديدات المسح الضوئي، يجب على المستخدمين ومشغلي العلامات التجارية اعتماد ضوابط تقنية أساسية: فحص بروتوكول HTTPS لعنوان URL المستهدف، التحقق البصري من النطاق قبل النقر، التحقق من سلامة نطاق QR الديناميكي، وتفعيل المصادقة متعددة العوامل (MFA) للحد من سرقة البيانات الاعتمادية. يقوم موقع FreeQRBarcodes.com بفحص روابط التوجيه الديناميكية تلقائياً مقابل قواعد بيانات التهديدات المعروفة، ولكنه لا يوفر تحليلاً للبرامج الضارة مدعوماً بالذكاء الاصطناعي.",
     "relatedFAQs": [
       {
         "question": "هل يفحص المولد الروابط المدخلة للتأكد من خلوها من البرمجيات الخبيثة؟",
         "answer": "نعم، تفحص بوابتنا الديناميكية الروابط المستهدفة تلقائياً للتحقق من خلوها من النطاقات الخبيثة وأنماط التصيد لحماية المستخدمين النهائيين."
+      },
+      {
+        "question": "هل يوفر FreeQRBarcodes.com خدمة الكشف عن التهديدات بالذكاء الاصطناعي في الوقت الفعلي؟",
+        "answer": "لا. يقوم موقع FreeQRBarcodes.com بإجراء فحص تلقائي قياسي مقابل قواعد بيانات التهديدات الأمنية لعناوين التوجيه الديناميكية، ولا يقدم تحليلاً حياً مدعوماً بالذكاء الاصطناعي أو فحصاً أمنياً لنقاط النهاية."
       }
     ],
     "internalLinks": [
       {
-        "label": "التعرف على معايير الأمان المتبعة",
+        "label": "Learn About Security Standards",
         "url": "/security"
       },
       {
-        "label": "قراءة تقرير مركز الثقة والموثوقية",
-        "url": "/trust"
+        "label": "Read Security Policies",
+        "url": "/security"
       }
     ]
   },
@@ -413,21 +421,25 @@
     "readingTime": "قراءة في 8 دقائق",
     "author": "فريق معايير التجارة الدولية وسلاسل الإمداد",
     "intro": "بحلول عام 2027، ستنتقل ماسحات نقاط البيع بالتجزئة العالمية (POS) من الرموز الشريطية الخطية التقليدية 1D إلى رموز QR ثنائية الأبعاد تعمل بمعيار GS1 Digital Link. إليك ما تحتاج الشركات لمعرفته للاستعداد لهذه النقلة التاريخية.",
-    "contentMarkdown": "## نهاية عصر الباركود الخطي بعد 50 عاماً من الخدمة\n\nمنذ عام 1974، كان الباركود الخطي 1D UPC هو المحرك الأساسي لخطوط الدفع في المتاجر حول العالم. ومع ذلك، تقتصر الرموز التقليدية على تخزين رقم الصنف التجاري العالمي (GTIN) فقط. يأتي **معيار GS1 Digital Link** ليحل هذه المشكلة جذرياً.\n\n### ما هو معيار GS1 Digital Link؟\n\nيقوم المعيار بترميز رابط ويب ذكي يحتوي على رقم الصنف التجاري (GTIN)، والرقم التسلسلي للقطعة، ورقم التشغيلة (Batch/Lot)، وتاريخ انتهاء الصلاحية في رمز QR واحد:\n### مقارنة الباركود التقليدي ومعيار GS1 Digital Link\n\n| الموضوع | طريقة الباركود التقليدي | طريقة معيار GS1 Digital Link | الأثر العملي |\n| --- | --- | --- | --- |\n| تعريف المنتج | ترميز رقم GTIN (UPC/EAN) الخطي فقط | رابط ويب قياسي موحد يدمج رقم GTIN والأرقام التسلسلية ورقم التشغيلة | دمج عدة رموز وملصقات تغليف في رمز ثنائي الأبعاد واحد |\n| فحص نقاط البيع (الكاشير) | مسح ضوئي ليزري خطي لقراءة سعر الصنف الثابت | قراءة سريعة بالمستشعرات البصرية في أجزاء من الثانية | تسريع عمليات الدفع مع التحقق التلقائي الفوري من انتهاء الصلاحية |\n| الخدمات اللوجستية وسلاسل التوريد | الحاجة إلى رموز إضافية منفصلة لتتبع أرقام التشغيلات والتواريخ | ترميز تواريخ الصلاحية ورقم الدفعة وتفاصيل التتبع مباشرة | أتمتة إدارة المخزون والمستودعات وتسهيل عمليات سحب المنتجات بدقة |\n| معلومات وتفاعل المستهلك | غير متوافق مع المسح المباشر بكاميرات الهواتف الذكية | مسح مباشر بالهاتف يفتح صفحات المكونات ومسببات الحساسية ودليل الاستخدام | توحيد الدفع في المتجر وتجربة المستهلك الرقمية في رمز واحد |\n\n### لماذا يستبدل رمز 2D واحد ملصقات التغليف المتعددة؟\n\n* **عند الكاشير**: تقرأ ماسحة المتجر السعر وتتحقق من عدم انتهاء الصلاحية فوراً.\n* **عند المستهلك**: يمسح المتسوق نفس الرمز بهاتفه لفتح صفحة المنتج وقراءة المكونات ومعلومات الحساسية وتفاصيل الاستدامة.\n* **في إدارة المخزون**: تمكين تتبع سلاسل التوريد وسحب المنتجات المعيبة بدقة متناهية.",
+    "contentMarkdown": "## نهاية عصر الباركود الخطي بعد 50 عاماً من الخدمة\n\nمنذ عام 1974، كان الباركود الخطي 1D UPC هو المحرك الأساسي لخطوط الدفع في المتاجر حول العالم. ومع ذلك، تقتصر الرموز التقليدية على تخزين رقم الصنف التجاري العالمي (GTIN) فقط. يأتي **معيار GS1 Digital Link** ليحل هذه المشكلة جذرياً.\n\n### ما هو معيار GS1 Digital Link؟\n\nيقوم المعيار بترميز رابط ويب ذكي يحتوي على رقم الصنف التجاري (GTIN)، والرقم التسلسلي للقطعة، ورقم التشغيلة (Batch/Lot)، وتاريخ انتهاء الصلاحية في رمز QR واحد:\n### مقارنة الباركود التقليدي ومعيار GS1 Digital Link\n\n| الموضوع | طريقة الباركود التقليدي | طريقة معيار GS1 Digital Link | الأثر العملي |\n| --- | --- | --- | --- |\n| تعريف المنتج | ترميز رقم GTIN (UPC/EAN) الخطي فقط | رابط ويب قياسي موحد يدمج رقم GTIN والأرقام التسلسلية ورقم التشغيلة | دمج عدة رموز وملصقات تغليف في رمز ثنائي الأبعاد واحد |\n| فحص نقاط البيع (الكاشير) | مسح ضوئي ليزري خطي لقراءة سعر الصنف الثابت | قراءة سريعة بالمستشعرات البصرية في أجزاء من الثانية | تسريع عمليات الدفع مع التحقق التلقائي الفوري من انتهاء الصلاحية |\n| الخدمات اللوجستية وسلاسل التوريد | الحاجة إلى رموز إضافية منفصلة لتتبع أرقام التشغيلات والتواريخ | ترميز تواريخ الصلاحية ورقم الدفعة وتفاصيل التتبع مباشرة | أتمتة إدارة المخزون والمستودعات وتسهيل عمليات سحب المنتجات بدقة |\n| معلومات وتفاعل المستهلك | غير متوافق مع المسح المباشر بكاميرات الهواتف الذكية | مسح مباشر بالهاتف يفتح صفحات المكونات ومسببات الحساسية ودليل الاستخدام | توحيد الدفع في المتجر وتجربة المستهلك الرقمية في رمز واحد |\n\n### لماذا يستبدل رمز 2D واحد ملصقات التغليف المتعددة؟\n\n* **عند الكاشير**: تقرأ ماسحة المتجر السعر وتتحقق من عدم انتهاء الصلاحية فوراً.\n* **عند المستهلك**: يمسح المتسوق نفس الرمز بهاتفه لفتح صفحة المنتج وقراءة المكونات ومعلومات الحساسية وتفاصيل الاستدامة.\n* **في إدارة المخزون**: تمكين تتبع سلاسل التوريد وسحب المنتجات المعيبة بدقة متناهية.\n\n### الامتثال لمعيار GS1 URI Syntax 1.7.0\nتستند هذه المقالة إلى المعيار الرسمي لـ GS1 Digital Link (إصدار URI Syntax 1.7.0، المعتمد في أغسطس 2026). يرجى ملاحظة أن موقع FreeQRBarcodes.com هو منصة للتصميم والتصور فقط، ولا يعمل كمحلل (Resolver) لمعيار GS1 Digital Link أو منشئ لعناوين compliant GS1 Digital Link URIs.",
     "relatedFAQs": [
       {
         "question": "متى يبدأ التطبيق الإلزامي لمعيار GS1 للرموز ثنائية الأبعاد؟",
         "answer": "حددت الأهداف العالمية لقطاع التجزئة (مبادرة Sunrise 2027) أن جميع أنظمة نقاط البيع حول العالم يجب أن تدعم مسح الرموز ثنائية الأبعاد بالكامل بحلول نهاية عام 2027."
+      },
+      {
+        "question": "هل موقع FreeQRBarcodes.com محلل رسمي لمعيار GS1 Digital Link؟",
+        "answer": "لا. موقع FreeQRBarcodes.com هو أداة لتصميم وإنشاء الرموز الشريطية المخصصة. لتوجيه ومعالجة روابط GS1 Digital Link بشكل متوافق ومعتمد، يرجى استشارة موفر خدمة محلل معتمد من GS1."
       }
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR متوافقة مع معايير GS1",
-        "url": "/"
+        "label": "Generate Standard Retail Barcodes",
+        "url": "/barcode-generator"
       },
       {
-        "label": "استكشاف حلول المؤسسات وسلاسل التوريد",
-        "url": "/enterprise"
+        "label": "Learn About Our Platform",
+        "url": "/about"
       }
     ]
   },
@@ -450,12 +462,12 @@
     ],
     "internalLinks": [
       {
-        "label": "تصميم لافتات QR للفنادق والضيافة",
-        "url": "/"
+        "label": "Generate Guest WiFi QR Codes",
+        "url": "/wifi-qr-generator"
       },
       {
-        "label": "الاطلاع على باقات الأعمال والأسعار",
-        "url": "/compare"
+        "label": "Check Platform Features",
+        "url": "/pricing"
       }
     ]
   },
@@ -478,12 +490,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR مشفرة للعيادات",
-        "url": "/"
+        "label": "Create a Registration vCard QR",
+        "url": "/vcard-qr-generator"
       },
       {
-        "label": "مراجعة معايير الثقة والامتثال",
-        "url": "/trust"
+        "label": "Review Security & Compliance",
+        "url": "/security"
       }
     ]
   },
@@ -506,12 +518,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR لتتبع الأصول والمعدات",
-        "url": "/"
+        "label": "Generate Asset Tag QR Codes in Bulk",
+        "url": "/bulk-qr-generator"
       },
       {
-        "label": "تصدير متجهات ورسومات عالية الدقة (SVG)",
-        "url": "/"
+        "label": "Generate Linear Barcodes",
+        "url": "/barcode-generator"
       }
     ]
   },
@@ -534,12 +546,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رمز QR لقائمة طعام المطعم",
-        "url": "/"
+        "label": "Create a Restaurant Menu QR Code",
+        "url": "/restaurant-menu-qr-generator"
       },
       {
-        "label": "استعراض قوالب تصميم المنيو",
-        "url": "/templates"
+        "label": "Explore Contactless Dining Solutions",
+        "url": "/solutions/contactless-menu"
       }
     ]
   },
@@ -562,12 +574,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إعداد رمز QR ديناميكي لقائمة طعامك",
-        "url": "/"
+        "label": "Generate Menu QR Codes",
+        "url": "/restaurant-menu-qr-generator"
       },
       {
-        "label": "مقارنة المزايا والخيارات",
-        "url": "/compare"
+        "label": "Compare Features",
+        "url": "/pricing"
       }
     ]
   },
@@ -590,12 +602,12 @@
     ],
     "internalLinks": [
       {
-        "label": "تصميم لوحات QR لطاولات المطاعم",
-        "url": "/"
+        "label": "Create Tabletop Restaurant QR Codes",
+        "url": "/restaurant-qr-generator"
       },
       {
-        "label": "استعراض دراسات الحالة والنتائج",
-        "url": "/testimonials"
+        "label": "View Digital Restaurant Guides",
+        "url": "/blog/complete-guide-to-digital-qr-restaurant-menus"
       }
     ]
   },
@@ -618,12 +630,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR لتذاكر الفعاليات",
-        "url": "/"
+        "label": "Create standard URL QR codes",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "استكشاف حلول ومنصات التحليلات",
-        "url": "/analytics"
+        "label": "Explore Event Check-In Solutions",
+        "url": "/solutions/event-ticketing-checkin"
       }
     ]
   },
@@ -646,12 +658,12 @@
     ],
     "internalLinks": [
       {
-        "label": "توليد رمز QR لبطاقة عمل vCard",
-        "url": "/"
+        "label": "Create Custom Contact vCards",
+        "url": "/vcard-qr-generator"
       },
       {
-        "label": "استعراض المجتمع ومخطط التطوير",
-        "url": "/compare"
+        "label": "Learn About FreeQRBarcodes",
+        "url": "/about"
       }
     ]
   },
@@ -674,11 +686,11 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR للعروض التقديمية",
-        "url": "/"
+        "label": "Create Presentation QR Codes",
+        "url": "/url-qr-generator"
       },
       {
-        "label": "دليل أفضل ممارسات التصميم",
+        "label": "Read Design Best Practices",
         "url": "/faq"
       }
     ]
@@ -702,12 +714,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR للتعليم والمدارس",
-        "url": "/"
+        "label": "Create Handout Sharing PDF QR Codes",
+        "url": "/pdf-sharing-qr-generator"
       },
       {
-        "label": "استعراض قوالب المدارس والجامعات",
-        "url": "/"
+        "label": "Generate Educational URL QR Codes",
+        "url": "/url-qr-generator"
       }
     ]
   },
@@ -730,12 +742,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رمز QR جغرافي للموقع",
-        "url": "/"
+        "label": "Generate GPS QR Codes",
+        "url": "/location-qr-generator"
       },
       {
-        "label": "استعراض الأدوات التفاعلية",
-        "url": "/"
+        "label": "Create Free Campus WiFi QR Codes",
+        "url": "/wifi-qr-generator"
       }
     ]
   },
@@ -758,11 +770,11 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رمز QR لحضور الفصول الدراسية",
-        "url": "/"
+        "label": "Create GPS QR Codes for Attendance",
+        "url": "/location-qr-generator"
       },
       {
-        "label": "قراءة الأسئلة الشائعة للقطاع التعليمي",
+        "label": "Explore Educational FAQs",
         "url": "/faq"
       }
     ]
@@ -786,12 +798,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء صفحة روابط التواصل الاجتماعي",
-        "url": "/"
+        "label": "Generate Instagram Bio QR Codes",
+        "url": "/instagram-qr-generator"
       },
       {
-        "label": "استكشاف تخصيص الألوان والتصاميم",
-        "url": "/"
+        "label": "Create Custom YouTube QR Codes",
+        "url": "/youtube-qr-generator"
       }
     ]
   },
@@ -814,12 +826,12 @@
     ],
     "internalLinks": [
       {
-        "label": "تصميم حملات QR تفاعلية",
-        "url": "/"
+        "label": "Design QR Campaigns",
+        "url": "/animated-qr-generator"
       },
       {
-        "label": "مراجعة منصة التسويق الذكية",
-        "url": "/compare"
+        "label": "Review Retail Marketing Guides",
+        "url": "/blog/omnichannel-retail-qr-codes-footfall-to-sales"
       }
     ]
   },
@@ -842,12 +854,12 @@
     ],
     "internalLinks": [
       {
-        "label": "إنشاء رموز QR لبطاقات المنتجات",
-        "url": "/"
+        "label": "Create Social QR Codes",
+        "url": "/instagram-qr-generator"
       },
       {
-        "label": "استعراض قوالب التصميم الجاهزة",
-        "url": "/templates"
+        "label": "Explore App Download Solutions",
+        "url": "/solutions/app-download-marketing"
       }
     ]
   }
