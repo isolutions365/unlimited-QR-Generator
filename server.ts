@@ -3152,7 +3152,7 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
   // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---
   async function startServer() {
     console.log("Starting Express...");
-    const PORT = 3000;
+    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
     console.log("Loading Firebase...");
     console.log("Loading Firestore...");
