@@ -5,7 +5,6 @@
   "Professional QR Creator": "Créateur de QR Code professionnel",
   "Secure WiFi Template Deployment": "Déploiement sécurisé de modèles WiFi",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "Nous avons implémenté et vérifié les niveaux de correction Reed-Solomon, mais le calcul automatisé de la zone de silence garantit que les caméras modernes des usines de traitement peuvent lire les étiquettes sans difficulté.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "Nous avons lancé de nouvelles directives de sécurité personnalisées pour le déploiement de QR Code en entreprise sur des réseaux locaux sécurisés, garantissant une encapsulation des identifiants avec une approche zero-trust.",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "Grâce aux derniers chemins SVG, nous pouvons restituer dynamiquement des codes vectoriels évolutifs sans flou de pixellisation ni décalage de mise en page.",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "Votre profil SaaS Entreprise a été activé avec succès ! Explorez le Creator Studio, personnalisez vos modèles et partagez vos idées de fonctionnalités avec notre communauté.",
   "analytics.colBrowser": "Navigateur client",
@@ -3977,5 +3976,6 @@
   "barcode.table.qrLen": "Jusqu’à 7 089 chiffres / 4 296 alphanumériques",
   "barcode.table.qrInd": "Marketing mobile & emballage connecté",
   "barcode.table.qrScan": "Caméras smartphone & imageurs 2D",
-  "barcode.guide.symbologiesDesc": "Choisir la mauvaise symbologie peut entraîner l’échec des scanners anciens. Consultez ce tableau comparatif pour répondre aux exigences de votre entreprise :"
+  "barcode.guide.symbologiesDesc": "Choisir la mauvaise symbologie peut entraîner l’échec des scanners anciens. Consultez ce tableau comparatif pour répondre aux exigences de votre entreprise :",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Nous avons lancé de nouvelles directives de sécurité personnalisées pour le déploiement de QR Code en entreprise sur des réseaux locaux sécurisés, favorisant une gestion sécurisée des identifiants."
 }

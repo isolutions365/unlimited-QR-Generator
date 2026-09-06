@@ -1204,7 +1204,6 @@
   "Interactive Vector Quality Controller": "Interactive Vector Quality Controller",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.",
   "Secure WiFi Template Deployment": "Secure WiFi Template Deployment",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.",
   "i18n.activeKeyTracking": "Active Key Tracking",
   "i18n.activeLocalizers": "Active Localizers:",
   "i18n.alignment": "Alignment",
@@ -3976,5 +3975,6 @@
   "barcode.table.qrLen": "Up to 7,089 numeric / 4,296 alphanumeric",
   "barcode.table.qrInd": "Mobile Marketing & Smart Packaging",
   "barcode.table.qrScan": "Smartphone Cameras & 2D Area Imagers",
-  "barcode.guide.symbologiesDesc": "Selecting the wrong symbology can cause legacy scanners to fail. Review this structural framework to match your business requirements:"
+  "barcode.guide.symbologiesDesc": "Selecting the wrong symbology can cause legacy scanners to fail. Review this structural framework to match your business requirements:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling."
 }

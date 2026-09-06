@@ -112,7 +112,7 @@ export const EXPECTED_KEYS = [
   "WEB REDIRECT MODULE",
   "Warm Craft",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.",
   "Web Profile",
   "WhatsApp Chat Link (Or Number)",
   "White & Blue",

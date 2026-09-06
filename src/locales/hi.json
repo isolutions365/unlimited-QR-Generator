@@ -1198,7 +1198,6 @@
   "Interactive Vector Quality Controller": "इंटरैक्टिव वेक्टर गुणवत्ता Controller",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "के साथ यह latest SVG paths, हम सकते हैं dynamically रेंडर करें स्केलेबल वेक्टर कोड के बिना कोई भी rasterization blurring या लेआउट shifting.",
   "Secure WiFi Template Deployment": "सुरक्षित WiFi टेम्प्लेट परिनियोजन",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "हम launched नया कस्टमाइज्ड सुरक्षा दिशा-निर्देश के लिए एंटरप्राइज QR परिनियोजन पर सुरक्षित स्थानीय नेटवर्क, सुनिश्चित करना ज़ीरो-ट्रस्ट credential encapsulation.",
   "i18n.activeKeyTracking": "सक्रिय कुंजी ट्रैकिंग",
   "i18n.activeLocalizers": "सक्रिय Localizers:",
   "i18n.alignment": "संरेखण",
@@ -3976,5 +3975,6 @@
   "barcode.table.qrLen": "7,089 संख्यात्मक / 4,296 अक्षरांकीय तक",
   "barcode.table.qrInd": "मोबाइल मार्केटिंग और स्मार्ट पैकेजिंग",
   "barcode.table.qrScan": "स्मार्टफोन कैमरे और 2D इमेजर",
-  "barcode.guide.symbologiesDesc": "गलत सिम्बोलॉजी चुनने से पुराने स्कैनर विफल हो सकते हैं। अपनी व्यावसायिक आवश्यकताओं के अनुसार सही प्रारूप चुनने के लिए इस तुलनात्मक तालिका की समीक्षा करें:"
+  "barcode.guide.symbologiesDesc": "गलत सिम्बोलॉजी चुनने से पुराने स्कैनर विफल हो सकते हैं। अपनी व्यावसायिक आवश्यकताओं के अनुसार सही प्रारूप चुनने के लिए इस तुलनात्मक तालिका की समीक्षा करें:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "हम launched नया कस्टमाइज्ड सुरक्षा दिशा-निर्देश के लिए एंटरप्राइज QR परिनियोजन पर सुरक्षित स्थानीय नेटवर्क, सुरक्षित क्रेडेंशियल हैंडलिंग को बढ़ावा देना।"
 }

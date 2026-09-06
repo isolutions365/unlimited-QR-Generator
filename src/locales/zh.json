@@ -5,7 +5,6 @@
   "Professional QR Creator": "专业 QR 码生成器",
   "Secure WiFi Template Deployment": "安全 Wi-Fi 模板部署",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "我们已经实现并验证了 Reed-Solomon 纠错级别，自动静区计算可确保加工厂的现代摄像头能够顺畅读取标签。",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以确保零信任凭据封装。",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "借助最新的 SVG 路径，我们可以动态渲染可缩放矢量代码，而不会产生任何栅格化模糊或布局偏移。",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "您的 SaaS 企业版个人资料已成功激活！探索创作工作室，自定义模板，并与我们的社区分享功能想法。",
   "analytics.colBrowser": "客户端浏览器",
@@ -3300,7 +3299,6 @@
   "Congratulations! Someone registered using your unique referral link": "恭喜！有人使用您的专属推荐链接完成了注册",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly": "我们已经实现并验证了 Reed-Solomon 纠错级别，自动静区计算可确保加工厂的现代摄像头能够顺畅读取标签",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting": "借助最新的 SVG 路径，我们可以动态渲染可缩放矢量代码，而不会产生任何栅格化模糊或布局偏移",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以确保零信任凭据封装",
   "blog.viewDetails": "查看详情",
   "blog.ctaSubtitle": "为您的业务创建、自定义和管理高转化率的动态二维码。",
   "animations.speedMs": "{{ms}} 毫秒",
@@ -3998,5 +3996,7 @@
   "barcode.table.qrLen": "最多 7,089 数字 / 4,296 字母数字",
   "barcode.table.qrInd": "移动营销与智能包装",
   "barcode.table.qrScan": "智能手机摄像头与 2D 影像扫描器",
-  "barcode.guide.symbologiesDesc": "选择错误的条码制式可能导致传统扫描器读取失败。请参考以下结构化对比表，选择符合您业务需求的技术格式："
+  "barcode.guide.symbologiesDesc": "选择错误的条码制式可能导致传统扫描器读取失败。请参考以下结构化对比表，选择符合您业务需求的技术格式：",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以促进安全凭据处理。",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以促进安全凭据处理。"
 }

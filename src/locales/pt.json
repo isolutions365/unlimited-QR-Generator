@@ -5,7 +5,6 @@
   "Professional QR Creator": "Criador Profissional de QR Code",
   "Secure WiFi Template Deployment": "Implantação Segura de Modelos Wi-Fi",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "Implementamos e verificamos os níveis de correção Reed-Solomon, e o cálculo automático da zona silenciosa garante que câmeras modernas em fábricas leiam etiquetas perfeitamente.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "Lançamos novas diretrizes de segurança personalizadas para implantação de QR corporativo em redes locais seguras, garantindo encapsulamento de credenciais zero-trust.",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "Com os caminhos SVG mais recentes, podemos renderizar dinamicamente códigos vetoriais escaláveis sem desfoque de rasterização ou deslocamento de layout.",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "Seu perfil SaaS Enterprise foi ativado com sucesso! Explore o Creator Studio, personalize modelos e compartilhe ideias de recursos com nossa comunidade.",
   "analytics.colBrowser": "Navegador do Cliente",
@@ -3907,5 +3906,6 @@
   "barcode.table.qrLen": "Até 7.089 números / 4.296 alfanuméricos",
   "barcode.table.qrInd": "Marketing móvel e embalagens inteligentes",
   "barcode.table.qrScan": "Câmeras de smartphone e sensores 2D",
-  "barcode.guide.symbologiesDesc": "Escolher a simbologia errada pode causar falhas em scanners legados. Revise este quadro comparativo para atender às necessidades do seu negócio:"
+  "barcode.guide.symbologiesDesc": "Escolher a simbologia errada pode causar falhas em scanners legados. Revise este quadro comparativo para atender às necessidades do seu negócio:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Lançamos novas diretrizes de segurança personalizadas para implantação de QR corporativo em redes locais seguras, promovendo o manuseio seguro de credenciais."
 }

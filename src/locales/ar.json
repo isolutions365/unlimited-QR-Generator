@@ -1200,7 +1200,6 @@
   "Interactive Vector Quality Controller": "وحدة التحكم التفاعلية بجودة المتجهات",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "باستخدام أحدث مسارات SVG المتجهة، يمكننا تصيير رموز متجهة عالية القابلية للتوسع دون أي تشويش بكسلي أو انزياح في التخطيط.",
   "Secure WiFi Template Deployment": "نشر قوالب شبكات الواي فاي الآمنة",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "أطلقنا إرشادات أمان مخصصة وجديدة لنشر رموز QR للمؤسسات عبر الشبكات المحلية الآمنة مع ضمان تشفير وحماية بيانات الاعتماد وفق معايير انعدام الثقة.",
   "i18n.activeKeyTracking": "تتبع المفاتيح النشطة",
   "i18n.activeLocalizers": "المترجمون والمدققون النشطون:",
   "i18n.alignment": "المحاذاة والاتجاه",
@@ -5016,5 +5015,6 @@
   "barcode.table.qrLen": "حتى 7,089 رقماً / 4,296 حرفاً",
   "barcode.table.qrInd": "التسويق عبر الجوال والتغليف الذكي",
   "barcode.table.qrScan": "كاميرات الهواتف الذكية وماسحات 2D",
-  "barcode.guide.symbologiesDesc": "قد يؤدي اختيار رمز غير متوافق إلى فشل أجهزة المسح القديمة. استعرض هذا الجدول المقارن لتحديد الرمز المناسب لمتطلبات عملك:"
+  "barcode.guide.symbologiesDesc": "قد يؤدي اختيار رمز غير متوافق إلى فشل أجهزة المسح القديمة. استعرض هذا الجدول المقارن لتحديد الرمز المناسب لمتطلبات عملك:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "أطلقنا إرشادات أمان مخصصة وجديدة لنشر رموز QR للمؤسسات عبر الشبكات المحلية الآمنة لتعزيز التعامل الآمن مع بيانات الاعتماد."
 }

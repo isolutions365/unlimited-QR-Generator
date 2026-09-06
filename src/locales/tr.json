@@ -5,7 +5,6 @@
   "Professional QR Creator": "Profesyonel QR Oluşturucu",
   "Secure WiFi Template Deployment": "Güvenli Wi-Fi Şablon Dağıtımı",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "Reed-Solomon düzeltme seviyelerini uyguladık ve doğruladık; otomatik sessiz bölge hesaplaması, üretim tesislerindeki modern kameraların etiketleri sorunsuz bir şekilde okuyabilmesini garanti eder.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "Güvenli yerel ağlarda kurumsal QR dağıtımı için sıfır güven kimlik bilgisi kapsülemesini sağlayan yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk.",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "En son SVG yolları sayesinde, pikselleşme bulanıklığı veya düzen kayması olmadan ölçeklenebilir vektör kodlarını dinamik olarak işleyebiliriz.",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "SaaS Kurumsal profiliniz başarıyla etkinleştirildi! Oluşturucu Stüdyosu'nu keşfedin, şablonları özelleştirin ve topluluğumuzla özellik fikirlerinizi paylaşın.",
   "analytics.colBrowser": "İstemci Tarayıcısı",
@@ -3300,7 +3299,6 @@
   "Congratulations! Someone registered using your unique referral link": "Tebrikler! Birisi sizin benzersiz referans bağlantınızı kullanarak kaydoldu",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly": "Reed-Solomon düzeltme seviyelerini uyguladık ve doğruladık; otomatik sessiz bölge hesaplaması, üretim tesislerindeki modern kameraların etiketleri sorunsuz bir şekilde okuyabilmesini garanti eder",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting": "En son SVG yolları sayesinde, pikselleşme bulanıklığı veya düzen kayması olmadan ölçeklenebilir vektör kodlarını dinamik olarak işleyebiliriz",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation": "Güvenli yerel ağlarda kurumsal QR dağıtımı için sıfır güven kimlik bilgisi kapsülemesini sağlayan yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk",
   "blog.viewDetails": "Detayları Görüntüle",
   "blog.ctaSubtitle": "İşletmeniz için yüksek dönüşümlü, dinamik QR kodları oluşturun, özelleştirin ve yönetin.",
   "animations.speedMs": "{{ms}} ms",
@@ -4070,5 +4068,7 @@
   "barcode.table.qrLen": "7.089 sayısal / 4.296 alfasayısal karaktere kadar",
   "barcode.table.qrInd": "Mobil Pazarlama ve Akıllı Ambalaj",
   "barcode.table.qrScan": "Akıllı Telefon Kameraları ve 2D Tarayıcılar",
-  "barcode.guide.symbologiesDesc": "Yanlış semboloji seçimi eski tarayıcılarda okuma hatasına neden olabilir. İşletme gereksinimlerinize en uygun formatı belirlemek için bu tabloyu inceleyin:"
+  "barcode.guide.symbologiesDesc": "Yanlış semboloji seçimi eski tarayıcılarda okuma hatasına neden olabilir. İşletme gereksinimlerinize en uygun formatı belirlemek için bu tabloyu inceleyin:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Güvenli yerel ağlarda kurumsal QR dağıtımı için güvenli kimlik bilgisi yönetimini teşvik eden yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk.",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Güvenli yerel ağlarda kurumsal QR dağıtımı için güvenli kimlik bilgisi yönetimini teşvik eden yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk"
 }

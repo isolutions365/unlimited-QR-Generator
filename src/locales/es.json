@@ -5,7 +5,6 @@
   "Professional QR Creator": "Generador de Código QR Profesional",
   "Secure WiFi Template Deployment": "Implementación Segura de Plantillas de WiFi",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "Hemos implementado y verificado los niveles de corrección de Reed-Solomon, y el cálculo automático de la zona silenciosa garantiza que las cámaras modernas en fábricas lean las etiquetas sin problemas.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "Lanzamos nuevas directrices de seguridad personalizadas para la implementación empresarial de QR en redes locales seguras, garantizando la encapsulación de credenciales de cero confianza.",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "Con las últimas rutas SVG, podemos renderizar dinámicamente códigos vectoriales escalables sin desenfoque de rasterización ni cambios de diseño.",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "¡Su perfil de SaaS Enterprise se ha activado con éxito! Explore el Creador Studio, personalice plantillas y comparta ideas de funciones con nuestra comunidad.",
   "analytics.colBrowser": "Navegador del cliente",
@@ -3977,5 +3976,6 @@
   "barcode.table.qrLen": "Hasta 7.089 números / 4.296 alfanuméricos",
   "barcode.table.qrInd": "Marketing móvil y empaque inteligente",
   "barcode.table.qrScan": "Cámaras de smartphone e imágenes 2D",
-  "barcode.guide.symbologiesDesc": "Elegir la simbología incorrecta puede provocar fallos en lectores antiguos. Revise este marco estructural para adaptarse a los requisitos de su negocio:"
+  "barcode.guide.symbologiesDesc": "Elegir la simbología incorrecta puede provocar fallos en lectores antiguos. Revise este marco estructural para adaptarse a los requisitos de su negocio:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Lanzamos nuevas directrices de seguridad personalizadas para la implementación empresarial de QR en redes locales seguras, promoviendo el manejo seguro de credenciales."
 }

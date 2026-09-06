@@ -5,7 +5,6 @@
   "Professional QR Creator": "Pembuat QR Profesional",
   "Secure WiFi Template Deployment": "Penerapan Templat Wi-Fi Aman",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "Kami telah mengimplementasikan dan memverifikasi tingkat koreksi Reed-Solomon, dan kalkulasi zona tenang otomatis menjamin kamera modern di pabrik pemrosesan dapat membaca label secara lancar.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, memastikan enkapsulasi kredensial zero-trust.",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "Dengan jalur SVG terbaru, kami dapat merender kode vektor yang dapat diskalakan secara dinamis tanpa efek kabur akibat rasterisasi atau pergeseran tata letak.",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "Profil SaaS Enterprise Anda telah berhasil diaktifkan! Jelajahi Creator Studio, sesuaikan templat, dan bagikan ide fitur dengan komunitas kami.",
   "analytics.colBrowser": "Peramban Klien",
@@ -3300,7 +3299,6 @@
   "Congratulations! Someone registered using your unique referral link": "Selamat! Seseorang mendaftar menggunakan tautan referal unik Anda",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly": "Kami telah mengimplementasikan dan memverifikasi tingkat koreksi Reed-Solomon, dan kalkulasi zona tenang otomatis menjamin kamera modern di pabrik pemrosesan dapat membaca label secara lancar",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting": "Dengan jalur SVG terbaru, kami dapat merender kode vektor yang dapat diskalakan secara dinamis tanpa efek kabur akibat rasterisasi atau pergeseran tata letak",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, memastikan enkapsulasi kredensial zero-trust",
   "blog.viewDetails": "Lihat Detail",
   "blog.ctaSubtitle": "Buat, sesuaikan, dan kelola kode QR dinamis berkonversi tinggi untuk bisnis Anda.",
   "animations.speedMs": "{{ms}} ms",
@@ -4070,5 +4068,7 @@
   "barcode.table.qrLen": "Hingga 7.089 angka / 4.296 alfanumerik",
   "barcode.table.qrInd": "Pemasaran Seluler & Kemasan Pintar",
   "barcode.table.qrScan": "Kamera Ponsel Cerdas & Pencitra 2D",
-  "barcode.guide.symbologiesDesc": "Memilih simbologi yang salah dapat menyebabkan pemindai lama gagal membaca. Tinjau kerangka terstruktur ini untuk menyesuaikan kebutuhan bisnis Anda:"
+  "barcode.guide.symbologiesDesc": "Memilih simbologi yang salah dapat menyebabkan pemindai lama gagal membaca. Tinjau kerangka terstruktur ini untuk menyesuaikan kebutuhan bisnis Anda:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, mendorong penanganan kredensial yang aman.",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, mendorong penanganan kredensial yang aman"
 }

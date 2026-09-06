@@ -5,7 +5,6 @@
   "Professional QR Creator": "전문 QR 크리에이터",
   "Secure WiFi Template Deployment": "보안 Wi-Fi 템플릿 배포",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "리드-솔로몬 오류 복구 수준을 구현 및 검증했으나, 여백 자동 계산 기능을 통해 현대 공장의 카메라가 라벨을 완벽하게 인식할 수 있도록 보장합니다.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "보안 로컬 네트워크의 엔터프라이즈 QR 배포를 위한 새로운 맞춤형 보안 가이드라인을 출범하여 제로 트러스트 자격 증명 캡슐화를 제공합니다.",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "최신 SVG 경로를 사용하여 래스터화 림이나 레이아웃 이탈 없이 확장 가능한 벡터 코드를 동적으로 렌더링할 수 있습니다.",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "SaaS 엔터프라이즈 프로필이 성공적으로 활성화되었습니다! 크리에이터 스튜디오를 탐색하고 템플릿을 맞춤 설정하며 커뮤니티와 기능 아이디어를 공유해 보세요.",
   "analytics.colBrowser": "클라이언트 브라우저",
@@ -3302,7 +3301,6 @@
   "Congratulations! Someone registered using your unique referral link": "축하합니다! 누군가가 당신의 전용 추천 링크를 사용하여 가입했습니다",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly": "리드-솔로몬 오류 복구 수준을 구현 및 검증했으나, 여백 자동 계산 기능을 통해 현대 공장의 카메라가 라벨을 완벽하게 인식할 수 있도록 보장합니다",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting": "최신 SVG 경로를 사용하여 래스터화 림이나 레이아웃 이탈 없이 확장 가능한 벡터 코드를 동적으로 렌더링할 수 있습니다",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation": "보안 로컬 네트워크의 엔터프라이즈 QR 배포를 위한 새로운 맞춤형 보안 가이드라인을 출범하여 제로 트러스트 자격 증명 캡슐화를 제공합니다",
   "blog.viewDetails": "자세히 보기",
   "blog.ctaSubtitle": "비즈니스를 위한 전환율 높은 동적 QR 코드를 생성, 맞춤 설정 및 관리하세요.",
   "company.title": "iSolutions ICo 소개",
@@ -3999,5 +3997,7 @@
   "barcode.table.qrLen": "최대 7,089 숫자 / 4,296 영숫자",
   "barcode.table.qrInd": "모바일 마케팅 및 스마트 패키징",
   "barcode.table.qrScan": "스마트폰 카메라 및 2D 에어리어 이미저",
-  "barcode.guide.symbologiesDesc": "부적절한 심볼로지를 선택하면 구형 스캐너에서 인식 오류가 발생할 수 있습니다. 비즈니스 요구사항에 맞는 최적의 형식을 아래 비교표에서 확인하세요:"
+  "barcode.guide.symbologiesDesc": "부적절한 심볼로지를 선택하면 구형 스캐너에서 인식 오류가 발생할 수 있습니다. 비즈니스 요구사항에 맞는 최적의 형식을 아래 비교표에서 확인하세요:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "보안 로컬 네트워크의 엔터프라이즈 QR 배포를 위한 새로운 맞춤형 보안 가이드라인을 출시하여 안전한 자격 증명 관리를 장려합니다.",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "보안 로컬 네트워크의 엔터프라이즈 QR 배포를 위한 새로운 맞춤형 보안 가이드라인을 출시하여 안전한 자격 증명 관리를 장려합니다"
 }

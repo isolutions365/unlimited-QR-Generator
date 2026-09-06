@@ -5,7 +5,6 @@
   "Professional QR Creator": "プロフェッショナルQRクリエイター",
   "Secure WiFi Template Deployment": "セキュアWi-Fiテンプレートのデプロイ",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "リード・ソロモン符号の誤り訂正レベルを実装・検証済みですが、自動クワイエットゾーン計算により、工場の現代的なカメラでラベルをスムーズに読み取れることが保証されます。",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、ゼロトラストの認証情報カプセル化を実現しました。",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "最新のSVGパスにより、ラスタライズによるぼやけやレイアウトのずれを発生させることなく、スケーラブルなベクトルコードを動的に描画できます。",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "SaaSエンタープライズプロファイルが正常に有効化されました！クリエイタースタジオを探索し、テンプレートをカスタマイズして、コミュニティと機能のアイデアを共有しましょう。",
   "analytics.colBrowser": "クライアントブラウザ",
@@ -3300,7 +3299,6 @@
   "Congratulations! Someone registered using your unique referral link": "おめでとうございます！あなたの専用紹介リンクを使用して誰かが登録しました",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly": "リード・ソロモン符号の誤り訂正レベルを実装・検証済みですが、自動クワイエットゾーン計算により、工場の現代的なカメラでラベルをスムーズに読み取れることが保証されます",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting": "最新のSVGパスにより、ラスタライズによるぼやけやレイアウトのずれを発生させることなく、スケーラブルなベクトルコードを動的に描画できます",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、ゼロトラストの認証情報カプセル化を実現しました",
   "blog.viewDetails": "詳細を見る",
   "blog.ctaSubtitle": "ビジネス向けにコンバージョン率の高い動的QRコードを作成、カスタマイズ、管理。",
   "animations.speedMs": "{{ms}} ミリ秒",
@@ -3998,5 +3996,7 @@
   "barcode.table.qrLen": "最大 7,089数字 / 4,296英数字",
   "barcode.table.qrInd": "モバイルマーケティング＆スマートパッケージング",
   "barcode.table.qrScan": "スマートフォンカメラ＆ 2D エリアイメージャー",
-  "barcode.guide.symbologiesDesc": "不適切なシンボル体系を選択すると、レガシースキャナーで読み取りに失敗する原因となります。業務要件に最適な形式を以下の比較表でご確認ください："
+  "barcode.guide.symbologiesDesc": "不適切なシンボル体系を選択すると、レガシースキャナーで読み取りに失敗する原因となります。業務要件に最適な形式を以下の比較表でご確認ください：",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、安全な認証情報の取り扱いを推進します。",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、安全な認証情報の取り扱いを推進します。"
 }

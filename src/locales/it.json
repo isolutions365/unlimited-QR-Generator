@@ -5,7 +5,6 @@
   "Professional QR Creator": "Creatore QR Professionale",
   "Secure WiFi Template Deployment": "Distribuzione Sicura dei Modelli Wi-Fi",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly.": "Abbiamo implementato e verificato i livelli di correzione Reed-Solomon, e il calcolo automatico della zona di rispetto garantisce che le telecamere moderne nelle fabbriche di lavorazione possano leggere le etichette senza problemi.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation.": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, garantendo l’incapsulamento delle credenziali a tolleranza zero (zero-trust).",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting.": "Con i percorsi SVG più recenti, possiamo eseguire il rendering dinamico di codici vettoriali scalabili senza sfocature da rasterizzazione o spostamenti di layout.",
   "Your SaaS Enterprise profile has been activated successfully! Explore the Creator Studio, customize templates, and share feature ideas with our community.": "Il tuo profilo SaaS Enterprise è stato attivato con successo! Esplora il Creator Studio, personalizza i modelli e condividi idee sulle funzionalità con la nostra community.",
   "analytics.colBrowser": "Browser del client",
@@ -3302,7 +3301,6 @@
   "Congratulations! Someone registered using your unique referral link": "Congratulazioni! Qualcuno si è registrato utilizzando il tuo link referral unico",
   "We have implemented and verified the Reed-Solomon correction levels, but automated quiet zone calculation guarantees that modern cameras on processing factories can read labels seamlessly": "Abbiamo implementato e verificato i livelli di correzione Reed-Solomon, e il calcolo automatico della zona di rispetto garantisce che le telecamere moderne nelle fabbriche di lavorazione possano leggere le etichette senza problemi",
   "With the latest SVG paths, we can dynamically render scalable vector codes without any rasterization blurring or layout shifting": "Con i percorsi SVG più recenti, possiamo eseguire il rendering dinamico di codici vettoriali scalabili senza sfocature da rasterizzazione o spostamenti di layout",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, ensuring zero-trust credential encapsulation": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, garantendo l’incapsulamento delle credenziali a tolleranza zero (zero-trust)",
   "blog.viewDetails": "Mostra Dettagli",
   "blog.ctaSubtitle": "Crea, personalizza e gestisci codici QR dinamici ad alta conversione per la tua azienda.",
   "animations.speedMs": "{{ms}} ms",
@@ -4000,5 +3998,7 @@
   "barcode.table.qrLen": "Fino a 7.089 numeri / 4.296 alfanumerici",
   "barcode.table.qrInd": "Marketing mobile & smart packaging",
   "barcode.table.qrScan": "Fotocamere smartphone e imager 2D",
-  "barcode.guide.symbologiesDesc": "Selezionare la simbologia errata può causare il malfunzionamento dei vecchi scanner. Consulta questo quadro comparativo per le tue esigenze aziendali:"
+  "barcode.guide.symbologiesDesc": "Selezionare la simbologia errata può causare il malfunzionamento dei vecchi scanner. Consulta questo quadro comparativo per le tue esigenze aziendali:",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, promuovendo la gestione sicura delle credenziali.",
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, promuovendo la gestione sicura delle credenziali"
 }
