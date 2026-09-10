@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { ScanLog } from '../types';
+import {
+  resolveScanSync,
+  lookupIpLocation,
+  ResolvedGeoLocation,
+  isPrivateOrReservedIp
+} from '../lib/geoLookupService';
 
 interface D3WorldHeatmapProps {
   scans: ScanLog[];
@@ -11,63 +17,8 @@ interface D3WorldHeatmapProps {
 export default function D3WorldHeatmap({ scans, onHoverCountry, hoveredCountryName }: D3WorldHeatmapProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  // Normalize location strings for heatmap coordination mapping
-  const normalizeCountry = (loc: string): string => {
-    if (!loc) return 'Global';
-    const l = loc.trim().toLowerCase();
-
-    // Mapping aliases/names to standard keys
-    if (l.includes('united states') || l === 'us' || l === 'usa') return 'United States';
-    if (l.includes('united kingdom') || l === 'uk' || l === 'gb' || l.includes('london')) return 'United Kingdom';
-    if (l.includes('germany') || l === 'de' || l.includes('berlin')) return 'Germany';
-    if (l.includes('france') || l === 'fr' || l.includes('paris')) return 'France';
-    if (l.includes('ireland') || l === 'ie' || l.includes('dublin')) return 'Ireland';
-    if (l.includes('japan') || l === 'jp' || l.includes('tokyo')) return 'Japan';
-    if (l.includes('canada') || l === 'ca' || l.includes('toronto')) return 'Canada';
-    if (l.includes('australia') || l === 'au' || l.includes('sydney')) return 'Australia';
-    if (l.includes('india') || l === 'in' || l.includes('delhi') || l.includes('mumbai')) return 'India';
-    if (l.includes('china') || l === 'cn' || l.includes('beijing')) return 'China';
-    if (l.includes('brazil') || l === 'br' || l.includes('rio')) return 'Brazil';
-    if (l.includes('south africa') || l === 'za') return 'South Africa';
-    if (l.includes('italy') || l === 'it' || l.includes('rome')) return 'Italy';
-    if (l.includes('spain') || l === 'es' || l.includes('madrid')) return 'Spain';
-    if (l.includes('mexico') || l === 'mx') return 'Mexico';
-    if (l.includes('saudi arabia') || l === 'sa' || l.includes('riyadh')) return 'Saudi Arabia';
-    if (l.includes('united arab emirates') || l.includes('uae') || l === 'ae' || l.includes('dubai')) return 'United Arab Emirates';
-    if (l.includes('egypt') || l === 'eg' || l.includes('cairo')) return 'Egypt';
-    if (l.includes('turkey') || l === 'tr' || l.includes('istanbul')) return 'Turkey';
-    if (l.includes('pakistan') || l === 'pk' || l.includes('karachi')) return 'Pakistan';
-    if (l.includes('bangladesh') || l === 'bd' || l.includes('dhaka')) return 'Bangladesh';
-    if (l.includes('indonesia') || l === 'id' || l.includes('jakarta')) return 'Indonesia';
-    if (l.includes('russia') || l === 'ru' || l.includes('moscow')) return 'Russia';
-    if (l.includes('argentina') || l === 'ar' || l.includes('buenos aires')) return 'Argentina';
-    if (l.includes('colombia') || l === 'co' || l.includes('bogota')) return 'Colombia';
-    if (l.includes('chile') || l === 'cl' || l.includes('santiago')) return 'Chile';
-    if (l.includes('peru') || l === 'pe' || l.includes('lima')) return 'Peru';
-    if (l.includes('netherlands') || l === 'nl' || l.includes('amsterdam')) return 'Netherlands';
-    if (l.includes('belgium') || l === 'be' || l.includes('brussels')) return 'Belgium';
-    if (l.includes('switzerland') || l === 'ch' || l.includes('zurich')) return 'Switzerland';
-    if (l.includes('sweden') || l === 'se' || l.includes('stockholm')) return 'Sweden';
-    if (l.includes('norway') || l === 'no' || l.includes('oslo')) return 'Norway';
-    if (l.includes('singapore') || l === 'sg') return 'Singapore';
-    if (l.includes('new zealand') || l === 'nz') return 'New Zealand';
-    if (l.includes('south korea') || l === 'kr' || l.includes('seoul')) return 'South Korea';
-    if (l.includes('vietnam') || l === 'vn') return 'Vietnam';
-    if (l.includes('thailand') || l === 'th' || l.includes('bangkok')) return 'Thailand';
-    if (l.includes('malaysia') || l === 'my' || l.includes('kuala lumpur')) return 'Malaysia';
-    if (l.includes('nigeria') || l === 'ng' || l.includes('lagos')) return 'Nigeria';
-    if (l.includes('kenya') || l === 'ke' || l.includes('nairobi')) return 'Kenya';
-    if (l.includes('morocco') || l === 'ma' || l.includes('casablanca')) return 'Morocco';
-    if (l.includes('ukraine') || l === 'ua' || l.includes('kyiv')) return 'Ukraine';
-    if (l.includes('poland') || l === 'pl' || l.includes('warsaw')) return 'Poland';
-    if (l.includes('greece') || l === 'gr' || l.includes('athens')) return 'Greece';
-
-    // Fuzzy check fallback
-    const match = Object.keys(countryCoordinates).find(key => key !== 'Global' && l.includes(key.toLowerCase()));
-    if (match) return match;
-
-    return 'Global';
-  };
+  // Dynamic asynchronous resolved locations by IP
+  const [dynamicIpLocations, setDynamicIpLocations] = useState<Map<string, ResolvedGeoLocation>>(() => new Map());
 
   // Simplified World GeoJSON Coordinates
   const landmasses: any = {
@@ -136,54 +87,45 @@ export default function D3WorldHeatmap({ scans, onHoverCountry, hoveredCountryNa
     ]
   };
 
-  // Precise country coordinates for projection mapping
-  const countryCoordinates: { [key: string]: { coord: [number, number]; code: string } } = {
-    'Canada': { coord: [-106.3468, 56.1304], code: 'CA' },
-    'United States': { coord: [-95.7129, 37.0902], code: 'US' },
-    'Brazil': { coord: [-51.9253, -14.2350], code: 'BR' },
-    'Ireland': { coord: [-8.2439, 53.4129], code: 'IE' },
-    'United Kingdom': { coord: [-3.4360, 55.3781], code: 'UK' },
-    'France': { coord: [2.2137, 46.2276], code: 'FR' },
-    'Germany': { coord: [10.4515, 51.1657], code: 'DE' },
-    'South Africa': { coord: [22.9375, -30.5595], code: 'ZA' },
-    'India': { coord: [78.9629, 20.5937], code: 'IN' },
-    'China': { coord: [104.1954, 35.8617], code: 'CN' },
-    'Japan': { coord: [138.2529, 36.2048], code: 'JP' },
-    'Australia': { coord: [133.7751, -25.2744], code: 'AU' },
-    'Italy': { coord: [12.5674, 41.8719], code: 'IT' },
-    'Spain': { coord: [-3.7492, 40.4637], code: 'ES' },
-    'Mexico': { coord: [-102.5528, 23.6345], code: 'MX' },
-    'Saudi Arabia': { coord: [45.0792, 23.8859], code: 'SA' },
-    'United Arab Emirates': { coord: [53.8478, 23.4241], code: 'AE' },
-    'Egypt': { coord: [30.8025, 26.8206], code: 'EG' },
-    'Turkey': { coord: [35.2433, 38.9637], code: 'TR' },
-    'Pakistan': { coord: [69.3451, 30.3753], code: 'PK' },
-    'Bangladesh': { coord: [90.3563, 23.6850], code: 'BD' },
-    'Indonesia': { coord: [113.9213, -0.7893], code: 'ID' },
-    'Russia': { coord: [105.3188, 61.5240], code: 'RU' },
-    'Argentina': { coord: [-63.6167, -38.4161], code: 'AR' },
-    'Colombia': { coord: [-73.0810, 4.5709], code: 'CO' },
-    'Chile': { coord: [-71.5430, -35.6751], code: 'CL' },
-    'Peru': { coord: [-75.0152, -9.1900], code: 'PE' },
-    'Netherlands': { coord: [5.2913, 52.1326], code: 'NL' },
-    'Belgium': { coord: [4.4699, 50.5039], code: 'BE' },
-    'Switzerland': { coord: [8.2275, 46.8182], code: 'CH' },
-    'Sweden': { coord: [18.6435, 60.1282], code: 'SE' },
-    'Norway': { coord: [8.4689, 60.4720], code: 'NO' },
-    'Singapore': { coord: [103.8198, 1.3521], code: 'SG' },
-    'New Zealand': { coord: [174.8860, -40.9006], code: 'NZ' },
-    'South Korea': { coord: [127.7669, 35.9078], code: 'KR' },
-    'Vietnam': { coord: [108.2772, 14.0583], code: 'VN' },
-    'Thailand': { coord: [100.9925, 15.8700], code: 'TH' },
-    'Malaysia': { coord: [101.9758, 4.2105], code: 'MY' },
-    'Nigeria': { coord: [8.6753, 9.0820], code: 'NG' },
-    'Kenya': { coord: [37.9062, -1.2921], code: 'KE' },
-    'Morocco': { coord: [-9.5572, 31.7917], code: 'MA' },
-    'Ukraine': { coord: [31.1656, 48.3794], code: 'UA' },
-    'Poland': { coord: [19.1451, 51.9194], code: 'PL' },
-    'Greece': { coord: [21.8243, 39.0742], code: 'GR' },
-    'Global': { coord: [0, 20], code: 'GL' }
-  };
+  // Dynamic background IP lookup for public IPs
+  useEffect(() => {
+    let isMounted = true;
+    const unresolvedIps: string[] = [];
+
+    scans.forEach(s => {
+      if (s.ip && !isPrivateOrReservedIp(s.ip) && !dynamicIpLocations.has(s.ip.trim())) {
+        unresolvedIps.push(s.ip.trim());
+      }
+    });
+
+    if (unresolvedIps.length === 0) return;
+
+    // Batch resolve distinct public IPs
+    const uniqueIps = Array.from(new Set(unresolvedIps));
+    const promises = uniqueIps.map(async ip => {
+      const res = await lookupIpLocation(ip);
+      return { ip, res };
+    });
+
+    Promise.all(promises).then(results => {
+      if (!isMounted) return;
+      let hasUpdates = false;
+      setDynamicIpLocations(prev => {
+        const next = new Map(prev);
+        results.forEach(({ ip, res }) => {
+          if (res && !next.has(ip)) {
+            next.set(ip, res);
+            hasUpdates = true;
+          }
+        });
+        return hasUpdates ? next : prev;
+      });
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [scans, dynamicIpLocations]);
 
   useEffect(() => {
     if (!svgRef.current) return;
@@ -239,30 +181,58 @@ export default function D3WorldHeatmap({ scans, onHoverCountry, hoveredCountryNa
       .attr('stroke-linejoin', 'round')
       .style('transition', 'fill 0.3s ease');
 
-    // 5. Aggregate geographical scan counts
-    const counts: { [key: string]: number } = {};
-    scans.forEach(s => {
-      const country = normalizeCountry(s.approxLocation);
-      counts[country] = (counts[country] || 0) + 1;
+    // 5. Dynamic IP & Location Geo-lookup Aggregation
+    // Clusters scans by resolved geographic location to eliminate single-country hotspots
+    const clusterMap = new Map<string, {
+      name: string;
+      city: string;
+      country: string;
+      code: string;
+      coords: [number, number];
+      count: number;
+    }>();
+
+    scans.forEach((scan, index) => {
+      // Prioritize live-resolved IP location if available; otherwise use sync multi-tier resolver
+      const liveResolved = scan.ip ? dynamicIpLocations.get(scan.ip.trim()) : null;
+      const geo = liveResolved || resolveScanSync(scan, index);
+
+      // Key by display name or regional coordinates to group local scans without collapsing entire countries
+      const clusterKey = `${geo.displayName}_${geo.coordinates[0].toFixed(1)}_${geo.coordinates[1].toFixed(1)}`;
+      
+      const existing = clusterMap.get(clusterKey);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        clusterMap.set(clusterKey, {
+          name: geo.displayName,
+          city: geo.city,
+          country: geo.country,
+          code: geo.countryCode,
+          coords: geo.coordinates,
+          count: 1
+        });
+      }
     });
 
-    const maxCount = Math.max(...Object.values(counts), 1);
+    const clusters = Array.from(clusterMap.values()).filter(c => c.count > 0);
+    const maxCount = Math.max(...clusters.map(c => c.count), 1);
 
     // Format geo data with coordinates
-    const geoData = Object.keys(counts).map(name => {
-      const info = countryCoordinates[name] || countryCoordinates['Global'];
-      const count = counts[name];
-      const intensity = count / maxCount;
-      const [projX, projY] = projection(info.coord) || [width / 2, height / 2];
+    const geoData = clusters.map(c => {
+      const intensity = c.count / maxCount;
+      const [projX, projY] = projection(c.coords) || [width / 2, height / 2];
       return {
-        name,
-        count,
+        name: c.name,
+        city: c.city,
+        country: c.country,
+        count: c.count,
         intensity,
         x: projX,
         y: projY,
-        code: info.code
+        code: c.code
       };
-    }).filter(d => d.count > 0);
+    });
 
     // Define colors
     const getHeatColors = (intensity: number) => {
@@ -362,7 +332,7 @@ export default function D3WorldHeatmap({ scans, onHoverCountry, hoveredCountryNa
     }
     repeatPulse();
 
-  }, [scans, onHoverCountry]);
+  }, [scans, dynamicIpLocations, onHoverCountry]);
 
   // Synchronize state trigger hover outlines from external (e.g. leaderboard selection)
   useEffect(() => {
@@ -373,10 +343,30 @@ export default function D3WorldHeatmap({ scans, onHoverCountry, hoveredCountryNa
       .style('fill', '#f1f5f9');
 
     if (hoveredCountryName) {
+      const matchLower = hoveredCountryName.toLowerCase();
       // Find matching landmass to accent slightly
       svgElement.selectAll('.land')
-        .filter((d: any) => d && d.properties && hoveredCountryName.toLowerCase().includes(d.properties.name.toLowerCase()))
+        .filter((d: any) => d && d.properties && matchLower.includes(d.properties.name.toLowerCase()))
         .style('fill', '#e0e7ff');
+
+      // Accentuate matching hotspots
+      svgElement.selectAll('.hotspot')
+        .each(function(d: any) {
+          const isMatch = d && (
+            (d.name && d.name.toLowerCase().includes(matchLower)) ||
+            (d.country && d.country.toLowerCase().includes(matchLower)) ||
+            (d.code && d.code.toLowerCase() === matchLower)
+          );
+          if (isMatch) {
+            d3.select(this).select('.outer-glow')
+              .attr('r', 28)
+              .attr('fill', 'rgba(79, 70, 229, 0.4)');
+          } else {
+            d3.select(this).select('.outer-glow')
+              .attr('r', (item: any) => 10 + item.intensity * 14)
+              .attr('fill', (item: any) => item.intensity > 0.7 ? 'rgba(239, 68, 68, 0.25)' : item.intensity > 0.4 ? 'rgba(249, 115, 22, 0.25)' : 'rgba(79, 70, 229, 0.25)');
+          }
+        });
     }
   }, [hoveredCountryName]);
 
