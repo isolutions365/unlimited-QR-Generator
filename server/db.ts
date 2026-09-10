@@ -231,7 +231,11 @@ async function testConnection() {
       console.log("Firebase connection verified and fully operational.");
     }
   } catch (error: any) {
-    console.log("Firebase startup health check notice:", error?.message || error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    if (errorMsg.toLowerCase().includes('client is offline') || errorMsg.toLowerCase().includes('the client is offline')) {
+      console.error("Please check your Firebase configuration.");
+    }
+    console.log("Firebase startup health check notice:", errorMsg);
     // Note: Do NOT set isFallbackMode = true here so live database queries are always attempted
   }
 }

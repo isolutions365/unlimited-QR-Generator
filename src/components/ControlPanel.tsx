@@ -1219,7 +1219,14 @@ export default function ControlPanel({ currentProject,
                     return '';
                   })()}
                   onChange={e => {
-                    const lat = ((val) => (val || '').trim())(e.target.value);
+                    let lat = ((val) => (val || '').trim())(e.target.value);
+                    if (lat !== '' && lat !== '-' && lat !== '.' && lat !== '-.') {
+                      const num = parseFloat(lat);
+                      if (!isNaN(num)) {
+                        if (num > 90) lat = '90';
+                        else if (num < -90) lat = '-90';
+                      }
+                    }
                     const existingLng = (() => {
                       if (localProject.content?.startsWith('geo:')) {
                         return localProject.content.substring(4).split(',')[1] || '';
@@ -1245,7 +1252,14 @@ export default function ControlPanel({ currentProject,
                     return '';
                   })()}
                   onChange={e => {
-                    const lng = ((val) => (val || '').trim())(e.target.value);
+                    let lng = ((val) => (val || '').trim())(e.target.value);
+                    if (lng !== '' && lng !== '-' && lng !== '.' && lng !== '-.') {
+                      const num = parseFloat(lng);
+                      if (!isNaN(num)) {
+                        if (num > 180) lng = '180';
+                        else if (num < -180) lng = '-180';
+                      }
+                    }
                     const existingLat = (() => {
                       if (localProject.content?.startsWith('geo:')) {
                         return localProject.content.substring(4).split(',')[0] || '';

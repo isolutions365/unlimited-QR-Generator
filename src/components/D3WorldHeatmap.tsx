@@ -14,19 +14,58 @@ export default function D3WorldHeatmap({ scans, onHoverCountry, hoveredCountryNa
   // Normalize location strings for heatmap coordination mapping
   const normalizeCountry = (loc: string): string => {
     if (!loc) return 'Global';
-    const l = ((val) => (val || '').trim())(loc.toLowerCase());
+    const l = loc.trim().toLowerCase();
+
+    // Mapping aliases/names to standard keys
     if (l.includes('united states') || l === 'us' || l === 'usa') return 'United States';
-    if (l.includes('united kingdom') || l === 'uk' || l === 'gb' || l === 'great britain') return 'United Kingdom';
-    if (l.includes('germany') || l === 'de') return 'Germany';
-    if (l.includes('france') || l === 'fr') return 'France';
-    if (l.includes('ireland') || l === 'ie') return 'Ireland';
-    if (l.includes('japan') || l === 'jp') return 'Japan';
-    if (l.includes('canada') || l === 'ca') return 'Canada';
-    if (l.includes('australia') || l === 'au') return 'Australia';
-    if (l.includes('india') || l === 'in') return 'India';
-    if (l.includes('china') || l === 'cn') return 'China';
-    if (l.includes('brazil') || l === 'br') return 'Brazil';
+    if (l.includes('united kingdom') || l === 'uk' || l === 'gb' || l.includes('london')) return 'United Kingdom';
+    if (l.includes('germany') || l === 'de' || l.includes('berlin')) return 'Germany';
+    if (l.includes('france') || l === 'fr' || l.includes('paris')) return 'France';
+    if (l.includes('ireland') || l === 'ie' || l.includes('dublin')) return 'Ireland';
+    if (l.includes('japan') || l === 'jp' || l.includes('tokyo')) return 'Japan';
+    if (l.includes('canada') || l === 'ca' || l.includes('toronto')) return 'Canada';
+    if (l.includes('australia') || l === 'au' || l.includes('sydney')) return 'Australia';
+    if (l.includes('india') || l === 'in' || l.includes('delhi') || l.includes('mumbai')) return 'India';
+    if (l.includes('china') || l === 'cn' || l.includes('beijing')) return 'China';
+    if (l.includes('brazil') || l === 'br' || l.includes('rio')) return 'Brazil';
     if (l.includes('south africa') || l === 'za') return 'South Africa';
+    if (l.includes('italy') || l === 'it' || l.includes('rome')) return 'Italy';
+    if (l.includes('spain') || l === 'es' || l.includes('madrid')) return 'Spain';
+    if (l.includes('mexico') || l === 'mx') return 'Mexico';
+    if (l.includes('saudi arabia') || l === 'sa' || l.includes('riyadh')) return 'Saudi Arabia';
+    if (l.includes('united arab emirates') || l.includes('uae') || l === 'ae' || l.includes('dubai')) return 'United Arab Emirates';
+    if (l.includes('egypt') || l === 'eg' || l.includes('cairo')) return 'Egypt';
+    if (l.includes('turkey') || l === 'tr' || l.includes('istanbul')) return 'Turkey';
+    if (l.includes('pakistan') || l === 'pk' || l.includes('karachi')) return 'Pakistan';
+    if (l.includes('bangladesh') || l === 'bd' || l.includes('dhaka')) return 'Bangladesh';
+    if (l.includes('indonesia') || l === 'id' || l.includes('jakarta')) return 'Indonesia';
+    if (l.includes('russia') || l === 'ru' || l.includes('moscow')) return 'Russia';
+    if (l.includes('argentina') || l === 'ar' || l.includes('buenos aires')) return 'Argentina';
+    if (l.includes('colombia') || l === 'co' || l.includes('bogota')) return 'Colombia';
+    if (l.includes('chile') || l === 'cl' || l.includes('santiago')) return 'Chile';
+    if (l.includes('peru') || l === 'pe' || l.includes('lima')) return 'Peru';
+    if (l.includes('netherlands') || l === 'nl' || l.includes('amsterdam')) return 'Netherlands';
+    if (l.includes('belgium') || l === 'be' || l.includes('brussels')) return 'Belgium';
+    if (l.includes('switzerland') || l === 'ch' || l.includes('zurich')) return 'Switzerland';
+    if (l.includes('sweden') || l === 'se' || l.includes('stockholm')) return 'Sweden';
+    if (l.includes('norway') || l === 'no' || l.includes('oslo')) return 'Norway';
+    if (l.includes('singapore') || l === 'sg') return 'Singapore';
+    if (l.includes('new zealand') || l === 'nz') return 'New Zealand';
+    if (l.includes('south korea') || l === 'kr' || l.includes('seoul')) return 'South Korea';
+    if (l.includes('vietnam') || l === 'vn') return 'Vietnam';
+    if (l.includes('thailand') || l === 'th' || l.includes('bangkok')) return 'Thailand';
+    if (l.includes('malaysia') || l === 'my' || l.includes('kuala lumpur')) return 'Malaysia';
+    if (l.includes('nigeria') || l === 'ng' || l.includes('lagos')) return 'Nigeria';
+    if (l.includes('kenya') || l === 'ke' || l.includes('nairobi')) return 'Kenya';
+    if (l.includes('morocco') || l === 'ma' || l.includes('casablanca')) return 'Morocco';
+    if (l.includes('ukraine') || l === 'ua' || l.includes('kyiv')) return 'Ukraine';
+    if (l.includes('poland') || l === 'pl' || l.includes('warsaw')) return 'Poland';
+    if (l.includes('greece') || l === 'gr' || l.includes('athens')) return 'Greece';
+
+    // Fuzzy check fallback
+    const match = Object.keys(countryCoordinates).find(key => key !== 'Global' && l.includes(key.toLowerCase()));
+    if (match) return match;
+
     return 'Global';
   };
 
@@ -111,6 +150,38 @@ export default function D3WorldHeatmap({ scans, onHoverCountry, hoveredCountryNa
     'China': { coord: [104.1954, 35.8617], code: 'CN' },
     'Japan': { coord: [138.2529, 36.2048], code: 'JP' },
     'Australia': { coord: [133.7751, -25.2744], code: 'AU' },
+    'Italy': { coord: [12.5674, 41.8719], code: 'IT' },
+    'Spain': { coord: [-3.7492, 40.4637], code: 'ES' },
+    'Mexico': { coord: [-102.5528, 23.6345], code: 'MX' },
+    'Saudi Arabia': { coord: [45.0792, 23.8859], code: 'SA' },
+    'United Arab Emirates': { coord: [53.8478, 23.4241], code: 'AE' },
+    'Egypt': { coord: [30.8025, 26.8206], code: 'EG' },
+    'Turkey': { coord: [35.2433, 38.9637], code: 'TR' },
+    'Pakistan': { coord: [69.3451, 30.3753], code: 'PK' },
+    'Bangladesh': { coord: [90.3563, 23.6850], code: 'BD' },
+    'Indonesia': { coord: [113.9213, -0.7893], code: 'ID' },
+    'Russia': { coord: [105.3188, 61.5240], code: 'RU' },
+    'Argentina': { coord: [-63.6167, -38.4161], code: 'AR' },
+    'Colombia': { coord: [-73.0810, 4.5709], code: 'CO' },
+    'Chile': { coord: [-71.5430, -35.6751], code: 'CL' },
+    'Peru': { coord: [-75.0152, -9.1900], code: 'PE' },
+    'Netherlands': { coord: [5.2913, 52.1326], code: 'NL' },
+    'Belgium': { coord: [4.4699, 50.5039], code: 'BE' },
+    'Switzerland': { coord: [8.2275, 46.8182], code: 'CH' },
+    'Sweden': { coord: [18.6435, 60.1282], code: 'SE' },
+    'Norway': { coord: [8.4689, 60.4720], code: 'NO' },
+    'Singapore': { coord: [103.8198, 1.3521], code: 'SG' },
+    'New Zealand': { coord: [174.8860, -40.9006], code: 'NZ' },
+    'South Korea': { coord: [127.7669, 35.9078], code: 'KR' },
+    'Vietnam': { coord: [108.2772, 14.0583], code: 'VN' },
+    'Thailand': { coord: [100.9925, 15.8700], code: 'TH' },
+    'Malaysia': { coord: [101.9758, 4.2105], code: 'MY' },
+    'Nigeria': { coord: [8.6753, 9.0820], code: 'NG' },
+    'Kenya': { coord: [37.9062, -1.2921], code: 'KE' },
+    'Morocco': { coord: [-9.5572, 31.7917], code: 'MA' },
+    'Ukraine': { coord: [31.1656, 48.3794], code: 'UA' },
+    'Poland': { coord: [19.1451, 51.9194], code: 'PL' },
+    'Greece': { coord: [21.8243, 39.0742], code: 'GR' },
     'Global': { coord: [0, 20], code: 'GL' }
   };
 
