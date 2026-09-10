@@ -199,13 +199,6 @@ export default function Generator({ initialProject, onProjectChange, className =
   return (
     <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 ${isDarkMode ? 'dark' : ''} ${className}`}>
       
-      {/* JSON-LD Schemas */}
-      {appSchemas.map((schema, i) => (
-        <script key={i} type="application/ld+json">
-          {JSON.stringify(schema)}
-        </script>
-      ))}
-
       {/* Main Split Layout Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 

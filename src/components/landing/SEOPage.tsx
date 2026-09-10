@@ -128,6 +128,39 @@ export default function SEOPage({
     }
   }, [pageData, seoTitle, metaDescription]);
 
+  useEffect(() => {
+    if (!pageData) return;
+
+    const scriptId = `seo-landing-schemas-${slug}`;
+    let scriptEl = document.getElementById(scriptId) as HTMLScriptElement;
+
+    if (!scriptEl) {
+      scriptEl = document.createElement('script');
+      scriptEl.id = scriptId;
+      scriptEl.type = 'application/ld+json';
+      document.head.appendChild(scriptEl);
+    }
+
+    const schemas: any[] = [
+      buildFAQSchema(),
+      buildSoftwareApplicationSchema(),
+      buildBreadcrumbSchema()
+    ];
+
+    if (slug === 'url-qr-generator') {
+      schemas.push(buildHowToSchema());
+    }
+
+    scriptEl.textContent = JSON.stringify(schemas);
+
+    return () => {
+      const el = document.getElementById(scriptId);
+      if (el) {
+        el.remove();
+      }
+    };
+  }, [slug, locale, pageData]);
+
   if (!pageData) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
@@ -268,14 +301,6 @@ export default function SEOPage({
   return (
     <div className="min-h-screen bg-slate-50/50 text-slate-900 font-sans tracking-normal selection:bg-indigo-100 selection:text-indigo-900">
       
-      {/* Script tag injection for schemas */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFAQSchema()) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildSoftwareApplicationSchema()) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbSchema()) }} />
-      {slug === 'url-qr-generator' && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildHowToSchema()) }} />
-      )}
-
       {/* Hero Header Area */}
       <div className="relative pt-6 pb-20 border-b border-slate-200/60 bg-linear-to-b from-white via-slate-50/50 to-slate-100/20 px-6 overflow-hidden">
         

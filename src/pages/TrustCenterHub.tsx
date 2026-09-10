@@ -1207,7 +1207,7 @@ export default function TrustCenterHub({
         'name': t('trust.isolutionsIco', 'iSolutions ICo'),
         'logo': {
           '@type': 'ImageObject',
-          'url': 'https://www.freeqrbarcodes.com/logo.png'
+          'url': 'https://www.freeqrbarcodes.com/apple-touch-icon.png'
         }
       },
       'mainEntityOfPage': {

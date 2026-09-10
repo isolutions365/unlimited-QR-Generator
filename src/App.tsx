@@ -271,7 +271,8 @@ import {
   Wifi, Mail, Phone, Contact, Globe, Utensils, Facebook, Instagram, Youtube, FileText,
   Wand2, Palette, LayoutTemplate, Play, Image, Megaphone, Smartphone, HelpCircle, BookOpen,
   BarChart3, Info, MessageSquare, Shield, Bell, BellOff, Radio, Sun, Moon, Laptop, Scale, Cpu, Barcode, FileSpreadsheet, Wallet, FormInput, Printer, Copy, Check,
-  Maximize2, Tablet, Download, Search, ExternalLink, FileCheck2, MapPin, TrendingUp, TrendingDown
+  Maximize2, Tablet, Download, Search, ExternalLink, FileCheck2, MapPin, TrendingUp, TrendingDown, Calendar,
+  ZoomIn, ZoomOut
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, STATUS, Step } from 'react-joyride';
@@ -880,8 +881,18 @@ export default function App() {
   const [isWhatsappOverlayOpen, setIsWhatsappOverlayOpen] = useState(false);
   const [whatsappOverlaySearch, setWhatsappOverlaySearch] = useState('');
   const [whatsappOverlayDeviceFilter, setWhatsappOverlayDeviceFilter] = useState<'all' | 'mobile' | 'desktop' | 'tablet'>('all');
+  const [whatsappOverlayDateRange, setWhatsappOverlayDateRange] = useState<'all' | '7d' | '30d' | '90d' | 'custom'>('all');
+  const [whatsappCustomStartDate, setWhatsappCustomStartDate] = useState<string>('');
+  const [whatsappCustomEndDate, setWhatsappCustomEndDate] = useState<string>('');
   const [whatsappSelectedScanDetail, setWhatsappSelectedScanDetail] = useState<ScanLog | null>(null);
   const [simulatedWhatsappScans, setSimulatedWhatsappScans] = useState<ScanLog[]>([]);
+
+  // Interactive Map Zoom & Navigation States
+  const [whatsappMapZoom, setWhatsappMapZoom] = useState<number>(1);
+  const [whatsappMapPan, setWhatsappMapPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDraggingMap, setIsDraggingMap] = useState<boolean>(false);
+  const mapDragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const mapHasDraggedRef = useRef<boolean>(false);
 
   // ESC key listener to close overlay
   useEffect(() => {
@@ -892,6 +903,16 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isWhatsappOverlayOpen]);
+
+  // Reset map zoom and pan whenever overlay closes
+  useEffect(() => {
+    if (!isWhatsappOverlayOpen) {
+      setWhatsappMapZoom(1);
+      setWhatsappMapPan({ x: 0, y: 0 });
+      setIsDraggingMap(false);
+      mapHasDraggedRef.current = false;
+    }
   }, [isWhatsappOverlayOpen]);
 
   // Derived dataset combining real, live simulated, and sample telemetry scan records
@@ -1077,6 +1098,57 @@ export default function App() {
         userId: 'user-wa-10',
         destinationUrl: 'https://wa.me/15550192834',
         referrer: 'Edge Browser'
+      },
+      {
+        id: 'wa-demo-11',
+        projectId: 'whatsapp-proj-1',
+        trackingId: 'tr-wa-111',
+        timestamp: new Date(nowMs - 10 * 24 * 3600 * 1000).toISOString(), // 10 days ago (30d, 90d, all)
+        deviceType: 'Mobile',
+        browser: 'Chrome Mobile 123.0',
+        os: 'Android 13',
+        approxLocation: 'Mumbai, India',
+        city: 'Mumbai',
+        country: 'India',
+        countryCode: 'IN',
+        ip: '103.21.141.2',
+        userId: 'user-wa-11',
+        destinationUrl: 'https://wa.me/15550192834',
+        referrer: 'Google Lens'
+      },
+      {
+        id: 'wa-demo-12',
+        projectId: 'whatsapp-proj-1',
+        trackingId: 'tr-wa-112',
+        timestamp: new Date(nowMs - 45 * 24 * 3600 * 1000).toISOString(), // 45 days ago (90d, all)
+        deviceType: 'Desktop',
+        browser: 'Safari 17.0',
+        os: 'macOS Sonoma',
+        approxLocation: 'Sydney, Australia',
+        city: 'Sydney',
+        country: 'Australia',
+        countryCode: 'AU',
+        ip: '1.1.1.1',
+        userId: 'user-wa-12',
+        destinationUrl: 'https://wa.me/15550192834?text=Support',
+        referrer: 'Direct URL Entry'
+      },
+      {
+        id: 'wa-demo-13',
+        projectId: 'whatsapp-proj-1',
+        trackingId: 'tr-wa-113',
+        timestamp: new Date(nowMs - 120 * 24 * 3600 * 1000).toISOString(), // 120 days ago (all only)
+        deviceType: 'Tablet',
+        browser: 'Chrome Tablet 124.0',
+        os: 'Android 14',
+        approxLocation: 'São Paulo, Brazil',
+        city: 'São Paulo',
+        country: 'Brazil',
+        countryCode: 'BR',
+        ip: '186.200.10.5',
+        userId: 'user-wa-13',
+        destinationUrl: 'https://wa.me/15550192834',
+        referrer: 'Printed QR Code Scan'
       }
     ];
 
@@ -1087,11 +1159,42 @@ export default function App() {
 
   const filteredWhatsappScans = React.useMemo(() => {
     return whatsappScanLogs.filter(s => {
+      // 1. Device filter
       if (whatsappOverlayDeviceFilter !== 'all') {
         if (whatsappOverlayDeviceFilter === 'mobile' && s.deviceType?.toLowerCase() !== 'mobile') return false;
         if (whatsappOverlayDeviceFilter === 'desktop' && s.deviceType?.toLowerCase() !== 'desktop') return false;
         if (whatsappOverlayDeviceFilter === 'tablet' && s.deviceType?.toLowerCase() !== 'tablet') return false;
       }
+
+      // 2. Date-range filter
+      const scanDate = new Date(s.timestamp);
+      const scanTime = scanDate.getTime();
+      const now = new Date();
+      const nowTime = now.getTime();
+
+      if (whatsappOverlayDateRange === '7d') {
+        const sevenDaysAgo = nowTime - 7 * 24 * 60 * 60 * 1000;
+        if (scanTime < sevenDaysAgo) return false;
+      } else if (whatsappOverlayDateRange === '30d') {
+        const thirtyDaysAgo = nowTime - 30 * 24 * 60 * 60 * 1000;
+        if (scanTime < thirtyDaysAgo) return false;
+      } else if (whatsappOverlayDateRange === '90d') {
+        const ninetyDaysAgo = nowTime - 90 * 24 * 60 * 60 * 1000;
+        if (scanTime < ninetyDaysAgo) return false;
+      } else if (whatsappOverlayDateRange === 'custom') {
+        if (whatsappCustomStartDate) {
+          const start = new Date(whatsappCustomStartDate);
+          start.setHours(0, 0, 0, 0);
+          if (scanTime < start.getTime()) return false;
+        }
+        if (whatsappCustomEndDate) {
+          const end = new Date(whatsappCustomEndDate);
+          end.setHours(23, 59, 59, 999);
+          if (scanTime > end.getTime()) return false;
+        }
+      }
+
+      // 3. Search filter
       if (whatsappOverlaySearch.trim()) {
         const q = whatsappOverlaySearch.toLowerCase().trim();
         const matchLoc = s.approxLocation?.toLowerCase().includes(q) || s.city?.toLowerCase().includes(q) || s.country?.toLowerCase().includes(q);
@@ -1102,7 +1205,197 @@ export default function App() {
       }
       return true;
     });
-  }, [whatsappScanLogs, whatsappOverlayDeviceFilter, whatsappOverlaySearch]);
+  }, [whatsappScanLogs, whatsappOverlayDeviceFilter, whatsappOverlaySearch, whatsappOverlayDateRange, whatsappCustomStartDate, whatsappCustomEndDate]);
+
+  const whatsappOverlaySparklineData = React.useMemo(() => {
+    const now = new Date();
+    const nowTime = now.getTime();
+    let startTime = nowTime - 30 * 24 * 60 * 60 * 1000; // default to 30d
+    let endTime = nowTime;
+
+    if (whatsappOverlayDateRange === '7d') {
+      startTime = nowTime - 7 * 24 * 60 * 60 * 1000;
+    } else if (whatsappOverlayDateRange === '30d') {
+      startTime = nowTime - 30 * 24 * 60 * 60 * 1000;
+    } else if (whatsappOverlayDateRange === '90d') {
+      startTime = nowTime - 90 * 24 * 60 * 60 * 1000;
+    } else if (whatsappOverlayDateRange === 'all') {
+      const timestamps = whatsappScanLogs.map(s => new Date(s.timestamp).getTime());
+      if (timestamps.length > 0) {
+        startTime = Math.min(...timestamps);
+      } else {
+        startTime = nowTime - 120 * 24 * 60 * 60 * 1000;
+      }
+    } else if (whatsappOverlayDateRange === 'custom') {
+      if (whatsappCustomStartDate) {
+        const start = new Date(whatsappCustomStartDate);
+        start.setHours(0, 0, 0, 0);
+        startTime = start.getTime();
+      } else {
+        startTime = nowTime - 30 * 24 * 60 * 60 * 1000;
+      }
+      if (whatsappCustomEndDate) {
+        const end = new Date(whatsappCustomEndDate);
+        end.setHours(23, 59, 59, 999);
+        endTime = end.getTime();
+      }
+    }
+
+    if (startTime >= endTime) {
+      startTime = endTime - 24 * 60 * 60 * 1000;
+    }
+
+    const numBuckets = 12;
+    const bucketDuration = (endTime - startTime) / numBuckets;
+    const buckets = Array.from({ length: numBuckets }, (_, i) => ({
+      start: startTime + i * bucketDuration,
+      end: startTime + (i + 1) * bucketDuration,
+      count: 0,
+    }));
+
+    whatsappScanLogs.forEach(s => {
+      const scanTime = new Date(s.timestamp).getTime();
+      
+      // Filter out if they don't match device filter
+      if (whatsappOverlayDeviceFilter !== 'all') {
+        if (whatsappOverlayDeviceFilter === 'mobile' && s.deviceType?.toLowerCase() !== 'mobile') return;
+        if (whatsappOverlayDeviceFilter === 'desktop' && s.deviceType?.toLowerCase() !== 'desktop') return;
+        if (whatsappOverlayDeviceFilter === 'tablet' && s.deviceType?.toLowerCase() !== 'tablet') return;
+      }
+      
+      // Filter out if they don't match search filter
+      if (whatsappOverlaySearch.trim()) {
+        const q = whatsappOverlaySearch.toLowerCase().trim();
+        const matchLoc = s.approxLocation?.toLowerCase().includes(q) || s.city?.toLowerCase().includes(q) || s.country?.toLowerCase().includes(q);
+        const matchDevice = s.deviceType?.toLowerCase().includes(q) || s.os?.toLowerCase().includes(q) || s.browser?.toLowerCase().includes(q);
+        const matchIp = s.ip?.toLowerCase().includes(q);
+        const matchUrl = s.destinationUrl?.toLowerCase().includes(q);
+        const matched = matchLoc || matchDevice || matchIp || matchUrl;
+        if (!matched) return;
+      }
+
+      for (const bucket of buckets) {
+        if (scanTime >= bucket.start && scanTime < bucket.end) {
+          bucket.count++;
+          break;
+        }
+      }
+    });
+
+    return buckets.map((b, idx) => ({
+      index: idx,
+      count: b.count,
+      label: new Date(b.start).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+    }));
+  }, [whatsappScanLogs, whatsappOverlayDateRange, whatsappOverlayDeviceFilter, whatsappOverlaySearch, whatsappCustomStartDate, whatsappCustomEndDate]);
+
+  const countryCoords: Record<string, { x: number; y: number; name: string }> = {
+    US: { x: 65, y: 70, name: 'United States' },
+    CA: { x: 65, y: 50, name: 'Canada' },
+    GB: { x: 145, y: 55, name: 'United Kingdom' },
+    NL: { x: 152, y: 54, name: 'Netherlands' },
+    DE: { x: 156, y: 57, name: 'Germany' },
+    SG: { x: 232, y: 120, name: 'Singapore' },
+    IN: { x: 210, y: 92, name: 'India' },
+    AU: { x: 265, y: 145, name: 'Australia' },
+    BR: { x: 105, y: 118, name: 'Brazil' },
+    ZA: { x: 172, y: 132, name: 'South Africa' },
+    JP: { x: 258, y: 75, name: 'Japan' },
+    AE: { x: 188, y: 88, name: 'United Arab Emirates' },
+  };
+
+  const locationStats = React.useMemo(() => {
+    const stats: Record<string, { count: number; name: string; countryCode: string; lastScan: string }> = {};
+    filteredWhatsappScans.forEach(s => {
+      const code = s.countryCode || 'US';
+      const name = s.country || 'United States';
+      if (!stats[code]) {
+        stats[code] = {
+          count: 0,
+          name,
+          countryCode: code,
+          lastScan: s.timestamp
+        };
+      }
+      stats[code].count++;
+    });
+    return Object.values(stats).sort((a, b) => b.count - a.count);
+  }, [filteredWhatsappScans]);
+
+  const handleCountryClick = (countryCode: string, countryName: string) => {
+    if (mapHasDraggedRef.current) {
+      mapHasDraggedRef.current = false;
+      return;
+    }
+    playAudioSound('click');
+    if (whatsappOverlaySearch.toLowerCase() === countryName.toLowerCase()) {
+      setWhatsappOverlaySearch('');
+    } else {
+      setWhatsappOverlaySearch(countryName);
+    }
+  };
+
+  const handleMapZoomIn = () => {
+    playAudioSound('click');
+    setWhatsappMapZoom(prev => Math.min(3.5, Number((prev + 0.5).toFixed(1))));
+  };
+
+  const handleMapZoomOut = () => {
+    playAudioSound('click');
+    setWhatsappMapZoom(prev => {
+      const next = Math.max(1, Number((prev - 0.5).toFixed(1)));
+      if (next === 1) {
+        setWhatsappMapPan({ x: 0, y: 0 });
+      }
+      return next;
+    });
+  };
+
+  const handleMapZoomReset = () => {
+    playAudioSound('click');
+    setWhatsappMapZoom(1);
+    setWhatsappMapPan({ x: 0, y: 0 });
+  };
+
+  const handleMapPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (whatsappMapZoom <= 1) return;
+    setIsDraggingMap(true);
+    mapDragStartRef.current = { x: e.clientX - whatsappMapPan.x, y: e.clientY - whatsappMapPan.y };
+    mapHasDraggedRef.current = false;
+  };
+
+  const handleMapPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (!isDraggingMap) return;
+    const newX = e.clientX - mapDragStartRef.current.x;
+    const newY = e.clientY - mapDragStartRef.current.y;
+    if (Math.abs(newX - (e.clientX - mapDragStartRef.current.x)) > 3 || Math.abs(newY - (e.clientY - mapDragStartRef.current.y)) > 3 || Math.abs(whatsappMapPan.x - newX) > 3 || Math.abs(whatsappMapPan.y - newY) > 3) {
+      mapHasDraggedRef.current = true;
+    }
+    const maxPanX = (160 * (whatsappMapZoom - 1)) * 1.2;
+    const maxPanY = (90 * (whatsappMapZoom - 1)) * 1.2;
+    setWhatsappMapPan({
+      x: Math.max(-maxPanX, Math.min(maxPanX, newX)),
+      y: Math.max(-maxPanY, Math.min(maxPanY, newY))
+    });
+  };
+
+  const handleMapPointerUp = () => {
+    setIsDraggingMap(false);
+  };
+
+  const handleMapWheel = (e: React.WheelEvent<SVGSVGElement>) => {
+    if (e.deltaY < 0) {
+      setWhatsappMapZoom(prev => Math.min(3.5, Number((prev + 0.25).toFixed(2))));
+    } else if (e.deltaY > 0) {
+      setWhatsappMapZoom(prev => {
+        const next = Math.max(1, Number((prev - 0.25).toFixed(2)));
+        if (next === 1) {
+          setWhatsappMapPan({ x: 0, y: 0 });
+        }
+        return next;
+      });
+    }
+  };
 
   const handleSimulateWhatsappScan = () => {
     playAudioSound('click');
@@ -3801,9 +4094,6 @@ export default function App() {
         {/* Dynamic Homepage SEO & Internal Linking Architecture */}
         {!isLandingPage && (
           <div id="seo-homepage-directory" className="mt-16 border-t border-slate-200/60 pt-16 space-y-16 select-none bg-linear-to-b from-transparent to-slate-50/40 p-6 rounded-3xl">
-            {/* JSON-LD Homepage Schema injection */}
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildHomepageSchema()) }} />
-
             {/* Static vs Dynamic Honest Comparison Section */}
             <StaticVsDynamicComparison
               onSelectStatic={() => {
@@ -4817,12 +5107,6 @@ export default function App() {
 
       {/* Footer with rich SEO directory links */}
       <footer id="app-footer" dir="ltr" className="py-16 border-t border-slate-200 bg-slate-50/50 text-slate-600 mt-12">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(getFooterOrganizationSchema())
-          }}
-        />
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
           {/* Column 1: Branding & Product Hunt */}
           <div id="footer-branding" className="sm:col-span-2 md:col-span-1 space-y-3 text-left">
@@ -5135,8 +5419,14 @@ export default function App() {
               <div className="bg-slate-50 border-b border-slate-200/80 p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs shrink-0">
                 <div className="bg-white p-3 rounded-xl border border-slate-200/60 shadow-3xs">
                   <span className="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">Total Scan Logs</span>
-                  <span className="text-lg font-black text-slate-900 font-mono">{whatsappScanLogs.length}</span>
-                  <span className="text-[10px] text-emerald-600 font-semibold block mt-0.5">Active Tracking</span>
+                  <span className="text-lg font-black text-slate-900 font-mono">
+                    {filteredWhatsappScans.length !== whatsappScanLogs.length 
+                      ? `${filteredWhatsappScans.length} / ${whatsappScanLogs.length}` 
+                      : whatsappScanLogs.length}
+                  </span>
+                  <span className="text-[10px] text-emerald-600 font-semibold block mt-0.5">
+                    {filteredWhatsappScans.length !== whatsappScanLogs.length ? 'Filtered Records' : 'All Records Active'}
+                  </span>
                 </div>
 
                 <div className="bg-white p-3 rounded-xl border border-slate-200/60 shadow-3xs">
@@ -5165,92 +5455,434 @@ export default function App() {
               </div>
 
               {/* Search, Filter & Action Toolbar */}
-              <div className="p-4 bg-white border-b border-slate-200/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shrink-0">
-                {/* Search Bar */}
-                <div className="relative flex-1 max-w-md">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    id="whatsapp-scan-search-input"
-                    value={whatsappOverlaySearch}
-                    onChange={(e) => setWhatsappOverlaySearch(e.target.value)}
-                    placeholder="Filter by city, country, OS, browser, IP or URL..."
-                    className="w-full pl-9 pr-8 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-800 placeholder-slate-400"
-                  />
-                  {whatsappOverlaySearch && (
-                    <button
-                      type="button"
-                      onClick={() => setWhatsappOverlaySearch('')}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-full"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                {/* Filter Pills & Actions */}
-                <div className="flex flex-wrap items-center gap-2">
-                  {/* Device Filter Buttons */}
-                  <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-semibold">
-                    {(['all', 'mobile', 'desktop', 'tablet'] as const).map((filterType) => (
+              <div className="p-4 bg-white border-b border-slate-200/80 space-y-3 shrink-0 animate-fade-in">
+                {/* Search Bar & Primary Actions */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  {/* Search Input */}
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      id="whatsapp-scan-search-input"
+                      value={whatsappOverlaySearch}
+                      onChange={(e) => setWhatsappOverlaySearch(e.target.value)}
+                      placeholder="Filter by city, country, OS, browser, IP or URL..."
+                      className="w-full pl-9 pr-8 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-800 placeholder-slate-400"
+                    />
+                    {whatsappOverlaySearch && (
                       <button
-                        key={filterType}
-                        id={`filter-whatsapp-device-${filterType}`}
-                        onClick={() => {
-                          playAudioSound('click');
-                          setWhatsappOverlayDeviceFilter(filterType);
-                        }}
-                        className={`px-2.5 py-1 rounded-lg capitalize transition-all cursor-pointer text-[11px] ${
-                          whatsappOverlayDeviceFilter === filterType
-                            ? 'bg-white text-emerald-800 shadow-2xs font-extrabold'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
+                        type="button"
+                        onClick={() => setWhatsappOverlaySearch('')}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-full"
                       >
-                        {filterType}
+                        <X className="w-3.5 h-3.5" />
                       </button>
-                    ))}
+                    )}
                   </div>
 
-                  {/* Test Live Scan Button */}
-                  <button
-                    type="button"
-                    id="simulate-whatsapp-scan-btn"
-                    onClick={handleSimulateWhatsappScan}
-                    className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95"
-                    title="Simulate a real-time incoming scan"
-                  >
-                    <Zap className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600" />
-                    <span>Simulate Scan</span>
-                  </button>
+                  {/* Actions */}
+                  <div className="flex items-center gap-2 self-end md:self-auto">
+                    {/* Test Live Scan Button */}
+                    <button
+                      type="button"
+                      id="simulate-whatsapp-scan-btn"
+                      onClick={handleSimulateWhatsappScan}
+                      className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95"
+                      title="Simulate a real-time incoming scan"
+                    >
+                      <Zap className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600" />
+                      <span>Simulate Scan</span>
+                    </button>
 
-                  {/* Export CSV Button */}
-                  <button
-                    type="button"
-                    id="export-whatsapp-scans-csv"
-                    onClick={handleExportWhatsappScansCSV}
-                    className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95"
-                    title="Export scan logs to CSV"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Export CSV</span>
-                  </button>
+                    {/* Export CSV Button */}
+                    <button
+                      type="button"
+                      id="export-whatsapp-scans-csv"
+                      onClick={handleExportWhatsappScansCSV}
+                      className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95"
+                      title="Export scan logs to CSV"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Export CSV</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Filters Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-2 border-t border-slate-100">
+                  {/* Device Filter */}
+                  <div className="flex flex-col gap-1 shrink-0">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Device Type</span>
+                    <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-semibold self-start">
+                      {(['all', 'mobile', 'desktop', 'tablet'] as const).map((filterType) => (
+                        <button
+                          key={filterType}
+                          id={`filter-whatsapp-device-${filterType}`}
+                          onClick={() => {
+                            playAudioSound('click');
+                            setWhatsappOverlayDeviceFilter(filterType);
+                          }}
+                          className={`px-2.5 py-1 rounded-lg capitalize transition-all cursor-pointer text-[11px] ${
+                            whatsappOverlayDeviceFilter === filterType
+                              ? 'bg-white text-emerald-800 shadow-2xs font-extrabold'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          {filterType}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Date Range Picker */}
+                  <div className="flex flex-col gap-1 flex-1 min-w-0">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Date Period & Volume Trend</span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-semibold self-start">
+                        {(['all', '7d', '30d', '90d', 'custom'] as const).map((range) => (
+                          <button
+                            key={range}
+                            id={`filter-whatsapp-date-${range}`}
+                            onClick={() => {
+                              playAudioSound('click');
+                              setWhatsappOverlayDateRange(range);
+                            }}
+                            className={`px-2.5 py-1 rounded-lg capitalize transition-all cursor-pointer text-[11px] ${
+                              whatsappOverlayDateRange === range
+                                ? 'bg-white text-emerald-800 shadow-2xs font-extrabold'
+                                : 'text-slate-600 hover:text-slate-900'
+                            }`}
+                          >
+                            {range === 'all' ? 'All-Time' : range}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Custom Date Inputs inline with picker */}
+                      <AnimatePresence>
+                        {whatsappOverlayDateRange === 'custom' && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.15 }}
+                            className="flex items-center gap-1.5"
+                          >
+                            <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-xl text-[11px]">
+                              <Calendar className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                              <input
+                                type="date"
+                                value={whatsappCustomStartDate}
+                                onChange={(e) => setWhatsappCustomStartDate(e.target.value)}
+                                className="bg-transparent border-0 p-0 focus:ring-0 text-[11px] text-slate-700 outline-hidden w-[105px] font-semibold"
+                                title="Start Date"
+                              />
+                              <span className="text-slate-400 font-bold mx-0.5">to</span>
+                              <input
+                                type="date"
+                                value={whatsappCustomEndDate}
+                                onChange={(e) => setWhatsappCustomEndDate(e.target.value)}
+                                className="bg-transparent border-0 p-0 focus:ring-0 text-[11px] text-slate-700 outline-hidden w-[105px] font-semibold"
+                                title="End Date"
+                              />
+                              {(whatsappCustomStartDate || whatsappCustomEndDate) && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setWhatsappCustomStartDate('');
+                                    setWhatsappCustomEndDate('');
+                                  }}
+                                  className="text-slate-400 hover:text-slate-600 p-0.5 rounded-full ml-1"
+                                  title="Clear Custom Dates"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {/* Mini Sparkline Chart */}
+                      <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-2.5 py-1 text-slate-700 h-[30px] shadow-3xs hover:bg-slate-100/50 transition-all">
+                        <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Volume:</span>
+                        <div className="w-[80px] h-[18px] flex items-end gap-[2.5px]">
+                          {whatsappOverlaySparklineData.map((d) => {
+                            const maxVal = Math.max(...whatsappOverlaySparklineData.map((x) => x.count), 1);
+                            const percent = (d.count / maxVal) * 100;
+                            return (
+                              <div
+                                key={d.index}
+                                className="flex-1 bg-emerald-500/80 rounded-xs transition-all duration-300 hover:bg-emerald-600 cursor-help"
+                                style={{ height: `${Math.max(percent, 10)}%` }}
+                                title={`${d.count} scans near ${d.label}`}
+                              />
+                            );
+                          })}
+                        </div>
+                        <span className="text-[9px] font-mono font-black text-emerald-800 bg-emerald-50 border border-emerald-200 px-1 py-0.5 rounded-sm">
+                          {whatsappOverlaySparklineData.reduce((acc, x) => acc + x.count, 0)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Scan Log Items List */}
-              <div id="whatsapp-scans-list" className="p-4 overflow-y-auto flex-1 space-y-3 min-h-[280px]">
+              {/* Modal Body with Map & Scan Log list */}
+              <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-[350px]">
+                {/* SVG/d3 Scan Distribution Map Visualizer */}
+                <div className="lg:w-[320px] xl:w-[360px] border-b lg:border-b-0 lg:border-r border-slate-200/80 bg-slate-50/50 p-4 flex flex-col shrink-0 overflow-y-auto">
+                  <div className="flex items-center justify-between mb-3 shrink-0">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Scan Distribution Map</span>
+                    <span className="text-[9px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full">
+                      {locationStats.length} Country Hubs
+                    </span>
+                  </div>
+
+                  {/* World Projection Map Container */}
+                  <div className="relative bg-slate-900 border border-slate-800 rounded-2xl p-2.5 overflow-hidden shadow-inner h-[210px] flex flex-col justify-between shrink-0">
+                    {/* Top Status & Legend */}
+                    <div className="absolute top-1.5 left-2 z-10 flex flex-col select-none">
+                      <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider">Interactive Live Nodes</span>
+                      <span className="text-[9px] font-semibold text-emerald-400">Click node to filter</span>
+                    </div>
+
+                    {/* Floating Zoom & Navigation Controls */}
+                    <div 
+                      id="whatsapp-map-zoom-controls"
+                      className="absolute top-1.5 right-2 z-20 flex items-center gap-0.5 bg-slate-950/85 backdrop-blur-xs border border-slate-700/80 rounded-lg p-0.5 shadow-md select-none"
+                    >
+                      {/* Zoom Out Button */}
+                      <button
+                        type="button"
+                        onClick={handleMapZoomOut}
+                        disabled={whatsappMapZoom <= 1}
+                        id="whatsapp-map-zoom-out"
+                        className="w-5 h-5 flex items-center justify-center rounded text-slate-300 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-300 transition-all cursor-pointer disabled:cursor-not-allowed"
+                        title="Zoom out (-)"
+                        aria-label="Zoom out"
+                      >
+                        <ZoomOut className="w-3 h-3" />
+                      </button>
+
+                      {/* Zoom Level Reset / Indicator */}
+                      <button
+                        type="button"
+                        onClick={handleMapZoomReset}
+                        id="whatsapp-map-zoom-reset-btn"
+                        className="px-1 h-5 flex items-center justify-center rounded text-[9px] font-mono font-bold text-emerald-400 hover:bg-slate-800 transition-all cursor-pointer"
+                        title="Click to reset zoom (100%)"
+                        aria-label="Reset zoom"
+                      >
+                        {Math.round(whatsappMapZoom * 100)}%
+                      </button>
+
+                      {/* Zoom In Button */}
+                      <button
+                        type="button"
+                        onClick={handleMapZoomIn}
+                        disabled={whatsappMapZoom >= 3.5}
+                        id="whatsapp-map-zoom-in"
+                        className="w-5 h-5 flex items-center justify-center rounded text-slate-300 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-300 transition-all cursor-pointer disabled:cursor-not-allowed"
+                        title="Zoom in (+)"
+                        aria-label="Zoom in"
+                      >
+                        <ZoomIn className="w-3 h-3" />
+                      </button>
+
+                      {/* Reset icon button if zoomed or panned */}
+                      {(whatsappMapZoom > 1 || whatsappMapPan.x !== 0 || whatsappMapPan.y !== 0) && (
+                        <button
+                          type="button"
+                          onClick={handleMapZoomReset}
+                          id="whatsapp-map-zoom-reset"
+                          className="w-5 h-5 flex items-center justify-center rounded text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-all border-l border-slate-700/80 pl-0.5 ml-0.5"
+                          title="Reset view (1.0x)"
+                          aria-label="Reset view"
+                        >
+                          <RotateCcw className="w-2.5 h-2.5" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* SVG Map Canvas */}
+                    <div className="w-full h-full relative mt-2 overflow-hidden rounded-xl">
+                      <svg 
+                        viewBox="0 0 320 180" 
+                        className={`w-full h-full text-slate-800 select-none touch-none ${
+                          whatsappMapZoom > 1 ? (isDraggingMap ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-default'
+                        }`}
+                        onPointerDown={handleMapPointerDown}
+                        onPointerMove={handleMapPointerMove}
+                        onPointerUp={handleMapPointerUp}
+                        onPointerLeave={handleMapPointerUp}
+                        onWheel={handleMapWheel}
+                      >
+                        {/* High-tech grid background lines */}
+                        <defs>
+                          <pattern id="map-grid" width="16" height="16" patternUnits="userSpaceOnUse">
+                            <path d="M 16 0 L 0 0 0 16" fill="none" stroke="#ffffff" strokeWidth="0.5" strokeOpacity="0.04" />
+                          </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#map-grid)" />
+
+                        {/* Zoomable & Pannable Group */}
+                        <g
+                          transform={`translate(${whatsappMapPan.x}, ${whatsappMapPan.y}) scale(${whatsappMapZoom})`}
+                          style={{
+                            transformOrigin: '160px 90px',
+                            transition: isDraggingMap ? 'none' : 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                          }}
+                        >
+                          {/* Simplified Continent Grids/Silhouettes for visual perspective */}
+                          {/* North America */}
+                          <path d="M 25,35 L 75,35 L 90,60 L 70,80 L 45,80 L 30,55 Z" className="fill-slate-800/60 hover:fill-slate-800 transition-all duration-300" />
+                          {/* South America */}
+                          <path d="M 75,85 L 95,85 L 105,110 L 95,145 L 75,115 Z" className="fill-slate-800/60 hover:fill-slate-800 transition-all duration-300" />
+                          {/* Europe */}
+                          <path d="M 125,40 L 165,40 L 160,65 L 130,65 L 120,50 Z" className="fill-slate-800/60 hover:fill-slate-800 transition-all duration-300" />
+                          {/* Africa */}
+                          <path d="M 130,70 L 160,70 L 170,90 L 160,125 L 140,120 L 125,100 Z" className="fill-slate-800/60 hover:fill-slate-800 transition-all duration-300" />
+                          {/* Asia */}
+                          <path d="M 165,45 L 255,45 L 260,90 L 220,110 L 175,85 Z" className="fill-slate-800/60 hover:fill-slate-800 transition-all duration-300" />
+                          {/* Oceania */}
+                          <path d="M 235,120 L 275,120 L 265,145 L 235,140 Z" className="fill-slate-800/60 hover:fill-slate-800 transition-all duration-300" />
+
+                          {/* Connection Lines from central telemetry hub */}
+                          {locationStats.map((stat, idx) => {
+                            const coords = countryCoords[stat.countryCode] || { x: 160, y: 90 };
+                            return (
+                              <line
+                                key={`line-${idx}`}
+                                x1="160"
+                                y1="90"
+                                x2={coords.x}
+                                y2={coords.y}
+                                stroke="#10b981"
+                                strokeWidth="0.5"
+                                strokeDasharray="2,3"
+                                strokeOpacity={0.15}
+                              />
+                            );
+                          })}
+
+                          {/* Interactive Scan Nodes */}
+                          {locationStats.map((stat) => {
+                            const coords = countryCoords[stat.countryCode] || { x: 160, y: 90 };
+                            const isCurrentlyFiltered = whatsappOverlaySearch.toLowerCase() === stat.name.toLowerCase();
+                            
+                            return (
+                              <g
+                                key={stat.countryCode}
+                                className="cursor-pointer group"
+                                onClick={() => handleCountryClick(stat.countryCode, stat.name)}
+                              >
+                                <title>{`${stat.name} (${stat.countryCode}): ${stat.count} scans - Click to filter`}</title>
+                                {/* Pulse Effect Rings */}
+                                <circle
+                                  cx={coords.x}
+                                  cy={coords.y}
+                                  r={isCurrentlyFiltered ? 10 : 6}
+                                  className={`fill-none stroke-emerald-400 stroke-[1.5] transition-all duration-1000 ${
+                                    stat.count > 0 ? 'animate-ping' : ''
+                                  }`}
+                                  opacity={isCurrentlyFiltered ? 0.8 : 0.4}
+                                  style={{ transformOrigin: `${coords.x}px ${coords.y}px`, animationDuration: '2.5s' }}
+                                />
+                                
+                                {/* Inner Solid Node */}
+                                <circle
+                                  cx={coords.x}
+                                  cy={coords.y}
+                                  r={isCurrentlyFiltered ? 4.5 : 3}
+                                  className={`transition-all duration-300 ${
+                                    isCurrentlyFiltered 
+                                      ? 'fill-emerald-400 stroke-white stroke-2 shadow-md' 
+                                      : 'fill-emerald-500 hover:fill-emerald-400 group-hover:scale-125'
+                                  }`}
+                                />
+                              </g>
+                            );
+                          })}
+                        </g>
+                      </svg>
+                    </div>
+
+                    {/* Footer Status Indicators */}
+                    {whatsappMapZoom > 1 ? (
+                      <div className="absolute bottom-1.5 left-2 z-10 flex items-center gap-1.5 text-[8px] font-mono text-emerald-300 bg-slate-950/85 backdrop-blur-xs border border-emerald-800/60 px-1.5 py-0.5 rounded-full select-none shadow-xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span>DRAG TO PAN • {Math.round(whatsappMapZoom * 100)}%</span>
+                      </div>
+                    ) : (
+                      <div className="absolute bottom-1.5 left-2 text-slate-500 font-mono text-[8px] tracking-widest select-none">
+                        PROJECTION: EQUIRECTANGULAR
+                      </div>
+                    )}
+                    <div className="absolute bottom-1.5 right-2 text-slate-500 font-mono text-[8px] tracking-widest text-right shrink-0 select-none">
+                      SYS STATUS: ONLINE
+                    </div>
+                  </div>
+
+                  {/* Location Stats List (Sidepanel) */}
+                  <div className="mt-4 flex-1 space-y-2 min-h-0 overflow-y-auto">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Top Scanned Countries</span>
+                    
+                    {locationStats.length === 0 ? (
+                      <p className="text-[11px] text-slate-400 italic">No locations recorded</p>
+                    ) : (
+                      <div className="space-y-1.5">
+                        {locationStats.map((stat) => {
+                          const isCurrentlyFiltered = whatsappOverlaySearch.toLowerCase() === stat.name.toLowerCase();
+                          return (
+                            <button
+                              key={stat.countryCode}
+                              type="button"
+                              onClick={() => handleCountryClick(stat.countryCode, stat.name)}
+                              className={`w-full flex items-center justify-between p-2 rounded-xl border transition-all text-left text-xs ${
+                                isCurrentlyFiltered
+                                  ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900 shadow-3xs font-extrabold'
+                                  : 'bg-white border-slate-200/60 hover:bg-slate-50 text-slate-700'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className="text-slate-400 font-mono font-bold text-[10px] w-5 text-center bg-slate-100 py-0.5 rounded-sm uppercase shrink-0">
+                                  {stat.countryCode}
+                                </span>
+                                <span className="font-semibold truncate">{stat.name}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5 shrink-0 ml-1">
+                                <span className="font-mono text-[10px] bg-slate-100 px-1.5 py-0.5 rounded-md text-slate-600 font-bold">
+                                  {stat.count}x
+                                </span>
+                                {isCurrentlyFiltered && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Scan Log Items List */}
+                <div id="whatsapp-scans-list" className="p-4 overflow-y-auto flex-1 space-y-3 min-h-[280px]">
                 {filteredWhatsappScans.length === 0 ? (
                   <div className="text-center py-12 px-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                     <Search className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                    <p className="text-sm font-extrabold text-slate-700">No scan logs matched your search</p>
-                    <p className="text-xs text-slate-500 mt-1">Try clearing your search query or switching device filters.</p>
+                    <p className="text-sm font-extrabold text-slate-700">No scan logs matched your filters</p>
+                    <p className="text-xs text-slate-500 mt-1">Try clearing your search query, switching device filters, or selecting a broader time period.</p>
                     <button
                       type="button"
                       onClick={() => {
                         setWhatsappOverlaySearch('');
                         setWhatsappOverlayDeviceFilter('all');
+                        setWhatsappOverlayDateRange('all');
+                        setWhatsappCustomStartDate('');
+                        setWhatsappCustomEndDate('');
                       }}
-                      className="mt-3 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 rounded-lg"
+                      className="mt-3 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 rounded-lg cursor-pointer"
                     >
                       Reset Filters
                     </button>
@@ -5390,6 +6022,7 @@ export default function App() {
                     );
                   })
                 )}
+                </div>
               </div>
 
               {/* Modal Footer */}
