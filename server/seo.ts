@@ -1002,46 +1002,6 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute, locale
     });
   }
 
-  // Add HowTo schema for URL QR generator
-  if (slug === 'url-qr-generator') {
-    schemas.push({
-      "@type": "HowTo",
-      "name": "How to Create a URL QR Code",
-      "description": "Step-by-step instructions for creating a custom styled URL QR code with logos, colors, and scan counts.",
-      "totalTime": "PT3M",
-      "step": [
-        {
-          "@type": "HowToStep",
-          "position": 1,
-          "name": "Input Destination Link",
-          "text": "Paste your complete target URL into the input field, including the http:// or https:// protocol.",
-          "url": pageUrl
-        },
-        {
-          "@type": "HowToStep",
-          "position": 2,
-          "name": "Select Branding & Colors",
-          "text": "Choose a stylish linear gradient or solid color, custom eye shapes, and pixel patterns.",
-          "url": pageUrl
-        },
-        {
-          "@type": "HowToStep",
-          "position": 3,
-          "name": "Embed Centerpiece Logo",
-          "text": "Upload your brand logo or select standard social icons with High error correction settings.",
-          "url": pageUrl
-        },
-        {
-          "@type": "HowToStep",
-          "position": 4,
-          "name": "Export & Print Layout",
-          "text": "Download the code as high-resolution PNG, or scalable vector SVG/PDF.",
-          "url": pageUrl
-        }
-      ]
-    });
-  }
-
   return {
     "@context": "https://schema.org",
     "@graph": schemas

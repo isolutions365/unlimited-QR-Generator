@@ -3,6 +3,7 @@ import { Locale, SUPPORTED_LOCALES, extractLocaleAndPath, isRtlLocale } from './
 import { formatICU, ICUValues } from './icuFormatter';
 import * as formatters from './localeFormatter';
 import { EXPECTED_KEYS, validateLocaleDictionary, LocaleReport, generateFullReport, ValidationReport } from './i18nValidator';
+import { i18n } from '../i18n';
 import en from '../locales/en.json';
 import ar from '../locales/ar.json';
 import ur from '../locales/ur.json';
@@ -126,8 +127,6 @@ Object.entries(enDictionary).forEach(([key, value]) => {
     englishToKeyMap[(((val) => (val || '').trim())(value)).toLowerCase()] = key;
   }
 });
-
-import { i18n } from '../i18n';
 
 interface I18nContextType {
   locale: Locale;
@@ -427,10 +426,30 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useTranslation() {
+export function useTranslation(): I18nContextType {
   const context = useContext(I18nContext);
   if (context === undefined) {
-    throw new Error('useTranslation must be used within an I18nProvider');
+    return {
+      locale: 'en' as Locale,
+      changeLocale: () => {},
+      t: (key: TKey, defaultText?: string) => defaultText || key,
+      isLoading: false,
+      formatDate: (d: any) => String(d),
+      formatTime: (d: any) => String(d),
+      formatNumber: (n: any) => String(n),
+      formatPercent: (n: any) => `${n}%`,
+      formatCurrency: (n: any) => `$${n}`,
+      formatRelativeTime: (n: any) => `${n}`,
+      getRelativeTimeString: (d: any) => String(d),
+      formatDimensions: (w: any, h: any, u?: string) => `${w} × ${h} ${u || 'px'}`,
+      formatFileSize: (b: any) => `${b} B`,
+      formatDateLabel: (d: any) => String(d),
+      requestedKeys: [],
+      loadedDictionaries: dictionaryCache,
+      dictionary: enDictionary,
+      loadAllDictionariesForAnalysis: async () => translations as any,
+      runValidationReport: async () => ({}) as any,
+    };
   }
   return context;
 }

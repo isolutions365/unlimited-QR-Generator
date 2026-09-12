@@ -147,10 +147,6 @@ export default function SEOPage({
       buildBreadcrumbSchema()
     ];
 
-    if (slug === 'url-qr-generator') {
-      schemas.push(buildHowToSchema());
-    }
-
     scriptEl.textContent = JSON.stringify(schemas);
 
     return () => {
@@ -213,42 +209,6 @@ export default function SEOPage({
           "text": item.a
         }
       }))
-    };
-  };
-
-  const buildHowToSchema = () => {
-    if (slug !== 'url-qr-generator') return null;
-    return {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      "name": t('seo.schemaHowToName', 'How to Create a URL QR Code with FreeQRBarcodes.com'),
-      "description": t('seo.schemaHowToDesc', 'Step-by-step instructions for creating a custom styled URL QR code with logos, colors, and scan counts.'),
-      "step": [
-        {
-          "@type": "HowToStep",
-          "name": t('seo.schemaStep1Name', 'Input Destination Link'),
-          "text": t('seo.schemaStep1Text', 'Paste your complete target URL into the input field, including the http:// or https:// protocol.'),
-          "url": "https://www.freeqrbarcodes.com/url-qr-generator"
-        },
-        {
-          "@type": "HowToStep",
-          "name": t('seo.schemaStep2Name', 'Select Branding & Colors'),
-          "text": t('seo.schemaStep2Text', 'Choose a stylish linear gradient or solid color, custom eye shapes, and pixel patterns.'),
-          "url": "https://www.freeqrbarcodes.com/url-qr-generator"
-        },
-        {
-          "@type": "HowToStep",
-          "name": t('seo.schemaStep3Name', 'Embed Centerpiece Logo'),
-          "text": t('seo.schemaStep3Text', 'Upload your brand logo or select standard social icons with High error correction settings.'),
-          "url": "https://www.freeqrbarcodes.com/url-qr-generator"
-        },
-        {
-          "@type": "HowToStep",
-          "name": t('seo.schemaStep4Name', 'Export & Print Layout'),
-          "text": t('seo.schemaStep4Text', 'Download the code as high-resolution PNG, or scalable vector SVG/PDF.'),
-          "url": "https://www.freeqrbarcodes.com/url-qr-generator"
-        }
-      ]
     };
   };
 

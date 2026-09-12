@@ -127,6 +127,17 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
   throw new Error(JSON.stringify(errInfo));
 }
 
+// Helper to extract clean Firestore database ID from configuration/environment strings
+function cleanDbId(rawId: string | undefined): string {
+  if (!rawId || typeof rawId !== 'string') return '(default)';
+  const trimmed = rawId.trim();
+  if (trimmed.includes('=')) {
+    const afterEqual = trimmed.split('=').pop()?.trim();
+    return afterEqual || '(default)';
+  }
+  return trimmed || '(default)';
+}
+
 // Read Firebase configurations and initialize lazily to prevent blocking startup / render latency
 export let db: any;
 export let isFallbackMode = false;
@@ -140,7 +151,7 @@ export function getDb() {
     const envStorageBucket = process.env.VITE_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET;
     const envMessagingSenderId = process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env.FIREBASE_MESSAGING_SENDER_ID;
     const envAppId = process.env.VITE_FIREBASE_APP_ID || process.env.FIREBASE_APP_ID;
-    const envFirestoreDbId = process.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || process.env.FIREBASE_FIRESTORE_DATABASE_ID;
+    const envFirestoreDbId = cleanDbId(process.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || process.env.FIREBASE_FIRESTORE_DATABASE_ID);
     const envMeasurementId = process.env.VITE_FIREBASE_MEASUREMENT_ID || process.env.FIREBASE_MEASUREMENT_ID;
 
     let firebaseConfig: any = null;
@@ -170,7 +181,7 @@ export function getDb() {
             messagingSenderId: rawConfig.messagingSenderId,
             appId: rawConfig.appId,
             measurementId: rawConfig.measurementId,
-            firestoreDatabaseId: rawConfig.firestoreDatabaseId
+            firestoreDatabaseId: cleanDbId(rawConfig.firestoreDatabaseId)
           };
         }
       } catch (e) {
@@ -187,7 +198,8 @@ export function getDb() {
         projectId: "dummy-project-12345",
         storageBucket: "dummy-bucket.appspot.com",
         messagingSenderId: "12345678",
-        appId: "1:12345:web:abcdef"
+        appId: "1:12345:web:abcdef",
+        firestoreDatabaseId: "(default)"
       };
     }
 
@@ -217,25 +229,16 @@ export function getDb() {
 
 // Validate Connection on Boot asynchronously without breaking live DB queries
 async function testConnection() {
-  const timeoutPromise = new Promise((_, reject) => 
-    setTimeout(() => reject(new Error('Firebase connection check timed out')), 2500)
-  );
-
   try {
     const activeDb = getDb();
     if (activeDb) {
-      await Promise.race([
-        getDocFromServer(doc(activeDb, 'test', 'connection')),
-        timeoutPromise
-      ]);
+      await getDocFromServer(doc(activeDb, 'test', 'connection'));
       console.log("Firebase connection verified and fully operational.");
     }
   } catch (error: any) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    if (errorMsg.toLowerCase().includes('client is offline') || errorMsg.toLowerCase().includes('the client is offline')) {
+    if (error instanceof Error && error.message.includes('the client is offline')) {
       console.error("Please check your Firebase configuration.");
     }
-    console.log("Firebase startup health check notice:", errorMsg);
     // Note: Do NOT set isFallbackMode = true here so live database queries are always attempted
   }
 }

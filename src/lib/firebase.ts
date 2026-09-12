@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, AppCheck, getToken } from 'firebase/app-check';
 import appletConfig from '../../firebase-applet-config.json';
@@ -22,8 +22,8 @@ const getEnvVar = (key: string): string | undefined => {
 // Define the firebaseConfig using safe getEnvVar with fallback to firebase-applet-config.json
 const rawDatabaseId = getEnvVar('VITE_FIREBASE_FIRESTORE_DATABASE_ID') || (appletConfig as any)?.firestoreDatabaseId;
 const cleanDatabaseId = (rawDatabaseId && typeof rawDatabaseId === 'string' && rawDatabaseId.includes('=')) 
-  ? rawDatabaseId.split('=').pop() 
-  : rawDatabaseId;
+  ? rawDatabaseId.split('=').pop()?.trim() || '(default)'
+  : (rawDatabaseId?.trim() || '(default)');
 
 export const firebaseConfig = {
   apiKey: getEnvVar('VITE_FIREBASE_API_KEY') || appletConfig.apiKey,
@@ -161,6 +161,20 @@ console.log('[Firebase Init] Active Firebase projectId:', firebaseConfig.project
 
 // Export initialized Firestore and Auth services strictly adhering to standard Firebase skill setup
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId); /* CRITICAL: The app will break without this line */
+
+// Validate Connection to Firestore per Firebase integration skill
+async function testConnection() {
+  try {
+    await getDocFromServer(doc(db, 'test', 'connection'));
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('the client is offline')) {
+      console.error("Please check your Firebase configuration.");
+    }
+  }
+}
+if (typeof window !== 'undefined') {
+  testConnection();
+}
 
 let authInstance: any;
 try {
