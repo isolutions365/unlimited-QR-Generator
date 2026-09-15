@@ -751,6 +751,30 @@ html[dir="rtl"] .cookie-consent-container {
   background-clip: padding-box, border-box;
 }
 
+#recent-whatsapp-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 10px 20px -8px rgba(16, 185, 129, 0.3), 0 0 15px rgba(59, 130, 246, 0.15);
+  transition-duration: 0.1s;
+}
+
+#recent-whatsapp-card:hover #recent-whatsapp-icon,
+#recent-whatsapp-card:hover .whatsapp-icon {
+  animation: whatsapp-gentle-pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes whatsapp-gentle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 0px rgba(16, 185, 129, 0));
+  }
+  50% {
+    transform: scale(1.24);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 16px rgba(16, 185, 129, 0.8));
+  }
+}
+
 
 
 

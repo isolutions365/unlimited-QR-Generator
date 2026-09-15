@@ -781,35 +781,6 @@ export function buildHomepageSchema(locale: SupportedLocale = 'en') {
         ]
       },
       {
-        "@type": "HowTo",
-        "name": "How to Create a Custom QR Code",
-        "description": "3 simple steps to create a free custom QR code with tracking and branding.",
-        "totalTime": "PT2M",
-        "step": [
-          {
-            "@type": "HowToStep",
-            "position": 1,
-            "name": "Select Your Content Type",
-            "text": "Choose from URL, vCard contact, WiFi password, plain text, SMS, WhatsApp link, or digital restaurant menu.",
-            "url": `${pageUrl}#step1`
-          },
-          {
-            "@type": "HowToStep",
-            "position": 2,
-            "name": "Customize Design & Branding",
-            "text": "Apply custom brand colors, linear gradients, unique corner eye shapes, and upload your central brand logo.",
-            "url": `${pageUrl}#step2`
-          },
-          {
-            "@type": "HowToStep",
-            "position": 3,
-            "name": "Download & Track Scans",
-            "text": "Export print-ready SVG or PNG files immediately and enable dynamic short-link scan tracking analytics.",
-            "url": `${pageUrl}#step3`
-          }
-        ]
-      },
-      {
         "@type": "BreadcrumbList",
         "itemListElement": [
           {

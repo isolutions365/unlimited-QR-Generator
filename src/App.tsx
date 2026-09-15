@@ -2058,36 +2058,6 @@ export default function App() {
               "item": rootUrl
             }
           ]
-        },
-        {
-          "@type": "HowTo",
-          "@id": `${rootUrl}/#howto`,
-          "name": "How to Create a Custom QR Code in 3 Simple Steps",
-          "description": "Follow these 3 simple steps to create, customize, and download a free high-resolution QR code with vector SVG or PNG export.",
-          "totalTime": "PT1M",
-          "step": [
-            {
-              "@type": "HowToStep",
-              "position": 1,
-              "name": "Select Your Content Type",
-              "text": "Choose from URL, vCard contact, WiFi password, plain text, SMS, WhatsApp link, or digital restaurant menu.",
-              "url": `${rootUrl}/#step-1`
-            },
-            {
-              "@type": "HowToStep",
-              "position": 2,
-              "name": "Customize Design & Branding",
-              "text": "Apply custom brand colors, linear gradients, unique corner eye shapes, and upload your central brand logo.",
-              "url": `${rootUrl}/#step-2`
-            },
-            {
-              "@type": "HowToStep",
-              "position": 3,
-              "name": "Download & Track Scans",
-              "text": "Export print-ready SVG or PNG files immediately and enable dynamic short-link scan tracking analytics.",
-              "url": `${rootUrl}/#step-3`
-            }
-          ]
         }
       ]
     };
@@ -4514,19 +4484,50 @@ export default function App() {
          
                         {isCategoryCardVisible('whatsapp') && (
                           <motion.div key="whatsapp-card-wrapper" variants={categoryCardVariants} className="snap-start shrink-0 w-[85vw] sm:w-auto h-full" exit="exit" layout>
-                            <div 
-                              id="recent-whatsapp-card" 
-                              onClick={() => {
-                                playAudioSound('click');
-                                setIsWhatsappOverlayOpen(true);
-                              }}
-                              className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group cursor-pointer ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
-                              style={{ transition: 'all 0.3s ease' }}
-                              title="Click to expand scan timestamps and device details"
-                            >
-                              <div className="space-y-1">
+                            {(() => {
+                              const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
+                              const lastScan = whatsappScans.length > 0 
+                                ? whatsappScans.reduce((latest, current) => new Date(current.timestamp).getTime() > new Date(latest.timestamp).getTime() ? current : latest, whatsappScans[0])
+                                : (whatsappScanLogs.length > 0 ? whatsappScanLogs[0] : null);
+                              const lastScanLocation = lastScan?.approxLocation || (lastScan?.city && lastScan?.country ? `${lastScan.city}, ${lastScan.country}` : (lastScan?.country || 'London, United Kingdom'));
+                              const lastScanTimeStr = lastScan?.timestamp ? getRelativeTimeString(lastScan.timestamp) : '2 mins ago';
+
+                              return (
+                                <div 
+                                  id="recent-whatsapp-card" 
+                                  onClick={() => {
+                                    playAudioSound('click');
+                                    setIsWhatsappOverlayOpen(true);
+                                  }}
+                                  className={`h-full p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between hover:-translate-y-2.5 hover:scale-[1.03] hover:border-emerald-500 hover:shadow-[inset_0_0_15px_rgba(16,185,129,0.35),0_25px_60px_-15px_rgba(16,185,129,0.45),0_0_40px_rgba(16,185,129,0.3)] group cursor-pointer relative ${isRtlLocale(locale) ? 'rtl-active' : ''}`}
+                                  style={{ transition: 'all 0.3s ease' }}
+                                  title={`Last Scan Location: ${lastScanLocation} (${lastScanTimeStr}) • Click to expand scan details`}
+                                >
+                                  {/* Last Scan Location Hover Tooltip */}
+                                  <div 
+                                    id="recent-whatsapp-location-tooltip"
+                                    className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-all duration-200 z-40 bg-slate-900/95 text-white px-3 py-1.5 rounded-xl shadow-xl border border-emerald-500/30 backdrop-blur-xs flex items-center gap-2 whitespace-nowrap"
+                                  >
+                                    <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                                      <MapPin className="w-3 h-3" />
+                                    </div>
+                                    <div className="flex flex-col text-left">
+                                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">{t('recent.card.whatsapp.lastScanLocation', 'Last Scan Location')}</span>
+                                      <span className="text-[11px] font-extrabold text-slate-100 flex items-center gap-1.5">
+                                        <span>{lastScanLocation}</span>
+                                        <span className="text-[9px] text-slate-400 font-normal">({lastScanTimeStr})</span>
+                                      </span>
+                                    </div>
+                                    {/* Tooltip Arrow */}
+                                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-slate-900/95" />
+                                  </div>
+
+                                  <div className="space-y-1">
                                 <div className="flex items-center justify-between gap-2">
                                   <div className="flex items-center gap-1.5 flex-wrap">
+                                    <div className="p-1 rounded-md bg-emerald-100/90 text-emerald-700 flex items-center justify-center border border-emerald-200/80 shadow-2xs">
+                                      <MessageSquare id="recent-whatsapp-icon" className="w-3.5 h-3.5 whatsapp-icon transition-transform duration-300" />
+                                    </div>
                                     <span className="text-[10px] text-emerald-800 font-bold uppercase block rtl-content">{t('recent.card.whatsapp.badge')}</span>
                                     {(() => {
                                       const whatsappScans = scans?.filter(s => projects?.some(p => p.id === s.projectId && (p.type === 'social' || p.type === 'url') && p.content.includes('wa.me'))) || [];
@@ -4809,6 +4810,8 @@ export default function App() {
                                 </button>
                               </div>
                             </div>
+                              );
+                            })()}
                           </motion.div>
                         )}
          
