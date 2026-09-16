@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
 import { UserSession } from '../lib/api';
+import {
+  ScanNotificationSettings,
+  getDefaultScanNotificationSettings,
+  isDNDActiveNow,
+} from '../utils/scanNotificationSettings';
 
 export interface LiveToast {
   id: string;
@@ -11,8 +16,13 @@ export interface LiveToast {
   ip?: string;
 }
 
-export function useScanNotifications(user: UserSession | null, nPermission: NotificationPermission) {
+export function useScanNotifications(
+  user: UserSession | null,
+  nPermission: NotificationPermission,
+  customSettings?: ScanNotificationSettings
+) {
   const [toasts, setToasts] = useState<LiveToast[]>([]);
+  const [suppressedScansCount, setSuppressedScansCount] = useState(0);
 
   useEffect(() => {
     if (!user) {
@@ -50,6 +60,22 @@ export function useScanNotifications(user: UserSession | null, nPermission: Noti
             const parsed = JSON.parse(event.data);
             if (parsed.type === 'NEW_SCAN') {
               const data = parsed.data;
+
+              // Check DND and notification settings
+              const currentSettings = customSettings || getDefaultScanNotificationSettings();
+              const isSuppressedByDND = isDNDActiveNow(currentSettings);
+              const isToastsEnabled = currentSettings.enabled;
+
+              if (isSuppressedByDND || !isToastsEnabled) {
+                console.log(
+                  `[WS Socket] Scan logged in background for "${data.projectName}", toast alert suppressed (${
+                    isSuppressedByDND ? 'Do Not Disturb active' : 'toasts disabled'
+                  }).`
+                );
+                setSuppressedScansCount((prev) => prev + 1);
+                return;
+              }
+
               const uid = `toast-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
               setToasts((prev) => [
                 ...prev,
@@ -63,9 +89,6 @@ export function useScanNotifications(user: UserSession | null, nPermission: Noti
                   ip: data.ip || data.ipAddress || ''
                 }
               ]);
-
-              // Audio & Desktop Notification logic here (simplified for brevity, kept same functionality)
-              // ...
             }
           } catch (msgErr) {
             console.error('[WS Socket] Message decoding failed:', msgErr);
@@ -91,7 +114,7 @@ export function useScanNotifications(user: UserSession | null, nPermission: Noti
       if (reconnectTimeout) clearTimeout(reconnectTimeout);
       if (keepAliveInterval) clearInterval(keepAliveInterval);
     };
-  }, [user]);
+  }, [user, customSettings]);
 
-  return { toasts };
+  return { toasts, setToasts, suppressedScansCount };
 }

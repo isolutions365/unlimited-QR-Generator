@@ -23,6 +23,12 @@ import BulkFormatHelpModal from './components/BulkFormatHelpModal';
 import { usePlatformLayout } from './hooks/usePlatformLayout';
 import { MobileTabType } from './components/MobileBottomNav';
 import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/audioFeedback';
+import {
+  ScanNotificationSettings,
+  getDefaultScanNotificationSettings,
+  saveScanNotificationSettings,
+  isDNDActiveNow,
+} from './utils/scanNotificationSettings';
 
 // Code-splitting via React.lazy for secondary landing & hub pages
 // Resilient lazy loader helper for dynamic imports
@@ -513,6 +519,20 @@ export default function App() {
 
   // Sound settings state
   const [soundSettings, setSoundSettings] = useState<SoundSettings>(() => getDefaultSoundSettings());
+  // Scan notification & Do Not Disturb (DND) settings state
+  const [scanSettings, setScanSettings] = useState<ScanNotificationSettings>(() =>
+    getDefaultScanNotificationSettings()
+  );
+  const scanSettingsRef = useRef<ScanNotificationSettings>(scanSettings);
+  useEffect(() => {
+    scanSettingsRef.current = scanSettings;
+  }, [scanSettings]);
+
+  const handleUpdateScanSettings = (newSettings: ScanNotificationSettings) => {
+    setScanSettings(newSettings);
+    saveScanNotificationSettings(newSettings);
+  };
+
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   // Real-time scan alerts toasts lists
@@ -592,8 +612,23 @@ export default function App() {
               console.log('[WS Socket] Incoming real-time scan metrics:', parsed.data);
               const data = parsed.data;
 
-              // Immediately refresh analytics data on real-time scan event
+              // Immediately refresh analytics data on real-time scan event (continuous background logging)
               fetchUserData();
+
+              // Check Scan Notification settings & Do Not Disturb (DND) status
+              const currentScanSettings = scanSettingsRef.current;
+              const isNotificationsEnabled = currentScanSettings?.enabled ?? true;
+              const isDndActive = isDNDActiveNow(currentScanSettings);
+
+              // If notifications are globally disabled OR currently in DND quiet hours, suppress real-time toast alerts and chimes
+              if (!isNotificationsEnabled || isDndActive) {
+                console.log(
+                  `[WS Socket] Scan toast suppressed due to ${
+                    !isNotificationsEnabled ? 'disabled notifications' : 'active Do Not Disturb (DND) quiet hours'
+                  }. Background logging preserved.`
+                );
+                return;
+              }
 
               // Append toast safely
               const uid = `toast-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -2598,21 +2633,32 @@ export default function App() {
       const seededLog = await api.seedScanClick(projectId, trackingId);
       await fetchUserData();
 
-      // Trigger instant live toast notification for simulator testing
-      const targetProj = projects.find(p => p.id === projectId);
-      const uid = `toast-sim-${Date.now()}`;
-      setToasts((prev) => [
-        ...prev,
-        {
-          id: uid,
-          projectName: targetProj?.name || 'Dynamic QR',
-          approxLocation: seededLog.approxLocation || 'New York, US',
-          deviceType: seededLog.deviceType || 'Mobile (iOS)',
-          browser: seededLog.browser || 'Safari',
-          timestamp: new Date().toISOString(),
-          ip: seededLog.ip || '192.168.1.104'
-        }
-      ]);
+      // Trigger instant live toast notification for simulator testing (respecting notification and DND settings)
+      const isNotificationsEnabled = scanSettings?.enabled ?? true;
+      const isDndActive = isDNDActiveNow(scanSettings);
+
+      if (isNotificationsEnabled && !isDndActive) {
+        const targetProj = projects.find(p => p.id === projectId);
+        const uid = `toast-sim-${Date.now()}`;
+        setToasts((prev) => [
+          ...prev,
+          {
+            id: uid,
+            projectName: targetProj?.name || 'Dynamic QR',
+            approxLocation: seededLog.approxLocation || 'New York, US',
+            deviceType: seededLog.deviceType || 'Mobile (iOS)',
+            browser: seededLog.browser || 'Safari',
+            timestamp: new Date().toISOString(),
+            ip: seededLog.ip || '192.168.1.104'
+          }
+        ]);
+      } else {
+        console.log(
+          `[Simulator] Simulated scan toast suppressed due to ${
+            !isNotificationsEnabled ? 'disabled notifications' : 'active Do Not Disturb (DND) quiet hours'
+          }. Scan data logged successfully.`
+        );
+      }
     } catch (err: any) {
       console.error(err);
       setErrorMessage(t('error.seedFailed', 'Verification Error: Seed writing failed. Make sure user is fully logged in.'));
@@ -6057,6 +6103,8 @@ export default function App() {
         onClose={() => setIsSettingsModalOpen(false)}
         soundSettings={soundSettings}
         onUpdateSoundSettings={setSoundSettings}
+        scanSettings={scanSettings}
+        onUpdateScanSettings={handleUpdateScanSettings}
       />
 
       {/* CSV & Excel File Format Instructions Modal for Bulk QR Generator */}

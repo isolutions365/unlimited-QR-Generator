@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Volume2, VolumeX, Sliders, Play, Check, Zap, Shield, RotateCcw, Trash2, RefreshCw } from 'lucide-react';
+import { X, Volume2, VolumeX, Sliders, Play, Check, Zap, Shield, RotateCcw, Trash2, RefreshCw, Bell, BellOff, Moon, Clock } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 import { SoundSettings, saveSoundSettings, playAudioSound } from '../utils/audioFeedback';
+import {
+  ScanNotificationSettings,
+  getDefaultScanNotificationSettings,
+  saveScanNotificationSettings,
+  isDNDActiveNow,
+} from '../utils/scanNotificationSettings';
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   soundSettings: SoundSettings;
   onUpdateSoundSettings: (newSettings: SoundSettings) => void;
+  scanSettings?: ScanNotificationSettings;
+  onUpdateScanSettings?: (newSettings: ScanNotificationSettings) => void;
 }
 
 export default function SettingsModal({
@@ -16,9 +24,14 @@ export default function SettingsModal({
   onClose,
   soundSettings,
   onUpdateSoundSettings,
+  scanSettings,
+  onUpdateScanSettings,
 }: SettingsModalProps) {
   const { t } = useTranslation();
   const [localSettings, setLocalSettings] = useState<SoundSettings>(soundSettings);
+  const [localScanSettings, setLocalScanSettings] = useState<ScanNotificationSettings>(() =>
+    scanSettings || getDefaultScanNotificationSettings()
+  );
   const [isPlayingTest, setIsPlayingTest] = useState(false);
   const [isClearingCache, setIsClearingCache] = useState(false);
   const [cacheClearedSuccess, setCacheClearedSuccess] = useState(false);
@@ -27,6 +40,7 @@ export default function SettingsModal({
   React.useEffect(() => {
     if (isOpen) {
       setLocalSettings(soundSettings);
+      setLocalScanSettings(scanSettings || getDefaultScanNotificationSettings());
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
           onClose();
@@ -35,7 +49,7 @@ export default function SettingsModal({
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, soundSettings, onClose]);
+  }, [isOpen, soundSettings, scanSettings, onClose]);
 
   if (!isOpen) return null;
 
@@ -132,6 +146,20 @@ export default function SettingsModal({
     playAudioSound('preview', { ...localSettings, soundEnabled: true });
     setTimeout(() => setIsPlayingTest(false), 400);
   };
+
+  const handleUpdateScanSettingsField = <K extends keyof ScanNotificationSettings>(
+    field: K,
+    val: ScanNotificationSettings[K]
+  ) => {
+    const updated = { ...localScanSettings, [field]: val };
+    setLocalScanSettings(updated);
+    if (onUpdateScanSettings) {
+      onUpdateScanSettings(updated);
+    }
+    saveScanNotificationSettings(updated);
+  };
+
+  const isDndCurrentlyActive = isDNDActiveNow(localScanSettings);
 
   const soundTypeOptions: { id: SoundSettings['soundType']; label: string; desc: string }[] = [
     { id: 'chime', label: t('settings.typeChime', 'Harmonic Chime'), desc: t('settings.typeChimeDesc', 'Soft ascending dual-tone chime') },
@@ -376,6 +404,154 @@ export default function SettingsModal({
                 </div>
               </div>
             )}
+
+            {/* Real-Time Scan Alerts & Do Not Disturb Section */}
+            <div className="space-y-3 pt-4 border-t border-slate-100" id="scan-notifications-dnd-section">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <Bell className="w-3.5 h-3.5 text-indigo-600" />
+                  {t('settings.scanNotificationsHeading', 'Scan Notifications & Alerts')}
+                </label>
+                {localScanSettings.dndEnabled && (
+                  <span
+                    className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                      isDndCurrentlyActive
+                        ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                    }`}
+                  >
+                    <Moon className="w-3 h-3 text-amber-600" />
+                    {isDndCurrentlyActive
+                      ? t('settings.dndActiveNow', 'DND Active Now')
+                      : t('settings.dndScheduled', 'DND Scheduled')}
+                  </span>
+                )}
+              </div>
+
+              {/* Master Toast Alerts Toggle */}
+              <div
+                className={`p-4 rounded-xl border transition-all ${
+                  localScanSettings.enabled
+                    ? 'bg-indigo-50/30 border-indigo-200/80'
+                    : 'bg-slate-50 border-slate-200'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`p-2.5 rounded-xl transition-colors ${
+                        localScanSettings.enabled ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'
+                      }`}
+                    >
+                      {localScanSettings.enabled ? <Bell className="w-5 h-5" /> : <BellOff className="w-5 h-5" />}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900">
+                        {t('settings.realtimeToastsTitle', 'Real-Time Scan Toast Alerts')}
+                      </h4>
+                      <p className="text-xs text-slate-500">
+                        {t(
+                          'settings.realtimeToastsDesc',
+                          'Display pop-up toast notifications on screen when someone scans your dynamic QR codes'
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={localScanSettings.enabled}
+                      onChange={(e) => handleUpdateScanSettingsField('enabled', e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                  </label>
+                </div>
+
+                {/* Do Not Disturb (DND) Card inside Scan Alerts */}
+                <div className="mt-4 pt-4 border-t border-indigo-100/80 space-y-3">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-1.5 bg-amber-50 text-amber-700 rounded-lg">
+                        <Moon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h5 className="text-xs font-bold text-slate-900">
+                            {t('settings.dndTitle', 'Do Not Disturb (Scheduled Quiet Hours)')}
+                          </h5>
+                        </div>
+                        <p className="text-[11px] text-slate-500">
+                          {t(
+                            'settings.dndDesc',
+                            'Suppress real-time toast alerts and chimes during specific hours while still logging all scan data in the background'
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={localScanSettings.dndEnabled}
+                        onChange={(e) => handleUpdateScanSettingsField('dndEnabled', e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Time Range Pickers for DND */}
+                  {localScanSettings.dndEnabled && (
+                    <div className="bg-white/80 p-3.5 rounded-xl border border-amber-200/80 space-y-3 animate-in fade-in duration-200">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                          <Clock className="w-3.5 h-3.5 text-amber-600" />
+                          <span>{t('settings.dndQuietHoursRange', 'Quiet Hours Schedule')}</span>
+                        </div>
+                        <span className="text-[11px] font-mono text-slate-500">
+                          {localScanSettings.dndStart} – {localScanSettings.dndEnd}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
+                            {t('settings.dndStartTime', 'Starts At (Quiet begins)')}
+                          </label>
+                          <input
+                            type="time"
+                            value={localScanSettings.dndStart}
+                            onChange={(e) => handleUpdateScanSettingsField('dndStart', e.target.value)}
+                            className="w-full px-3 py-1.5 text-xs font-mono font-semibold bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
+                            {t('settings.dndEndTime', 'Ends At (Alerts resume)')}
+                          </label>
+                          <input
+                            type="time"
+                            value={localScanSettings.dndEnd}
+                            onChange={(e) => handleUpdateScanSettingsField('dndEnd', e.target.value)}
+                            className="w-full px-3 py-1.5 text-xs font-mono font-semibold bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 p-2 bg-amber-50/60 rounded-lg border border-amber-100 text-[11px] text-amber-900">
+                        <span className="text-amber-600 font-bold">ℹ️</span>
+                        <span>
+                          {t(
+                            'settings.dndBackgroundNotice',
+                            'All scans are continuously logged into your analytics database with location and device metrics even while alerts are silent.'
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {/* Storage & Cache Management */}
             <div className="space-y-3 pt-2 border-t border-slate-100">
