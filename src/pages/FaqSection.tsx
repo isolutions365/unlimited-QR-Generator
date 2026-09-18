@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, HelpCircle, ChevronDown, ChevronUp, Copy, Check, ArrowLeft, ShieldAlert } from 'lucide-react';
 import ScrollableTabContainer from '../components/ScrollableTabContainer';
-import { faqCategories, FAQItem } from '../data/faqData';
+import { faqCategories, FAQItem, loadFaqDataAsync, isFaqLocaleCached } from '../data/faqData';
 import { getLocalizedFaq, faqCategoryLabels, Locale } from '../utils/translations';
 import { useTranslation } from '../utils/i18n';
 import { buildProductionUrl } from '../config/siteConfig';
@@ -21,8 +21,30 @@ export default function FaqSection({ onNavigate, locale: propLocale }: FaqSectio
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const localizedFaqData = useMemo(() => {
-    return getLocalizedFaq(locale);
+  const [localizedFaqData, setLocalizedFaqData] = useState<FAQItem[]>(() => getLocalizedFaq(locale));
+  const [isFaqLoading, setIsFaqLoading] = useState<boolean>(() => locale !== 'en' && !isFaqLocaleCached(locale));
+
+  useEffect(() => {
+    let isMounted = true;
+    const isCached = isFaqLocaleCached(locale);
+    if (!isCached && locale !== 'en') {
+      setIsFaqLoading(true);
+    }
+    loadFaqDataAsync(locale)
+      .then((data) => {
+        if (isMounted) {
+          setLocalizedFaqData(data);
+          setIsFaqLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setIsFaqLoading(false);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [locale]);
 
   // Filter FAQs based on search and selected category

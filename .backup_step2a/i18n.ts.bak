@@ -6,42 +6,36 @@ import { SUPPORTED_LOCALES } from './utils/translations';
 import * as formatters from './utils/localeFormatter';
 
 import en from './locales/en.json';
+import ar from './locales/ar.json';
+import ur from './locales/ur.json';
+import de from './locales/de.json';
+import fr from './locales/fr.json';
+import es from './locales/es.json';
+import pt from './locales/pt.json';
+import it from './locales/it.json';
+import tr from './locales/tr.json';
+import id from './locales/id.json';
+import hi from './locales/hi.json';
+import zh from './locales/zh.json';
+import ja from './locales/ja.json';
+import ko from './locales/ko.json';
 
 const resources = {
   en: { translation: en },
+  ar: { translation: ar },
+  ur: { translation: ur },
+  de: { translation: de },
+  fr: { translation: fr },
+  es: { translation: es },
+  pt: { translation: pt },
+  it: { translation: it },
+  tr: { translation: tr },
+  id: { translation: id },
+  hi: { translation: hi },
+  zh: { translation: zh },
+  ja: { translation: ja },
+  ko: { translation: ko },
 };
-
-const localeLoaders: Record<string, () => Promise<{ default: Record<string, string> }>> = {
-  en: () => Promise.resolve({ default: en }),
-  ar: () => import('./locales/ar.json'),
-  ur: () => import('./locales/ur.json'),
-  de: () => import('./locales/de.json'),
-  fr: () => import('./locales/fr.json'),
-  es: () => import('./locales/es.json'),
-  pt: () => import('./locales/pt.json'),
-  it: () => import('./locales/it.json'),
-  tr: () => import('./locales/tr.json'),
-  id: () => import('./locales/id.json'),
-  hi: () => import('./locales/hi.json'),
-  zh: () => import('./locales/zh.json'),
-  ja: () => import('./locales/ja.json'),
-  ko: () => import('./locales/ko.json'),
-};
-
-export async function loadI18nLocale(lng: string): Promise<void> {
-  if (i18n.hasResourceBundle(lng, 'translation')) {
-    return;
-  }
-  const loader = localeLoaders[lng];
-  if (loader) {
-    try {
-      const mod = await loader();
-      i18n.addResourceBundle(lng, 'translation', mod.default || mod, true, true);
-    } catch (e) {
-      console.warn(`[i18n] Failed to load resource bundle for ${lng}:`, e);
-    }
-  }
-}
 
 i18n
   .use(LanguageDetector)

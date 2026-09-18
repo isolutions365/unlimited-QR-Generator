@@ -279,13 +279,17 @@ app.use(compression({
   app.use(express.static(path.join(process.cwd(), 'public'), {
     index: false,
     setHeaders: (res, filePath) => {
+      const fileName = path.basename(filePath).toLowerCase();
       if (filePath.endsWith('.html')) {
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
-      } else if (filePath.match(/\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$/i) || filePath.includes('/assets/')) {
+      } else if (fileName === 'sw.js' || fileName === 'service-worker.js' || fileName.startsWith('workbox-')) {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+      } else if (filePath.includes('/assets/') && filePath.match(/\-[a-zA-Z0-9_-]{8,}\./)) {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       } else {
-        res.setHeader('Cache-Control', 'public, max-age=86400');
+        res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
       }
     }
   }));
@@ -3260,6 +3264,18 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
       (global as any).viteInstance = vite;
       app.use(serveHtmlWithSeoAndSchema);
       app.use(vite.middlewares);
+      app.use((req, res, next) => {
+        if (req.method === 'GET' || req.method === 'HEAD') {
+          const isAssetPath = req.path.startsWith('/assets/') ||
+            /\.(js|mjs|css|map|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$/i.test(req.path);
+          if (isAssetPath) {
+            res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+            return res.status(404).send('Asset not found');
+          }
+        }
+        next();
+      });
       app.get('*', serveHtmlWithSeoAndSchema);
     } else {
       const distPath = path.join(process.cwd(), 'dist');
@@ -3281,6 +3297,10 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
           res.setHeader('Access-Control-Allow-Headers', '*');
+          const fileName = path.basename(filePath).toLowerCase();
+          const isContentHashedAsset = filePath.includes('/assets/') && /\-[a-zA-Z0-9_-]{8,}\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$/i.test(filePath);
+          const isServiceWorker = fileName === 'sw.js' || fileName === 'service-worker.js' || fileName.startsWith('workbox-');
+
           if (filePath.endsWith('.html')) {
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
@@ -3288,21 +3308,39 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
             res.setHeader('Surrogate-Control', 'no-store');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
-          } else if (filePath.match(/\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$/i) || filePath.includes('/assets/')) {
+          } else if (isServiceWorker) {
+            res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+          } else if (isContentHashedAsset) {
             if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
               res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
             } else if (filePath.endsWith('.css')) {
               res.setHeader('Content-Type', 'text/css; charset=utf-8');
             }
             res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-          } else if (filePath.endsWith('.webmanifest') || filePath.endsWith('.json')) {
-            res.setHeader('Content-Type', 'application/json; charset=utf-8');
-            res.setHeader('Cache-Control', 'public, max-age=86400');
+          } else if (filePath.endsWith('.webmanifest') || filePath.endsWith('.json') || filePath.endsWith('.xml') || filePath.endsWith('.txt')) {
+            res.setHeader('Content-Type', filePath.endsWith('.xml') ? 'application/xml; charset=utf-8' : (filePath.endsWith('.txt') ? 'text/plain; charset=utf-8' : 'application/json; charset=utf-8'));
+            res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
           } else {
-            res.setHeader('Cache-Control', 'public, max-age=86400');
+            res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
           }
         }
       }));
+
+      // Missing static asset handler: Return 404 for missing static assets instead of serving 200 OK SPA HTML
+      app.use((req, res, next) => {
+        if (req.method === 'GET' || req.method === 'HEAD') {
+          const isAssetPath = !req.path.startsWith('/api/') && (req.path.startsWith('/assets/') ||
+            /\.(js|mjs|css|map|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$/i.test(req.path));
+          if (isAssetPath) {
+            res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+            return res.status(404).send('Asset not found');
+          }
+        }
+        next();
+      });
+
       app.get('*', serveHtmlWithSeoAndSchema);
     }
 

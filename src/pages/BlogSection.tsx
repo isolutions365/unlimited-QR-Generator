@@ -4,7 +4,7 @@ import {
   ArrowLeft, Calendar, Clock, User, Tag, ArrowRight, Share2, Copy, Check,
   BookOpen, ChevronRight, MessageSquare, AlertCircle, Zap, Filter
 } from 'lucide-react';
-import { blogCategories, BlogArticle, checkArticleTranslationStatus } from '../data/blogData';
+import { blogCategories, BlogArticle, checkArticleTranslationStatus, loadBlogArticlesAsync, isBlogLocaleCached } from '../data/blogData';
 import { getLocalizedBlog, Locale } from '../utils/translations';
 import { useTranslation } from '../utils/i18n';
 import { buildProductionUrl } from '../config/siteConfig';
@@ -42,8 +42,30 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
   const [copiedLink, setCopiedLink] = useState(false);
   const [expandedFaqIndex, setExpandedFaqIndex] = useState<number | null>(null);
 
-  const localizedArticles = useMemo(() => {
-    return getLocalizedBlog(locale);
+  const [localizedArticles, setLocalizedArticles] = useState<BlogArticle[]>(() => getLocalizedBlog(locale));
+  const [isArticlesLoading, setIsArticlesLoading] = useState<boolean>(() => locale !== 'en' && !isBlogLocaleCached(locale));
+
+  useEffect(() => {
+    let isMounted = true;
+    const isCached = isBlogLocaleCached(locale);
+    if (!isCached && locale !== 'en') {
+      setIsArticlesLoading(true);
+    }
+    loadBlogArticlesAsync(locale)
+      .then((data) => {
+        if (isMounted) {
+          setLocalizedArticles(data);
+          setIsArticlesLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setIsArticlesLoading(false);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [locale]);
 
   // Synchronize active slug if initialSlug changes

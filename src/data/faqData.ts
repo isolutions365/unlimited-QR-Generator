@@ -1,34 +1,4 @@
 import faqEn from '../locales/faq/en.json';
-import faqAr from '../locales/faq/ar.json';
-import faqUr from '../locales/faq/ur.json';
-import faqDe from '../locales/faq/de.json';
-import faqFr from '../locales/faq/fr.json';
-import faqEs from '../locales/faq/es.json';
-import faqPt from '../locales/faq/pt.json';
-import faqIt from '../locales/faq/it.json';
-import faqTr from '../locales/faq/tr.json';
-import faqId from '../locales/faq/id.json';
-import faqHi from '../locales/faq/hi.json';
-import faqZh from '../locales/faq/zh.json';
-import faqJa from '../locales/faq/ja.json';
-import faqKo from '../locales/faq/ko.json';
-
-const faqDataMap: Record<string, any> = {
-  en: faqEn,
-  ar: faqAr,
-  ur: faqUr,
-  de: faqDe,
-  fr: faqFr,
-  es: faqEs,
-  pt: faqPt,
-  it: faqIt,
-  tr: faqTr,
-  id: faqId,
-  hi: faqHi,
-  zh: faqZh,
-  ja: faqJa,
-  ko: faqKo
-};
 
 export interface FAQItem {
   id: string;
@@ -46,10 +16,66 @@ export const faqCategories = [
   { id: 'business', label: 'Business & Commercial' }
 ] as const;
 
-export const getFaqData = (locale: string = 'en'): FAQItem[] => {
-  const data = faqDataMap[locale];
-  if (Array.isArray(data) && data.length > 0) {
-    return data as FAQItem[];
+const faqLoaders: Record<string, () => Promise<{ default: any }>> = {
+  en: () => Promise.resolve({ default: faqEn }),
+  ar: () => import('../locales/faq/ar.json'),
+  ur: () => import('../locales/faq/ur.json'),
+  de: () => import('../locales/faq/de.json'),
+  fr: () => import('../locales/faq/fr.json'),
+  es: () => import('../locales/faq/es.json'),
+  pt: () => import('../locales/faq/pt.json'),
+  it: () => import('../locales/faq/it.json'),
+  tr: () => import('../locales/faq/tr.json'),
+  id: () => import('../locales/faq/id.json'),
+  hi: () => import('../locales/faq/hi.json'),
+  zh: () => import('../locales/faq/zh.json'),
+  ja: () => import('../locales/faq/ja.json'),
+  ko: () => import('../locales/faq/ko.json'),
+};
+
+const faqDataCache: Record<string, FAQItem[]> = {
+  en: faqEn as FAQItem[],
+};
+
+const pendingFaqLoads = new Map<string, Promise<FAQItem[]>>();
+
+export const isFaqLocaleCached = (locale: string = 'en'): boolean => {
+  return !!faqDataCache[locale];
+};
+
+export const loadFaqDataAsync = async (locale: string = 'en'): Promise<FAQItem[]> => {
+  if (faqDataCache[locale]) {
+    return faqDataCache[locale];
   }
-  return (faqDataMap['en'] || []) as FAQItem[];
+  if (pendingFaqLoads.has(locale)) {
+    return pendingFaqLoads.get(locale)!;
+  }
+  const loader = faqLoaders[locale] || faqLoaders['en'];
+  const loadPromise = loader()
+    .then((mod) => {
+      const data = (mod.default || mod) as FAQItem[];
+      if (Array.isArray(data) && data.length > 0) {
+        faqDataCache[locale] = data;
+      } else {
+        faqDataCache[locale] = faqDataCache['en'];
+      }
+      pendingFaqLoads.delete(locale);
+      return faqDataCache[locale];
+    })
+    .catch((err) => {
+      pendingFaqLoads.delete(locale);
+      console.warn(`[faqData] Error loading localized FAQ for "${locale}":`, err);
+      return faqDataCache['en'] || (faqEn as FAQItem[]);
+    });
+
+  pendingFaqLoads.set(locale, loadPromise);
+  return loadPromise;
+};
+
+export const getFaqData = (locale: string = 'en'): FAQItem[] => {
+  if (faqDataCache[locale]) {
+    return faqDataCache[locale];
+  }
+  loadFaqDataAsync(locale);
+  return faqDataCache['en'] || (faqEn as FAQItem[]);
 };

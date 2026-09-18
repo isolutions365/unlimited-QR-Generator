@@ -2,65 +2,41 @@ import React, { createContext, useContext, useState, useEffect, useLayoutEffect,
 import { Locale, SUPPORTED_LOCALES, extractLocaleAndPath, isRtlLocale } from './translations';
 import { formatICU, ICUValues } from './icuFormatter';
 import * as formatters from './localeFormatter';
-import { EXPECTED_KEYS, LocaleReport, generateFullReport, ValidationReport } from './i18nValidator';
-import { i18n, loadI18nLocale } from '../i18n';
+import { EXPECTED_KEYS, validateLocaleDictionary, LocaleReport, generateFullReport, ValidationReport } from './i18nValidator';
+import { i18n } from '../i18n';
 import en from '../locales/en.json';
+import ar from '../locales/ar.json';
+import ur from '../locales/ur.json';
+import de from '../locales/de.json';
+import fr from '../locales/fr.json';
+import es from '../locales/es.json';
+import pt from '../locales/pt.json';
+import it from '../locales/it.json';
+import tr from '../locales/tr.json';
+import id from '../locales/id.json';
+import hi from '../locales/hi.json';
+import zh from '../locales/zh.json';
+import ja from '../locales/ja.json';
+import ko from '../locales/ko.json';
 
-const enDictionary: Record<string, string> = en;
-
-// Explicit dynamic chunk loader map for code splitting
-const localeLoaders: Record<Locale, () => Promise<{ default: Record<string, string> }>> = {
-  en: () => Promise.resolve({ default: en }),
-  ar: () => import('../locales/ar.json'),
-  ur: () => import('../locales/ur.json'),
-  de: () => import('../locales/de.json'),
-  fr: () => import('../locales/fr.json'),
-  es: () => import('../locales/es.json'),
-  pt: () => import('../locales/pt.json'),
-  it: () => import('../locales/it.json'),
-  tr: () => import('../locales/tr.json'),
-  id: () => import('../locales/id.json'),
-  hi: () => import('../locales/hi.json'),
-  zh: () => import('../locales/zh.json'),
-  ja: () => import('../locales/ja.json'),
-  ko: () => import('../locales/ko.json'),
+const translations: Record<string, Record<string, string>> = {
+  en,
+  ar,
+  ur,
+  de,
+  fr,
+  es,
+  pt,
+  it,
+  tr,
+  id,
+  hi,
+  zh,
+  ja,
+  ko
 };
 
-// In-memory cache for loaded translation dictionaries
-const dictionaryCache: Record<string, Record<string, string>> = {
-  en: enDictionary,
-};
-
-// Active in-flight requests map to prevent duplicate concurrent network fetches
-const pendingLoads = new Map<Locale, Promise<Record<string, string>>>();
-
-export async function fetchLocaleDictionary(loc: Locale): Promise<Record<string, string>> {
-  if (dictionaryCache[loc]) {
-    return dictionaryCache[loc];
-  }
-  if (pendingLoads.has(loc)) {
-    return pendingLoads.get(loc)!;
-  }
-  const loader = localeLoaders[loc];
-  if (!loader) {
-    return enDictionary;
-  }
-  const loadPromise = loader()
-    .then((mod) => {
-      const dict = (mod.default || mod) as Record<string, string>;
-      dictionaryCache[loc] = dict;
-      pendingLoads.delete(loc);
-      return dict;
-    })
-    .catch((err) => {
-      pendingLoads.delete(loc);
-      console.warn(`[i18n] Error dynamically loading locale dictionary "${loc}":`, err);
-      return dictionaryCache['en'] || enDictionary;
-    });
-
-  pendingLoads.set(loc, loadPromise);
-  return loadPromise;
-}
+const enDictionary = en;
 
 // Type-safe translation keys derived from expected keys
 export type TKey = typeof EXPECTED_KEYS[number] | (string & {});
@@ -180,6 +156,9 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
+// In-memory cache for loaded translation dictionaries
+const dictionaryCache: Record<string, Record<string, string>> = translations;
+
 // Tracks keys invoked by components during runtime
 const runtimeKeySet = new Set<string>();
 
@@ -204,11 +183,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return 'en';
   });
 
-  const [dictionary, setDictionary] = useState<Record<string, string>>(() => {
-    return dictionaryCache[locale] || enDictionary;
-  });
+  const [dictionary, setDictionary] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const latestRequestIdRef = useRef<number>(0);
 
   // Sync state with popstate (e.g. browser back/forward)
   useEffect(() => {
@@ -222,35 +198,12 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [locale]);
 
-  // Asynchronously load translation dictionary when locale changes
+  // Synchronously load translation dictionary when locale changes
   useEffect(() => {
-    let isSubscribed = true;
-    const currentRequestId = ++latestRequestIdRef.current;
-
-    if (dictionaryCache[locale]) {
-      setDictionary(dictionaryCache[locale]);
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
-    fetchLocaleDictionary(locale)
-      .then((dict) => {
-        if (isSubscribed && currentRequestId === latestRequestIdRef.current) {
-          setDictionary(dict);
-          setIsLoading(false);
-        }
-      })
-      .catch(() => {
-        if (isSubscribed && currentRequestId === latestRequestIdRef.current) {
-          setDictionary(enDictionary);
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isSubscribed = false;
-    };
+    const dict = translations[locale] || {};
+    setDictionary(dict);
+    setIsLoading(false);
   }, [locale]);
 
   const changeLocale = (newLocale: Locale) => {
@@ -259,9 +212,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
     // Sync with i18next instance if available
     if (i18n && typeof i18n.changeLanguage === 'function') {
-      loadI18nLocale(newLocale).then(() => {
-        i18n.changeLanguage(newLocale).catch(() => {});
-      });
+      i18n.changeLanguage(newLocale).catch(() => {});
     }
 
     // Update the URL path prefix dynamically to support /locale/...
@@ -397,13 +348,10 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Loads all supported dictionaries on demand.
+   * Loads all supported dictionaries directly from individual imports.
    */
   const loadAllDictionariesForAnalysis = async (): Promise<Record<Locale, Record<string, string>>> => {
-    const entries = await Promise.all(
-      (SUPPORTED_LOCALES as Locale[]).map(async (loc) => [loc, await fetchLocaleDictionary(loc)] as const)
-    );
-    return Object.fromEntries(entries) as Record<Locale, Record<string, string>>;
+    return translations as Record<Locale, Record<string, string>>;
   };
 
   /**
@@ -413,6 +361,41 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     const allDicts = await loadAllDictionariesForAnalysis();
     return generateFullReport(allDicts, 'en');
   };
+
+  // Generate and log a beautiful translation coverage report on startup
+  useEffect(() => {
+    const logCoverageReport = async () => {
+      try {
+        const report = await runValidationReport();
+        console.group('%c📊 FREE QR GENERATOR - I18N COVERAGE REPORT', 'color: #6366f1; font-weight: bold; font-size: 13px; padding: 4px;');
+        console.log(`%cTimestamp: %c${report.timestamp}`, 'color: #94a3b8; font-weight: bold;', 'color: #0f172a;');
+        console.log(`%cGlobal Coverage Percentage: %c${report.overallCoverage}%`, 'color: #94a3b8; font-weight: bold;', 'color: #10b981; font-weight: bold;');
+        
+        Object.entries(report.reports).forEach(([loc, r]) => {
+          const rep = r as LocaleReport;
+          const missingCount = rep.missingKeys.length;
+          const duplicateCount = rep.issues.filter(i => i.type === 'duplicate_value').length;
+          const pctColor = rep.coveragePercentage === 100 ? 'color: #10b981; font-weight: bold;' : 'color: #6366f1; font-weight: bold;';
+          
+          console.groupCollapsed(`%cLocale: %c${loc.toUpperCase()} %c(${rep.coveragePercentage}%)`, 'color: #475569; font-weight: bold;', 'color: #0f172a; font-weight: bold;', pctColor);
+          console.log(`%cTotal Keys Expected: %c${rep.totalKeys}`, 'color: #64748b;', 'color: #334155; font-weight: bold;');
+          console.log(`%cTranslated Keys: %c${rep.translatedKeys}`, 'color: #64748b;', 'color: #10b981; font-weight: bold;');
+          console.log(`%cMissing Keys count: %c${missingCount}`, 'color: #64748b;', missingCount > 0 ? 'color: #ef4444; font-weight: bold;' : 'color: #10b981; font-weight: bold;');
+          if (missingCount > 0) {
+            console.log('%cMissing Keys List:', 'color: #ef4444; font-weight: bold;', rep.missingKeys);
+          }
+          console.log(`%cDuplicate Values/Keys count: %c${duplicateCount}`, 'color: #64748b;', duplicateCount > 0 ? 'color: #f59e0b; font-weight: bold;' : 'color: #10b981;');
+          console.groupEnd();
+        });
+        console.groupEnd();
+      } catch (err) {
+        console.warn('Could not generate automatic startup i18n report:', err);
+      }
+    };
+    // Let the provider fully load before running analysis to avoid stalling initial render
+    const timer = setTimeout(logCoverageReport, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <I18nContext.Provider
@@ -464,7 +447,7 @@ export function useTranslation(): I18nContextType {
       requestedKeys: [],
       loadedDictionaries: dictionaryCache,
       dictionary: enDictionary,
-      loadAllDictionariesForAnalysis: async () => ({ en: enDictionary }) as any,
+      loadAllDictionariesForAnalysis: async () => translations as any,
       runValidationReport: async () => ({}) as any,
     };
   }
@@ -526,4 +509,3 @@ export function useDocumentLanguage() {
     updateDocumentHeadAndHreflang(locale);
   }, [locale]);
 }
-

@@ -43,6 +43,7 @@ export interface SitemapRoute {
   seoTitle?: string;
   seoDescription?: string;
   isLanding?: boolean;
+  lastmod?: string;
 }
 
 export const sitemapRoutes: SitemapRoute[] = [
@@ -1330,7 +1331,6 @@ export function buildGenericPageSchema(route: SitemapRoute, locale: SupportedLoc
 
 export function buildSitemapXml(): string {
   const baseUrl = 'https://www.freeqrbarcodes.com';
-  const lastmod = new Date().toISOString().split('T')[0];
   
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
@@ -1340,20 +1340,25 @@ export function buildSitemapXml(): string {
   for (const route of sitemapRoutes) {
     xml += `  <url>\n`;
     xml += `    <loc>${baseUrl}${route.path === '/' ? '' : route.path}</loc>\n`;
-    xml += `    <lastmod>${lastmod}</lastmod>\n`;
+    if (route.lastmod && /^\d{4}-\d{2}-\d{2}$/.test(route.lastmod)) {
+      xml += `    <lastmod>${route.lastmod}</lastmod>\n`;
+    }
     xml += `    <changefreq>${route.changefreq}</changefreq>\n`;
     xml += `    <priority>${route.priority}</priority>\n`;
     xml += `  </url>\n`;
     count++;
   }
   
-  // Add blog articles
+  // Add blog articles with verified modification dates
   for (const slug of Object.keys(blogArticles)) {
     const article = blogArticles[slug];
-    const articleDate = article.date && /^\d{4}-\d{2}-\d{2}$/.test(article.date) ? article.date : lastmod;
+    const rawDate = article.dateModified || article.date;
+    const articleDate = rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : undefined;
     xml += `  <url>\n`;
     xml += `    <loc>${baseUrl}/blog/${slug}</loc>\n`;
-    xml += `    <lastmod>${articleDate}</lastmod>\n`;
+    if (articleDate) {
+      xml += `    <lastmod>${articleDate}</lastmod>\n`;
+    }
     xml += `    <changefreq>monthly</changefreq>\n`;
     xml += `    <priority>0.7</priority>\n`;
     xml += `  </url>\n`;
