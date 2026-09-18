@@ -3904,5 +3904,6 @@
   "barcode.table.qrInd": "Mobiles Marketing & Smart Packaging",
   "barcode.table.qrScan": "Smartphone-Kameras & 2D-Flächenkameras",
   "barcode.guide.symbologiesDesc": "Die Wahl der falschen Symbologie kann zum Ausfall älterer Scanner führen. Nutzen Sie diese Übersicht, um das passende Format für Ihre Anforderungen zu wählen:",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Wir haben neue maßgeschneiderte Sicherheitsrichtlinien für den Enterprise-QR-Einsatz in sicheren lokalen Netzwerken veröffentlicht, die einen sicheren Umgang mit Anmeldeinformationen fördern."
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Wir haben neue maßgeschneiderte Sicherheitsrichtlinien für den Enterprise-QR-Einsatz in sicheren lokalen Netzwerken veröffentlicht, die einen sicheren Umgang mit Anmeldeinformationen fördern.",
+  "preview.designEstimateNotice": "Design-Schätzung. Testen Sie den heruntergeladenen QR-Code vor dem Drucken."
 }

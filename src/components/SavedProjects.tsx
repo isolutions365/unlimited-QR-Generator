@@ -18,6 +18,7 @@ import {
   useSortable,
   rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { motion, AnimatePresence } from 'motion/react';
 
 import { useTranslation } from '../utils/i18n';
 import { isRtlLocale, Locale } from '../utils/translations';
@@ -119,9 +120,14 @@ function SortableProjectItem({
   };
 
   return (
-    <div
+    <motion.div
       ref={setNodeRef}
       style={style}
+      layout={!isDragging}
+      transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: isDragging ? 0.35 : 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.2 } }}
       onClick={(e) => onCardClick(proj, e)}
       className={`bg-white hover:bg-indigo-50/20 border rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between gap-3 group relative shadow-xs hover:shadow-md ${
         isSelected ? 'border-indigo-500 bg-indigo-50/30 ring-2 ring-indigo-500/20 shadow-sm' : 'border-slate-200 hover:border-indigo-400'
@@ -362,7 +368,7 @@ function SortableProjectItem({
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -1255,34 +1261,36 @@ export default function SavedProjects({
             >
               <SortableContext items={orderedProjects.map(p => p.id)} strategy={rectSortingStrategy}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[520px] overflow-y-auto pr-1">
-                  {orderedProjects.map((proj) => {
-                    const isSelected = selectedIds.includes(proj.id);
-                    return (
-                      <SortableProjectItem
-                        key={proj.id}
-                        proj={proj}
-                        isSelected={isSelected}
-                        locale={locale}
-                        movingProjectId={movingProjectId}
-                        isDuplicatingId={isDuplicatingId}
-                        allCategories={allCategories}
-                        copiedId={copiedId}
-                        t={t}
-                        onCardClick={handleCardClick}
-                        onToggleSelect={handleToggleSelect}
-                        onLoadAndEdit={handleLoadAndEdit}
-                        onDuplicateProject={handleDuplicateProject}
-                        onMoveProject={handleMoveProject}
-                        onCreateFolder={handleCreateFolder}
-                        onDelete={onDelete}
-                        setSelectedDetailProject={setSelectedDetailProject}
-                        setMovingProjectId={setMovingProjectId}
-                        setAnalyticsProject={setAnalyticsProject}
-                        onCopyLink={handleCopyLink}
-                        onSeedData={onSeedData}
-                      />
-                    );
-                  })}
+                  <AnimatePresence mode="popLayout">
+                    {orderedProjects.map((proj) => {
+                      const isSelected = selectedIds.includes(proj.id);
+                      return (
+                        <SortableProjectItem
+                          key={proj.id}
+                          proj={proj}
+                          isSelected={isSelected}
+                          locale={locale}
+                          movingProjectId={movingProjectId}
+                          isDuplicatingId={isDuplicatingId}
+                          allCategories={allCategories}
+                          copiedId={copiedId}
+                          t={t}
+                          onCardClick={handleCardClick}
+                          onToggleSelect={handleToggleSelect}
+                          onLoadAndEdit={handleLoadAndEdit}
+                          onDuplicateProject={handleDuplicateProject}
+                          onMoveProject={handleMoveProject}
+                          onCreateFolder={handleCreateFolder}
+                          onDelete={onDelete}
+                          setSelectedDetailProject={setSelectedDetailProject}
+                          setMovingProjectId={setMovingProjectId}
+                          setAnalyticsProject={setAnalyticsProject}
+                          onCopyLink={handleCopyLink}
+                          onSeedData={onSeedData}
+                        />
+                      );
+                    })}
+                  </AnimatePresence>
                 </div>
               </SortableContext>
 

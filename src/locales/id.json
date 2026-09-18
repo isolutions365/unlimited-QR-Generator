@@ -4070,5 +4070,6 @@
   "barcode.table.qrScan": "Kamera Ponsel Cerdas & Pencitra 2D",
   "barcode.guide.symbologiesDesc": "Memilih simbologi yang salah dapat menyebabkan pemindai lama gagal membaca. Tinjau kerangka terstruktur ini untuk menyesuaikan kebutuhan bisnis Anda:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, mendorong penanganan kredensial yang aman.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, mendorong penanganan kredensial yang aman"
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, mendorong penanganan kredensial yang aman",
+  "preview.designEstimateNotice": "Estimasi desain. Uji kode QR yang diunduh sebelum mencetak."
 }

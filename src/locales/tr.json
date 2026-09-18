@@ -4070,5 +4070,6 @@
   "barcode.table.qrScan": "Akıllı Telefon Kameraları ve 2D Tarayıcılar",
   "barcode.guide.symbologiesDesc": "Yanlış semboloji seçimi eski tarayıcılarda okuma hatasına neden olabilir. İşletme gereksinimlerinize en uygun formatı belirlemek için bu tabloyu inceleyin:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Güvenli yerel ağlarda kurumsal QR dağıtımı için güvenli kimlik bilgisi yönetimini teşvik eden yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Güvenli yerel ağlarda kurumsal QR dağıtımı için güvenli kimlik bilgisi yönetimini teşvik eden yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk"
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Güvenli yerel ağlarda kurumsal QR dağıtımı için güvenli kimlik bilgisi yönetimini teşvik eden yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk",
+  "preview.designEstimateNotice": "Tasarım tahmini. Yazdırmadan önce indirilen QR kodunu test edin."
 }

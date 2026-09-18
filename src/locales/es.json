@@ -3977,5 +3977,6 @@
   "barcode.table.qrInd": "Marketing móvil y empaque inteligente",
   "barcode.table.qrScan": "Cámaras de smartphone e imágenes 2D",
   "barcode.guide.symbologiesDesc": "Elegir la simbología incorrecta puede provocar fallos en lectores antiguos. Revise este marco estructural para adaptarse a los requisitos de su negocio:",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Lanzamos nuevas directrices de seguridad personalizadas para la implementación empresarial de QR en redes locales seguras, promoviendo el manejo seguro de credenciales."
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Lanzamos nuevas directrices de seguridad personalizadas para la implementación empresarial de QR en redes locales seguras, promoviendo el manejo seguro de credenciales.",
+  "preview.designEstimateNotice": "Estimación de diseño. Pruebe el código QR descargado antes de imprimir."
 }

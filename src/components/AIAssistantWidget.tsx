@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ScrollableTabContainer from './ScrollableTabContainer';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { 
   X, Send, Bot, User, Loader2, ArrowRight, CheckCircle2,
   Palette, Link as LinkIcon, FileText, SearchCheck, Utensils, Contact,
@@ -95,6 +95,7 @@ export default function AIAssistantWidget({
   onUpdateProject
 }: AIAssistantWidgetProps) {
   const { t } = useTranslation();
+  const shouldReduceMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(() => {
     try {
@@ -132,6 +133,20 @@ export default function AIAssistantWidget({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
+
+  // Listen for custom event from MobileHeader
+  useEffect(() => {
+    const handleOpenAI = () => {
+      playAudioSound('preview');
+      try {
+        localStorage.setItem('qr_has_opened_ai_assistant', 'true');
+      } catch {}
+      setHasOpened(true);
+      setIsOpen(true);
+    };
+    window.addEventListener('open-ai-assistant', handleOpenAI);
+    return () => window.removeEventListener('open-ai-assistant', handleOpenAI);
+  }, []);
 
   useEffect(() => {
     if (chatEndRef.current && isOpen) {
@@ -444,17 +459,16 @@ export default function AIAssistantWidget({
 
   return (
     <>
-      {/* 1. Floating Trigger Button (Positioned vertically separated from reCAPTCHA badge & MobileNav) */}
-      <div className="ai-assistant-floating-container" id="ai-assistant-floating-wrapper">
+      {/* 1. Floating Trigger Button (Positioned vertically separated from reCAPTCHA badge & MobileNav; hidden on mobile since trigger is integrated in header) */}
+      <div className="hidden md:block ai-assistant-floating-container" id="ai-assistant-floating-wrapper">
         <AnimatePresence>
           {!isOpen && (
             <motion.button
               id="ai-assistant-floating-trigger"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
+              transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
               onClick={() => {
                 playAudioSound('preview');
                 try {
@@ -464,14 +478,9 @@ export default function AIAssistantWidget({
                 setIsOpen(true);
               }}
               aria-label="Open AI Workspace Assistant"
-              className="flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:to-violet-800 text-white rounded-full shadow-xl hover:shadow-2xl font-bold text-xs tracking-wide transition-all cursor-pointer border border-indigo-400/30 group"
+              className="flex items-center gap-2 min-h-[44px] px-3.5 py-2.5 bg-slate-900/95 hover:bg-slate-800 text-indigo-300 hover:text-white rounded-full shadow-lg font-semibold text-xs tracking-tight transition-colors cursor-pointer border border-slate-700/80 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 select-none group"
             >
-              <div className="relative">
-                <Zap className="w-4 h-4 animate-pulse text-amber-300" />
-                {!hasOpened && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
-                )}
-              </div>
+              <Zap className="w-4 h-4 text-indigo-400 shrink-0" />
               <span>{t('ai.buttonLabel', 'AI Assistant')}</span>
             </motion.button>
           )}
@@ -488,16 +497,20 @@ export default function AIAssistantWidget({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40"
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40"
             />
 
             {/* Slide-over Drawer Container */}
             <motion.div
               id="ai-assistant-slide-drawer"
-              initial={{ x: '100%' }}
+              initial={shouldReduceMotion ? false : { x: '100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { x: '100%' }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0.01 }
+                  : { type: 'tween', ease: [0.4, 0, 0.2, 1], duration: 0.22 }
+              }
               className="fixed inset-y-0 right-0 rtl:right-auto rtl:left-0 z-50 w-full sm:w-[420px] md:w-[460px] bg-white shadow-2xl flex flex-col border-l rtl:border-l-0 rtl:border-r border-slate-200 text-slate-800 overflow-hidden"
             >
               {/* Drawer Header (Modern Gradient: "AI Workspace Assistant") */}

@@ -4000,5 +4000,6 @@
   "barcode.table.qrScan": "Fotocamere smartphone e imager 2D",
   "barcode.guide.symbologiesDesc": "Selezionare la simbologia errata può causare il malfunzionamento dei vecchi scanner. Consulta questo quadro comparativo per le tue esigenze aziendali:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, promuovendo la gestione sicura delle credenziali.",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, promuovendo la gestione sicura delle credenziali"
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, promuovendo la gestione sicura delle credenziali",
+  "preview.designEstimateNotice": "Stima di progettazione. Testa il codice QR scaricato prima di stampare."
 }

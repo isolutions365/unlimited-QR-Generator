@@ -5016,5 +5016,6 @@
   "barcode.table.qrInd": "التسويق عبر الجوال والتغليف الذكي",
   "barcode.table.qrScan": "كاميرات الهواتف الذكية وماسحات 2D",
   "barcode.guide.symbologiesDesc": "قد يؤدي اختيار رمز غير متوافق إلى فشل أجهزة المسح القديمة. استعرض هذا الجدول المقارن لتحديد الرمز المناسب لمتطلبات عملك:",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "أطلقنا إرشادات أمان مخصصة وجديدة لنشر رموز QR للمؤسسات عبر الشبكات المحلية الآمنة لتعزيز التعامل الآمن مع بيانات الاعتماد."
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "أطلقنا إرشادات أمان مخصصة وجديدة لنشر رموز QR للمؤسسات عبر الشبكات المحلية الآمنة لتعزيز التعامل الآمن مع بيانات الاعتماد.",
+  "preview.designEstimateNotice": "تقدير تصميمي. اختبر رمز QR بعد تنزيله قبل الطباعة."
 }

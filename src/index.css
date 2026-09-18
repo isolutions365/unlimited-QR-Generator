@@ -1,31 +1,20 @@
 @import "tailwindcss";
 
 @layer base {
-  /* Premium modern button micro-interactions that trigger once cursor enters */
+  /* Stabilized interactive button transitions: smooth color/surface response without destructive scale/translate transforms or forced shadow overlays */
   button,
   [role="button"],
   input[type="submit"],
   .btn-animate {
-    transition: transform 0.25s cubic-bezier(0.34, 1.6, 0.64, 1), 
-                box-shadow 0.25s cubic-bezier(0.34, 1.6, 0.64, 1),
-                background-color 0.2s ease,
-                border-color 0.2s ease,
-                color 0.15s ease !important;
+    transition-property: color, background-color, border-color, opacity, box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
   }
 
-  button:hover,
-  [role="button"]:hover,
-  input[type="submit"]:hover {
-    transform: scale(1.045) translateY(-2px);
-    box-shadow: 0 10px 20px -8px rgba(99, 102, 241, 0.25), 
-                0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  }
-
-  button:active,
-  [role="button"]:active,
-  input[type="submit"]:active {
-    transform: scale(0.96) translateY(0px) !important;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
+  button:disabled,
+  [role="button"][aria-disabled="true"],
+  input[type="submit"]:disabled {
+    cursor: not-allowed;
   }
 }
 
@@ -626,15 +615,15 @@ html[dir="rtl"] .grecaptcha-badge {
 /* 2. Global AI Workspace Assistant Button Container */
 .ai-assistant-floating-container {
   position: fixed !important;
-  bottom: 84px !important; /* Clears MobileBottomNav on mobile */
-  right: 20px !important;
-  z-index: 50 !important;
-  transition: bottom 0.3s ease, right 0.3s ease, left 0.3s ease, transform 0.25s ease !important;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 72px) !important; /* Guaranteed non-overlap clearance above MobileBottomNav */
+  right: 16px !important;
+  z-index: 40 !important;
+  transition: bottom 0.2s ease, right 0.2s ease, left 0.2s ease !important;
 }
 
 @media (min-width: 768px) {
   .ai-assistant-floating-container {
-    bottom: 24px !important; /* Clean distance above footer */
+    bottom: 24px !important; /* Clean distance above desktop footer */
     right: 24px !important;
   }
 }
@@ -643,7 +632,7 @@ html[dir="rtl"] .grecaptcha-badge {
 .rtl-active .ai-assistant-floating-container,
 html[dir="rtl"] .ai-assistant-floating-container {
   right: auto !important;
-  left: 20px !important;
+  left: 16px !important;
 }
 
 @media (min-width: 768px) {
@@ -774,6 +763,23 @@ html[dir="rtl"] .cookie-consent-container {
     filter: drop-shadow(0 0 16px rgba(16, 185, 129, 0.8));
   }
 }
+
+/* ==========================================================================
+   Global Reduced-Motion Safety Foundation
+   Honors OS/browser accessibility preference by collapsing motion durations
+   to 0.01ms (preserving transitionend/animationend event callbacks).
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 
 
 

@@ -2348,11 +2348,11 @@
   "preview.foldLine": "کھڑا کرنے کے لیے یہاں سے موڑیں (Fold Line)",
   "preview.foldStandDisplay": "ٹیبل ڈسپلے موڑیں اور رکھیں",
   "preview.footnoteDesc": "Adds سائز, date, and custom string in footer مارجنs.",
-  "preview.gradeCritical": "Critical سکین کی صلاحیت انتباہ",
+  "preview.gradeCritical": "اسکین ہونے کی صلاحیت کے بارے میں اہم انتباہ",
   "preview.gradeCriticalDesc": "Extremely narrow رنگ contrast or excessively large center overlays detected.",
-  "preview.gradeExcellent": "Excellent سکین کی صلاحیت",
+  "preview.gradeExcellent": "اسکین ہونے کی بہترین صلاحیت",
   "preview.gradeExcellentDesc": "Highly compatible contrast and correct emblem boundaries.",
-  "preview.gradeModerate": "Moderate سکین کی صلاحیت",
+  "preview.gradeModerate": "اسکین ہونے کی درمیانی صلاحیت",
   "preview.gradeModerateDesc": "انتباہ: gradient واپسgrounds or large emblems may decrease older camera reading times.",
   "preview.grid2x2": "2x2 گرڈ (4 کاپیاں)",
   "preview.grid2x2Desc": "متوازن کاغذ تقسیم",
@@ -3977,5 +3977,6 @@
   "barcode.table.qrInd": "موبائل مارکیٹنگ اور سمارٹ پیکیجنگ",
   "barcode.table.qrScan": "اسمارٹ فون کیمرے اور 2D امیجرز",
   "barcode.guide.symbologiesDesc": "غلط علامت کے انتخاب کی وجہ سے پرانے اسکینرز ناکام ہو سکتے ہیں۔ اپنی کاروباری ضروریات کے مطابق اس تقابلی جائزے کو دیکھیں۔",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "ہم نے محفوظ مقامی نیٹ ورکس کے لیے حسب ضرورت سیکیورٹی رہنما اصول جاری کیے ہیں جو محفوظ کریڈینشل ہینڈلنگ کو فروغ دیتے ہیں۔"
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "ہم نے محفوظ مقامی نیٹ ورکس کے لیے حسب ضرورت سیکیورٹی رہنما اصول جاری کیے ہیں جو محفوظ کریڈینشل ہینڈلنگ کو فروغ دیتے ہیں۔",
+  "preview.designEstimateNotice": "ڈیزائن کا تخمینہ۔ پرنٹ کرنے سے پہلے ڈاؤن لوڈ کردہ QR کوڈ کو ٹیسٹ کریں۔"
 }

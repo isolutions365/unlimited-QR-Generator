@@ -3998,5 +3998,6 @@
   "barcode.table.qrScan": "スマートフォンカメラ＆ 2D エリアイメージャー",
   "barcode.guide.symbologiesDesc": "不適切なシンボル体系を選択すると、レガシースキャナーで読み取りに失敗する原因となります。業務要件に最適な形式を以下の比較表でご確認ください：",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、安全な認証情報の取り扱いを推進します。",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、安全な認証情報の取り扱いを推進します。"
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、安全な認証情報の取り扱いを推進します。",
+  "preview.designEstimateNotice": "デザイン推定値です。印刷前にダウンロードしたQRコードをテストしてください。"
 }

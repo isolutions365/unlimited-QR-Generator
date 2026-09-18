@@ -3998,5 +3998,6 @@
   "barcode.table.qrScan": "智能手机摄像头与 2D 影像扫描器",
   "barcode.guide.symbologiesDesc": "选择错误的条码制式可能导致传统扫描器读取失败。请参考以下结构化对比表，选择符合您业务需求的技术格式：",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以促进安全凭据处理。",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以促进安全凭据处理。"
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以促进安全凭据处理。",
+  "preview.designEstimateNotice": "设计评估。打印前请测试下载的二维码。"
 }

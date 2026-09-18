@@ -19,6 +19,7 @@ interface ControlPanelProps {
   isSaving: boolean;
   userEmail?: string | null;
   projects?: QRProject[];
+  activeMobileSection?: 'content' | 'style' | 'logo' | 'all';
 }
 
 const quickStyles = [
@@ -164,9 +165,13 @@ export default function ControlPanel({ currentProject,
   onSave,
   isSaving,
   userEmail,
-  projects = []
+  projects = [],
+  activeMobileSection = 'all'
 }: ControlPanelProps) {
   const { t, locale } = useTranslation();
+  const showContentSection = activeMobileSection === 'all' || activeMobileSection === 'content';
+  const showStyleSection = activeMobileSection === 'all' || activeMobileSection === 'style';
+  const showLogoSection = activeMobileSection === 'all' || activeMobileSection === 'logo';
   const [localProject, setLocalProject] = useState<Partial<QRProject>>(currentProject);
   const [showEccTooltip, setShowEccTooltip] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
@@ -643,20 +648,20 @@ export default function ControlPanel({ currentProject,
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-4 sm:p-6 shadow-sm flex flex-col gap-4 sm:gap-6"
+      className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-xs flex flex-col gap-4 sm:gap-6"
     >
       {/* Scope Title & Undo/Redo Action Toolbar */}
-      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-gray-100">
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight text-gray-900 flex items-center gap-2">
-            <Paintbrush className="w-5 h-5 text-indigo-600" />
-            {t('control.customizeTitle', 'Customize Your QR Code')}
+          <h2 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 flex items-center gap-2">
+            <Paintbrush className="w-5 h-5 text-indigo-600 shrink-0" />
+            <span>{t('control.customizeTitle', 'Customize Your QR Code')}</span>
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">{t('control.desc', 'Configure type, contents, custom styles, and centerpiece tags.')}</p>
+          <p className="text-xs text-slate-500 mt-0.5">{t('control.desc', 'Configure type, contents, custom styles, and centerpiece tags.')}</p>
         </div>
 
-        {/* Undo / Redo Control Bar */}
-        <div id="design-undo-redo-toolbar" className="flex items-center gap-1.5 self-start sm:self-auto bg-slate-50 border border-slate-200/80 p-1 rounded-xl shadow-xs">
+        {/* Undo / Redo Control Bar with Stable 44px Touch Targets */}
+        <div id="design-undo-redo-toolbar" className="flex items-center gap-1 self-start sm:self-auto bg-slate-100/90 border border-slate-200/90 p-1 rounded-xl shadow-xs">
           <button
             type="button"
             id="btn-undo-design"
@@ -664,13 +669,13 @@ export default function ControlPanel({ currentProject,
             onClick={handleUndo}
             title={t('control.undoTooltip', 'Undo design change (Ctrl+Z / ⌘Z)')}
             aria-label="Undo design change"
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all select-none ${
+            className={`flex items-center gap-1.5 min-h-[44px] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors select-none focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${
               canUndo
-                ? 'bg-white text-slate-700 shadow-xs border border-slate-200/70 hover:bg-slate-50 hover:text-indigo-600 active:scale-95 cursor-pointer'
-                : 'text-slate-300 border border-transparent cursor-not-allowed opacity-40'
+                ? 'bg-white text-slate-800 shadow-2xs border border-slate-200 hover:bg-slate-50 hover:text-indigo-600 cursor-pointer'
+                : 'text-slate-400 bg-transparent border border-transparent cursor-not-allowed opacity-60'
             }`}
           >
-            <Undo2 className="w-3.5 h-3.5 shrink-0" />
+            <Undo2 className="w-4 h-4 shrink-0" />
             <span>{t('control.undo', 'Undo')}</span>
           </button>
           
@@ -681,22 +686,24 @@ export default function ControlPanel({ currentProject,
             onClick={handleRedo}
             title={t('control.redoTooltip', 'Redo design change (Ctrl+Y / ⌘⇧Z)')}
             aria-label="Redo design change"
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all select-none ${
+            className={`flex items-center gap-1.5 min-h-[44px] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors select-none focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${
               canRedo
-                ? 'bg-white text-slate-700 shadow-xs border border-slate-200/70 hover:bg-slate-50 hover:text-indigo-600 active:scale-95 cursor-pointer'
-                : 'text-slate-300 border border-transparent cursor-not-allowed opacity-40'
+                ? 'bg-white text-slate-800 shadow-2xs border border-slate-200 hover:bg-slate-50 hover:text-indigo-600 cursor-pointer'
+                : 'text-slate-400 bg-transparent border border-transparent cursor-not-allowed opacity-60'
             }`}
           >
-            <Redo2 className="w-3.5 h-3.5 shrink-0" />
+            <Redo2 className="w-4 h-4 shrink-0" />
             <span>{t('control.redo', 'Redo')}</span>
           </button>
         </div>
       </motion.div>
 
       {/* Target Content Types */}
-      <motion.div
-        id="tour-qr-type"
-        variants={itemVariants}
+      {showContentSection && (
+        <>
+          <motion.div
+            id="tour-qr-type"
+            variants={itemVariants}
         whileHover={{
           scale: 1.015,
           y: -2,
@@ -1387,12 +1394,16 @@ export default function ControlPanel({ currentProject,
           />
         )}
       </motion.div>
+        </>
+      )}
 
       {/* Integrated Color Palette and Gradient Manager */}
-      <ColorPalette
-        currentProject={localProject}
-        onChange={onChange}
-      />
+      {showStyleSection && (
+        <>
+          <ColorPalette
+            currentProject={localProject}
+            onChange={onChange}
+          />
 
       {/* Quick Style Presets Section */}
       <motion.div
@@ -2405,8 +2416,11 @@ export default function ControlPanel({ currentProject,
           </div>
         )}
       </motion.div>
+        </>
+      )}
 
       {/* Brand Logos Custom center overlay */}
+      {showLogoSection && (
       <motion.div
         id="logo-settings-section"
         variants={itemVariants}
@@ -3237,40 +3251,45 @@ export default function ControlPanel({ currentProject,
           </div>
         )}
       </motion.div>
+      )}
 
       {/* Subtle Color-Shift Animation Selector */}
-      <motion.div
-        variants={itemVariants}
-        whileHover={{
-          scale: 1.015,
-          y: -2,
-          boxShadow: '0 8px 20px -8px rgba(16, 185, 129, 0.06), 0 2px 6px -4px rgba(16, 185, 129, 0.04)'
-        }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="flex items-center justify-between bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100/30 transition-all duration-300"
-      >
-        <div>
-          <span className="text-xs font-semibold text-emerald-950 block">{t('control.animateColorShift', 'Animate Color Shift')}</span>
-          <span className="text-[10px] text-emerald-700 block">{t('control.colorShiftDesc', 'Gradually transitions the QR pattern colors over time using Framer Motion.')}</span>
-        </div>
-        <button
-          type="button"
-          role="switch"
-          aria-label="Toggle pattern color shift animation"
-          aria-checked={localProject.design?.colorShift ? "true" : "false"}
-          onClick={() => setDesignField('colorShift', !localProject.design?.colorShift)}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.design?.colorShift ? 'bg-emerald-600' : 'bg-gray-200 ' }`}
+      {showStyleSection && (
+        <motion.div
+          variants={itemVariants}
+          whileHover={{
+            scale: 1.015,
+            y: -2,
+            boxShadow: '0 8px 20px -8px rgba(16, 185, 129, 0.06), 0 2px 6px -4px rgba(16, 185, 129, 0.04)'
+          }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+          className="flex items-center justify-between bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100/30 transition-all duration-300"
         >
-          <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.design?.colorShift ? 'translate-x-6' : 'translate-x-1' }`}
-          />
-        </button>
-      </motion.div>
+          <div>
+            <span className="text-xs font-semibold text-emerald-950 block">{t('control.animateColorShift', 'Animate Color Shift')}</span>
+            <span className="text-[10px] text-emerald-700 block">{t('control.colorShiftDesc', 'Gradually transitions the QR pattern colors over time using Framer Motion.')}</span>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-label="Toggle pattern color shift animation"
+            aria-checked={localProject.design?.colorShift ? "true" : "false"}
+            onClick={() => setDesignField('colorShift', !localProject.design?.colorShift)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${ localProject.design?.colorShift ? 'bg-emerald-600' : 'bg-gray-200 ' }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ localProject.design?.colorShift ? 'translate-x-6' : 'translate-x-1' }`}
+            />
+          </button>
+        </motion.div>
+      )}
 
       {/* Analytics Tracking Flag toggle with Honest Static vs Dynamic Transparency */}
-      <motion.div
-        id="tour-analytics-toggle"
-        variants={itemVariants}
+      {showContentSection && (
+        <>
+          <motion.div
+            id="tour-analytics-toggle"
+            variants={itemVariants}
         className="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50 transition-all duration-300 space-y-3"
       >
         <div className="flex items-center justify-between gap-3">
@@ -3575,6 +3594,8 @@ export default function ControlPanel({ currentProject,
           )}
         </button>
       </motion.div>
+        </>
+      )}
     </motion.div>
   );
 }

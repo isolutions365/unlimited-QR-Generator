@@ -3977,5 +3977,6 @@
   "barcode.table.qrInd": "Marketing mobile & emballage connecté",
   "barcode.table.qrScan": "Caméras smartphone & imageurs 2D",
   "barcode.guide.symbologiesDesc": "Choisir la mauvaise symbologie peut entraîner l’échec des scanners anciens. Consultez ce tableau comparatif pour répondre aux exigences de votre entreprise :",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Nous avons lancé de nouvelles directives de sécurité personnalisées pour le déploiement de QR Code en entreprise sur des réseaux locaux sécurisés, favorisant une gestion sécurisée des identifiants."
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Nous avons lancé de nouvelles directives de sécurité personnalisées pour le déploiement de QR Code en entreprise sur des réseaux locaux sécurisés, favorisant une gestion sécurisée des identifiants.",
+  "preview.designEstimateNotice": "Estimation de conception. Testez le code QR téléchargé avant l'impression."
 }

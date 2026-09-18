@@ -2346,11 +2346,11 @@
   "preview.foldLine": "FOLD रेखा को STAND",
   "preview.foldStandDisplay": "Fold और Stand प्रदर्शित करें",
   "preview.footnoteDesc": "Adds आकार, तिथि, और कस्टम string में फ़ुटर margins.",
-  "preview.gradeCritical": "Critical स्कैन-क्षमता चेतावनी",
+  "preview.gradeCritical": "स्कैन होने की क्षमता के बारे में गंभीर चेतावनी",
   "preview.gradeCriticalDesc": "Extremely narrow रंग कंट्रास्ट या excessively बड़ा केंद्र overlays detected.",
-  "preview.gradeExcellent": "Excellent स्कैन-क्षमता",
+  "preview.gradeExcellent": "स्कैन होने की उत्कृष्ट क्षमता",
   "preview.gradeExcellentDesc": "अत्यधिक compatible कंट्रास्ट और correct emblem boundaries.",
-  "preview.gradeModerate": "Moderate स्कैन-क्षमता",
+  "preview.gradeModerate": "स्कैन होने की मध्यम क्षमता",
   "preview.gradeModerateDesc": "चेतावनी: ग्रेडिएंट backgrounds या बड़ा emblems सकता है decrease older कैमरा reading बार.",
   "preview.grid2x2": "2x2 ग्रिड (4 Copies)",
   "preview.grid2x2Desc": "यहां तक कि कागज वितरण",
@@ -3976,5 +3976,6 @@
   "barcode.table.qrInd": "मोबाइल मार्केटिंग और स्मार्ट पैकेजिंग",
   "barcode.table.qrScan": "स्मार्टफोन कैमरे और 2D इमेजर",
   "barcode.guide.symbologiesDesc": "गलत सिम्बोलॉजी चुनने से पुराने स्कैनर विफल हो सकते हैं। अपनी व्यावसायिक आवश्यकताओं के अनुसार सही प्रारूप चुनने के लिए इस तुलनात्मक तालिका की समीक्षा करें:",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "हम launched नया कस्टमाइज्ड सुरक्षा दिशा-निर्देश के लिए एंटरप्राइज QR परिनियोजन पर सुरक्षित स्थानीय नेटवर्क, सुरक्षित क्रेडेंशियल हैंडलिंग को बढ़ावा देना।"
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "हम launched नया कस्टमाइज्ड सुरक्षा दिशा-निर्देश के लिए एंटरप्राइज QR परिनियोजन पर सुरक्षित स्थानीय नेटवर्क, सुरक्षित क्रेडेंशियल हैंडलिंग को बढ़ावा देना।",
+  "preview.designEstimateNotice": "डिज़ाइन अनुमान। प्रिंट करने से पहले डाउनलोड किए गए QR कोड का परीक्षण करें।"
 }

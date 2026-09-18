@@ -92,7 +92,7 @@ export default function AppLayoutShell({
   // MOBILE APP / NATIVE VIEW:
   // Renders compact MobileHeader, hides heavy multi-row headers, renders mobile bottom tab bar & camera scanner
   return (
-    <div id="mobile-app-shell" className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans pb-24">
+    <div id="mobile-app-shell" className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans pb-28 sm:pb-32">
       {/* Sleek Mobile Header */}
       <MobileHeader
         platformName={platform.platformName}
@@ -107,9 +107,9 @@ export default function AppLayoutShell({
       />
 
       {/* Main Mobile App Body Container */}
-      <main className="flex-1 px-3 py-4 max-w-md mx-auto w-full space-y-4 overflow-x-hidden">
+      <main className="flex-1 px-3 sm:px-4 py-3.5 max-w-md mx-auto w-full space-y-4 overflow-x-hidden">
         {activeMobileTab === 'generator' && (
-          <div className="space-y-4 animate-in fade-in duration-200">
+          <div className="space-y-3.5 animate-in fade-in duration-150">
             {mobileGeneratorWorkspace || desktopMainContent}
           </div>
         )}
@@ -117,11 +117,11 @@ export default function AppLayoutShell({
         {activeMobileTab === 'tools' && (
           <div className="space-y-4 animate-in fade-in duration-200">
             {mobileToolsWorkspace || (
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 space-y-4">
-                <h2 className="text-base font-black text-white flex items-center gap-2">
+              <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-xs space-y-4">
+                <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
                   <span>📱</span> Mobile QR Power Tools
                 </h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-600">
                   Select a specialized QR generator or tool below to get started instantly.
                 </p>
                 {desktopSubNav}
@@ -133,8 +133,8 @@ export default function AppLayoutShell({
         {activeMobileTab === 'saved' && (
           <div className="space-y-4 animate-in fade-in duration-200">
             {mobileSavedProjectsWorkspace || (
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4">
-                <h2 className="text-sm font-bold text-white mb-3">Saved Projects & History</h2>
+              <div className="bg-white border border-slate-200/80 rounded-3xl p-4 shadow-xs">
+                <h2 className="text-sm font-bold text-slate-900 mb-3">Saved Projects & History</h2>
                 {mobileSavedProjectsWorkspace}
               </div>
             )}
@@ -144,14 +144,14 @@ export default function AppLayoutShell({
         {activeMobileTab === 'settings' && (
           <div className="space-y-4 animate-in fade-in duration-200">
             {mobileSettingsWorkspace || (
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 text-center space-y-4">
-                <h2 className="text-sm font-bold text-white">App Settings & Account Profile</h2>
-                <p className="text-xs text-slate-400">Tap below to customize audio feedback, default download formats, or manage your account.</p>
+              <div className="bg-white border border-slate-200/80 rounded-3xl p-5 text-center shadow-xs space-y-4">
+                <h2 className="text-sm font-bold text-slate-900">App Settings & Account Profile</h2>
+                <p className="text-xs text-slate-600">Tap below to customize audio feedback, default download formats, or manage your account.</p>
                 {onOpenSettings && (
                   <button
                     type="button"
                     onClick={onOpenSettings}
-                    className="w-full py-3 bg-indigo-600 text-white rounded-2xl text-xs font-bold shadow-lg shadow-indigo-950 cursor-pointer"
+                    className="w-full min-h-[44px] py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer transition-colors"
                   >
                     Open Settings Panel
                   </button>

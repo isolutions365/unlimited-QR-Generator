@@ -3976,5 +3976,6 @@
   "barcode.table.qrInd": "Mobile Marketing & Smart Packaging",
   "barcode.table.qrScan": "Smartphone Cameras & 2D Area Imagers",
   "barcode.guide.symbologiesDesc": "Selecting the wrong symbology can cause legacy scanners to fail. Review this structural framework to match your business requirements:",
-  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling."
+  "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.",
+  "preview.designEstimateNotice": "Design estimate. Test the downloaded QR code before printing."
 }
