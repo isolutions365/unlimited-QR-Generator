@@ -246,14 +246,14 @@ export default function ProgrammaticHub({
       "image": "https://www.freeqrbarcodes.com/og-image.jpg",
       "author": {
         "@type": "Organization",
-        "name": t('programmatic.authorName', 'FreeQRBarcodes Editorial Board')
+        "name": t('programmatic.authorName', 'FreeQRBarcodes.com Editorial Board')
       },
       "publisher": {
         "@type": "Organization",
-        "name": t('programmatic.publisherName', 'FreeQRBarcodes'),
+        "name": t('programmatic.publisherName', 'Free QR Code Generator Inc.'),
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
+          "url": "https://www.freeqrbarcodes.com/favicon-32x32.png"
         }
       },
       "mainEntityOfPage": canonicalUrl
@@ -790,18 +790,14 @@ export default function ProgrammaticHub({
                 const hasBespoke = industriesData.some(i => i.slug === item.slug) || section !== 'industries';
                 
                 return (
-                  <motion.a
+                  <motion.div
                     layout
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.25 }}
                     key={item.slug}
-                    href={path}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onNavigate(path);
-                    }}
+                    onClick={() => onNavigate(path)}
                     className="group bg-white border border-slate-200/90 rounded-2xl p-5 hover:shadow-lg hover:border-indigo-200 hover:-translate-y-0.5 transition-all cursor-pointer flex flex-col justify-between"
                   >
                     <div>
@@ -839,7 +835,7 @@ export default function ProgrammaticHub({
                       <span>{t('programmatic.exploreAuthorityFile', 'Explore Authority File')}</span>
                       <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-indigo-600 transition-transform group-hover:translate-x-0.5" />
                     </div>
-                  </motion.a>
+                  </motion.div>
                 );
               })}
             </AnimatePresence>

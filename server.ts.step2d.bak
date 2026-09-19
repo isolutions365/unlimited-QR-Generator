@@ -286,6 +286,8 @@ app.use(compression({
       } else if (fileName === 'sw.js' || fileName === 'service-worker.js' || fileName.startsWith('workbox-')) {
         res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+      } else if (filePath.includes('/assets/') && filePath.match(/\-[a-zA-Z0-9_-]{8,}\./)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       } else {
         res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
       }
@@ -3289,42 +3291,6 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
         next();
       });
 
-      // Build-derived asset inventory for verified content-hashed build outputs
-      const getVerifiedBuildAssetsSet = (distDir: string): Set<string> => {
-        const verifiedSet = new Set<string>();
-        const manifestPaths = [
-          path.join(distDir, '.vite', 'manifest.json'),
-          path.join(distDir, 'manifest.json')
-        ];
-        for (const mPath of manifestPaths) {
-          if (fs.existsSync(mPath)) {
-            try {
-              const content = fs.readFileSync(mPath, 'utf-8');
-              const manifestObj = JSON.parse(content);
-              for (const key of Object.keys(manifestObj)) {
-                const entry = manifestObj[key];
-                if (entry && typeof entry === 'object') {
-                  if (entry.file && typeof entry.file === 'string') {
-                    verifiedSet.add(entry.file.replace(/\\/g, '/'));
-                  }
-                  if (Array.isArray(entry.css)) {
-                    entry.css.forEach((c: string) => verifiedSet.add(c.replace(/\\/g, '/')));
-                  }
-                  if (Array.isArray(entry.assets)) {
-                    entry.assets.forEach((a: string) => verifiedSet.add(a.replace(/\\/g, '/')));
-                  }
-                }
-              }
-            } catch (err) {
-              console.warn('Error reading Vite manifest.json:', err);
-            }
-          }
-        }
-        return verifiedSet;
-      };
-
-      const verifiedBuildAssets = getVerifiedBuildAssetsSet(distPath);
-
       app.use(express.static(distPath, {
         index: false,
         setHeaders: (res, filePath) => {
@@ -3332,10 +3298,7 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
           res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
           res.setHeader('Access-Control-Allow-Headers', '*');
           const fileName = path.basename(filePath).toLowerCase();
-          const relPath = path.relative(distPath, filePath).replace(/\\/g, '/');
-          
-          // An asset is ONLY immutable if it is explicitly listed in Vite build manifest AND lives in /assets/
-          const isVerifiedHashedBuildAsset = verifiedBuildAssets.has(relPath) && relPath.startsWith('assets/');
+          const isContentHashedAsset = filePath.includes('/assets/') && /\-[a-zA-Z0-9_-]{8,}\.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$/i.test(filePath);
           const isServiceWorker = fileName === 'sw.js' || fileName === 'service-worker.js' || fileName.startsWith('workbox-');
 
           if (filePath.endsWith('.html')) {
@@ -3348,7 +3311,7 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
           } else if (isServiceWorker) {
             res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
-          } else if (isVerifiedHashedBuildAsset) {
+          } else if (isContentHashedAsset) {
             if (filePath.endsWith('.js') || filePath.endsWith('.mjs')) {
               res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
             } else if (filePath.endsWith('.css')) {

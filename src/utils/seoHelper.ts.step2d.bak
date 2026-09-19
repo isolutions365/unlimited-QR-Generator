@@ -148,7 +148,7 @@ function injectJsonLd(config: LocalizedSEOConfig, locale: Locale, doc: Document)
   const webSiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "FreeQRBarcodes",
+    "name": "FreeQRBarcodes.com",
     "url": canonicalUrl,
     "description": config.description,
     "inLanguage": locale,
@@ -183,7 +183,7 @@ function injectJsonLd(config: LocalizedSEOConfig, locale: Locale, doc: Document)
       "@type": "Product",
       "name": config.title,
       "description": config.description,
-      "image": config.image || `${getProductionBaseUrl()}/apple-touch-icon.png`,
+      "image": config.image || `${getProductionBaseUrl()}/logo.png`,
       "offers": {
         "@type": "Offer",
         "price": "0.00",

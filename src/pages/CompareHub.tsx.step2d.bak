@@ -151,10 +151,10 @@ export default function CompareHub({
       },
       "publisher": {
         "@type": "Organization",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator Inc.",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
+          "url": "https://www.freeqrbarcodes.com/favicon-32x32.png"
         }
       },
       "mainEntityOfPage": canonicalUrl
@@ -239,16 +239,12 @@ export default function CompareHub({
                     <span>Design Custom QR Code</span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </button>
-                  <a
-                    href="/compare"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleBackToDirectory();
-                    }}
+                  <button
+                    onClick={handleBackToDirectory}
                     className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-slate-800 text-slate-200 font-bold text-sm tracking-wide hover:bg-slate-700 transition-colors cursor-pointer border border-slate-700"
                   >
                     Browse Comparisons
-                  </a>
+                  </button>
                 </div>
               </div>
 
@@ -680,17 +676,13 @@ export default function CompareHub({
                     {c.optionA} {t('compare.vsLower', 'vs')} {c.optionB}
                   </span>
 
-                  <a
-                    href={`/compare/${c.slug}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleCompareClick(c.slug);
-                    }}
+                  <button
+                    onClick={() => handleCompareClick(c.slug)}
                     className="inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 transition-colors cursor-pointer"
                   >
                     <span>{t('compare.readAnalysis', 'Read Analysis')}</span>
                     <ChevronRight className="w-3 h-3" />
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}

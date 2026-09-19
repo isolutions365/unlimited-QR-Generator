@@ -32,7 +32,6 @@ import blogHi from '../src/locales/blog/hi.json';
 import blogZh from '../src/locales/blog/zh.json';
 import blogJa from '../src/locales/blog/ja.json';
 import blogKo from '../src/locales/blog/ko.json';
-import { getAllVerifiedRoutes } from '../src/data/sitemapRegistry';
 
 // ============================================
 // ENHANCED SITEMAP ROUTES WITH UNIQUE SEO DATA
@@ -47,14 +46,320 @@ export interface SitemapRoute {
   lastmod?: string;
 }
 
-export const sitemapRoutes: SitemapRoute[] = getAllVerifiedRoutes().map(r => ({
-  path: r.path,
-  changefreq: r.changefreq as any,
-  priority: r.priority,
-  seoTitle: r.seoTitle,
-  seoDescription: r.seoDescription,
-  lastmod: r.lastmod
-}));
+export const sitemapRoutes: SitemapRoute[] = [
+  { 
+    path: '/', 
+    changefreq: 'weekly', 
+    priority: '1.0',
+    seoTitle: 'Free QR Code Generator - Dynamic QR Codes & Custom Creator',
+    seoDescription: 'Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.'
+  },
+  { 
+    path: '/about', 
+    changefreq: 'monthly', 
+    priority: '0.6', 
+    seoTitle: 'About Free QR Code Generator - 100% Free Dynamic QR Tool',
+    seoDescription: 'Learn about Free QR Code Generator, the free tool for creating dynamic QR codes with custom branding, real-time analytics, and no signup required.' 
+  },
+  { 
+    path: '/contact', 
+    changefreq: 'monthly', 
+    priority: '0.6',
+    seoTitle: 'Contact Free QR Code Generator - Support & Inquiries',
+    seoDescription: 'Get in touch with Free QR Code Generator team for support, partnerships, or general inquiries. We are here to help 24/7.' 
+  },
+  { 
+    path: '/faq', 
+    changefreq: 'weekly', 
+    priority: '0.9',
+    seoTitle: 'FAQ - Free QR Code Generator | Common Questions Answered',
+    seoDescription: 'Find answers to 25+ common questions about QR codes, static vs dynamic codes, error correction levels, customization, and how to create them.' 
+  },
+  { 
+    path: '/blog', 
+    changefreq: 'daily', 
+    priority: '0.9',
+    seoTitle: 'Guides, Tutorials & Marketing Blog - Free QR Code Generator',
+    seoDescription: 'Read our technical and strategic guides on QR codes, dynamic redirects, QR codes for restaurant menus, business networking, and contactless services.' 
+  },
+  { 
+    path: '/pricing', 
+    changefreq: 'monthly', 
+    priority: '0.7',
+    seoTitle: 'Pricing - Free QR Code Generator (Always Free)',
+    seoDescription: 'Free QR Code Generator is 100% free. No credit card, no signup, no watermarks. Create unlimited dynamic QR codes with full features.' 
+  },
+  { 
+    path: '/privacy-policy', 
+    changefreq: 'yearly', 
+    priority: '0.4',
+    seoTitle: 'Privacy Policy & Data Security Compliance | FreeQRBarcodes.com',
+    seoDescription: 'Review our strict privacy policy. Zero cloud databases for static codes, offline-first client-side storage, and fully GDPR/CCPA compliant metrics.' 
+  },
+  { 
+    path: '/security', 
+    changefreq: 'yearly', 
+    priority: '0.4',
+    seoTitle: 'Security Standards & Phishing Prevention | FreeQRBarcodes.com',
+    seoDescription: 'Review our advanced security architecture, including barcode input sanitization, defense against optical phishing (QRishing), and local encryption.' 
+  },
+  { 
+    path: '/accessibility', 
+    changefreq: 'yearly', 
+    priority: '0.4',
+    seoTitle: 'WCAG 2.2 Accessibility Standards | FreeQRBarcodes.com',
+    seoDescription: 'Explore our commitment to accessibility. Learn about tactile QR guidelines, contrast ratios, and screen-reader compatibility under WCAG 2.2 AA.' 
+  },
+  { 
+    path: '/terms', 
+    changefreq: 'yearly', 
+    priority: '0.4',
+    seoTitle: 'Terms of Service - Free QR Code Generator',
+    seoDescription: 'Read the terms of service for using Free QR Code Generator. Free for personal and commercial use with no restrictions.' 
+  },
+  { 
+    path: '/academy', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'QR Code Academy - Learn QR Technology & Best Practices',
+    seoDescription: 'Comprehensive guides on QR specifications, error correction, scannability standards, cybersecurity, and implementation best practices.' 
+  },
+  { 
+    path: '/barcode-generator', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'Free Barcode Generator - 1D & 2D Barcodes (Code 128, EAN, UPC)',
+    seoDescription: 'Create free 1D linear and 2D matrix barcodes: Code 128, EAN-13, UPC-A, Code 39, ISBN, Data Matrix, PDF417. Print-ready vector exports.' 
+  },
+  { 
+    path: '/bulk-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'Bulk QR Code Generator - Create 1000s via CSV/Excel',
+    seoDescription: 'Upload CSV or Excel files to generate hundreds or thousands of unique QR codes in bulk. Download ZIP with high-resolution branded codes.' 
+  },
+  { 
+    path: '/zatca-invoice', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free ZATCA Phase 1 QR Code Generator (TLV) | FreeQRBarcodes',
+    seoDescription: 'Generate ZATCA Phase 1 compliant TLV/Base64 QR codes for Simplified Tax Invoices instantly. Free, browser-based, no signup. Includes TLV inspector for Phase 2 verification.'
+  },
+  
+  // Landing pages
+  { 
+    path: '/url-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free URL QR Code Generator - Trackable Short Links',
+    seoDescription: 'Create free URL QR codes with trackable short links. Edit destination after printing, monitor scans, and export SVG/PNG. No signup required.' 
+  },
+  { 
+    path: '/pdf-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free PDF QR Code Generator - Create Document QR Codes',
+    seoDescription: 'Create custom QR codes that link directly to your online PDF documents, user manuals, catalogs, brochures, and reports. 100% free with vector export.' 
+  },
+  { 
+    path: '/wifi-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free WiFi QR Code Generator - Instant Connect',
+    seoDescription: 'Create WiFi QR codes for WPA/WPA2/WPA3 networks. Guests scan and connect automatically without typing passwords. Free and private.' 
+  },
+  { 
+    path: '/vcard-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free vCard QR Code Generator - Create vCard 3.0 Contact Codes',
+    seoDescription: 'Create standard vCard 3.0 contact QR codes with your name, phone, email, job title, company, address, and website. 100% free with instant export.' 
+  },
+  { 
+    path: '/email-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Email QR Code Generator - Pre-filled Messages',
+    seoDescription: 'Create email QR codes with pre-set recipient, subject, and body. Perfect for marketing campaigns and customer support. Free to use.' 
+  },
+  { 
+    path: '/sms-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free SMS QR Code Generator - Text Message QR',
+    seoDescription: 'Generate SMS QR codes with predefined phone numbers and message text. Ideal for promotions, alerts, and two-way communication.' 
+  },
+  { 
+    path: '/whatsapp-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free WhatsApp QR Code Generator - Chat Links',
+    seoDescription: 'Create WhatsApp QR codes to start conversations instantly. Pre-filled messages for support, sales, and marketing. Free and easy.' 
+  },
+  { 
+    path: '/instagram-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Instagram QR Code Generator - Bio Links',
+    seoDescription: 'Generate Instagram QR codes for bio links, posts, and reels. Drive traffic to your profile with custom branded QR codes.' 
+  },
+  { 
+    path: '/facebook-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Facebook QR Code Generator - Page Links',
+    seoDescription: 'Create Facebook QR codes for pages, groups, and events. Increase followers and engagement with scannable social links.' 
+  },
+  { 
+    path: '/youtube-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free YouTube QR Code Generator - Channel Links',
+    seoDescription: 'Generate YouTube QR codes for channels, videos, and playlists. Boost subscribers with custom branded QR codes. Free vector exports.' 
+  },
+  { 
+    path: '/restaurant-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Restaurant QR Code Generator - Table & Venue QR Codes',
+    seoDescription: 'Create custom QR codes for your restaurant, cafe, or bar. Link diners to your restaurant website, table info, social pages, and guest links.' 
+  },
+  { 
+    path: '/business-card-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Business Card QR Code Generator - For Printed Business Cards',
+    seoDescription: 'Generate clean, scanable QR codes to print on paper business cards. Help contacts save your details directly to their phones at networking events.' 
+  },
+  { 
+    path: '/app-store-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free App Store QR Code Generator - iOS & Android',
+    seoDescription: 'Create smart app download QR codes that auto-detect iOS or Android and redirect to the correct store. Perfect for app marketing.' 
+  },
+  { 
+    path: '/location-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Location QR Code Generator - GPS & Map Links',
+    seoDescription: 'Generate GPS QR codes for store locators, event venues, and tourism spots. Encode coordinates and map links for instant navigation.' 
+  },
+  { 
+    path: '/restaurant-menu-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Restaurant Menu QR Code Generator - Digital Food & Drink Menus',
+    seoDescription: 'Create custom menu QR codes for dining tables. Link guests directly to your digital food and drink menu, wine list, or hosted PDF menu.' 
+  },
+  { 
+    path: '/digital-card-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Digital Card QR Code Generator - Paperless Contact Sharing',
+    seoDescription: 'Create digital contact QR codes for screen-based, paperless contact sharing. Display on your phone or device for seamless mobile-to-mobile networking.' 
+  },
+  { 
+    path: '/pdf-sharing-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free PDF Sharing QR Code Generator - Share Documents with Groups',
+    seoDescription: 'Create QR codes designed for sharing documents, event handouts, training materials, and presentation slides with groups and audiences effortlessly.' 
+  },
+  { 
+    path: '/animated-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Animated QR Code Generator | Dynamic & Moving QR Codes',
+    seoDescription: 'Make your QR codes stand out with beautiful animated styles, loop transitions, custom GIF overlays, and eye-catching movement patterns.' 
+  },
+  { 
+    path: '/payment-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Payment QR Code Generator | PayPal, IBAN & UPI QR Codes',
+    seoDescription: 'Generate secure, customized payment QR codes. Accept PayPal, Venmo, Cash App, UPI, and bank IBAN transfers with a frictionless mobile scan.' 
+  },
+  { 
+    path: '/crypto-qr-generator', 
+    changefreq: 'weekly', 
+    priority: '0.9', 
+    isLanding: true,
+    seoTitle: 'Free Crypto QR Code Generator | Bitcoin & Ethereum Wallet QRs',
+    seoDescription: 'Generate secure, custom QR codes for cryptocurrency wallet addresses. Supports Bitcoin, Ethereum, Solana, and major crypto networks.' 
+  },
+
+  // Solutions pages
+  { 
+    path: '/solutions/contactless-menu', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'Contactless Restaurant Menu QR Solution - Free Digital Menus',
+    seoDescription: 'Implement contactless digital menus with QR codes. Update items instantly, reduce printing costs, and enhance guest experience.' 
+  },
+  { 
+    path: '/solutions/digital-business-card', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'Digital Business Card Solution - vCard QR Codes',
+    seoDescription: 'Modern professional networking with digital business card QR codes. One-tap contact saving, custom branding, and real-time analytics.' 
+  },
+  { 
+    path: '/solutions/google-review-booster', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'Google Review Booster QR Solution - Get More 5-Star Reviews',
+    seoDescription: 'Countertop QR codes that accelerate 5-star Google Business reviews. Increase ratings and attract more customers effortlessly.' 
+  },
+  { 
+    path: '/solutions/wifi-guest-onboarding', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'Guest WiFi Onboarding QR Solution - Hotels, Offices, Cafes',
+    seoDescription: 'Seamless guest wireless connectivity with WiFi QR codes. No password typing required. Perfect for hotels, offices, and cafes.' 
+  },
+  { 
+    path: '/solutions/event-ticket-qr-code', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'Event Ticketing QR Solution - Fast Attendee Validation',
+    seoDescription: 'QR code event ticketing and access control. Fast attendee validation, badge scanning, and real-time entry tracking for conferences.' 
+  },
+  { 
+    path: '/solutions/event-ticketing-checkin', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'Event Check-In & Ticketing QR Solution',
+    seoDescription: 'High-speed attendee check-in and access control with dynamic QR codes for live summits and conferences.' 
+  },
+  { 
+    path: '/solutions/app-download-marketing', 
+    changefreq: 'weekly', 
+    priority: '0.8',
+    seoTitle: 'App Download Marketing QR Solution',
+    seoDescription: 'Smart multi-platform QR codes that dynamically route users to Apple App Store or Google Play.' 
+  }
+];
 
 export const SEO_META_MAP: Record<string, SitemapRoute> = sitemapRoutes.reduce((acc, route) => {
   acc[route.path] = route;
@@ -394,7 +699,14 @@ export const landingPageFaqs: Record<string, Array<{q: string; a: string}>> = {
 
 export const ORGANIZATION_SAME_AS: string[] = [
   "https://www.producthunt.com/posts/free-qr-generator-4",
-  "https://www.freeqrbarcodes.com/about"
+  "https://www.freeqrbarcodes.com/about",
+  "https://www.freeqrbarcodes.com/why-freeqrgen",
+  "https://www.freeqrbarcodes.com/faq",
+  "https://www.freeqrbarcodes.com/blog",
+  "https://www.freeqrbarcodes.com/templates",
+  "https://www.freeqrbarcodes.com/compare",
+  "https://www.freeqrbarcodes.com/solutions",
+  "https://www.freeqrbarcodes.com/system-status"
 ];
 
 export function buildHomepageSchema(locale: SupportedLocale = 'en') {
@@ -408,13 +720,13 @@ export function buildHomepageSchema(locale: SupportedLocale = 'en') {
       {
         "@type": "Organization",
         "@id": "https://www.freeqrbarcodes.com/#organization",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "logo": {
           "@type": "ImageObject",
           "@id": "https://www.freeqrbarcodes.com/#logo",
           "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png",
-          "caption": "FreeQRBarcodes Logo"
+          "caption": "Free QR Code Generator Logo"
         },
         "image": { "@id": "https://www.freeqrbarcodes.com/#logo" },
         "sameAs": ORGANIZATION_SAME_AS
@@ -422,7 +734,7 @@ export function buildHomepageSchema(locale: SupportedLocale = 'en') {
       {
         "@type": "WebSite",
         "@id": "https://www.freeqrbarcodes.com/#website",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" },
         "potentialAction": {
@@ -497,7 +809,7 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
       {
         "@type": "Organization",
         "@id": "https://www.freeqrbarcodes.com/#organization",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "logo": {
           "@type": "ImageObject",
@@ -509,7 +821,7 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
       {
         "@type": "WebSite",
         "@id": "https://www.freeqrbarcodes.com/#website",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
@@ -528,14 +840,14 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
           "jobTitle": "QR Code Technology Specialist",
           "worksFor": {
             "@type": "Organization",
-            "name": "FreeQRBarcodes",
+            "name": "Free QR Code Generator",
             "@id": "https://www.freeqrbarcodes.com/#organization"
           }
         },
         "publisher": {
           "@type": "Organization",
           "@id": "https://www.freeqrbarcodes.com/#organization",
-          "name": "FreeQRBarcodes",
+          "name": "Free QR Code Generator",
           "logo": {
             "@type": "ImageObject",
             "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png"
@@ -590,7 +902,7 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute, locale
     {
       "@type": "Organization",
       "@id": "https://www.freeqrbarcodes.com/#organization",
-      "name": "FreeQRBarcodes",
+      "name": "Free QR Code Generator",
       "url": "https://www.freeqrbarcodes.com/",
       "logo": {
         "@type": "ImageObject",
@@ -602,7 +914,7 @@ export function buildLandingPageSchema(slug: string, route: SitemapRoute, locale
     {
       "@type": "WebSite",
       "@id": "https://www.freeqrbarcodes.com/#website",
-      "name": "FreeQRBarcodes",
+      "name": "Free QR Code Generator",
       "url": "https://www.freeqrbarcodes.com/",
       "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
     },
@@ -679,7 +991,7 @@ export function buildAboutPageSchema(route: SitemapRoute, locale: SupportedLocal
       {
         "@type": "Organization",
         "@id": "https://www.freeqrbarcodes.com/#organization",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "logo": {
           "@type": "ImageObject",
@@ -692,7 +1004,7 @@ export function buildAboutPageSchema(route: SitemapRoute, locale: SupportedLocal
       {
         "@type": "WebSite",
         "@id": "https://www.freeqrbarcodes.com/#website",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
@@ -748,7 +1060,7 @@ export function buildFaqPageSchema(route: SitemapRoute, locale: SupportedLocale 
       {
         "@type": "Organization",
         "@id": "https://www.freeqrbarcodes.com/#organization",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "logo": {
           "@type": "ImageObject",
@@ -760,7 +1072,7 @@ export function buildFaqPageSchema(route: SitemapRoute, locale: SupportedLocale 
       {
         "@type": "WebSite",
         "@id": "https://www.freeqrbarcodes.com/#website",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
@@ -822,7 +1134,7 @@ export function buildBlogListingSchema(locale: SupportedLocale = 'en') {
       {
         "@type": "Organization",
         "@id": "https://www.freeqrbarcodes.com/#organization",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "logo": {
           "@type": "ImageObject",
@@ -834,7 +1146,7 @@ export function buildBlogListingSchema(locale: SupportedLocale = 'en') {
       {
         "@type": "WebSite",
         "@id": "https://www.freeqrbarcodes.com/#website",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
@@ -893,7 +1205,7 @@ export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTit
       {
         "@type": "Organization",
         "@id": "https://www.freeqrbarcodes.com/#organization",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "logo": {
           "@type": "ImageObject",
@@ -905,7 +1217,7 @@ export function buildSolutionSchema(route: SitemapRoute | { path: string; seoTit
       {
         "@type": "WebSite",
         "@id": "https://www.freeqrbarcodes.com/#website",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
@@ -969,7 +1281,7 @@ export function buildGenericPageSchema(route: SitemapRoute, locale: SupportedLoc
       {
         "@type": "Organization",
         "@id": "https://www.freeqrbarcodes.com/#organization",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "logo": {
           "@type": "ImageObject",
@@ -981,7 +1293,7 @@ export function buildGenericPageSchema(route: SitemapRoute, locale: SupportedLoc
       {
         "@type": "WebSite",
         "@id": "https://www.freeqrbarcodes.com/#website",
-        "name": "FreeQRBarcodes",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrbarcodes.com/",
         "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
@@ -1018,17 +1330,16 @@ export function buildGenericPageSchema(route: SitemapRoute, locale: SupportedLoc
 // ============================================
 
 export function buildSitemapXml(): string {
-  const baseUrl = "https://www.freeqrbarcodes.com";
-  const allRoutes = getAllVerifiedRoutes();
+  const baseUrl = 'https://www.freeqrbarcodes.com';
   
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
   
   let count = 0;
   
-  for (const route of allRoutes) {
+  for (const route of sitemapRoutes) {
     xml += `  <url>\n`;
-    xml += `    <loc>${baseUrl}${route.path === "/" ? "" : route.path}</loc>\n`;
+    xml += `    <loc>${baseUrl}${route.path === '/' ? '' : route.path}</loc>\n`;
     if (route.lastmod && /^\d{4}-\d{2}-\d{2}$/.test(route.lastmod)) {
       xml += `    <lastmod>${route.lastmod}</lastmod>\n`;
     }
@@ -1038,9 +1349,30 @@ export function buildSitemapXml(): string {
     count++;
   }
   
+  // Add blog articles with verified modification dates
+  for (const slug of Object.keys(blogArticles)) {
+    const article = blogArticles[slug];
+    const rawDate = article.dateModified || article.date;
+    const articleDate = rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : undefined;
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/blog/${slug}</loc>\n`;
+    if (articleDate) {
+      xml += `    <lastmod>${articleDate}</lastmod>\n`;
+    }
+    xml += `    <changefreq>monthly</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += `  </url>\n`;
+    count++;
+  }
+  
   xml += `</urlset>`;
   
-  console.info(`Sitemap generation validated: successfully compiled exactly ${count} verified canonical URLs.`);
+  // Final route validation to ensure all 71 canonical URLs are present
+  if (count !== 71) {
+    console.warn(`Sitemap generation validation mismatch: expected 71 URLs, generated ${count}.`);
+  } else {
+    console.info(`Sitemap generation validated: successfully compiled exactly ${count} canonical URLs.`);
+  }
   
   return xml;
 }
@@ -1392,7 +1724,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     // --- BLOG POST SEO ---
     else if (isBlogPost && blogArticles[blogSlug]) {
       const article = blogArticles[blogSlug];
-      pageTitle = `${article.title} - FreeQRBarcodes Blog`;
+      pageTitle = `${article.title} - Free QR Code Generator Blog`;
       pageDescription = article.description;
       schemaJson = buildBlogSchema(blogSlug, article, locale);
       

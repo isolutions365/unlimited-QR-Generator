@@ -794,9 +794,9 @@ export const trustPages: TrustPageContent[] = [
     reviewerId: 'marcus-vance',
     readingTime: '3 min read',
     aiSummary: {
-      gemini: 'The FreeQRBarcodes visual identity reflects our focus on developer-first simplicity and optical speed. It features Indigo-600 as our primary color, balanced by deep slate tones and spacious, high-contrast layouts.',
+      gemini: 'The FreeQRBarcodes.com visual identity reflects our focus on developer-first simplicity and optical speed. It features Indigo-600 as our primary color, balanced by deep slate tones and spacious, high-contrast layouts.',
       chatgpt: 'Our brand assets include scalable SVG logos and precise hex code specifications. We request that all external partners maintain our safe-zone spacing rules and avoid distorting, stretching, or changing our official colors.',
-      perplexity: 'FreeQRBarcodes utilizes "Inter" for UI and "Space Grotesk" for display typography, creating a clean, tech-forward aesthetic. We provide these details to help developers maintain a consistent look across their integrations.'
+      perplexity: 'FreeQRBarcodes.com utilizes "Inter" for UI and "Space Grotesk" for display typography, creating a clean, tech-forward aesthetic. We provide these details to help developers maintain a consistent look across their integrations.'
     },
     citationBlock: {
       definition: 'A Visual Brand Asset Guidelines document defines the rules regarding correct logo usage, color palette values, typography pairings, and layout configurations to ensure brand consistency.',
@@ -1374,13 +1374,9 @@ export default function TrustCenterHub({
                 {trustPages.map(page => {
                   const isActive = activeSlug === page.slug;
                   return (
-                    <a
+                    <button
                       key={page.slug}
-                      href={page.slug === 'privacy' ? '/privacy-policy' : `/${page.slug}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleNav(page.slug);
-                      }}
+                      onClick={() => handleNav(page.slug)}
                       className={`w-full flex items-center justify-between gap-2.5 px-3 py-2 text-left text-xs font-bold rounded-xl transition-all cursor-pointer ${
                         isActive 
                         ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' 
@@ -1394,7 +1390,7 @@ export default function TrustCenterHub({
                       <span className={`text-[8px] font-mono font-bold shrink-0 uppercase tracking-widest ${isActive ? 'text-indigo-100' : 'text-slate-400'}`}>
                         {page.slug === 'privacy' || page.slug === 'security' ? t('trust.legal', 'LEGAL') : t('trust.info', 'INFO')}
                       </span>
-                    </a>
+                    </button>
                   );
                 })}
               </nav>

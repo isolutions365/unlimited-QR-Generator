@@ -337,12 +337,12 @@ export function auditAllRoutes(locale: Locale): { routes: AuditedRouteInfo[]; su
         sampleSnippet: {
           '@context': 'https://schema.org',
           '@type': 'Organization',
-          'name': 'FreeQRBarcodes',
+          'name': 'Free QR & Barcodes Generator',
           'url': ROOT_DOMAIN,
-          'logo': `${ROOT_DOMAIN}/apple-touch-icon.png`,
+          'logo': `${ROOT_DOMAIN}/logo.png`,
           'sameAs': [
-            'https://www.producthunt.com/posts/free-qr-generator-4',
-            `${ROOT_DOMAIN}/about`
+            'https://twitter.com/freeqrbarcodes',
+            'https://github.com/freeqrbarcodes'
           ]
         }
       });

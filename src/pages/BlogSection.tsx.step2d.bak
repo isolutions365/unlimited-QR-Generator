@@ -109,14 +109,14 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
         'jobTitle': 'QR Code Technology Specialist',
         'worksFor': {
           '@type': 'Organization',
-          'name': 'FreeQRBarcodes',
+          'name': 'Free QR Code Generator',
           '@id': 'https://www.freeqrbarcodes.com/#organization'
         }
       },
       'publisher': {
         '@type': 'Organization',
         '@id': 'https://www.freeqrbarcodes.com/#organization',
-        'name': 'FreeQRBarcodes',
+        'name': 'Free QR Code Generator',
         'url': 'https://www.freeqrbarcodes.com/',
         'logo': {
           '@type': 'ImageObject',

@@ -325,26 +325,22 @@
         {
           "@type": "Organization",
           "@id": "https://www.freeqrbarcodes.com/#organization",
-          "name": "FreeQRBarcodes",
+          "name": "Free QR Code Generator",
           "url": "https://www.freeqrbarcodes.com/",
           "logo": {
             "@type": "ImageObject",
             "@id": "https://www.freeqrbarcodes.com/#logo",
             "url": "https://www.freeqrbarcodes.com/apple-touch-icon.png",
-            "caption": "FreeQRBarcodes Logo"
+            "caption": "Free QR Code Generator Logo"
           },
           "image": {
             "@id": "https://www.freeqrbarcodes.com/#logo"
-          },
-          "sameAs": [
-            "https://www.producthunt.com/posts/free-qr-generator-4",
-            "https://www.freeqrbarcodes.com/about"
-          ]
+          }
         },
         {
           "@type": "WebSite",
           "@id": "https://www.freeqrbarcodes.com/#website",
-          "name": "FreeQRBarcodes",
+          "name": "Free QR Code Generator",
           "url": "https://www.freeqrbarcodes.com/",
           "publisher": {
             "@id": "https://www.freeqrbarcodes.com/#organization"
@@ -361,7 +357,7 @@
         {
           "@type": "WebApplication",
           "@id": "https://www.freeqrbarcodes.com/#webapplication",
-          "name": "FreeQRBarcodes - Free Dynamic QR Code Generator",
+          "name": "Free QR Code Generator - Dynamic QR Codes & Custom Creator",
           "url": "https://www.freeqrbarcodes.com/",
           "description": "Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.",
           "applicationCategory": "UtilitiesApplication",
