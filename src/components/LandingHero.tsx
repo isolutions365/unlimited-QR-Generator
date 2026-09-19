@@ -209,17 +209,17 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
             </h1>
 
             <p className="mt-5 text-sm sm:text-base md:text-lg text-slate-600 font-normal max-w-2xl leading-relaxed">
-              {t('hero.description', 'Generate 100% free, high-resolution static and dynamic QR codes and 1D barcodes directly in your browser. No sign-up or credit card required. Full custom styling, logo embedding, vector SVG/PDF exports, and Avery print templates with unlimited scans and zero watermarks.')}
+              {t('hero.description', 'Generate high-resolution static and dynamic QR codes and 1D barcodes directly in your browser. Static code generation and vector exports are free with no account required and no scan limits. Optional dynamic tracking codes provide editable redirect URLs and scan metrics.')}
             </p>
 
             {/* Factual Capabilities Callout Bar */}
             <div className="mt-4 p-3 rounded-xl bg-slate-100/80 border border-slate-200/80 text-left max-w-xl text-xs text-slate-700 space-y-1">
               <div className="flex items-center gap-1.5 font-semibold text-slate-900">
                 <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
-                <span>{t('hero.transparencyHeading', 'Zero Paywalls • Client-Side Privacy • Optional Cloud Services')}</span>
+                <span>{t('hero.transparencyHeading', 'Client-Side Static Generation • Free Vector Exports • Optional Hosted Dynamic Links')}</span>
               </div>
               <p className="text-[11px] text-slate-600 leading-snug">
-                {t('hero.transparencyDetails', 'Static codes (URLs, WiFi, vCards, Barcodes) process locally with zero server dependency and never expire. Optional dynamic tracking codes route through secure endpoints for post-print link editing and scan analytics.')}
+                {t('hero.transparencyDetails', 'Static QR codes encode data directly into the matrix with zero intermediary redirect servers. Optional dynamic QR codes route through cloud endpoints to support post-print destination updates and scan analytics.')}
               </p>
             </div>
 

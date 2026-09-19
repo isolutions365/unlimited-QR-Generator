@@ -84,7 +84,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
   },
   'static-vs-dynamic-qr-codes-guide': {
     title: 'Static vs. Dynamic QR Codes: Complete Architectural Guide',
-    description: 'Choosing between static and dynamic QR codes is critical. Learn how payload immutability, server redirects, and real-time telemetry dictate the ideal solution.',
+    description: 'Technical guide comparing static and dynamic QR codes: ISO encoding, error correction, resolution stages, telemetry, and risk analysis.',
     date: '2026-06-14',
     dateModified: '2026-08-30',
     author: 'Marcus Vance, Lead Systems Architect',
@@ -329,9 +329,10 @@ export const landingPageFaqs: Record<string, Array<{q: string; a: string}>> = {
     { q: 'How do I add my logo to a URL QR code?', a: 'Upload your logo in the design panel. The generator automatically centers it with error correction.' }
   ],
   'wifi-qr-generator': [
-    { q: 'What is a WiFi QR code?', a: 'A WiFi QR code encodes network credentials so guests can connect automatically without typing passwords.' },
-    { q: 'Which WiFi security protocols are supported?', a: 'We support WPA, WPA2, WPA3, and WEP encryption protocols.' },
-    { q: 'Can I create a WiFi QR code without a password?', a: 'Yes, you can generate open network QR codes for public guest WiFi.' }
+    { q: 'What is a WiFi QR code?', a: 'A WiFi QR code encodes wireless credentials (SSID, security protocol, and password) into a standardized static 2D barcode so compatible devices can parse credentials and prompt to join the network without manual typing.' },
+    { q: 'Which WiFi security options are supported?', a: 'The generator supports WPA/WPA2/WPA3 (using the standard T:WPA schema), legacy WEP (T:WEP), and Open unencrypted networks (T:nopass).' },
+    { q: 'Is the WiFi network password visible to someone scanning the code?', a: 'The password is stored as plain text inside the QR code matrix (WIFI:S:...;T:...;P:...;;). Anyone with a barcode scanner can read the password string, though over-the-air Wi-Fi traffic remains encrypted once connected.' },
+    { q: 'Why do devices prompt to join rather than connecting automatically?', a: 'Mobile operating systems implement user confirmation prompts (such as a "Join Network" banner) as a security safeguard to prevent unauthorized or unintended network switching.' }
   ],
   'pdf-qr-generator': [
     { q: 'What is a PDF QR code?', a: 'A PDF QR code links to a downloadable PDF document, menu, catalog, or whitepaper.' },

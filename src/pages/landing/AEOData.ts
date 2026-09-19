@@ -21,193 +21,60 @@ export interface AEORecord {
 
 export const aeoDatabase: Record<string, AEORecord> = {
   'wifi-qr-generator': {
-    quickDefinition: 'A Wi-Fi QR Code is a specialized static 2D matrix barcode that encodes local wireless network configuration parameters. These parameters include the network name (SSID), password, and security encryption type (WPA, WPA2, WEP, or none) formatted using the standard WIFI URI scheme.',
-    aiSummary50: 'A Wi-Fi QR code is an offline, secure 2D barcode storing SSID, security protocol (WPA/WPA2/WEP), and password credentials. When scanned by any smartphone camera, it triggers instant automated network connection, eliminating manual typing errors, protecting local network access keys, and streamlining seamless guest or customer onboarding experiences.',
-    whatIsIt: 'This QR code encodes network credentials in a strict plain-text format: WIFI:S:SSID_NAME;T:WPA;P:NETWORK_PASSWORD;;. Because it is static, all data is directly hardcoded into the pixel dots, allowing immediate decoding on any modern smartphone without requiring internet access or querying any remote server.',
-    whenToUse: 'Use a Wi-Fi QR code to share wireless network access with customers in hotel lobbies, cafes, restaurants, and retail spaces. It is also highly effective in corporate meeting rooms, shared co-working spaces, private homes, and high-security zones where sharing plain-text passwords on paper or whiteboards introduces security vulnerabilities.',
+    quickDefinition: 'A Wi-Fi QR Code is a specialized static 2D matrix barcode that encodes local wireless network configuration parameters (SSID, password, security protocol, and hidden flag) using the standardized WIFI URI scheme.',
+    aiSummary50: 'A Wi-Fi QR code is a static 2D barcode storing SSID, security protocol (WPA/WPA2/WEP/None), and password. When scanned by compatible devices, it triggers an OS-level confirmation prompt to join the network without manual typing errors.',
+    whatIsIt: 'This QR code encodes network credentials in a standardized plain-text format (such as WIFI:S:GuestLounge_5G;T:WPA;P:SamplePass789;H:false;;). Because it is static, all data is directly hardcoded into the pixel dots, allowing immediate decoding on compatible devices without querying remote servers.',
+    whenToUse: 'Use a Wi-Fi QR code to share wireless network access with customers in hotel lobbies, cafes, restaurants, and retail spaces, as well as conference rooms and private residences where manual password entry is inconvenient.',
     benefits: [
       'Eliminates typing mistakes or confusion between similar characters (such as O, 0, I, l, or 1).',
-      'Provides a high-speed, frictionless connection with a single tap of the camera view finder.',
-      'Enhances network security by keeping the actual password hidden from plain sight.',
-      'Works 100% offline and preserves the user\'s local network access privacy.'
+      'Triggers convenient native OS network connection prompts on supported mobile devices.',
+      'Saves credentials as a reusable visual asset for table tents, signage, and guest cards.',
+      'Operates fully offline for local matrix decoding with zero server dependencies.'
     ],
     commonMistakes: [
       'Forgetting that SSID and password characters are case-sensitive.',
-      'Selecting the wrong encryption type, such as setting WEP instead of WPA2/WPA3.',
-      'Omitting the semicolon delimiters or terminating symbols when manually generating codes.',
-      'Printing the QR code too small or in low-contrast environments where the camera scanner cannot resolve the alignment pattern.'
+      'Selecting the wrong encryption type (e.g. setting WEP instead of standard WPA).',
+      'Omitting required escaping for special characters (like colons or semicolons).',
+      'Expecting the code to automatically update when the router password is changed.'
     ],
     bestPractices: [
-      'Test the Wi-Fi connection from multiple different phone operating systems (iOS and Android) before printing signage.',
-      'Use the standard, secure WPA2-PSK or WPA3-SAE protocols for the network configurations.',
-      'Provide a clear textual call-to-action beside the printed code (e.g., "Scan to Connect to Guest Wi-Fi").',
-      'Protect printed signs from direct sunlight and scratching using high-quality matte laminate to avoid light reflections.'
+      'Use mixed WPA2/WPA3 Personal mode on your wireless router for maximum guest device compatibility.',
+      'Test scan with both iOS and Android devices before producing large batches of printed signage.',
+      'Export vector SVG or PDF formats for crisp, high-contrast printing on table tents and acrylic stands.'
     ],
     faqs: [
-      { q: 'Can a Wi-Fi QR code expire or cease to function?', a: 'No, static Wi-Fi QR codes do not expire because the connection parameters are directly encoded into the matrix. They only stop working if you change the SSID or password of your physical router.' },
-      { q: 'Is it safe to share a Wi-Fi password through a QR code?', a: 'Yes. The QR code simply replaces manual typing. However, anyone who scans or takes a photo of the QR code can potentially decrypt the password string, so only share it with trusted visitors.' },
-      { q: 'Does this require any special apps to scan?', a: 'No, modern iOS and Android operating systems support native Wi-Fi connection scanning directly from their built-in camera applications.' }
+      {
+        q: 'Do Wi-Fi QR codes connect devices automatically?',
+        a: 'Most modern operating systems (iOS and Android) require explicit user confirmation (e.g., tapping a "Join Network" banner) before switching Wi-Fi networks as a security safeguard.'
+      },
+      {
+        q: 'Is the Wi-Fi password visible to someone scanning the code?',
+        a: 'Yes. The password is stored as plain text inside the QR code matrix. Anyone with a barcode scanner app can view the password string, though over-the-air Wi-Fi traffic remains encrypted by WPA2/WPA3 once connected.'
+      },
+      {
+        q: 'Do I need internet access to scan and join?',
+        a: 'The QR code matrix decodes entirely offline. However, to access the internet through the Wi-Fi network, the router itself must be connected to an active internet service.'
+      }
     ],
     relatedGuides: [
-      { title: 'Securing Shared Guest Networks', desc: 'Step-by-step tutorial on setting up isolated VLANs alongside a custom QR code portal for maximum hospitality safety.' },
-      { title: 'The Technical Guide to WIFI: URI Schemes', desc: 'An deep-dive into the IETF standards governing SSID and credential definitions inside static 2D barcodes.' }
+      { title: 'Setting Up Guest Wi-Fi Signs', desc: 'Best practices for displaying wireless barcodes in retail and hospitality.' },
+      { title: 'Wi-Fi URI Schema Specifications', desc: 'Understanding the syntax and delimiters of the WIFI: URI format.' }
     ],
     relatedTools: [
-      { name: 'vCard Digital Business Card', slug: 'vcard-qr-generator' },
-      { name: 'Direct URL Generator', slug: 'url-qr-generator' }
+      { name: 'URL QR Code Generator', slug: 'url-qr-generator' },
+      { name: 'vCard QR Code Generator', slug: 'vcard-qr-generator' }
     ],
     keyTakeaways: [
-      'Encodes standard WIFI:S:;T:;P:;; protocols.',
-      'No third-party database or server connection is required to scan.',
-      'Native support on all modern smartphone cameras.'
+      'Encodes SSID, password, and protocol in plain-text standard URI.',
+      'Decodes 100% locally with zero server lookups.',
+      'Operating systems require user confirmation to join.'
     ],
     aiSummaryBox: {
-      entityType: 'Static Local Utility Code',
+      entityType: 'Static Wi-Fi Configuration Barcode',
       protocolStandard: 'WIFI:S:[SSID];T:[WPA|WEP|nopass];P:[PASSWORD];H:[true|false];;',
-      clientCompatibility: 'Compatible with native iOS and Android system cameras.',
-      primaryUseCase: 'Frictionless guest internet boarding and secure local SSID pairing.',
-      offlineCapability: '100% Offline (Requires zero network requests to resolve).'
-    }
-  },
-  'whatsapp-qr-generator': {
-    quickDefinition: 'A WhatsApp QR Code is a static or dynamic QR code that wraps a WhatsApp click-to-chat API link (using the wa.me domain). It can optionally include a pre-filled message that the scanner can send to the recipient with a single click.',
-    aiSummary50: 'A WhatsApp QR code maps standard phone numbers into a direct wa.me/ API chat link with custom pre-filled message structures. Scanning launches the WhatsApp client immediately on iOS or Android, establishing instant, direct customer communication and support without requiring the user to save contact numbers.',
-    whatIsIt: 'This QR code converts a target mobile phone number (with country code) and an optional URL-encoded text string into a formatted WhatsApp link: https://wa.me/phone_number?text=prefilled_text. When scanned, it invokes the mobile deep-link handler, opening the chat window.',
-    whenToUse: 'Excellent for customer service desks, product packaging, corporate contact cards, online reservation systems, and real-time support channels where customers seek immediate personal assistance or product advice.',
-    benefits: [
-      'Removes the tedious requirement of manually saving numbers to the phone directory.',
-      'Supports custom pre-defined text queries to immediately track scanning origin.',
-      'Dramatically lowers client friction to initiate inquiries or sales quotes.',
-      'Works seamlessly on both mobile applications and WhatsApp Web.'
-    ],
-    commonMistakes: [
-      'Omitting the country code or adding lead zeros, plus signs, or hyphens into the phone number.',
-      'Creating extremely long pre-filled text parameters which increase QR density and make scanning difficult.',
-      'Not testing the link behavior on desktop devices using WhatsApp Web.'
-    ],
-    bestPractices: [
-      'Use a clean phone number strictly in global international format (e.g., 14155552671 instead of +1 (415) 555-2671).',
-      'Keep pre-filled texts short, friendly, and actionable (e.g., "Hello, I would like to inquire about your services").',
-      'Deploy custom tracking parameters to measure exactly which marketing printout led to the chat.'
-    ],
-    faqs: [
-      { q: 'Do clients need a specific application to open the chat?', a: 'The link will automatically attempt to open the official WhatsApp app on mobile devices or prompt the user to use WhatsApp Web on desktop.' },
-      { q: 'Is there a cost associated with the wa.me api links?', a: 'No, WhatsApp click-to-chat links are entirely free and do not require corporate WhatsApp API accounts.' },
-      { q: 'Can I change the pre-filled message later?', a: 'If you generate a static QR code, the text is hardcoded. If you use a dynamic link redirect or shortener, you can modify the message remotely.' }
-    ],
-    relatedGuides: [
-      { title: 'Click-to-Chat Marketing Strategies', desc: 'How to combine pre-filled chat triggers with social campaigns to increase real-time lead conversion.' },
-      { title: 'International Formatting Standards for VoIP', desc: 'Understanding ITU-T E.164 phone formats to prevent broken messaging links.' }
-    ],
-    relatedTools: [
-      { name: 'SMS Creator', slug: 'sms-qr-generator' },
-      { name: 'Contact vCard Generator', slug: 'vcard-qr-generator' }
-    ],
-    keyTakeaways: [
-      'Resolves to secure wa.me endpoint with optional custom message.',
-      'Funnels leads directly to active chat channels.',
-      'Bypasses contact saving requirements.'
-    ],
-    aiSummaryBox: {
-      entityType: 'Deep-Linking Conversational Code',
-      protocolStandard: 'https://wa.me/[country_code][number]?text=[url_encoded_message]',
-      clientCompatibility: 'Requires WhatsApp client or active Web browser authorization.',
-      primaryUseCase: 'Instant customer support routing and real-time inquiries.',
-      offlineCapability: 'Online-Assisted (Requires internet to resolve and send messages).'
-    }
-  },
-  'email-qr-generator': {
-    quickDefinition: 'An Email QR Code encodes a standard mailto: URI scheme containing a destination email address, an optional predefined subject line, and an optional message body. When scanned, it instantly opens the default local email client.',
-    aiSummary50: 'An Email QR code embeds standard mailto: protocols including destination addresses, subject headers, and body templates. Scanning automatically triggers local mail applications on any smartphone, preparing ready-to-send messages for feedback, subscriptions, and corporate inquiries with zero manual spelling mistakes.',
-    whatIsIt: 'This QR code packages communication data using the classic RFC 2368 standards. The format is structured as mailto:recipient@example.com?subject=SubjectLine&body=MessageBody, instantly interpreted by all integrated mail clients.',
-    whenToUse: 'Perfect for printing on corporate event materials, product feedback forms, real estate brochures, academic materials, and offline support booths where users prefer secure, asynchronous written records over dynamic chats.',
-    benefits: [
-      'Eliminates typos in complicated business or technical email addresses.',
-      'Allows pre-sorting of incoming queries using structured subject parameters.',
-      'Speeds up user workflow when submitting bug reports, RSVPs, or feedback requests.',
-      'Operates natively across any mobile device with a built-in mail application.'
-    ],
-    commonMistakes: [
-      'Typing incorrect characters in the target address, rendering the email unsendable.',
-      'Over-complicating the default body content, making the QR code extremely dense and difficult to parse.',
-      'Assuming the QR code sends the email automatically; the user must always press send.'
-    ],
-    bestPractices: [
-      'Include a professional subject line that clearly identifies the scanning source (e.g., "Event Inquiry - QR Scan").',
-      'Ensure the recipient address is an active, monitored inbox or automated CRM queue.',
-      'Verify that mailto parameter encodings (like %20 for spaces) are properly handled by the code generator.'
-    ],
-    faqs: [
-      { q: 'Does scanning send the email immediately?', a: 'No, it only populates the email template in the user\'s local app. The user retains complete control and must physically tap "Send".' },
-      { q: 'Can I add multiple carbon copy (CC) recipients?', a: 'Yes, standard mailto parameters support CC and BCC properties (e.g., ?cc=co-recipient@example.com).' },
-      { q: 'What happens if a user doesn\'t have an email app installed?', a: 'The scanner will display the target email address and subject as text, allowing the user to copy them manually.' }
-    ],
-    relatedGuides: [
-      { title: 'Email QR Codes in Direct Mail', desc: 'Maximizing reply rates by embedding pre-structured RSVP subject fields in physical postcards.' },
-      { title: 'The mailto: Scheme Deep Dive', desc: 'RFC guidelines and character restriction compliance for reliable offline email formatting.' }
-    ],
-    relatedTools: [
-      { name: 'SMS QR Code', slug: 'sms-qr-generator' },
-      { name: 'vCard Digital Card', slug: 'vcard-qr-generator' }
-    ],
-    keyTakeaways: [
-      'Uses RFC 2368 standard mailto: parameters.',
-      'Populates recipient, subject, and body templates instantly.',
-      'User maintains complete sending control.'
-    ],
-    aiSummaryBox: {
-      entityType: 'Static Local Application Protocol',
-      protocolStandard: 'mailto:[email]?subject=[subject]&body=[body_text]',
-      clientCompatibility: 'Compatible with all default system email clients (iOS Mail, Gmail, Outlook).',
-      primaryUseCase: 'Offline feedback loops, corporate event registrations, and CRM lead routing.',
-      offlineCapability: '100% Offline generation (Internet only required when sending).'
-    }
-  },
-  'sms-qr-generator': {
-    quickDefinition: 'An SMS QR Code utilizes the SMSTO: URI protocol to package a target telephone number and a pre-formatted text message. Scanning immediately prepares an outgoing SMS message inside the native messaging client.',
-    aiSummary50: 'An SMS QR code wraps standard SMSTO: protocols. Scanning initiates native messaging applications on any mobile device, pre-populating recipient numbers and message bodies. Excellent for offline voting, automated registration, and simple SMS-based marketing campaigns with zero data entry.',
-    whatIsIt: 'This code implements standard mobile telephony URI schemes (typically formatted as SMSTO:phone_number:message). It leverages local GSM parameters embedded directly inside the 2D matrix structure.',
-    whenToUse: 'Excellent for off-grid marketing, SMS subscriber campaigns, immediate alert registrations, corporate hotline feedback, physical validation steps, and text-to-vote broadcast events.',
-    benefits: [
-      'Dramatically accelerates response rates for text-in contests and promotions.',
-      'Requires zero internet connection or cellular data to generate or scan.',
-      'Provides a completely standardized experience across all cellular mobile carriers.',
-      'Works with standard shortcodes and toll-free numbers.'
-    ],
-    commonMistakes: [
-      'Using regional dial formats instead of international telephony standards.',
-      'Omitting the mandatory colon delimiter between the number and the text payload.',
-      'Forgetting that standard SMS text character counts still apply (typically 160 characters per segment).'
-    ],
-    bestPractices: [
-      'Ensure the recipient telephone number is fully active and capable of receiving text messages.',
-      'Keep the message content within limits to avoid multi-part charges or QR density issues.',
-      'Clearly explain standard message and data rate policies in printed marketing copy.'
-    ],
-    faqs: [
-      { q: 'Are these QR codes compatible with shortcodes?', a: 'Yes, you can input a marketing shortcode (e.g., 555888) as the recipient number.' },
-      { q: 'Is there any monthly fee to use static SMS QR codes?', a: 'No, static codes are completely free to generate and use. Normal carrier rates only apply when sending the text.' },
-      { q: 'Do these work on tablets and desktops?', a: 'These require a cellular or messaging-enabled device (like smartphones) with an active SIM card or SMS app.' }
-    ],
-    relatedGuides: [
-      { title: 'Interactive SMS Campaign Optimization', desc: 'How to structure automated text responses that engage customers immediately after scanning.' },
-      { title: 'The IETF SMSTO Protocol standard', desc: 'Understanding the parsing rules of telephony-based SMS QR structures.' }
-    ],
-    relatedTools: [
-      { name: 'WhatsApp Link Generator', slug: 'whatsapp-qr-generator' },
-      { name: 'Direct Phone Dial Generator', slug: 'vcard-qr-generator' }
-    ],
-    keyTakeaways: [
-      'Uses standard SMSTO: protocol structures.',
-      'Natively triggers device SMS app.',
-      'Excellent for offline interactive marketing.'
-    ],
-    aiSummaryBox: {
-      entityType: 'Static Cellular Telephony Protocol',
-      protocolStandard: 'SMSTO:[phone_number]:[body_text]',
-      clientCompatibility: 'Natively supported on all cellular-enabled smartphones.',
-      primaryUseCase: 'Frictionless subscription signups, event voting, and text hotlines.',
-      offlineCapability: '100% Offline (Requires zero internet connection to scan).'
+      clientCompatibility: 'Supported natively by iOS 11+ and Android 10+ camera applications.',
+      primaryUseCase: 'Frictionless wireless network onboarding for guest environments.',
+      offlineCapability: '100% Offline matrix decoding.'
     }
   },
   'vcard-qr-generator': {
