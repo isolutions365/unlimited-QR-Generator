@@ -5162,7 +5162,7 @@ export default function App() {
             <button 
               onClick={() => navigateTo('/')} 
               className="flex items-center text-left focus:outline-hidden hover:opacity-95 active:scale-98 transition-all cursor-pointer"
-              aria-label="FreeQRBarcodes.com Home"
+              aria-label="FreeQRBarcodes Home"
             >
               <Logo size={42} />
             </button>
@@ -5171,7 +5171,7 @@ export default function App() {
             </p>
             <div className="pt-2">
               <a href="https://www.producthunt.com/posts/free-qr-generator-4" target="_blank" rel="noopener noreferrer" className="inline-block transition-transform hover:scale-102 duration-300">
-                <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=free-qr-generator-4&theme=light" alt="FreeQRBarcodes.com on Product Hunt" width="180" height="38" />
+                <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=free-qr-generator-4&theme=light" alt="FreeQRBarcodes on Product Hunt" width="180" height="38" />
               </a>
             </div>
           </div>

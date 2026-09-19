@@ -75,7 +75,7 @@ export default function Logo({ size = 52, hideText = false, className = '' }: Lo
             className="animate-huewave transition-all duration-300"
             style={textGradientStyle}
           >
-            QRBarcodes.com
+            QRBarcodes
           </span>
         </div>
       )}
