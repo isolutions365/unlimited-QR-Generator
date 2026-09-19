@@ -53,66 +53,66 @@ export const landingPages: Record<string, LandingPageData> = {
     h1: 'Free WiFi QR Code Generator',
     intro: {
       title: 'Instant Wireless Network Pairing via Static WiFi QR Codes',
-      text1: 'Connecting to wireless networks by typing long alphanumeric passwords is slow and prone to errors. Our free WiFi QR code generator compiles your network name (SSID), security protocol, and password into a standardized static QR string (such as WIFI:S:GuestLounge_5G;T:WPA;P:SamplePass789;H:false;;). When guests scan the code using a compatible smartphone camera, the operating system can parse the credentials and prompt the user to join the network.',
-      text2: 'Because WiFi QR codes are static, credentials are baked directly into the visual pattern and processed 100% locally on client devices—no network names or passwords are sent to or stored on external servers. This provides complete data privacy for your router settings while letting you generate print-ready signs, table tents, and guest plaques in seconds.',
-      highlight: 'Static client-side encoding. Zero router credentials stored on external servers.'
+      text1: 'Connecting to wireless networks by manually typing long alphanumeric passwords is slow and prone to typographical errors. Our free WiFi QR code generator compiles your network name (SSID), security protocol, and password into a standardized static QR string (such as WIFI:S:GuestLounge_5G;T:WPA;P:SamplePass789;H:false;;). When scanned by a compatible smartphone camera or barcode scanner, supported operating systems and apps can parse the payload and display a prompt to join the network.',
+      text2: 'Because static WiFi QR codes store fixed network parameters directly within the visual matrix, data processing occurs entirely in client memory during creation and locally on the scanning device—no network names or passwords are sent to or hosted on our servers. The code has no built-in expiry timer and remains usable as long as the router credentials match and the printed graphic remains legible.',
+      highlight: 'Static client-side encoding. Fixed network parameters stored directly in the matrix without intermediary servers.'
     },
     benefits: {
       title: 'Key Capabilities & Technical Specifications of WiFi QR Codes',
-      desc: 'Understand the workflow, supported protocols, and operational benefits of static WiFi QR codes.',
+      desc: 'Understand the payload structure, supported encryption modes, and operational characteristics of static WiFi QR codes.',
       items: [
-        { title: 'Frictionless Guest Network Onboarding', desc: 'Eliminates manual password typing and character confusion. Compatible devices scan the printed code to trigger the native connection confirmation prompt.' },
+        { title: 'Frictionless Guest Network Onboarding', desc: 'Eliminates manual password entry and character confusion. Compatible devices and scanner applications parse the payload to display a local network join prompt.' },
         { title: 'Standardized Protocol Schemas', desc: 'Supports standard Wi-Fi syntax for WPA/WPA2/WPA3 Personal (T:WPA), legacy WEP (T:WEP), and Open unencrypted networks (T:nopass).' },
-        { title: '100% Client-Side Generation & Privacy', desc: 'Network credentials never leave your browser. The QR code matrix is calculated locally in memory without transmitting SSIDs or passwords to any backend service.' },
-        { title: 'Custom Design & Vector Print Quality', desc: 'Personalize foreground dots, background colors, and corner markers. Export high-resolution PNG, SVG vector, or PDF files for crystal-clear printing at any scale.' },
-        { title: 'Permanent, Self-Sustaining Codes', desc: 'Static WiFi QR codes do not expire, require no subscription, and have zero server dependencies. They remain functional as long as the router credentials stay unchanged.' }
+        { title: 'Local Client-Side Generation & Privacy', desc: 'Network credentials never leave your browser. The QR code matrix is calculated locally in memory without transmitting SSIDs or passwords to any backend service.' },
+        { title: 'Custom Design & Vector Print Quality', desc: 'Personalize foreground dots, background colors, and corner markers. Export high-resolution PNG, SVG vector, or PDF files for clean printing at various dimensions.' },
+        { title: 'Fixed Data with No Expiry Timer', desc: 'Static WiFi QR codes store fixed text data without built-in expiration timers or cloud redirect dependencies. They remain valid as long as physical legibility and router settings persist.' }
       ]
     },
     features: {
-      title: 'Understanding Technical Architecture & Device Compatibility',
-      desc: 'Real-world technical considerations for cross-platform compatibility, scanner security, and network discovery.',
+      title: 'Technical Architecture, Security & Device Compatibility',
+      desc: 'Technical considerations regarding scanner permissions, payload readability, and encryption standards.',
       items: [
-        { title: 'Device-Dependent OS Connection Prompts', desc: 'Scanning a WiFi QR code does not force an automatic connection without user consent. iOS and Android security models require users to explicitly tap a "Join Network" confirmation banner to prevent unauthorized network switching.' },
-        { title: 'WPA3 Protocol & Device Support Nuances', desc: 'The generator outputs standard T:WPA schema, which modern devices (iOS 13+, Android 10+) resolve for WPA2-PSK and mixed WPA2/WPA3 networks. Strict WPA3-SAE parsing varies by scanner application and device operating system version.' },
-        { title: 'Hidden SSID Flag (H:true)', desc: 'When configuring a hidden network, the generator appends H:true to the payload (e.g., WIFI:S:LabSecureOps;T:WPA;P:HiddenKey456;H:true;;). Compatible scanner software uses this flag to identify non-broadcasting SSIDs.' },
-        { title: 'Plain-Text Payload vs. Encrypted Network Traffic', desc: 'The WiFi QR code payload stores credentials as unencrypted plain text inside the 2D matrix, readable by anyone who scans the barcode. However, once connected, all wireless data transmitted between the device and router remains fully encrypted by WPA2/WPA3.' },
-        { title: 'Static Payload Immutability', desc: 'WiFi credentials are hardcoded into the printed 2D matrix dots. If you change your router password or SSID in the future, you must generate and print a new QR code.' }
+        { title: 'Device- and App-Dependent Connection Prompts', desc: 'Native camera apps and operating systems (such as modern iOS and Android builds) typically present a confirmation banner before connecting to a network. However, exact prompt behavior and network configuration permissions vary across device vendors and third-party scanning apps.' },
+        { title: 'WPA2/WPA3 Transition Network Compatibility', desc: 'The generator outputs standard T:WPA schema, which is widely recognized across WPA2-PSK and mixed WPA2/WPA3 Personal (Transition Mode) networks. Pure WPA3-SAE-only compatibility is not guaranteed by the T:WPA tag alone and depends on individual scanner implementations and OS network stacks.' },
+        { title: 'Hidden SSID Flag (H:true)', desc: 'When configuring a non-broadcasting network, the generator appends H:true to the payload (e.g., WIFI:S:LabSecureOps;T:WPA;P:HiddenKey456;H:true;;). Compatible scanner software uses this flag when searching for the SSID.' },
+        { title: 'Plain-Text Matrix vs. Over-the-Air Encryption', desc: 'The WiFi QR code payload stores credentials as unencrypted plain text within the 2D matrix, readable by anyone who scans the barcode. Over-the-air wireless encryption depends entirely on the router security configuration (WPA2/WPA3); unencrypted networks (T:nopass) do not gain encryption simply by using a QR code.' },
+        { title: 'Fixed Payload Immutability', desc: 'WiFi credentials are baked directly into the printed 2D matrix. If you modify your router password or SSID, the existing static barcode cannot update itself and must be regenerated.' }
       ]
     },
     howItWorks: {
       title: 'Step-by-Step WiFi QR Code Creation Workflow',
-      desc: 'Follow these four clear steps to encode and verify your wireless network code.',
+      desc: 'Follow these four steps to encode and verify your wireless network code.',
       steps: [
         { step: '1', title: 'Enter Network Name (SSID)', desc: 'Type the exact SSID broadcast by your wireless router. SSIDs are case-sensitive (e.g., "GuestLounge_5G" differs from "guestlounge_5g").' },
-        { step: '2', title: 'Select Security Protocol & Enter Password', desc: 'Choose your router encryption type (WPA/WPA2/WPA3 using T:WPA, WEP using T:WEP, or Open/None using T:nopass). Enter the exact network key.' },
-        { step: '3', title: 'Indicate If SSID Is Hidden', desc: 'If your router does not publicly broadcast its name, check the hidden network option so the H:true flag is included in the payload string.' },
-        { step: '4', title: 'Customize, Test Scan & Download', desc: 'Style colors and frames, perform a test scan using your phone camera to verify pairing, and export your vector SVG, PDF, or PNG graphic for printing.' }
+        { step: '2', title: 'Select Security Protocol & Enter Password', desc: 'Choose your router encryption mode (WPA/WPA2/WPA3 using T:WPA, WEP using T:WEP, or Open/None using T:nopass). Enter the exact network key.' },
+        { step: '3', title: 'Indicate If SSID Is Hidden', desc: 'If your router does not publicly broadcast its name, enable the hidden network option so the H:true flag is appended to the payload string.' },
+        { step: '4', title: 'Customize, Test Scan & Download', desc: 'Adjust styling options, perform a test scan with your device to verify pairing, and export your vector SVG, PDF, or PNG graphic for print reproduction.' }
       ]
     },
     useCases: {
-      title: 'Versatile Use Cases Across Commercial and Residential Spaces',
-      desc: 'Incorporate instant WiFi access anywhere people gather to boost customer satisfaction and simplify administration.',
+      title: 'Common Use Cases Across Hospitality and Workspaces',
+      desc: 'Deploy printed wireless access points across physical venues to simplify network onboarding for visitors.',
       items: [
-        { title: 'Bustling Cafes & Food Joints', desc: 'Display QR codes on menu covers, cash registers, or table tents. Customers connect instantly, keeping staff focused on taking orders rather than typing passwords.' },
-        { title: 'Hotels, Airbnbs & Guesthouses', desc: 'Incorporate the wireless code in visitor binder manuals, bedside tables, or welcome plaques. Guests feel at home without manual network searches.' },
-        { title: 'Professional Coworking Workspaces', desc: 'Streamline onboarding for freelancers and hot-deskers. Place printed codes on shared partitions and desk units.' },
-        { title: 'Corporate Meeting Chambers', desc: 'Keep client negotiations fluid. Introduce visitor credentials on projection display screens or entrance stands.' }
+        { title: 'Cafes, Restaurants & Food Venues', desc: 'Display QR codes on table tents, counter signs, or menus so patrons can connect without requiring staff to dictate passwords.' },
+        { title: 'Hotels, Vacation Rentals & Lodging', desc: 'Include printed codes in guest welcome books or bedside cards to eliminate manual typing of lengthy network keys.' },
+        { title: 'Offices & Coworking Environments', desc: 'Simplify guest network onboarding for visiting clients, contractors, and conference attendees.' },
+        { title: 'Residential & Private Spaces', desc: 'Place a discrete frame in living spaces to let friends and family join your guest network easily.' }
       ]
     },
     faqs: [
-      { q: 'Is this free wifi qr code generator secure and private?', a: 'Yes. Our platform processes your credentials 100% locally in your browser memory. Your SSID and network password are never transmitted to, processed by, or stored on our servers.' },
-      { q: 'Why does scanning not always connect automatically?', a: 'Modern mobile operating systems (iOS and Android) require explicit user confirmation for security reasons. When scanned, the device prompts the user with a "Join Network" banner to prevent unauthorized Wi-Fi switching. Additionally, third-party scanner apps that lack Wi-Fi configuration permissions may only display the raw text payload.' },
-      { q: 'Are WiFi QR codes static or dynamic?', a: 'WiFi QR codes are static. The SSID, encryption protocol, and password are baked directly into the 2D pixel pattern. Because there is no intermediary server, the code never expires, but changing the password on your router requires generating a new QR code.' },
-      { q: 'What are the security implications of printing a WiFi QR code?', a: 'Standard WiFi QR codes store your password as plain, unencrypted text (e.g., WIFI:S:SSID;T:WPA;P:PASSWORD;;) within the barcode matrix. Anyone who scans the code can view the text password. Only display WiFi QR codes in trusted physical areas. Note that once connected, over-the-air network traffic is still encrypted by WPA2/WPA3.' },
-      { q: 'Does WPA3 work with all mobile devices?', a: 'The generator uses the standard T:WPA schema, which modern devices (iOS 13+, Android 10+) handle for WPA2 and mixed WPA2/WPA3 networks. Pure WPA3-SAE behavior is device-dependent and varies across scanner apps. Setting routers to mixed WPA2/WPA3 Personal mode ensures broadest compatibility.' },
-      { q: 'Will a QR code work for hidden networks?', a: 'Yes. When configured with the hidden flag (H:true), the QR code instructs compatible scanner apps and device operating systems that the network does not broadcast its SSID.' },
-      { q: 'Can I change my WiFi password without generating a new QR code?', a: 'No. Because WiFi QR codes are static with the password embedded directly in the visual matrix, changing your router password invalidates the printed code, requiring a new code to be generated.' },
-      { q: 'Can I customize the design and colors of my WiFi QR code?', a: 'Yes. You can customize colors, corner eye shapes, dot patterns, and frames, or insert your business logo into the center while maintaining high Reed-Solomon error correction for reliable scanning.' }
+      { q: 'Is this free wifi qr code generator private and local?', a: 'Yes. Matrix calculation runs in your local browser memory. Your SSID and network password are not transmitted to, processed by, or stored on our servers.' },
+      { q: 'Why does scanning not always connect automatically across all devices?', a: 'Connection behavior depends on operating system versions, device manufacturer configurations, and scanner app capabilities. Most native camera apps display a confirmation prompt before joining a network, while some third-party scanner apps without network configuration permissions may only display the raw text payload.' },
+      { q: 'Are WiFi QR codes static or dynamic?', a: 'WiFi QR codes are static. The SSID, security protocol, and password are baked directly into the 2D pixel pattern. There is no intermediary server or built-in expiration timer, but changing router credentials requires generating a new code.' },
+      { q: 'Is the Wi-Fi password protected inside the QR code?', a: 'No. Standard WiFi QR codes encode network credentials as unencrypted plain text (e.g., WIFI:S:SSID;T:WPA;P:PASSWORD;;) within the barcode matrix. Anyone who scans the visual pattern with a standard barcode reader can view the password string. Over-the-air Wi-Fi traffic encryption depends on the router security setting (WPA2/WPA3); unencrypted networks (T:nopass) remain unencrypted.' },
+      { q: 'Does WPA3 work across all mobile scanners?', a: 'The generator outputs standard T:WPA syntax, which is widely supported on WPA2 and mixed WPA2/WPA3 Personal (Transition Mode) networks. Pure WPA3-SAE-only network parsing is not guaranteed by the T:WPA schema alone and varies across scanner apps and device firmware.' },
+      { q: 'Will a QR code work for hidden SSIDs?', a: 'When the hidden network flag (H:true) is included, compatible scanner applications and mobile operating systems use this parameter to attempt connection to a non-broadcasting SSID.' },
+      { q: 'Can a static WiFi QR code update if I change my router password?', a: 'No. Because the credentials are fixed directly in the visual matrix with no intermediary routing server, changing router settings invalidates existing printed codes and requires generating a new one.' },
+      { q: 'Can I customize the visual styling of my WiFi QR code?', a: 'Yes. You can customize colors, corner markers, dot patterns, and frames, or place a centered icon, while maintaining error correction to support reliable optical scanning.' }
     ],
     cta: {
       title: 'Generate Your Custom WiFi QR Code in Real-Time Now',
-      subtitle: 'Claim your network privacy, boost visitor convenience, and customize your wireless barcode for free.',
-      buttonText: 'Initialize WiFi Code',
+      subtitle: 'Create a customized, static wireless network barcode with client-side matrix calculation and vector exports.',
+      buttonText: 'Create WiFi Code',
       typePreset: 'wifi',
       defaultContent: 'WIFI:S:GuestLounge_5G;T:WPA;P:SamplePass789;H:false;;',
       defaultName: 'My Guest WiFi Network'

@@ -21,39 +21,39 @@ export interface AEORecord {
 
 export const aeoDatabase: Record<string, AEORecord> = {
   'wifi-qr-generator': {
-    quickDefinition: 'A Wi-Fi QR Code is a specialized static 2D matrix barcode that encodes local wireless network configuration parameters (SSID, password, security protocol, and hidden flag) using the standardized WIFI URI scheme.',
-    aiSummary50: 'A Wi-Fi QR code is a static 2D barcode storing SSID, security protocol (WPA/WPA2/WEP/None), and password. When scanned by compatible devices, it triggers an OS-level confirmation prompt to join the network without manual typing errors.',
-    whatIsIt: 'This QR code encodes network credentials in a standardized plain-text format (such as WIFI:S:GuestLounge_5G;T:WPA;P:SamplePass789;H:false;;). Because it is static, all data is directly hardcoded into the pixel dots, allowing immediate decoding on compatible devices without querying remote servers.',
-    whenToUse: 'Use a Wi-Fi QR code to share wireless network access with customers in hotel lobbies, cafes, restaurants, and retail spaces, as well as conference rooms and private residences where manual password entry is inconvenient.',
+    quickDefinition: 'A Wi-Fi QR Code is a static 2D matrix barcode that encodes local wireless network configuration parameters (SSID, security protocol, password, and optional hidden flag) using the standard WIFI URI scheme.',
+    aiSummary50: 'A Wi-Fi QR code is a static 2D barcode storing SSID, security type (WPA/WEP/None), and password. When scanned by compatible devices, supported software can parse the credentials and display a prompt to join the local network.',
+    whatIsIt: 'This QR code encodes network credentials in a standardized plain-text format (such as WIFI:S:GuestLounge_5G;T:WPA;P:SamplePass789;H:false;;). Because it is static, data is fixed directly in the matrix, allowing local optical decoding on compatible devices without querying remote servers.',
+    whenToUse: 'Use a Wi-Fi QR code to share wireless network credentials on physical signs, table tents, or cards in cafes, hotels, workplaces, or homes where manual password entry is inconvenient.',
     benefits: [
-      'Eliminates typing mistakes or confusion between similar characters (such as O, 0, I, l, or 1).',
-      'Triggers convenient native OS network connection prompts on supported mobile devices.',
-      'Saves credentials as a reusable visual asset for table tents, signage, and guest cards.',
-      'Operates fully offline for local matrix decoding with zero server dependencies.'
+      'Reduces manual typing mistakes and character confusion (such as O vs 0 or I vs 1).',
+      'Enables compatible devices to present a prompt to join the local network.',
+      'Provides a reusable visual asset for table tents, signage, and guest cards.',
+      'Calculates matrix patterns locally in browser memory with no intermediary redirect servers.'
     ],
     commonMistakes: [
-      'Forgetting that SSID and password characters are case-sensitive.',
-      'Selecting the wrong encryption type (e.g. setting WEP instead of standard WPA).',
-      'Omitting required escaping for special characters (like colons or semicolons).',
-      'Expecting the code to automatically update when the router password is changed.'
+      'Assuming SSID or password capitalization does not matter (SSIDs and passwords are case-sensitive).',
+      'Selecting an incompatible security type (such as selecting legacy WEP for modern WPA networks).',
+      'Assuming standard T:WPA encoding guarantees support on pure WPA3-SAE-only networks across all scanner apps.',
+      'Expecting printed static QR codes to update automatically when the router password is changed.'
     ],
     bestPractices: [
-      'Use mixed WPA2/WPA3 Personal mode on your wireless router for maximum guest device compatibility.',
-      'Test scan with both iOS and Android devices before producing large batches of printed signage.',
-      'Export vector SVG or PDF formats for crisp, high-contrast printing on table tents and acrylic stands.'
+      'Use mixed WPA2/WPA3 Personal (Transition Mode) on routers for broad guest device compatibility.',
+      'Test scan printed proofs with multiple device models and scanning apps before large print runs.',
+      'Export vector SVG or PDF formats for clean edge fidelity and reliable contrast on printed signs.'
     ],
     faqs: [
       {
         q: 'Do Wi-Fi QR codes connect devices automatically?',
-        a: 'Most modern operating systems (iOS and Android) require explicit user confirmation (e.g., tapping a "Join Network" banner) before switching Wi-Fi networks as a security safeguard.'
+        a: 'Device and app behavior varies. Native camera scanners and operating systems (such as modern iOS and Android builds) generally display a confirmation prompt before joining a network, while third-party apps without network configuration permissions may display only the raw text payload.'
       },
       {
         q: 'Is the Wi-Fi password visible to someone scanning the code?',
-        a: 'Yes. The password is stored as plain text inside the QR code matrix. Anyone with a barcode scanner app can view the password string, though over-the-air Wi-Fi traffic remains encrypted by WPA2/WPA3 once connected.'
+        a: 'Yes. The password is stored as plain text inside the QR code matrix (WIFI:S:...;T:...;P:...;;). Anyone with a barcode scanner app can view the decoded string. Over-the-air wireless encryption depends on the router security mode (WPA2/WPA3); unencrypted networks (T:nopass) remain unencrypted.'
       },
       {
-        q: 'Do I need internet access to scan and join?',
-        a: 'The QR code matrix decodes entirely offline. However, to access the internet through the Wi-Fi network, the router itself must be connected to an active internet service.'
+        q: 'Do I need internet access to scan and decode a WiFi QR code?',
+        a: 'Decoding the visual matrix into plain text happens locally on the scanning device without internet access. Connecting to the wireless router also operates locally, while subsequent internet access depends on whether the router has an active uplink.'
       }
     ],
     relatedGuides: [
@@ -66,13 +66,13 @@ export const aeoDatabase: Record<string, AEORecord> = {
     ],
     keyTakeaways: [
       'Encodes SSID, password, and protocol in plain-text standard URI.',
-      'Decodes 100% locally with zero server lookups.',
-      'Operating systems require user confirmation to join.'
+      'Decodes locally in client memory with zero server lookups.',
+      'Prompt and connection behavior depends on device and scanner software.'
     ],
     aiSummaryBox: {
       entityType: 'Static Wi-Fi Configuration Barcode',
       protocolStandard: 'WIFI:S:[SSID];T:[WPA|WEP|nopass];P:[PASSWORD];H:[true|false];;',
-      clientCompatibility: 'Supported natively by iOS 11+ and Android 10+ camera applications.',
+      clientCompatibility: 'Parsed by compatible iOS and Android camera apps and optical scanner utilities.',
       primaryUseCase: 'Frictionless wireless network onboarding for guest environments.',
       offlineCapability: '100% Offline matrix decoding.'
     }
