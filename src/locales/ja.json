@@ -3999,5 +3999,10 @@
   "barcode.guide.symbologiesDesc": "不適切なシンボル体系を選択すると、レガシースキャナーで読み取りに失敗する原因となります。業務要件に最適な形式を以下の比較表でご確認ください：",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、安全な認証情報の取り扱いを推進します。",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "セキュアなローカルネットワーク上でのエンタープライズQRデプロイ向けにカスタマイズされた新しいセキュリティガイドラインを導入し、安全な認証情報の取り扱いを推進します。",
-  "preview.designEstimateNotice": "デザイン推定値です。印刷前にダウンロードしたQRコードをテストしてください。"
+  "preview.designEstimateNotice": "デザイン推定値です。印刷前にダウンロードしたQRコードをテストしてください。",
+  "hero.titlePrefix": "無料のプロ仕様",
+  "hero.titleHighlight": "QRコード＆バーコードスタジオ",
+  "hero.description": "ブラウザ上で高解像度QRコードおよび1次元バーコードを直接生成できます。静的コード生成とベクター出力はアカウント不要・スキャン無制限でローカルメモリ内で動作します。オプションの動的コードは、編集可能なリダイレクトURLとサーバー記録のアクセス解析を提供します。",
+  "hero.transparencyHeading": "クライアント側静的生成 • ベクター出力 • オプションの動的短縮リンク",
+  "hero.transparencyDetails": "静的QRコードは当プラットフォームのリダイレクトサービスを経由せず、固定データを直接画像パターンにエンコードします。オプションの動的QRコードはクラウド経由の編集可能なURLを保持し、印刷後のリンク先変更やアクセス解析に対応します。"
 }

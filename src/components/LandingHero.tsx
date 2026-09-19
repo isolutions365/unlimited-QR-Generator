@@ -219,7 +219,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                 <span>{t('hero.transparencyHeading', 'Client-Side Static Generation • Vector Exports • Optional Hosted Dynamic Links')}</span>
               </div>
               <p className="text-[11px] text-slate-600 leading-snug">
-                {t('hero.transparencyDetails', 'Static QR codes and 1D barcodes encode fixed data directly into the visual pattern with zero intermediary redirect servers. Optional dynamic QR codes route through cloud endpoints to support post-print destination updates and request analytics.')}
+                {t('hero.transparencyDetails', 'Static QR codes encode fixed data directly into the visual pattern with no redirect service required from this platform. Optional dynamic QR codes encode an editable redirect URL that routes through cloud endpoints to support post-print destination updates and request analytics.')}
               </p>
             </div>
 

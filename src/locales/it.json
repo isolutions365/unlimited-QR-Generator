@@ -4001,5 +4001,10 @@
   "barcode.guide.symbologiesDesc": "Selezionare la simbologia errata può causare il malfunzionamento dei vecchi scanner. Consulta questo quadro comparativo per le tue esigenze aziendali:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, promuovendo la gestione sicura delle credenziali.",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Abbiamo lanciato nuove linee guida di sicurezza personalizzate per la distribuzione di QR enterprise su reti locali sicure, promuovendo la gestione sicura delle credenziali",
-  "preview.designEstimateNotice": "Stima di progettazione. Testa il codice QR scaricato prima di stampare."
+  "preview.designEstimateNotice": "Stima di progettazione. Testa il codice QR scaricato prima di stampare.",
+  "hero.titlePrefix": "Studio Professionale Gratuito",
+  "hero.titleHighlight": "per Codici QR e Codici a Barre",
+  "hero.description": "Genera codici QR ad alta risoluzione e codici a barre lineari 1D direttamente nel tuo browser. La generazione statica e l'esportazione vettoriale avvengono localmente nella memoria del client senza account né limiti di scansione. I codici dinamici opzionali forniscono URL di reindirizzamento modificabili e statistiche registrate sul server.",
+  "hero.transparencyHeading": "Generazione statica lato client • Esportazione vettoriale • Link dinamici opzionali",
+  "hero.transparencyDetails": "I codici QR statici codificano dati fissi direttamente nel pattern visivo senza richiedere servizi di reindirizzamento da questa piattaforma. I codici QR dinamici opzionali codificano un URL di reindirizzamento modificabile instradato tramite cloud per aggiornamenti post-stampa e analisi delle richieste."
 }

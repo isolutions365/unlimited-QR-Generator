@@ -4000,5 +4000,10 @@
   "barcode.guide.symbologiesDesc": "부적절한 심볼로지를 선택하면 구형 스캐너에서 인식 오류가 발생할 수 있습니다. 비즈니스 요구사항에 맞는 최적의 형식을 아래 비교표에서 확인하세요:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "보안 로컬 네트워크의 엔터프라이즈 QR 배포를 위한 새로운 맞춤형 보안 가이드라인을 출시하여 안전한 자격 증명 관리를 장려합니다.",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "보안 로컬 네트워크의 엔터프라이즈 QR 배포를 위한 새로운 맞춤형 보안 가이드라인을 출시하여 안전한 자격 증명 관리를 장려합니다",
-  "preview.designEstimateNotice": "디자인 추정치입니다. 인쇄하기 전에 다운로드한 QR 코드를 테스트하십시오."
+  "preview.designEstimateNotice": "디자인 추정치입니다. 인쇄하기 전에 다운로드한 QR 코드를 테스트하십시오.",
+  "hero.titlePrefix": "무료 전문",
+  "hero.titleHighlight": "QR 코드 및 바코드 스튜디오",
+  "hero.description": "브라우저에서 고해상도 QR 코드 및 1D 선형 바코드를 바로 생성하세요. 정적 코드 생성 및 벡터 내보내기는 회원가입이나 스캔 제한 없이 클라이언트 메모리에서 로컬로 실행됩니다. 선택적 동적 추적 코드는 수정 가능한 리디렉션 URL과 서버 로그 분석을 제공합니다.",
+  "hero.transparencyHeading": "클라이언트 측 정적 생성 • 벡터 내보내기 • 선택적 호스팅 동적 링크",
+  "hero.transparencyDetails": "정적 QR 코드는 본 플랫폼의 리디렉션 서비스 없이 고정 데이터를 시각적 패턴에 직접 인코딩합니다. 선택적 동적 QR 코드는 클라우드 엔드포인트를 통해 수정 가능한 리디렉션 URL을 인코딩하여 인쇄 후 목적지 변경 및 요청 분석을 지원합니다."
 }

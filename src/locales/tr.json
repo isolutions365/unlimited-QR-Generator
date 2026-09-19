@@ -4071,5 +4071,10 @@
   "barcode.guide.symbologiesDesc": "Yanlış semboloji seçimi eski tarayıcılarda okuma hatasına neden olabilir. İşletme gereksinimlerinize en uygun formatı belirlemek için bu tabloyu inceleyin:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Güvenli yerel ağlarda kurumsal QR dağıtımı için güvenli kimlik bilgisi yönetimini teşvik eden yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk.",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Güvenli yerel ağlarda kurumsal QR dağıtımı için güvenli kimlik bilgisi yönetimini teşvik eden yeni özelleştirilmiş güvenlik yönergelerini kullanıma sunduk",
-  "preview.designEstimateNotice": "Tasarım tahmini. Yazdırmadan önce indirilen QR kodunu test edin."
+  "preview.designEstimateNotice": "Tasarım tahmini. Yazdırmadan önce indirilen QR kodunu test edin.",
+  "hero.titlePrefix": "Ücretsiz Profesyonel",
+  "hero.titleHighlight": "QR Kod ve Çizgi Kod Stüdyosu",
+  "hero.description": "Yüksek çözünürlüklü QR kodları ve 1D çizgili barkodları doğrudan tarayıcınızda oluşturun. Statik kod üretimi ve vektör dışa aktarımları hesap gerektirmeden ve tarama limiti olmadan yerel istemci belleğinde çalışır. İsteğe bağlı dinamik takip kodları düzenlenebilir yönlendirme URL'leri ve sunucu kayıtlı metrikler sunar.",
+  "hero.transparencyHeading": "İstemci Tarafı Statik Üretim • Vektör Dışa Aktarımı • İsteğe Bağlı Dinamik Bağlantılar",
+  "hero.transparencyDetails": "Statik QR kodları, bu platformdan herhangi bir yönlendirme hizmetine ihtiyaç duymadan sabit verileri doğrudan görsel desene kodlar. İsteğe bağlı dinamik QR kodları, baskı sonrası hedef güncelleme ve istek analizini desteklemek için bulut uç noktalarından geçen düzenlenebilir bir yönlendirme URL'si kodlar."
 }

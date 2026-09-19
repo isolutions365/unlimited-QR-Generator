@@ -3999,5 +3999,10 @@
   "barcode.guide.symbologiesDesc": "选择错误的条码制式可能导致传统扫描器读取失败。请参考以下结构化对比表，选择符合您业务需求的技术格式：",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以促进安全凭据处理。",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "我们为安全局域网上的企业 QR 部署推出了新的定制安全指南，以促进安全凭据处理。",
-  "preview.designEstimateNotice": "设计评估。打印前请测试下载的二维码。"
+  "preview.designEstimateNotice": "设计评估。打印前请测试下载的二维码。",
+  "hero.titlePrefix": "免费专业级",
+  "hero.titleHighlight": "二维码与一维条形码工作台",
+  "hero.description": "在浏览器中直接生成高分辨率二维码与一维线性条形码。静态码生成与矢量导出完全在本地客户端内存中运行，无需注册账户且无扫描次数限制。可选的动态追踪码提供可编辑的重定向URL以及服务器记录的扫描指标。",
+  "hero.transparencyHeading": "客户端本地静态生成 • 矢量格式导出 • 可选云端动态短链",
+  "hero.transparencyDetails": "静态二维码将固定数据直接编码到视觉图案中，无需本平台的重定向服务。可选的动态二维码则编码可编辑的重定向短链，经由云端节点实现印刷后修改目标地址与请求数据分析。"
 }

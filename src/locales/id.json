@@ -4071,5 +4071,10 @@
   "barcode.guide.symbologiesDesc": "Memilih simbologi yang salah dapat menyebabkan pemindai lama gagal membaca. Tinjau kerangka terstruktur ini untuk menyesuaikan kebutuhan bisnis Anda:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, mendorong penanganan kredensial yang aman.",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling": "Kami meluncurkan panduan keamanan kustom baru untuk penerapan QR enterprise pada jaringan lokal yang aman, mendorong penanganan kredensial yang aman",
-  "preview.designEstimateNotice": "Estimasi desain. Uji kode QR yang diunduh sebelum mencetak."
+  "preview.designEstimateNotice": "Estimasi desain. Uji kode QR yang diunduh sebelum mencetak.",
+  "hero.titlePrefix": "Studio Profesional Gratis",
+  "hero.titleHighlight": "Kode QR & Kode Batang Linear",
+  "hero.description": "Hasilkan kode QR resolusi tinggi dan kode batang 1D linear langsung di peramban Anda. Pembuatan kode statis dan ekspor vektor berjalan secara lokal di memori klien tanpa perlu akun dan tanpa batas pemindaian. Kode pelacakan dinamis opsional menyediakan URL pengalihan yang dapat diedit dan metrik pemindaian tercatat di server.",
+  "hero.transparencyHeading": "Pembuatan Statis Sisi Klien • Ekspor Vektor • Tautan Dinamis Opsional",
+  "hero.transparencyDetails": "Kode QR statis mengodekan data tetap langsung ke dalam pola visual tanpa memerlukan layanan pengalihan dari platform ini. Kode QR dinamis opsional mengodekan URL pengalihan yang dapat diedit melalui titik akhir cloud untuk mendukung pembaruan tujuan pasca-cetak dan analitik permintaan."
 }

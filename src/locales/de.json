@@ -3905,5 +3905,10 @@
   "barcode.table.qrScan": "Smartphone-Kameras & 2D-Flächenkameras",
   "barcode.guide.symbologiesDesc": "Die Wahl der falschen Symbologie kann zum Ausfall älterer Scanner führen. Nutzen Sie diese Übersicht, um das passende Format für Ihre Anforderungen zu wählen:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Wir haben neue maßgeschneiderte Sicherheitsrichtlinien für den Enterprise-QR-Einsatz in sicheren lokalen Netzwerken veröffentlicht, die einen sicheren Umgang mit Anmeldeinformationen fördern.",
-  "preview.designEstimateNotice": "Design-Schätzung. Testen Sie den heruntergeladenen QR-Code vor dem Drucken."
+  "preview.designEstimateNotice": "Design-Schätzung. Testen Sie den heruntergeladenen QR-Code vor dem Drucken.",
+  "hero.titlePrefix": "Kostenloses professionelles",
+  "hero.titleHighlight": "QR-Code- & Barcode-Studio",
+  "hero.description": "Erstellen Sie hochauflösende QR-Codes und lineare 1D-Barcodes direkt im Browser. Die statische Codegenerierung und Vektorexporte laufen lokal im Clientspeicher ohne Konto und ohne Scan-Limits. Optionale dynamische Tracking-Codes bieten bearbeitbare Ziel-URLs und serverseitig erfasste Scan-Metriken.",
+  "hero.transparencyHeading": "Clientseitige statische Erstellung • Vektor-Exporte • Optionale dynamische Links",
+  "hero.transparencyDetails": "Statische QR-Codes kodieren feste Daten direkt im visuellen Muster, ohne dass ein Weiterleitungsdienst dieser Plattform erforderlich ist. Optionale dynamische QR-Codes kodieren eine bearbeitbare Weiterleitungs-URL über Cloud-Endpunkte für nachträgliche Zieländerungen und Abfrageanalysen."
 }

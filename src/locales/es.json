@@ -3978,5 +3978,10 @@
   "barcode.table.qrScan": "Cámaras de smartphone e imágenes 2D",
   "barcode.guide.symbologiesDesc": "Elegir la simbología incorrecta puede provocar fallos en lectores antiguos. Revise este marco estructural para adaptarse a los requisitos de su negocio:",
   "We launched new customized security guidelines for enterprise QR deployment on secure local networks, promoting secure credential handling.": "Lanzamos nuevas directrices de seguridad personalizadas para la implementación empresarial de QR en redes locales seguras, promoviendo el manejo seguro de credenciales.",
-  "preview.designEstimateNotice": "Estimación de diseño. Pruebe el código QR descargado antes de imprimir."
+  "preview.designEstimateNotice": "Estimación de diseño. Pruebe el código QR descargado antes de imprimir.",
+  "hero.titlePrefix": "Estudio Profesional y Gratuito",
+  "hero.titleHighlight": "de Códigos QR y Códigos de Barras",
+  "hero.description": "Genere códigos QR de alta resolución y códigos de barras lineales 1D directamente en su navegador. La generación estática y la exportación vectorial se ejecutan localmente en la memoria del cliente sin requerir cuenta ni límites de escaneo. Los códigos dinámicos opcionales proporcionan URLs de redirección editables y métricas en servidor.",
+  "hero.transparencyHeading": "Generación estática en el cliente • Exportación vectorial • Enlaces dinámicos opcionales",
+  "hero.transparencyDetails": "Los códigos QR estáticos codifican datos fijos directamente en el patrón visual sin requerir ningún servicio de redirección de esta plataforma. Los códigos QR dinámicos opcionales codifican una URL de redirección editable que pasa por la nube para actualizar el destino tras imprimir y analizar solicitudes."
 }
