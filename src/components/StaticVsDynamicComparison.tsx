@@ -36,63 +36,63 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
 
   const comparisonFeatures = [
     {
-      feature: t('compare.pricingLabel', 'Pricing & Fees'),
-      description: t('compare.pricingDesc', 'Cost to generate, download, and use commercially'),
+      feature: t('compare.pricingLabel', 'Pricing & Commercial Terms'),
+      description: t('compare.pricingDesc', 'Cost to generate, download, and deploy in production'),
       staticVal: t('compare.staticPricing', '100% Free Forever'),
-      staticSub: t('compare.staticPricingSub', 'No hidden fees or paywalls'),
+      staticSub: t('compare.staticPricingSub', 'Unlimited scans, commercial use allowed, zero watermarks'),
       staticBadge: 'positive',
-      dynamicVal: t('compare.dynamicPricing', 'Free to Try & Deploy'),
-      dynamicSub: t('compare.dynamicPricingSub', 'Free tier included; upgraded plans for unlimited retention'),
-      dynamicBadge: 'neutral'
+      dynamicVal: t('compare.dynamicPricing', '100% Free Platform'),
+      dynamicSub: t('compare.dynamicPricingSub', 'Dynamic redirection & telemetry included with zero paywalls'),
+      dynamicBadge: 'positive'
     },
     {
       feature: t('compare.signupLabel', 'Account & Sign-Up Requirement'),
-      description: t('compare.signupDesc', 'Whether an account is needed before generating or downloading'),
-      staticVal: t('compare.staticSignup', 'No Sign-Up Required (0 steps)'),
-      staticSub: t('compare.staticSignupSub', 'Instant browser generation, zero registration'),
+      description: t('compare.signupDesc', 'Whether registration is required before generating or downloading'),
+      staticVal: t('compare.staticSignup', 'No Sign-Up Required'),
+      staticSub: t('compare.staticSignupSub', 'Instant browser generation; no email or credentials needed'),
       staticBadge: 'positive',
       dynamicVal: t('compare.dynamicSignup', 'No Upfront Sign-Up to Try'),
-      dynamicSub: t('compare.dynamicSignupSub', 'Create instantly; connect free account to save & manage dashboard'),
+      dynamicSub: t('compare.dynamicSignupSub', 'Test and preview instantly; connect free account to save dashboard & manage links'),
       dynamicBadge: 'neutral'
     },
     {
-      feature: t('compare.expirationLabel', 'Lifespan & Expiration'),
-      description: t('compare.expirationDesc', 'How long the printed QR code remains functional'),
-      staticVal: t('compare.staticExpiration', 'Never Expires (Permanent)'),
-      staticSub: t('compare.staticExpirationSub', 'Direct matrix encoding never depends on external servers'),
+      feature: t('compare.expirationLabel', 'Lifespan & Expiration Mechanics'),
+      description: t('compare.expirationDesc', 'How code longevity and availability are governed'),
+      staticVal: t('compare.staticExpiration', 'Matrix Never Expires'),
+      staticSub: t('compare.staticExpirationSub', 'Raw data is self-contained. Web destinations remain subject to target URL uptime.'),
       staticBadge: 'positive',
-      dynamicVal: t('compare.dynamicExpiration', '180-Day Free Data Retention'),
-      dynamicSub: t('compare.dynamicExpirationSub', 'Unclaimed/guest test logs auto-purge after 180 days unless upgraded or renewed'),
-      dynamicBadge: 'warning'
+      dynamicVal: t('compare.dynamicExpiration', 'Managed via Redirect Server'),
+      dynamicSub: t('compare.dynamicExpirationSub', 'Routes through cloud endpoint; active as long as the redirect entry is maintained'),
+      dynamicBadge: 'neutral'
     },
     {
       feature: t('compare.analyticsLabel', 'Scan Tracking & Analytics'),
-      description: t('compare.analyticsDesc', 'Ability to count scans, viewer devices, and scan locations'),
-      staticVal: t('compare.staticAnalytics', 'No Analytics (Zero Telemetry)'),
-      staticSub: t('compare.staticAnalyticsSub', 'Direct offline scan; 100% privacy with no tracking data collected'),
+      description: t('compare.analyticsDesc', 'Ability to record scan volume, device OS, and timestamps'),
+      staticVal: t('compare.staticAnalytics', 'No Scan Telemetry'),
+      staticSub: t('compare.staticAnalyticsSub', 'Device connects directly to destination; zero tracking data is collected'),
       staticBadge: 'neutral',
-      dynamicVal: t('compare.dynamicAnalytics', 'Real-Time Analytics Included'),
-      dynamicSub: t('compare.dynamicAnalyticsSub', 'Scan counts, device types, operating systems & regional heatmaps'),
+      dynamicVal: t('compare.dynamicAnalytics', 'Real-Time Scan Telemetry'),
+      dynamicSub: t('compare.dynamicAnalyticsSub', 'Aggregates scan counts, device operating system, and hourly activity'),
       dynamicBadge: 'positive'
     },
     {
       feature: t('compare.editingLabel', 'Post-Print Destination Editing'),
-      description: t('compare.editingDesc', 'Change the target link without reprinting paper/packaging'),
-      staticVal: t('compare.staticEditing', 'Cannot Be Changed After Print'),
-      staticSub: t('compare.staticEditingSub', 'Data is physically locked into the matrix pattern'),
+      description: t('compare.editingDesc', 'Update destination URL without reprinting paper, decals, or packaging'),
+      staticVal: t('compare.staticEditing', 'Fixed Permanently in Matrix'),
+      staticSub: t('compare.staticEditingSub', 'Payload is physically hardcoded. Changing destination requires reprinting or domain-level 301 redirect.'),
       staticBadge: 'negative',
-      dynamicVal: t('compare.dynamicEditing', 'Editable Anytime in 1 Click'),
-      dynamicSub: t('compare.dynamicEditingSub', 'Update target URL on the fly without reprinting materials'),
+      dynamicVal: t('compare.dynamicEditing', 'Editable via Dashboard'),
+      dynamicSub: t('compare.dynamicEditingSub', 'Update destination URL anytime without modifying printed materials'),
       dynamicBadge: 'positive'
     },
     {
-      feature: t('compare.privacyLabel', 'Privacy & Hosting Dependency'),
-      description: t('compare.privacyDesc', 'Where data is processed and stored'),
-      staticVal: t('compare.staticPrivacy', '100% Client-Side / Offline'),
-      staticSub: t('compare.staticPrivacySub', 'Zero server hops; generated in local browser memory'),
+      feature: t('compare.privacyLabel', 'Privacy & Hosting Architecture'),
+      description: t('compare.privacyDesc', 'Where data is processed and how scans are resolved'),
+      staticVal: t('compare.staticPrivacy', '100% Client-Side Processing'),
+      staticSub: t('compare.staticPrivacySub', 'Rendered directly in browser memory; zero payload storage on external servers'),
       staticBadge: 'positive',
-      dynamicVal: t('compare.dynamicPrivacy', 'Cloud Redirect Routing'),
-      dynamicSub: t('compare.dynamicPrivacySub', 'Encrypted Firestore redirect server resolves destination instantly'),
+      dynamicVal: t('compare.dynamicPrivacy', 'Cloud-Hosted Redirection'),
+      dynamicSub: t('compare.dynamicPrivacySub', 'Intermediate endpoint logs scan metrics before forwarding scanner to destination'),
       dynamicBadge: 'neutral'
     },
   ];
@@ -117,7 +117,7 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
         <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
           {t(
             'compare.subtitle', 
-            'We believe in 100% honesty. Static QR codes are completely free and permanent. Dynamic QR codes provide live analytics and editable links through our cloud servers, with a 180-day retention window on the free tier.'
+            'A direct, factual overview of how QR codes operate. Static QR codes encode raw data directly into the matrix with zero server dependency. Dynamic QR codes route through cloud endpoints to enable post-print destination changes and scan analytics.'
           )}
         </p>
       </div>
@@ -271,16 +271,16 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
                 </div>
               </div>
 
-              <div className="flex items-start gap-2.5 text-xs text-amber-900 bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/80">
-                <div className="w-5 h-5 rounded-full bg-amber-200 text-amber-900 flex items-center justify-center shrink-0 mt-0.5">
-                  <Clock className="w-3 h-3 stroke-[2.5]" />
+              <div className="flex items-start gap-2.5 text-xs text-indigo-900 bg-indigo-50/80 p-2.5 rounded-xl border border-indigo-200/80">
+                <div className="w-5 h-5 rounded-full bg-indigo-200 text-indigo-900 flex items-center justify-center shrink-0 mt-0.5">
+                  <Database className="w-3 h-3 stroke-[2.5]" />
                 </div>
                 <div>
-                  <strong className="text-amber-950 font-bold">{t('compare.dynamicRetentionTitle', '180-Day Free Retention Policy:')}</strong>{' '}
-                  <span className="text-amber-800">
+                  <strong className="text-indigo-950 font-bold">{t('compare.dynamicHostingTitle', 'Hosted Cloud Infrastructure:')}</strong>{' '}
+                  <span className="text-indigo-800">
                     {t(
-                      'compare.dynamicRetentionDesc',
-                      'Free guest/anonymous dynamic scan logs & temporary links are kept for 180 days. Connect an account to retain projects permanently.'
+                      'compare.dynamicHostingDesc',
+                      'Dynamic redirection routes through secure cloud servers to log analytics and handle destination changes. Link availability depends on server uptime.'
                     )}
                   </span>
                 </div>
@@ -391,12 +391,12 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
             </div>
             <div className="space-y-1">
               <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                {t('compare.whyDifferenceTitle', 'Why is there a 180-day retention window on Free Dynamic QRs?')}
+                {t('compare.whyDifferenceTitle', 'How to choose between Static and Dynamic QR Codes?')}
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed">
                 {t(
                   'compare.whyDifferenceDesc',
-                  'Static QR codes are rendered directly by your web browser canvas using pure mathematics—they cost zero server resources to exist forever. Dynamic QR codes route through cloud servers and log analytics to a database on every scan. To keep our service free and prevent abandoned link spam, unclaimed guest test links and telemetry are retained for 180 days unless claimed under an active account.'
+                  'Choose Static QR codes for permanent, unchanging data such as WiFi credentials, fixed URLs, plain text, and personal vCards—they execute locally, require no network connection to decode, and have zero server dependencies. Choose Dynamic QR codes for marketing campaigns, physical print runs, restaurant menus, or any deployment where you may need to update the destination URL later or measure scan performance over time.'
                 )}
               </p>
             </div>

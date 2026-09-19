@@ -202,15 +202,26 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left z-10">
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
-              The Ultimate <br className="hidden sm:inline" />
+              {t('hero.titlePrefix', 'Free Professional')} <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                All-in-One QR & Barcode Studio
+                {t('hero.titleHighlight', 'QR Code & Barcode Studio')}
               </span>
             </h1>
 
             <p className="mt-5 text-sm sm:text-base md:text-lg text-slate-600 font-normal max-w-2xl leading-relaxed">
-              Create ZATCA e-invoices, restaurant digital menus, crypto payment links, and bulk print-ready label sheets with 100% free vector export.
+              {t('hero.description', 'Generate 100% free, high-resolution static and dynamic QR codes and 1D barcodes directly in your browser. No sign-up or credit card required. Full custom styling, logo embedding, vector SVG/PDF exports, and Avery print templates with unlimited scans and zero watermarks.')}
             </p>
+
+            {/* Factual Capabilities Callout Bar */}
+            <div className="mt-4 p-3 rounded-xl bg-slate-100/80 border border-slate-200/80 text-left max-w-xl text-xs text-slate-700 space-y-1">
+              <div className="flex items-center gap-1.5 font-semibold text-slate-900">
+                <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+                <span>{t('hero.transparencyHeading', 'Zero Paywalls • Client-Side Privacy • Optional Cloud Services')}</span>
+              </div>
+              <p className="text-[11px] text-slate-600 leading-snug">
+                {t('hero.transparencyDetails', 'Static codes (URLs, WiFi, vCards, Barcodes) process locally with zero server dependency and never expire. Optional dynamic tracking codes route through secure endpoints for post-print link editing and scan analytics.')}
+              </p>
+            </div>
 
             {/* Quick-Category Tabs */}
             <div className="mt-7 w-full max-w-xl">
