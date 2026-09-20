@@ -337,7 +337,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-28',
     title: 'What Is a QR Code & How Does It Work? The Definitive Guide',
     description: 'Discover the math, science, and practical mechanics behind QR codes. From automotive tracking in 1994 to universal digital convenience today.',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'QR Code Fundamentals'
   },
   {
@@ -346,7 +346,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-30',
     title: 'Static vs. Dynamic QR Codes: Complete Architectural Guide',
     description: 'Choosing between static and dynamic QR codes is critical. Learn how payload immutability, server redirects, and real-time telemetry dictate the ideal solution.',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'QR Code Fundamentals'
   },
   {
@@ -355,7 +355,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-25',
     title: 'QR Error Correction Explained: L, M, Q, and H Comparison',
     description: 'Master Reed-Solomon error correction algorithms in QR codes. Learn how 7% to 30% recovery thresholds enable custom logos without scan failures.',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'QR Code Fundamentals'
   },
   {
@@ -463,7 +463,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-09-02',
     title: 'GS1 Digital Link Transition: The 2027 Barcode Revolution Explained',
     description: 'Discover how the global retail industry is transitioning from legacy 1D UPC barcodes to 2D QR codes powered by the GS1 Digital Link standard.',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'Technology'
   },
   {
@@ -490,7 +490,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-30',
     title: 'Smart Facilities & Equipment Management: Instant Maintenance Ticketing',
     description: 'Discover how facility managers track HVAC units, elevators, and office assets with rugged industrial QR code decals linking to instant service logs.',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'Contactless Solutions'
   },
   {
@@ -605,9 +605,9 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     slug: 'qr-code-for-surveys-and-feedback',
     date: '2026-09-20',
     dateModified: '2026-09-20',
-    title: 'QR Code for Surveys & Feedback: The Complete Implementation Guide',
-    description: 'Master QR code customer surveys, NPS feedback, CSAT polls, and Google Forms with optimal sizing, redirect telemetry, and conversion rate best practices.',
-    author: 'Marcus Vance, Lead Systems Architect',
+    title: 'How to Create a QR Code for Surveys and Customer Feedback',
+    description: 'Learn how to create a QR code for Google Forms and other surveys, choose a static or dynamic link, test print placement, and measure scans separately from responses.',
+    author: 'FreeQRBarcodes',
     category: 'Business Marketing'
   },
 ];

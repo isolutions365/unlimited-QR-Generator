@@ -79,7 +79,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover the math, science, and practical mechanics behind QR codes. From automotive tracking in 1994 to universal digital convenience today.',
     date: '2026-06-02',
     dateModified: '2026-08-28',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'QR Code Fundamentals'
   },
   'static-vs-dynamic-qr-codes-guide': {
@@ -87,7 +87,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Technical guide comparing static and dynamic QR codes: ISO encoding, Reed-Solomon codewords, resolution stages, telemetry, and risk analysis.',
     date: '2026-06-14',
     dateModified: '2026-08-30',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'QR Code Fundamentals'
   },
   'qr-code-error-correction-levels-explained': {
@@ -95,7 +95,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Master Reed-Solomon error correction algorithms in QR codes. Learn how 7% to 30% recovery thresholds enable custom logos without scan failures.',
     date: '2026-07-02',
     dateModified: '2026-08-25',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'QR Code Fundamentals'
   },
   'omnichannel-retail-qr-codes-footfall-to-sales': {
@@ -191,7 +191,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover how the global retail industry is transitioning from legacy 1D UPC barcodes to 2D QR codes powered by the GS1 Digital Link standard.',
     date: '2026-08-10',
     dateModified: '2026-09-02',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'Technology'
   },
   'hotel-digital-checkin-guest-experience-qr': {
@@ -215,7 +215,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover how facility managers track HVAC units, elevators, and office assets with rugged industrial QR code decals linking to instant service logs.',
     date: '2026-08-04',
     dateModified: '2026-08-30',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'Contactless Solutions'
   },
   'complete-guide-to-digital-qr-restaurant-menus': {
@@ -315,11 +315,11 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     category: 'Social Media Marketing'
   },
   'qr-code-for-surveys-and-feedback': {
-    title: 'QR Code for Surveys & Feedback: The Complete Implementation Guide',
-    description: 'Master QR code customer surveys, NPS feedback, CSAT polls, and Google Forms with optimal sizing, redirect telemetry, and conversion rate best practices.',
+    title: 'How to Create a QR Code for Surveys and Customer Feedback',
+    description: 'Learn how to create a QR code for Google Forms and other surveys, choose a static or dynamic link, test print placement, and measure scans separately from responses.',
     date: '2026-09-20',
     dateModified: '2026-09-20',
-    author: 'Marcus Vance, Lead Systems Architect',
+    author: 'FreeQRBarcodes',
     category: 'Business Marketing'
   }
 };
@@ -530,17 +530,18 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
         "url": articleUrl,
         "datePublished": article.date.includes('T') ? article.date : `${article.date}T08:00:00+00:00`,
         "dateModified": article.dateModified ? (article.dateModified.includes('T') ? article.dateModified : `${article.dateModified}T08:00:00+00:00`) : (article.date.includes('T') ? article.date : `${article.date}T08:00:00+00:00`),
-        "author": {
-          "@type": "Person",
-          "name": article.author,
-          "url": "https://www.freeqrbarcodes.com/about",
-          "jobTitle": "QR Code Technology Specialist",
-          "worksFor": {
-            "@type": "Organization",
-            "name": "FreeQRBarcodes",
-            "@id": "https://www.freeqrbarcodes.com/#organization"
-          }
-        },
+        "author": (!article.author || article.author === 'FreeQRBarcodes' || article.author.includes('Marcus Vance'))
+          ? {
+              "@type": "Organization",
+              "@id": "https://www.freeqrbarcodes.com/#organization",
+              "name": "FreeQRBarcodes",
+              "url": "https://www.freeqrbarcodes.com/"
+            }
+          : {
+              "@type": "Person",
+              "name": article.author,
+              "url": "https://www.freeqrbarcodes.com/about"
+            },
         "publisher": {
           "@type": "Organization",
           "@id": "https://www.freeqrbarcodes.com/#organization",

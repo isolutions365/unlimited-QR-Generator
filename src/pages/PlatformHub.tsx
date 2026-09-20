@@ -1440,10 +1440,10 @@ func main() {
                     <div className="w-px bg-slate-100 hidden md:block"></div>
                     <div className="flex-1 space-y-2">
                       <div className="font-semibold text-slate-700">
-                        {t('platform.reviewerProfileTitle', 'Reviewer Profile: Marcus Vance, CISSP').replace(/Marcus\s*Vance,\s*CISSP|Marcus\s*Vance/gi, 'FreeQRBarcodes Engineering Team')}
+                        {t('platform.reviewerProfileTitle', 'Reviewer Profile: FreeQRBarcodes Engineering Team').replace(/Marcus\s*Vance,\s*CISSP|Marcus\s*Vance/gi, 'FreeQRBarcodes Engineering Team')}
                       </div>
                       <p className="text-slate-500 text-[11px]">
-                        {t('platform.reviewerProfileDesc', 'Chief Security Officer & Trust Engineer. Marcus audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.').replace(/Marcus/gi, 'The FreeQRBarcodes Engineering Team')}
+                        {t('platform.reviewerProfileDesc', 'FreeQRBarcodes Engineering Team audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.').replace(/Marcus/gi, 'The FreeQRBarcodes Engineering Team')}
                       </p>
                     </div>
                   </div>
