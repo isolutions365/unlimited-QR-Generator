@@ -313,7 +313,7 @@ export default function Generator({ initialProject, onProjectChange, className =
                       onChange={(e) => setWifiData({ ...wifiData, encryption: e.target.value as any })}
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-3 text-xs font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
                     >
-                      <option value="WPA">{t('generator.wifi_wpa', 'WPA / WPA2 / WPA3 (Recommended)')}</option>
+                      <option value="WPA">{t('generator.wifi_wpa', 'WPA / WPA2 Personal (Recommended)')}</option>
                       <option value="WEP">{t('generator.wifi_wep', 'WEP')}</option>
                       <option value="nopass">{t('generator.wifi_open', 'Unencrypted (Open Network)')}</option>
                     </select>

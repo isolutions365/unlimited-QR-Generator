@@ -330,7 +330,7 @@ export const landingPageFaqs: Record<string, Array<{q: string; a: string}>> = {
   ],
   'wifi-qr-generator': [
     { q: 'What is a WiFi QR code?', a: 'A WiFi QR code encodes wireless configuration parameters (SSID, security protocol, password, and optional hidden flag) into a standardized static 2D barcode so compatible devices can parse credentials and display a prompt to join the network.' },
-    { q: 'Which WiFi security options are supported?', a: 'The generator supports WPA/WPA2/WPA3 Personal (using the standard T:WPA schema), legacy WEP (T:WEP), and Open unencrypted networks (T:nopass).' },
+    { q: 'Which WiFi security options are supported?', a: 'The generator supports the standard T:WPA schema recognized for WPA and WPA2 Personal networks (with transition-mode compatibility on supported devices, but not guaranteeing pure WPA3-SAE-only networks), legacy WEP (T:WEP), and Open unencrypted networks (T:nopass).' },
     { q: 'Is the WiFi network password visible to someone scanning the code?', a: 'The password is stored as plain text inside the QR code matrix (WIFI:S:...;T:...;P:...;;). Anyone with an optical barcode scanner can view the string. Over-the-air Wi-Fi encryption depends on the router security setting (WPA2/WPA3); open networks (T:nopass) remain unencrypted.' },
     { q: 'Why do devices prompt to join rather than connecting automatically?', a: 'Device and app behavior varies across operating system versions and scanner software. Native camera apps generally display a confirmation prompt before joining a network to prevent unintended network switching.' }
   ],

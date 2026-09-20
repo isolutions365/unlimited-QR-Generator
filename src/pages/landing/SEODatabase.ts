@@ -48,8 +48,8 @@ export const landingPages: Record<string, LandingPageData> = {
   'wifi-qr-generator': {
     slug: 'wifi-qr-generator',
     keyword: 'free wifi qr code generator',
-    seoTitle: 'Free WiFi QR Code Generator | Connect Instantly without Passwords',
-    metaDescription: 'Generate customized WiFi QR codes with our free WiFi QR code generator. Allow guests to scan and connect to your local network without typing passwords.',
+    seoTitle: 'Free WiFi QR Code Generator | Connect Without Typing the Password',
+    metaDescription: 'Generate customized WiFi QR codes with our free WiFi QR code generator. Allow guests to scan and connect to your local network without typing the password.',
     h1: 'Free WiFi QR Code Generator',
     intro: {
       title: 'Instant Wireless Network Pairing via Static WiFi QR Codes',
@@ -62,7 +62,7 @@ export const landingPages: Record<string, LandingPageData> = {
       desc: 'Understand the payload structure, supported encryption modes, and operational characteristics of static WiFi QR codes.',
       items: [
         { title: 'Frictionless Guest Network Onboarding', desc: 'Eliminates manual password entry and character confusion. Compatible devices and scanner applications parse the payload to display a local network join prompt.' },
-        { title: 'Standardized Protocol Schemas', desc: 'Supports standard Wi-Fi syntax for WPA/WPA2/WPA3 Personal (T:WPA), legacy WEP (T:WEP), and Open unencrypted networks (T:nopass).' },
+        { title: 'Standardized Protocol Schemas', desc: 'The T:WPA value is widely recognized for WPA and WPA2 Personal networks. Some devices may also accept it with WPA2/WPA3 transition-mode networks, but the payload value alone does not guarantee compatibility with WPA3-SAE-only networks. Support depends on the scanning application, operating system, and network configuration. Also supports legacy WEP (T:WEP) and Open unencrypted networks (T:nopass).' },
         { title: 'Local Client-Side Generation & Privacy', desc: 'Network credentials never leave your browser. The QR code matrix is calculated locally in memory without transmitting SSIDs or passwords to any backend service.' },
         { title: 'Custom Design & Vector Print Quality', desc: 'Personalize foreground dots, background colors, and corner markers. Export high-resolution PNG, SVG vector, or PDF files for clean printing at various dimensions.' },
         { title: 'Fixed Data with No Expiry Timer', desc: 'Static WiFi QR codes store fixed text data without built-in expiration timers or cloud redirect dependencies. They remain valid as long as physical legibility and router settings persist.' }
@@ -73,7 +73,7 @@ export const landingPages: Record<string, LandingPageData> = {
       desc: 'Technical considerations regarding scanner permissions, payload readability, and encryption standards.',
       items: [
         { title: 'Device- and App-Dependent Connection Prompts', desc: 'Native camera apps and operating systems (such as modern iOS and Android builds) typically present a confirmation banner before connecting to a network. However, exact prompt behavior and network configuration permissions vary across device vendors and third-party scanning apps.' },
-        { title: 'WPA2/WPA3 Transition Network Compatibility', desc: 'The generator outputs standard T:WPA schema, which is widely recognized across WPA2-PSK and mixed WPA2/WPA3 Personal (Transition Mode) networks. Pure WPA3-SAE-only compatibility is not guaranteed by the T:WPA tag alone and depends on individual scanner implementations and OS network stacks.' },
+        { title: 'WPA2/WPA3 Transition Network Compatibility', desc: 'The T:WPA value is widely recognized for WPA and WPA2 Personal networks. Some devices may also accept it with WPA2/WPA3 transition-mode networks, but the payload value alone does not guarantee compatibility with WPA3-SAE-only networks. Support depends on the scanning application, operating system, and network configuration.' },
         { title: 'Hidden SSID Flag (H:true)', desc: 'When configuring a non-broadcasting network, the generator appends H:true to the payload (e.g., WIFI:S:LabSecureOps;T:WPA;P:HiddenKey456;H:true;;). Compatible scanner software uses this flag when searching for the SSID.' },
         { title: 'Plain-Text Matrix vs. Over-the-Air Encryption', desc: 'The WiFi QR code payload stores credentials as unencrypted plain text within the 2D matrix, readable by anyone who scans the barcode. Over-the-air wireless encryption depends entirely on the router security configuration (WPA2/WPA3); unencrypted networks (T:nopass) do not gain encryption simply by using a QR code.' },
         { title: 'Fixed Payload Immutability', desc: 'WiFi credentials are baked directly into the printed 2D matrix. If you modify your router password or SSID, the existing static barcode cannot update itself and must be regenerated.' }
@@ -84,7 +84,7 @@ export const landingPages: Record<string, LandingPageData> = {
       desc: 'Follow these four steps to encode and verify your wireless network code.',
       steps: [
         { step: '1', title: 'Enter Network Name (SSID)', desc: 'Type the exact SSID broadcast by your wireless router. SSIDs are case-sensitive (e.g., "GuestLounge_5G" differs from "guestlounge_5g").' },
-        { step: '2', title: 'Select Security Protocol & Enter Password', desc: 'Choose your router encryption mode (WPA/WPA2/WPA3 using T:WPA, WEP using T:WEP, or Open/None using T:nopass). Enter the exact network key.' },
+        { step: '2', title: 'Select Security Protocol & Enter Password', desc: 'Choose your router encryption mode (WPA/WPA2 using T:WPA, with transition-mode compatibility on supported devices, WEP using T:WEP, or Open/None using T:nopass). Enter the exact network key.' },
         { step: '3', title: 'Indicate If SSID Is Hidden', desc: 'If your router does not publicly broadcast its name, enable the hidden network option so the H:true flag is appended to the payload string.' },
         { step: '4', title: 'Customize, Test Scan & Download', desc: 'Adjust styling options, perform a test scan with your device to verify pairing, and export your vector SVG, PDF, or PNG graphic for print reproduction.' }
       ]
@@ -104,7 +104,7 @@ export const landingPages: Record<string, LandingPageData> = {
       { q: 'Why does scanning not always connect automatically across all devices?', a: 'Connection behavior depends on operating system versions, device manufacturer configurations, and scanner app capabilities. Most native camera apps display a confirmation prompt before joining a network, while some third-party scanner apps without network configuration permissions may only display the raw text payload.' },
       { q: 'Are WiFi QR codes static or dynamic?', a: 'WiFi QR codes are static. The SSID, security protocol, and password are baked directly into the 2D pixel pattern. There is no intermediary server or built-in expiration timer, but changing router credentials requires generating a new code.' },
       { q: 'Is the Wi-Fi password protected inside the QR code?', a: 'No. Standard WiFi QR codes encode network credentials as unencrypted plain text (e.g., WIFI:S:SSID;T:WPA;P:PASSWORD;;) within the barcode matrix. Anyone who scans the visual pattern with a standard barcode reader can view the password string. Over-the-air Wi-Fi traffic encryption depends on the router security setting (WPA2/WPA3); unencrypted networks (T:nopass) remain unencrypted.' },
-      { q: 'Does WPA3 work across all mobile scanners?', a: 'The generator outputs standard T:WPA syntax, which is widely supported on WPA2 and mixed WPA2/WPA3 Personal (Transition Mode) networks. Pure WPA3-SAE-only network parsing is not guaranteed by the T:WPA schema alone and varies across scanner apps and device firmware.' },
+      { q: 'Does WPA3 work across all mobile scanners?', a: 'The T:WPA value is widely recognized for WPA and WPA2 Personal networks. Some devices may also accept it with WPA2/WPA3 transition-mode networks, but the payload value alone does not guarantee compatibility with WPA3-SAE-only networks. Support depends on the scanning application, operating system, and network configuration.' },
       { q: 'Will a QR code work for hidden SSIDs?', a: 'When the hidden network flag (H:true) is included, compatible scanner applications and mobile operating systems use this parameter to attempt connection to a non-broadcasting SSID.' },
       { q: 'Can a static WiFi QR code update if I change my router password?', a: 'No. Because the credentials are fixed directly in the visual matrix with no intermediary routing server, changing router settings invalidates existing printed codes and requires generating a new one.' },
       { q: 'Can I customize the visual styling of my WiFi QR code?', a: 'Yes. You can customize colors, corner markers, dot patterns, and frames, or place a centered icon, while maintaining error correction to support reliable optical scanning.' }
