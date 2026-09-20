@@ -123,7 +123,7 @@ export default function Header({
   return (
     <>
     <header
-      dir="ltr"
+      dir={isRtl ? 'rtl' : 'ltr'}
       className={`sticky top-0 z-50 px-3 sm:px-6 flex items-center justify-between gap-4 border-b backdrop-blur-xl transition-all duration-500 ease-in-out ${
         isScrolled
           ? 'py-2 sm:py-2.5 border-slate-200/85 shadow-md bg-white/40 shadow-indigo-100/20'
@@ -148,7 +148,7 @@ export default function Header({
         >
           <button className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${activeDropdown === 'generators' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}>
             <QrCode className="w-3.5 h-3.5" />
-            <span>QR Generators</span>
+            <span>{safeT('nav.qrGenerators', 'QR Generators')}</span>
             <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'generators' ? 'rotate-180' : ''}`} />
           </button>
           
@@ -159,29 +159,29 @@ export default function Header({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.15 }}
-                className="absolute left-1/2 -translate-x-1/2 mt-3 w-[780px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 z-50 grid grid-cols-4 gap-6 text-left"
+                className="absolute left-1/2 -translate-x-1/2 mt-3 w-[780px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 z-50 grid grid-cols-4 gap-6 text-start"
               >
                 {/* Column 1: Popular */}
                 <div className="space-y-4">
-                  <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider font-mono">Popular Creators</span>
+                  <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider font-mono">{safeT('nav.popularCreators', 'Popular Creators')}</span>
                   <div className="flex flex-col gap-2">
                     {[
-                      { name: 'URL QR', path: '/url-qr-generator', desc: 'Convert links to QR', icon: Globe },
-                      { name: 'WiFi QR', path: '/wifi-qr-generator', desc: 'Instant lobby onboarding', icon: Compass },
-                      { name: 'WhatsApp QR', path: '/whatsapp-qr-generator', desc: 'Pre-typed chat triggers', icon: Smartphone },
-                      { name: 'vCard QR', path: '/vcard-qr-generator', desc: 'Rich digital contact cards', icon: Contact },
+                      { name: 'URL QR', key: 'nav.urlQr', desc: 'Convert links to QR', descKey: 'nav.urlQrDesc', path: '/url-qr-generator', icon: Globe },
+                      { name: 'WiFi QR', key: 'nav.wifiQr', desc: 'Instant lobby onboarding', descKey: 'nav.wifiQrDesc', path: '/wifi-qr-generator', icon: Compass },
+                      { name: 'WhatsApp QR', key: 'nav.whatsappQr', desc: 'Pre-typed chat triggers', descKey: 'nav.whatsappQrDesc', path: '/whatsapp-qr-generator', icon: Smartphone },
+                      { name: 'vCard QR', key: 'nav.vcardQr', desc: 'Rich digital contact cards', descKey: 'nav.vcardQrDesc', path: '/vcard-qr-generator', icon: Contact },
                     ].map((item) => (
                       <button
                         key={item.path}
                         onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
-                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-indigo-50/50 transition-colors text-left"
+                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-indigo-50/50 transition-colors text-start"
                       >
                         <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                           <item.icon className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{item.name}</span>
-                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                          <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{safeT(item.key, item.name)}</span>
+                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{safeT(item.descKey, item.desc)}</span>
                         </div>
                       </button>
                     ))}
@@ -190,25 +190,25 @@ export default function Header({
 
                 {/* Column 2: Business & Dining */}
                 <div className="space-y-4">
-                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider font-mono">Dining & Business</span>
+                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider font-mono">{safeT('nav.diningBusiness', 'Dining & Business')}</span>
                   <div className="flex flex-col gap-2">
                     {[
-                      { name: 'Restaurant Menu', path: '/restaurant-menu-qr-generator', desc: 'Digital menus for diners', icon: Utensils },
-                      { name: 'Business Card', path: '/business-card-qr-generator', desc: 'Corporate identity nodes', icon: Wand2 },
-                      { name: 'Digital Profile', path: '/digital-card-qr-generator', desc: 'Custom personal bio links', icon: LayoutTemplate },
-                      { name: 'PDF Sharing QR', path: '/pdf-sharing-qr-generator', desc: 'Distribute documents', icon: FileText },
+                      { name: 'Restaurant Menu', key: 'nav.restaurantMenu', desc: 'Digital menus for diners', descKey: 'nav.restaurantMenuDesc', path: '/restaurant-menu-qr-generator', icon: Utensils },
+                      { name: 'Business Card', key: 'nav.businessCard', desc: 'Corporate identity nodes', descKey: 'nav.businessCardDesc', path: '/business-card-qr-generator', icon: Wand2 },
+                      { name: 'Digital Profile', key: 'nav.digitalProfile', desc: 'Custom personal bio links', descKey: 'nav.digitalProfileDesc', path: '/digital-card-qr-generator', icon: LayoutTemplate },
+                      { name: 'PDF Sharing QR', key: 'nav.pdfSharing', desc: 'Distribute documents', descKey: 'nav.pdfSharingDesc', path: '/pdf-sharing-qr-generator', icon: FileText },
                     ].map((item) => (
                       <button
                         key={item.path}
                         onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
-                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-amber-50/40 transition-colors text-left"
+                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-amber-50/40 transition-colors text-start"
                       >
                         <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-colors">
                           <item.icon className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="block text-xs font-bold text-slate-800 group-hover:text-amber-700 transition-colors">{item.name}</span>
-                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                          <span className="block text-xs font-bold text-slate-800 group-hover:text-amber-700 transition-colors">{safeT(item.key, item.name)}</span>
+                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{safeT(item.descKey, item.desc)}</span>
                         </div>
                       </button>
                     ))}
@@ -217,25 +217,25 @@ export default function Header({
 
                 {/* Column 3: Social Media */}
                 <div className="space-y-4">
-                  <span className="text-[10px] font-bold text-pink-600 uppercase tracking-wider font-mono">Social Media</span>
+                  <span className="text-[10px] font-bold text-pink-600 uppercase tracking-wider font-mono">{safeT('nav.socialMedia', 'Social Media')}</span>
                   <div className="flex flex-col gap-2">
                     {[
-                      { name: 'Instagram Profile', path: '/instagram-qr-generator', desc: 'Grow followers organic', icon: Play },
-                      { name: 'Facebook Page', path: '/facebook-qr-generator', desc: 'Boost likes & engagement', icon: Megaphone },
-                      { name: 'YouTube Video', path: '/youtube-qr-generator', desc: 'Direct views count boost', icon: Play },
-                      { name: 'Location Map', path: '/location-qr-generator', desc: 'Embed coordinates point', icon: MapPin },
+                      { name: 'Instagram Profile', key: 'nav.instagramProfile', desc: 'Grow followers organic', descKey: 'nav.instagramProfileDesc', path: '/instagram-qr-generator', icon: Play },
+                      { name: 'Facebook Page', key: 'nav.facebookPage', desc: 'Boost likes & engagement', descKey: 'nav.facebookPageDesc', path: '/facebook-qr-generator', icon: Megaphone },
+                      { name: 'YouTube Video', key: 'nav.youtubeVideo', desc: 'Direct views count boost', descKey: 'nav.youtubeVideoDesc', path: '/youtube-qr-generator', icon: Play },
+                      { name: 'Location Map', key: 'nav.locationMap', desc: 'Embed coordinates point', descKey: 'nav.locationMapDesc', path: '/location-qr-generator', icon: MapPin },
                     ].map((item) => (
                       <button
                         key={item.path}
                         onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
-                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-pink-50/40 transition-colors text-left"
+                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-pink-50/40 transition-colors text-start"
                       >
                         <div className="w-8 h-8 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-600 group-hover:text-white transition-colors">
                           <item.icon className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="block text-xs font-bold text-slate-800 group-hover:text-pink-600 transition-colors">{item.name}</span>
-                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                          <span className="block text-xs font-bold text-slate-800 group-hover:text-pink-600 transition-colors">{safeT(item.key, item.name)}</span>
+                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{safeT(item.descKey, item.desc)}</span>
                         </div>
                       </button>
                     ))}
@@ -244,25 +244,25 @@ export default function Header({
 
                 {/* Column 4: Professional & Advanced */}
                 <div className="space-y-4">
-                  <span className="text-[10px] font-bold text-purple-600 uppercase tracking-wider font-mono">Advanced & Pro</span>
+                  <span className="text-[10px] font-bold text-purple-600 uppercase tracking-wider font-mono">{safeT('nav.advancedPro', 'Advanced & Pro')}</span>
                   <div className="flex flex-col gap-2">
                     {[
-                      { name: 'Animated QR', path: '/animated-qr-generator', desc: 'Creative motion scanning', icon: Palette },
-                      { name: 'Payment QR', path: '/payment-qr-generator', desc: 'Receive digital wallet pays', icon: Wallet },
-                      { name: 'Crypto QR', path: '/crypto-qr-generator', desc: 'Secure blockchain wallet', icon: Bitcoin },
-                      { name: 'App Store QR', path: '/app-store-qr-generator', desc: 'Dual OS smart download', icon: Bot },
+                      { name: 'Animated QR', key: 'nav.animatedQr', desc: 'Creative motion scanning', descKey: 'nav.animatedQrDesc', path: '/animated-qr-generator', icon: Palette },
+                      { name: 'Payment QR', key: 'nav.paymentQr', desc: 'Receive digital wallet pays', descKey: 'nav.paymentQrDesc', path: '/payment-qr-generator', icon: Wallet },
+                      { name: 'Crypto QR', key: 'nav.cryptoQr', desc: 'Secure blockchain wallet', descKey: 'nav.cryptoQrDesc', path: '/crypto-qr-generator', icon: Bitcoin },
+                      { name: 'App Store QR', key: 'nav.appStoreQr', desc: 'Dual OS smart download', descKey: 'nav.appStoreQrDesc', path: '/app-store-qr-generator', icon: Bot },
                     ].map((item) => (
                       <button
                         key={item.path}
                         onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
-                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-purple-50/40 transition-colors text-left"
+                        className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-purple-50/40 transition-colors text-start"
                       >
                         <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
                           <item.icon className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="block text-xs font-bold text-slate-800 group-hover:text-purple-600 transition-colors">{item.name}</span>
-                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                          <span className="block text-xs font-bold text-slate-800 group-hover:text-purple-600 transition-colors">{safeT(item.key, item.name)}</span>
+                          <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{safeT(item.descKey, item.desc)}</span>
                         </div>
                       </button>
                     ))}
@@ -279,7 +279,7 @@ export default function Header({
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${currentPath === '/barcode-generator' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}
         >
           <Barcode className="w-3.5 h-3.5" />
-          <span>Barcode Studio</span>
+          <span>{safeT('nav.barcodeStudio', 'Barcode Studio')}</span>
         </button>
 
         {/* Bulk QR Link */}
@@ -288,7 +288,7 @@ export default function Header({
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${currentPath === '/bulk-qr-generator' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}
         >
           <FileSpreadsheet className="w-3.5 h-3.5" />
-          <span>Bulk QR</span>
+          <span>{safeT('nav.bulkQr', 'Bulk QR')}</span>
         </button>
 
         {/* Enterprise Solutions Dropdown */}
@@ -298,7 +298,7 @@ export default function Header({
         >
           <button className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${activeDropdown === 'solutions' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}>
             <Zap className="w-3.5 h-3.5" />
-            <span>Solutions</span>
+            <span>{safeT('nav.solutions', 'Solutions')}</span>
             <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'solutions' ? 'rotate-180' : ''}`} />
           </button>
           
@@ -309,28 +309,28 @@ export default function Header({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.15 }}
-                className="absolute left-1/2 -translate-x-1/2 mt-3 w-[420px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 text-left flex flex-col gap-1"
+                className="absolute left-1/2 -translate-x-1/2 mt-3 w-[420px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 text-start flex flex-col gap-1"
               >
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono px-3 py-1.5">Enterprise Solutions</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono px-3 py-1.5">{safeT('nav.enterpriseSolutions', 'Enterprise Solutions')}</span>
                 {[
-                  { name: 'Contactless Digital Menu', path: '/solutions/contactless-menu', desc: 'Paperless dining lists for diners', icon: Utensils },
-                  { name: 'NFC vCard Networking', path: '/solutions/digital-business-card', desc: 'Seamless high-grade corporate profiles', icon: Contact },
-                  { name: 'Google Review Booster', path: '/solutions/google-review-booster', desc: 'Boost organic localized stars count', icon: Sparkles },
-                  { name: 'WiFi Guest Onboarding', path: '/solutions/wifi-guest-onboarding', desc: 'No-password lobby network pairing', icon: Compass },
-                  { name: 'Event Gate Tickets Pass', path: '/solutions/event-ticketing-checkin', desc: 'Secure barcode/QR checks at door', icon: LayoutTemplate },
-                  { name: 'Unified App Marketing', path: '/solutions/app-download-marketing', desc: 'Smart OS download router page', icon: Bot },
+                  { name: 'Contactless Digital Menu', key: 'nav.contactlessDigitalMenu', path: '/solutions/contactless-menu', desc: 'Paperless dining lists for diners', descKey: 'nav.contactlessMenuDesc', icon: Utensils },
+                  { name: 'NFC vCard Networking', key: 'nav.nfcVcardNetworking', path: '/solutions/digital-business-card', desc: 'Seamless high-grade corporate profiles', descKey: 'nav.nfcVcardDesc', icon: Contact },
+                  { name: 'Google Review Booster', key: 'nav.googleReviewBooster', path: '/solutions/google-review-booster', desc: 'Boost organic localized stars count', descKey: 'nav.reviewBoosterDesc', icon: Sparkles },
+                  { name: 'WiFi Guest Onboarding', key: 'nav.wifiGuestOnboarding', path: '/solutions/wifi-guest-onboarding', desc: 'No-password lobby network pairing', descKey: 'nav.wifiGuestDesc', icon: Compass },
+                  { name: 'Event Gate Tickets Pass', key: 'nav.eventGateTickets', path: '/solutions/event-ticketing-checkin', desc: 'Secure barcode/QR checks at door', descKey: 'nav.eventGateDesc', icon: LayoutTemplate },
+                  { name: 'Unified App Marketing', key: 'nav.unifiedAppMarketing', path: '/solutions/app-download-marketing', desc: 'Smart OS download router page', descKey: 'nav.unifiedAppDesc', icon: Bot },
                 ].map((item) => (
                   <button
                     key={item.path}
                     onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
-                    className="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-indigo-50/50 transition-colors text-left"
+                    className="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-indigo-50/50 transition-colors text-start"
                   >
                     <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                       <item.icon className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{item.name}</span>
-                      <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{item.desc}</span>
+                      <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{safeT(item.key, item.name)}</span>
+                      <span className="block text-[10px] text-slate-400 font-medium leading-tight mt-0.5">{safeT(item.descKey, item.desc)}</span>
                     </div>
                   </button>
                 ))}
@@ -338,10 +338,10 @@ export default function Header({
                 <div className="border-t border-slate-100 mt-2 pt-2 px-1">
                   <button
                     onClick={() => { setActiveDropdown(null); navigateTo('/solutions'); }}
-                    className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-indigo-600 hover:text-indigo-700 text-xs font-extrabold transition-colors text-left"
+                    className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-indigo-600 hover:text-indigo-700 text-xs font-extrabold transition-colors text-start"
                   >
-                    <span>Explore All Industry Solutions</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>{safeT('nav.exploreAllSolutions', 'Explore All Industry Solutions')}</span>
+                    <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                   </button>
                 </div>
               </motion.div>
@@ -356,7 +356,7 @@ export default function Header({
         >
           <button className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${activeDropdown === 'resources' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50'}`}>
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>Resources</span>
+            <span>{safeT('nav.resources', 'Resources')}</span>
             <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'resources' ? 'rotate-180' : ''}`} />
           </button>
           
@@ -367,25 +367,25 @@ export default function Header({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 mt-3 w-[260px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-3.5 z-50 text-left flex flex-col gap-1"
+                className="absolute right-0 rtl:right-auto rtl:left-0 mt-3 w-[260px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-3.5 z-50 text-start flex flex-col gap-1"
               >
                 {[
-                  { name: 'FAQ & Help Center', path: '/faq', desc: 'Answers to common queries', icon: HelpCircle },
-                  { name: 'Guides & Blog', path: '/blog', desc: 'Tutorials & news', icon: BookOpen },
-                  { name: 'Product Comparisons', path: '/compare', desc: 'Side-by-side matrices', icon: Scale },
-                  { name: 'AI QR Generator', path: '/ai-gateway', desc: 'Artistic generative models', icon: Bot },
+                  { name: 'FAQ & Help Center', key: 'nav.faqHelpCenter', path: '/faq', desc: 'Answers to common queries', descKey: 'nav.faqHelpCenterDesc', icon: HelpCircle },
+                  { name: 'Guides & Blog', key: 'nav.guidesBlog', path: '/blog', desc: 'Tutorials & news', descKey: 'nav.guidesBlogDesc', icon: BookOpen },
+                  { name: 'Product Comparisons', key: 'nav.productComparisons', path: '/compare', desc: 'Side-by-side matrices', descKey: 'nav.productComparisonsDesc', icon: Scale },
+                  { name: 'AI QR Generator', key: 'nav.aiQrGenerator', path: '/ai-gateway', desc: 'Artistic generative models', descKey: 'nav.aiQrGeneratorDesc', icon: Bot },
                 ].map((item) => (
                   <button
                     key={item.path}
                     onClick={() => { setActiveDropdown(null); navigateTo(item.path); }}
-                    className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-indigo-50/50 transition-colors text-left"
+                    className="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-indigo-50/50 transition-colors text-start"
                   >
                     <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                       <item.icon className="w-3.5 h-3.5" />
                     </div>
                     <div>
-                      <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{item.name}</span>
-                      <span className="block text-[10px] text-slate-400 mt-0.5">{item.desc}</span>
+                      <span className="block text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{safeT(item.key, item.name)}</span>
+                      <span className="block text-[10px] text-slate-400 mt-0.5">{safeT(item.descKey, item.desc)}</span>
                     </div>
                   </button>
                 ))}
@@ -552,7 +552,7 @@ export default function Header({
                          onSignOut?.();
                          setIsMobileMenuOpen(false);
                        }} 
-                       className="w-full px-4 py-3 text-lg font-bold text-red-600 hover:bg-red-50 rounded-lg text-left cursor-pointer transition-colors"
+                       className="w-full px-4 py-3 text-lg font-bold text-red-600 hover:bg-red-50 rounded-lg text-start cursor-pointer transition-colors"
                      >
                        {safeT('nav.signOut', 'Sign Out')}
                      </button>
@@ -564,7 +564,7 @@ export default function Header({
                          onSignInClick?.();
                          setIsMobileMenuOpen(false);
                        }} 
-                       className="w-full px-4 py-3 text-lg font-bold text-slate-700 hover:bg-slate-100 rounded-lg text-left cursor-pointer transition-colors"
+                       className="w-full px-4 py-3 text-lg font-bold text-slate-700 hover:bg-slate-100 rounded-lg text-start cursor-pointer transition-colors"
                      >
                        {safeT('nav.signIn', 'Sign In')}
                      </button>
@@ -573,7 +573,7 @@ export default function Header({
                          onSignUpClick?.();
                          setIsMobileMenuOpen(false);
                        }} 
-                       className="w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-lg font-bold text-left cursor-pointer transition-colors"
+                       className="w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-lg font-bold text-start cursor-pointer transition-colors"
                      >
                        {safeT('nav.signUp', 'Sign Up')}
                      </button>

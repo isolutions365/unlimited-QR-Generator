@@ -2738,7 +2738,7 @@ export default function App() {
   const studioSEO = getStudioSEOText();
 
   return (
-    <div className="min-h-screen bg-slate-50/80 text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased">
+    <div dir={isRtlLocale(locale) ? 'rtl' : 'ltr'} className="min-h-screen bg-slate-50/80 text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased">
       <Joyride
         {...({
           steps: tourSteps,
@@ -5077,13 +5077,13 @@ export default function App() {
       </main>
 
       {/* Footer with rich SEO directory links */}
-      <footer id="app-footer" dir="ltr" className="py-16 border-t border-slate-200 bg-slate-50/50 text-slate-600 mt-12">
+      <footer id="app-footer" dir={isRtlLocale(locale) ? 'rtl' : 'ltr'} className="py-16 border-t border-slate-200 bg-slate-50/50 text-slate-600 mt-12">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
           {/* Column 1: Branding & Product Hunt */}
-          <div id="footer-branding" className="sm:col-span-2 md:col-span-1 space-y-3 text-left">
+          <div id="footer-branding" className="sm:col-span-2 md:col-span-1 space-y-3 text-start">
             <button 
               onClick={() => navigateTo('/')} 
-              className="flex items-center text-left focus:outline-hidden hover:opacity-95 active:scale-98 transition-all cursor-pointer"
+              className="flex items-center text-start focus:outline-hidden hover:opacity-95 active:scale-98 transition-all cursor-pointer"
               aria-label="FreeQRBarcodes Home"
             >
               <Logo size={42} />
@@ -5099,20 +5099,20 @@ export default function App() {
           </div>
 
           {/* Column 2: QR Generators */}
-          <div id="footer-qr-generators" className="space-y-4 text-left">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">QR Generators</h2>
+          <div id="footer-qr-generators" className="space-y-4 text-start">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">{t('footer.qrGenerators', 'QR Generators')}</h2>
             <div className="flex flex-col gap-2">
               {[
-                { name: '🔗 URL QR Code', path: '/url-qr-generator' },
-                { name: '📡 WiFi QR Code', path: '/wifi-qr-generator' },
-                { name: '📇 vCard QR Code', path: '/vcard-qr-generator' },
-                { name: '✉️ Email QR Code', path: '/email-qr-generator' },
-                { name: '📱 SMS QR Code', path: '/sms-qr-generator' },
-                { name: '💬 WhatsApp QR', path: '/whatsapp-qr-generator' },
-                { name: '📸 Instagram QR', path: '/instagram-qr-generator' },
-                { name: '📘 Facebook QR', path: '/facebook-qr-generator' },
-                { name: '🎥 YouTube QR', path: '/youtube-qr-generator' },
-                { name: '📍 Location QR', path: '/location-qr-generator' },
+                { name: '🔗 URL QR Code', key: 'footer.solutionUrl', path: '/url-qr-generator' },
+                { name: '📡 WiFi QR Code', key: 'footer.solutionWifi', path: '/wifi-qr-generator' },
+                { name: '📇 vCard QR Code', key: 'footer.solutionVcard', path: '/vcard-qr-generator' },
+                { name: '✉️ Email QR Code', key: 'footer.solutionEmail', path: '/email-qr-generator' },
+                { name: '📱 SMS QR Code', key: 'footer.solutionSms', path: '/sms-qr-generator' },
+                { name: '💬 WhatsApp QR', key: 'footer.solutionWhatsapp', path: '/whatsapp-qr-generator' },
+                { name: '📸 Instagram QR', key: 'footer.solutionInstagram', path: '/instagram-qr-generator' },
+                { name: '📘 Facebook QR', key: 'footer.solutionFacebook', path: '/facebook-qr-generator' },
+                { name: '🎥 YouTube QR', key: 'footer.solutionYoutube', path: '/youtube-qr-generator' },
+                { name: '📍 Location QR', key: 'footer.solutionLocation', path: '/location-qr-generator' },
               ].map((item) => (
                 <a 
                   key={item.path}
@@ -5120,30 +5120,30 @@ export default function App() {
                   onClick={(e) => { e.preventDefault(); navigateTo(item.path); }} 
                   className="text-xs text-slate-600 hover:text-indigo-600 hover:font-bold transition-all cursor-pointer truncate"
                 >
-                  {item.name}
+                  {t(item.key, item.name)}
                 </a>
               ))}
             </div>
           </div>
 
           {/* Column 3: Barcode & Specialized */}
-          <div id="footer-barcode-specialized" className="space-y-4 text-left">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">Barcode & Specialized</h2>
+          <div id="footer-barcode-specialized" className="space-y-4 text-start">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">{t('footer.barcodeSpecialized', 'Barcode & Specialized')}</h2>
             <div className="flex flex-col gap-2">
               {[
-                { name: '📊 Barcode Generator', path: '/barcode-generator' },
-                { name: '🗂️ Bulk QR Generator', path: '/bulk-qr-generator' },
-                { name: '🎨 Animated QR', path: '/animated-qr-generator' },
-                { name: '💳 Payment QR', path: '/payment-qr-generator' },
-                { name: '🪙 Crypto QR', path: '/crypto-qr-generator' },
-                { name: '🤖 App Store QR', path: '/app-store-qr-generator' },
-                { name: '🍔 Restaurant Menu QR', path: '/restaurant-menu-qr-generator' },
-                { name: '🍳 Restaurant QR', path: '/restaurant-qr-generator' },
-                { name: '💼 Business Card QR', path: '/business-card-qr-generator' },
-                { name: '🏷️ Digital Card QR', path: '/digital-card-qr-generator' },
-                { name: '📁 PDF Sharing QR', path: '/pdf-sharing-qr-generator' },
-                { name: '📄 PDF QR Code', path: '/pdf-qr-generator' },
-                { name: '🧾 ZATCA Invoice QR', path: '/zatca-invoice' },
+                { name: '📊 Barcode Generator', key: 'footer.barcodeGenerator', path: '/barcode-generator' },
+                { name: '🗂️ Bulk QR Generator', key: 'footer.bulkQrGenerator', path: '/bulk-qr-generator' },
+                { name: '🎨 Animated QR', key: 'footer.animatedQr', path: '/animated-qr-generator' },
+                { name: '💳 Payment QR', key: 'footer.paymentQr', path: '/payment-qr-generator' },
+                { name: '🪙 Crypto QR', key: 'footer.cryptoQr', path: '/crypto-qr-generator' },
+                { name: '🤖 App Store QR', key: 'footer.appStoreQr', path: '/app-store-qr-generator' },
+                { name: '🍔 Restaurant Menu QR', key: 'footer.restaurantMenuQr', path: '/restaurant-menu-qr-generator' },
+                { name: '🍳 Restaurant QR', key: 'footer.solutionRestaurant', path: '/restaurant-qr-generator' },
+                { name: '💼 Business Card QR', key: 'footer.solutionBusinessCard', path: '/business-card-qr-generator' },
+                { name: '🏷️ Digital Card QR', key: 'footer.digitalCardQr', path: '/digital-card-qr-generator' },
+                { name: '📁 PDF Sharing QR', key: 'footer.pdfSharingQr', path: '/pdf-sharing-qr-generator' },
+                { name: '📄 PDF QR Code', key: 'footer.solutionPdf', path: '/pdf-qr-generator' },
+                { name: '🧾 ZATCA Invoice QR', key: 'footer.zatcaInvoiceQr', path: '/zatca-invoice' },
               ].map((item) => (
                 <a 
                   key={item.path}
@@ -5151,25 +5151,25 @@ export default function App() {
                   onClick={(e) => { e.preventDefault(); navigateTo(item.path); }} 
                   className="text-xs text-slate-600 hover:text-indigo-600 hover:font-bold transition-all cursor-pointer truncate"
                 >
-                  {item.name}
+                  {t(item.key, item.name)}
                 </a>
               ))}
             </div>
           </div>
 
           {/* Column 4: Solutions */}
-          <div id="footer-solutions" className="space-y-4 text-left">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">Solutions</h2>
+          <div id="footer-solutions" className="space-y-4 text-start">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">{t('footer.solutions', 'Solutions')}</h2>
             <div className="flex flex-col gap-2">
               {[
-                { name: '🍔 Contactless Menu', path: '/solutions/contactless-menu' },
-                { name: '💼 Digital Business Card', path: '/solutions/digital-business-card' },
-                { name: '⭐ Review Booster', path: '/solutions/google-review-booster' },
-                { name: '📡 WiFi Guest Onboarding', path: '/solutions/wifi-guest-onboarding' },
-                { name: '🎟️ Event Ticketing Check-In', path: '/solutions/event-ticketing-checkin' },
-                { name: '🎟️ Event Ticket QR', path: '/templates/event-ticket-qr-code' },
-                { name: '📈 App Download Marketing', path: '/solutions/app-download-marketing' },
-                { name: '⚡ All Enterprise Solutions', path: '/solutions' },
+                { name: '🍔 Contactless Menu', key: 'footer.solContactlessMenu', path: '/solutions/contactless-menu' },
+                { name: '💼 Digital Business Card', key: 'footer.solDigitalBusinessCard', path: '/solutions/digital-business-card' },
+                { name: '⭐ Review Booster', key: 'footer.solReviewBooster', path: '/solutions/google-review-booster' },
+                { name: '📡 WiFi Guest Onboarding', key: 'footer.solWifiOnboarding', path: '/solutions/wifi-guest-onboarding' },
+                { name: '🎟️ Event Ticketing Check-In', key: 'footer.solEventTicketing', path: '/solutions/event-ticketing-checkin' },
+                { name: '🎟️ Event Ticket QR', key: 'footer.solEventTicketQr', path: '/templates/event-ticket-qr-code' },
+                { name: '📈 App Download Marketing', key: 'footer.solAppDownload', path: '/solutions/app-download-marketing' },
+                { name: '⚡ All Enterprise Solutions', key: 'footer.solAllEnterprise', path: '/solutions' },
               ].map((item) => (
                 <a 
                   key={item.path}
@@ -5177,24 +5177,24 @@ export default function App() {
                   onClick={(e) => { e.preventDefault(); navigateTo(item.path); }} 
                   className="text-xs text-slate-600 hover:text-indigo-600 hover:font-bold transition-all cursor-pointer truncate"
                 >
-                  {item.name}
+                  {t(item.key, item.name)}
                 </a>
               ))}
             </div>
           </div>
 
           {/* Column 5: Company & Resources */}
-          <div id="footer-company-resources" className="space-y-4 text-left">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">Company</h2>
+          <div id="footer-company-resources" className="space-y-4 text-start">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-mono">{t('footer.company', 'Company')}</h2>
             <div className="flex flex-col gap-2">
               {[
-                { name: '🏢 About Our Platform', path: '/about' },
-                { name: '🌟 Why iSolutions', path: '/why-freeqrgen' },
-                { name: '❓ Frequently Asked (FAQ)', path: '/faq' },
-                { name: '📝 Guides & News Blog', path: '/blog' },
-                { name: '📐 QR Templates Hub', path: '/templates' },
-                { name: '⚖️ Product Comparisons', path: '/compare' },
-                { name: '🟢 Live System Status', path: '/system-status' },
+                { name: '🏢 About Our Platform', key: 'footer.aboutUs', path: '/about' },
+                { name: '🌟 Why iSolutions', key: 'footer.whyUs', path: '/why-freeqrgen' },
+                { name: '❓ Frequently Asked (FAQ)', key: 'footer.faq', path: '/faq' },
+                { name: '📝 Guides & News Blog', key: 'footer.blog', path: '/blog' },
+                { name: '📐 QR Templates Hub', key: 'footer.templates', path: '/templates' },
+                { name: '⚖️ Product Comparisons', key: 'footer.compare', path: '/compare' },
+                { name: '🟢 Live System Status', key: 'footer.systemStatus', path: '/system-status' },
               ].map((item) => (
                 <a 
                   key={item.path}
@@ -5202,7 +5202,7 @@ export default function App() {
                   onClick={(e) => { e.preventDefault(); navigateTo(item.path); }} 
                   className="text-xs text-slate-600 hover:text-indigo-600 hover:font-bold transition-all cursor-pointer truncate"
                 >
-                  {item.name}
+                  {t(item.key, item.name)}
                 </a>
               ))}
             </div>

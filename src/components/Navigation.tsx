@@ -75,7 +75,7 @@ export default function Navigation({
 
   return (
     <nav 
-      className={`hidden xl:flex items-center gap-1.5 min-w-0 overflow-visible ${isRtl ? 'flex-row-reverse' : 'flex-row'}`} 
+      className="hidden xl:flex items-center gap-1.5 min-w-0 overflow-visible" 
       dir={isRtl ? 'rtl' : 'ltr'}
     >
       {visibleLinks.map((link) => {
@@ -115,7 +115,7 @@ export default function Navigation({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="absolute top-full mt-2 w-52 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-2 right-0"
+                className="absolute top-full mt-2 w-52 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-2 right-0 rtl:right-auto rtl:left-0 text-start"
               >
                 {moreLinks.map((link) => {
                   const active = isLinkActive(link);
@@ -123,7 +123,7 @@ export default function Navigation({
                     <button
                       key={link.name}
                       onClick={() => { onLinkClick(link); setIsMoreOpen(false); }}
-                      className={`flex w-full items-center gap-2 px-3 py-2 text-xs font-bold rounded-lg whitespace-nowrap ${
+                      className={`flex w-full items-center gap-2 px-3 py-2 text-xs font-bold rounded-lg whitespace-nowrap text-start ${
                         active ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
                       }`}
                     >

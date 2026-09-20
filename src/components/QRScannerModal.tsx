@@ -143,7 +143,7 @@ export default function QRScannerModal({ isOpen, onClose, onScannedResult }: QRS
 
   return (
     <AnimatePresence>
-      <div dir="ltr" className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col justify-between p-4 overflow-hidden">
+      <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col justify-between p-4 overflow-hidden">
         {/* Top Header */}
         <div className="flex items-center justify-between text-white py-2 z-10">
           <div className="flex items-center gap-2">

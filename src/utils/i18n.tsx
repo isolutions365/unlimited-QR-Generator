@@ -222,6 +222,14 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [locale]);
 
+  // Synchronize HTML element lang and dir attributes whenever locale changes
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = locale;
+      document.documentElement.dir = isRtlLocale(locale) ? 'rtl' : 'ltr';
+    }
+  }, [locale]);
+
   // Asynchronously load translation dictionary when locale changes
   useEffect(() => {
     let isSubscribed = true;
