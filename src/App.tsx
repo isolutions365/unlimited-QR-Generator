@@ -3644,7 +3644,7 @@ export default function App() {
               <div className="hidden md:flex items-center gap-2 shrink-0">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  100% Free & Unlimited
+                  {t('studio.freeUnlimitedBadge', '100% Free & Unlimited')}
                 </span>
               </div>
             </div>
@@ -3655,14 +3655,14 @@ export default function App() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-3">
               <div>
                 <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400 font-mono">
-                  EXPLICIT WORKFLOW GUIDE
+                  {t('workflow.eyebrow', 'EXPLICIT WORKFLOW GUIDE')}
                 </span>
                 <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight">
-                  Create Your Custom QR Code in 4 Simple Steps
+                  {t('workflow.title', 'Create Your Custom QR Code in 4 Simple Steps')}
                 </h3>
               </div>
               <span className="text-xs text-slate-300 font-medium">
-                No sign-up required • Instant browser generation
+                {t('workflow.subtitle', 'No sign-up required • Instant browser generation')}
               </span>
             </div>
 
@@ -3673,10 +3673,10 @@ export default function App() {
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                    <QrCode className="w-3.5 h-3.5 text-indigo-400" /> Choose QR Type
+                    <QrCode className="w-3.5 h-3.5 text-indigo-400" /> {t('workflow.step1Title', 'Choose QR Type')}
                   </h4>
                   <p className="text-[11px] text-slate-300 leading-tight">
-                    Select URL, vCard, Menu, Wi-Fi, or Barcode from the tabs below.
+                    {t('workflow.step1Desc', 'Select URL, vCard, Menu, Wi-Fi, or Barcode from the tabs below.')}
                   </p>
                 </div>
               </div>
@@ -3687,10 +3687,10 @@ export default function App() {
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                    <FormInput className="w-3.5 h-3.5 text-indigo-400" /> Enter Content
+                    <FormInput className="w-3.5 h-3.5 text-indigo-400" /> {t('workflow.step2Title', 'Enter Content')}
                   </h4>
                   <p className="text-[11px] text-slate-300 leading-tight">
-                    Input your target link, text, contact details, or upload file data.
+                    {t('workflow.step2Desc', 'Input your target link, text, contact details, or upload file data.')}
                   </p>
                 </div>
               </div>
@@ -3701,10 +3701,10 @@ export default function App() {
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                    <Palette className="w-3.5 h-3.5 text-indigo-400" /> Customize Design
+                    <Palette className="w-3.5 h-3.5 text-indigo-400" /> {t('workflow.step3Title', 'Customize Design')}
                   </h4>
                   <p className="text-[11px] text-slate-300 leading-tight">
-                    Style colors, dot patterns, frames, and add a brand logo.
+                    {t('workflow.step3Desc', 'Style colors, dot patterns, frames, and add a brand logo.')}
                   </p>
                 </div>
               </div>
@@ -3715,10 +3715,10 @@ export default function App() {
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                    <Download className="w-3.5 h-3.5 text-emerald-400" /> Download & Print
+                    <Download className="w-3.5 h-3.5 text-emerald-400" /> {t('workflow.step4Title', 'Download & Print')}
                   </h4>
                   <p className="text-[11px] text-slate-300 leading-tight">
-                    Export high-res PNG, SVG vectors, or ready-to-print layouts.
+                    {t('workflow.step4Desc', 'Export high-res PNG, SVG vectors, or ready-to-print layouts.')}
                   </p>
                 </div>
               </div>
@@ -4265,10 +4265,18 @@ export default function App() {
                   {t('whyChoose.title', 'Why Choose Our Free QR Code Studio')}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  Our generator leverages high-density 2D matrix symbology to instantly encode URLs, vCards, WiFi access points, and payment payloads. Every matrix generated strictly adheres to ISO/IEC 18004 standards for global scanner interoperability across iOS, Android, and industrial optics.
+                  {t('whyChoose.desc1', 'Our generator leverages high-density 2D matrix symbology to instantly encode URLs, vCards, WiFi access points, and payment payloads. Every matrix generated strictly adheres to ISO/IEC 18004 standards for global scanner interoperability across iOS, Android, and industrial optics.')}
                 </p>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed pt-1">
-                  Unlike basic barcode tools, our engine integrates advanced <a href="https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction" target="_blank" rel="noopener" className="text-indigo-300 hover:text-white underline underline-offset-2 font-medium transition-colors">Reed–Solomon error correction</a> algorithms (L, M, Q, H) allowing your customized <a href="https://en.wikipedia.org/wiki/QR_code" target="_blank" rel="noopener" className="text-indigo-300 hover:text-white underline underline-offset-2 font-medium transition-colors">QR code</a> to remain 100% scannable even if up to 30% of the symbol surface is covered by logos, custom branding, or physical print wear.
+                  {t('whyChoose.desc2_p1', 'Unlike basic barcode tools, our engine integrates advanced ')}
+                  <a href="https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction" target="_blank" rel="noopener" className="text-indigo-300 hover:text-white underline underline-offset-2 font-medium transition-colors">
+                    {t('whyChoose.reedSolomonLink', 'Reed–Solomon error correction')}
+                  </a>
+                  {t('whyChoose.desc2_p2', ' algorithms (L, M, Q, H) allowing your customized ')}
+                  <a href="https://en.wikipedia.org/wiki/QR_code" target="_blank" rel="noopener" className="text-indigo-300 hover:text-white underline underline-offset-2 font-medium transition-colors">
+                    {t('whyChoose.qrCodeLink', 'QR code')}
+                  </a>
+                  {t('whyChoose.desc2_p3', ' to remain 100% scannable even if up to 30% of the symbol surface is covered by logos, custom branding, or physical print wear.')}
                 </p>
               </div>
             </section>

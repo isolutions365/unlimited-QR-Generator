@@ -199,7 +199,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Left Column: Hero Text & Interactive Navigation */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left z-10">
+          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-start z-10">
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
               {t('hero.titlePrefix', 'Free Professional')} <br className="hidden sm:inline" />
@@ -213,7 +213,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
             </p>
 
             {/* Factual Capabilities Callout Bar */}
-            <div className="mt-4 p-3 rounded-xl bg-slate-100/80 border border-slate-200/80 text-left max-w-xl text-xs text-slate-700 space-y-1">
+            <div className="mt-4 p-3 rounded-xl bg-slate-100/80 border border-slate-200/80 text-start max-w-xl text-xs text-slate-700 space-y-1">
               <div className="flex items-center gap-1.5 font-semibold text-slate-900">
                 <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
                 <span>{t('hero.transparencyHeading', 'Client-Side Static Generation • Vector Exports • Optional Hosted Dynamic Links')}</span>
@@ -226,15 +226,15 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
             {/* Quick-Category Tabs */}
             <div className="mt-7 w-full max-w-xl">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2.5 font-mono">
-                ⚡ Quick Tool Select
+                {t('hero.quickToolSelect', '⚡ Quick Tool Select')}
               </span>
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
                 {[
-                  { id: 'menu', idx: 0, label: 'Menus & Forms' },
-                  { id: 'payments', idx: 1, label: 'Payments & Crypto' },
-                  { id: 'print', idx: 2, label: 'Bulk Print Studio' },
-                  { id: 'zatca', idx: 3, label: 'ZATCA Invoice' },
-                  { id: 'card', idx: 4, label: 'vCards & Wi-Fi' },
+                  { id: 'menu', idx: 0, label: t('hero.tabMenus', 'Menus & Forms') },
+                  { id: 'payments', idx: 1, label: t('hero.tabPayments', 'Payments & Crypto') },
+                  { id: 'print', idx: 2, label: t('hero.tabBulkPrint', 'Bulk Print Studio') },
+                  { id: 'zatca', idx: 3, label: t('hero.tabZatca', 'ZATCA Invoice') },
+                  { id: 'card', idx: 4, label: t('hero.tabVcards', 'vCards & Wi-Fi') },
                 ].map((tab) => {
                   const isSelected = activeTextureIndex === tab.idx;
                   return (
@@ -266,8 +266,8 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white font-bold text-sm shadow-xl shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
               >
                 <QrCode className="w-4 h-4 tool-icon-blur-up" />
-                <span>Launch Studio Generator</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span>{t('hero.launchGenerator', 'Launch Studio Generator')}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180 transition-transform" />
               </button>
 
               <button
@@ -279,7 +279,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-300 hover:border-slate-400 shadow-xs transition-all cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-emerald-600 tool-icon-blur-up" />
-                <span>Explore Avery Label Printer</span>
+                <span>{t('hero.exploreAvery', 'Explore Avery Label Printer')}</span>
               </button>
             </div>
 
@@ -287,15 +287,15 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
             <div className="mt-8 pt-6 border-t border-slate-200 w-full flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-xs text-slate-600">
               <span className="flex items-center gap-1.5 font-medium">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                100% Free Vector SVG & PDF
+                {t('hero.freeVector', '100% Free Vector SVG & PDF')}
               </span>
               <span className="flex items-center gap-1.5 font-medium">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                No Sign-Up Required
+                {t('hero.noSignUp', 'No Sign-Up Required')}
               </span>
               <span className="flex items-center gap-1.5 font-medium">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Offline Generator Engine
+                {t('hero.offlineEngine', 'Offline Generator Engine')}
               </span>
             </div>
 
@@ -328,7 +328,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   }`}
                 >
                   <span className="text-sm sm:text-base tool-icon-blur-up">🍽️</span>
-                  <span>Digital Restaurant Menus</span>
+                  <span>{t('hero.badgeMenu', 'Digital Restaurant Menus')}</span>
                 </motion.button>
 
                 {/* Badge 2: Top Right - Instant Crypto & UPI Payments */}
@@ -344,7 +344,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   }`}
                 >
                   <span className="text-sm sm:text-base tool-icon-blur-up">💳</span>
-                  <span>Crypto & UPI Payments</span>
+                  <span>{t('hero.badgeCrypto', 'Crypto & UPI Payments')}</span>
                 </motion.button>
 
                 {/* Badge 3: Mid Right - Avery 5160 Bulk Label Print Studio */}
@@ -360,7 +360,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   }`}
                 >
                   <span className="text-sm sm:text-base tool-icon-blur-up">🖨️</span>
-                  <span>Avery 5160 Bulk Print</span>
+                  <span>{t('hero.badgeAvery', 'Avery 5160 Bulk Print')}</span>
                 </motion.button>
 
                 {/* Badge 4: Bottom Left - ZATCA TLV Compliant (KSA) */}
@@ -376,7 +376,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   }`}
                 >
                   <span className="text-sm sm:text-base tool-icon-blur-up">🧾</span>
-                  <span>ZATCA TLV Compliant</span>
+                  <span>{t('hero.badgeZatca', 'ZATCA TLV Compliant')}</span>
                 </motion.button>
 
                 {/* Badge 5: Bottom Right - AI Dynamic Forms & RSVPs */}
@@ -392,7 +392,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   }`}
                 >
                   <span className="text-sm sm:text-base tool-icon-blur-up">🤖</span>
-                  <span>AI Forms & RSVPs</span>
+                  <span>{t('hero.badgeAiForms', 'AI Forms & RSVPs')}</span>
                 </motion.button>
 
               </div>
@@ -542,9 +542,9 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                         <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
                           <div className="flex items-center gap-1">
                             <Printer className="w-3.5 h-3.5 text-indigo-600" />
-                            <span className="text-[11px] font-bold text-indigo-700">Avery 5160 Labels</span>
+                            <span className="text-[11px] font-bold text-indigo-700">{t('hero.averyLabelsTitle', 'Avery 5160 Labels')}</span>
                           </div>
-                          <span className="text-[9px] font-mono text-slate-500">30 / Page</span>
+                          <span className="text-[9px] font-mono text-slate-500">{t('hero.averyLabelsCount', '30 / Page')}</span>
                         </div>
 
                         {/* Label Grid simulation */}
@@ -562,7 +562,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                         </div>
 
                         <div className="bg-indigo-50 p-1.5 rounded-lg border border-indigo-200/80 text-center">
-                          <span className="text-[9px] font-bold text-indigo-700">Ready for PDF / Laser Printing</span>
+                          <span className="text-[9px] font-bold text-indigo-700">{t('hero.averyReadyPrint', 'Ready for PDF / Laser Printing')}</span>
                         </div>
                       </motion.div>
                     )}
@@ -673,7 +673,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                     ))}
                   </div>
                   <span className="text-[9px] font-mono text-slate-500 uppercase">
-                    3D Interactive Preview
+                    {t('hero.interactivePreview', '3D Interactive Preview')}
                   </span>
                 </div>
 
