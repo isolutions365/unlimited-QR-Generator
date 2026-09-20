@@ -3166,7 +3166,8 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
   // --- VITE MIDDLEWARE INTERFACE & STANDALONE STARTUP ---
   async function startServer() {
     console.log("Starting Express...");
-    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+    const parsedPort = Number.parseInt(process.env.PORT ?? '', 10);
+    const port = Number.isFinite(parsedPort) && parsedPort > 0 ? parsedPort : 3000;
 
     console.log("Loading Firebase...");
     console.log("Loading Firestore...");
@@ -3381,8 +3382,8 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
       app.get('*', serveHtmlWithSeoAndSchema);
     }
 
-    const server = app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Express listening on PORT=${PORT}`);
+    const server = app.listen(port, '0.0.0.0', () => {
+      console.log(`Express listening on port=${port}`);
     });
 
     // Handle WebSocket upgrades gracefully

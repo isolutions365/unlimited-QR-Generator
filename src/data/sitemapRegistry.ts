@@ -329,7 +329,7 @@ export const trustCenterRoutes: VerifiedRoute[] = [
   }
 ];
 
-// 3. Blog Articles Metadata (30 verified articles with genuine dates)
+// 3. Blog Articles Metadata (31 verified articles with genuine dates)
 export const blogArticleSlugs: { slug: string; date: string; dateModified: string; title: string; description: string; author: string; category: string }[] = [
   {
     slug: 'what-is-qr-code-how-it-works',
@@ -601,6 +601,15 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
     category: 'Social Media Marketing'
   },
+  {
+    slug: 'qr-code-for-surveys-and-feedback',
+    date: '2026-09-20',
+    dateModified: '2026-09-20',
+    title: 'QR Code for Surveys & Feedback: The Complete Implementation Guide',
+    description: 'Master QR code customer surveys, NPS feedback, CSAT polls, and Google Forms with optimal sizing, redirect telemetry, and conversion rate best practices.',
+    author: 'Marcus Vance, Lead Systems Architect',
+    category: 'Business Marketing'
+  },
 ];
 
 export function getAllVerifiedRoutes(): VerifiedRoute[] {
@@ -704,7 +713,7 @@ export function getAllVerifiedRoutes(): VerifiedRoute[] {
     });
   }
 
-  // 10. Blog Articles (30)
+  // 10. Blog Articles (31)
   for (const blog of blogArticleSlugs) {
     routes.push({
       path: `/blog/${blog.slug}`,

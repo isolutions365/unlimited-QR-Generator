@@ -1,3 +1,4 @@
+Sitemap generation validated: successfully compiled exactly 153 verified canonical URLs.
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -787,6 +788,12 @@
   <url>
     <loc>https://www.freeqrbarcodes.com/blog/influencer-merch-unboxing-direct-social-engagement</loc>
     <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/qr-code-for-surveys-and-feedback</loc>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

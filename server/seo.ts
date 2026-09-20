@@ -313,6 +313,14 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     dateModified: '2026-09-03',
     author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
     category: 'Social Media Marketing'
+  },
+  'qr-code-for-surveys-and-feedback': {
+    title: 'QR Code for Surveys & Feedback: The Complete Implementation Guide',
+    description: 'Master QR code customer surveys, NPS feedback, CSAT polls, and Google Forms with optimal sizing, redirect telemetry, and conversion rate best practices.',
+    date: '2026-09-20',
+    dateModified: '2026-09-20',
+    author: 'Marcus Vance, Lead Systems Architect',
+    category: 'Business Marketing'
   }
 };
 
@@ -1219,12 +1227,45 @@ export function extractLocaleAndPath(pathname: string): { locale: SupportedLocal
 }
 
 /**
- * Generates the full hreflang alternates link tags for all 14 supported languages + x-default
+ * Generates the full hreflang alternates link tags for all 14 supported languages + x-default.
+ * For blog articles, it verifies translation existence in each locale before advertising alternates.
  */
 export function buildHreflangTags(cleanPath: string, baseUrl = 'https://www.freeqrbarcodes.com'): string {
   const normalizedPath = cleanPath === '/' ? '' : (cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`);
   const enUrl = `${baseUrl}${normalizedPath || '/'}`;
   
+  if (cleanPath.startsWith('/blog/')) {
+    const slug = cleanPath.substring(6);
+    const blogLocalesMap: Record<string, any[]> = {
+      ar: blogAr,
+      ur: blogUr,
+      de: blogDe,
+      fr: blogFr,
+      es: blogEs,
+      pt: blogPt,
+      it: blogIt,
+      tr: blogTr,
+      id: blogId,
+      hi: blogHi,
+      zh: blogZh,
+      ja: blogJa,
+      ko: blogKo,
+    };
+
+    const entries: { hreflang: string; href: string }[] = [
+      { hreflang: 'en', href: enUrl }
+    ];
+
+    for (const [loc, list] of Object.entries(blogLocalesMap)) {
+      if (Array.isArray(list) && list.some((a: any) => a.slug === slug)) {
+        entries.push({ hreflang: loc, href: `${baseUrl}/${loc}${normalizedPath}` });
+      }
+    }
+
+    entries.push({ hreflang: 'x-default', href: enUrl });
+    return entries.map(e => `<link rel="alternate" hreflang="${e.hreflang}" href="${e.href}" />`).join('\n    ');
+  }
+
   const entries: { hreflang: string; href: string }[] = [
     { hreflang: 'en', href: enUrl },
     { hreflang: 'ar', href: `${baseUrl}/ar${normalizedPath}` },
@@ -1333,7 +1374,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     // 2. Pattern match for blog posts: /blog/:slug
     let isBlogPost = false;
     let blogSlug = '';
-    if (!matchedRoute && cleanPath.startsWith('/blog/')) {
+    if (cleanPath.startsWith('/blog/')) {
       blogSlug = cleanPath.replace('/blog/', '').replace(/\/$/, '');
       if (blogArticles[blogSlug]) {
         isBlogPost = true;
@@ -1342,7 +1383,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     
     // 3. Pattern match for solutions: /solutions/*
     let isSolution = false;
-    if (!matchedRoute && cleanPath.startsWith('/solutions/')) {
+    if (cleanPath.startsWith('/solutions/')) {
       isSolution = true;
     }
 

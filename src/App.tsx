@@ -7,7 +7,7 @@ import { auth } from './lib/firebase';
 import { signInAnonymously } from 'firebase/auth';
 import { QRProject, ScanLog, AppTab } from './types';
 import { landingPages } from './pages/landing/SEODatabase';
-import { getBlogArticles } from './data/blogData';
+import { getBlogArticles, checkArticleTranslationStatus } from './data/blogData';
 import { getAllVerifiedRoutes } from './data/sitemapRegistry';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
@@ -1820,10 +1820,25 @@ export default function App() {
     };
     geoRegion.setAttribute('content', regionMapping[locale] || 'US');
 
-    // Sync hreflang tags for all 14 supported languages to achieve ultimate Search Engine crawlers index visibility
+    // Sync hreflang tags for supported languages; for blog articles, verify translation presence before advertising
     document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
 
+    const isBlogArticleRoute = cleanPath.startsWith('/blog/');
+    const blogArticleSlug = isBlogArticleRoute ? cleanPath.substring(6) : null;
+
     SUPPORTED_LOCALES.forEach((loc) => {
+      if (isBlogArticleRoute && loc !== 'en') {
+        const localizedArticles = getBlogArticles(loc);
+        const art = localizedArticles.find(a => a.slug === blogArticleSlug);
+        if (!art) {
+          return;
+        }
+        const status = checkArticleTranslationStatus(art, loc);
+        if (!status.isComplete) {
+          return;
+        }
+      }
+
       const hAlternate = document.createElement('link');
       hAlternate.setAttribute('rel', 'alternate');
       hAlternate.setAttribute('hreflang', loc === 'en' ? 'x-default' : loc);
@@ -1833,11 +1848,11 @@ export default function App() {
       document.head.appendChild(hAlternate);
 
       if (loc === 'en') {
-        const xDefault = document.createElement('link');
-        xDefault.setAttribute('rel', 'alternate');
-        xDefault.setAttribute('hreflang', 'en');
-        xDefault.setAttribute('href', `${rootUrl}${cleanPath === '/' ? '' : cleanPath}`);
-        document.head.appendChild(xDefault);
+        const enTag = document.createElement('link');
+        enTag.setAttribute('rel', 'alternate');
+        enTag.setAttribute('hreflang', 'en');
+        enTag.setAttribute('href', `${rootUrl}${cleanPath === '/' ? '' : cleanPath}`);
+        document.head.appendChild(enTag);
       }
     });
 
