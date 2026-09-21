@@ -364,7 +364,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-22',
     title: 'Omnichannel Retail: Converting In-Store Footfall into Digital Sales',
     description: 'Discover how modern retail stores use smart QR window decals and shelf-talkers to capture lost revenue and sync offline visitors with e-commerce.',
-    author: 'Sarah Jenkins, Retail Marketing Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Marketing Strategies'
   },
   {
@@ -373,7 +373,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-26',
     title: 'B2B Lead Generation: High-Converting Trade Show QR Strategies',
     description: 'Learn how enterprise sales teams replace generic brochures with personalized dynamic QR codes to track booth visits and score prospects in real-time.',
-    author: 'Sarah Jenkins, Retail Marketing Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Marketing Strategies'
   },
   {
@@ -382,7 +382,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-29',
     title: 'Smart Product Packaging: Driving Customer Engagement & Authenticity',
     description: 'Explore how FMCG and luxury brands print dynamic QR codes on packaging for serial verification, ingredient transparency, and loyalty rewards.',
-    author: 'Sarah Jenkins, Retail Marketing Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Marketing Strategies'
   },
   {
@@ -391,7 +391,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-20',
     title: 'UTM Tracking & GA4: Measuring Exact Offline Print Campaign ROI',
     description: 'A step-by-step masterclass on structuring UTM campaign tags for QR codes to track billboard, direct mail, and magazine conversions in Google Analytics 4.',
-    author: 'David Chen, Performance Analytics Lead',
+    author: 'FreeQRBarcodes',
     category: 'Analytics & Tracking'
   },
   {
@@ -400,7 +400,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-24',
     title: 'Offline-to-Online Retargeting: Building Audiences from Physical Scans',
     description: 'Learn how dynamic QR redirect servers trigger Meta Pixels, Google Tag Manager events, and TikTok remarketing tags upon physical scan interactions.',
-    author: 'David Chen, Performance Analytics Lead',
+    author: 'FreeQRBarcodes',
     category: 'Analytics & Tracking'
   },
   {
@@ -409,7 +409,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-31',
     title: 'A/B Testing Physical Print Ads with Dynamic QR Short Links',
     description: 'Discover how growth marketers run split tests on print fliers, flyers, and direct mailers by routing alternating QR scans to different landing pages.',
-    author: 'David Chen, Performance Analytics Lead',
+    author: 'FreeQRBarcodes',
     category: 'Analytics & Tracking'
   },
   {
@@ -418,7 +418,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-18',
     title: 'The Small Business QR Playbook: 10 High-Impact Use Cases',
     description: 'Ten cost-effective, frictionless QR code implementations that neighborhood cafes, salons, auto shops, and boutiques can deploy in under 5 minutes.',
-    author: 'Hannah Brooks, Local Commerce Consultant',
+    author: 'FreeQRBarcodes',
     category: 'Small Business Tools'
   },
   {
@@ -427,7 +427,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-27',
     title: 'How to 10x Google Reviews with Countertop QR Display Stands',
     description: 'Learn the exact psychological triggers and technical setup to get satisfied customers to leave 5-star Google Business ratings right at checkout.',
-    author: 'Hannah Brooks, Local Commerce Consultant',
+    author: 'FreeQRBarcodes',
     category: 'Small Business Tools'
   },
   {
@@ -436,7 +436,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-09-01',
     title: 'Contactless Invoicing: Adding Instant Payment QR Codes to Bills',
     description: 'Discover how freelancers, service contractors, and pop-up vendors generate instant payment QR codes on invoices for zero-fee rapid settlement.',
-    author: 'Hannah Brooks, Local Commerce Consultant',
+    author: 'FreeQRBarcodes',
     category: 'Small Business Tools'
   },
   {
@@ -445,7 +445,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-21',
     title: 'The Technical Architecture of 2D Matrix Codes: Micro QR, iQR, and Standard Models',
     description: 'An in-depth technical analysis of 2D barcode variants, module capacities, coordinate encoding, and specialized industrial matrix standards.',
-    author: 'Dr. Elena Rostova, Cryptography & Signals Specialist',
+    author: 'FreeQRBarcodes',
     category: 'Technology'
   },
   {
@@ -454,7 +454,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-28',
     title: 'Cybersecurity in QR Systems: Preventing Qshing & Malicious URL Redirection',
     description: 'Learn how cybercriminals exploit physical QR codes through QR phishing (Qshing) and how enterprise security protocols safeguard user scans.',
-    author: 'Dr. Elena Rostova, Cryptography & Signals Specialist',
+    author: 'FreeQRBarcodes',
     category: 'Technology'
   },
   {
@@ -472,7 +472,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-19',
     title: 'Frictionless Hotel Check-Ins: Keyless Room Access & Concierge Web Apps',
     description: 'Learn how boutique and luxury hotels use contactless QR codes in lobbies and guest rooms to streamline check-ins, room service orders, and amenities booking.',
-    author: 'Elena Rossi, Hospitality Technology Specialist',
+    author: 'FreeQRBarcodes',
     category: 'Contactless Solutions'
   },
   {
@@ -481,7 +481,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-23',
     title: 'Touchless Patient Registration: Modernizing Clinic Waiting Rooms with QR Forms',
     description: 'Explore how medical clinics, dental practices, and diagnostic centers streamline patient check-in and medical history intake using hygienic QR forms.',
-    author: 'Dr. Aris Thorne, Healthcare Systems Consultant',
+    author: 'FreeQRBarcodes',
     category: 'Contactless Solutions'
   },
   {
@@ -499,7 +499,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-17',
     title: 'Modernizing the Dining Experience: Digital QR Menus vs Physical Laminates',
     description: 'Everything restaurateurs need to know about designing, printing, and optimizing contactless digital QR menus to increase average order values.',
-    author: 'Marco Delvecchio, Culinary Technology Director',
+    author: 'FreeQRBarcodes',
     category: 'Restaurant QR Menus'
   },
   {
@@ -508,7 +508,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-25',
     title: 'Dynamic Pricing & Real-Time Item Disabling: Running Lean Kitchen Operations',
     description: 'Learn how high-volume bars and restaurants implement happy hour specials, surge pricing, and live 86-lists without reprinting tabletop QR stands.',
-    author: 'Marco Delvecchio, Culinary Technology Director',
+    author: 'FreeQRBarcodes',
     category: 'Restaurant QR Menus'
   },
   {
@@ -517,7 +517,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-31',
     title: 'Table-Side Ordering & Self-Checkout: Increasing Table Turnaround by 30%',
     description: 'Explore how fast-casual and high-volume dining establishments boost table turnover rates and staff tips using tableside QR ordering and payments.',
-    author: 'Marco Delvecchio, Culinary Technology Director',
+    author: 'FreeQRBarcodes',
     category: 'Restaurant QR Menus'
   },
   {
@@ -526,7 +526,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-22',
     title: 'High-Throughput Ticketing: Scanning 1,000+ Attendees per Minute at Festivals',
     description: 'Learn how music festivals, stadiums, and conferences deploy high-speed QR barcode scanners, cryptographic validation, and offline turnstiles.',
-    author: 'Julian Sterling, Event Operations Director',
+    author: 'FreeQRBarcodes',
     category: 'Event QR Codes'
   },
   {
@@ -535,7 +535,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-27',
     title: 'Interactive Conference Badges: Frictionless Digital Business Card Networking',
     description: 'Discover how corporate summit organizers replace paper business cards with dynamic vCard QR badges for instant contact exchange and lead scoring.',
-    author: 'Julian Sterling, Event Operations Director',
+    author: 'FreeQRBarcodes',
     category: 'Event QR Codes'
   },
   {
@@ -544,7 +544,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-09-02',
     title: 'Live Audience Polls & Stage Q&A: Engaging Hybrid Summit Attendees in Real-Time',
     description: 'Learn how keynote speakers and event producers drive 80%+ audience participation using giant stage-screen QR codes for live voting and anonymous Q&A.',
-    author: 'Julian Sterling, Event Operations Director',
+    author: 'FreeQRBarcodes',
     category: 'Event QR Codes'
   },
   {
@@ -553,7 +553,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-19',
     title: 'Interactive Textbooks: Linking Static Classroom Handouts to 3D Models & Video Lectures',
     description: 'Explore how K-12 educators and university professors transform static worksheets into dynamic learning portals with video solutions and 3D AR models.',
-    author: 'Prof. Arthur Vance, EdTech Research Fellow',
+    author: 'FreeQRBarcodes',
     category: 'Education QR Codes'
   },
   {
@@ -562,7 +562,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-28',
     title: 'Campus Navigation & Building Directories: Guiding Freshmen with Geo-Tagged QRs',
     description: 'Learn how modern universities and hospital complexes place scannable QR signs at campus intersections to provide interactive 3D wayfinding maps.',
-    author: 'Prof. Arthur Vance, EdTech Research Fellow',
+    author: 'FreeQRBarcodes',
     category: 'Education QR Codes'
   },
   {
@@ -571,7 +571,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-09-03',
     title: 'Automated Attendance Systems: QR-Based Lecture Hall Check-In Best Practices',
     description: 'Discover how university lecture halls automate roll call for 300+ students in under two minutes using rotating dynamic QR codes and geofencing.',
-    author: 'Prof. Arthur Vance, EdTech Research Fellow',
+    author: 'FreeQRBarcodes',
     category: 'Education QR Codes'
   },
   {
@@ -580,7 +580,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-24',
     title: 'Multi-Link Bio QR Codes: Unifying Instagram, TikTok, YouTube & Spotify in One Scan',
     description: 'Learn how content creators, musicians, and influencers design aesthetic multi-link landing pages connected to a single scannable QR code.',
-    author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Social Media Marketing'
   },
   {
@@ -589,7 +589,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-08-29',
     title: 'Interactive Pop-Up Store Activations: Turning Foot Traffic into Viral Social Followers',
     description: 'Discover how direct-to-consumer (DTC) fashion and beauty brands turn temporary pop-up shops into viral TikTok and Instagram follower magnets.',
-    author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Social Media Marketing'
   },
   {
@@ -598,7 +598,7 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     dateModified: '2026-09-03',
     title: 'Influencer Merch & Unboxing Campaigns: Driving Direct Engagement from Product Tags',
     description: 'Learn how top creators design custom hangtags and packaging inserts with QR codes to trigger viral unboxing videos and community hashtag growth.',
-    author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Social Media Marketing'
   },
   {

@@ -36,7 +36,7 @@ export const knowledgeArticles: KnowledgeArticle[] = [
     category: "Basics",
     tags: ["Technical Guide", "Standards", "2D Barcodes"],
     readingTime: "5 min read",
-    author: "Technical Editorial Board",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "A Quick Response (QR) code is a type of two-dimensional (2D) matrix barcode designed to store alphanumeric data, web links, or media coordinates in a compact grid structure.",
     contentMarkdown: `## Understanding the 2D Matrix Standard
@@ -88,7 +88,7 @@ Developed in 1994 by Masahiro Hara of Denso Wave, a subsidiary of Toyota, QR cod
     category: "Technology",
     tags: ["Algorithms", "Binary Coding", "Data Science"],
     readingTime: "6 min read",
-    author: "Senior Software Architect",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "QR codes function by translating textual data, telephone coordinates, or web links into binary states (0s and 1s) mapped as black and white squares on a 2D coordinate grid.",
     contentMarkdown: `## Encoding Payload Data into Binary
@@ -143,7 +143,7 @@ To prevent long lines of solid black or white pixels (which confuse optical sens
     category: "Comparisons",
     tags: ["Marketing", "Analytics", "Data Architecture"],
     readingTime: "6 min read",
-    author: "SEO Engineering Lead",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "The choice between static and dynamic QR codes is the most important decision when deploying physical marketing campaigns. They operate on two distinct data hosting models.",
     contentMarkdown: `## Structural Architecture of Static QR Codes
@@ -196,7 +196,7 @@ Use **Static** for unchanging offline utilities like local guest WiFi, text-only
     category: "Business",
     tags: ["Hospitality", "Contactless", "Operations"],
     readingTime: "5 min read",
-    author: "Hospitality Lead consultant",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "Restaurant QR codes have revolutionized the hospitality sector, transforming static table tops into high-performance contactless order portals and menu viewing decks.",
     contentMarkdown: `## Transitioning to Touchless Menus
@@ -247,7 +247,7 @@ Modern hospitality structures map specific QR codes to individual tables (e.g., 
     category: "Business",
     tags: ["Networking", "vCard", "Corporate"],
     readingTime: "4 min read",
-    author: "Corporate Networking Expert",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "A Business Card QR Code bridges traditional paper business cards with modern smartphone address books, removing the friction of manual contact entry.",
     contentMarkdown: `## Redefining First Impressions
@@ -299,7 +299,7 @@ You can set up a business card QR code in two ways:
     category: "Networking",
     tags: ["WiFi", "Security", "IT Administration"],
     readingTime: "4 min read",
-    author: "Network Security Analyst",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "WiFi QR codes simplify guest wireless login by replacing complex passwords with a single, secure scan.",
     contentMarkdown: `## The Standard WIFI URI Scheme
@@ -351,7 +351,7 @@ This format keeps your wireless password hidden from plain sight while letting g
     category: "Marketing",
     tags: ["SEO", "Local Business", "Google Business"],
     readingTime: "5 min read",
-    author: "Local SEO Specialist",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "Google Review QR codes make it easy for customers to leave feedback on your Google Business Profile with a single scan.",
     contentMarkdown: `## The Value of Local Google Reviews
@@ -405,7 +405,7 @@ To set up your QR code:
     category: "Social",
     tags: ["Messaging", "Social Media", "Customer Service"],
     readingTime: "4 min read",
-    author: "Social Integration Engineer",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "WhatsApp QR codes let customers start a conversation with your support team with a single scan, removing the need to save phone numbers manually.",
     contentMarkdown: `## The Technical wa.me API Protocol
@@ -456,7 +456,7 @@ You can include a pre-filled text message that the scanner can send with a singl
     category: "Documents",
     tags: ["PDF", "Office Automation", "E-books"],
     readingTime: "5 min read",
-    author: "Document Solutions Manager",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "PDF QR codes make it easy to share restaurant menus, product user guides, corporate brochures, and academic files with a single scan.",
     contentMarkdown: `## Digital File Sharing Made Easy
@@ -507,7 +507,7 @@ Ensure your PDF content is laid out in a mobile-friendly portrait format. Use la
     category: "Communication",
     tags: ["Email", "mailto", "Workspace Solutions"],
     readingTime: "4 min read",
-    author: "Technical Content Writer",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "Email QR codes let customers send inquiries, support tickets, and feedback requests with pre-filled details to ensure accurate routing.",
     contentMarkdown: `## The mailto: URI Standard
@@ -558,7 +558,7 @@ Use email QR codes on product labels, real estate posters, conference banners, a
     category: "Communication",
     tags: ["Telephony", "tel", "IT Integration"],
     readingTime: "3 min read",
-    author: "Network Administrator",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "Phone QR codes let customers call your sales or customer service teams with a single scan, avoiding manual dialing mistakes.",
     contentMarkdown: `## The tel: Telephony Standard
@@ -609,7 +609,7 @@ Embedding direct dial numbers in QR codes is perfect for product labels, busines
     category: "Communication",
     tags: ["SMS", "Telephony", "Marketing Automation"],
     readingTime: "4 min read",
-    author: "Marketing Operations Lead",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "SMS QR codes let customers opt into marketing campaigns, vote in contests, or contact support with a single, quick scan.",
     contentMarkdown: `## The SMSTO: Protocol Standard
@@ -659,7 +659,7 @@ Use SMS QR codes on event banners, restaurant table tents, product boxes, and fl
     category: "Navigation",
     tags: ["Routing", "Analytics", "UTMs"],
     readingTime: "5 min read",
-    author: "Digital Architect Consultant",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "URL QR codes bridge physical advertisements with dynamic online landing pages, making web links easy to scan and open instantly.",
     contentMarkdown: `## Formatting URLs for Scanning
@@ -710,7 +710,7 @@ To measure how much traffic and conversions your physical materials (flyers, ban
     category: "Navigation",
     tags: ["GPS", "Mapping", "Local SEO"],
     readingTime: "4 min read",
-    author: "Geospatial Analyst",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "Location QR codes embed geographic GPS coordinates (latitude and longitude) to open navigation maps on mobile devices with a single scan.",
     contentMarkdown: `## The Standard geo: URI Protocol
@@ -761,7 +761,7 @@ Use location QR codes on event invitations, real estate listings, and business b
     category: "Business",
     tags: ["vCard", "VCF", "Directory Integration"],
     readingTime: "5 min read",
-    author: "Data Standards Specialist",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "vCard QR codes store structured contact data inside a 2D barcode, letting users import details directly into their phone address books.",
     contentMarkdown: `## The IETF VCF Specification Standard
@@ -822,7 +822,7 @@ Modern smartphone cameras read vCard parameters natively. When a user scans the 
     category: "Events",
     tags: ["Scheduling", "iCal", "Conferences"],
     readingTime: "5 min read",
-    author: "Event Operations Lead",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "Event QR codes let users save event details, dates, and locations directly to their digital calendars with a single scan.",
     contentMarkdown: `## The Standard iCalendar vEvent Schema
@@ -879,7 +879,7 @@ Use event QR codes on invitations, banners, tickets, and posters to help attende
     category: "Printing",
     tags: ["Sizing", "Optics", "Ratios"],
     readingTime: "5 min read",
-    author: "Senior Prepress Engineer",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "Setting the right dimensions and scanning distance ratios is crucial to ensure your printed QR codes scan quickly and reliably on all devices.",
     contentMarkdown: `## Calculating the Scanning Distance Ratio
@@ -930,7 +930,7 @@ Longer URLs or extensive vCard details increase the number of rows and columns (
     category: "Printing",
     tags: ["Printing", "Vector Graphics", "Matte Laminate"],
     readingTime: "5 min read",
-    author: "Senior Print Consultant",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "This guide covers best practices for high-resolution printing to ensure your printed QR codes scan quickly and reliably.",
     contentMarkdown: `## Sizing and Contrast Calculations
@@ -979,7 +979,7 @@ For high-quality printing, always export your QR codes in vector formats (SVG, E
     category: "Technology",
     tags: ["Algorithms", "Error Correction", "Reed-Solomon"],
     readingTime: "5 min read",
-    author: "Senior Software Architect",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "Reed-Solomon error correction lets QR codes scan reliably even when partially scuffed, wet, or covered by a custom brand logo.",
     contentMarkdown: `## The Reed-Solomon Algebraic Algorithm
@@ -1030,7 +1030,7 @@ When placing a custom brand logo in the center of your QR code, choose Level H e
     category: "Security",
     tags: ["Quishing", "Cybersecurity", "Dynamic Routing"],
     readingTime: "5 min read",
-    author: "Cybersecurity Lead Specialist",
+    author: "FreeQRBarcodes",
     date: "July 7, 2026",
     intro: "While QR codes are simply static data patterns, their convenience makes them a target for phishing attacks, known as 'quishing'.",
     contentMarkdown: `## Understanding QR Phishing (Quishing)

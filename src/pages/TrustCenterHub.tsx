@@ -13,69 +13,6 @@ import {
 // ==========================================
 // AUTHOR PROFILES DATA (EEAT Compliance)
 // ==========================================
-export interface Author {
-  id: string;
-  name: string;
-  role: string;
-  avatar: string;
-  specialization: string;
-  bio: string;
-  credentials: string[];
-  socials: {
-    linkedin?: string;
-    twitter?: string;
-    github?: string;
-  };
-  publications: string[];
-}
-
-export const authors: Author[] = [
-  {
-    id: 'sarah-chen',
-    name: 'Muhammad Mubeen (Founder & Lead Developer)',
-    role: 'Lead Architect & Core Engineer',
-    avatar: 'MM',
-    specialization: 'Full-Stack Software Architecture, Optical Tracking Verification, Systems Security',
-    bio: 'Muhammad Mubeen is the Founder and Lead Developer of FreeQRBarcodes.com. With deep expertise in full-stack engineering and cloud architectures, he designed FreeQRBarcodes.com with an offline-first technical ethos to democratize beautiful, secure, and highly scannable 2D barcode utilities. Under his leadership, the platform guarantees zero-tracking browser-rendered static codes that protect user network keys, vCards, and dynamic campaigns.',
-    credentials: [
-      'Founder & Lead Architect at iSolutions ICo.',
-      'Specialist in Client-Side Image Rendering & 2D Symbology Engineering',
-      'Creator of secure offline-first data verification systems',
-      'Lead Developer behind FreeQRBarcodes\'s lightweight vector rendering core'
-    ],
-    socials: {
-      linkedin: 'https://linkedin.com/in/muhammad-mubeen',
-      github: 'https://github.com/muhammad-mubeen'
-    },
-    publications: [
-      'Client-Side Vector Barcode Generation and Error-Correction Preservation',
-      'A Zero-Tracking Approach to Contactless Information Transmission Protocols',
-      'Optimizing Matrix Code Contrast under Sub-Optimal Ambient Lighting Conditions'
-    ]
-  },
-  {
-    id: 'marcus-vance',
-    name: 'FreeQRBarcodes Engineering Team',
-    role: 'Trust, Security & Technical Operations Core',
-    avatar: 'ET',
-    specialization: 'High-Availability Infrastructure, Cryptographic Data Sandboxing, DevSecOps',
-    bio: 'The FreeQRBarcodes Engineering Team is composed of dedicated software engineers, trust experts, and performance specialists. Together, we manage our high-speed global delivery networks, secure serverless routing protocols, and open-access API architectures. Our mission is to maintain 100% platform availability, deliver modern interface performance, and ensure that every generated barcode complies strictly with global standards.',
-    credentials: [
-      'Core Engineering Collective at iSolutions ICo.',
-      'Certified Web Security & Cryptographic Sandbox Auditors',
-      'Maintainers of the FreeQRBarcodes High-Availability Globally Distributed Edge Network'
-    ],
-    socials: {
-      github: 'https://github.com/freeqrbarcodes-org'
-    },
-    publications: [
-      'Scaling Edge Services for Real-Time Contactless Interaction Utilities',
-      'Automated Scannability Validation via Multi-Threaded Browser Tests',
-      'Enterprise Sandboxing and GDPR/CCPA Data Minimization Standards'
-    ]
-  }
-];
-
 // ==========================================
 // TRUST CENTER PAGES CONTENT DATA
 // ==========================================
@@ -1083,7 +1020,6 @@ export default function TrustCenterHub({
   const { t } = useTranslation();
   const [activeSlug, setActiveSlug] = useState<string>('about');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
 
   // Handle URL slug routing
   useEffect(() => {
@@ -1098,8 +1034,6 @@ export default function TrustCenterHub({
   }, [initialSlug]);
 
   const activePage = trustPages.find(p => p.slug === activeSlug) || trustPages[0];
-  const activeAuthor = authors.find(a => a.id === activePage.authorId) || authors[0];
-  const activeReviewer = authors.find(a => a.id === activePage.reviewerId) || authors[1];
 
   // Dynamic Metadata and Schema Injection
   useEffect(() => {
@@ -1197,14 +1131,16 @@ export default function TrustCenterHub({
       'datePublished': '2025-04-12T08:00:00+00:00',
       'dateModified': new Date(activePage.lastUpdated).toISOString(),
       'author': {
-        '@type': 'Person',
-        'name': t('trust.author.' + activeAuthor.id + '.name', activeAuthor.name),
-        'jobTitle': t('trust.author.' + activeAuthor.id + '.role', activeAuthor.role),
-        'sameAs': activeAuthor.socials.linkedin || 'https://www.freeqrbarcodes.com/'
+        '@type': 'Organization',
+        '@id': 'https://www.freeqrbarcodes.com/#organization',
+        'name': 'FreeQRBarcodes',
+        'url': 'https://www.freeqrbarcodes.com/'
       },
       'publisher': {
         '@type': 'Organization',
-        'name': t('trust.isolutionsIco', 'iSolutions ICo'),
+        '@id': 'https://www.freeqrbarcodes.com/#organization',
+        'name': 'FreeQRBarcodes',
+        'url': 'https://www.freeqrbarcodes.com/',
         'logo': {
           '@type': 'ImageObject',
           'url': 'https://www.freeqrbarcodes.com/apple-touch-icon.png'
@@ -1245,7 +1181,7 @@ export default function TrustCenterHub({
       const scripts = document.querySelectorAll('script[data-schema-type]');
       scripts.forEach(s => s.remove());
     };
-  }, [activePage, activeAuthor, t]);
+  }, [activePage, t]);
 
   // Handle sidebar navigation
   const handleNav = (slug: string) => {
@@ -1463,46 +1399,16 @@ export default function TrustCenterHub({
                 {/* Expert Review / Author Credentials Accordion */}
                 <div className="flex flex-wrap items-center gap-4 p-3 bg-slate-50 border border-slate-100 rounded-2xl text-[11px] leading-snug">
                   <div className="flex items-center gap-2">
-                    <button 
-                      onClick={() => setSelectedAuthor(activeAuthor)}
-                      className="w-7 h-7 bg-indigo-600 text-white font-black text-xs rounded-full flex items-center justify-center cursor-pointer hover:bg-slate-900 transition-colors"
-                      title={t('trust.viewAuthorBio', 'View Author Bio')}
-                    >
-                      {activeAuthor.avatar}
-                    </button>
-                    <div>
-                      <span className="block text-slate-400 font-bold uppercase text-[9px] font-mono">
-                        {t('trust.authoredBy', 'AUTHORED BY:')}
-                      </span>
-                      <button 
-                        onClick={() => setSelectedAuthor(activeAuthor)}
-                        className="font-bold text-slate-800 hover:text-indigo-600 transition-colors text-left"
-                      >
-                        {t('trust.author.' + activeAuthor.id + '.name', activeAuthor.name)}
-                      </button>
+                    <div className="w-7 h-7 bg-indigo-600 text-white font-black text-xs rounded-full flex items-center justify-center">
+                      F
                     </div>
-                  </div>
-
-                  <div className="hidden sm:block h-6 w-px bg-slate-200" />
-
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={() => setSelectedAuthor(activeReviewer)}
-                      className="w-7 h-7 bg-slate-800 text-white font-black text-xs rounded-full flex items-center justify-center cursor-pointer hover:bg-indigo-600 transition-colors"
-                      title={t('trust.viewReviewerBio', 'View Reviewer Bio')}
-                    >
-                      {activeReviewer.avatar}
-                    </button>
                     <div>
                       <span className="block text-slate-400 font-bold uppercase text-[9px] font-mono">
-                        {t('trust.reviewedBy', 'REVIEWED BY:')}
+                        {t('trust.publishedBy', 'PUBLISHED BY:')}
                       </span>
-                      <button 
-                        onClick={() => setSelectedAuthor(activeReviewer)}
-                        className="font-bold text-slate-800 hover:text-indigo-600 transition-colors text-left"
-                      >
-                        {t('trust.author.' + activeReviewer.id + '.name', activeReviewer.name)}
-                      </button>
+                      <span className="font-bold text-slate-800 text-xs">
+                        FreeQRBarcodes
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1923,98 +1829,6 @@ export default function TrustCenterHub({
         </div>
       </div>
 
-      {/* AUTHOR MODAL PROFILE DRAWER */}
-      {selectedAuthor && (
-        <div className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center z-50 p-4" onClick={() => setSelectedAuthor(null)}>
-          <div 
-            className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-6 animate-scale-in"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xl font-black shrink-0 shadow-lg shadow-indigo-100">
-                {selectedAuthor.avatar}
-              </div>
-              <div>
-                <h3 className="text-lg font-black text-slate-900 leading-none">
-                  {t('trust.author.' + selectedAuthor.id + '.name', selectedAuthor.name)}
-                </h3>
-                <span className="block text-[11px] text-indigo-600 font-bold mt-1 leading-tight">
-                  {t('trust.author.' + selectedAuthor.id + '.role', selectedAuthor.role)}
-                </span>
-                <span className="block text-[9px] font-mono text-slate-400 mt-1 uppercase tracking-widest">
-                  {t('trust.author.' + selectedAuthor.id + '.specialization', selectedAuthor.specialization).split(',')[0]}
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-4 text-xs text-slate-600 leading-relaxed">
-              <div>
-                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">
-                  {t('trust.authorBiography', 'BIOGRAPHY')}
-                </span>
-                <p>{t('trust.author.' + selectedAuthor.id + '.bio', selectedAuthor.bio)}</p>
-              </div>
-
-              <div>
-                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">
-                  {t('trust.authorCredentials', 'PROFESSIONAL CREDENTIALS')}
-                </span>
-                <ul className="space-y-1 list-disc list-inside">
-                  {selectedAuthor.credentials.map((cred, idx) => (
-                    <li key={idx} className="leading-snug text-slate-700">
-                      {t('trust.author.' + selectedAuthor.id + '.credentials.' + idx, cred)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <span className="block text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider mb-1">
-                  {t('trust.authorPublications', 'SELECTED PUBLICATIONS')}
-                </span>
-                <ul className="space-y-1 list-disc list-inside italic">
-                  {selectedAuthor.publications.map((pub, idx) => (
-                    <li key={idx} className="leading-snug text-slate-700">
-                      "{t('trust.author.' + selectedAuthor.id + '.publications.' + idx, pub)}"
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Social connect links */}
-              <div className="pt-4 border-t border-slate-100 flex items-center gap-4">
-                <span className="text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">
-                  {t('trust.authorConnect', 'CONNECT:')}
-                </span>
-                {selectedAuthor.socials.linkedin && (
-                  <a href={selectedAuthor.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                    {t('trust.linkedin', 'LinkedIn')} <ArrowUpRight className="w-3 h-3" />
-                  </a>
-                )}
-                {selectedAuthor.socials.twitter && (
-                  <a href={selectedAuthor.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                    {t('trust.twitter', 'Twitter')} <ArrowUpRight className="w-3 h-3" />
-                  </a>
-                )}
-                {selectedAuthor.socials.github && (
-                  <a href={selectedAuthor.socials.github} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                    {t('trust.github', 'GitHub')} <ArrowUpRight className="w-3 h-3" />
-                  </a>
-                )}
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <button
-                onClick={() => setSelectedAuthor(null)}
-                className="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer"
-              >
-                {t('trust.closeAuthorProfile', 'Close Author Profile')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

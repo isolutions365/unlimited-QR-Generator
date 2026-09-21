@@ -103,7 +103,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover how modern retail stores use smart QR window decals and shelf-talkers to capture lost revenue and sync offline visitors with e-commerce.',
     date: '2026-06-18',
     dateModified: '2026-08-22',
-    author: 'Sarah Jenkins, Retail Marketing Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Marketing Strategies'
   },
   'b2b-lead-generation-with-qr-landing-pages': {
@@ -111,7 +111,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how enterprise sales teams replace generic brochures with personalized dynamic QR codes to track booth visits and score prospects in real-time.',
     date: '2026-07-11',
     dateModified: '2026-08-26',
-    author: 'Sarah Jenkins, Retail Marketing Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Marketing Strategies'
   },
   'smart-packaging-qr-codes-product-engagement': {
@@ -119,7 +119,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Explore how FMCG and luxury brands print dynamic QR codes on packaging for serial verification, ingredient transparency, and loyalty rewards.',
     date: '2026-08-01',
     dateModified: '2026-08-29',
-    author: 'Sarah Jenkins, Retail Marketing Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Marketing Strategies'
   },
   'utm-tracking-measuring-qr-code-roi-ga4': {
@@ -127,7 +127,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'A step-by-step masterclass on structuring UTM campaign tags for QR codes to track billboard, direct mail, and magazine conversions in Google Analytics 4.',
     date: '2026-06-10',
     dateModified: '2026-08-20',
-    author: 'David Chen, Performance Analytics Lead',
+    author: 'FreeQRBarcodes',
     category: 'Analytics & Tracking'
   },
   'retargeting-offline-audiences-with-dynamic-qr': {
@@ -135,7 +135,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how dynamic QR redirect servers trigger Meta Pixels, Google Tag Manager events, and TikTok remarketing tags upon physical scan interactions.',
     date: '2026-07-08',
     dateModified: '2026-08-24',
-    author: 'David Chen, Performance Analytics Lead',
+    author: 'FreeQRBarcodes',
     category: 'Analytics & Tracking'
   },
   'ab-testing-print-advertising-with-qr-codes': {
@@ -143,7 +143,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover how growth marketers run split tests on print fliers, flyers, and direct mailers by routing alternating QR scans to different landing pages.',
     date: '2026-08-05',
     dateModified: '2026-08-31',
-    author: 'David Chen, Performance Analytics Lead',
+    author: 'FreeQRBarcodes',
     category: 'Analytics & Tracking'
   },
   'small-business-qr-code-starter-playbook': {
@@ -151,7 +151,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Ten cost-effective, frictionless QR code implementations that neighborhood cafes, salons, auto shops, and boutiques can deploy in under 5 minutes.',
     date: '2026-06-05',
     dateModified: '2026-08-18',
-    author: 'Hannah Brooks, Local Commerce Consultant',
+    author: 'FreeQRBarcodes',
     category: 'Small Business Tools'
   },
   'how-to-boost-google-reviews-with-countertop-qr': {
@@ -159,7 +159,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn the exact psychological triggers and technical setup to get satisfied customers to leave 5-star Google Business ratings right at checkout.',
     date: '2026-07-15',
     dateModified: '2026-08-27',
-    author: 'Hannah Brooks, Local Commerce Consultant',
+    author: 'FreeQRBarcodes',
     category: 'Small Business Tools'
   },
   'contactless-invoicing-qr-payment-receipts': {
@@ -167,7 +167,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover how freelancers, service contractors, and pop-up vendors generate instant payment QR codes on invoices for zero-fee rapid settlement.',
     date: '2026-08-06',
     dateModified: '2026-09-01',
-    author: 'Hannah Brooks, Local Commerce Consultant',
+    author: 'FreeQRBarcodes',
     category: 'Small Business Tools'
   },
   'anatomy-of-2d-matrix-grids-micro-qr-iqr': {
@@ -175,7 +175,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'An in-depth technical analysis of 2D barcode variants, module capacities, coordinate encoding, and specialized industrial matrix standards.',
     date: '2026-06-22',
     dateModified: '2026-08-21',
-    author: 'Dr. Elena Rostova, Cryptography & Signals Specialist',
+    author: 'FreeQRBarcodes',
     category: 'Technology'
   },
   'qr-code-cybersecurity-preventing-qshing-attacks': {
@@ -183,7 +183,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how cybercriminals exploit physical QR codes through QR phishing (Qshing) and how enterprise security protocols safeguard user scans.',
     date: '2026-07-19',
     dateModified: '2026-08-28',
-    author: 'Dr. Elena Rostova, Cryptography & Signals Specialist',
+    author: 'FreeQRBarcodes',
     category: 'Technology'
   },
   'gs1-digital-link-2027-barcode-standards-transition': {
@@ -199,7 +199,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how boutique and luxury hotels use contactless QR codes in lobbies and guest rooms to streamline check-ins, room service orders, and amenities booking.',
     date: '2026-06-25',
     dateModified: '2026-08-19',
-    author: 'Elena Rossi, Hospitality Technology Specialist',
+    author: 'FreeQRBarcodes',
     category: 'Contactless Solutions'
   },
   'touchless-healthcare-clinic-patient-registration-qr': {
@@ -207,7 +207,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Explore how medical clinics, dental practices, and diagnostic centers streamline patient check-in and medical history intake using hygienic QR forms.',
     date: '2026-07-14',
     dateModified: '2026-08-23',
-    author: 'Dr. Aris Thorne, Healthcare Systems Consultant',
+    author: 'FreeQRBarcodes',
     category: 'Contactless Solutions'
   },
   'smart-facility-maintenance-ticketing-equipment-qr': {
@@ -223,7 +223,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Everything restaurateurs need to know about designing, printing, and optimizing contactless digital QR menus to increase average order values.',
     date: '2026-06-08',
     dateModified: '2026-08-17',
-    author: 'Marco Delvecchio, Culinary Technology Director',
+    author: 'FreeQRBarcodes',
     category: 'Restaurant QR Menus'
   },
   'dynamic-pricing-and-realtime-menu-updates-qr': {
@@ -231,7 +231,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how high-volume bars and restaurants implement happy hour specials, surge pricing, and live 86-lists without reprinting tabletop QR stands.',
     date: '2026-07-06',
     dateModified: '2026-08-25',
-    author: 'Marco Delvecchio, Culinary Technology Director',
+    author: 'FreeQRBarcodes',
     category: 'Restaurant QR Menus'
   },
   'tableside-ordering-and-speeding-up-table-turnover': {
@@ -239,7 +239,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Explore how fast-casual and high-volume dining establishments boost table turnover rates and staff tips using tableside QR ordering and payments.',
     date: '2026-07-29',
     dateModified: '2026-08-31',
-    author: 'Marco Delvecchio, Culinary Technology Director',
+    author: 'FreeQRBarcodes',
     category: 'Restaurant QR Menus'
   },
   'high-speed-event-ticketing-and-access-control-qr': {
@@ -247,7 +247,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how music festivals, stadiums, and conferences deploy high-speed QR barcode scanners, cryptographic validation, and offline turnstiles.',
     date: '2026-06-16',
     dateModified: '2026-08-22',
-    author: 'Julian Sterling, Event Operations Director',
+    author: 'FreeQRBarcodes',
     category: 'Event QR Codes'
   },
   'smart-networking-vcard-badges-for-conferences': {
@@ -255,7 +255,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover how corporate summit organizers replace paper business cards with dynamic vCard QR badges for instant contact exchange and lead scoring.',
     date: '2026-07-10',
     dateModified: '2026-08-27',
-    author: 'Julian Sterling, Event Operations Director',
+    author: 'FreeQRBarcodes',
     category: 'Event QR Codes'
   },
   'live-audience-polls-qa-interactive-event-qr': {
@@ -263,7 +263,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how keynote speakers and event producers drive 80%+ audience participation using giant stage-screen QR codes for live voting and anonymous Q&A.',
     date: '2026-08-08',
     dateModified: '2026-09-02',
-    author: 'Julian Sterling, Event Operations Director',
+    author: 'FreeQRBarcodes',
     category: 'Event QR Codes'
   },
   'interactive-textbooks-and-classroom-handouts-qr': {
@@ -271,7 +271,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Explore how K-12 educators and university professors transform static worksheets into dynamic learning portals with video solutions and 3D AR models.',
     date: '2026-06-12',
     dateModified: '2026-08-19',
-    author: 'Prof. Arthur Vance, EdTech Research Fellow',
+    author: 'FreeQRBarcodes',
     category: 'Education QR Codes'
   },
   'campus-navigation-and-smart-building-directories-qr': {
@@ -279,7 +279,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how modern universities and hospital complexes place scannable QR signs at campus intersections to provide interactive 3D wayfinding maps.',
     date: '2026-07-21',
     dateModified: '2026-08-28',
-    author: 'Prof. Arthur Vance, EdTech Research Fellow',
+    author: 'FreeQRBarcodes',
     category: 'Education QR Codes'
   },
   'qr-based-automated-student-attendance-systems': {
@@ -287,7 +287,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover how university lecture halls automate roll call for 300+ students in under two minutes using rotating dynamic QR codes and geofencing.',
     date: '2026-08-12',
     dateModified: '2026-09-03',
-    author: 'Prof. Arthur Vance, EdTech Research Fellow',
+    author: 'FreeQRBarcodes',
     category: 'Education QR Codes'
   },
   'multi-link-social-bio-qr-codes-one-scan': {
@@ -295,7 +295,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how content creators, musicians, and influencers design aesthetic multi-link landing pages connected to a single scannable QR code.',
     date: '2026-06-20',
     dateModified: '2026-08-24',
-    author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Social Media Marketing'
   },
   'pop-up-store-activations-viral-social-qr-campaigns': {
@@ -303,7 +303,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Discover how direct-to-consumer (DTC) fashion and beauty brands turn temporary pop-up shops into viral TikTok and Instagram follower magnets.',
     date: '2026-07-18',
     dateModified: '2026-08-29',
-    author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Social Media Marketing'
   },
   'influencer-merch-unboxing-direct-social-engagement': {
@@ -311,7 +311,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     description: 'Learn how top creators design custom hangtags and packaging inserts with QR codes to trigger viral unboxing videos and community hashtag growth.',
     date: '2026-08-14',
     dateModified: '2026-09-03',
-    author: 'Chloe Martinez, Social Media & Creator Economy Strategist',
+    author: 'FreeQRBarcodes',
     category: 'Social Media Marketing'
   },
   'qr-code-for-surveys-and-feedback': {
@@ -530,18 +530,12 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
         "url": articleUrl,
         "datePublished": article.date.includes('T') ? article.date : `${article.date}T08:00:00+00:00`,
         "dateModified": article.dateModified ? (article.dateModified.includes('T') ? article.dateModified : `${article.dateModified}T08:00:00+00:00`) : (article.date.includes('T') ? article.date : `${article.date}T08:00:00+00:00`),
-        "author": (!article.author || article.author === 'FreeQRBarcodes' || article.author.includes('Marcus Vance'))
-          ? {
-              "@type": "Organization",
-              "@id": "https://www.freeqrbarcodes.com/#organization",
-              "name": "FreeQRBarcodes",
-              "url": "https://www.freeqrbarcodes.com/"
-            }
-          : {
-              "@type": "Person",
-              "name": article.author,
-              "url": "https://www.freeqrbarcodes.com/about"
-            },
+        "author": {
+          "@type": "Organization",
+          "@id": "https://www.freeqrbarcodes.com/#organization",
+          "name": "FreeQRBarcodes",
+          "url": "https://www.freeqrbarcodes.com/"
+        },
         "publisher": {
           "@type": "Organization",
           "@id": "https://www.freeqrbarcodes.com/#organization",

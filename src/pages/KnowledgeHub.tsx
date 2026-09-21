@@ -146,15 +146,10 @@ export default function KnowledgeHub({ section, initialSlug, onNavigate, locale:
       "description": activeArticle.metaDescription,
       "image": "https://www.freeqrbarcodes.com/og-image.jpg",
       "author": {
-        "@type": "Person",
-        "name": activeArticle.author || String(t('knowledge.editorialTeam', 'Muhammad Mubeen, Lead Developer')),
-        "url": `${rootUrl}/about`,
-        "sameAs": `${rootUrl}/about`,
-        "worksFor": {
-          "@type": "Organization",
-          "@id": `${rootUrl}/#organization`,
-          "name": "FreeQRBarcodes"
-        }
+        "@type": "Organization",
+        "@id": `${rootUrl}/#organization`,
+        "name": "FreeQRBarcodes",
+        "url": `${rootUrl}/`
       },
       "publisher": {
         "@type": "Organization",

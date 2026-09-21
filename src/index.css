@@ -503,7 +503,7 @@ html[dir="rtl"] [class*="space-x-"]:not(.ltr-lock) > :not([hidden]) ~ :not([hidd
   unicode-bidi: isolate !important;
 }
 
-/* Fix RTL list marker positioning and padding using CSS logical properties */
+/* Fix RTL list marker positioning and padding */
 .rtl-active ul,
 .rtl-active ol {
   direction: rtl !important;
@@ -511,11 +511,10 @@ html[dir="rtl"] [class*="space-x-"]:not(.ltr-lock) > :not([hidden]) ~ :not([hidd
 
 .rtl-active ul.list-disc,
 .rtl-active ol.list-decimal {
-  padding-inline-start: 1.25rem !important;
-  padding-inline-end: 0 !important;
+  padding-right: 1.25rem !important;
+  padding-left: 0 !important;
 }
 
-/* Use CSS Logical Properties (margin-inline-start/end and padding-inline-start/end) for RTL active elements */
 .rtl-active p,
 .rtl-active li,
 .rtl-active h1,
@@ -525,23 +524,22 @@ html[dir="rtl"] [class*="space-x-"]:not(.ltr-lock) > :not([hidden]) ~ :not([hidd
 .rtl-active h5,
 .rtl-active h6,
 .rtl-active .content-paragraph {
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-  padding-inline-start: 0;
-  padding-inline-end: 0;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
-/* Logical alignment utilities for RTL active containers */
 .rtl-active .ms-auto,
 html[dir="rtl"] .ms-auto {
-  margin-inline-start: auto !important;
-  margin-inline-end: 0 !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
 }
 
 .rtl-active .me-auto,
 html[dir="rtl"] .me-auto {
-  margin-inline-end: auto !important;
-  margin-inline-start: 0 !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
 }
 
 /* Custom logo and rainbow gradient animations */

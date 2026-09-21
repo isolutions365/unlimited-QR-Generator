@@ -391,7 +391,6 @@ export default function GrowthSuite({
             { id: 'profile', label: t('growth.tabProfile', 'User Profile & XP'), icon: User },
             { id: 'community', label: t('growth.tabCommunity', 'Community Hub'), icon: Users },
             { id: 'roadmap', label: t('growth.tabRoadmap', 'Public Roadmap'), icon: Lightbulb },
-            { id: 'testimonials', label: t('growth.tabTestimonials', 'Case Studies'), icon: Layers },
             { id: 'release-notes', label: t('growth.tabReleaseNotes', 'Release Notes'), icon: Calendar },
             { id: 'feedback', label: t('growth.tabFeedback', 'Feedback Center'), icon: Sliders },
           ].map((tab) => {
@@ -1186,84 +1185,7 @@ export default function GrowthSuite({
           </div>
         )}
 
-        {/* 4. CASE STUDIES & SUCCESS CENTER */}
-        {activeTab === 'testimonials' && (
-          <div className="p-6 md:p-8 text-left">
-            <div className="border-b border-slate-100 pb-4 mb-8">
-              <h2 className="text-xl font-black text-slate-800 tracking-tight uppercase">{t('growth.testimonialsTitle', 'Customer Testimonial & Case Studies')}</h2>
-              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                {t('growth.testimonialsDesc', "Discover how leading brands utilize FreeQRBarcodes's high-fidelity designer codes to increase campaign interaction levels.")}
-              </p>
-            </div>
 
-            {/* Testimonials List */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              {[
-                {
-                  quote: t('growth.testimonial1Quote', "We replaced our standard static QR codes with FreeQRBarcodes's rounded classy templates, which resulted in a massive 42% increase in our store app downloads."),
-                  author: t('growth.testimonial1Author', "Marcus Aurel"),
-                  role: t('growth.testimonial1Role', "Head of Marketing, Velox Retail"),
-                  stats: t('growth.testimonial1Stats', "+42% Scan Engagement")
-                },
-                {
-                  quote: t('growth.testimonial2Quote', "Dynamic quiet zone calculations and custom Reed-Solomon protection enabled zero-latency logistics tracking for our warehouses, even under harsh ambient light."),
-                  author: t('growth.testimonial2Author', "Dr. Kenji Tanaka"),
-                  role: t('growth.testimonial2Role', "Operations Lead, Kyoto Express"),
-                  stats: t('growth.testimonial2Stats', "99.9% Read Compatibility")
-                }
-              ].map((tItem, i) => (
-                <div key={i} className="bg-slate-50/60 border border-slate-200 rounded-2xl p-6 relative flex flex-col justify-between">
-                  <div>
-                    <Heart className="w-5 h-5 text-indigo-500 mb-3" />
-                    <p className="text-xs italic text-slate-600 leading-relaxed font-medium">"{tItem.quote}"</p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-slate-150 flex items-center justify-between">
-                    <div>
-                      <span className="block text-xs font-black uppercase tracking-tight text-slate-800">{tItem.author}</span>
-                      <span className="block text-[10px] text-slate-500">{tItem.role}</span>
-                    </div>
-                    <span className="text-[10px] bg-indigo-50 border border-indigo-100 text-indigo-700 py-1 px-3 rounded-full font-bold font-mono">
-                      {tItem.stats}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Case Study Details */}
-            <div className="bg-slate-900 text-slate-100 rounded-2xl p-6 md:p-8 relative overflow-hidden">
-              <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 opacity-10">
-                <Zap className="w-72 h-72 text-indigo-400" />
-              </div>
-              <span className="text-[9px] font-black uppercase tracking-widest text-indigo-400 font-mono block mb-2">{t('growth.caseStudyReport', 'CASE STUDY REPORT')}</span>
-              <h3 className="text-lg font-black uppercase text-white tracking-tight max-w-xl">
-                {t('growth.caseStudyTitle', 'Global Event QR Integration: Elevating Ticket Verification and Customer Retention')}
-              </h3>
-              <p className="text-xs text-slate-300 mt-3 mb-6 leading-relaxed max-w-2xl">
-                {t('growth.caseStudyDesc', 'FreeQRBarcodes collaborated with Horizon Logistics to generate over 120,000 localized ticket codes with integrated error recovery algorithms. Using dynamic routing, planners could alter destination itineraries live during schedules without reprinting.')}
-              </p>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-slate-850">
-                <div>
-                  <span className="block text-[10px] text-slate-400 font-mono uppercase">{t('growth.scanVolumes', 'Scan Volumes')}</span>
-                  <span className="block text-lg font-black text-white font-mono mt-0.5">{t('growth.scanVolumeValue', '120K+')}</span>
-                </div>
-                <div>
-                  <span className="block text-[10px] text-slate-400 font-mono uppercase">{t('growth.setupSpeed', 'Setup Speed')}</span>
-                  <span className="block text-lg font-black text-white font-mono mt-0.5">{t('growth.setupSpeedValue', '< 3 Secs')}</span>
-                </div>
-                <div>
-                  <span className="block text-[10px] text-slate-400 font-mono uppercase">{t('growth.roiFactor', 'ROI Factor')}</span>
-                  <span className="block text-lg font-black text-white font-mono mt-0.5">{t('growth.roiFactorValue', '8.4X')}</span>
-                </div>
-                <div>
-                  <span className="block text-[10px] text-slate-400 font-mono uppercase">{t('growth.scannersUsed', 'Scanners Used')}</span>
-                  <span className="block text-lg font-black text-white font-mono mt-0.5">{t('growth.anyMobile', 'Any Mobile')}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* 5. RELEASE NOTES VIEW */}
         {activeTab === 'release-notes' && (

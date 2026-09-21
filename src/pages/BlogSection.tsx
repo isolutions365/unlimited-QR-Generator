@@ -102,18 +102,12 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
       'description': activeArticle.metaDescription || activeArticle.intro,
       'datePublished': isoDate,
       'dateModified': activeArticle.dateModified ? formatDateToISO(activeArticle.dateModified) : isoDate,
-      'author': (!activeArticle.author || activeArticle.author === 'FreeQRBarcodes' || activeArticle.author.includes('Marcus Vance'))
-        ? {
-            '@type': 'Organization',
-            '@id': 'https://www.freeqrbarcodes.com/#organization',
-            'name': 'FreeQRBarcodes',
-            'url': 'https://www.freeqrbarcodes.com/'
-          }
-        : {
-            '@type': 'Person',
-            'name': activeArticle.author,
-            'url': authorUrl
-          },
+      'author': {
+        '@type': 'Organization',
+        '@id': 'https://www.freeqrbarcodes.com/#organization',
+        'name': 'FreeQRBarcodes',
+        'url': 'https://www.freeqrbarcodes.com/'
+      },
       'publisher': {
         '@type': 'Organization',
         '@id': 'https://www.freeqrbarcodes.com/#organization',
@@ -278,7 +272,7 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-mono font-bold text-slate-400">
               <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {activeArticle.date}</span>
               <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {activeArticle.readingTime}</span>
-              <span className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> {(!activeArticle.author || activeArticle.author.includes('Marcus Vance')) ? 'FreeQRBarcodes' : activeArticle.author}</span>
+              <span className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> {activeArticle.author || 'FreeQRBarcodes'}</span>
             </div>
           </div>
 

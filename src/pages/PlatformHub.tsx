@@ -1417,37 +1417,7 @@ func main() {
                   </div>
                 </div>
 
-                {/* Editorial and Fact Check Block */}
-                <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-xs space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
-                      {t('platform.editorialIntegrityTitle', 'Editorial Integrity & Peer Review')}
-                    </h3>
-                    <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold">
-                      {t('platform.eeatVerified', 'E-E-A-T Verified')}
-                    </span>
-                  </div>
-                  <div className="h-px bg-slate-100"></div>
-                  <div className="flex flex-col md:flex-row gap-6 text-xs text-slate-600 leading-relaxed">
-                    <div className="flex-1 space-y-2">
-                      <div className="font-semibold text-slate-700">
-                        {t('platform.authorProfileTitle', 'Author Profile: Dr. Sarah Chen').replace(/Dr\.\s*Sarah\s*Chen|Sarah\s*Chen/gi, 'Muhammad Mubeen (Founder & Lead Developer)')}
-                      </div>
-                      <p className="text-slate-500 text-[11px]">
-                        {t('platform.authorProfileDesc', 'Senior Technical SEO & Optical Data Architect. Dr. Sarah Chen oversees optical verification, matrix density calibrations, and compatibility mappings to ensure search optimization integrity across our platforms.').replace(/Dr\.\s*Sarah\s*Chen|Sarah\s*Chen/gi, 'Muhammad Mubeen')}
-                      </p>
-                    </div>
-                    <div className="w-px bg-slate-100 hidden md:block"></div>
-                    <div className="flex-1 space-y-2">
-                      <div className="font-semibold text-slate-700">
-                        {t('platform.reviewerProfileTitle', 'Reviewer Profile: FreeQRBarcodes Engineering Team').replace(/Marcus\s*Vance,\s*CISSP|Marcus\s*Vance/gi, 'FreeQRBarcodes Engineering Team')}
-                      </div>
-                      <p className="text-slate-500 text-[11px]">
-                        {t('platform.reviewerProfileDesc', 'FreeQRBarcodes Engineering Team audits input sanitization, data encryption, and local sandbox boundaries to maintain security and compliance.').replace(/Marcus/gi, 'The FreeQRBarcodes Engineering Team')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+
               </div>
 
               {/* Sidebar Citation Blocks */}
