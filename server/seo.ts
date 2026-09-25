@@ -329,6 +329,14 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     dateModified: '2026-09-21',
     author: 'FreeQRBarcodes',
     category: 'Social Media Marketing'
+  },
+  'qr-code-for-google-maps': {
+    title: 'How to Create a QR Code for Google Maps and Directions',
+    description: 'Learn how to create a QR code for a Google Maps location or directions link, choose between a shared URL, coordinates, or Place ID, and test it before printing.',
+    date: '2026-09-25',
+    dateModified: '2026-09-25',
+    author: 'FreeQRBarcodes',
+    category: 'QR Code Guides'
   }
 };
 

@@ -1,4 +1,3 @@
-Sitemap generation validated: successfully compiled exactly 153 verified canonical URLs.
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -794,6 +793,24 @@ Sitemap generation validated: successfully compiled exactly 153 verified canonic
   <url>
     <loc>https://www.freeqrbarcodes.com/blog/qr-code-for-surveys-and-feedback</loc>
     <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/how-to-create-qr-code-for-social-media</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/qr-code-for-google-maps</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.freeqrbarcodes.com/blog/how-to-print-qr-codes-on-different-materials</loc>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -619,6 +619,24 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     author: 'FreeQRBarcodes',
     category: 'Social Media Marketing'
   },
+  {
+    slug: 'qr-code-for-google-maps',
+    date: '2026-09-25',
+    dateModified: '2026-09-25',
+    title: 'How to Create a QR Code for Google Maps and Directions',
+    description: 'Learn how to create a QR code for a Google Maps location or directions link, choose between a shared URL, coordinates, or Place ID, and test it before printing.',
+    author: 'FreeQRBarcodes',
+    category: 'QR Code Guides'
+  },
+  {
+    slug: 'how-to-print-qr-codes-on-different-materials',
+    date: '2026-09-25',
+    dateModified: '2026-09-25',
+    title: 'How to Print Durable QR Codes on Paper, Plastic, Metal, Glass, and Fabric',
+    description: 'Learn how paper, plastic, metal, glass, fabric, curvature, glare, weather, print methods, and quiet zones affect QR code scanning and durability.',
+    author: 'FreeQRBarcodes',
+    category: 'Print Production & Marking'
+  },
 ];
 
 export function getAllVerifiedRoutes(): VerifiedRoute[] {
