@@ -196,9 +196,11 @@ export default function ZatcaInvoiceGenerator({
   const [inspectorInput, setInspectorInput] = useState('');
   const [copied, setCopied] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null);
+  const [qrDataUrl, setQrDataUrl] = useState<string>('');
 
-  // Canvas Ref
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Canvas Refs
+  const builderCanvasRef = useRef<HTMLCanvasElement>(null);
+  const receiptCanvasRef = useRef<HTMLCanvasElement>(null);
   const printRef = useRef<HTMLDivElement>(null);
 
   // Calculated totals
@@ -277,40 +279,72 @@ export default function ZatcaInvoiceGenerator({
     setTimestamp(new Date().toISOString().slice(0, 19) + 'Z');
   };
 
-  // Render QR Code onto canvas
+  // Render QR Code onto canvas and generate image data URL
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    let isCancelled = false;
 
-    renderStyledQR(
-      canvas,
-      tlvBase64,
-      {
+    const generateAndRender = async () => {
+      if (!tlvBase64) return;
+
+      const renderOptions = {
         fgColor,
         bgColor,
-        gradientType: 'none',
+        gradientType: 'none' as const,
         gradientColor: '#059669',
         dotStyle,
         eyeStyle,
         margin: 16,
-        errorCorrectionLevel: 'M',
-        frameStyle: showFrame ? 'custom' : 'none',
+        errorCorrectionLevel: 'M' as const,
+        frameStyle: (showFrame ? 'custom' : 'none') as FrameStyle,
         frameText: showFrame ? frameText : '',
         frameColor: '#059669',
         frameTextColor: '#ffffff',
         frameFontSize: 13,
-        frameTextPosition: 'bottom'
+        frameTextPosition: 'bottom' as const
+      };
+
+      try {
+        const offscreen = document.createElement('canvas');
+        await renderStyledQR(offscreen, tlvBase64, renderOptions);
+        if (!isCancelled) {
+          const dataUrl = offscreen.toDataURL('image/png', 1.0);
+          setQrDataUrl(dataUrl);
+        }
+      } catch (err) {
+        console.error('Failed to generate offscreen QR:', err);
       }
-    );
-  }, [tlvBase64, fgColor, bgColor, dotStyle, eyeStyle, showFrame, frameText, qrSize]);
+
+      if (builderCanvasRef.current && !isCancelled) {
+        try {
+          await renderStyledQR(builderCanvasRef.current, tlvBase64, renderOptions);
+        } catch (err) {
+          console.error('Failed to render builder canvas QR:', err);
+        }
+      }
+
+      if (receiptCanvasRef.current && !isCancelled) {
+        try {
+          await renderStyledQR(receiptCanvasRef.current, tlvBase64, renderOptions);
+        } catch (err) {
+          console.error('Failed to render receipt canvas QR:', err);
+        }
+      }
+    };
+
+    generateAndRender();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [tlvBase64, fgColor, bgColor, dotStyle, eyeStyle, showFrame, frameText, qrSize, activeSubView]);
 
   // Download QR image
   const handleDownload = (format: 'png' | 'svg') => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const dataUrl = qrDataUrl || builderCanvasRef.current?.toDataURL('image/png', 1.0) || receiptCanvasRef.current?.toDataURL('image/png', 1.0);
+    if (!dataUrl) return;
     const link = document.createElement('a');
     link.download = `ZATCA-QR-${invoiceNumber || 'invoice'}.${format}`;
-    link.href = canvas.toDataURL('image/png', 1.0);
+    link.href = dataUrl;
     link.click();
   };
 
@@ -815,12 +849,21 @@ export default function ZatcaInvoiceGenerator({
               </div>
 
               {/* Canvas Renderer */}
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center shadow-inner relative group">
-                <canvas
-                  ref={canvasRef}
-                  className="max-w-full h-auto rounded-xl shadow-xs"
-                  style={{ width: '260px', height: 'auto' }}
-                />
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center shadow-inner relative group min-h-[280px]">
+                {qrDataUrl ? (
+                  <img
+                    src={qrDataUrl}
+                    alt="رمز الاستجابة السريعة المعتمد ZATCA"
+                    className="max-w-full h-auto rounded-xl shadow-xs object-contain"
+                    style={{ width: '260px', height: '260px' }}
+                  />
+                ) : (
+                  <canvas
+                    ref={builderCanvasRef}
+                    className="max-w-full h-auto rounded-xl shadow-xs"
+                    style={{ width: '260px', height: '260px' }}
+                  />
+                )}
               </div>
 
               {/* QR Metadata Badge */}
@@ -1007,11 +1050,20 @@ export default function ZatcaInvoiceGenerator({
 
               {/* QR Code in Print View */}
               <div className="flex flex-col items-center">
-                <canvas
-                  ref={canvasRef}
-                  style={{ width: '130px', height: 'auto' }}
-                  className="rounded-lg border border-slate-200"
-                />
+                {qrDataUrl ? (
+                  <img
+                    src={qrDataUrl}
+                    alt="رمز التحقق ZATCA"
+                    style={{ width: '130px', height: '130px' }}
+                    className="rounded-lg border border-slate-200 bg-white object-contain shadow-2xs"
+                  />
+                ) : (
+                  <canvas
+                    ref={receiptCanvasRef}
+                    style={{ width: '130px', height: '130px' }}
+                    className="rounded-lg border border-slate-200 bg-white"
+                  />
+                )}
                 <span className="text-[9px] font-mono text-slate-500 mt-1">رمز التحقق ZATCA</span>
               </div>
             </div>

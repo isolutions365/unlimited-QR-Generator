@@ -151,12 +151,7 @@ function injectJsonLd(config: LocalizedSEOConfig, locale: Locale, doc: Document)
     "name": "FreeQRBarcodes",
     "url": canonicalUrl,
     "description": config.description,
-    "inLanguage": locale,
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": `${getProductionBaseUrl()}${locale === 'en' ? '' : '/' + locale}/?search={search_term_string}`,
-      "query-input": "required name=search_term_string"
-    }
+    "inLanguage": locale
   };
 
   const scripts: Record<string, any>[] = [webSiteSchema];
@@ -174,24 +169,6 @@ function injectJsonLd(config: LocalizedSEOConfig, locale: Locale, doc: Document)
       }))
     };
     scripts.push(breadcrumbSchema);
-  }
-
-  // 3. Product / Tool Schema (for the QR Generator itself)
-  if (config.type === 'product') {
-    const productSchema = {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "name": config.title,
-      "description": config.description,
-      "image": config.image || `${getProductionBaseUrl()}/apple-touch-icon.png`,
-      "offers": {
-        "@type": "Offer",
-        "price": "0.00",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/InStock"
-      }
-    };
-    scripts.push(productSchema);
   }
 
   // Inject into document head

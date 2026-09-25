@@ -1930,14 +1930,6 @@ export default function App() {
           "description": "Design secure, highly custom dynamic QR codes with color gradients, custom dot patterns, embedded logos, and real-time short-link scan analytics.",
           "publisher": {
             "@id": `${rootUrl}/#organization`
-          },
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": `${rootUrl}/?search={search_term_string}`
-            },
-            "query-input": "required name=search_term_string"
           }
         },
         {
@@ -1963,30 +1955,26 @@ export default function App() {
         {
           "@type": "WebApplication",
           "@id": `${rootUrl}/#webapplication`,
-          "name": "Free QR Code Generator & Analytics Platform",
+          "name": "Free QR Code and Barcode Generator",
           "url": rootUrl,
-          "speakable": {
-            "@type": "SpeakableSpecification",
-            "cssSelector": [
-              "#studio-main-heading",
-              "#studio-direct-answer-summary"
-            ]
-          },
-          "operatingSystem": "All Mobile, Tablet, and Desktop web browsers",
-          "applicationCategory": "DesignApplication, UtilitiesApplication",
-          "browserRequirements": "Requires JavaScript. Supports HTML5 Canvas.",
+          "description": "Create static QR codes and linear 1D barcodes in your browser, customize their appearance, and export PNG, SVG, or PDF files. Optional hosted dynamic-link features are separate and depend on the redirect service.",
+          "operatingSystem": "Any",
+          "applicationCategory": "UtilitiesApplication",
+          "browserRequirements": "Requires JavaScript",
           "offers": {
             "@type": "Offer",
-            "price": "0.00",
+            "price": "0",
             "priceCurrency": "USD"
           },
           "featureList": [
-            "Dynamic QR Code Generation",
-            "WiFi Connection QR Setup",
-            "vCard Interactive Business Cards",
-            "Scan Count & Real-time Location Analytics",
-            "Gradient Fill & Customized QR Eye Designs",
-            "Custom Logo branding integration"
+            "URL QR: Direct client-side static web links and optional dynamic redirects.",
+            "PDF QR: Document linking for restaurant menus, brochures, and digital guides.",
+            "WiFi QR: Direct WiFi network authentication payload with no typed password.",
+            "vCard QR: Offline-compatible digital contact cards directly to device address books.",
+            "Email QR: Direct mailto link encoding receiver and subject fields.",
+            "SMS QR: Direct SMS message encoding recipient and preset body text.",
+            "WhatsApp QR: Direct click-to-chat messaging links for customer communication.",
+            "Barcode Generator: Standard 1D barcodes including Code128, EAN-13, and UPC-A."
           ],
           "creator": {
             "@id": `${rootUrl}/#organization`

@@ -474,93 +474,12 @@ app.use(compression({
     });
   }
 
-  // Explicit /api/health endpoint with dependency ping checks and environment auditing
-  app.get('/api/health', async (req, res) => {
-    const startTime = Date.now();
-    const envAudit = {
-      node_env: process.env.NODE_ENV || 'development',
-      has_gemini_key: !!process.env.GEMINI_API_KEY,
-      has_firebase_config: !!(process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID),
-      has_jwt_secret: !!process.env.JWT_SECRET,
-    };
-
-    let firebaseStatus: { status: string; isFallbackMode: boolean; latencyMs?: number; message?: string; error?: string } = {
-      status: 'unknown',
-      isFallbackMode: false,
-    };
-
-    let geminiStatus: { status: string; configured: boolean; latencyMs?: number; message?: string; error?: string } = {
-      status: 'unknown',
-      configured: envAudit.has_gemini_key,
-    };
-
-    // 1. Firebase Firestore ping test
-    try {
-      const fbStartTime = Date.now();
-      if (!adminDb) {
-        throw new Error('Firebase Admin DB is unavailable or not initialized');
-      }
-
-      // Fast, 100% non-blocking check to confirm the Admin SDK has loaded and initialized with a valid database ID
-      const projectId = (adminDb as any).projectId || 'unknown';
-      firebaseStatus = {
-        status: 'ok',
-        isFallbackMode: false,
-        latencyMs: Date.now() - fbStartTime,
-        message: 'Firebase connection verified (Admin SDK initialized for project: ' + projectId + ')',
-      };
-    } catch (fbErr: any) {
-      firebaseStatus = {
-        status: 'degraded',
-        isFallbackMode: false,
-        message: fbErr?.message || 'Firebase Admin DB is unavailable or not initialized',
-        error: String(fbErr?.message || fbErr),
-      };
-    }
-
-    // 2. Gemini AI ping test
-    if (!envAudit.has_gemini_key) {
-      geminiStatus = {
-        status: 'not_configured',
-        configured: false,
-        message: 'GEMINI_API_KEY is missing from environment variables',
-      };
-    } else {
-      try {
-        const geminiStartTime = Date.now();
-        const client = getGoogleAiClient();
-        if (client) {
-          geminiStatus = {
-            status: 'ok',
-            configured: true,
-            latencyMs: Date.now() - geminiStartTime,
-            message: 'GoogleGenAI client initialized and ready',
-          };
-        }
-      } catch (geminiErr: any) {
-        geminiStatus = {
-          status: 'error',
-          configured: true,
-          message: 'Gemini client initialization failed',
-          error: String(geminiErr?.message || geminiErr),
-        };
-      }
-    }
-
-    const overallStatus = (firebaseStatus.status === 'ok' && (geminiStatus.status === 'ok' || geminiStatus.status === 'not_configured'))
-      ? 'ok'
-      : 'degraded';
-
+  // Minimal and safe /api/health endpoint
+  app.get('/api/health', (req, res) => {
     res.status(200).json({
-      status: overallStatus,
+      status: 'ok',
       timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      responseTimeMs: Date.now() - startTime,
-      environment: envAudit,
-      dependencies: {
-        firebase: firebaseStatus,
-        gemini: geminiStatus,
-      },
+      uptime: process.uptime()
     });
   });
 
@@ -2755,7 +2674,10 @@ Generate the 'payload' matching the precise data schema for the selected categor
   // Handler for QR Redirection & Telemetry Tracking
   const handleQRRedirect = async (req: express.Request, res: express.Response) => {
     const { trackingId } = req.params;
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, private');
+    res.setHeader('Cache-Control', 'no-store, private, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     console.log(`[Short-Link Redirect] Request received for shortCode/trackingId: "${trackingId}"`);
 
     const escapeHtml = (str: string) => {
@@ -3051,49 +2973,70 @@ Generate the 'payload' matching the precise data schema for the selected categor
     if (fs.existsSync(robotsPath)) {
       return res.sendFile(robotsPath);
     }
-    const robots = `# Standard Search Engine Crawlers
+    const robots = `User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
+
 User-agent: Googlebot
 Allow: /
 Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
 
 User-agent: Bingbot
 Allow: /
 Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
 
-# AI & LLM Crawlers
 User-agent: GPTBot
 Allow: /
 Disallow: /api/
-
-User-agent: ChatGPT-User
-Allow: /
-Disallow: /api/
-
-User-agent: PerplexityBot
-Allow: /
-Disallow: /api/
-
-User-agent: ClaudeBot
-Allow: /
-Disallow: /api/
-
-User-agent: Claude-Web
-Allow: /
-Disallow: /api/
-
-User-agent: Google-Extended
-Allow: /
-Disallow: /api/
-
-User-agent: CCBot
-Allow: /
-Disallow: /api/
-
-# Default Rules for All Other Crawlers
-User-agent: *
-Allow: /
-Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
 Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
 
 Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
     res.send(robots);

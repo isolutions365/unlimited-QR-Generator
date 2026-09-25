@@ -1,45 +1,66 @@
-# Standard Search Engine Crawlers
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
+
 User-agent: Googlebot
 Allow: /
 Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
 
 User-agent: Bingbot
 Allow: /
 Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
 
-# AI & LLM Crawlers
 User-agent: GPTBot
 Allow: /
 Disallow: /api/
-
-User-agent: ChatGPT-User
-Allow: /
-Disallow: /api/
-
-User-agent: PerplexityBot
-Allow: /
-Disallow: /api/
-
-User-agent: ClaudeBot
-Allow: /
-Disallow: /api/
-
-User-agent: Claude-Web
-Allow: /
-Disallow: /api/
-
-User-agent: Google-Extended
-Allow: /
-Disallow: /api/
-
-User-agent: CCBot
-Allow: /
-Disallow: /api/
-
-# Default Rules for All Other Crawlers
-User-agent: *
-Allow: /
-Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
 Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /settings/
+Disallow: /embed/
+Disallow: /_redirects/
+Disallow: /qr/
+Disallow: /r/
 
 Sitemap: https://www.freeqrbarcodes.com/sitemap.xml

@@ -610,6 +610,15 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     author: 'FreeQRBarcodes',
     category: 'Business Marketing'
   },
+  {
+    slug: 'how-to-create-qr-code-for-social-media',
+    date: '2026-09-21',
+    dateModified: '2026-09-21',
+    title: 'How to Create a QR Code for Social Media Profiles',
+    description: 'Learn how to create a QR code for social media profiles, choose between single profiles and link-in-bio pages, test print placement, and avoid same-device scanning pitfalls.',
+    author: 'FreeQRBarcodes',
+    category: 'Social Media Marketing'
+  },
 ];
 
 export function getAllVerifiedRoutes(): VerifiedRoute[] {

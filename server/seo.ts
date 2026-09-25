@@ -321,6 +321,14 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     dateModified: '2026-09-20',
     author: 'FreeQRBarcodes',
     category: 'Business Marketing'
+  },
+  'how-to-create-qr-code-for-social-media': {
+    title: 'How to Create a QR Code for Social Media Profiles',
+    description: 'Learn how to create a QR code for social media profiles, choose between single profiles and link-in-bio pages, test print placement, and avoid same-device scanning pitfalls.',
+    date: '2026-09-21',
+    dateModified: '2026-09-21',
+    author: 'FreeQRBarcodes',
+    category: 'Social Media Marketing'
   }
 };
 
@@ -433,15 +441,7 @@ export function buildHomepageSchema(locale: SupportedLocale = 'en') {
         "@id": "https://www.freeqrbarcodes.com/#website",
         "name": "FreeQRBarcodes",
         "url": "https://www.freeqrbarcodes.com/",
-        "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://www.freeqrbarcodes.com/?q={search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
-        }
+        "publisher": { "@id": "https://www.freeqrbarcodes.com/#organization" }
       },
       {
         "@type": "WebPage",
@@ -456,9 +456,9 @@ export function buildHomepageSchema(locale: SupportedLocale = 'en') {
       {
         "@type": "WebApplication",
         "@id": `${pageUrl}#webapplication`,
-        "name": "Free QR Code Generator - Dynamic QR Codes & Custom Creator",
+        "name": "Free QR Code and Barcode Generator",
         "url": pageUrl,
-        "description": "Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.",
+        "description": "Create static QR codes and linear 1D barcodes in your browser, customize their appearance, and export PNG, SVG, or PDF files. Optional hosted dynamic-link features are separate and depend on the redirect service.",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any",
         "browserRequirements": "Requires JavaScript",
@@ -468,14 +468,14 @@ export function buildHomepageSchema(locale: SupportedLocale = 'en') {
           "priceCurrency": "USD"
         },
         "featureList": [
-          "URL QR: Secure web redirects with live trackable shortened links.",
-          "PDF QR: Contactless dynamic documents loading restaurant menus & guides.",
-          "WiFi QR: Auto-pair guests to local wireless routers with no password typed.",
-          "vCard QR: Share rich digital contact records immediately to scanners.",
-          "Email QR: Preconfigure receiver addresses with customized boilerplate body text.",
-          "SMS QR: Compose direct-to-text messages with pre-allocated phone nodes.",
-          "WhatsApp QR: Trigger instant customized chat logs instantly with customer staff.",
-          "Social QR: Consolidate bio-links directly to Instagram, Facebook and Youtube."
+          "URL QR: Direct client-side static web links and optional dynamic redirects.",
+          "PDF QR: Document linking for restaurant menus, brochures, and digital guides.",
+          "WiFi QR: Direct WiFi network authentication payload with no typed password.",
+          "vCard QR: Offline-compatible digital contact cards directly to device address books.",
+          "Email QR: Direct mailto link encoding receiver and subject fields.",
+          "SMS QR: Direct SMS message encoding recipient and preset body text.",
+          "WhatsApp QR: Direct click-to-chat messaging links for customer communication.",
+          "Barcode Generator: Standard 1D barcodes including Code128, EAN-13, and UPC-A."
         ]
       },
       {
@@ -1429,7 +1429,8 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     // --- BLOG POST SEO ---
     else if (isBlogPost && blogArticles[blogSlug]) {
       const article = blogArticles[blogSlug];
-      pageTitle = `${article.title} - FreeQRBarcodes Blog`;
+      const blogSuffix = blogSlug === 'how-to-create-qr-code-for-social-media' ? ' | FreeQRBarcodes Blog' : ' - FreeQRBarcodes Blog';
+      pageTitle = `${article.title}${blogSuffix}`;
       pageDescription = article.description;
       schemaJson = buildBlogSchema(blogSlug, article, locale);
       
