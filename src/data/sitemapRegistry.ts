@@ -637,6 +637,15 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     author: 'FreeQRBarcodes',
     category: 'Print Production & Marking'
   },
+  {
+    slug: 'qr-codes-for-events-and-webinars',
+    date: '2026-09-26',
+    dateModified: '2026-09-26',
+    title: 'How to Use QR Codes for Events, Registration, and Webinars',
+    description: 'Learn how to use QR codes for event registration, webinar access, calendar links, venue directions, attendee check-in, schedules, and post-event feedback.',
+    author: 'FreeQRBarcodes',
+    category: 'QR Code Guides'
+  },
 ];
 
 export function getAllVerifiedRoutes(): VerifiedRoute[] {

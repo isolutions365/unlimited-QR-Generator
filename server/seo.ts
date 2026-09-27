@@ -71,6 +71,7 @@ export interface BlogArticleMeta {
   dateModified: string;
   author: string;
   category: string;
+  faqs?: { question: string; answer: string; }[];
 }
 
 export const blogArticles: Record<string, BlogArticleMeta> = {
@@ -337,6 +338,56 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     dateModified: '2026-09-25',
     author: 'FreeQRBarcodes',
     category: 'QR Code Guides'
+  },
+  'how-to-print-qr-codes-on-different-materials': {
+    title: 'How to Print Durable QR Codes on Paper, Plastic, Metal, Glass, and Fabric',
+    description: 'Learn how paper, plastic, metal, glass, fabric, curvature, glare, weather, print methods, and quiet zones affect QR code scanning and durability.',
+    date: '2026-09-25',
+    dateModified: '2026-09-25',
+    author: 'FreeQRBarcodes',
+    category: 'Print Production & Marking'
+  },
+  'qr-codes-for-events-and-webinars': {
+    title: 'How to Use QR Codes for Events, Registration, and Webinars',
+    description: 'Learn how to use QR codes for event registration, webinar access, calendar links, venue directions, attendee check-in, schedules, and post-event feedback.',
+    date: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: 'FreeQRBarcodes',
+    category: 'QR Code Guides',
+    faqs: [
+      {
+        question: 'Does scanning an event QR code automatically register me for the event?',
+        answer: 'No. Scanning an event QR code simply opens the registration web page on your smartphone browser. You must fill out the required form fields, accept terms, and click submit to complete your registration.'
+      },
+      {
+        question: 'Will a calendar QR code add an event without my permission?',
+        answer: 'No. Operating systems and calendar applications require explicit user confirmation before saving any event to your personal calendar. The QR code provides the formatted event data, but you must click Add to Calendar or Save to confirm.'
+      },
+      {
+        question: 'Can I change my event date or location after printing QR codes?',
+        answer: 'Yes, provided you use a dynamic QR code. Dynamic QR codes route through an editable short URL, allowing you to update the destination web page or calendar link in your dashboard anytime without reprinting physical materials.'
+      },
+      {
+        question: 'Is a generic QR code secure enough to prevent ticket fraud?',
+        answer: 'No. A generic QR code that opens a common public link cannot prevent ticket duplication or verify attendee identity. Secure admission ticketing requires unique, individualized QR tokens paired with real-time gate scanner validation.'
+      },
+      {
+        question: 'Can I use a QR code for a virtual webinar on Zoom or Teams?',
+        answer: 'Yes. You can link attendees directly to a webinar registration page or waiting room. However, never publicly print administrative or host URLs containing passwords or elevated privileges.'
+      },
+      {
+        question: 'Does an event QR code work if attendees do not have internet access?',
+        answer: 'QR codes that link to web pages, online registration forms, or streaming webinars require an active internet connection. Only static QR codes encoding raw plain text or direct vCard/vEvent payloads can be decoded entirely offline without data service.'
+      },
+      {
+        question: 'Why do scan counts differ from actual event attendance numbers?',
+        answer: 'Scan counts measure total optical camera decodes and redirect requests, which include duplicate scans, accidental camera triggers, and curious browsers who never complete registration. Actual attendance is measured by gate check-ins or webinar join logs.'
+      },
+      {
+        question: 'What is the required quiet zone for an event QR code?',
+        answer: 'Under ISO/IEC 18004:2024, standard QR codes require a blank quiet zone at least 4 modules wide on all four sides. This margin must remain completely free of text, borders, logos, and background artwork.'
+      }
+    ]
   }
 };
 
@@ -508,7 +559,7 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
   const homeUrl = locale === 'en' ? `${baseUrl}/` : `${baseUrl}/${locale}`;
   const homeName = LOCALE_HOME_NAMES[locale] || 'Home';
 
-  return {
+  const schema: any = {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -558,11 +609,7 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
           "@id": articleUrl
         },
         "inLanguage": locale,
-        "articleSection": article.category,
-        "speakable": {
-          "@type": "SpeakableSpecification",
-          "cssSelector": ["#article-intro-text", "#article-main-body"]
-        }
+        "articleSection": article.category
       },
       {
         "@type": "BreadcrumbList",
@@ -589,6 +636,22 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
       }
     ]
   };
+
+  if (article.faqs && article.faqs.length > 0) {
+    schema["@graph"].push({
+      "@type": "FAQPage",
+      "mainEntity": article.faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    });
+  }
+
+  return schema;
 }
 
 export function buildLandingPageSchema(slug: string, route: SitemapRoute, locale: SupportedLocale = 'en') {
@@ -1821,6 +1884,9 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     }
     if (html.includes('property="og:url"')) {
       html = html.replace(/<meta[^>]*property=["']og:url["'][^>]*>/i, `<meta property="og:url" content="${pageUrl}" />`);
+    }
+    if (html.includes('property="og:type"')) {
+      html = html.replace(/<meta[^>]*property=["']og:type["'][^>]*>/i, `<meta property="og:type" content="${isBlogPost ? 'article' : 'website'}" />`);
     }
     
     // Inject Twitter Card Tags
