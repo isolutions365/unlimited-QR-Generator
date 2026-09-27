@@ -71,7 +71,6 @@ export interface BlogArticleMeta {
   dateModified: string;
   author: string;
   category: string;
-  faqs?: { question: string; answer: string; }[];
 }
 
 export const blogArticles: Record<string, BlogArticleMeta> = {
@@ -353,41 +352,7 @@ export const blogArticles: Record<string, BlogArticleMeta> = {
     date: '2026-09-26',
     dateModified: '2026-09-26',
     author: 'FreeQRBarcodes',
-    category: 'QR Code Guides',
-    faqs: [
-      {
-        question: 'Does scanning an event QR code automatically register me for the event?',
-        answer: 'No. Scanning an event QR code simply opens the registration web page on your smartphone browser. You must fill out the required form fields, accept terms, and click submit to complete your registration.'
-      },
-      {
-        question: 'Will a calendar QR code add an event without my permission?',
-        answer: 'No. Operating systems and calendar applications require explicit user confirmation before saving any event to your personal calendar. The QR code provides the formatted event data, but you must click Add to Calendar or Save to confirm.'
-      },
-      {
-        question: 'Can I change my event date or location after printing QR codes?',
-        answer: 'Yes, provided you use a dynamic QR code. Dynamic QR codes route through an editable short URL, allowing you to update the destination web page or calendar link in your dashboard anytime without reprinting physical materials.'
-      },
-      {
-        question: 'Is a generic QR code secure enough to prevent ticket fraud?',
-        answer: 'No. A generic QR code that opens a common public link cannot prevent ticket duplication or verify attendee identity. Secure admission ticketing requires unique, individualized QR tokens paired with real-time gate scanner validation.'
-      },
-      {
-        question: 'Can I use a QR code for a virtual webinar on Zoom or Teams?',
-        answer: 'Yes. You can link attendees directly to a webinar registration page or waiting room. However, never publicly print administrative or host URLs containing passwords or elevated privileges.'
-      },
-      {
-        question: 'Does an event QR code work if attendees do not have internet access?',
-        answer: 'QR codes that link to web pages, online registration forms, or streaming webinars require an active internet connection. Only static QR codes encoding raw plain text or direct vCard/vEvent payloads can be decoded entirely offline without data service.'
-      },
-      {
-        question: 'Why do scan counts differ from actual event attendance numbers?',
-        answer: 'Scan counts measure total optical camera decodes and redirect requests, which include duplicate scans, accidental camera triggers, and curious browsers who never complete registration. Actual attendance is measured by gate check-ins or webinar join logs.'
-      },
-      {
-        question: 'What is the required quiet zone for an event QR code?',
-        answer: 'Under ISO/IEC 18004:2024, standard QR codes require a blank quiet zone at least 4 modules wide on all four sides. This margin must remain completely free of text, borders, logos, and background artwork.'
-      }
-    ]
+    category: 'QR Code Guides'
   }
 };
 
@@ -636,21 +601,6 @@ export function buildBlogSchema(slug: string, article: BlogArticleMeta, locale: 
       }
     ]
   };
-
-  if (article.faqs && article.faqs.length > 0) {
-    schema["@graph"].push({
-      "@type": "FAQPage",
-      "mainEntity": article.faqs.map(faq => ({
-        "@type": "Question",
-        "name": faq.question,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": faq.answer
-        }
-      }))
-    });
-  }
-
   return schema;
 }
 
@@ -1382,7 +1332,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     const cached = seoResponseCache.get(cacheKey);
     const now = Date.now();
     if (cached && (now - cached.timestamp) < SEO_CACHE_TTL_MS) {
-      res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
+      res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
       res.setHeader('CDN-Cache-Control', 'no-store');
@@ -1932,7 +1882,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     }
 
     // Set high performance non-stale headers and CSP report-only header
-    res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
+    res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
     res.setHeader('CDN-Cache-Control', 'no-store');

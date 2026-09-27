@@ -157,50 +157,6 @@ export default function BlogSection({ initialSlug, onNavigate, locale: propLocal
     };
   }, [articleSchema]);
 
-  // Dynamically compute FAQPage JSON-LD schema when article has FAQs
-  const faqSchema = useMemo(() => {
-    if (!activeArticle || !activeArticle.relatedFAQs || activeArticle.relatedFAQs.length === 0) return null;
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      'mainEntity': activeArticle.relatedFAQs.map(faq => ({
-        '@type': 'Question',
-        'name': faq.question,
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': faq.answer
-        }
-      }))
-    };
-  }, [activeArticle]);
-
-  // Synchronize dynamic FAQ script tag in document.head
-  useEffect(() => {
-    const faqScriptId = 'blog-article-faq-jsonld';
-    let faqScriptEl = document.getElementById(faqScriptId);
-
-    if (faqSchema) {
-      if (!faqScriptEl) {
-        faqScriptEl = document.createElement('script');
-        faqScriptEl.id = faqScriptId;
-        faqScriptEl.setAttribute('type', 'application/ld+json');
-        document.head.appendChild(faqScriptEl);
-      }
-      faqScriptEl.textContent = JSON.stringify(faqSchema, null, 2);
-    } else {
-      if (faqScriptEl) {
-        faqScriptEl.remove();
-      }
-    }
-
-    return () => {
-      const el = document.getElementById(faqScriptId);
-      if (el) {
-        el.remove();
-      }
-    };
-  }, [faqSchema]);
-
   // Filter articles based on category selection
   const filteredArticles = useMemo(() => {
     if (selectedCategory === 'all') return localizedArticles;
