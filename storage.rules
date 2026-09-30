@@ -1,0 +1,16 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // --- PDF SHARES (Server-Mediated Fortress Gate) ---
+    // Direct client reads and writes are completely denied.
+    // All uploads, access control, and downloads are mediated by the trusted server via Firebase Admin SDK.
+    match /pdf_shares/{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Default deny for all other storage paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

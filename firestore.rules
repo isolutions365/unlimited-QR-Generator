@@ -169,13 +169,14 @@ service cloud.firestore {
       allow delete: if isSignedIn() && existing().userId == request.auth.uid;
     }
 
-    // --- PDF SHARES COLLECTION ---
+    // --- PDF SHARES COLLECTION (Server-Mediated Fortress Gate: Direct browser access completely denied) ---
     match /pdf_shares/{shareId} {
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
-      allow get: if true; // Publicly readable for QR scanner redirect or download page
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
-      allow update: if true; // Let anonymous users increment download/view counts
-      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+      allow read, write: if false; // All client reads and writes denied; managed exclusively server-side via Firebase Admin SDK
+    }
+
+    // --- PDF SHARE RATE LIMITS (Server-Only Backend) ---
+    match /pdf_share_rate_limits/{limitId} {
+      allow read, write: if false; // Only accessed server-side via Firebase Admin SDK
     }
 
     // --- CUSTOM FORMS COLLECTION ---

@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import { dbInstance, hashPassword, verifyPassword, getDb, isFallbackMode, DbScan, DbProject } from './server/db';
 import { adminDb } from './server/firebase-admin';
 import { doc, getDoc, getDocs, collection, query, where, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { createPdfSharingRouter } from './server/pdf-shares';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, Type } from '@google/genai';
 import { getBlogArticles, checkArticleTranslationStatus } from './src/data/blogData';
@@ -228,6 +229,10 @@ const formRateLimiter = createRateLimiter({
 
 export const app = express();
 
+// Configure trusted reverse-proxy hop for Google Cloud Run / Firebase App Hosting
+// 1 hop corresponds to the Google Front End (GFE) / Cloud Run reverse proxy layer
+app.set('trust proxy', 1);
+
 // Security Headers Middleware
 app.use((req, res, next) => {
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
@@ -292,7 +297,8 @@ app.use(compression({
     }
   }));
 
-  app.use(express.json());
+  app.use(express.json({ limit: '15mb' }));
+  app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
   // Tight and Strict CORS policy configuration
   const allowedOrigins = [
@@ -3069,6 +3075,8 @@ Sitemap: https://www.freeqrbarcodes.com/sitemap.xml`;
     next();
   });
 
+  // Mount PDF Sharing & Document Access Control Router
+  app.use(createPdfSharingRouter());
 
   app.use('/api/*', (req, res) => {
     res.status(404).json({

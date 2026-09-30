@@ -646,6 +646,15 @@ export const blogArticleSlugs: { slug: string; date: string; dateModified: strin
     author: 'FreeQRBarcodes',
     category: 'QR Code Guides'
   },
+  {
+    slug: 'qr-codes-for-document-management',
+    date: '2026-09-28',
+    dateModified: '2026-09-28',
+    title: 'How to Use QR Codes for Document Management and File Access',
+    description: 'Learn how QR codes can link to PDFs, manuals, policies, forms, drawings, and versioned files while preserving access control, document updates, and audit boundaries.',
+    author: 'FreeQRBarcodes',
+    category: 'QR Code Guides'
+  },
 ];
 
 export function getAllVerifiedRoutes(): VerifiedRoute[] {

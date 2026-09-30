@@ -2044,7 +2044,9 @@ export default function App() {
     const currentSlug = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
     const isGeneratorRoute = cleanPath === '/generator' || cleanPath === '/tool' || cleanPath === '/studio';
 
-    if (isGeneratorRoute) {
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#pdf-')) {
+      setActiveTab('pdf');
+    } else if (isGeneratorRoute) {
       const searchParams = new URLSearchParams(window.location.search);
       const tabParam = searchParams.get('tab');
       if (tabParam) {
@@ -2125,6 +2127,16 @@ export default function App() {
       });
     }
   }, [cleanPath]);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (typeof window !== 'undefined' && window.location.hash.startsWith('#pdf-')) {
+        setActiveTab('pdf');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   const navigateTo = (path: string) => {
     const { cleanPath: targetClean } = extractLocaleAndPath(path);

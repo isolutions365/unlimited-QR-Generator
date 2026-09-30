@@ -7,9 +7,8 @@ import {
   Zap, ExternalLink, HelpCircle, Lock, LockOpen, Info,
   Search, ShieldAlert, ArrowRight, Share2, Plus, Sliders, Smartphone
 } from 'lucide-react';
-import { auth, db } from '../lib/firebase';
+import { auth } from '../lib/firebase';
 import { signInAnonymously } from 'firebase/auth';
-import { collection, doc, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { useTranslation } from '../utils/i18n';
@@ -28,18 +27,20 @@ interface PdfShareConfig {
   id: string;
   title: string;
   description: string;
-  activeFileName: string;
-  activeFileSize: string;
-  activeFileUrl: string; // Simulated link or base64 data URI
+  activeFileName?: string;
+  activeFileSize?: string;
+  fileName?: string;
+  fileSize?: string;
   viewCount: number;
   downloadCount: number;
   createdAt: string;
-  // Security & Expiry
-  password?: string;
-  expiryDate?: string; // ISO string or null
-  maxDownloads?: number; // Unlimited if null/0
+  // Security & Expiry (scrypt hashed on server, never stored in client state)
+  isProtected?: boolean;
+  expiresAt?: string | null;
+  expiryDate?: string;
+  maxDownloads?: number;
   // Version history
-  versions: PdfVersion[];
+  versions?: PdfVersion[];
   themeColor: 'indigo' | 'emerald' | 'rose' | 'amber';
 }
 
@@ -64,7 +65,7 @@ export default function PdfSharing() {
         "Dynamic QR PDF Sharing Hub": "مركز مشاركة ملفات PDF عبر رمز QR الديناميكي",
         "Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.": "حمّل الكتيبات والملفات أو قوائم الطعام بصيغة PDF. أنشئ على الفور رموز QR، واستبدل الملف الأساسي في أي وقت دون تغيير رمز QR، وقم بتكوين كلمات المرور، وتتبع تنزيلات المستخدمين.",
         "Cloud Space Used": "مساحة السحاب المستخدمة",
-        "Guests get 100MB free persistent sandbox storage.": "يحصل الضيوف على مساحة تخزين رملية مستمرة ومجانية سعتها 100 ميجابايت.",
+        "Guests get 100MB free private cloud storage quota.": "يحصل الضيوف على مساحة تخزين سحابية خاصة سعتها 100 ميجابايت.",
         "1. Core Document Upload": "1. رفع المستند الأساسي",
         "Drag & drop your PDF file or try out one of our pre-configured documents.": "اسحب وأسقط ملف PDF الخاص بك أو جرب أحد المستندات المعدة مسبقًا.",
         "Drag & drop PDF here, or click to browse": "اسحب وأسقط ملف PDF هنا، أو انقر للتصفح",
@@ -140,7 +141,7 @@ export default function PdfSharing() {
         "Dynamic QR PDF Sharing Hub": "ڈائنامک کیو آر پی ڈی ایف شیئرنگ ہب",
         "Upload PDF brochures, real estate guides, or menus. Instantly generate QR codes, replace the underlying file at any time without changing the QR code, configure passwords, and track user downloads.": "پی ڈی ایف بروشرز، رئیل اسٹیٹ گائیڈز، یا مینو اپ لوڈ کریں۔ فوری کیو آر بنائیں، کیو آر بدلے بغیر فائل تبدیل کریں، پاس ورڈ لگائیں، اور ڈاؤن لوڈز ٹریک کریں۔",
         "Cloud Space Used": "استعمال شدہ کلاؤڈ اسپیس",
-        "Guests get 100MB free persistent sandbox storage.": "مہمان صارفین کے لیے 100MB مفت اسٹوریج۔",
+        "Guests get 100MB free private cloud storage quota.": "مہمان صارفین کے لیے 100MB کلاؤڈ اسٹوریج کوٹہ۔",
         "1. Core Document Upload": "1. دستاویز اپ لوڈ کریں",
         "Drag & drop your PDF file or try out one of our pre-configured documents.": "اپنی پی ڈی ایف فائل ڈریگ اینڈ ڈراپ کریں یا ہمارے پہلے سے موجود نمونے استعمال کریں۔",
         "Drag & drop PDF here, or click to browse": "پی ڈی ایف فائل یہاں ڈراپ کریں یا براؤز کریں",
@@ -225,7 +226,7 @@ export default function PdfSharing() {
   // New PDF Form Draft
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
-  const [uploadedFile, setUploadedFile] = useState<{ name: string; size: string; content: string } | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<{ name: string; size: string; file: File } | null>(null);
   const [pdfPassword, setPdfPassword] = useState('');
   const [pdfExpiry, setPdfExpiry] = useState('');
   const [pdfMaxDownloads, setPdfMaxDownloads] = useState('');
@@ -237,39 +238,95 @@ export default function PdfSharing() {
   const [passwordError, setPasswordError] = useState(false);
   const [simulatedDownloadSuccess, setSimulatedDownloadSuccess] = useState(false);
   const [simulatedViewSuccess, setSimulatedViewSuccess] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load saved shares on mount
-  useEffect(() => {
-    loadSavedShares();
-  }, []);
-
-  const loadSavedShares = async () => {
-    let userId = auth.currentUser?.uid;
-    if (!userId) {
+  // Helper to obtain active auth token (or anonymous token)
+  const getAuthToken = async (): Promise<string | null> => {
+    let token = await auth.currentUser?.getIdToken();
+    if (!token && auth.currentUser?.uid) {
+      token = auth.currentUser.uid;
+    }
+    if (!token) {
       try {
         const anon = await signInAnonymously(auth);
-        userId = anon.user.uid;
+        token = (await anon.user.getIdToken()) || anon.user.uid;
       } catch (e) {
         console.warn('Anon auth notice:', e);
       }
     }
-    if (userId) {
-      try {
-        const q = query(collection(db, 'pdf_shares'), where('userId', '==', userId));
-        const snap = await getDocs(q);
-        const list: PdfShareConfig[] = [];
-        snap.forEach((docSnap) => {
-          list.push({ id: docSnap.id, ...docSnap.data() } as PdfShareConfig);
-        });
+    return token || null;
+  };
+
+  // Load saved shares from API on mount
+  useEffect(() => {
+    loadSavedShares();
+  }, []);
+
+  // Listen to hash changes for deep linking to /#pdf-{shareId}
+  useEffect(() => {
+    const handleHash = async () => {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#pdf-')) {
+        const shareId = hash.substring(1);
+        try {
+          const res = await fetch(`/api/pdf-shares/${shareId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setSimulatedShare({
+              ...data,
+              activeFileName: data.fileName,
+              activeFileSize: data.fileSize,
+              versions: []
+            });
+            setVisitorPasswordInput('');
+            setPasswordError(false);
+            setDownloadError(null);
+            setSimulatedDownloadSuccess(false);
+            setSimulatedViewSuccess(false);
+          }
+        } catch (err) {
+          console.error('[PDF Sharing] Failed to load share from URL hash:', err);
+        }
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  const loadSavedShares = async () => {
+    const token = await getAuthToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch('/api/pdf-shares', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        const list: PdfShareConfig[] = (json.shares || []).map((s: any) => ({
+          ...s,
+          activeFileName: s.fileName || s.activeFileName || 'document.pdf',
+          activeFileSize: s.fileSize || s.activeFileSize || '1.0 MB',
+          versions: s.versions || [{
+            versionId: 'v1',
+            fileName: s.fileName || 'document.pdf',
+            fileSize: s.fileSize || '1.0 MB',
+            uploadedAt: s.createdAt
+          }]
+        }));
         setShares(list);
         if (list.length > 0 && !selectedShare) {
           setSelectedShare(list[0]);
         }
-      } catch (err) {
-        console.error('Error fetching PDF shares from Firestore:', err);
       }
+    } catch (err) {
+      console.error('Error fetching PDF shares from API:', err);
     }
   };
 
@@ -297,212 +354,172 @@ export default function PdfSharing() {
     }
   };
 
-  const processSelectedFile = (file: File) => {
-    const sizeInMB = (file.size / (1024 * 1024)).toFixed(1);
-    const reader = new FileReader();
-    reader.onload = () => {
+  const processSelectedFile = async (file: File) => {
+    setFileError(null);
+
+    // 1. Enforce 10 MB maximum size limit
+    if (file.size > 10 * 1024 * 1024) {
+      setFileError('File size exceeds the 10 MB maximum limit.');
+      playAudioSound('preview');
+      return;
+    }
+
+    // 2. Validate PDF signature (%PDF-)
+    try {
+      const headerBuf = await file.slice(0, 5).arrayBuffer();
+      const headerStr = new TextDecoder().decode(headerBuf);
+      if (headerStr !== '%PDF-') {
+        setFileError('Invalid file: payload does not contain a valid %PDF- header signature.');
+        playAudioSound('preview');
+        return;
+      }
+
+      const sizeInMB = (file.size / (1024 * 1024)).toFixed(1);
       setUploadedFile({
         name: file.name,
         size: `${sizeInMB} MB`,
-        content: (reader.result as string) || 'JVBERi0xLjQKJVRydXN0ZWQgUERGIFNoYXJl'
+        file
       });
       playAudioSound('preview');
-    };
-    reader.readAsDataURL(file);
+    } catch (_readErr) {
+      setFileError('Failed to read file payload.');
+      playAudioSound('preview');
+    }
   };
 
   const selectPresetTemplate = (idx: number) => {
     const template = PRESET_PDF_TEMPLATES[idx];
-    setUploadedFile({
-      name: template.name,
-      size: template.size,
-      content: template.content
-    });
-    playAudioSound('preview');
+    setFileError(null);
+    try {
+      const rawBytes = atob(template.content);
+      const byteNumbers = new Uint8Array(rawBytes.length);
+      for (let i = 0; i < rawBytes.length; i++) {
+        byteNumbers[i] = rawBytes.charCodeAt(i);
+      }
+      const fileBlob = new File([byteNumbers], template.name, { type: 'application/pdf' });
+      setUploadedFile({
+        name: template.name,
+        size: template.size,
+        file: fileBlob
+      });
+      playAudioSound('preview');
+    } catch (_presetErr) {
+      setFileError('Failed to load preset document.');
+    }
   };
 
-  // Create new PDF Share Entry
+  // Create new PDF Share Entry via Secure Server API (Multipart FormData)
   const handleCreateShare = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!uploadedFile || !newTitle.trim()) return;
 
     setIsSaving(true);
-    const shareId = 'pdf-' + Math.random().toString(36).substring(2, 9);
-    
-    const initialVersion: PdfVersion = {
-      versionId: 'v1-' + Math.random().toString(36).substring(2, 5),
-      fileName: uploadedFile.name,
-      fileSize: uploadedFile.size,
-      uploadedAt: new Date().toISOString(),
-      base64Data: uploadedFile.content
-    };
+    setFileError(null);
 
-    const newShare: PdfShareConfig = {
-      id: shareId,
-      title: newTitle,
-      description: newDescription || 'Quick secure PDF sharing via dynamic, trackable QR code.',
-      activeFileName: uploadedFile.name,
-      activeFileSize: uploadedFile.size,
-      activeFileUrl: uploadedFile.content,
-      viewCount: 0,
-      downloadCount: 0,
-      createdAt: new Date().toISOString(),
-      password: pdfPassword || undefined,
-      expiryDate: pdfExpiry || undefined,
-      maxDownloads: pdfMaxDownloads ? parseInt(pdfMaxDownloads) : undefined,
-      versions: [initialVersion],
-      themeColor: pdfThemeColor
-    };
-
-    let userId = auth.currentUser?.uid;
-    if (!userId) {
-      try {
-        const anon = await signInAnonymously(auth);
-        userId = anon.user.uid;
-      } catch (e) {
-        console.warn('Anon auth notice:', e);
+    try {
+      const token = await getAuthToken();
+      if (!token) {
+        throw new Error('Authentication required to create a PDF share');
       }
-    }
-    if (userId) {
-      try {
-        await setDoc(doc(db, 'pdf_shares', shareId), {
-          ...newShare,
-          userId
-        });
-        await api.saveProject({
-          id: newShare.id,
-          name: newShare.title || 'PDF Share',
-          type: 'pdf',
-          content: buildProductionUrl(`/#pdf-${newShare.id}`),
-          userId: userId,
-          trackingId: newShare.id
-        }).catch(() => {});
-        playAudioSound('generate');
-      } catch (err) {
-        console.error('Firestore PDF save failed', err);
+
+      const formData = new FormData();
+      formData.append('file', uploadedFile.file, uploadedFile.name);
+      formData.append('title', newTitle.trim());
+      formData.append('description', newDescription.trim() || 'Quick secure PDF sharing via dynamic, trackable QR code.');
+      if (pdfPassword.trim()) formData.append('password', pdfPassword.trim());
+      if (pdfExpiry) formData.append('expiryDate', pdfExpiry);
+      if (pdfMaxDownloads) formData.append('maxDownloads', pdfMaxDownloads);
+      formData.append('themeColor', pdfThemeColor);
+
+      const res = await fetch('/api/pdf-shares', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to create PDF share');
       }
-    }
 
-    // Update Simulated Storage Limit
-    const sizeFloat = parseFloat(uploadedFile.size) || 1.0;
-    setTotalStorageUsedMB(prev => Math.min(storageLimitMB, prev + sizeFloat));
-
-    // Reset Form
-    setNewTitle('');
-    setNewDescription('');
-    setUploadedFile(null);
-    setPdfPassword('');
-    setPdfExpiry('');
-    setPdfMaxDownloads('');
-    
-    await loadSavedShares();
-    setSelectedShare(newShare);
-    setIsSaving(false);
-  };
-
-  // Rollback to previous version or replace active file
-  const handleReplaceFile = (file: File) => {
-    if (!selectedShare) return;
-
-    const sizeInMB = (file.size / (1024 * 1024)).toFixed(1);
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const base64 = (reader.result as string) || 'JVBERi0xLjQ=';
-      
-      const newVer: PdfVersion = {
-        versionId: 'v' + (selectedShare.versions.length + 1) + '-' + Math.random().toString(36).substring(2, 5),
-        fileName: file.name,
-        fileSize: `${sizeInMB} MB`,
-        uploadedAt: new Date().toISOString(),
-        base64Data: base64
+      const newShare: PdfShareConfig = {
+        id: data.id,
+        title: data.title,
+        description: data.description,
+        activeFileName: data.fileName,
+        activeFileSize: data.fileSize,
+        fileName: data.fileName,
+        fileSize: data.fileSize,
+        viewCount: 0,
+        downloadCount: 0,
+        createdAt: data.createdAt,
+        isProtected: Boolean(data.isProtected),
+        expiresAt: data.expiresAt,
+        maxDownloads: data.maxDownloads,
+        versions: [{
+          versionId: 'v1',
+          fileName: data.fileName,
+          fileSize: data.fileSize,
+          uploadedAt: data.createdAt
+        }],
+        themeColor: data.themeColor || pdfThemeColor
       };
 
-      const updatedShare: PdfShareConfig = {
-        ...selectedShare,
-        activeFileName: file.name,
-        activeFileSize: `${sizeInMB} MB`,
-        activeFileUrl: base64,
-        versions: [newVer, ...selectedShare.versions]
-      };
+      await api.saveProject({
+        id: newShare.id,
+        name: newShare.title || 'PDF Share',
+        type: 'pdf',
+        content: buildProductionUrl(`/#pdf-${newShare.id}`),
+        userId: auth.currentUser?.uid,
+        trackingId: newShare.id
+      }).catch(() => {});
 
-      await updateShareInDb(updatedShare);
-    };
-    reader.readAsDataURL(file);
-  };
+      playAudioSound('generate');
 
-  const handleRollbackVersion = async (ver: PdfVersion) => {
-    if (!selectedShare) return;
+      // Update Simulated Storage Limit
+      const sizeFloat = parseFloat(uploadedFile.size) || 1.0;
+      setTotalStorageUsedMB(prev => Math.min(storageLimitMB, prev + sizeFloat));
 
-    const updatedShare: PdfShareConfig = {
-      ...selectedShare,
-      activeFileName: ver.fileName,
-      activeFileSize: ver.fileSize,
-      activeFileUrl: ver.base64Data || selectedShare.activeFileUrl,
-      // Move this to the top of the version list or keep history
-    };
+      // Reset Form
+      setNewTitle('');
+      setNewDescription('');
+      setUploadedFile(null);
+      setPdfPassword('');
+      setPdfExpiry('');
+      setPdfMaxDownloads('');
 
-    await updateShareInDb(updatedShare);
-    playAudioSound('generate');
-  };
-
-  const handleUpdateSecuritySettings = async (updates: Partial<PdfShareConfig>) => {
-    if (!selectedShare) return;
-
-    const updatedShare: PdfShareConfig = {
-      ...selectedShare,
-      ...updates
-    };
-
-    await updateShareInDb(updatedShare);
-  };
-
-  const updateShareInDb = async (updated: PdfShareConfig) => {
-    let userId = auth.currentUser?.uid;
-    if (!userId) {
-      try {
-        const anon = await signInAnonymously(auth);
-        userId = anon.user.uid;
-      } catch (e) {}
+      await loadSavedShares();
+      setSelectedShare(newShare);
+    } catch (err: any) {
+      console.error('Failed to create PDF share:', err);
+      setFileError(err.message || 'Failed to create PDF share');
+      playAudioSound('preview');
+    } finally {
+      setIsSaving(false);
     }
-    if (userId) {
-      try {
-        await setDoc(doc(db, 'pdf_shares', updated.id), {
-          ...updated,
-          userId
-        });
-      } catch (err) {
-        console.error('Error updating Firestore PDF config:', err);
-      }
-    }
-    
-    setSelectedShare(updated);
-    await loadSavedShares();
-    playAudioSound('preview');
   };
 
   const handleDeleteShare = async (id: string) => {
-    let userId = auth.currentUser?.uid;
-    if (!userId) {
+    const token = await getAuthToken();
+    if (token) {
       try {
-        const anon = await signInAnonymously(auth);
-        userId = anon.user.uid;
-      } catch (e) {}
-    }
-    const shareToDelete = shares.find(s => s.id === id);
-    const deletedSize = shareToDelete ? parseFloat(shareToDelete.activeFileSize) || 1.5 : 1.5;
-
-    if (userId) {
-      try {
-        await deleteDoc(doc(db, 'pdf_shares', id));
+        await fetch(`/api/pdf-shares/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         await api.deleteProject(id).catch(() => {});
         playAudioSound('preview');
       } catch (err) {
-        console.error('Firestore PDF delete failed', err);
+        console.error('Failed to delete PDF share:', err);
       }
     }
 
+    const shareToDelete = shares.find(s => s.id === id);
+    const deletedSize = shareToDelete ? parseFloat(shareToDelete.activeFileSize || '1.5') || 1.5 : 1.5;
     setTotalStorageUsedMB(prev => Math.max(0, prev - deletedSize));
-    
+
     const remaining = shares.filter(s => s.id !== id);
     if (remaining.length > 0) {
       setSelectedShare(remaining[0]);
@@ -512,95 +529,189 @@ export default function PdfSharing() {
     await loadSavedShares();
   };
 
+  const handleReplaceFile = async (file: File) => {
+    if (!selectedShare) return;
+    setFileError(null);
+
+    if (file.size > 10 * 1024 * 1024) {
+      setFileError('File size exceeds the 10 MB maximum limit.');
+      playAudioSound('preview');
+      return;
+    }
+
+    try {
+      const headerBuf = await file.slice(0, 5).arrayBuffer();
+      const headerStr = new TextDecoder().decode(headerBuf);
+      if (headerStr !== '%PDF-') {
+        setFileError('Invalid file: payload does not contain a valid %PDF- header signature.');
+        playAudioSound('preview');
+        return;
+      }
+
+      const token = await getAuthToken();
+      if (!token) throw new Error('Authentication required');
+
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      const res = await fetch(`/api/pdf-shares/${selectedShare.id}/file`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to replace file');
+      }
+
+      const sizeInMB = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+      const newVersion: PdfVersion = {
+        versionId: `v${(selectedShare.versions?.length || 1) + 1}`,
+        fileName: file.name,
+        fileSize: sizeInMB,
+        uploadedAt: new Date().toISOString()
+      };
+
+      const updatedShare: PdfShareConfig = {
+        ...selectedShare,
+        activeFileName: file.name,
+        activeFileSize: sizeInMB,
+        fileName: file.name,
+        fileSize: sizeInMB,
+        versions: [newVersion, ...(selectedShare.versions || [])]
+      };
+
+      setSelectedShare(updatedShare);
+      setShares(prev => prev.map(s => s.id === updatedShare.id ? updatedShare : s));
+      playAudioSound('generate');
+    } catch (err: any) {
+      setFileError(err.message || 'Error updating PDF file');
+      playAudioSound('preview');
+    }
+  };
+
+  const handleRollbackVersion = (version: PdfVersion) => {
+    if (!selectedShare) return;
+    const updated: PdfShareConfig = {
+      ...selectedShare,
+      activeFileName: version.fileName,
+      activeFileSize: version.fileSize
+    };
+    setSelectedShare(updated);
+    setShares(prev => prev.map(s => s.id === updated.id ? updated : s));
+    playAudioSound('generate');
+  };
+
   // Visitor Simulation Handlers
-  const openVisitorSimulation = (share: PdfShareConfig) => {
-    setSimulatedShare(share);
+  const openVisitorSimulation = async (share: PdfShareConfig) => {
+    try {
+      const res = await fetch(`/api/pdf-shares/${share.id}`);
+      if (res.ok) {
+        const fresh = await res.json();
+        setSimulatedShare({
+          ...share,
+          ...fresh,
+          activeFileName: fresh.fileName || share.activeFileName,
+          activeFileSize: fresh.fileSize || share.activeFileSize
+        });
+      } else {
+        setSimulatedShare(share);
+      }
+    } catch {
+      setSimulatedShare(share);
+    }
     setVisitorPasswordInput('');
     setPasswordError(false);
+    setDownloadError(null);
     setSimulatedDownloadSuccess(false);
     setSimulatedViewSuccess(false);
     playAudioSound('preview');
   };
 
+  const executeDownload = async (shareId: string, passwordInput?: string) => {
+    setIsDownloading(true);
+    setDownloadError(null);
+    setPasswordError(false);
+
+    try {
+      const res = await fetch(`/api/pdf-shares/${shareId}/download`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: passwordInput || '' })
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        if (res.status === 429) {
+          setDownloadError(errJson.error || 'Too many failed password attempts. Lockout in effect.');
+          setPasswordError(true);
+        } else if (res.status === 401) {
+          setDownloadError(errJson.error || 'Invalid password. Access denied.');
+          setPasswordError(true);
+        } else if (res.status === 410) {
+          setDownloadError(errJson.error || 'This document share has expired or reached its maximum download limit.');
+        } else {
+          setDownloadError(errJson.error || 'Download failed.');
+        }
+        playAudioSound('preview');
+        return;
+      }
+
+      // Read binary blob
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.href = blobUrl;
+      downloadAnchor.download = simulatedShare?.activeFileName || simulatedShare?.fileName || 'document.pdf';
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      document.body.removeChild(downloadAnchor);
+      window.URL.revokeObjectURL(blobUrl);
+
+      setSimulatedDownloadSuccess(true);
+      setPasswordError(false);
+      setDownloadError(null);
+      playAudioSound('generate');
+
+      if (simulatedShare) {
+        setSimulatedShare({
+          ...simulatedShare,
+          downloadCount: (simulatedShare.downloadCount || 0) + 1
+        });
+      }
+      loadSavedShares();
+    } catch (err: any) {
+      setDownloadError('Network error connecting to download gateway.');
+      playAudioSound('preview');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const handleSimulatedPasswordSubmit = () => {
     if (!simulatedShare) return;
-    if (visitorPasswordInput === simulatedShare.password) {
-      setPasswordError(false);
-      playAudioSound('generate');
-    } else {
-      setPasswordError(true);
-      playAudioSound('preview');
-    }
+    executeDownload(simulatedShare.id, visitorPasswordInput);
   };
 
   const recordSimulatedView = async () => {
     if (!simulatedShare) return;
     setSimulatedViewSuccess(true);
-    
-    const updated = {
+    try {
+      await fetch(`/api/pdf-shares/${simulatedShare.id}`);
+    } catch {}
+    setSimulatedShare({
       ...simulatedShare,
-      viewCount: simulatedShare.viewCount + 1
-    };
-
-    let userId = auth.currentUser?.uid;
-    if (!userId) {
-      try {
-        const anon = await signInAnonymously(auth);
-        userId = anon.user.uid;
-      } catch (e) {}
-    }
-    if (userId) {
-      await setDoc(doc(db, 'pdf_shares', updated.id), { ...updated, userId });
-    }
-
-    setSimulatedShare(updated);
-    if (selectedShare?.id === updated.id) {
-      setSelectedShare(updated);
-    }
-    await loadSavedShares();
+      viewCount: (simulatedShare.viewCount || 0) + 1
+    });
     playAudioSound('generate');
   };
 
-  const recordSimulatedDownload = async () => {
+  const recordSimulatedDownload = () => {
     if (!simulatedShare) return;
-    
-    // Check download limit
-    if (simulatedShare.maxDownloads && simulatedShare.downloadCount >= simulatedShare.maxDownloads) {
-      playAudioSound('preview');
-      return;
-    }
-
-    setSimulatedDownloadSuccess(true);
-    const updated = {
-      ...simulatedShare,
-      downloadCount: simulatedShare.downloadCount + 1
-    };
-
-    let userId = auth.currentUser?.uid;
-    if (!userId) {
-      try {
-        const anon = await signInAnonymously(auth);
-        userId = anon.user.uid;
-      } catch (e) {}
-    }
-    if (userId) {
-      await setDoc(doc(db, 'pdf_shares', updated.id), { ...updated, userId });
-    }
-
-    setSimulatedShare(updated);
-    if (selectedShare?.id === updated.id) {
-      setSelectedShare(updated);
-    }
-    await loadSavedShares();
-    playAudioSound('generate');
-
-    // Trigger physical text download representing the simulated PDF file
-    const link = document.createElement('a');
-    link.href = 'data:application/pdf;base64,JVBERi0xLjQKJVRydXN0ZWQgUERGIFNoYXJl';
-    link.download = simulatedShare.activeFileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    executeDownload(simulatedShare.id, visitorPasswordInput);
   };
 
   const copyToClipboard = (text: string, label: string) => {
@@ -612,15 +723,16 @@ export default function PdfSharing() {
 
   // Expiry Checker helper
   const isExpired = (share: PdfShareConfig) => {
-    if (!share.expiryDate) return false;
-    const expiry = new Date(share.expiryDate);
+    const exp = share.expiresAt || share.expiryDate;
+    if (!exp) return false;
+    const expiry = new Date(exp);
     return expiry < new Date();
   };
 
   // Limit checker helper
   const isLimitReached = (share: PdfShareConfig) => {
     if (!share.maxDownloads) return false;
-    return share.downloadCount >= share.maxDownloads;
+    return (share.downloadCount || 0) >= share.maxDownloads;
   };
 
   // Theme palettes helper
@@ -716,7 +828,7 @@ export default function PdfSharing() {
               style={{ width: `${(totalStorageUsedMB / storageLimitMB) * 100}%` }}
             />
           </div>
-          <p className="text-[10px] text-slate-500 mt-1.5">{tPdf("Guests get 100MB free persistent sandbox storage.")}</p>
+          <p className="text-[10px] text-slate-500 mt-1.5">{tPdf("Guests get 100MB free private cloud storage quota.")}</p>
         </div>
       </div>
 
@@ -775,8 +887,11 @@ export default function PdfSharing() {
                   ) : (
                     <div>
                       <p className="text-xs font-bold text-slate-700">{tPdf("Drag & drop PDF here, or click to browse")}</p>
-                      <p className="text-[10px] text-slate-400 mt-1">{tPdf("Supports standard PDF formats up to 25 MB")}</p>
+                      <p className="text-[10px] text-slate-400 mt-1">{tPdf("Supports standard PDF formats up to 10 MB (enforced)")}</p>
                     </div>
+                  )}
+                  {fileError && (
+                    <p className="text-[10px] text-rose-600 font-bold mt-2 bg-rose-50 border border-rose-100 p-1.5 rounded-lg">{fileError}</p>
                   )}
                 </div>
               </div>
@@ -946,7 +1061,7 @@ export default function PdfSharing() {
                       <div className="min-w-0 text-start">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <p className="text-xs font-black text-slate-800 truncate">{share.title}</p>
-                          {share.password && (
+                          {share.isProtected && (
                             <span className="text-[8px] bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded-md flex items-center gap-0.5 font-bold">
                               <Lock className="w-2.5 h-2.5" />
                               {tPdf("Secure")}
@@ -1090,13 +1205,13 @@ export default function PdfSharing() {
                       </div>
                     </div>
 
-                    <input
-                      type="password"
-                      defaultValue={selectedShare.password || ''}
-                      onBlur={(e) => handleUpdateSecuritySettings({ password: e.target.value || undefined })}
-                      placeholder={tPdf("No Password")}
-                      className="w-28 px-2.5 py-1 text-[11px] rounded-lg border border-slate-200 outline-none text-slate-800 bg-white"
-                    />
+                    <span className={`px-2.5 py-1 text-[11px] font-bold rounded-lg border ${
+                      selectedShare.isProtected 
+                        ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                        : 'bg-slate-100 text-slate-500 border-slate-200'
+                    }`}>
+                      {selectedShare.isProtected ? tPdf("Protected (scrypt)") : tPdf("Public Link")}
+                    </span>
                   </div>
 
                   {/* Expiry block */}
@@ -1109,12 +1224,13 @@ export default function PdfSharing() {
                       </div>
                     </div>
 
-                    <input
-                      type="date"
-                      defaultValue={selectedShare.expiryDate || ''}
-                      onChange={(e) => handleUpdateSecuritySettings({ expiryDate: e.target.value || undefined })}
-                      className="px-2 py-1 text-[11px] rounded-lg border border-slate-200 outline-none text-slate-800 bg-white"
-                    />
+                    <span className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg">
+                      {selectedShare.expiresAt 
+                        ? new Date(selectedShare.expiresAt).toLocaleDateString()
+                        : selectedShare.expiryDate 
+                          ? new Date(selectedShare.expiryDate).toLocaleDateString()
+                          : tPdf("No Expiration")}
+                    </span>
                   </div>
 
                   {/* Limit block */}
@@ -1127,13 +1243,9 @@ export default function PdfSharing() {
                       </div>
                     </div>
 
-                    <input
-                      type="number"
-                      placeholder={tPdf("Unlimited")}
-                      defaultValue={selectedShare.maxDownloads || ''}
-                      onBlur={(e) => handleUpdateSecuritySettings({ maxDownloads: e.target.value ? parseInt(e.target.value) : undefined })}
-                      className="w-20 px-2.5 py-1 text-[11px] rounded-lg border border-slate-200 outline-none text-slate-800 bg-white"
-                    />
+                    <span className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg">
+                      {selectedShare.maxDownloads ? selectedShare.maxDownloads : tPdf("Unlimited")}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1248,8 +1360,8 @@ export default function PdfSharing() {
                   <p className="text-xs text-slate-400">{simulatedShare.description}</p>
                 </div>
 
-                {/* Password Protection Guard */}
-                {simulatedShare.password && visitorPasswordInput !== simulatedShare.password ? (
+                {/* Password Protection Guard (Enforced Server-Side via scrypt) */}
+                {simulatedShare.isProtected && !simulatedDownloadSuccess ? (
                   <div className="bg-amber-50 border border-amber-200/60 p-4 rounded-2xl space-y-3 text-center">
                     <Lock className="w-6 h-6 text-amber-600 mx-auto" />
                     <div>
@@ -1262,17 +1374,33 @@ export default function PdfSharing() {
                         type="password"
                         placeholder={tPdf("Enter password...")}
                         value={visitorPasswordInput}
-                        onChange={(e) => setVisitorPasswordInput(e.target.value)}
+                        onChange={(e) => {
+                          setVisitorPasswordInput(e.target.value);
+                          setPasswordError(false);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleSimulatedPasswordSubmit();
+                          }
+                        }}
                         className="w-full text-center py-2 px-3 text-xs bg-white rounded-xl border border-amber-200 outline-none focus:ring-1 focus:ring-amber-500 font-bold"
                       />
                       {passwordError && (
-                        <p className="text-[9px] text-rose-600 font-bold">{tPdf("Inaccurate key. Try again.")}</p>
+                        <p className="text-[9px] text-rose-600 font-bold">
+                          {downloadError || tPdf("Inaccurate key. Try again.")}
+                        </p>
                       )}
                       <button
                         onClick={handleSimulatedPasswordSubmit}
-                        className="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                        disabled={isDownloading}
+                        className="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                       >
-                        {tPdf("Unlock PDF Access")}
+                        {isDownloading ? (
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                          <Key className="w-3.5 h-3.5" />
+                        )}
+                        <span>{isDownloading ? tPdf("Verifying...") : tPdf("Unlock PDF Access")}</span>
                       </button>
                     </div>
                   </div>

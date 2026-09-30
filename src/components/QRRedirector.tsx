@@ -173,13 +173,12 @@ export default function QRRedirector({ trackingId, onNavigate }: QRRedirectorPro
           console.error('[QRRedirector] Step 4 error:', stepErr);
         }
 
-        // Step 5: Search pdf_shares collection directly by ID
-        console.log(`[QRRedirector] [Step 5] Checking pdf_shares for ID: "${trackingId}"`);
+        // Step 5: Check pdf_shares via secure server API (No direct Firestore read by browser)
+        console.log(`[QRRedirector] [Step 5] Checking pdf_shares API for ID: "${trackingId}"`);
         try {
-          const docPdfRef = doc(db, 'pdf_shares', trackingId);
-          const docPdfSnap = await getDoc(docPdfRef);
-          if (docPdfSnap.exists() && active) {
-            console.log(`[QRRedirector] [Step 5 SUCCESS] Found match in pdf_shares:`, docPdfSnap.data());
+          const pdfRes = await fetch(`/api/pdf-shares/${trackingId}`);
+          if (pdfRes.ok && active) {
+            console.log(`[QRRedirector] [Step 5 SUCCESS] Found valid active share via API for:`, trackingId);
             await executeRedirect(`/#pdf-${trackingId}`);
             return;
           }
