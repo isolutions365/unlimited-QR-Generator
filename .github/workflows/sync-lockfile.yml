@@ -1,0 +1,45 @@
+name: Sync package-lock.json
+
+# Runs every time code is pushed to main (e.g. from AI Studio),
+# and automatically fixes package-lock.json if it's out of sync
+# with package.json — preventing "npm ci" EUSAGE build failures.
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  sync-lockfile:
+    runs-on: ubuntu-latest
+    # Prevent infinite loop: skip if this run was triggered by the bot's own commit
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies (regenerates lock file if needed)
+        run: npm install --package-lock-only
+
+      - name: Commit updated lock file if changed
+        run: |
+          if ! git diff --quiet -- package-lock.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add package-lock.json
+            git commit -m "chore: auto-sync package-lock.json [skip ci]"
+            git push
+            echo "package-lock.json was out of sync and has been fixed."
+          else
+            echo "package-lock.json already in sync. Nothing to do."
+          fi
