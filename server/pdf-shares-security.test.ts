@@ -927,7 +927,9 @@ describe('STEP 6H-FINAL-HARDENING: Comprehensive Persistence, Distributed Rate L
       });
       assert.strictEqual(authorizedRes.status, 200);
 
-      const storagePath = `pdf_shares/owner-replace/${created.id}.pdf`;
+      const docSnap = await persistentDb.collection('pdf_shares').doc(created.id).get();
+      const updatedData: any = docSnap.data();
+      const storagePath = updatedData?.storageObjectPath || `pdf_shares/owner-replace/${created.id}.pdf`;
       const [downloaded] = await testBucket.file(storagePath).download();
       assert.deepStrictEqual(downloaded, replacementPdf);
     });

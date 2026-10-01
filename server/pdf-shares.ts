@@ -1,6 +1,8 @@
 import express from 'express';
 import crypto from 'crypto';
 import path from 'path';
+import os from 'os';
+import fs from 'fs';
 import net from 'net';
 import Busboy from 'busboy';
 import { adminAuth, adminDb, getStorageBucket } from './firebase-admin';
@@ -39,7 +41,11 @@ export function getRateLimitSecret(): string {
     cachedRateLimitSecret = envSecret.trim();
     return cachedRateLimitSecret;
   }
-  // Fallback server-only random secret in dev/test
+  // In production, strictly fail closed: do not activate in-memory random secrets
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('RATE_LIMIT_SECRET environment variable is missing in production environment');
+  }
+  // Fallback server-only random secret in dev/test only
   cachedRateLimitSecret = crypto.randomBytes(32).toString('hex');
   return cachedRateLimitSecret;
 }
@@ -295,10 +301,11 @@ export function sanitizeFileName(inputName: string): string {
   return clean.toLowerCase().endsWith('.pdf') ? clean : `${clean}.pdf`;
 }
 
-// Helper to parse multipart/form-data with streaming busboy parser
+// Helper to parse multipart/form-data with bounded ephemeral temporary file streaming
 export interface ParsedUpload {
   fields: Record<string, string>;
   fileBuffer: Buffer;
+  tempFilePath?: string;
   fileName: string;
   mimeType: string;
 }
@@ -334,12 +341,14 @@ export function parseMultipartUpload(req: express.Request): Promise<ParsedUpload
     }
 
     const fields: Record<string, string> = {};
-    const fileChunks: Buffer[] = [];
     let fileUploaded = false;
     let fileName = 'document.pdf';
     let mimeType = 'application/pdf';
     let fileTooLarge = false;
     let totalBytesReceived = 0;
+    const tempFilePath = path.join(os.tmpdir(), `pdf_stream_${crypto.randomBytes(16).toString('hex')}.tmp`);
+    let fileWriteStream: fs.WriteStream | null = null;
+    let streamWriteError: any = null;
 
     busboy.on('field', (name: string, val: string) => {
       fields[name] = val;
@@ -349,42 +358,70 @@ export function parseMultipartUpload(req: express.Request): Promise<ParsedUpload
       fileUploaded = true;
       fileName = info.filename || 'document.pdf';
       mimeType = info.mimeType || 'application/pdf';
+      fileWriteStream = fs.createWriteStream(tempFilePath);
+      fileWriteStream.on('error', (err) => {
+        streamWriteError = err;
+      });
 
       stream.on('data', (chunk: Buffer) => {
         totalBytesReceived += chunk.length;
         if (totalBytesReceived > MAX_FILE_SIZE_BYTES) {
           fileTooLarge = true;
           (stream as any).destroy?.();
+          fileWriteStream?.destroy();
+          try { if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath); } catch (_) {}
           return;
         }
-        fileChunks.push(chunk);
+        fileWriteStream?.write(chunk);
       });
 
       stream.on('limit', () => {
         fileTooLarge = true;
+        fileWriteStream?.destroy();
+        try { if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath); } catch (_) {}
       });
     });
 
     busboy.on('finish', () => {
       if (fileTooLarge) {
+        try { if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath); } catch (_) {}
         return reject(new Error('FILE_TOO_LARGE'));
       }
-      if (!fileUploaded || fileChunks.length === 0) {
+      if (streamWriteError) {
+        try { if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath); } catch (_) {}
+        return reject(streamWriteError);
+      }
+      if (!fileUploaded || totalBytesReceived === 0) {
+        try { if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath); } catch (_) {}
         return reject(new Error('NO_FILE'));
       }
-      const combined = Buffer.concat(fileChunks);
-      if (combined.length > MAX_FILE_SIZE_BYTES) {
+      if (totalBytesReceived > MAX_FILE_SIZE_BYTES) {
+        try { if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath); } catch (_) {}
         return reject(new Error('FILE_TOO_LARGE'));
       }
-      resolve({
-        fields,
-        fileBuffer: combined,
-        fileName,
-        mimeType
-      });
+
+      if (fileWriteStream) {
+        fileWriteStream.end(() => {
+          try {
+            const fileBuffer = fs.readFileSync(tempFilePath);
+            resolve({
+              fields,
+              fileBuffer,
+              tempFilePath,
+              fileName,
+              mimeType
+            });
+          } catch (readErr) {
+            reject(readErr);
+          }
+        });
+      } else {
+        reject(new Error('NO_FILE'));
+      }
     });
 
     busboy.on('error', (err: any) => {
+      try { if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath); } catch (_) {}
       reject(err);
     });
 
@@ -397,13 +434,13 @@ export function createPdfSharingRouter(): express.Router {
 
   // 1. Create a new PDF Share (Multipart upload -> Cloud Storage + Firestore metadata)
   router.post('/api/pdf-shares', async (req, res) => {
+    let uploadResult: ParsedUpload | null = null;
     try {
       const user = await authenticateRequestUser(req);
       if (!user) {
         return res.status(401).json({ error: 'Authentication required to create a PDF share' });
       }
 
-      let uploadResult: ParsedUpload;
       const isMultipart = (req.headers['content-type'] || '').includes('multipart/form-data');
 
       if (isMultipart) {
@@ -563,6 +600,10 @@ export function createPdfSharingRouter(): express.Router {
     } catch (err: any) {
       console.error('[PDF Sharing] Create share error:', err);
       return res.status(500).json({ error: 'Internal error creating PDF share' });
+    } finally {
+      if (uploadResult?.tempFilePath && fs.existsSync(uploadResult.tempFilePath)) {
+        try { fs.unlinkSync(uploadResult.tempFilePath); } catch (_) {}
+      }
     }
   });
 
@@ -831,6 +872,7 @@ export function createPdfSharingRouter(): express.Router {
 
   // 6. Replace PDF File for an Existing Share (Owner Only - Preserves Existing Share ID and QR Matrix)
   router.put('/api/pdf-shares/:shareId/file', async (req, res) => {
+    let uploadResult: ParsedUpload | null = null;
     try {
       const user = await authenticateRequestUser(req);
       if (!user) {
@@ -850,7 +892,6 @@ export function createPdfSharingRouter(): express.Router {
         return res.status(403).json({ error: 'Unauthorized: you can only update your own document shares' });
       }
 
-      let uploadResult: ParsedUpload;
       const isMultipart = (req.headers['content-type'] || '').includes('multipart/form-data');
 
       if (isMultipart) {
@@ -901,30 +942,60 @@ export function createPdfSharingRouter(): express.Router {
 
       const safeName = sanitizeFileName(fileName);
       const bucket = getStorageBucket();
-      const objectPath = data.storageObjectPath || `pdf_shares/${user.uid}/${shareId}.pdf`;
-      const fileRef = bucket.file(objectPath);
+      const currentObjectPath = data.storageObjectPath || `pdf_shares/${user.uid}/${shareId}.pdf`;
+      const stagedObjectPath = `pdf_shares/${user.uid}/${shareId}_v${Date.now()}.pdf`;
+      const stagedFileRef = bucket.file(stagedObjectPath);
 
-      // Overwrite private object in Cloud Storage
-      await fileRef.save(fileBuffer, {
-        contentType: 'application/pdf',
-        metadata: {
-          shareId,
-          ownerUid: user.uid,
-          originalFileName: safeName,
-          fileSizeBytes: String(fileBuffer.length),
-          updatedAt: new Date().toISOString()
-        },
-        resumable: false,
-        validation: false
-      });
+      // Stage 1: Upload new version to isolated staged object in Cloud Storage
+      try {
+        await stagedFileRef.save(fileBuffer, {
+          contentType: 'application/pdf',
+          metadata: {
+            shareId,
+            ownerUid: user.uid,
+            originalFileName: safeName,
+            fileSizeBytes: String(fileBuffer.length),
+            updatedAt: new Date().toISOString()
+          },
+          resumable: false,
+          validation: false
+        });
+      } catch (uploadErr) {
+        console.error('[PDF Sharing] Staged replacement upload failed:', uploadErr);
+        return res.status(500).json({ error: 'Failed to upload replacement document to storage' });
+      }
 
+      // Stage 2: Switch Firestore metadata to point to the newly verified object
       const newSize = `${(fileBuffer.length / (1024 * 1024)).toFixed(1)} MB`;
-      await docRef.update({
-        fileName: safeName,
-        fileSize: newSize,
-        fileSizeBytes: fileBuffer.length,
-        updatedAt: new Date().toISOString()
-      });
+      try {
+        await docRef.update({
+          fileName: safeName,
+          fileSize: newSize,
+          fileSizeBytes: fileBuffer.length,
+          storageObjectPath: stagedObjectPath,
+          updatedAt: new Date().toISOString()
+        });
+      } catch (metaErr) {
+        // COMPENSATION: Metadata switch failed, delete staged object to keep previous file intact
+        console.error('[PDF Sharing] Metadata update failed during replacement, rolling back staged object:', metaErr);
+        try {
+          await stagedFileRef.delete();
+        } catch (_delErr) {}
+        return res.status(500).json({ error: 'Failed to update document metadata; previous version preserved' });
+      }
+
+      // Stage 3: Metadata switch succeeded; clean up old object
+      if (currentObjectPath && currentObjectPath !== stagedObjectPath) {
+        try {
+          const oldFileRef = bucket.file(currentObjectPath);
+          const [oldExists] = await oldFileRef.exists();
+          if (oldExists) {
+            await oldFileRef.delete();
+          }
+        } catch (cleanupOldErr) {
+          console.warn('[PDF Sharing] Warning cleaning up previous object version:', cleanupOldErr);
+        }
+      }
 
       return res.json({
         id: shareId,
@@ -935,6 +1006,10 @@ export function createPdfSharingRouter(): express.Router {
     } catch (err: any) {
       console.error('[PDF Sharing] File replace error:', err);
       return res.status(500).json({ error: 'Failed to replace file' });
+    } finally {
+      if (uploadResult?.tempFilePath && fs.existsSync(uploadResult.tempFilePath)) {
+        try { fs.unlinkSync(uploadResult.tempFilePath); } catch (_) {}
+      }
     }
   });
 
