@@ -272,7 +272,7 @@ You can set up a business card QR code in two ways:
       { q: "What contact details fit in a static vCard?", a: "You can encode your full name, phone number, email address, job title, company, and website link." },
       { q: "Does saving a vCard require an internet connection?", a: "No, a standard vCard QR code contains all contact data internally and works fully offline." }
     ],
-    relatedArticles: ["vcard-qr-codes", "best-qr-code-size-guide"],
+    relatedArticles: ["best-qr-code-size-guide", "qr-printing-guide"],
     relatedTools: [
       { name: "vCard QR Creator", slug: "vcard-qr-generator" },
       { name: "Business Card Hub", slug: "business-card-qr-generator" }
@@ -429,7 +429,7 @@ You can include a pre-filled text message that the scanner can send with a singl
       { q: "Does the user need to save my number first?", a: "No, scanning the QR code opens a chat window immediately without requiring the user to save your contact." },
       { q: "Are there fees to use click-to-chat links?", a: "No, standard WhatsApp click-to-chat links are free and do not require corporate business accounts." }
     ],
-    relatedArticles: ["sms-qr-codes", "vcard-qr-codes"],
+    relatedArticles: ["sms-qr-codes", "business-card-qr-codes"],
     relatedTools: [
       { name: "WhatsApp Link Creator", slug: "whatsapp-qr-generator" },
       { name: "vCard QR Creator", slug: "vcard-qr-generator" }
@@ -531,7 +531,7 @@ Use email QR codes on product labels, real estate posters, conference banners, a
       { q: "Does scanning send the email automatically?", a: "No, it only pre-populates the email draft. The user retains complete control and must physically tap Send." },
       { q: "Can I add multiple recipients?", a: "Yes, you can add multiple carbon copy (CC) or blind carbon copy (BCC) addresses within standard mailto configurations." }
     ],
-    relatedArticles: ["sms-qr-codes", "vcard-qr-codes"],
+    relatedArticles: ["sms-qr-codes", "business-card-qr-codes"],
     relatedTools: [
       { name: "Email QR Creator", slug: "email-qr-generator" },
       { name: "vCard Contact Card", slug: "vcard-qr-generator" }
@@ -753,67 +753,6 @@ Use location QR codes on event invitations, real estate listings, and business b
     }
   },
   {
-    slug: "vcard-qr-codes",
-    title: "vCard QR Codes",
-    seoTitle: "vCard QR Codes: Dynamic and Static Contact Cards Guide",
-    metaDescription: "Detailed technical specifications for the IETF vCard protocol inside 2D barcodes to import contacts fully offline.",
-    section: "resources",
-    category: "Business",
-    tags: ["vCard", "VCF", "Directory Integration"],
-    readingTime: "5 min read",
-    author: "FreeQRBarcodes",
-    date: "July 7, 2026",
-    intro: "vCard QR codes store structured contact data inside a 2D barcode, letting users import details directly into their phone address books.",
-    contentMarkdown: `## The IETF VCF Specification Standard
-vCard QR codes follow the standard IETF RFC 2426 format. This schema structures contact information to ensure seamless compatibility:
-\`BEGIN:VCARD\`
-\`VERSION:3.0\`
-\`N:LastName;FirstName\`
-\`FN:FullName\`
-\`ORG:CompanyName\`
-\`TITLE:JobTitle\`
-\`TEL;TYPE=WORK,VOICE:+14155552671\`
-\`EMAIL;TYPE=PREF,INTERNET:work@example.com\`
-\`URL:https://www.example.com\`
-\`END:VCARD\`
-
-### Managing Payload Data Complexity
-Because static vCard QR codes store complete contact details inside the pattern, they have a higher pixel density. To keep your codes easy to scan:
-* Keep text values short and avoid special symbols.
-* Use international formats for phone numbers (e.g., +14155552671).
-* Use Level M or Q error correction to ensure the code remains scannable.
-
-### Native Mobile Imports
-Modern smartphone cameras read vCard parameters natively. When a user scans the code, their device prompts them to add the contact directly to their address book, removing the need to type details manually.`,
-    featuredImage: "from-indigo-600 to-indigo-800",
-    tableOfContents: [
-      { id: "vcf-standard", text: "The IETF VCF Specification Standard" },
-      { id: "managing-complexity", text: "Managing Payload Data Complexity" },
-      { id: "native-imports", text: "Native Mobile Imports" }
-    ],
-    faqs: [
-      { q: "Can a vCard QR code include a profile photo?", a: "While technically possible, doing so dramatically increases the size and density of the QR code, making it nearly impossible to scan." },
-      { q: "Do static vCard QR codes require an internet connection?", a: "No, a standard vCard QR code stores all contact data internally and works fully offline." }
-    ],
-    relatedArticles: ["business-card-qr-codes", "best-qr-code-size-guide"],
-    relatedTools: [
-      { name: "vCard QR Creator", slug: "vcard-qr-generator" },
-      { name: "Business Card Hub", slug: "business-card-qr-generator" }
-    ],
-    keyTakeaways: [
-      "Follows standard IETF RFC 2426 contact specification guidelines.",
-      "Directly imports names, phone numbers, and emails into smartphone address books.",
-      "Works 100% offline to protect user privacy."
-    ],
-    aiSummaryBox: {
-      entityType: "Structured Contact Import Object",
-      protocolStandard: "vCard RFC 2426 VCF data standard",
-      clientCompatibility: "Parsed natively by iOS Contacts and Android People databases.",
-      primaryUseCase: "Frictionless real-world professional contact and website sharing.",
-      offlineCapability: "100% Offline (Direct local import without database queries)."
-    }
-  },
-  {
     slug: "event-qr-codes",
     title: "Event QR Codes",
     seoTitle: "Event QR Codes: Scheduling and Ticket Integrations",
@@ -852,7 +791,7 @@ Use event QR codes on invitations, banners, tickets, and posters to help attende
       { q: "Does scanning add the event to the user's calendar automatically?", a: "No, it opens a preview of the event in the calendar app. The user must tap Save." },
       { q: "Do calendar QR codes work offline?", a: "Yes, the event coordinates are stored inside the QR code itself and work fully offline." }
     ],
-    relatedArticles: ["location-qr-codes", "vcard-qr-codes"],
+    relatedArticles: ["location-qr-codes", "business-card-qr-codes"],
     relatedTools: [
       { name: "vCard QR Creator", slug: "vcard-qr-generator" },
       { name: "Direct URL Linker", slug: "url-qr-generator" }

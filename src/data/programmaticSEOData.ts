@@ -47,79 +47,44 @@ export const getSeoIcon = (iconName: string) => {
 export const industriesData: SEOProfile[] = [
   {
     slug: 'restaurant',
-    name: 'Restaurant',
+    name: 'Restaurants, Cafes & Food Services',
     badge: 'Hospitality',
     iconName: 'Utensils',
-    metaTitle: 'Enterprise QR Codes for Restaurants | Professional Digital Menus',
-    metaDesc: 'Deploy secure digital menus, tableside ordering, and contactless checkouts for your restaurant. Streamline service operations and reduce tableside printing.',
+    metaTitle: 'Enterprise QR Codes for Restaurants & Cafes | Professional Digital Menus',
+    metaDesc: 'Deploy secure digital menus, tableside ordering, cafe preorder counters, and guest WiFi checkouts. Streamline dining operations and eliminate paper reprints.',
     heroGradient: 'from-amber-600 to-orange-800',
     challenges: [
       'Constant menu revisions and printing costs due to ingredient shortages and price inflation.',
       'Slower dining room turnover caused by staff shortages and order-entry delays.',
+      'Morning commuter counter queues in cafes blocking quick takeaway orders.',
       'Inability to collect structured customer feedback or loyalty sign-ups on physical tables.'
     ],
-    whyQRHelps: 'By shifting from paper boards to high-contrast dining QR codes on table tents, guests can view real-time prices, ingredients, and allergen warnings immediately upon seating. This cuts server greeter times and improves customer self-checkout speeds.',
+    whyQRHelps: 'By shifting from paper boards to high-contrast dining QR codes on table tents and counter coasters, guests can view real-time prices, ingredients, and allergen warnings immediately upon seating. For cafes and coffee shops, guest WiFi QR codes and social review links eliminate counter bottlenecks and let morning commuters browse specials and connect to high-speed networks in seconds.',
     workflow: [
-      'Customer scans tableside QR code using standard phone camera.',
-      'A rich, mobile-optimized dynamic menu displays live ingredients and prices.',
-      'Customer orders and processes payments securely without queuing at registers.'
+      'Customer scans tableside tent, window cling, or cafe counter coaster using standard phone camera.',
+      'A rich, mobile-optimized dynamic menu displays live ingredients, daily roasts, and pricing.',
+      'Customer orders, accesses guest WiFi, or processes payments securely without queuing at registers.'
     ],
     practices: [
-      'Apply error correction level Q to preserve scan readability despite oil smudges.',
-      'Add a clear call-to-action border reading "Scan to View Menu" around the code.',
+      'Apply error correction level Q to preserve scan readability despite oil smudges or moisture.',
+      'Position codes at eye-level on registers for cafe queues and centered on dining tables.',
+      'Add a clear call-to-action border reading "Scan to View Menu & Specials" around the code.',
       'Optimize the target web server for mobile devices to load in under a second.'
     ],
     mistakes: [
-      'Directing customers to heavy, unreadable multi-megabyte PDF files instead of dynamic pages.',
-      'Using low-contrast dot colors that are unreadable under ambient restaurant lighting.',
+      'Directing customers to heavy, unreadable multi-megabyte PDF files instead of dynamic responsive pages.',
+      'Using low-contrast pastel dot colors that are unreadable under ambient restaurant lighting or morning shadows.',
       'Placing QR decals under highly reflective glossy glass covers.'
     ],
     faq: [
       { q: 'Can I edit prices without reprinting the table QR code?', a: 'Yes. If you link to a dynamic URL, you can swap menu links or modify website pricing instantly while keeping the printed QR code identical.' },
+      { q: 'How do QR codes work for both dining menus and cafe guest WiFi?', a: 'You can deploy distinct, purpose-built codes: one dynamic URL code for your food/drink catalog and one dedicated WiFi QR code on table tents for instant guest network pairing without typing passwords.' },
       { q: 'Do older patrons struggle with scanning menu codes?', a: 'Modern smartphone cameras scan automatically without separate app installs, and keeping a few paper sheets on hand covers all diner preferences.' }
     ],
     caseStudy: {
-      title: 'Trattoria Bella local pilot',
-      metric: '38% increase in appetizer orders',
-      result: 'Contactless table codes streamlined tableside order placement, shaving 11 minutes off typical dining durations.'
-    }
-  },
-  {
-    slug: 'cafe',
-    name: 'Cafe & Coffee Shop',
-    badge: 'Hospitality',
-    iconName: 'Coffee',
-    metaTitle: 'Custom Cafe Menu QR Codes | FreeQRBarcodes',
-    metaDesc: 'Streamline coffee orders and boost local social media followers with custom cafe menu QR codes. Setup WiFi and reviews easily.',
-    heroGradient: 'from-amber-500 to-amber-800',
-    challenges: [
-      'Long morning counter lines blocking quick commuter takeouts.',
-      'Low repeat visitation rates and difficulties growing social media profiles.',
-      'Spelling out complicated guest WiFi keys dozens of times per hour.'
-    ],
-    whyQRHelps: 'A cafe WiFi QR code coupled with a quick social media follow link eliminates counter friction. Let coffee enthusiasts join guest networks, access loyalty apps, and check local menus with speed.',
-    workflow: [
-      'Commuters scan the storefront window or tableside coaster QR.',
-      'The coffee menu opens directly, letting them preorder signature blends.',
-      'A post-scan redirect invites them to follow the cafe Instagram profile.'
-    ],
-    practices: [
-      'Position codes at eye-level on registers and near the entry lines.',
-      'Coordinate the color tones with warm coffee accents.',
-      'Keep text short so modules scan instantly for users on the move.'
-    ],
-    mistakes: [
-      'Failing to test SSID capitalization on guest WiFi connections.',
-      'Using low-contrast pastel colors that struggle under early-morning shadows.',
-      'Not updating menu specials regularly.'
-    ],
-    faq: [
-      { q: 'Can I set up a single code for social profiles and WiFi?', a: 'We recommend utilizing separate, clear decals (one for Guest WiFi and one for Social Profiles) to maximize user action.' }
-    ],
-    caseStudy: {
-      title: 'Daily Grind Espresso',
-      metric: '1,400+ new Instagram followers',
-      result: 'In-store mirror stickers redirected patrons straight to their social portfolio feed, boosting review counts by 45%.'
+      title: 'Trattoria Bella & Daily Grind Espresso Pilot',
+      metric: '38% increase in appetizer/drink orders & 11-min turnover boost',
+      result: 'Contactless table tents and counter coaster QR codes streamlined order placement, shaved 11 minutes off typical dining durations, and drove over 1,400 new local customer reviews.'
     }
   },
   {
@@ -290,24 +255,6 @@ export const solutionsData = [
     targetPreset: 'restaurant'
   },
   {
-    slug: 'digital-business-card',
-    name: 'Dynamic vCard Professional Networking',
-    badge: 'Professional',
-    metaTitle: 'Professional vCard QR Code Business Cards | FreeQRBarcodes',
-    metaDesc: 'Build instant professional connections. Share phone, email, portfolio, and social profiles directly with a single scan.',
-    desc: 'Allows instant address book population without manual typing errors.',
-    targetPreset: 'business-card'
-  },
-  {
-    slug: 'google-review-booster',
-    name: 'Local SEO Google Review Boosters',
-    badge: 'SEO',
-    metaTitle: 'Google Review QR Code Generator | Boost Local SEO Ratings',
-    metaDesc: 'Boost your business rating on Google Maps. Send customers straight to your review section with a custom QR code.',
-    desc: 'Drives verified five-star ratings directly from physical checkout registers.',
-    targetPreset: 'google-review'
-  },
-  {
     slug: 'wifi-guest-onboarding',
     name: 'No-Password Guest WiFi Onboarding',
     badge: 'Utilities',
@@ -352,22 +299,6 @@ export const useCasesData = [
     metaTitle: 'Real Estate Yard Sign QR Codes | Property Virtual Tours',
     metaDesc: 'Incorporate trackable QR codes on printed lawn signs. Connect house hunters straight to immersive high-definition video tours.',
     desc: 'Connects house hunters to walk-through video tours right from physical sidewalks.'
-  },
-  {
-    slug: 'product-packaging-manuals',
-    name: 'Sustainable Product Packaging Manuals',
-    badge: 'E-commerce',
-    metaTitle: 'Product Manual QR Codes on Packaging | FreeQRBarcodes',
-    metaDesc: 'Ditch heavy paper instruction booklets. Link physical cardboard boxes directly to digital user guides, guides, and manuals.',
-    desc: 'Replaces massive paper booklets with direct links to dynamic PDF manuals.'
-  },
-  {
-    slug: 'office-lobby-wifi',
-    name: 'Lobby Visitor Network Credentials',
-    badge: 'Corporate',
-    metaTitle: 'Office Guest WiFi QR Codes | Secure Lobby Onboarding',
-    metaDesc: 'Provide high-security guest internet access securely. Let visiting corporate clients scan a lobby placard to connect instantly.',
-    desc: 'Allows visiting corporate partners to scan a placard to pair with guest servers.'
   },
   {
     slug: 'concert-ticket-validation',

@@ -377,6 +377,37 @@ app.use(compression({
       return res.redirect(301, `/${parts[0]}/privacy-policy`);
     }
 
+    // 301 Redirect consolidated duplicate/near-duplicate routes to canonical targets
+    const consolidatedPathRedirects: Record<string, string> = {
+      '/compare/qr-menu-vs-paper-menu': '/compare/restaurant-qr-vs-printed-menu',
+      '/compare/editable-vs-non-editable-qr-codes': '/compare/static-vs-dynamic-qr-code',
+      '/use-cases/office-lobby-wifi': '/solutions/wifi-guest-onboarding',
+      '/use-case/office-lobby-wifi': '/solutions/wifi-guest-onboarding',
+      '/solutions/digital-business-card': '/templates/business-card-qr-code',
+      '/solution/digital-business-card': '/templates/business-card-qr-code',
+      '/solutions/google-review-booster': '/templates/google-review-qr-code',
+      '/solution/google-review-booster': '/templates/google-review-qr-code',
+      '/use-cases/product-packaging-manuals': '/templates/product-packaging-qr-code',
+      '/use-case/product-packaging-manuals': '/templates/product-packaging-qr-code',
+      '/resources/vcard-qr-codes': '/guides/business-card-qr-codes',
+      '/knowledge/vcard-qr-codes': '/guides/business-card-qr-codes',
+      '/academy/vcard-qr-codes': '/guides/business-card-qr-codes',
+      '/guides/vcard-qr-codes': '/guides/business-card-qr-codes',
+      '/industries/cafe': '/industries/restaurant',
+      '/industry/cafe': '/industries/restaurant'
+    };
+
+    if (consolidatedPathRedirects[cleanPath]) {
+      return res.redirect(301, consolidatedPathRedirects[cleanPath]);
+    }
+
+    if (parts.length >= 2 && (SUPPORTED_LOCALES as readonly string[]).includes(parts[0])) {
+      const nonLocalePath = '/' + parts.slice(1).join('/');
+      if (consolidatedPathRedirects[nonLocalePath]) {
+        return res.redirect(301, `/${parts[0]}${consolidatedPathRedirects[nonLocalePath]}`);
+      }
+    }
+
     // 301 Redirect legacy/mismatched blog slugs to canonical blog URLs
     const blogRedirects: Record<string, string> = {
       'what-is-a-qr-code-and-how-does-it-work': 'what-is-qr-code-how-it-works',

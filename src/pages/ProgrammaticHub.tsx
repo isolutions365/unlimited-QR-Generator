@@ -285,16 +285,13 @@ export default function ProgrammaticHub({
     let defaultContent = `https://www.freeqrbarcodes.com/?ref=${activeProfile.slug}`;
     let defaultName = t('programmatic.presetDefaultName', '{{name}} Campaign QR', { name: activeProfile.name });
 
-    if (activeProfile.slug === 'wifi-guest-onboarding' || activeProfile.slug === 'office-lobby-wifi') {
+    if (activeProfile.slug === 'wifi-guest-onboarding') {
       typePreset = 'wifi';
       defaultContent = 'WIFI:S:GuestNetwork;T:WPA;P:GuestPassword123;;';
-    } else if (activeProfile.slug === 'digital-business-card') {
-      typePreset = 'card';
-      defaultContent = 'BEGIN:VCARD\nFN:John Doe\nORG:Enterprise\nTEL:1234567\nEMAIL:john@example.com\nEND:VCARD';
     } else if (activeProfile.slug === 'app-download-marketing') {
       typePreset = 'app';
       defaultContent = JSON.stringify({ ios: 'https://apps.apple.com', android: 'https://play.google.com', fallback: 'https://www.freeqrbarcodes.com' });
-    } else if (activeProfile.slug === 'restaurant' || activeProfile.slug === 'cafe') {
+    } else if (activeProfile.slug === 'restaurant') {
       typePreset = 'url';
       defaultContent = `https://www.freeqrbarcodes.com/menu-demo`;
     }

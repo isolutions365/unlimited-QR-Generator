@@ -5171,8 +5171,8 @@ export default function App() {
             <div className="flex flex-col gap-2">
               {[
                 { name: '🍔 Contactless Menu', key: 'footer.solContactlessMenu', path: '/solutions/contactless-menu' },
-                { name: '💼 Digital Business Card', key: 'footer.solDigitalBusinessCard', path: '/solutions/digital-business-card' },
-                { name: '⭐ Review Booster', key: 'footer.solReviewBooster', path: '/solutions/google-review-booster' },
+                { name: '💼 Digital Business Card', key: 'footer.solDigitalBusinessCard', path: '/templates/business-card-qr-code' },
+                { name: '⭐ Review Booster', key: 'footer.solReviewBooster', path: '/templates/google-review-qr-code' },
                 { name: '📡 WiFi Guest Onboarding', key: 'footer.solWifiOnboarding', path: '/solutions/wifi-guest-onboarding' },
                 { name: '🎟️ Event Ticketing Check-In', key: 'footer.solEventTicketing', path: '/solutions/event-ticketing-checkin' },
                 { name: '🎟️ Event Ticket QR', key: 'footer.solEventTicketQr', path: '/templates/event-ticket-qr-code' },
