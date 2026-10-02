@@ -314,8 +314,8 @@ export default function Header({
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono px-3 py-1.5">{safeT('nav.enterpriseSolutions', 'Enterprise Solutions')}</span>
                 {[
                   { name: 'Contactless Digital Menu', key: 'nav.contactlessDigitalMenu', path: '/solutions/contactless-menu', desc: 'Paperless dining lists for diners', descKey: 'nav.contactlessMenuDesc', icon: Utensils },
-                  { name: 'NFC vCard Networking', key: 'nav.nfcVcardNetworking', path: '/solutions/digital-business-card', desc: 'Seamless high-grade corporate profiles', descKey: 'nav.nfcVcardDesc', icon: Contact },
-                  { name: 'Google Review Booster', key: 'nav.googleReviewBooster', path: '/solutions/google-review-booster', desc: 'Boost organic localized stars count', descKey: 'nav.reviewBoosterDesc', icon: Sparkles },
+                  { name: 'NFC vCard Networking', key: 'nav.nfcVcardNetworking', path: '/templates/business-card-qr-code', desc: 'Seamless high-grade corporate profiles', descKey: 'nav.nfcVcardDesc', icon: Contact },
+                  { name: 'Google Review Booster', key: 'nav.googleReviewBooster', path: '/templates/google-review-qr-code', desc: 'Boost organic localized stars count', descKey: 'nav.reviewBoosterDesc', icon: Sparkles },
                   { name: 'WiFi Guest Onboarding', key: 'nav.wifiGuestOnboarding', path: '/solutions/wifi-guest-onboarding', desc: 'No-password lobby network pairing', descKey: 'nav.wifiGuestDesc', icon: Compass },
                   { name: 'Event Gate Tickets Pass', key: 'nav.eventGateTickets', path: '/solutions/event-ticketing-checkin', desc: 'Secure barcode/QR checks at door', descKey: 'nav.eventGateDesc', icon: LayoutTemplate },
                   { name: 'Unified App Marketing', key: 'nav.unifiedAppMarketing', path: '/solutions/app-download-marketing', desc: 'Smart OS download router page', descKey: 'nav.unifiedAppDesc', icon: Bot },
