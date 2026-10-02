@@ -135,7 +135,7 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
                 <Check className="w-3.5 h-3.5" />
                 {t('compare.staticPill', '100% Free Forever • Zero Sign-Up')}
               </span>
-              <span className="text-[11px] font-mono font-bold text-slate-400 uppercase">
+              <span className="text-[11px] font-mono font-bold text-slate-600 uppercase">
                 {t('compare.staticTag', 'Offline Sovereign')}
               </span>
             </div>
@@ -183,12 +183,12 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
                 </div>
               </div>
 
-              <div className="flex items-start gap-2.5 text-xs text-slate-500 pt-1">
-                <div className="w-5 h-5 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center shrink-0 mt-0.5">
+              <div className="flex items-start gap-2.5 text-xs text-slate-600 pt-1">
+                <div className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 mt-0.5">
                   <Info className="w-3 h-3" />
                 </div>
                 <div>
-                  <strong className="text-slate-700 font-medium">{t('compare.staticTradeoffTitle', 'Trade-off:')}</strong>{' '}
+                  <strong className="text-slate-800 font-medium">{t('compare.staticTradeoffTitle', 'Trade-off:')}</strong>{' '}
                   <span>{t('compare.staticTradeoffDesc', 'Cannot change the destination after printing; does not track scan counts.')}</span>
                 </div>
               </div>
@@ -197,7 +197,7 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
 
           <div className="mt-8 pt-6 border-t border-slate-150 relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="text-left w-full sm:w-auto">
-              <span className="text-[10px] uppercase font-mono font-bold text-slate-400 block">{t('compare.bestForLabel', 'Best For')}</span>
+              <span className="text-[10px] uppercase font-mono font-bold text-slate-600 block">{t('compare.bestForLabel', 'Best For')}</span>
               <span className="text-xs font-bold text-slate-800">{t('compare.staticBestFor', 'Wi-Fi, Personal vCards, Packaging, Permanent URLs')}</span>
             </div>
             {onSelectStatic && (
@@ -223,7 +223,7 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
                 <BarChart3 className="w-3.5 h-3.5" />
                 {t('compare.dynamicPill', 'Free to Try • Live Analytics & Editable')}
               </span>
-              <span className="text-[11px] font-mono font-bold text-indigo-500 uppercase">
+              <span className="text-[11px] font-mono font-bold text-indigo-700 uppercase">
                 {t('compare.dynamicTag', 'Cloud-Routed')}
               </span>
             </div>
@@ -290,7 +290,7 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
 
           <div className="mt-8 pt-6 border-t border-slate-150 relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="text-left w-full sm:w-auto">
-              <span className="text-[10px] uppercase font-mono font-bold text-slate-400 block">{t('compare.bestForLabel', 'Best For')}</span>
+              <span className="text-[10px] uppercase font-mono font-bold text-slate-600 block">{t('compare.bestForLabel', 'Best For')}</span>
               <span className="text-xs font-bold text-slate-800">{t('compare.dynamicBestFor', 'Marketing Campaigns, Restaurant Menus, Promo Flyers')}</span>
             </div>
             {onSelectDynamic && (
@@ -316,13 +316,13 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
               <Layers className="w-4 h-4 text-indigo-600" />
               <span>{t('compare.tableHeading', 'Complete Technical & Policy Matrix')}</span>
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               {t('compare.tableSubheading', 'Direct, verifiable breakdown of features, limits, and server infrastructure.')}
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-            <Database className="w-3.5 h-3.5 text-slate-400" />
+          <div className="inline-flex items-center gap-1.5 text-xs text-slate-600 font-medium">
+            <Database className="w-3.5 h-3.5 text-slate-500" />
             <span>{t('compare.firestoreBacked', 'Backed by Google Cloud Firestore')}</span>
           </div>
         </div>
@@ -351,7 +351,7 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
                 <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
                   <td className="py-4 px-4 sm:px-6">
                     <div className="font-bold text-slate-900 text-xs sm:text-sm">{row.feature}</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5 leading-snug">{row.description}</div>
+                    <div className="text-[11px] text-slate-600 mt-0.5 leading-snug">{row.description}</div>
                   </td>
 
                   {/* Static Value */}

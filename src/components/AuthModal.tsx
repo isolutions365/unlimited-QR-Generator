@@ -3,6 +3,7 @@ import { api } from '../lib/api';
 import { loginWithEmail, signupWithEmail, loginWithGoogle, verifyUserEmail, sendPasswordReset, getSignInMethods } from '../lib/firebaseAuthServices';
 import { Mail, Lock, User, X, Eye, EyeOff, Zap, KeyRound, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
+import { useReCaptchaEnterprise } from '../hooks/useReCaptchaEnterprise';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'signin' }: AuthModalProps) {
   const { t } = useTranslation();
+  const { executeToken } = useReCaptchaEnterprise({ enabled: isOpen });
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>(initialTab);
 
   React.useEffect(() => {
@@ -55,6 +57,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
 
     setIsResetLoading(true);
     try {
+      await executeToken('password_reset');
       await sendPasswordReset(resetEmail.trim());
       setResetSuccess(true);
     } catch (err: any) {
@@ -107,6 +110,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialTab = 'si
     setIsLoading(true);
 
     try {
+      await executeToken(activeTab === 'signup' ? 'signup' : 'login');
       if (activeTab === 'signup') {
         if (!((val) => (val || '').trim())(name)) throw new Error(t('auth.nameRequired', 'Name is required') as any);
         

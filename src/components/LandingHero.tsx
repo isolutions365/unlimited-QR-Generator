@@ -208,24 +208,24 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
               </span>
             </h1>
 
-            <p className="mt-5 text-sm sm:text-base md:text-lg text-slate-600 font-normal max-w-2xl leading-relaxed">
+            <p className="mt-5 text-sm sm:text-base md:text-lg text-slate-700 font-normal max-w-2xl leading-relaxed">
               {t('hero.description', 'Generate high-resolution QR codes and linear 1D barcodes directly in your browser. Static code generation and vector exports run locally in client memory with no account required and no scan limits. Optional dynamic tracking codes provide editable redirect URLs and server-logged scan metrics.')}
             </p>
 
             {/* Factual Capabilities Callout Bar */}
-            <div className="mt-4 p-3 rounded-xl bg-slate-100/80 border border-slate-200/80 text-start max-w-xl text-xs text-slate-700 space-y-1">
+            <div className="mt-4 p-3 rounded-xl bg-slate-100/90 border border-slate-200/90 text-start max-w-xl text-xs text-slate-700 space-y-1">
               <div className="flex items-center gap-1.5 font-semibold text-slate-900">
                 <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
                 <span>{t('hero.transparencyHeading', 'Client-Side Static Generation • Vector Exports • Optional Hosted Dynamic Links')}</span>
               </div>
-              <p className="text-[11px] text-slate-600 leading-snug">
+              <p className="text-[11px] text-slate-700 leading-snug">
                 {t('hero.transparencyDetails', 'Static QR codes encode fixed data directly into the visual pattern with no redirect service required from this platform. Optional dynamic QR codes encode an editable redirect URL that routes through cloud endpoints to support post-print destination updates and request analytics.')}
               </p>
             </div>
 
             {/* Quick-Category Tabs */}
             <div className="mt-7 w-full max-w-xl">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2.5 font-mono">
+              <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-2.5 font-mono">
                 {t('hero.quickToolSelect', '⚡ Quick Tool Select')}
               </span>
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
@@ -242,7 +242,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                       key={tab.id}
                       type="button"
                       onClick={() => handleNavClick(tab.id, tab.idx)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border animate-icon-blur-up ${
+                      className={`min-h-[44px] px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border inline-flex items-center justify-center animate-icon-blur-up ${
                         isSelected 
                           ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-500/20 scale-105' 
                           : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50 shadow-xs'
@@ -284,7 +284,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
             </div>
 
             {/* Key Feature Trust Indicators */}
-            <div className="mt-8 pt-6 border-t border-slate-200 w-full flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-xs text-slate-600">
+            <div className="mt-8 pt-6 border-t border-slate-200 w-full flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-xs text-slate-700">
               <span className="flex items-center gap-1.5 font-medium">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 {t('hero.freeVector', '100% Free Vector SVG & PDF')}
@@ -321,7 +321,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   animate={{ y: [0, -4, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                   onClick={() => handleNavClick('menu', 0)}
-                  className={`pointer-events-auto absolute top-0 left-0 px-2.5 py-1 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
+                  className={`pointer-events-auto absolute top-0 left-0 min-h-[44px] px-3 py-2 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold inline-flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
                     activeTextureIndex === 0 
                       ? 'bg-amber-50 border-amber-400 text-amber-900 shadow-md ring-2 ring-amber-500/20' 
                       : 'bg-white/95 border-slate-200 text-slate-700 hover:border-amber-300 shadow-xs'
@@ -337,7 +337,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   animate={{ y: [0, 4, 0] }}
                   transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
                   onClick={() => handleNavClick('payments', 1)}
-                  className={`pointer-events-auto absolute top-0 right-0 px-2.5 py-1 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
+                  className={`pointer-events-auto absolute top-0 right-0 min-h-[44px] px-3 py-2 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold inline-flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
                     activeTextureIndex === 1 
                       ? 'bg-emerald-50 border-emerald-400 text-emerald-900 shadow-md ring-2 ring-emerald-500/20' 
                       : 'bg-white/95 border-slate-200 text-slate-700 hover:border-emerald-300 shadow-xs'
@@ -353,7 +353,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   animate={{ y: [0, -5, 0] }}
                   transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
                   onClick={() => handleNavClick('print', 2)}
-                  className={`pointer-events-auto absolute top-1/2 right-0 -translate-y-1/2 px-2.5 py-1 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
+                  className={`pointer-events-auto absolute top-1/2 right-0 -translate-y-1/2 min-h-[44px] px-3 py-2 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold inline-flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
                     activeTextureIndex === 2 
                       ? 'bg-indigo-50 border-indigo-400 text-indigo-900 shadow-md ring-2 ring-indigo-500/20' 
                       : 'bg-white/95 border-slate-200 text-slate-700 hover:border-indigo-300 shadow-xs'
@@ -369,7 +369,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   animate={{ y: [0, 4, 0] }}
                   transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
                   onClick={() => handleNavClick('zatca', 3)}
-                  className={`pointer-events-auto absolute bottom-0 left-0 px-2.5 py-1 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
+                  className={`pointer-events-auto absolute bottom-0 left-0 min-h-[44px] px-3 py-2 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold inline-flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
                     activeTextureIndex === 3 
                       ? 'bg-emerald-50 border-emerald-400 text-emerald-900 shadow-md ring-2 ring-emerald-500/20' 
                       : 'bg-white/95 border-slate-200 text-slate-700 hover:border-emerald-300 shadow-xs'
@@ -385,7 +385,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                   animate={{ y: [0, -4, 0] }}
                   transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
                   onClick={() => handleNavClick('card', 4)}
-                  className={`pointer-events-auto absolute bottom-0 right-0 px-2.5 py-1 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
+                  className={`pointer-events-auto absolute bottom-0 right-0 min-h-[44px] px-3 py-2 rounded-2xl border backdrop-blur-md text-[10px] sm:text-[11px] font-bold inline-flex items-center gap-1.5 cursor-pointer transition-all animate-icon-blur-up ${
                     activeTextureIndex === 4 
                       ? 'bg-purple-50 border-purple-400 text-purple-900 shadow-md ring-2 ring-purple-500/20' 
                       : 'bg-white/95 border-slate-200 text-slate-700 hover:border-purple-300 shadow-xs'
@@ -607,7 +607,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                           </div>
                           <div className="min-w-0 text-left">
                             <span className="text-[10px] font-bold text-slate-900 block truncate">TLV Base64 Encoded QR</span>
-                            <span className="text-[8px] text-slate-500 block">Cryptographic Stamp Compliant</span>
+                            <span className="text-[9px] text-slate-600 block">Cryptographic Stamp Compliant</span>
                           </div>
                         </div>
                       </motion.div>
@@ -633,7 +633,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
 
                         <div className="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs text-left space-y-1">
                           <span className="text-[10px] font-bold text-slate-900 block">Annual Tech Summit 2026</span>
-                          <span className="text-[9px] text-slate-500 block">Live RSVP & Badge Issuance</span>
+                          <span className="text-[9px] text-slate-600 block">Live RSVP & Badge Issuance</span>
                           <div className="w-full bg-purple-100 h-1.5 rounded-full overflow-hidden mt-1">
                             <div className="bg-purple-600 h-full w-3/4" />
                           </div>
@@ -645,7 +645,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                           </div>
                           <div className="min-w-0 text-left">
                             <span className="text-[10px] font-bold text-slate-900 block truncate">Scan for Instant RSVP</span>
-                            <span className="text-[8px] text-slate-500 block">Auto-Sync Lead Submissions</span>
+                            <span className="text-[9px] text-slate-600 block">Auto-Sync Lead Submissions</span>
                           </div>
                         </div>
                       </motion.div>
@@ -656,7 +656,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
 
                 {/* Autoplay Progress Dots Footer */}
                 <div className="flex items-center justify-between z-10 [transform:translateZ(30px)] pt-2 border-t border-slate-100">
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1">
                     {TEXTURES.map((tItem, idx) => (
                       <button
                         key={tItem.id}
@@ -665,14 +665,18 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                           setActiveTextureIndex(idx);
                           setIsAutoPlaying(false);
                         }}
-                        className={`h-1.5 rounded-full transition-all ${
-                          activeTextureIndex === idx ? 'w-6 bg-indigo-600' : 'w-1.5 bg-slate-300 hover:bg-slate-400'
-                        }`}
+                        className="min-h-[44px] min-w-[32px] sm:min-w-[40px] px-1 py-3 inline-flex items-center justify-center cursor-pointer"
                         aria-label={`Select texture ${tItem.badgeTitle}`}
-                      />
+                      >
+                        <span
+                          className={`h-2 rounded-full transition-all block ${
+                            activeTextureIndex === idx ? 'w-6 bg-indigo-600' : 'w-2 bg-slate-300 hover:bg-slate-500'
+                          }`}
+                        />
+                      </button>
                     ))}
                   </div>
-                  <span className="text-[9px] font-mono text-slate-500 uppercase">
+                  <span className="text-[10px] font-mono text-slate-600 font-semibold uppercase">
                     {t('hero.interactivePreview', '3D Interactive Preview')}
                   </span>
                 </div>

@@ -13,6 +13,7 @@ import { api } from '../lib/api';
 import { playAudioSound } from '../utils/audioFeedback';
 import { useTranslation } from '../utils/i18n';
 import { buildProductionUrl } from '../config/siteConfig';
+import { useReCaptchaEnterprise } from '../hooks/useReCaptchaEnterprise';
 
 // Interfaces
 interface PdfVersion {
@@ -52,6 +53,7 @@ const PRESET_PDF_TEMPLATES = [
 
 export default function PdfSharing() {
   const { t, locale } = useTranslation();
+  const { executeToken } = useReCaptchaEnterprise();
   const isRtl = locale === 'ar' || locale === 'ur';
   const isArabic = locale === 'ar';
   const isUrdu = locale === 'ur';
@@ -417,6 +419,7 @@ export default function PdfSharing() {
     setFileError(null);
 
     try {
+      await executeToken('pdf_share_create');
       const token = await getAuthToken();
       if (!token) {
         throw new Error('Authentication required to create a PDF share');

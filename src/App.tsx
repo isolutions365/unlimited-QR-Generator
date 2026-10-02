@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getProductionBaseUrl } from './config/siteConfig';
 import { api, UserSession } from './lib/api';
 import { useFirebaseAuth } from './context/FirebaseAuthContext';
-import { useReCaptchaEnterprise } from './hooks/useReCaptchaEnterprise';
 import { auth } from './lib/firebase';
 import { signInAnonymously } from 'firebase/auth';
 import { QRProject, ScanLog, AppTab } from './types';
@@ -399,7 +398,6 @@ const categoryCardVariants: any = {
 
 export default function App() {
   const { user: fbUser, loading: fbLoading, logout: fbLogout } = useFirebaseAuth();
-  useReCaptchaEnterprise(); // Safely initialize and execute reCAPTCHA Enterprise on mount
 
   // Embed reCAPTCHA badge guard (cleanup if any stale badges exist)
   useEffect(() => {

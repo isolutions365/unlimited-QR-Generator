@@ -15,7 +15,10 @@ export default defineConfig(() => {
     },
     build: {
       manifest: true,
-      target: 'es2022',
+      target: ['es2022', 'chrome100', 'firefox100', 'safari15.4', 'edge100'],
+      modulePreload: {
+        polyfill: false,
+      },
       minify: 'esbuild' as const,
       cssMinify: true,
       sourcemap: false,

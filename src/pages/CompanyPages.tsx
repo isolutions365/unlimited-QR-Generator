@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../utils/i18n';
 import BreadcrumbNav from '../components/BreadcrumbNav';
+import { useReCaptchaEnterprise } from '../hooks/useReCaptchaEnterprise';
 
 import { ShieldCheck, Mail, MapPin, Users, Award, Briefcase, Heart, Send, CheckCircle2, Globe, ArrowLeft, MessageSquare, Phone, Info } from 'lucide-react';
 
@@ -12,6 +13,7 @@ interface CompanyPagesProps {
 export default function CompanyPages({
    view, onNavigate }: CompanyPagesProps) {
   const { t } = useTranslation();
+  const { executeToken } = useReCaptchaEnterprise({ enabled: view === 'contact' });
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -85,9 +87,10 @@ export default function CompanyPages({
     "url": `https://www.freeqrbarcodes.com/${view}`
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    await executeToken('contact_form');
     // Simulate API contact request
     setTimeout(() => {
       setIsSubmitting(false);

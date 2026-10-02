@@ -21,6 +21,7 @@ import { isRtlLocale } from '../utils/translations';
 import { renderStyledQR } from '../utils/qrRenderer';
 import { FrameStyle } from '../types';
 import BulkFormatHelpModal from './BulkFormatHelpModal';
+import { useReCaptchaEnterprise } from '../hooks/useReCaptchaEnterprise';
 
 interface BulkEntry {
   id: string;
@@ -32,6 +33,7 @@ interface BulkEntry {
 
 export default function BulkQRGenerator() {
   const { t, locale } = useTranslation();
+  const { executeToken } = useReCaptchaEnterprise();
   const isRtl = isRtlLocale(locale);
   
   const [entries, setEntries] = useState<BulkEntry[]>([]);
@@ -275,6 +277,7 @@ export default function BulkQRGenerator() {
   const startGeneration = async () => {
     if (entries.length === 0) return;
     
+    await executeToken('bulk_generate');
     setStatus('generating');
     setProgress(0);
     setErrorMessage('');

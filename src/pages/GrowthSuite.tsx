@@ -13,6 +13,7 @@ import {
   RefreshCw, Layers, Sliders, Play, Trash2, CheckCircle2, ChevronDown, Bell, Key, ShieldAlert, Home
 } from 'lucide-react';
 import { api } from '../lib/api';
+import { useReCaptchaEnterprise } from '../hooks/useReCaptchaEnterprise';
 
 interface GrowthSuiteProps {
   view: string;
@@ -26,6 +27,7 @@ export default function GrowthSuite({
    view: initialView, onNavigate, locale, user, onSignInClick }: GrowthSuiteProps) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<string>(initialView || 'profile');
+  const { executeToken } = useReCaptchaEnterprise({ enabled: activeTab === 'feedback' });
   const [profile, setProfile] = useState<any>(null);
   const [referrals, setReferrals] = useState<any>(null);
   const [posts, setPosts] = useState<any[]>([]);
@@ -303,6 +305,7 @@ export default function GrowthSuite({
     if (!((val) => (val || '').trim())(feedbackText)) return;
     try {
       setLoading(true);
+      await executeToken('feedback_submit');
       await api.submitFeedback({
         type: feedbackType,
         satisfaction: feedbackSatisfaction,
