@@ -10,16 +10,10 @@ import { getBlogArticles, checkArticleTranslationStatus } from './data/blogData'
 import { getAllVerifiedRoutes } from './data/sitemapRegistry';
 import ControlPanel from './components/ControlPanel';
 import PreviewPanel from './components/PreviewPanel';
-import AuthModal from './components/AuthModal';
-import ShortcutsHelpModal from './components/ShortcutsHelpModal';
-import TourWelcomeModal from './components/TourWelcomeModal';
-import SettingsModal from './components/SettingsModal';
-import AIAssistantWidget from './components/AIAssistantWidget';
 import QRRedirector from './components/QRRedirector';
 import AppLayoutShell from './components/AppLayoutShell';
 import MobileQRWorkspace from './components/MobileQRWorkspace';
 import ScrollableTabContainer from './components/ScrollableTabContainer';
-import BulkFormatHelpModal from './components/BulkFormatHelpModal';
 import { usePlatformLayout } from './hooks/usePlatformLayout';
 import { MobileTabType } from './components/MobileBottomNav';
 import { SoundSettings, getDefaultSoundSettings, playAudioSound } from './utils/audioFeedback';
@@ -29,27 +23,15 @@ import {
   saveScanNotificationSettings,
   isDNDActiveNow,
 } from './utils/scanNotificationSettings';
+import { lazyWithRetry } from './utils/lazyWithRetry';
 
-// Code-splitting via React.lazy for secondary landing & hub pages
-// Resilient lazy loader helper for dynamic imports
-function lazyWithRetry<T extends React.ComponentType<any>>(
-  factory: () => Promise<{ default: T }>
-) {
-  return React.lazy(async () => {
-    try {
-      return await factory();
-    } catch (error) {
-      // Retry once by reloading window session if module fetch failed
-      const hasRefreshed = sessionStorage.getItem('lazy_retry_refreshed');
-      if (!hasRefreshed) {
-        sessionStorage.setItem('lazy_retry_refreshed', 'true');
-        window.location.reload();
-      }
-      throw error;
-    }
-  });
-}
-
+// Code-splitting via React.lazy for secondary modals, widgets, landing & hub pages
+const AuthModal = lazyWithRetry(() => import('./components/AuthModal'));
+const ShortcutsHelpModal = lazyWithRetry(() => import('./components/ShortcutsHelpModal'));
+const TourWelcomeModal = lazyWithRetry(() => import('./components/TourWelcomeModal'));
+const SettingsModal = lazyWithRetry(() => import('./components/SettingsModal'));
+const AIAssistantWidget = lazyWithRetry(() => import('./components/AIAssistantWidget'));
+const BulkFormatHelpModal = lazyWithRetry(() => import('./components/BulkFormatHelpModal'));
 const SEOPage = lazyWithRetry(() => import('./pages/landing/SEOPage'));
 const BulkQRGenerator = lazyWithRetry(() => import('./components/BulkQRGenerator'));
 const AnimationsShowcase = lazyWithRetry(() => import('./components/AnimationsShowcase'));
@@ -6025,31 +6007,33 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Global Sound & Preferences Modal */}
-      <SettingsModal
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-        soundSettings={soundSettings}
-        onUpdateSoundSettings={setSoundSettings}
-        scanSettings={scanSettings}
-        onUpdateScanSettings={handleUpdateScanSettings}
-      />
+      {/* Global Sound & Preferences Modal, Bulk Help, & AI Assistant */}
+      <React.Suspense fallback={null}>
+        <SettingsModal
+          isOpen={isSettingsModalOpen}
+          onClose={() => setIsSettingsModalOpen(false)}
+          soundSettings={soundSettings}
+          onUpdateSoundSettings={setSoundSettings}
+          scanSettings={scanSettings}
+          onUpdateScanSettings={handleUpdateScanSettings}
+        />
 
-      {/* CSV & Excel File Format Instructions Modal for Bulk QR Generator */}
-      <BulkFormatHelpModal
-        isOpen={isBulkHelpModalOpen}
-        onClose={() => setIsBulkHelpModalOpen(false)}
-        onGoToBulkTab={() => setActiveTab('bulk')}
-      />
+        {/* CSV & Excel File Format Instructions Modal for Bulk QR Generator */}
+        <BulkFormatHelpModal
+          isOpen={isBulkHelpModalOpen}
+          onClose={() => setIsBulkHelpModalOpen(false)}
+          onGoToBulkTab={() => setActiveTab('bulk')}
+        />
 
-      {/* Campaign AI Assistant Widget */}
-      <AIAssistantWidget
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onNavigate={navigateTo}
-        currentProject={currentProject}
-        onUpdateProject={setCurrentProject}
-      />
+        {/* Campaign AI Assistant Widget */}
+        <AIAssistantWidget
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onNavigate={navigateTo}
+          currentProject={currentProject}
+          onUpdateProject={setCurrentProject}
+        />
+      </React.Suspense>
     </div>
   );
 }

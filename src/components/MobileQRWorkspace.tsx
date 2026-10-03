@@ -13,11 +13,13 @@ import {
 } from 'lucide-react';
 import ControlPanel from './ControlPanel';
 import PreviewPanel from './PreviewPanel';
-import SavedProjects from './SavedProjects';
 import { MemoizedQRCanvas } from './MemoizedQRCanvas';
 import { QRProject } from '../types';
 import { SoundSettings } from '../utils/audioFeedback';
 import { useTranslation } from '../utils/i18n';
+import { lazyWithRetry } from '../utils/lazyWithRetry';
+
+const SavedProjects = lazyWithRetry(() => import('./SavedProjects'));
 
 interface MobileQRWorkspaceProps {
   currentProject: Partial<QRProject>;
@@ -429,20 +431,26 @@ export default function MobileQRWorkspace({
           transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
           className="space-y-3.5"
         >
-          <SavedProjects
-            projects={projects}
-            onSelect={(proj) => {
-              onSelectProject(proj);
-              setMobileTab('editor');
-            }}
-            onDelete={onDeleteProject}
-            onBatchDelete={onBatchDeleteProjects}
-            onSeedData={onSeedScanClick}
-            onUpdateCategory={onUpdateProjectCategory}
-            onBatchUpdateCategory={onBatchUpdateCategory}
-            isLoading={isLoadingData}
-            onReorderProjects={onReorderProjects}
-          />
+          <React.Suspense fallback={
+            <div className="flex items-center justify-center p-8 min-h-[160px]">
+              <div className="w-6 h-6 rounded-full border-2 border-indigo-600/20 border-t-indigo-600 animate-spin" />
+            </div>
+          }>
+            <SavedProjects
+              projects={projects}
+              onSelect={(proj) => {
+                onSelectProject(proj);
+                setMobileTab('editor');
+              }}
+              onDelete={onDeleteProject}
+              onBatchDelete={onBatchDeleteProjects}
+              onSeedData={onSeedScanClick}
+              onUpdateCategory={onUpdateProjectCategory}
+              onBatchUpdateCategory={onBatchUpdateCategory}
+              isLoading={isLoadingData}
+              onReorderProjects={onReorderProjects}
+            />
+          </React.Suspense>
         </motion.div>
       )}
     </div>
