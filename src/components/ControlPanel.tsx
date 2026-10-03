@@ -779,10 +779,11 @@ export default function ControlPanel({ currentProject,
         whileHover={{
           scale: 1.015,
           y: -2,
-          boxShadow: '0 8px 20px -8px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.04)'
+          filter: 'drop-shadow(0 8px 12px rgba(0, 0, 0, 0.08)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.04))'
         }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-4"
+        style={{ willChange: 'transform' }}
+        className="p-4 bg-gray-50/40 rounded-xl border border-gray-200/40 hover:bg-white hover:border-gray-200/80 transition-all duration-300 shadow-sm space-y-4 will-change-transform transform-gpu"
       >
         <div>
           <label htmlFor="project-name-input" className="block text-xs font-semibold text-slate-800 mb-1">{t('control.projectNameLabel', 'Project Name')}</label>

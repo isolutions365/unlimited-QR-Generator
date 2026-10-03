@@ -382,11 +382,13 @@
     </script>
     <!-- DYNAMIC_SCHEMA_END -->
 
-    <!-- Performance Optimization: Limit to critical preconnects (Max 3 to satisfy PageSpeed audits) -->
+    <!-- Performance Optimization: Critical preconnects for Google Fonts and Firebase Auth APIs -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://api.producthunt.com" />
-    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+    <link rel="preconnect" href="https://gen-lang-client-0962876854.firebaseapp.com" crossorigin />
+    <link rel="preconnect" href="https://apis.google.com" crossorigin />
+    <link rel="preconnect" href="https://www.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
 
     <!-- Font Asynchronous Preloading to minimize Render Blocking (FCP, LCP, SI optimized) -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
