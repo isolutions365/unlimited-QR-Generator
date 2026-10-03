@@ -204,7 +204,7 @@ export const StaticVsDynamicComparison: React.FC<StaticVsDynamicComparisonProps>
               <button
                 type="button"
                 onClick={onSelectStatic}
-                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+                className="w-full sm:w-auto px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold rounded-xl text-xs transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
               >
                 <span>{t('compare.createStaticBtn', 'Create Static QR')}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
