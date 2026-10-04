@@ -1340,7 +1340,6 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     const cached = seoResponseCache.get(cacheKey);
     const now = Date.now();
     if (cached && (now - cached.timestamp) < SEO_CACHE_TTL_MS) {
-      res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
       res.setHeader('CDN-Cache-Control', 'no-store');
@@ -1889,8 +1888,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       html = html.replace('<div id="root"></div>', `<div id="root">${wrappedNoscriptHtml}</div>`);
     }
 
-    // Set high performance non-stale headers and CSP report-only header
-    res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.producthunt.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.google.com https://www.producthunt.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';");
+    // Set high performance non-stale headers
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate');
     res.setHeader('CDN-Cache-Control', 'no-store');
