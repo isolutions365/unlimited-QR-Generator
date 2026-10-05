@@ -2,14 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9YC4RNZWB3"></script>
+    <!-- Google tag (gtag.js) - Queue initialized immediately, script injected on browser idle -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-9YC4RNZWB3');
+
+      (function() {
+        function loadGtm() {
+          if (window.__gtmLoaded) return;
+          window.__gtmLoaded = true;
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-9YC4RNZWB3';
+          document.head.appendChild(s);
+        }
+
+        function scheduleGtm() {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadGtm, { timeout: 2000 });
+          } else {
+            setTimeout(loadGtm, 1500);
+          }
+        }
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          scheduleGtm();
+        } else {
+          window.addEventListener('DOMContentLoaded', scheduleGtm, { once: true });
+        }
+      })();
     </script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, s-maxage=0" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -277,16 +300,32 @@
     <meta name="indexnow-verification" content="58b88f6bad214a2d81bb516a4541ac02" />
     <meta name="google-adsense-account" content="ca-pub-1877345878061699">
     <script>
-      // Non-blocking deferred loading of AdSense to optimize PageSpeed metrics and prevent main-thread blocking
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          const script = document.createElement('script');
+      // Non-blocking deferred loading of AdSense via requestIdleCallback to eliminate TBT contribution
+      (function() {
+        function loadAdSense() {
+          if (window.__adsenseLoaded) return;
+          window.__adsenseLoaded = true;
+          var script = document.createElement('script');
           script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1877345878061699";
           script.async = true;
           script.crossOrigin = "anonymous";
           document.head.appendChild(script);
-        }, 1500); // 1.5s delay to let browser finish first contentful paint (FCP) and interactive state
-      });
+        }
+
+        function scheduleAdSense() {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadAdSense, { timeout: 3500 });
+          } else {
+            setTimeout(loadAdSense, 3000);
+          }
+        }
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          scheduleAdSense();
+        } else {
+          window.addEventListener('DOMContentLoaded', scheduleAdSense, { once: true });
+        }
+      })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Free QR Code Generator - Dynamic QR Codes & Custom Creator</title>
