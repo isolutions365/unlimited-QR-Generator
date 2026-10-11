@@ -1251,15 +1251,16 @@ export function extractLocaleAndPath(pathname: string): { locale: SupportedLocal
 }
 
 /**
- * Generates the full hreflang alternates link tags for all 14 supported languages + x-default.
- * For blog articles, it verifies translation existence in each locale before advertising alternates.
+ * Checks whether a given path is translated in a specific locale.
+ * Returns true for 'en'.
+ * For /blog/:slug, checks if the post slug exists in that locale's blog JSON.
+ * For other routes, checks if getLocalizedSeoMetadata returns a non-empty title.
  */
-export function buildHreflangTags(cleanPath: string, baseUrl = 'https://www.freeqrbarcodes.com'): string {
-  const normalizedPath = cleanPath === '/' ? '' : (cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`);
-  const enUrl = `${baseUrl}${normalizedPath || '/'}`;
-  
+export function isLocaleTranslated(locale: string, cleanPath: string): boolean {
+  if (locale === 'en') return true;
+
   if (cleanPath.startsWith('/blog/')) {
-    const slug = cleanPath.substring(6);
+    const slug = cleanPath.substring(6).replace(/\/$/, '');
     const blogLocalesMap: Record<string, any[]> = {
       ar: blogAr,
       ur: blogUr,
@@ -1275,39 +1276,44 @@ export function buildHreflangTags(cleanPath: string, baseUrl = 'https://www.free
       ja: blogJa,
       ko: blogKo,
     };
-
-    const entries: { hreflang: string; href: string }[] = [
-      { hreflang: 'en', href: enUrl }
-    ];
-
-    for (const [loc, list] of Object.entries(blogLocalesMap)) {
-      if (Array.isArray(list) && list.some((a: any) => a.slug === slug)) {
-        entries.push({ hreflang: loc, href: `${baseUrl}/${loc}${normalizedPath}` });
-      }
-    }
-
-    entries.push({ hreflang: 'x-default', href: enUrl });
-    return entries.map(e => `<link rel="alternate" hreflang="${e.hreflang}" href="${e.href}" />`).join('\n    ');
+    const list = blogLocalesMap[locale];
+    return Array.isArray(list) && list.some((a: any) => a && a.slug === slug);
   }
 
+  const meta = getLocalizedSeoMetadata(cleanPath, locale as SupportedLocale, '', '');
+  return Boolean(meta && meta.title && meta.title.trim().length > 0);
+}
+
+/**
+ * Generates the full hreflang alternates link tags for all translated languages + x-default.
+ * If no translated locales exist for the path, returns an empty string (no hreflang tags).
+ * If translations exist, outputs en + each translated locale + x-default.
+ */
+export function buildHreflangTags(
+  cleanPath: string,
+  baseUrl = 'https://www.freeqrbarcodes.com',
+  translatedLocales?: string[]
+): string {
+  const locales = translatedLocales ?? (SUPPORTED_LOCALES as readonly string[]).filter(
+    (loc) => loc !== 'en' && isLocaleTranslated(loc, cleanPath)
+  );
+
+  if (!locales || locales.length === 0) {
+    return '';
+  }
+
+  const normalizedPath = cleanPath === '/' ? '' : (cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`);
+  const enUrl = `${baseUrl}${normalizedPath || '/'}`;
+
   const entries: { hreflang: string; href: string }[] = [
-    { hreflang: 'en', href: enUrl },
-    { hreflang: 'ar', href: `${baseUrl}/ar${normalizedPath}` },
-    { hreflang: 'ur', href: `${baseUrl}/ur${normalizedPath}` },
-    { hreflang: 'de', href: `${baseUrl}/de${normalizedPath}` },
-    { hreflang: 'fr', href: `${baseUrl}/fr${normalizedPath}` },
-    { hreflang: 'es', href: `${baseUrl}/es${normalizedPath}` },
-    { hreflang: 'pt', href: `${baseUrl}/pt${normalizedPath}` },
-    { hreflang: 'it', href: `${baseUrl}/it${normalizedPath}` },
-    { hreflang: 'tr', href: `${baseUrl}/tr${normalizedPath}` },
-    { hreflang: 'id', href: `${baseUrl}/id${normalizedPath}` },
-    { hreflang: 'hi', href: `${baseUrl}/hi${normalizedPath}` },
-    { hreflang: 'zh', href: `${baseUrl}/zh${normalizedPath}` },
-    { hreflang: 'ja', href: `${baseUrl}/ja${normalizedPath}` },
-    { hreflang: 'ko', href: `${baseUrl}/ko${normalizedPath}` },
-    { hreflang: 'x-default', href: enUrl }
+    { hreflang: 'en', href: enUrl }
   ];
 
+  for (const loc of locales) {
+    entries.push({ hreflang: loc, href: `${baseUrl}/${loc}${normalizedPath}` });
+  }
+
+  entries.push({ hreflang: 'x-default', href: enUrl });
   return entries.map(e => `<link rel="alternate" hreflang="${e.hreflang}" href="${e.href}" />`).join('\n    ');
 }
 
@@ -1394,7 +1400,7 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     // 1. Exact match in sitemapRoutes
     let matchedRoute = sitemapRoutes.find(r => r.path === cleanPath);
     
-    // 2. Pattern match for blog posts: /blog/:slug
+    // 2. Pattern match for blog posts: /blog/:slug (only known if slug exists in blogArticles)
     let isBlogPost = false;
     let blogSlug = '';
     if (cleanPath.startsWith('/blog/')) {
@@ -1410,6 +1416,36 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       isSolution = true;
     }
 
+    // 4. App-only routes (known interactive/authenticated routes that should be noindex, follow)
+    const isAppRoute = (
+      cleanPath === '/login' ||
+      cleanPath === '/signup' ||
+      cleanPath === '/register' ||
+      cleanPath === '/signin' ||
+      cleanPath === '/auth' ||
+      cleanPath === '/analytics' ||
+      cleanPath === '/profile' ||
+      cleanPath === '/embed' ||
+      cleanPath === '/menu-preview' ||
+      cleanPath === '/card-preview' ||
+      cleanPath === '/share-preview' ||
+      cleanPath === '/i18n-dashboard' ||
+      cleanPath === '/ai-gateway' ||
+      cleanPath === '/marketing-platform' ||
+      cleanPath === '/generator' ||
+      cleanPath === '/tool' ||
+      cleanPath === '/studio' ||
+      cleanPath.startsWith('/qr/')
+    );
+
+    // 5. Determine whether route is known
+    const isKnownContentRoute = Boolean(matchedRoute || isBlogPost || isSolution);
+    const isKnown = isKnownContentRoute || isAppRoute;
+    const shouldNoIndex = isAppRoute || !isKnown;
+
+    // 6. Translation verification
+    const translated = isLocaleTranslated(locale, cleanPath);
+
     // ============================================
     // SEO DATA & SCHEMA GENERATION
     // ============================================
@@ -1417,9 +1453,18 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     const baseUrl = 'https://www.freeqrbarcodes.com';
     let pageTitle = 'Free QR Code Generator - Dynamic QR Codes & Custom Creator';
     let pageDescription = 'Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.';
-    let pageUrl = locale === 'en'
-      ? `${baseUrl}${cleanPath === '/' ? '/' : cleanPath}`
-      : `${baseUrl}/${locale}${cleanPath === '/' ? '' : cleanPath}`;
+    
+    // Determine canonical URL:
+    // If locale !== 'en' and untranslated, point canonical to English version
+    let canonicalUrl: string;
+    if (locale !== 'en' && !translated) {
+      canonicalUrl = `${baseUrl}${cleanPath === '/' ? '/' : cleanPath}`;
+    } else {
+      canonicalUrl = locale === 'en'
+        ? `${baseUrl}${cleanPath === '/' ? '/' : cleanPath}`
+        : `${baseUrl}/${locale}${cleanPath === '/' ? '' : cleanPath}`;
+    }
+    let pageUrl = canonicalUrl;
     let schemaJson: any = buildHomepageSchema(locale);
     let prerenderedH1 = '';
     let noscriptHtml = '';
@@ -1823,13 +1868,28 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
       html = html.replace('</head>', `<link rel="canonical" href="${pageUrl}" />\n</head>`);
     }
 
-    // Inject Complete Hreflang Tags (en, ar, ur, hi, fr, es, tr, id — plus x-default)
-    const hreflangTags = buildHreflangTags(cleanPath, baseUrl);
-    html = html.replace(/<link[^>]*hreflang=["'][^"']*["'][^>]*>\s*/gi, '');
-    if (html.includes('rel="canonical"')) {
-      html = html.replace(/(<link[^>]*rel=["']canonical["'][^>]*>)/i, `$1\n    ${hreflangTags}`);
+    // Inject Robots Meta Tag (noindex, follow for app-only and unmatched routes; index, follow for known indexable routes)
+    const robotsContent = shouldNoIndex ? 'noindex, follow' : 'index, follow';
+    if (html.includes('name="robots"')) {
+      html = html.replace(/<meta[^>]*name=["']robots["'][^>]*>/i, `<meta name="robots" content="${robotsContent}" />`);
     } else {
-      html = html.replace('</head>', `    ${hreflangTags}\n</head>`);
+      html = html.replace('</head>', `<meta name="robots" content="${robotsContent}" />\n</head>`);
+    }
+
+    // Inject Hreflang Tags:
+    // Strip existing hreflang tags first
+    html = html.replace(/<link[^>]*hreflang=["'][^"']*["'][^>]*>\s*/gi, '');
+    
+    // Only inject hreflang tags if NOT shouldNoIndex and the path is translated into one or more non-English locales
+    if (!shouldNoIndex) {
+      const hreflangTags = buildHreflangTags(cleanPath, baseUrl);
+      if (hreflangTags && hreflangTags.trim().length > 0) {
+        if (html.includes('rel="canonical"')) {
+          html = html.replace(/(<link[^>]*rel=["']canonical["'][^>]*>)/i, `$1\n    ${hreflangTags}`);
+        } else {
+          html = html.replace('</head>', `    ${hreflangTags}\n</head>`);
+        }
+      }
     }
     
     // Inject OpenGraph Tags
