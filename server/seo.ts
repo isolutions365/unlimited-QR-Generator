@@ -1329,6 +1329,11 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
   try {
     const rawPath = (req.path || '/').replace(/\/+$/, '') || '/';
     
+    // FIX 1: Reject locale-prefixed asset requests with 404
+    if (/^\/[a-z]{2}\/assets(\/|$)/.test(rawPath)) {
+      return res.status(404).type('text/plain').send('Not found');
+    }
+    
     // Skip API and static asset requests
     if (
       rawPath.startsWith('/api/') || 
@@ -1455,9 +1460,14 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     let pageDescription = 'Create free dynamic QR codes with logos, custom colors, gradients, and real-time scan analytics. Complete with full design control, no sign-up required.';
     
     // Determine canonical URL:
-    // If locale !== 'en' and untranslated, point canonical to English version
+    // FIX 2: When shouldNoIndex is true (app-only or unmatched routes), set canonicalUrl to the requested URL itself (locale-prefixed if present).
+    // For indexable pages: if locale !== 'en' and untranslated, point canonical to English version; otherwise self-canonical.
     let canonicalUrl: string;
-    if (locale !== 'en' && !translated) {
+    if (shouldNoIndex) {
+      canonicalUrl = locale === 'en'
+        ? `${baseUrl}${cleanPath === '/' ? '/' : cleanPath}`
+        : `${baseUrl}/${locale}${cleanPath === '/' ? '' : cleanPath}`;
+    } else if (locale !== 'en' && !translated) {
       canonicalUrl = `${baseUrl}${cleanPath === '/' ? '/' : cleanPath}`;
     } else {
       canonicalUrl = locale === 'en'
@@ -1831,10 +1841,35 @@ export async function serveHtmlWithSeoAndSchema(req: express.Request, res: expre
     // ============================================
     // APPLY LOCALIZED SEO METADATA (P2 FIX)
     // ============================================
+    const englishDescription = pageDescription;
     if (locale !== 'en') {
       const localized = getLocalizedSeoMetadata(cleanPath, locale, pageTitle, pageDescription);
       pageTitle = localized.title;
       pageDescription = localized.description;
+
+      if (translated === true && !shouldNoIndex) {
+        const localizedH1 = pageTitle.split(' - ')[0].split(' | ')[0];
+        if (prerenderedH1) {
+          const oldPrerenderedH1 = prerenderedH1;
+          prerenderedH1 = prerenderedH1.replace(/<h1([^>]*)>.*?<\/h1>/s, `<h1$1>${localizedH1}</h1>`);
+          if (noscriptHtml.includes(oldPrerenderedH1)) {
+            noscriptHtml = noscriptHtml.replace(oldPrerenderedH1, prerenderedH1);
+          } else {
+            noscriptHtml = noscriptHtml.replace(/<h1([^>]*)>.*?<\/h1>/s, `<h1$1>${localizedH1}</h1>`);
+          }
+        } else {
+          prerenderedH1 = `<h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">${localizedH1}</h1>`;
+        }
+
+        if (englishDescription && noscriptHtml.includes(englishDescription)) {
+          noscriptHtml = noscriptHtml.replace(englishDescription, pageDescription);
+        } else {
+          noscriptHtml = noscriptHtml.replace(
+            /(<p class="text-base text-slate-700 leading-relaxed[^"]*">).*?(<\/p>)/s,
+            `$1${pageDescription}$2`
+          );
+        }
+      }
     }
 
     // ============================================
