@@ -136,7 +136,7 @@ export default function CompanyPages({
               {t('company.journeyBadge', 'Our Journey')}
             </span>
             <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-none">
-              {t('company.aboutTitle', 'About iSolutions QR Generator')}
+              {t('company.aboutTitle', 'About Free QR Code Generator')}
             </h1>
             <p className="text-base text-slate-600 max-w-2xl leading-relaxed">
               {t('company.aboutDesc', "We started with a simple belief: QR codes don't have to be boring black-and-white grids. They can be dynamic, artistic extensions of your visual and corporate brand identity.")}
@@ -233,7 +233,7 @@ export default function CompanyPages({
             <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest font-mono">{t('company.operationsBadge', 'Our Operations')}</span>
             <h2 className="text-lg font-extrabold text-white tracking-tight">{t('company.operationsTitle', 'Powered by iSolutions ICo')}</h2>
             <p className="text-xs text-slate-300 leading-relaxed max-w-xl">
-              {t('company.operationsDesc', 'iSolutions QR Generator is designed and developed by <strong>iSolutions ICo</strong>. We specialize in high-availability web tools, responsive UX designs, and robust systems aimed at making marketing technology accessible to everyone.', { strong: (chunks) => <strong>{chunks}</strong> })}
+              {t('company.operationsDesc', 'FreeQRBarcodes is designed and developed by <strong>iSolutions ICo</strong>. We specialize in high-availability web tools, responsive UX designs, and robust systems aimed at making marketing technology accessible to everyone.', { strong: (chunks) => <strong>{chunks}</strong> })}
             </p>
             <div className="pt-2 flex flex-wrap gap-4 text-xs text-slate-400">
               <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-indigo-400" /> isolutionsico.com</span>
@@ -322,7 +322,7 @@ export default function CompanyPages({
                 {t('company.terms.sec1Title', '1. Acceptance of Terms')}
               </h2>
               <p>
-                {t('company.terms.sec1Desc', 'By accessing or using the iSolutions QR Generator, you represent and warrant that you have read, understood, and agree to be bound by these Terms and Conditions. These terms govern all generated templates, local schema persistence, standard redirects, and visual campaigns.')}
+                {t('company.terms.sec1Desc', 'By accessing or using FreeQRBarcodes, you represent and warrant that you have read, understood, and agree to be bound by these Terms and Conditions. These terms govern all generated templates, local schema persistence, standard redirects, and visual campaigns.')}
               </p>
             </section>
 

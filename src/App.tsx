@@ -5177,7 +5177,7 @@ export default function App() {
             <div className="flex flex-col gap-2">
               {[
                 { name: '🏢 About Our Platform', key: 'footer.aboutUs', path: '/about' },
-                { name: '🌟 Why iSolutions', key: 'footer.whyUs', path: '/why-freeqrgen' },
+                { name: '🌟 Why FreeQRBarcodes', key: 'footer.whyUs', path: '/why-freeqrgen' },
                 { name: '❓ Frequently Asked (FAQ)', key: 'footer.faq', path: '/faq' },
                 { name: '📝 Guides & News Blog', key: 'footer.blog', path: '/blog' },
                 { name: '📐 QR Templates Hub', key: 'footer.templates', path: '/templates' },
@@ -5197,7 +5197,7 @@ export default function App() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 border-t border-slate-200 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono">
-          <p>{t('footer.copyright', '© 2026 iSolutions QR Generator. Decoupled and fully verified local-cloud schema.')}</p>
+          <p>{t('footer.copyright', '© 2026 FreeQRBarcodes. Decoupled and fully verified local-cloud schema.')}</p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a href={locale && locale !== 'en' ? `/${locale}/privacy-policy` : '/privacy-policy'} onClick={(e) => { e.preventDefault(); navigateTo('/privacy-policy'); }} className="text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-wider font-bold">{t('footer.privacyPolicy', 'Privacy Policy')}</a>
             <span>•</span>

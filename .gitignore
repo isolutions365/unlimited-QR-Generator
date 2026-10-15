@@ -6,3 +6,12 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Backups and temporary files
+*.bak
+*.step*.bak
+.backup_*/
+.backup*
+\[*
+*.tmp
+*.temp

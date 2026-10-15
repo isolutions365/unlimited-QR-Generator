@@ -171,7 +171,7 @@ export default function EmbedPage({
             </h4>
             <div className="space-y-3.5 text-xs text-slate-600 leading-relaxed">
               <p>
-                <strong className="text-slate-800">{t('embed.partner1Title', 'Support Free Software:')}</strong> {t('embed.partner1Desc', 'iSolutions QR Generator is a 100% free, unlimited, ad-free toolkit designed for local stores, schools, and developers. Placing a badge helps us stay free forever.')}
+                <strong className="text-slate-800">{t('embed.partner1Title', 'Support Free Software:')}</strong> {t('embed.partner1Desc', 'FreeQRBarcodes is a 100% free, unlimited, ad-free toolkit designed for local stores, schools, and developers. Placing a badge helps us stay free forever.')}
               </p>
               <p>
                 <strong className="text-slate-800">{t('embed.partner2Title', 'Boost SEO Authority:')}</strong> {t('embed.partner2Desc', 'Linking to high-quality dynamic web generators elevates domain trust parameters securely.')}
