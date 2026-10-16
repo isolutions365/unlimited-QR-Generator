@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Settings, 
-  Sparkles,
+  QrCode,
   User, 
   LogIn, 
   Smartphone, 
@@ -92,10 +92,10 @@ export default function MobileHeader({
           id="mobile-header-ai-btn"
           onClick={handleOpenAI}
           className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 hover:text-slate-900 border border-slate-200/80 transition-colors cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500"
-          aria-label="Open AI Assistant"
-          title="AI Assistant"
+          aria-label="Open QR Assistant"
+          title="QR Assistant"
         >
-          <Sparkles className="w-4 h-4 text-blue-600" />
+          <QrCode className="w-4 h-4 text-blue-600" />
         </button>
 
         {/* App Settings Action Button */}
