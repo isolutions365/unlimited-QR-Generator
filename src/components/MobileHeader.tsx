@@ -91,11 +91,11 @@ export default function MobileHeader({
           type="button"
           id="mobile-header-ai-btn"
           onClick={handleOpenAI}
-          className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 hover:text-slate-900 border border-slate-200/80 transition-colors cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 hover:text-slate-900 border border-slate-200/80 transition-colors cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 overflow-hidden"
           aria-label="Open QR Assistant"
           title="QR Assistant"
         >
-          <QrCode className="w-4 h-4 text-blue-600" />
+          <Logo size={20} hideText={true} />
         </button>
 
         {/* App Settings Action Button */}

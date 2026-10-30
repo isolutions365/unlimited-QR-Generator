@@ -1,5 +1,5 @@
 import React, { useState, useId } from 'react';
-import { HelpCircle, ChevronDown, Check, Copy, Sparkles, ShieldCheck, Zap } from 'lucide-react';
+import { HelpCircle, ChevronDown, Check, Copy, QrCode as Sparkles, ShieldCheck, Zap } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 
 export interface FaqItem {
@@ -143,7 +143,7 @@ export default function FaqSection({
                 >
                   <span className="flex items-center gap-3 min-w-0 font-bold text-xs sm:text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                     <span className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 shrink-0">
-                      <Sparkles className="w-4 h-4" />
+                      <Zap className="w-4 h-4 text-amber-500" />
                     </span>
                     <span className="truncate">{t(faq.question, faq.question)}</span>
                   </span>

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { 
   Link2, Wifi, Contact, Mail, AlignLeft, MessageSquare, Phone, UploadCloud, 
-  Paintbrush, ShieldCheck, Sparkles, Check, AlertCircle, RefreshCw, X, Image as ImageIcon,
+  Paintbrush, ShieldCheck, Zap as Sparkles, Check, AlertCircle, RefreshCw, X, Image as ImageIcon,
   Sun, Moon, Globe, QrCode
 } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
@@ -209,7 +209,7 @@ export default function Generator({ initialProject, onProjectChange, className =
           <div className="flex items-center justify-between bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-xs">
             <div>
               <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-[10px] font-extrabold uppercase tracking-widest border border-indigo-100 dark:border-indigo-800 mb-1">
-                <Sparkles className="w-3 h-3" /> Enterprise Engine 4.0
+                <Zap className="w-3 h-3 text-amber-500" /> Enterprise Engine 4.0
               </span>
               <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 Free QR & Barcode Generator

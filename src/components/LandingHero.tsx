@@ -9,7 +9,7 @@ import {
   Wallet, 
   Printer, 
   Contact, 
-  Sparkles, 
+  Zap as Sparkles, 
   ArrowRight, 
   CheckCircle2, 
   CreditCard, 
@@ -625,7 +625,7 @@ export default function LandingHero({ onSelectCategory, onPrimaryCTA, onSecondar
                       >
                         <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                           <div className="flex items-center gap-1.5">
-                            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                            <Zap className="w-3.5 h-3.5 text-purple-600" />
                             <span className="text-xs font-bold text-purple-700">AI RSVP & Dynamic Form</span>
                           </div>
                           <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[9px] font-bold border border-purple-200/80">Smart Form</span>

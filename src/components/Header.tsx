@@ -4,7 +4,7 @@ import {
   QrCode, Zap, ChevronDown, Menu, X, Globe, Compass, Wand2, Palette, 
   LayoutTemplate, Play, Image, Megaphone, HelpCircle, BookOpen, Utensils, 
   Cpu, Scale, Bot, Sliders, Volume2, VolumeX, FormInput, Contact, FileText, 
-  Barcode, FileSpreadsheet, BarChart3, User, LogOut, Sparkles, ArrowRight, 
+  Barcode, FileSpreadsheet, BarChart3, User, LogOut, QrCode as Sparkles, ArrowRight, 
   Wallet, Bitcoin, MapPin, Smartphone, Share2 
 } from 'lucide-react';
 import Navigation from './Navigation';
@@ -315,7 +315,7 @@ export default function Header({
                 {[
                   { name: 'Contactless Digital Menu', key: 'nav.contactlessDigitalMenu', path: '/solutions/contactless-menu', desc: 'Paperless dining lists for diners', descKey: 'nav.contactlessMenuDesc', icon: Utensils },
                   { name: 'NFC vCard Networking', key: 'nav.nfcVcardNetworking', path: '/templates/business-card-qr-code', desc: 'Seamless high-grade corporate profiles', descKey: 'nav.nfcVcardDesc', icon: Contact },
-                  { name: 'Google Review Booster', key: 'nav.googleReviewBooster', path: '/templates/google-review-qr-code', desc: 'Boost organic localized stars count', descKey: 'nav.reviewBoosterDesc', icon: Sparkles },
+                  { name: 'Google Review Booster', key: 'nav.googleReviewBooster', path: '/templates/google-review-qr-code', desc: 'Boost organic localized stars count', descKey: 'nav.reviewBoosterDesc', icon: Zap },
                   { name: 'WiFi Guest Onboarding', key: 'nav.wifiGuestOnboarding', path: '/solutions/wifi-guest-onboarding', desc: 'No-password lobby network pairing', descKey: 'nav.wifiGuestDesc', icon: Compass },
                   { name: 'Event Gate Tickets Pass', key: 'nav.eventGateTickets', path: '/solutions/event-ticketing-checkin', desc: 'Secure barcode/QR checks at door', descKey: 'nav.eventGateDesc', icon: LayoutTemplate },
                   { name: 'Unified App Marketing', key: 'nav.unifiedAppMarketing', path: '/solutions/app-download-marketing', desc: 'Smart OS download router page', descKey: 'nav.unifiedAppDesc', icon: Bot },

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Play, Compass, Lightbulb, Zap, Sparkles, Wand2, ShieldCheck, ExternalLink } from 'lucide-react';
+import { X, Play, Compass, Lightbulb, Zap, Wand2, ShieldCheck, ExternalLink } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 
 interface TourWelcomeModalProps {
@@ -79,7 +79,7 @@ export default function TourWelcomeModal({ isOpen, onClose, onStart, onOpenWelco
             <div className="px-6 pt-7 pb-4 flex justify-between items-start border-b border-slate-800/60">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-amber-400/10 text-amber-400 border border-amber-400/20 rounded-2xl flex items-center justify-center shadow-inner">
-                  <Sparkles className="w-5 h-5 animate-pulse" />
+                  <Zap className="w-5 h-5 text-amber-300 animate-pulse" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
